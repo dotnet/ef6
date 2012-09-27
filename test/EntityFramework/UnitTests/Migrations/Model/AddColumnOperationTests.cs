@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using Xunit;
 
     public class AddColumnOperationTests
@@ -25,12 +25,18 @@ namespace System.Data.Entity.Migrations.Model
                              {
                                  Name = "C"
                              };
-            var addColumnOperation = new AddColumnOperation("T", column);
+
+            var addColumnOperation
+                = new AddColumnOperation("T", column)
+                      {
+                          IsSystem = true
+                      };
 
             var dropColumnOperation = (DropColumnOperation)addColumnOperation.Inverse;
 
             Assert.Equal("C", dropColumnOperation.Name);
             Assert.Equal("T", dropColumnOperation.Table);
+            Assert.True(dropColumnOperation.IsSystem);
         }
 
         [Fact]

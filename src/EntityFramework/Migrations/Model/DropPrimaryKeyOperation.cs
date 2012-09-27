@@ -32,7 +32,8 @@ namespace System.Data.Entity.Migrations.Model
                     = new AddPrimaryKeyOperation
                           {
                               Name = Name,
-                              Table = Table
+                              Table = Table,
+                              IsSystem = IsSystem
                           };
 
                 Columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));

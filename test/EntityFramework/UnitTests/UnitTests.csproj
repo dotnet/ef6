@@ -189,6 +189,7 @@
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
+    <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />
@@ -218,7 +219,7 @@
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElementTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Internal\DatabaseCreatorTests.cs" />
-    <Compile Include="Internal\DefaultModelCacheFactoryTests.cs" />
+    <Compile Include="Internal\DefaultModelCacheKeyFactoryTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Internal\InternalContextTests.cs" />
     <Compile Include="Internal\ProviderConfigTests.cs" />

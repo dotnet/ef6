@@ -50,7 +50,8 @@ namespace System.Data.Entity.Migrations.Model
                       {
                           Table = "T",
                           IsUnique = true,
-                          Name = "Custom"
+                          Name = "Custom",
+                          IsSystem = true
                       };
 
             createIndexOperation.Columns.Add("C");
@@ -61,6 +62,7 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("T", inverse.Table);
             Assert.Equal("Custom", inverse.Name);
             Assert.Equal("C", inverse.Columns.Single());
+            Assert.True(inverse.IsSystem);
         }
 
         [Fact]

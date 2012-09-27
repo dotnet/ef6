@@ -46,7 +46,8 @@ namespace System.Data.Entity.Migrations.Model
             var createIndexOperation
                 = new CreateIndexOperation
                       {
-                          Table = DependentTable
+                          Table = DependentTable,
+                          IsSystem = IsSystem
                       };
 
             DependentColumns.Each(c => createIndexOperation.Columns.Add(c));
@@ -61,12 +62,14 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                var dropForeignKeyOperation = new DropForeignKeyOperation
-                                                  {
-                                                      Name = Name,
-                                                      PrincipalTable = PrincipalTable,
-                                                      DependentTable = DependentTable,
-                                                  };
+                var dropForeignKeyOperation
+                    = new DropForeignKeyOperation
+                          {
+                              Name = Name,
+                              PrincipalTable = PrincipalTable,
+                              DependentTable = DependentTable,
+                              IsSystem = IsSystem
+                          };
 
                 DependentColumns.Each(c => dropForeignKeyOperation.DependentColumns.Add(c));
 

@@ -32,7 +32,6 @@ namespace System.Data.Entity.Migrations
         private DatabaseProviderFixture _databaseProviderFixture;
 
         private DatabaseProvider _databaseProvider = DatabaseProvider.SqlClient;
-
         private ProgrammingLanguage _programmingLanguage = ProgrammingLanguage.CSharp;
 
         public DatabaseProvider DatabaseProvider
@@ -105,7 +104,7 @@ namespace System.Data.Entity.Migrations
 
             migrationsConfiguration.MigrationsAssembly = typeof(TMigration).Assembly;
 
-            return new DbMigrator(migrationsConfiguration);
+            return new DbMigrator(migrationsConfiguration, null);
         }
 
         public DbMigrator CreateMigrator<TContext>(DbMigration migration)
@@ -131,6 +130,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
+            IHistoryContextFactory historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -140,6 +140,7 @@ namespace System.Data.Entity.Migrations
                     automaticDataLossEnabled,
                     targetDatabase,
                     contextKey,
+                    historyContextFactory,
                     scaffoldedMigrations));
         }
 
@@ -148,6 +149,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
+            IHistoryContextFactory historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -158,7 +160,8 @@ namespace System.Data.Entity.Migrations
                           AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
                           ContextType = typeof(TContext),
                           MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly,
-                          MigrationsNamespace = typeof(TContext).Namespace
+                          MigrationsNamespace = typeof(TContext).Namespace,
+                          HistoryContextFactory = historyContextFactory
                       };
 
             if (!string.IsNullOrWhiteSpace(contextKey))

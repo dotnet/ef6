@@ -129,6 +129,11 @@ namespace System.Data.Entity.Internal
             ValidateOnSaveEnabled = true;
         }
 
+        protected InternalContext()
+        {
+            // for mocking
+        }
+
         #endregion
 
         #region Owner access
@@ -473,6 +478,11 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public void PerformDatabaseInitialization()
         {
+            if (Owner is HistoryContext)
+            {
+                return;
+            }
+
             var initializer = DbConfiguration.DependencyResolver
                                   .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
                               ?? DefaultInitializer

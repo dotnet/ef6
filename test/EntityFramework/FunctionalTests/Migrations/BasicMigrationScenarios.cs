@@ -96,7 +96,8 @@ namespace System.Data.Entity.Migrations
 
             generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
 
-            Assert.True(generatedMigration.DesignerCode.Contains("return null")
+            Assert.True(
+                generatedMigration.DesignerCode.Contains("return null")
                 || generatedMigration.DesignerCode.Contains("Return Nothing"));
         }
 

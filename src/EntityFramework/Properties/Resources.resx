@@ -5335,8 +5335,8 @@
     <value>Sequence contains no elements</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="UnableToAutoMigrateDefaultSchema" xml:space="preserve">
-    <value>Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes.</value>
+  <data name="UnableToMoveHistoryTableWithAuto" xml:space="preserve">
+    <value>Automatic migrations that affect the location of the migrations history system table (such as default schema changes) are not supported. Please use code-based migrations for operations that affect the location of the migrations history system table.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
   <data name="NoMatch" xml:space="preserve">
@@ -5346,5 +5346,9 @@
   <data name="MoreThanOneMatch" xml:space="preserve">
     <value>Sequence contains more than one matching element</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="HistoryMigrationNotSupported" xml:space="preserve">
+    <value>Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. </value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
 </root>

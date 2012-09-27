@@ -55,7 +55,10 @@ namespace System.Data.Entity.Migrations.Model
             {
                 var databaseName = _name.ToDatabaseName();
 
-                return new MoveTableOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema);
+                return new MoveTableOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema)
+                           {
+                               IsSystem = IsSystem
+                           };
             }
         }
 

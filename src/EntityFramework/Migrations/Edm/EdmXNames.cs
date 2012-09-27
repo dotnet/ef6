@@ -27,16 +27,16 @@ namespace System.Data.Entity.Migrations.Edm
         private static readonly XNamespace _ssdlNamespaceV3
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm/ssdl");
 
-        private static readonly XNamespace _annotationsNamespace
-            = XNamespace.Get("http://schemas.microsoft.com/ado/2009/02/edm/annotation");
+        private static readonly XNamespace _systemNamespace
+            = XNamespace.Get("http://schemas.microsoft.com/ado/2012/10/edm/migrations");
 
-        public static readonly XName IsSystem = _annotationsNamespace + "IsSystem";
+        public static readonly XName IsSystemName = _systemNamespace + "IsSystem";
 
-        public static string IsSystemAttribute(this XElement element)
+        public static bool IsSystem(this XElement element)
         {
             Contract.Requires(element != null);
 
-            return (string)element.Attribute(IsSystem);
+            return string.Equals("true", (string)element.Attribute(IsSystemName), StringComparison.Ordinal);
         }
 
         public static string ActionAttribute(this XElement element)
@@ -191,22 +191,13 @@ namespace System.Data.Entity.Migrations.Edm
 
         public static class Csdl
         {
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> AssociationNames = Names("Association");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> ComplexTypeNames = Names("ComplexType");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> EndNames = Names("End");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+            public static readonly IEnumerable<XName> EntityContainerNames = Names("EntityContainer");
+            public static readonly IEnumerable<XName> EntitySetNames = Names("EntitySet");
             public static readonly IEnumerable<XName> EntityTypeNames = Names("EntityType");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> PropertyNames = Names("Property");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> SchemaNames = Names("Schema");
 
             private static IEnumerable<XName> Names(string elementName)
@@ -223,18 +214,13 @@ namespace System.Data.Entity.Migrations.Edm
 
         public static class Msl
         {
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> AssociationSetMappingNames = Names("AssociationSetMapping");
-
             public static readonly IEnumerable<XName> ComplexPropertyNames = Names("ComplexProperty");
             public static readonly IEnumerable<XName> ConditionNames = Names("Condition");
             public static readonly IEnumerable<XName> EntityContainerMappingNames = Names("EntityContainerMapping");
             public static readonly IEnumerable<XName> EntitySetMappingNames = Names("EntitySetMapping");
             public static readonly IEnumerable<XName> EntityTypeMappingNames = Names("EntityTypeMapping");
-
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             public static readonly IEnumerable<XName> MappingNames = Names("Mapping");
-
             public static readonly IEnumerable<XName> MappingFragmentNames = Names("MappingFragment");
             public static readonly IEnumerable<XName> ScalarPropertyNames = Names("ScalarProperty");
 

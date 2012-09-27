@@ -7,6 +7,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Xml.Linq;
@@ -832,5 +833,15 @@ namespace ProductivityApiUnitTests
         }
 
         #endregion
+
+        [Fact]
+        public void Initializer_never_run_for_history_contexts()
+        {
+            var mockInitializer = new Mock<IDatabaseInitializer<HistoryContext>>();
+            Database.SetInitializer(mockInitializer.Object);
+
+            new HistoryContext().Database.Initialize(force: true);
+            mockInitializer.Verify(i => i.InitializeDatabase(It.IsAny<HistoryContext>()), Times.Never());
+        }
     }
 }

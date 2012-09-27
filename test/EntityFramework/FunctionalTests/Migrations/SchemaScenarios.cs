@@ -225,7 +225,7 @@ namespace System.Data.Entity.Migrations
             var migrator = CreateMigrator<CustomSchemaContext_v1>();
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("UnableToAutoMigrateDefaultSchema");
+                .ValidateMessage("UnableToMoveHistoryTableWithAuto");
         }
 
         [MigrationsTheory]
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<CustomSchemaContext_v1>();
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("UnableToAutoMigrateDefaultSchema");
+                .ValidateMessage("UnableToMoveHistoryTableWithAuto");
         }
 
         [MigrationsTheory]

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Linq;
@@ -31,6 +32,15 @@ namespace System.Data.Entity.Config
             mockProviderResolver.Verify(m => m.GetService(typeof(DbProviderServices), "FooClient"), Times.Once());
             Assert.Same(providerServices, resolver.GetService<DbProviderServices>("FooClient"));
             mockProviderResolver.Verify(m => m.GetService(typeof(DbProviderServices), "FooClient"), Times.Once());
+        }
+
+        [Fact]
+        public void The_root_resolver_can_return_a_default_history_context_factory()
+        {
+            Assert.IsType<DefaultHistoryContextFactory>(
+                new RootDependencyResolver(
+                    new DefaultProviderServicesResolver(),
+                    new DatabaseInitializerResolver()).GetService<IHistoryContextFactory>());
         }
 
         [Fact]

@@ -28,7 +28,7 @@ namespace System.Data.Entity.Utilities
         {
             Contract.Requires(model != null);
 
-            return model.Descendants().Attributes(EdmXNames.IsSystem).Any();
+            return model.Descendants().Attributes(EdmXNames.IsSystemName).Any();
         }
     }
 }

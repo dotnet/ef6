@@ -3,22 +3,21 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations.History;
 
     internal sealed class DefaultModelCacheKeyFactory : IDbModelCacheKeyFactory
     {
         public IDbModelCacheKey Create(DbContext context)
         {
-            string defaultSchema = null;
+            string customKey = null;
 
-            var historyContext = context as HistoryContext;
+            var modelCacheKeyProvider = context as IDbModelCacheKeyProvider;
 
-            if (historyContext != null)
+            if (modelCacheKeyProvider != null)
             {
-                defaultSchema = historyContext.DefaultSchema;
+                customKey = modelCacheKeyProvider.CacheKey;
             }
 
-            return new DefaultModelCacheKey(context.GetType(), context.InternalContext.ProviderName, defaultSchema);
+            return new DefaultModelCacheKey(context.GetType(), context.InternalContext.ProviderName, customKey);
         }
     }
 }

@@ -13406,11 +13406,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes."
+        /// A string like "Automatic migrations that affect the location of the migrations history system table (such as default schema changes) are not supported. Please use code-based migrations for operations that affect the location of the migrations history system table."
         /// </summary>
-        internal static string UnableToAutoMigrateDefaultSchema
+        internal static string UnableToMoveHistoryTableWithAuto
         {
-            get { return EntityRes.GetString(EntityRes.UnableToAutoMigrateDefaultSchema); }
+            get { return EntityRes.GetString(EntityRes.UnableToMoveHistoryTableWithAuto); }
         }
 
         /// <summary>
@@ -13427,6 +13427,14 @@ namespace System.Data.Entity.Resources
         internal static string MoreThanOneMatch
         {
             get { return EntityRes.GetString(EntityRes.MoreThanOneMatch); }
+        }
+
+        /// <summary>
+        /// A string like "Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. "
+        /// </summary>
+        internal static string HistoryMigrationNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.HistoryMigrationNotSupported); }
         }
     } 
 
@@ -15005,11 +15013,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// Migrations.Infrastructure.MigrationsException with message like "Auto-migrating default schema changes is not supported. Please use code-based migrations to migrate default schema changes."
+        /// Migrations.Infrastructure.MigrationsException with message like "Automatic migrations that affect the location of the migrations history system table (such as default schema changes) are not supported. Please use code-based migrations for operations that affect the location of the migrations history system table."
         /// </summary>
-        internal static Exception UnableToAutoMigrateDefaultSchema()
+        internal static Exception UnableToMoveHistoryTableWithAuto()
         {
-            return new Migrations.Infrastructure.MigrationsException(Strings.UnableToAutoMigrateDefaultSchema);
+            return new Migrations.Infrastructure.MigrationsException(Strings.UnableToMoveHistoryTableWithAuto);
         }
 
         /// <summary>
@@ -15026,6 +15034,14 @@ namespace System.Data.Entity.Resources
         internal static Exception MoreThanOneMatch()
         {
             return new InvalidOperationException(Strings.MoreThanOneMatch);
+        }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsException with message like "Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. "
+        /// </summary>
+        internal static Exception HistoryMigrationNotSupported()
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.HistoryMigrationNotSupported);
         }
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
@@ -16742,9 +16758,10 @@ namespace System.Data.Entity.Resources
         internal const string IQueryable_Not_Async = "IQueryable_Not_Async";
         internal const string IQueryable_Provider_Not_Async = "IQueryable_Provider_Not_Async";
         internal const string EmptySequence = "EmptySequence";
-        internal const string UnableToAutoMigrateDefaultSchema = "UnableToAutoMigrateDefaultSchema";
+        internal const string UnableToMoveHistoryTableWithAuto = "UnableToMoveHistoryTableWithAuto";
         internal const string NoMatch = "NoMatch";
         internal const string MoreThanOneMatch = "MoreThanOneMatch";
+        internal const string HistoryMigrationNotSupported = "HistoryMigrationNotSupported";
         
         static EntityRes loader = null;
         ResourceManager resources;

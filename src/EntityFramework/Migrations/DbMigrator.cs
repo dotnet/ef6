@@ -43,15 +43,16 @@ namespace System.Data.Entity.Migrations
         private readonly Lazy<XDocument> _emptyModel;
         private readonly DbMigrationsConfiguration _configuration;
         private readonly XDocument _currentModel;
+        private readonly XDocument _currentHistoryModel;
+        private readonly XDocument _initialHistoryModel;
         private readonly DbProviderFactory _providerFactory;
         private readonly HistoryRepository _historyRepository;
         private readonly MigrationAssembly _migrationAssembly;
         private readonly DbContextInfo _usersContextInfo;
-        private readonly bool _calledByCreateDatabase;
         private readonly EdmModelDiffer _modelDiffer;
+        private readonly bool _calledByCreateDatabase;
         private readonly string _providerManifestToken;
         private readonly string _targetDatabase;
-        private readonly string _defaultSchema;
         private readonly string _legacyContextKey;
 
         private MigrationSqlGenerator _sqlGenerator;
@@ -69,6 +70,7 @@ namespace System.Data.Entity.Migrations
             Contract.Requires(configuration.ContextType != null);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
             : base(null)
@@ -119,13 +121,13 @@ namespace System.Data.Entity.Migrations
 
                 _providerFactory = DbProviderServices.GetProviderFactory(connection);
 
-                _defaultSchema = context.InternalContext.DefaultSchema;
-
+                var defaultSchema = context.InternalContext.DefaultSchema;
                 var historySchemas = GetHistorySchemas();
 
-                if (!string.IsNullOrWhiteSpace(_defaultSchema))
+                if (!string.IsNullOrWhiteSpace(defaultSchema))
                 {
-                    historySchemas = historySchemas.Concat(new[] { _defaultSchema });
+                    historySchemas
+                        = historySchemas.Concat(new[] { defaultSchema });
                 }
 
                 _historyRepository
@@ -133,7 +135,10 @@ namespace System.Data.Entity.Migrations
                         _usersContextInfo.ConnectionString,
                         _providerFactory,
                         _configuration.ContextKey,
-                        historySchemas);
+                        historySchemas,
+                        _migrationAssembly.MigrationIds.Any()
+                            ? _configuration.HistoryContextFactory
+                            : null);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
@@ -152,6 +157,12 @@ namespace System.Data.Entity.Migrations
                             : _usersContextInfo.ConnectionStringOrigin.ToString());
 
                 _legacyContextKey = context.InternalContext.ContextKey;
+
+                _currentHistoryModel = GetCurrentHistoryModel(defaultSchema);
+                _initialHistoryModel = GetInitialHistoryModel();
+                _emptyModel = GetEmptyModel();
+
+                AttachHistoryModel(_currentModel);
             }
             finally
             {
@@ -160,24 +171,65 @@ namespace System.Data.Entity.Migrations
                     context.Dispose();
                 }
             }
+        }
 
-            var providerInfo
-                = new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken);
+        private Lazy<XDocument> GetEmptyModel()
+        {
+            return new Lazy<XDocument>(
+                () => new DbModelBuilder()
+                          .Build(new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken))
+                          .GetModel());
+        }
 
-            _emptyModel = new Lazy<XDocument>(() => new DbModelBuilder().Build(providerInfo).GetModel());
+        private XDocument GetCurrentHistoryModel(string defaultSchema)
+        {
+            using (var historyContext = _configuration.HistoryContextFactory.Create(CreateConnection(), true, defaultSchema))
+            {
+                var currentHistoryModel = historyContext.GetModel();
 
-            _historyRepository.AppendHistoryModel(_currentModel, providerInfo);
+                currentHistoryModel
+                    .Descendants()
+                    .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
+
+                return currentHistoryModel;
+            }
+        }
+
+        private XDocument GetInitialHistoryModel()
+        {
+            var initialHistoryModel
+                = (from migrationId in _migrationAssembly.MigrationIds
+                   let migrationMetadata = (IMigrationMetadata)_migrationAssembly.GetMigration(migrationId)
+                   select new ModelCompressor().Decompress(Convert.FromBase64String(migrationMetadata.Target)))
+                    .FirstOrDefault();
+
+            if (initialHistoryModel == null)
+            {
+                using (var historyContext = new HistoryContext(CreateConnection(), true, null))
+                {
+                    initialHistoryModel = historyContext.GetModel();
+
+                    initialHistoryModel
+                        .Descendants()
+                        .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
+                }
+            }
+
+            return initialHistoryModel;
         }
 
         private IEnumerable<string> GetHistorySchemas()
         {
+            var modelCompressor = new ModelCompressor();
+
             return
                 from migrationId in _migrationAssembly.MigrationIds
-                from entitySet in new ModelCompressor()
-                    .Decompress(
-                        Convert.FromBase64String(((IMigrationMetadata)_migrationAssembly.GetMigration(migrationId)).Target))
+                let migrationMetadata = (IMigrationMetadata)_migrationAssembly.GetMigration(migrationId)
+                from entitySet in
+                    modelCompressor
+                    .Decompress(Convert.FromBase64String(migrationMetadata.Target))
                     .Descendants(EdmXNames.Ssdl.EntitySetNames)
-                where entitySet.Attributes(EdmXNames.IsSystem).Any()
+                where entitySet.IsSystem()
                 select entitySet.SchemaAttribute();
         }
 
@@ -225,7 +277,25 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         public override IEnumerable<string> GetDatabaseMigrations()
         {
+            if (_migrationAssembly.MigrationIds.Any())
+            {
+                DetectInvalidHistoryChange();
+            }
+
             return _historyRepository.GetMigrationsSince(InitialDatabase);
+        }
+
+        /// <summary>
+        ///     Gets all migrations that are defined in the assembly but haven't been applied to the target database.
+        /// </summary>
+        public override IEnumerable<string> GetPendingMigrations()
+        {
+            if (_migrationAssembly.MigrationIds.Any())
+            {
+                DetectInvalidHistoryChange();
+            }
+
+            return _historyRepository.GetPendingMigrations(_migrationAssembly.MigrationIds);
         }
 
         internal ScaffoldedMigration ScaffoldInitialCreate(string @namespace)
@@ -305,14 +375,6 @@ namespace System.Data.Entity.Migrations
             return generatedMigration;
         }
 
-        /// <summary>
-        ///     Gets all migrations that are defined in the assembly but haven't been applied to the target database.
-        /// </summary>
-        public override IEnumerable<string> GetPendingMigrations()
-        {
-            return _historyRepository.GetPendingMigrations(_migrationAssembly.MigrationIds);
-        }
-
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void CheckLegacyCompatibility(Action onCompatible)
         {
@@ -353,6 +415,8 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override void Update(string targetMigration)
         {
+            DetectInvalidHistoryChange();
+
             base.EnsureDatabaseExists();
 
             var upgradeOperations = _historyRepository.GetUpgradeOperations();
@@ -411,6 +475,15 @@ namespace System.Data.Entity.Migrations
             }
 
             base.Upgrade(pendingMigrations, targetMigrationId, null);
+        }
+
+        private void DetectInvalidHistoryChange()
+        {
+            if (_modelDiffer.Diff(_initialHistoryModel, _currentHistoryModel)
+                .Any(o => o.IsSystem & !(o is MoveTableOperation)))
+            {
+                throw Error.HistoryMigrationNotSupported();
+            }
         }
 
         internal override void UpgradeHistory(IEnumerable<MigrationOperation> upgradeOperations)
@@ -512,7 +585,7 @@ namespace System.Data.Entity.Migrations
 
             var sourceModel = GetLastModel(lastMigration);
 
-            return _modelDiffer.Diff(sourceModel, model, ReferenceEquals(sourceModel, _emptyModel.Value)).Any();
+            return _modelDiffer.Diff(sourceModel, model).Any();
         }
 
         private XDocument GetLastModel(DbMigration lastMigration, string currentMigrationId = null)
@@ -574,10 +647,7 @@ namespace System.Data.Entity.Migrations
                 if (!sourceModel.HasSystemOperations())
                 {
                     // upgrade scenario, inject the history model
-                    _historyRepository
-                        .AppendHistoryModel(
-                            sourceModel,
-                            new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                    AttachHistoryModel(sourceModel);
                 }
             }
 
@@ -616,19 +686,16 @@ namespace System.Data.Entity.Migrations
             }
 
             bool? includeSystemOps = null;
+            var isFirstMigration = ReferenceEquals(lastModel, _emptyModel.Value);
 
-            if (ReferenceEquals(lastModel, _emptyModel.Value)
-                && !_historyRepository.IsShared())
+            if (isFirstMigration && !_historyRepository.IsShared())
             {
                 includeSystemOps = true;
 
                 if (!targetModel.HasSystemOperations())
                 {
                     // upgrade scenario, inject the history model
-                    _historyRepository
-                        .AppendHistoryModel(
-                            targetModel,
-                            new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                    AttachHistoryModel(targetModel);
                 }
             }
 
@@ -656,10 +723,7 @@ namespace System.Data.Entity.Migrations
                 if (!appendableModel.HasSystemOperations())
                 {
                     // upgrade scenario, inject the history model
-                    _historyRepository
-                        .AppendHistoryModel(
-                            appendableModel,
-                            new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken));
+                    AttachHistoryModel(appendableModel);
                 }
             }
 
@@ -667,15 +731,16 @@ namespace System.Data.Entity.Migrations
                 = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
                     .ToList();
 
+            if (!_calledByCreateDatabase
+                && !downgrading)
+            {
+                PreventAutoSystemChanges(operations);
+            }
+
             if (!_configuration.AutomaticMigrationDataLossAllowed
                 && operations.Any(o => o.IsDestructiveChange))
             {
                 throw Error.AutomaticDataLoss();
-            }
-
-            if (!_calledByCreateDatabase)
-            {
-                PreventAutoSystemChanges(operations);
             }
 
             ExecuteOperations(migrationId, targetModel, operations, downgrading, auto: true);
@@ -688,7 +753,7 @@ namespace System.Data.Entity.Migrations
                     {
                         if (o is MoveTableOperation)
                         {
-                            throw Error.UnableToAutoMigrateDefaultSchema();
+                            throw Error.UnableToMoveHistoryTableWithAuto();
                         }
 
                         var createTableOperation = o as CreateTableOperation;
@@ -699,7 +764,7 @@ namespace System.Data.Entity.Migrations
 
                             if (schema != DbDatabaseMetadataExtensions.DefaultSchema)
                             {
-                                throw Error.UnableToAutoMigrateDefaultSchema();
+                                throw Error.UnableToMoveHistoryTableWithAuto();
                             }
                         }
                     });
@@ -922,6 +987,36 @@ namespace System.Data.Entity.Migrations
             connection.ConnectionString = _usersContextInfo.ConnectionString;
 
             return connection;
+        }
+
+        private void AttachHistoryModel(XDocument targetModel)
+        {
+            Contract.Requires(targetModel != null);
+
+            var historyModel = new XDocument(_currentHistoryModel); // clone
+
+            var csdlNamespace = targetModel.Descendants(EdmXNames.Csdl.SchemaNames).Single().Name.Namespace;
+            var mslNamespace = targetModel.Descendants(EdmXNames.Msl.MappingNames).Single().Name.Namespace;
+            var ssdlNamespace = targetModel.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Name.Namespace;
+
+            var entityTypes = historyModel.Descendants(EdmXNames.Csdl.EntityTypeNames);
+            var entitySets = historyModel.Descendants(EdmXNames.Csdl.EntitySetNames);
+            var entitySetMappings = historyModel.Descendants(EdmXNames.Msl.EntitySetMappingNames);
+            var storeEntityTypes = historyModel.Descendants(EdmXNames.Ssdl.EntityTypeNames);
+            var storeEntitySets = historyModel.Descendants(EdmXNames.Ssdl.EntitySetNames);
+
+            // normalize namespaces
+            entityTypes.DescendantsAndSelf().Each(e => e.Name = csdlNamespace + e.Name.LocalName);
+            entitySets.DescendantsAndSelf().Each(e => e.Name = csdlNamespace + e.Name.LocalName);
+            entitySetMappings.DescendantsAndSelf().Each(e => e.Name = mslNamespace + e.Name.LocalName);
+            storeEntityTypes.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
+            storeEntitySets.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
+
+            targetModel.Descendants(EdmXNames.Csdl.SchemaNames).Single().Add(entityTypes);
+            targetModel.Descendants(EdmXNames.Csdl.EntityContainerNames).Single().Add(entitySets);
+            targetModel.Descendants(EdmXNames.Msl.EntityContainerMappingNames).Single().Add(entitySetMappings);
+            targetModel.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Add(storeEntityTypes);
+            targetModel.Descendants(EdmXNames.Ssdl.EntityContainerNames).Single().Add(storeEntitySets);
         }
     }
 }

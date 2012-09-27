@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -40,11 +40,16 @@ namespace System.Data.Entity.Migrations.Model
         [Fact]
         public void Inverse_should_produce_drop_table_operation()
         {
-            var createTableOperation = new CreateTableOperation("Foo");
+            var createTableOperation
+                = new CreateTableOperation("Foo")
+                      {
+                          IsSystem = true
+                      };
 
             var dropTableOperation = (DropTableOperation)createTableOperation.Inverse;
 
             Assert.Equal("Foo", dropTableOperation.Name);
+            Assert.True(dropTableOperation.IsSystem);
         }
 
         [Fact]

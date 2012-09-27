@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Xml;
     using Xunit.Sdk;
 
     internal class MigrationsTheoryCommand : ITestCommand
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Migrations
             get { return _innerCommand.Timeout; }
         }
 
-        public Xml.XmlNode ToStartXml()
+        public XmlNode ToStartXml()
         {
             return _innerCommand.ToStartXml();
         }

@@ -12,14 +12,14 @@ namespace System.Data.Entity.Migrations
     {
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {
-            var _providerLanguageCominations = GetCombinations(method.MethodInfo);
+            var _providerLanguageCombinations = GetCombinations(method.MethodInfo);
 
             var testCommands
                 = method.MethodInfo.GetParameters().Length == 0
                       ? new[] { new FactCommand(method) }
                       : base.EnumerateTestCommands(method);
 
-            return (from providerLanguageCombination in _providerLanguageCominations
+            return (from providerLanguageCombination in _providerLanguageCombinations
                     from testCommand in testCommands
                     select new MigrationsTheoryCommand(
                         testCommand,

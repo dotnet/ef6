@@ -21,25 +21,6 @@ namespace System.Data.Entity.Migrations
     public class HistoryRepositoryTests : DbTestCase
     {
         [MigrationsTheory]
-        public void AppendHistoryModel_should_add_system_elements_and_normalize_namespaces()
-        {
-            var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
-
-            var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
-            modelBuilder.Entity<FakeEntity>();
-
-            var model = modelBuilder.Build(ProviderInfo).GetModel();
-
-            historyRepository.AppendHistoryModel(model, ProviderInfo);
-
-            Assert.Equal(1, model.Descendants(EdmXNames.Csdl.EntityTypeNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
-            Assert.Equal(1, model.Descendants(EdmXNames.Msl.EntitySetMappingNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
-            Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntityTypeNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
-            Assert.Equal(1, model.Descendants(EdmXNames.Ssdl.EntitySetNames.Last()).Count(e => e.IsSystemAttribute() == "true"));
-        }
-
-        [MigrationsTheory]
         public void GetUpgradeOperations_should_return_add_product_version_column_when_not_present()
         {
             ResetDatabase();

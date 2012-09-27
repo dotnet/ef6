@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -32,6 +33,7 @@ namespace System.Data.Entity.Migrations
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = DefaultMigrationsDirectory;
         private readonly Lazy<IDbDependencyResolver> _resolver;
+        private IHistoryContextFactory _historyContextFactory;
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
@@ -147,6 +149,17 @@ namespace System.Data.Entity.Migrations
 
                 _codeGenerator = value;
             }
+        }
+
+        public IHistoryContextFactory HistoryContextFactory
+        {
+            get
+            {
+                return _historyContextFactory
+                       ?? _resolver.Value.GetService<IHistoryContextFactory>(GetType())
+                       ?? _resolver.Value.GetService<IHistoryContextFactory>();
+            }
+            set { _historyContextFactory = value; }
         }
 
         /// <summary>

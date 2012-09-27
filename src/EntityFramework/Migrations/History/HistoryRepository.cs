@@ -4,12 +4,12 @@ namespace System.Data.Entity.Migrations.History
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -28,6 +28,7 @@ namespace System.Data.Entity.Migrations.History
 
         private readonly string _contextKey;
         private readonly IEnumerable<string> _schemas;
+        private readonly IHistoryContextFactory _historyContextFactory;
 
         private string _currentSchema;
         private bool? _exists;
@@ -37,7 +38,8 @@ namespace System.Data.Entity.Migrations.History
             string connectionString,
             DbProviderFactory providerFactory,
             string contextKey,
-            IEnumerable<string> schemas = null)
+            IEnumerable<string> schemas = null,
+            IHistoryContextFactory historyContextFactory = null)
             : base(connectionString, providerFactory)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(contextKey));
@@ -48,6 +50,10 @@ namespace System.Data.Entity.Migrations.History
                 = new[] { DbDatabaseMetadataExtensions.DefaultSchema }
                     .Concat(schemas ?? Enumerable.Empty<string>())
                     .Distinct();
+
+            _historyContextFactory
+                = historyContextFactory
+                  ?? DbConfiguration.GetService<IHistoryContextFactory>();
         }
 
         public string CurrentSchema
@@ -493,44 +499,7 @@ namespace System.Data.Entity.Migrations.History
 
         private HistoryContext CreateContext(DbConnection connection = null, string schema = null)
         {
-            return new HistoryContext(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
-        }
-
-        public virtual void AppendHistoryModel(XDocument model, DbProviderInfo providerInfo)
-        {
-            Contract.Requires(model != null);
-            Contract.Requires(providerInfo != null);
-
-            var csdlNamespace = model.Descendants(EdmXNames.Csdl.SchemaNames).Single().Name.Namespace;
-            var mslNamespace = model.Descendants(EdmXNames.Msl.MappingNames).Single().Name.Namespace;
-            var ssdlNamespace = model.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Name.Namespace;
-
-            using (var context = CreateContext(schema: _schemas.Last()))
-            {
-                // prevent having to lookup the provider info.
-                context.InternalContext.ModelProviderInfo = providerInfo;
-
-                var historyModel = context.GetModel();
-
-                var entityType = historyModel.Descendants(EdmXNames.Csdl.EntityTypeNames).Single();
-                var entitySetMapping = historyModel.Descendants(EdmXNames.Msl.EntitySetMappingNames).Single();
-                var storeEntityType = historyModel.Descendants(EdmXNames.Ssdl.EntityTypeNames).Single();
-                var storeEntitySet = historyModel.Descendants(EdmXNames.Ssdl.EntitySetNames).Single();
-
-                new[] { entityType, entitySetMapping, storeEntityType, storeEntitySet }
-                    .Each(x => x.SetAttributeValue(EdmXNames.IsSystem, true));
-
-                // normalize namespaces
-                entityType.DescendantsAndSelf().Each(e => e.Name = csdlNamespace + e.Name.LocalName);
-                entitySetMapping.DescendantsAndSelf().Each(e => e.Name = mslNamespace + e.Name.LocalName);
-                storeEntityType.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
-                storeEntitySet.DescendantsAndSelf().Each(e => e.Name = ssdlNamespace + e.Name.LocalName);
-
-                model.Descendants(EdmXNames.Csdl.SchemaNames).Single().Add(entityType);
-                model.Descendants(EdmXNames.Msl.EntityContainerMappingNames).Single().Add(entitySetMapping);
-                model.Descendants(EdmXNames.Ssdl.SchemaNames).Single().Add(storeEntityType);
-                model.Descendants(EdmXNames.Ssdl.EntityContainerNames).Single().Add(storeEntitySet);
-            }
+            return _historyContextFactory.Create(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
         }
     }
 }

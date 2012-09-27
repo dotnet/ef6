@@ -3,17 +3,18 @@
 namespace System.Data.Entity.Migrations.History
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
 
-    internal class HistoryContext : DbContext
+    public class HistoryContext : DbContext, IDbModelCacheKeyProvider
     {
         public const string TableName = "__MigrationHistory";
 
-        static HistoryContext()
-        {
-            Database.SetInitializer<HistoryContext>(null);
-        }
-
         private readonly string _defaultSchema;
+
+        internal HistoryContext()
+        {
+            // for testing
+        }
 
         public HistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
             : base(existingConnection, contextOwnsConnection)
@@ -23,7 +24,12 @@ namespace System.Data.Entity.Migrations.History
             Configuration.ValidateOnSaveEnabled = false;
         }
 
-        public string DefaultSchema
+        public string CacheKey
+        {
+            get { return _defaultSchema; }
+        }
+
+        protected string DefaultSchema
         {
             get { return _defaultSchema; }
         }

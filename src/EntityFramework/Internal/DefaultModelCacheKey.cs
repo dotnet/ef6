@@ -9,9 +9,9 @@ namespace System.Data.Entity.Internal
     {
         private readonly Type _contextType;
         private readonly string _providerName;
-        private readonly string _schema;
+        private readonly string _customKey;
 
-        public DefaultModelCacheKey(Type contextType, string providerName, string schema)
+        public DefaultModelCacheKey(Type contextType, string providerName, string customKey)
         {
             Contract.Requires(contextType != null);
             Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Internal
 
             _contextType = contextType;
             _providerName = providerName;
-            _schema = schema;
+            _customKey = customKey;
         }
 
         public override bool Equals(object obj)
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Internal
             {
                 return (_contextType.GetHashCode() * 397)
                        ^ _providerName.GetHashCode()
-                       ^ (!string.IsNullOrWhiteSpace(_schema) ? _schema.GetHashCode() : 0);
+                       ^ (!string.IsNullOrWhiteSpace(_customKey) ? _customKey.GetHashCode() : 0);
             }
         }
 
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Internal
 
             return _contextType == other._contextType
                    && string.Equals(_providerName, other._providerName)
-                   && string.Equals(_schema, other._schema);
+                   && string.Equals(_customKey, other._customKey);
         }
     }
 }

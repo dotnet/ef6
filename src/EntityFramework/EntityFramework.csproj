@@ -458,6 +458,7 @@
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
+    <Compile Include="Infrastructure\IDbModelCacheKeyProvider.cs" />
     <Compile Include="Infrastructure\IDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\IManifestTokenService.cs" />
     <Compile Include="Internal\CommandTracer.cs" />
@@ -482,6 +483,8 @@
     <Compile Include="Internal\InterceptedCommand.cs" />
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
+    <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
+    <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
