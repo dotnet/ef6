@@ -26,10 +26,6 @@ namespace System.Data.Entity.Config
             return null;
         }
 
-        public virtual void Release(object service)
-        {
-        }
-
         public virtual void SetInitializer(Type contextType, object initializer)
         {
             Contract.Requires(contextType != null);

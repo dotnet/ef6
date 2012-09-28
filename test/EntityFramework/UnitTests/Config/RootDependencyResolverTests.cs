@@ -101,12 +101,6 @@ namespace System.Data.Entity.Config
             Assert.IsType<DefaultDbProviderFactoryService>(new RootDependencyResolver().GetService<IDbProviderFactoryService>());
         }
 
-        [Fact]
-        public void Release_does_not_throw()
-        {
-            new RootDependencyResolver().Release(new object());
-        }
-
         /// <summary>
         ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
         ///     issues. As with any test of this type just because the test passes does not mean that the code is

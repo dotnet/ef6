@@ -31,9 +31,5 @@ namespace FunctionalTests.TestHelpers
 
             return null;
         }
-
-        public void Release(object service)
-        {
-        }
     }
 }

@@ -59,14 +59,6 @@ namespace System.Data.Entity.Config
             Assert.Null(new TransientDependencyResolver<IPilkington>(() => new Karl(), "Karl").GetService<IPilkington>());
             Assert.Null(new TransientDependencyResolver<IPilkington>(() => new Karl(), "Karl").GetService<IGervais>("Ricky"));
         }
-
-        [Fact]
-        public void Release_does_not_throw()
-        {
-            var transientDependencyResolver = new TransientDependencyResolver<IPilkington>(() => new Karl(), "Karl");
-
-            transientDependencyResolver.Release(transientDependencyResolver.GetService<IPilkington>());
-        }
         
         /// <summary>
         ///     This test makes calls from multiple threads such that we have at least some chance of finding threading

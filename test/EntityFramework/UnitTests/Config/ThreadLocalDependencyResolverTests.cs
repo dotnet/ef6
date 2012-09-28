@@ -66,13 +66,6 @@ namespace System.Data.Entity.Config
             Assert.Null(new ThreadLocalDependencyResolver<IPilkington>(() => instance, "Karl").GetService<IGervais>("Ricky"));
         }
 
-        [Fact]
-        public void Release_does_not_throw()
-        {
-            var instance = new Mock<IPilkington>().Object;
-            new ThreadLocalDependencyResolver<IPilkington>(() => instance, "Karl").Release(instance);
-        }
-
         /// <summary>
         ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
         ///     issues. As with any test of this type just because the test passes does not mean that the code is

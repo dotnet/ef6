@@ -23,9 +23,5 @@ namespace System.Data.Entity.Config
 
             return null;
         }
-
-        public virtual void Release(object service)
-        {
-        }
     }
 }

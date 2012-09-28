@@ -39,11 +39,5 @@ namespace System.Data.Entity.Config
         {
             return _firstResolver.GetService(type, key) ?? _secondResolver.GetService(type, key);
         }
-
-        public virtual void Release(object service)
-        {
-            _firstResolver.Release(service);
-            _secondResolver.Release(service);
-        }
     }
 }

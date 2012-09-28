@@ -21,7 +21,7 @@ namespace System.Data.Entity.Config
         {
             Contract.Requires(resolver != null);
 
-            // The idea here is that Add, GetService, and Release must all be thread-safe, but
+            // The idea here is that Add and GetService must all be thread-safe, but
             // Add is only called infrequently. Therefore each time Add is called a snapshot is taken
             // of the stack that can then be enumerated without needing to make a snapshot
             // every time the enumeration is asked for, which is the normal behavior for the concurrent
@@ -40,11 +40,6 @@ namespace System.Data.Entity.Config
             return _resolversSnapshot
                 .Select(r => r.GetService(type, key))
                 .FirstOrDefault(s => s != null);
-        }
-
-        public virtual void Release(object service)
-        {
-            _resolversSnapshot.Each(r => r.Release(service));
         }
     }
 }

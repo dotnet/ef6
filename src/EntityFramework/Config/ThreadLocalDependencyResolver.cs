@@ -7,7 +7,7 @@ namespace System.Data.Entity.Config
 
     /// <summary>
     ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it returns
-    ///     a per-thread instance and does nothing on Release.
+    ///     a per-thread instance.
     /// </summary>
     /// <typeparam name="T"> The type that defines the contract for the dependency that will be resolved. </typeparam>
     /// <remarks>
@@ -51,11 +51,6 @@ namespace System.Data.Entity.Config
                     && (_key == null || Equals(key, _key)))
                        ? _threadLocal.Value
                        : null;
-        }
-
-        /// <inheritdoc />
-        public void Release(object service)
-        {
         }
 
         public void Dispose()

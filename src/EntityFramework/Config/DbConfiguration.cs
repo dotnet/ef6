@@ -2,8 +2,12 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
@@ -73,34 +77,6 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
-        ///     Registers a service instance using a <see cref="SingletonDependencyResolver{T}" />
-        /// </summary>
-        /// <typeparam name="TService"> The service contract type. </typeparam>
-        /// <param name="instance"> The instance of TService to be registered. </param>
-        protected internal void RegisterSingleton<TService>(TService instance)
-            where TService : class
-        {
-            Contract.Requires(instance != null);
-
-            RegisterSingleton(instance, null);
-        }
-
-        /// <summary>
-        ///     Registers a service instance with an optional key using a <see cref="SingletonDependencyResolver{T}" />
-        /// </summary>
-        /// <typeparam name="TService"> The service contract type. </typeparam>
-        /// <param name="instance"> The instance of TService to be registered. </param>
-        /// <param name="key"> The optional key used when resolving services of this type. </param>
-        protected internal void RegisterSingleton<TService>(TService instance, object key)
-            where TService : class
-        {
-            Contract.Requires(instance != null);
-
-            _internalConfiguration.CheckNotLocked("RegisterSingleton");
-            _internalConfiguration.RegisterSingleton(instance, key);
-        }
-
-        /// <summary>
         ///     Attempts to locate and return an instance of a given service.
         /// </summary>
         /// <typeparam name="TService"> The service contract type. </typeparam>
@@ -134,6 +110,12 @@ namespace System.Data.Entity.Config
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
         ///     an Entity Framework provider.
         /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
         [CLSCompliant(false)]
@@ -152,12 +134,152 @@ namespace System.Data.Entity.Config
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to change
         ///     the default connection factory being used.
         /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDbConnectionFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="connectionFactory"> The connection factory. </param>
         protected internal void SetDefaultConnectionFactory(IDbConnectionFactory connectionFactory)
         {
             Contract.Requires(connectionFactory != null);
 
             _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
             _internalConfiguration.RegisterSingleton(connectionFactory, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to 
+        ///     set the database initializer to use for the given context type.  The database initializer is called when a
+        ///     the given <see cref="DbContext" /> type is used to access a database for the first time.
+        ///     The default strategy for Code First contexts is an instance of <see cref="CreateDatabaseIfNotExists{TContext}" />.
+        /// </summary>
+        /// <remarks>
+        ///     Calling this method is equivalent to calling <see cref="Database.SetInitializer{TContext}" />.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDatabaseInitializer{TContext}" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <typeparam name="TContext"> The type of the context. </typeparam>
+        /// <param name="initializer"> The initializer to use, or null to disable initialization for the given context type. </param>
+        protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> initializer) where TContext : DbContext
+        {
+            _internalConfiguration.CheckNotLocked("SetDatabaseInitializer");
+            _internalConfiguration.RegisterSingleton(initializer ?? new NullDatabaseInitializer<TContext>(), null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add a
+        ///     <see cref="MigrationSqlGenerator" /> for use with the provider represented by the given invariant name.
+        /// </summary>
+        /// <remarks>
+        ///     This method is typically used by providers to register an associated SQL generator for Code First Migrations.
+        ///     It is different from setting the generator in the <see cref="DbMigrationsConfiguration" /> because it allows
+        ///     EF to use the Migrations pipeline to create a database even when there is no Migrations configuration in the project
+        ///     and/or Migrations are not being explicitly used.
+        /// 
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="MigrationSqlGenerator" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The invariant name of the ADO.NET provider for which this generator should be used. </param>
+        /// <param name="sqlGenerator"> A delegate that returns a new instance of the SQL generator each time it is called. </param>
+        protected internal void AddMigrationSqlGenerator(string providerInvariantName, Func<MigrationSqlGenerator> sqlGenerator)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+            Contract.Requires(sqlGenerator != null);
+
+            _internalConfiguration.CheckNotLocked("AddMigrationSqlGenerator");
+            _internalConfiguration.AddDependencyResolver(
+                new TransientDependencyResolver<MigrationSqlGenerator>(sqlGenerator, providerInvariantName));
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="IManifestTokenService" /> which allows provider manifest tokens to
+        ///     be obtained from connections without necessarily opening the connection.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IManifestTokenService" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="service"> The manifest token service. </param>
+        protected internal void SetManifestTokenService(IManifestTokenService service)
+        {
+            Contract.Requires(service != null);
+
+            _internalConfiguration.CheckNotLocked("SetManifestTokenService");
+            _internalConfiguration.RegisterSingleton(service, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="IDbProviderFactoryService" /> which allows a <see cref="DbProviderFactory" />
+        ///     to be obtained from a <see cref="DbConnection" /> in cases where the default implementation is not
+        ///     sufficient.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDbProviderFactoryService" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerFactoryService"> The provider factory service. </param>
+        protected internal void SetProviderFactoryService(IDbProviderFactoryService providerFactoryService)
+        {
+            Contract.Requires(providerFactoryService != null);
+
+            _internalConfiguration.CheckNotLocked("SetProviderFactoryService");
+            _internalConfiguration.RegisterSingleton(providerFactoryService, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="IDbModelCacheKeyFactory" /> which allows the key used to cache the
+        ///     model behind a <see cref="DbContext" /> to be changed.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="keyFactory"> The key factory. </param>
+        protected internal void SetModelCacheKeyFactory(IDbModelCacheKeyFactory keyFactory)
+        {
+            Contract.Requires(keyFactory != null);
+
+            _internalConfiguration.CheckNotLocked("SetModelCacheKeyFactory");
+            _internalConfiguration.RegisterSingleton(keyFactory, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="DbSpatialServices" /> which will be used whenever a spatial provider is
+        ///     required. Normally the spatial provider is obtained from the EF provider's <see cref="DbProviderServices" />
+        ///     implementation, but this can be overridden using this method. This also allows stand-alone instances of 
+        ///     <see cref="DbGeometry" /> and <see cref="DbGeography" /> to be created using the correct provider.
+        ///     Note that only one spatial provider can be set in this way; it is not possible to set different spatial providers
+        ///     for different EF/ADO.NET providers.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="keyFactory"> The key factory. </param>
+        protected internal void SetSpatialProvider(DbSpatialServices spatialProvider)
+        {
+            Contract.Requires(spatialProvider != null);
+
+            _internalConfiguration.CheckNotLocked("SetSpatialProvider");
+            _internalConfiguration.RegisterSingleton(spatialProvider, null);
         }
 
         internal virtual InternalConfiguration InternalConfiguration

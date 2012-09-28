@@ -58,22 +58,6 @@ namespace System.Data.Entity.Config
             mockFirstResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
             mockSecondResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
-
-        [Fact]
-        public void Release_calls_release_on_both_resolvers()
-        {
-            var mockFirstResolver = new Mock<IDbDependencyResolver>();
-            var mockSecondResolver = new Mock<IDbDependencyResolver>();
-
-            var karl = new object();
-
-            new CompositeResolver<IDbDependencyResolver, IDbDependencyResolver>(
-                mockFirstResolver.Object, mockSecondResolver.Object).Release(karl);
-
-            mockFirstResolver.Verify(m => m.Release(karl), Times.Once());
-            mockSecondResolver.Verify(m => m.Release(karl), Times.Once());
-        }
-
         public interface IPilkington
         {
         }

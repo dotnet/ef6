@@ -65,15 +65,12 @@ namespace System.Data.Entity
         #region Database creation strategy and seed data
 
         /// <summary>
-        ///     Gets or sets the database initialization strategy.  The database initialization strategy is called when <see
-        ///      cref="DbContext" /> instance
-        ///     is initialized from a <see cref="DbCompiledModel" />.  The strategy can optionally check for database existence, create a new database, and
-        ///     seed the database with data.
-        ///     The default strategy is an instance of <see cref="CreateDatabaseIfNotExists{TContext}" />.
+        ///     Sets the database initializer to use for the given context type.  The database initializer is called when a
+        ///     the given <see cref="DbContext" /> type is used to access a database for the first time.
+        ///     The default strategy for Code First contexts is an instance of <see cref="CreateDatabaseIfNotExists{TContext}" />.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context. </typeparam>
-        /// <param name="strategy"> The strategy. </param>
-        /// <value> The database creation strategy. </value>
+        /// <param name="strategy"> The initializer to use, or null to disable initialization for the given context type. </param>
         public static void SetInitializer<TContext>(IDatabaseInitializer<TContext> strategy) where TContext : DbContext
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(typeof(TContext));

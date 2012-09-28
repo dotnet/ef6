@@ -75,11 +75,5 @@ namespace System.Data.Entity.Config
                 Assert.True(bag.All(c => karl == c));
             }
         }
-
-        [Fact]
-        public void Release_does_not_throw()
-        {
-            new CachingDependencyResolver(new Mock<IDbDependencyResolver>().Object).Release(new object());
-        }
     }
 }

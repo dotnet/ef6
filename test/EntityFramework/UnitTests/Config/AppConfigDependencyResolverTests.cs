@@ -310,12 +310,6 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void Release_does_not_throw()
-        {
-            new AppConfigDependencyResolver(CreateAppConfig()).Release(new object());
-        }
-
-        [Fact]
         public void EF_provider_can_be_loaded_from_real_app_config()
         {
             Assert.Same(

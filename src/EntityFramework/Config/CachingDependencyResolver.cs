@@ -8,8 +8,6 @@ namespace System.Data.Entity.Config
     /// <summary>
     ///     This class wraps another <see cref="IDbDependencyResolver" /> such that the resolutions
     ///     made by that resolver are cached in a thread-safe manner.
-    ///     Note that Release is a no-op since this class does not handle releasing and re-caching
-    ///     new instances. It should not be used for anything that EF will call Release on.
     /// </summary>
     internal class CachingDependencyResolver : IDbDependencyResolver
     {
@@ -30,10 +28,6 @@ namespace System.Data.Entity.Config
             return _resolvedDependencies.GetOrAdd(
                 Tuple.Create(type, key),
                 k => _underlyingResolver.GetService(type, key));
-        }
-
-        public virtual void Release(object service)
-        {
         }
     }
 }

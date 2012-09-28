@@ -6,7 +6,7 @@ namespace System.Data.Entity.Config
 
     /// <summary>
     ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
-    ///     a new instance and does nothing on Release.
+    ///     a new instance.
     /// </summary>
     /// <typeparam name="T"> The type that defines the contract for the dependency that will be resolved. </typeparam>
     /// <remarks>
@@ -49,11 +49,6 @@ namespace System.Data.Entity.Config
                     && (_key == null || Equals(key, _key)))
                        ? _activator()
                        : null;
-        }
-
-        /// <inheritdoc />
-        public void Release(object service)
-        {
         }
     }
 }

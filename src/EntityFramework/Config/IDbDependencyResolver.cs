@@ -2,14 +2,61 @@
 
 namespace System.Data.Entity.Config
 {
-    /// <summary>
-    ///     This interface is implemented by any object that can resolve a dependency, either directly
-    ///     or through use of an external container.
-    /// </summary>
-    /// <remarks>
-    ///     Note that multiple threads may call into the same IDbDependencyResolver instance which means
-    ///     that implementations of this interface must be either immutable or thread-safe.
-    /// </remarks>
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Spatial;
+
+    ///<summary>
+    ///    This interface is implemented by any object that can resolve a dependency, either directly
+    ///    or through use of an external container.
+    ///</summary>
+    ///<remarks>
+    ///    Note that multiple threads may call into the same IDbDependencyResolver instance which means
+    ///    that implementations of this interface must be either immutable or thread-safe.
+    /// 
+    ///    The public services currently resolved using IDbDependencyResolver are:
+    /// 
+    ///    <see cref="IDatabaseInitializer{TContext}" />
+    ///    Object returned: A database initializer for the given context type
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    /// 
+    ///    <see cref="MigrationSqlGenerator" />
+    ///    Object returned: A SQL generator that can be used for Migrations and other actions that cause a database to be created
+    ///    Lifetime of returned service: Transient—a new object should be returned each time GetService is called
+    ///    Key is the ADO.NET provider invariant name string
+    /// 
+    ///    <see cref="DbProviderServices" />
+    ///    Object returned: An EF provider
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is the ADO.NET provider invariant name string
+    /// 
+    ///    <see cref="IDbConnectionFactory" />
+    ///    Object returned: The default connection factory that will be used when EF creates a database connection by convention
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    ///
+    ///    <see cref="IManifestTokenService" />
+    ///    Object returned: A service that can generated a provider manifest token from a connection
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    /// 
+    ///    <see cref="IDbProviderFactoryService" />
+    ///    Object returned: A service that can obtain a provider factory from a given connection
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    /// 
+    ///    <see cref="IDbModelCacheKeyFactory" />
+    ///    Object returned: A factory that will generate a model cache key for a given context
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    /// 
+    ///    <see cref="DbSpatialServices" />
+    ///    Object returned: an EF spatial provider
+    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///    Key is not used; will be null
+    ///</remarks>
     public interface IDbDependencyResolver
     {
         /// <summary>
@@ -22,16 +69,5 @@ namespace System.Data.Entity.Config
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         /// <returns> The resolved dependency, which must be an instance of the given contract type, or null if the dependency could not be resolved. </returns>
         object GetService(Type type, object key);
-
-        /// <summary>
-        ///     This method is called for transient services to give the resolver a chance to release the service
-        ///     after it has finished being used. This is roughly equivalent to the disposing the service except
-        ///     that the container is given the chance to control the process.
-        ///     This method must do nothing if the service was not one that it created or if the service does not
-        ///     need to be disposed. This method should not throw and should be resilient to cases where the
-        ///     service has already been released.
-        /// </summary>
-        /// <param name="service"> The service to release. </param>
-        void Release(object service);
     }
 }

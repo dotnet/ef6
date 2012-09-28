@@ -61,24 +61,6 @@ namespace System.Data.Entity.Config
             mockResolver3.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
 
-        [Fact]
-        public void Release_is_called_for_every_provider_in_the_chain()
-        {
-            var karl = new Mock<IPilkington>().Object;
-
-            var mockResolver1 = CreateMockResolver("Steve", new Mock<IPilkington>().Object);
-            var mockResolver2 = CreateMockResolver("Ricky", new Mock<IPilkington>().Object);
-
-            var chain = new ResolverChain();
-            chain.Add(mockResolver1.Object);
-            chain.Add(mockResolver2.Object);
-
-            chain.Release(karl);
-
-            mockResolver1.Verify(m => m.Release(karl), Times.Once());
-            mockResolver2.Verify(m => m.Release(karl), Times.Once());
-        }
-
         private static Mock<IDbDependencyResolver> CreateMockResolver<T>(string name, T service)
         {
             var mockResolver = new Mock<IDbDependencyResolver>();

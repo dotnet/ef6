@@ -61,11 +61,5 @@ namespace System.Data.Entity.Config
         {
             return _resolvers.GetService(type, key);
         }
-
-        /// <inheritdoc />
-        public virtual void Release(object service)
-        {
-            _resolvers.Release(service);
-        }
     }
 }
