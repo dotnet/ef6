@@ -700,12 +700,16 @@ namespace ProductivityApiTests
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommand(q));
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SQL_commands_can_be_executed_against_the_database_async()
         {
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommandAsync(q).Result);
         }
+
+#endif
 
         private void SQL_commands_can_be_executed_against_the_database_implementation(Func<Database, string, int> execute)
         {
@@ -727,12 +731,16 @@ namespace ProductivityApiTests
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommand(q, p));
         }
 
+#if !NET40
+
         [Fact]
         [AutoRollback]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
         {
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommandAsync(q, p).Result);
         }
+
+#endif
 
         private void SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(Func<Database, string, object[], int> execute)
         {
