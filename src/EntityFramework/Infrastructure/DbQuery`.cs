@@ -136,7 +136,7 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TElement}" /> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
+        ///     Returns an <see cref="IDbAsyncEnumerator{TResult}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]

@@ -146,6 +146,7 @@
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Objects\DataClasses\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactoryTests.cs" />
+    <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanTests.cs" />
     <Compile Include="Core\Objects\Internal\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionStringBuilderTests.cs" />
     <Compile Include="Core\Objects\ELinq\ObjectQueryProviderTests.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
+    <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Internal\InternalReferenceEntryTests.cs" />
     <Compile Include="Internal\InternalSqlSetQueryTests.cs" />
     <Compile Include="Internal\LazyAsyncEnumeratorTests.cs" />
+    <Compile Include="Internal\Linq\InternalDbQueryTests.cs" />
     <Compile Include="Internal\Linq\InternalDbSetTests.cs" />
     <Compile Include="Internal\Linq\InternalSetTests.cs" />
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />

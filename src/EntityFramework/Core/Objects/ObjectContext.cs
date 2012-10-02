@@ -84,6 +84,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly EntityWrapperFactory _entityWrapperFactory;
         private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
         private readonly Translator _translator;
+        private readonly ColumnMapFactory _columnMapFactory;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
 
@@ -174,6 +175,7 @@ namespace System.Data.Entity.Core.Objects
             bool isConnectionConstructor,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
             Translator translator = null,
+            ColumnMapFactory columnMapFactory = null,
             IDbCommandInterceptor commandInterceptor = null)
         {
             if (connection == null)
@@ -183,6 +185,7 @@ namespace System.Data.Entity.Core.Objects
 
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
+            _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
 
             _connection = connection;
             _connection.StateChange += ConnectionStateChange;
@@ -242,22 +245,18 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal ObjectContext(
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
-            Translator translator = null)
+            Translator translator = null,
+            ColumnMapFactory columnMapFactory = null,
+            IDbCommandInterceptor commandInterceptor = null,
+            IEntityAdapter adapter = null)
         {
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
-        }
-
-        internal ObjectContext(
-            ObjectStateManager objectStateManager,
-            IDbCommandInterceptor commandInterceptor,
-            IEntityAdapter adapter)
-        {
-            _objectStateManager = objectStateManager ?? new ObjectStateManager();
+            _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
             _commandInterceptor = commandInterceptor;
             _adapter = adapter;
         }
-
+        
         #endregion //Constructors
 
         #region Properties
@@ -3755,11 +3754,11 @@ namespace System.Data.Entity.Core.Objects
                             entitySet.Name, typeof(TElement)));
                 }
 
-                columnMap = ColumnMapFactory.CreateColumnMapFromReaderAndType(reader, modelEdmType, entitySet, null);
+                columnMap = _columnMapFactory.CreateColumnMapFromReaderAndType(reader, modelEdmType, entitySet, null);
             }
             else
             {
-                columnMap = ColumnMapFactory.CreateColumnMapFromReaderAndClrType(reader, typeof(TElement), MetadataWorkspace);
+                columnMap = _columnMapFactory.CreateColumnMapFromReaderAndClrType(reader, typeof(TElement), MetadataWorkspace);
             }
 
             // build a shaper for the column map to produce typed results

@@ -6,11 +6,15 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
+#if !NET40
+    using System.Threading;
+    using System.Threading.Tasks;
+#endif
     using Moq;
 
     internal class MockHelper
     {
-        public static EntityConnection InitializeEntityConnection(MetadataWorkspace metadataWorkspace = null)
+        public static EntityConnection CreateEntityConnection(MetadataWorkspace metadataWorkspace = null)
         {
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
             var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
@@ -27,14 +31,21 @@ namespace System.Data.Entity.Core.EntityClient
             return entityConnection;
         }
 
-        public static EntityCommandDefinition InitializeEntityCommandDefinition()
+        public static EntityCommandDefinition CreateEntityCommandDefinition()
         {
-            var storeDataReader = new Mock<DbDataReader>().Object;
-            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
+            var storeDataReaderMock = new Mock<DbDataReader>();
+#if !NET40
+            storeDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
+#endif
+            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
             entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
             entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                Returns(storeDataReader);
-
+                Returns(storeDataReaderMock.Object);
+#if !NET40
+            entityCommandDefinitionMock.Setup(
+                m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
+                Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(storeDataReaderMock.Object));
+#endif
             return entityCommandDefinitionMock.Object;
         }
     }

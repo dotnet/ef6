@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 producedValues: null);
 
             var shaperMock = new Mock<Shaper<RecordState>>(
-                Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                Common.Internal.Materialization.MockHelper.CreateDbDataReader(sourceEnumerable),
                 /*context*/ null,
                 /*workspace*/ null,
                 MergeOption.AppendOnly,
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 producedValues: null);
 
             var shaperMock = new Mock<Shaper<RecordState>>(
-                Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                Common.Internal.Materialization.MockHelper.CreateDbDataReader(sourceEnumerable),
                 /*context*/ null,
                 /*workspace*/ null,
                 MergeOption.AppendOnly,
@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                                         };
 
             dataReader = dataReader
-                         ?? Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable1, sourceEnumerable2);
+                         ?? Common.Internal.Materialization.MockHelper.CreateDbDataReader(sourceEnumerable1, sourceEnumerable2);
 
             var rootCoordinatorFactory = MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,

@@ -6,8 +6,10 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using Moq;
     using Xunit;
 
@@ -108,12 +110,12 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityCommandDefinition_is_executed_with_correct_EntityCommand_and_CommandBehavior()
             {
-                var entityConnection = MockHelper.InitializeEntityConnection();
+                var entityConnection = MockHelper.CreateEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
                 entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
                 entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                     Returns(storeDataReader).
@@ -137,12 +139,12 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityDataReader_is_created_with_correct_EntityCommand_DbDataReader_and_CommandBehavior()
             {
-                var entityConnection = MockHelper.InitializeEntityConnection();
+                var entityConnection = MockHelper.CreateEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
                 entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
                 entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
                     Returns(storeDataReader).
@@ -262,12 +264,12 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityCommandDefinition_is_executed_with_correct_EntityCommand_and_CommandBehavior()
             {
-                var entityConnection = InitializeEntityConnection();
+                var entityConnection = MockHelper.CreateEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
                 entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
@@ -293,12 +295,12 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityDataReader_is_created_with_correct_EntityCommand_DbDataReader_and_CommandBehavior()
             {
-                var entityConnection = InitializeEntityConnection();
+                var entityConnection = MockHelper.CreateEntityConnection();
                 var passedEntityCommand = default(EntityCommand);
                 var passedCommandbehavior = default(CommandBehavior);
                 var storeDataReader = new Mock<DbDataReader>().Object;
 
-                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
+                var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
                 entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
@@ -336,8 +338,8 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void Calls_ExecuteReader_with_CommandBehavior_set_to_SequentialAccess()
             {
-                var entityConnection = MockHelper.InitializeEntityConnection();
-                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var entityDataReaderMock = new Mock<EntityDataReader>();
                 var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
@@ -352,8 +354,8 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void Iterates_over_all_results_of_EntityDataReader_without_touching_individual_rows()
             {
-                var entityConnection = MockHelper.InitializeEntityConnection();
-                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var readNextCount = 0;
 
@@ -374,8 +376,8 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void Returns_EntityDataReader_RecordsAffected_as_a_result()
             {
-                var entityConnection = MockHelper.InitializeEntityConnection();
-                var entityCommandDefinition = MockHelper.InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var readNextCount = 0;
 
@@ -400,10 +402,10 @@ namespace System.Data.Entity.Core.EntityClient
         public class ExecuteNonQueryAsync
         {
             [Fact]
-            public async void Calls_ExecuteReaderAsync_with_CommandBehavior_set_to_SequentialAccess()
+            public void Calls_ExecuteReaderAsync_with_CommandBehavior_set_to_SequentialAccess()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var expectedRecordsAffected = 1;
                 var entityDataReaderMock = new Mock<EntityDataReader>();
@@ -420,16 +422,16 @@ namespace System.Data.Entity.Core.EntityClient
                                                 CallBase = true
                                             };
 
-                var actualRecordsAffected = await entityCommandMock.Object.ExecuteNonQueryAsync();
+                var actualRecordsAffected = entityCommandMock.Object.ExecuteNonQueryAsync().Result;
 
                 Assert.Equal(expectedRecordsAffected, actualRecordsAffected);
             }
 
             [Fact]
-            public async void Iterates_over_all_results_of_EntityDataReader_without_touching_individual_rows()
+            public void Iterates_over_all_results_of_EntityDataReader_without_touching_individual_rows()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var readNextCount = 0;
 
@@ -443,22 +445,23 @@ namespace System.Data.Entity.Core.EntityClient
                     Returns(entityDataReaderMock.Object);
 
                 var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
-                await entityCommand.ExecuteNonQueryAsync();
+
+                entityCommand.ExecuteNonQueryAsync().Wait();
 
                 entityDataReaderMock.Verify(m => m.NextResultAsync(It.IsAny<CancellationToken>()), Times.Exactly(5));
             }
 
             [Fact]
-            public async void Returns_EntityDataReader_RecordsAffected_as_a_result()
+            public void Returns_EntityDataReader_RecordsAffected_as_a_result()
             {
-                var entityConnection = InitializeEntityConnection();
-                var entityCommandDefinition = InitializeEntityCommandDefinition();
+                var entityConnection = MockHelper.CreateEntityConnection();
+                var entityCommandDefinition = MockHelper.CreateEntityCommandDefinition();
 
                 var readNextCount = 0;
 
                 var entityDataReaderMock = new Mock<EntityDataReader>();
-                entityDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Callback(() => readNextCount++).Returns(
-                    () => Task.FromResult(readNextCount < 5));
+                entityDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Callback(() => readNextCount++)
+                    .Returns(() => Task.FromResult(readNextCount < 5));
                 entityDataReaderMock.SetupGet(m => m.RecordsAffected).Returns(10);
 
                 var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
@@ -467,47 +470,11 @@ namespace System.Data.Entity.Core.EntityClient
                     Returns(entityDataReaderMock.Object);
 
                 var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
-                var result = await entityCommand.ExecuteNonQueryAsync();
+                var result = entityCommand.ExecuteNonQueryAsync().Result;
 
                 Assert.Equal(10, result);
             }
         }
-
-#endif
-
-        private static EntityConnection InitializeEntityConnection()
-        {
-            var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-            var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
-
-            var entityConnectionMock = new Mock<EntityConnection>();
-            entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
-            entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
-            entityConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
-            var entityConnection = entityConnectionMock.Object;
-
-            return entityConnection;
-        }
-
-        private static EntityCommandDefinition InitializeEntityCommandDefinition()
-        {
-            var storeDataReaderMock = new Mock<DbDataReader>();
-#if !NET40
-            storeDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
-#endif
-            var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null);
-            entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
-            entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                Returns(storeDataReaderMock.Object);
-#if !NET40
-            entityCommandDefinitionMock.Setup(
-                m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
-                Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(storeDataReaderMock.Object));
-#endif
-            return entityCommandDefinitionMock.Object;
-        }
-
-#if !NET40
 
         private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
             where TException : Exception

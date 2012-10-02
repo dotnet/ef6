@@ -13,19 +13,13 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     ///     This class represents a collection of query parameters at the object layer.
     /// </summary>
-    public sealed class ObjectParameterCollection : ICollection<ObjectParameter>
+    public class ObjectParameterCollection : ICollection<ObjectParameter>
     {
         // Note: There are NO public constructors for this class - it is for internal
         // ObjectQuery<T> use only, but must be public so that an instance thereof can be
         // a public property on ObjectQuery<T>.
 
         #region Internal Constructors
-
-        // ---------------------
-        // Internal Constructors
-        // ---------------------
-
-        #region ObjectParameterCollection (ClrPerspective)
 
         /// <summary>
         ///     This internal constructor creates a new query parameter collection and
@@ -45,13 +39,7 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
-        #endregion
-
         #region Private Fields
-
-        // --------------
-        // Private Fields
-        // --------------
 
         /// <summary>
         ///     Can parameters be added or removed from this collection?
@@ -78,10 +66,6 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Properties
 
-        // -----------------
-        // Public Properties
-        // -----------------
-
         /// <summary>
         ///     The number of parameters currently in the collection.
         /// </summary>
@@ -104,10 +88,6 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Public Indexers
-
-        // ---------------
-        // Public Indexers
-        // ---------------
 
         /// <summary>
         ///     This indexer allows callers to retrieve parameters by name. If no
@@ -135,10 +115,6 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Public Methods
-
-        // --------------
-        // Public Methods
-        // --------------
 
         #region Add
 
@@ -297,7 +273,7 @@ namespace System.Data.Entity.Core.Objects
         ///     These methods return enumerator instances, which allow the collection to
         ///     be iterated through and traversed.
         /// </summary>
-        IEnumerator<ObjectParameter> IEnumerable<ObjectParameter>.GetEnumerator()
+        public virtual IEnumerator<ObjectParameter> GetEnumerator()
         {
             return ((ICollection<ObjectParameter>)_parameters).GetEnumerator();
         }
@@ -312,10 +288,6 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Internal Methods
-
-        // ---------------
-        // Internal Methods
-        // ---------------
 
         /// <summary>
         ///     Retrieves a string that may be used to represent this parameter collection in an ObjectQuery cache key.
@@ -402,10 +374,6 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         #region Private Methods
-
-        // ---------------
-        // Private Methods
-        // ---------------
 
         /// <summary>
         ///     This private method checks for the existence of a given parameter object

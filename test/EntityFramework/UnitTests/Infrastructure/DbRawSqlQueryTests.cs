@@ -9,6 +9,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
+    using Moq;
     using Xunit;
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Non_generic_DbSqlQuery_ToString_returns_the_query()
+        public void Non_generic_DbRawSqlQuery_ToString_returns_the_query()
         {
             var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("select * from products"));
 
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Non_generic_DbSqlQuery_ToString_returns_the_query_but_not_the_parameters()
+        public void Non_generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
         {
             var query =
                 new DbRawSqlQuery(
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Generic_DbSqlQuery_ToString_returns_the_query()
+        public void Generic_DbRawSqlQuery_ToString_returns_the_query()
         {
             var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("select * from products"));
 
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Generic_DbSqlQuery_ToString_returns_the_query_but_not_the_parameters()
+        public void Generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
         {
             var query =
                 new DbRawSqlQuery<FakeEntity>(
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void DbSqlQuery_ContainsListCollection_returns_false()
+        public void DbRawSqlQuery_ContainsListCollection_returns_false()
         {
             var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
 
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Non_generic_DbSqlQuery_ContainsListCollection_returns_false()
+        public void Non_generic_DbRawSqlQuery_ContainsListCollection_returns_false()
         {
             var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
 
@@ -111,7 +112,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void DbSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
+        public void DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
         {
             var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
 
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Non_generic_DbSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
+        public void Non_generic_DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
         {
             var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
 
@@ -614,22 +615,6 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
         }
 
-        private static DbRawSqlQuery<TElement> CreateDbRawSqlQuery<TElement>(IEnumerable<TElement> sourceEnumerable)
-        {
-            var internalSqlNonSetQueryMock = MockHelper.CreateMockInternalSqlNonSetQuery("");
-            var shimEnumerator = new DbEnumeratorShim<TElement>(sourceEnumerable.GetEnumerator());
-            internalSqlNonSetQueryMock.Setup(m => m.GetAsyncEnumerator()).Returns(shimEnumerator);
-            return new DbRawSqlQuery<TElement>(internalSqlNonSetQueryMock.Object);
-        }
-
-        private static DbRawSqlQuery CreateDbRawSqlQuery(IEnumerable<object> sourceEnumerable)
-        {
-            var internalSqlNonSetQueryMock = MockHelper.CreateMockInternalSqlNonSetQuery("");
-            var shimEnumerator = new DbEnumeratorShim<object>(sourceEnumerable.GetEnumerator());
-            internalSqlNonSetQueryMock.Setup(m => m.GetAsyncEnumerator()).Returns(shimEnumerator);
-            return new DbRawSqlQuery(internalSqlNonSetQueryMock.Object);
-        }
-
         private class ModuloEqualityComparer : IEqualityComparer<int>
         {
             private readonly int _modulo;
@@ -653,5 +638,63 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
         #endregion
+
+        #region GetEnumerator tests
+
+        [Fact]
+        public void NonGeneric_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
+        {
+            var dbRawQuery = CreateDbRawSqlQuery(new object[0]);
+            var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
+#if !NET40
+            ((IDbAsyncEnumerable)dbRawQuery).GetAsyncEnumerator();
+
+            internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
+#endif
+
+            ((IEnumerable)dbRawQuery).GetEnumerator();
+
+            internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
+        }
+
+        [Fact]
+        public void Generic_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
+        {
+            var dbRawQuery = CreateDbRawSqlQuery(new string[0]);
+            var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
+#if !NET40
+            ((IDbAsyncEnumerable<string>)dbRawQuery).GetAsyncEnumerator();
+
+            internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
+#endif
+
+            ((IEnumerable<string>)dbRawQuery).GetEnumerator();
+
+            internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
+        }
+
+        #endregion
+
+        private static DbRawSqlQuery<TElement> CreateDbRawSqlQuery<TElement>(IEnumerable<TElement> sourceEnumerable)
+        {
+            var internalSqlNonSetQueryMock = MockHelper.CreateMockInternalSqlNonSetQuery("");
+            var shimEnumerator = new DbEnumeratorShim<TElement>(sourceEnumerable.GetEnumerator());
+#if !NET40
+            internalSqlNonSetQueryMock.Setup(m => m.GetAsyncEnumerator()).Returns(shimEnumerator);
+#endif
+            internalSqlNonSetQueryMock.Setup(m => m.GetEnumerator()).Returns(shimEnumerator);
+            return new DbRawSqlQuery<TElement>(internalSqlNonSetQueryMock.Object);
+        }
+
+        private static DbRawSqlQuery CreateDbRawSqlQuery(IEnumerable<object> sourceEnumerable)
+        {
+            var internalSqlNonSetQueryMock = MockHelper.CreateMockInternalSqlNonSetQuery("");
+            var shimEnumerator = new DbEnumeratorShim<object>(sourceEnumerable.GetEnumerator());
+#if !NET40
+            internalSqlNonSetQueryMock.Setup(m => m.GetAsyncEnumerator()).Returns(shimEnumerator);
+#endif
+            internalSqlNonSetQueryMock.Setup(m => m.GetEnumerator()).Returns(shimEnumerator);
+            return new DbRawSqlQuery(internalSqlNonSetQueryMock.Object);
+        }
     }
 }

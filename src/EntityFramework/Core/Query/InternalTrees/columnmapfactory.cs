@@ -17,15 +17,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
     /// <summary>
     ///     Factory methods for prescriptive column map patterns (includes default
-    ///     column maps for -- soon to be -- public materializer services and function
-    ///     mappings).
+    ///     column maps for materializer services and function mappings).
     /// </summary>
-    internal static class ColumnMapFactory
+    internal class ColumnMapFactory
     {
         /// <summary>
         ///     Creates a column map for the given reader and function mapping.
         /// </summary>
-        internal static CollectionColumnMap CreateFunctionImportStructuralTypeColumnMap(
+        internal virtual CollectionColumnMap CreateFunctionImportStructuralTypeColumnMap(
             DbDataReader storeDataReader, FunctionImportMappingNonComposable mapping, int resultSetIndex, EntitySet entitySet,
             StructuralType baseStructuralType)
         {
@@ -84,7 +83,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="edmType"> </param>
         /// <param name="entitySet"> </param>
         /// <returns> </returns>
-        internal static CollectionColumnMap CreateColumnMapFromReaderAndType(
+        internal virtual CollectionColumnMap CreateColumnMapFromReaderAndType(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,
             Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> renameList)
         {
@@ -136,7 +135,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal static CollectionColumnMap CreateColumnMapFromReaderAndClrType(DbDataReader reader, Type type, MetadataWorkspace workspace)
+        internal virtual CollectionColumnMap CreateColumnMapFromReaderAndClrType(DbDataReader reader, Type type, MetadataWorkspace workspace)
         {
             Debug.Assert(null != reader);
             Debug.Assert(null != type);

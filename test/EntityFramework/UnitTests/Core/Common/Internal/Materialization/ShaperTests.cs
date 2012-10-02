@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory(shaper => shaper.Reader.GetValue(0));
 
             var shaperMock = new Mock<Shaper<object>>(
-                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                MockHelper.CreateDbDataReader(sourceEnumerable),
                 /*context*/ null,
                 /*workspace*/ null,
                 MergeOption.AppendOnly,
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 producedValues: actualValuesFromRootCoordinator);
 
             var shaperMock = new Mock<Shaper<object>>(
-                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                MockHelper.CreateDbDataReader(sourceEnumerable),
                 /*context*/ null,
                 /*workspace*/ null,
                 MergeOption.AppendOnly,
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 producedValues: null);
 
             var shaperMock = new Mock<Shaper<RecordState>>(
-                MockHelper.CreateMockDbDataReader(sourceEnumerable),
+                MockHelper.CreateDbDataReader(sourceEnumerable),
                 /*context*/ null,
                 /*workspace*/ null,
                 MergeOption.AppendOnly,

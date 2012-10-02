@@ -221,3 +221,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.Edm.Serialization")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "System.Data.Entity.Core.Objects.ObjectParameterCollection.#System.Collections.Generic.ICollection`1<System.Data.Entity.Core.Objects.ObjectParameter>.IsReadOnly")]

@@ -20,8 +20,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
 
     internal class EntityCommandDefinition : DbCommandDefinition
     {
@@ -49,6 +51,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         private readonly BridgeDataReaderFactory _bridgeDataReaderFactory;
 
+        private readonly ColumnMapFactory _columnMapFactory;
+
         #endregion
 
         #region constructors
@@ -61,12 +65,13 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityCommandDefinition(
             DbProviderFactory storeProviderFactory, DbCommandTree commandTree,
-            BridgeDataReaderFactory bridgeDataReaderFactory = null)
+            BridgeDataReaderFactory bridgeDataReaderFactory = null, ColumnMapFactory columnMapFactory = null)
         {
             Contract.Requires(storeProviderFactory != null);
             Contract.Requires(commandTree != null);
 
             _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
+            _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
 
             var storeProviderServices = storeProviderFactory.GetProviderServices();
 
@@ -179,16 +184,19 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Constructor for testing/mocking purposes.
         /// </summary>
-        protected EntityCommandDefinition(BridgeDataReaderFactory factory = null, List<DbCommandDefinition> mappedCommandDefinitions = null)
+        protected EntityCommandDefinition(BridgeDataReaderFactory factory = null,
+            ColumnMapFactory columnMapFactory = null,
+            List<DbCommandDefinition> mappedCommandDefinitions = null)
         {
             _bridgeDataReaderFactory = factory ?? new BridgeDataReaderFactory();
+            _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
             _mappedCommandDefinitions = mappedCommandDefinitions;
         }
 
         /// <summary>
         ///     Determines the store type for a function import.
         /// </summary>
-        private static TypeUsage DetermineStoreResultType(
+        private TypeUsage DetermineStoreResultType(
             FunctionImportMappingNonComposable mapping, int resultSetIndex, out IColumnMapGenerator columnMapGenerator)
         {
             // Determine column maps and infer result types for the mapped function. There are four varieties:
@@ -209,7 +217,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     //Note: Defensive check for historic reasons, we expect functionImport.EntitySets.Count > resultSetIndex 
                     var entitySet = functionImport.EntitySets.Count > resultSetIndex ? functionImport.EntitySets[resultSetIndex] : null;
 
-                    columnMapGenerator = new FunctionColumnMapGenerator(mapping, resultSetIndex, entitySet, baseStructuralType);
+                    columnMapGenerator = new FunctionColumnMapGenerator(mapping, resultSetIndex, entitySet, baseStructuralType, _columnMapFactory);
 
                     // We don't actually know the return type for the stored procedure, but we can infer
                     // one based on the mapping (i.e.: a column for every property of the mapped types
@@ -547,10 +555,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DbDataReader reader = null;
             try
             {
-                reader =
-                    await
-                    storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
-                        continueOnCapturedContext: false);
+                reader = await
+                    storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception e)
             {
@@ -598,7 +605,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             // we won't damage anything the store provider did.
 
             var hasOutputParameters = false;
-            if (storeProviderCommand.Parameters != null) // SQLBUDT 519066
+            // Could be null for some providers, don't remove this check
+            if (storeProviderCommand.Parameters != null)
             {
                 var storeProviderServices = entityCommand.Connection.StoreProviderFactory.GetProviderServices();
 
@@ -769,19 +777,25 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             private readonly EntitySet _entitySet;
             private readonly StructuralType _baseStructuralType;
             private readonly int _resultSetIndex;
+            private readonly ColumnMapFactory _columnMapFactory;
 
             internal FunctionColumnMapGenerator(
-                FunctionImportMappingNonComposable mapping, int resultSetIndex, EntitySet entitySet, StructuralType baseStructuralType)
+                FunctionImportMappingNonComposable mapping,
+                int resultSetIndex,
+                EntitySet entitySet,
+                StructuralType baseStructuralType,
+                ColumnMapFactory columnMapFactory)
             {
                 _mapping = mapping;
                 _entitySet = entitySet;
                 _baseStructuralType = baseStructuralType;
                 _resultSetIndex = resultSetIndex;
+                _columnMapFactory = columnMapFactory;
             }
 
             ColumnMap IColumnMapGenerator.CreateColumnMap(DbDataReader reader)
             {
-                return ColumnMapFactory.CreateFunctionImportStructuralTypeColumnMap(
+                return _columnMapFactory.CreateFunctionImportStructuralTypeColumnMap(
                     reader, _mapping, _resultSetIndex, _entitySet, _baseStructuralType);
             }
         }

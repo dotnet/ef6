@@ -689,8 +689,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // synthesize a RowType for this mapping
                 TypeUsage resultType = null;
-                if (null != functionMapping.ResultBindings
-                    && 0 < functionMapping.ResultBindings.Count)
+                if (functionMapping.ResultBindings != null
+                    && functionMapping.ResultBindings.Count > 0)
                 {
                     var properties = new List<EdmProperty>(functionMapping.ResultBindings.Count);
                     foreach (var resultBinding in functionMapping.ResultBindings)
@@ -703,8 +703,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // add function parameters
-                var functionParams =
-                    functionMapping.Function.Parameters.Select(
+                var functionParams = functionMapping.Function.Parameters.Select(
                         paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
 
                 // construct DbFunctionCommandTree including implict return type

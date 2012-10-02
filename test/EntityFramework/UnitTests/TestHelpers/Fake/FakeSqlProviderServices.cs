@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            return new Mock<EntityCommandDefinition>(MockBehavior.Loose, null, null).Object;
+            return new Mock<EntityCommandDefinition>(MockBehavior.Loose, null, null, null).Object;
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)

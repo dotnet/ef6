@@ -11,8 +11,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Diagnostics.CodeAnalysis;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
 
     /// <summary>
     ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see
@@ -152,10 +154,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
 
                 // acquire store reader
-                storeReader =
-                    await
-                    commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).ConfigureAwait(
-                        continueOnCapturedContext: false);
+                storeReader = await
+                              commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).
+                                  ConfigureAwait(continueOnCapturedContext: false);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
@@ -188,5 +189,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
+
     }
 }

@@ -3016,10 +3016,19 @@ namespace ProductivityApiTests
 
                 DbQuery nonGenericQuery = query;
 
-                var enumerator = ((IEnumerable)query).GetEnumerator();
-                enumerator.MoveNext();
+                var enumerator = ((IEnumerable)nonGenericQuery).GetEnumerator();
+
+                Assert.True(enumerator.MoveNext());
 
                 Assert.Same(query.First(), enumerator.Current);
+
+#if !NET40
+                var asyncEnumerator = ((IDbAsyncEnumerable)nonGenericQuery).GetAsyncEnumerator();
+                
+                Assert.True(asyncEnumerator.MoveNextAsync().Result);
+
+                Assert.Same(query.First(), asyncEnumerator.Current);
+#endif
             }
         }
 

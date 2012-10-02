@@ -28,6 +28,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// </summary>
     internal class Translator
     {
+        private static readonly MethodInfo GenericTranslateColumnMap = typeof(Translator).GetMethod(
+            "TranslateColumnMap", BindingFlags.Instance | BindingFlags.NonPublic);
+
         /// <summary>
         ///     The main entry point for the translation process. Given a ColumnMap, returns 
         ///     a ShaperFactory which can be used to materialize results for a query.
@@ -90,9 +93,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static ShaperFactory TranslateColumnMap(
-            Translator translator, Type elementType,
-            QueryCacheManager queryCacheManager, ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex,
-            MergeOption mergeOption, bool valueLayer)
+            Translator translator,
+            Type elementType,
+            QueryCacheManager queryCacheManager,
+            ColumnMap columnMap,
+            MetadataWorkspace workspace,
+            SpanIndex spanIndex,
+            MergeOption mergeOption,
+            bool valueLayer)
         {
             Contract.Requires(elementType != null);
             Contract.Requires(queryCacheManager != null);
@@ -101,8 +109,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             Contract.Ensures(Contract.Result<ShaperFactory>() != null);
 
-            var typedCreateMethod = typeof(Translator).GetMethod("TranslateColumnMap", BindingFlags.Instance | BindingFlags.NonPublic)
-                .MakeGenericMethod(elementType);
+            var typedCreateMethod = GenericTranslateColumnMap.MakeGenericMethod(elementType);
 
             return (ShaperFactory)typedCreateMethod.Invoke(
                 translator, new object[] { queryCacheManager, columnMap, workspace, spanIndex, mergeOption, valueLayer });

@@ -272,12 +272,11 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal bool ValidateParameterType(ClrPerspective perspective)
         {
-            TypeUsage type = null;
+            TypeUsage type;
 
             // The parameter type metadata is only valid if it's scalar or enumeration type metadata.
             if ((perspective.TryGetType(_mappableType, out type))
-                &&
-                (TypeSemantics.IsScalarType(type)))
+                && (TypeSemantics.IsScalarType(type)))
             {
                 return true;
             }

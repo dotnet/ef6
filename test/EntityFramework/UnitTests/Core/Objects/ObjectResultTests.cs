@@ -2,46 +2,65 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections;
+    using System.Data.Entity.Core.Common.Internal.Materialization;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Linq.Expressions;
     using Moq;
     using Xunit;
 
     public class ObjectResultTests
     {
         [Fact]
-        public void GetEnumerator_calls_Shaper_GetEnumerator()
+        public void GetEnumerator_methods_call_Shaper_GetEnumerator()
         {
-            var shaperMock = MockHelper.CreateShaperMock<object>();
-            var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
-            shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
-            var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-                                       {
-                                           CallBase = true
-                                       };
-
-            var actualEnumerator = objectResultMock.Object.GetEnumerator();
-
-            Assert.Same(expectedEnumerator, actualEnumerator);
-            shaperMock.Verify(m => m.GetEnumerator(), Times.Once());
+            VerifyMethod(
+                r => r.GetEnumerator(),
+                m => m.GetEnumerator());
+            VerifyMethod(
+                r => ((IEnumerable)r).GetEnumerator(),
+                m => m.GetEnumerator());
+#if !NET40
+            VerifyMethod(
+                r => ((IDbAsyncEnumerable<object>)r).GetAsyncEnumerator(),
+                m => m.GetEnumerator());
+            VerifyMethod(
+                r => ((IDbAsyncEnumerable)r).GetAsyncEnumerator(),
+                m => m.GetEnumerator());
+#endif
         }
 
         [Fact]
         public void GetEnumerator_throws_when_called_twice()
         {
-            var shaperMock = MockHelper.CreateShaperMock<object>();
-            var expectedEnumerator = new Mock<IDbEnumerator<object>>().Object;
-            shaperMock.Setup(m => m.GetEnumerator()).Returns(() => expectedEnumerator);
-            var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-                                       {
-                                           CallBase = true
-                                       };
-
-            objectResultMock.Object.GetEnumerator();
+            var objectResult = VerifyMethod(
+                r => r.GetEnumerator(),
+                m => m.GetEnumerator());
 
             Assert.Equal(
                 Strings.Materializer_CannotReEnumerateQueryResults,
-                Assert.Throws<InvalidOperationException>(() => objectResultMock.Object.GetEnumerator()).Message);
+                Assert.Throws<InvalidOperationException>(() => ((IEnumerable)objectResult).GetEnumerator()).Message);
+        }
+
+        private ObjectResult VerifyMethod(Action<ObjectResult<object>> methodInvoke, Expression<Action<Shaper<object>>> mockMethodInvoke)
+        {
+            Assert.NotNull(methodInvoke);
+            Assert.NotNull(mockMethodInvoke);
+
+            var shaperMock = MockHelper.CreateShaperMock<object>();
+            shaperMock.Setup(m => m.GetEnumerator()).Returns(new Mock<IDbEnumerator<object>>().Object);
+            var objectResult = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
+            {
+                CallBase = true
+            }.Object;
+
+            methodInvoke(objectResult);
+
+            shaperMock.Verify(mockMethodInvoke, Times.Once());
+
+            return objectResult;
         }
     }
 }

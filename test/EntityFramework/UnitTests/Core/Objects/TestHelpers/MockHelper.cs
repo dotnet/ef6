@@ -159,8 +159,8 @@ namespace System.Data.Entity.Core.Objects
                                            CallBase = true
                                        };
 
-            var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), new Translator());
-
+            var objectContextMock = new Mock<ObjectContext>((ObjectQueryExecutionPlanFactory)null, null, null, null, null);
+            
 #if !NET40
             objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
 #endif

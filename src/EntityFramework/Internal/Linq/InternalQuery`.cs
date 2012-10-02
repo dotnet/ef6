@@ -29,11 +29,11 @@ namespace System.Data.Entity.Internal.Linq
         ///     Creates a new query that will be backed by the given InternalContext.
         /// </summary>
         /// <param name="internalContext"> The backing context. </param>
-        public InternalQuery(InternalContext context)
+        public InternalQuery(InternalContext internalContext)
         {
-            Contract.Requires(context != null);
+            Contract.Requires(internalContext != null);
 
-            _internalContext = context;
+            _internalContext = internalContext;
         }
 
         /// <summary>
@@ -42,6 +42,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public InternalQuery(InternalContext internalContext, ObjectQuery objectQuery)
         {
+            Contract.Requires(internalContext != null);
+
             _internalContext = internalContext;
             _objectQuery = (ObjectQuery<TElement>)objectQuery;
         }

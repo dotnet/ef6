@@ -149,24 +149,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             //
             // Create a new MemoryStream that the XML dumper should write to.
             //
-            var stream = new MemoryStream();
+            using (var stream = new MemoryStream())
+            {
+                //
+                // Create the dumper
+                //
+                var dumper = new XmlExpressionDumper(stream);
 
-            //
-            // Create the dumper
-            //
-            var dumper = new XmlExpressionDumper(stream);
+                //
+                // Dump this tree and then close the XML dumper so that the end document tag is written
+                // and the output is flushed to the stream.
+                //
+                Dump(dumper);
+                dumper.Close();
 
-            //
-            // Dump this tree and then close the XML dumper so that the end document tag is written
-            // and the output is flushed to the stream.
-            //
-            Dump(dumper);
-            dumper.Close();
 
-            //
-            // Construct a string from the resulting memory stream and return it to the caller
-            //
-            return XmlExpressionDumper.DefaultEncoding.GetString(stream.ToArray());
+                //
+                // Construct a string from the resulting memory stream and return it to the caller
+                //
+                return XmlExpressionDumper.DefaultEncoding.GetString(stream.ToArray());
+            }
         }
 #endif
 
