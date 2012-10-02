@@ -4,11 +4,10 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
@@ -241,7 +240,8 @@ namespace ProductivityApiTests
         [Fact]
         public void Null_complex_original_values_result_in_exception_when_querying_for_store_values_asynchronously()
         {
-            Null_complex_original_values_result_in_exception_when_querying_for_store_values_implementation(e =>
+            Null_complex_original_values_result_in_exception_when_querying_for_store_values_implementation(
+                e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result));
         }
 
@@ -1318,7 +1318,8 @@ namespace ProductivityApiTests
         [Fact]
         public void Store_values_cannot_be_read_or_set_for_an_object_in_the_Added_state_asynchronously()
         {
-            TestPropertyValuesNegativeForDetached(e =>
+            TestPropertyValuesNegativeForDetached(
+                e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result), "GetDatabaseValuesAsync");
         }
 
@@ -1347,7 +1348,8 @@ namespace ProductivityApiTests
         [Fact]
         public void Store_values_cannot_be_read_or_set_for_a_Detached_object_asynchronously()
         {
-            TestPropertyValuesNegativeForDetached(e =>
+            TestPropertyValuesNegativeForDetached(
+                e =>
                 ExceptionHelpers.UnwrapAggregateExceptions(() => e.GetDatabaseValuesAsync().Result), "GetDatabaseValuesAsync");
         }
 
@@ -2090,7 +2092,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        private void GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        private void GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -2121,7 +2124,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        private void NonGeneric_GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        private void NonGeneric_GetDatabaseValues_for_entity_not_in_the_store_returns_null_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -2152,7 +2156,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        private void GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        private void GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -2181,14 +2186,15 @@ namespace ProductivityApiTests
         [Fact]
         public void NonGeneric_GetDatabaseValuesAsync_for_derived_entity_not_in_the_store_returns_null()
         {
-            NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(e => e.GetDatabaseValuesAsync().Result);
+            NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(
+                e => e.GetDatabaseValuesAsync().Result);
         }
 
 #endif
 
-        public void NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        public void NonGeneric_GetDatabaseValues_for_derived_entity_not_in_the_store_returns_null_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
-
             using (var context = new AdvancedPatternsMasterContext())
             {
                 var employee = (CurrentEmployee)context.Entry(
@@ -2221,7 +2227,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        public void GetDatabaseValues_for_the_wrong_type_in_the_store_returns_null_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        public void GetDatabaseValues_for_the_wrong_type_in_the_store_returns_null_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -2261,7 +2268,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        public void NonGeneric_GetDatabaseValues_for_the_wrong_type_in_the_store_throws_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        public void NonGeneric_GetDatabaseValues_for_the_wrong_type_in_the_store_throws_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -2301,7 +2309,8 @@ namespace ProductivityApiTests
 
 #endif
 
-        public void Store_values_really_are_store_values_not_current_or_original_values_implementation(Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
+        public void Store_values_really_are_store_values_not_current_or_original_values_implementation(
+            Func<DbEntityEntry, DbPropertyValues> getPropertyValues)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {

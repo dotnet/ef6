@@ -41,15 +41,19 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal(
                 0,
                 new ColumnAttribute
-                {
-                    Order= 0
-                }.Order);
+                    {
+                        Order = 0
+                    }.Order);
         }
 
         [Fact]
         public void Order_cannot_be_set_to_negative_value()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ColumnAttribute { Order = -1 });
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new ColumnAttribute
+                          {
+                              Order = -1
+                          });
         }
 
         [Fact]
@@ -68,13 +72,25 @@ namespace System.ComponentModel.DataAnnotations.Schema
         {
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("value"),
-                Assert.Throws<ArgumentException>(() => new ColumnAttribute { TypeName = null }).Message);
+                Assert.Throws<ArgumentException>(
+                    () => new ColumnAttribute
+                              {
+                                  TypeName = null
+                              }).Message);
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("value"),
-                Assert.Throws<ArgumentException>(() => new ColumnAttribute { TypeName = "" }).Message);
+                Assert.Throws<ArgumentException>(
+                    () => new ColumnAttribute
+                              {
+                                  TypeName = ""
+                              }).Message);
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("value"),
-                Assert.Throws<ArgumentException>(() => new ColumnAttribute { TypeName = " " }).Message);
+                Assert.Throws<ArgumentException>(
+                    () => new ColumnAttribute
+                              {
+                                  TypeName = " "
+                              }).Message);
         }
     }
 }

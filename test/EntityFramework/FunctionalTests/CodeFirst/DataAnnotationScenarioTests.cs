@@ -8,7 +8,6 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Edm;
-    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
@@ -680,6 +679,8 @@ namespace FunctionalTests
 
     namespace Bug324763
     {
+        using System.Data.Entity.ModelConfiguration.Conventions;
+
         public class Product
         {
             [Timestamp]

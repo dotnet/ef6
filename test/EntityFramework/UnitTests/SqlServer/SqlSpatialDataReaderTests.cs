@@ -27,7 +27,7 @@ namespace System.Data.Entity.SqlServer
         }
 
 #if !NET40
-        
+
         [Fact]
         public void GetGeographyAsync_roundtrips_DbGeography()
         {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.SqlServer
         }
 
 #endif
-        
+
         [Fact]
         public void GetGeometry_roundtrips_DbGeometry()
         {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.SqlServer
         }
 
 #endif
-        
+
         private SqlDataReaderWrapper CreateSqlDataReaderWrapper(object spatialProviderValueToReturn, string providerDataType)
         {
             var mockSqlDataReader = new Mock<SqlDataReaderWrapper>();

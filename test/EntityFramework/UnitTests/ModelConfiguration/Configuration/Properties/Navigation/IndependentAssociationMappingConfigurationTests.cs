@@ -57,7 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(
                 Strings.TableNotFound("Split"),
                 Assert.Throws<InvalidOperationException>(
-                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo())).Message);
+                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo())).
+                    Message);
         }
 
         [Fact]

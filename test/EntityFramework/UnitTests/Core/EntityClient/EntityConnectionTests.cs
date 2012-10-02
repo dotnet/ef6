@@ -309,7 +309,8 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true);
 
-                AssertThrowsInAsyncMethod<EntityException>(Strings.EntityClient_ProviderSpecificError("Open"),
+                AssertThrowsInAsyncMethod<EntityException>(
+                    Strings.EntityClient_ProviderSpecificError("Open"),
                     () => entityConnection.OpenAsync().Wait());
 
                 dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
@@ -329,6 +330,5 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-
     }
 }

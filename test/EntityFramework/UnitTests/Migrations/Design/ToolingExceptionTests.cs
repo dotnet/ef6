@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations.Design
 {
-    using System.Data.Entity.Migrations.Design;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
     using Xunit;

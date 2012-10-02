@@ -3,10 +3,10 @@
 namespace FunctionalTests
 {
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Services;
     using System.Data.Services.Common;
     using Xunit;
@@ -30,10 +30,10 @@ namespace FunctionalTests
     [MimeType("MimeProp", "text/plain")]
     [HasStream]
     //[EntityPropertyMappingAttribute("OtherProp", SyndicationItemProperty.AuthorName, true, "critVal")]
-    [EntityPropertyMappingAttribute("OtherProp", SyndicationItemProperty.AuthorName,
+    [EntityPropertyMapping("OtherProp", SyndicationItemProperty.AuthorName,
         SyndicationTextContentKind.Plaintext, true)]
-    [EntityPropertyMappingAttribute("OtherProp", "targetPath3", "prefix3", "http://my.org/", true)]
-    [EntityPropertyMappingAttribute("Inner/Data", SyndicationItemProperty.AuthorName,
+    [EntityPropertyMapping("OtherProp", "targetPath3", "prefix3", "http://my.org/", true)]
+    [EntityPropertyMapping("Inner/Data", SyndicationItemProperty.AuthorName,
         SyndicationTextContentKind.Plaintext, true)]
     public class DataServiceFoo
     {

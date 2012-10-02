@@ -6,8 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using Xunit;
-    using Strings = System.Data.Entity.Resources.Strings;
 
     public sealed class DecimalPropertyConfigurationTests : PrimitivePropertyConfigurationTests
     {

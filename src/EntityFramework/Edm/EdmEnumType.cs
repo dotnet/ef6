@@ -13,6 +13,7 @@ namespace System.Data.Entity.Edm
 
         [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
         public virtual bool IsFlags { get; set; }
+
         public virtual EdmPrimitiveType UnderlyingType { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

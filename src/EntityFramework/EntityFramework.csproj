@@ -1401,7 +1401,7 @@
     <Compile Include="Utilities\ExpressionExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\MemberInfoExtensions.cs" />
     <Compile Include="Utilities\ProviderRowFinder.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
@@ -1866,7 +1866,6 @@
     <Compile Include="Utilities\DbProviderInfoExtensions.cs" />
     <Compile Include="Utilities\DbProviderManifestExtensions.cs" />
     <Compile Include="Utilities\HashSetExtensions.cs" />
-    <Compile Include="ModelConfiguration\Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\PropertyInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPath.cs" />
     <Compile Include="Utilities\RuntimeFailureMethods.cs" />

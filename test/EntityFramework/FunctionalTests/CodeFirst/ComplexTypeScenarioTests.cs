@@ -186,19 +186,19 @@ namespace FunctionalTests
             modelBuilder.Entity<EntityWithColumnsRename>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.ToTable("Table1");
-                        mapping.Properties(e => e.Property1);
-                    });
+                        {
+                            mapping.ToTable("Table1");
+                            mapping.Properties(e => e.Property1);
+                        });
 
             modelBuilder.Entity<EntityWithColumnsRename>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.ToTable("Table2");
-                        mapping.Properties(e => e.Property2);
-                        mapping.Properties(e => e.ComplexProp);
-                    });
+                        {
+                            mapping.ToTable("Table2");
+                            mapping.Properties(e => e.Property2);
+                            mapping.Properties(e => e.ComplexProp);
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 

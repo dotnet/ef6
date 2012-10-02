@@ -5,12 +5,10 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
-    using Moq;
     using Xunit;
 
     public class DefaultDbProviderFactoryServiceTests : TestBase

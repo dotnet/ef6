@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Query
 {
-    using Moq;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
@@ -10,17 +9,22 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Core.Metadata.Edm;
     using System.IO;
     using System.Xml;
+    using Moq;
     using Xunit;
 
     public static class QueryTestHelpers
     {
         public static MetadataWorkspace CreateMetadataWorkspace(string csdl, string ssdl, string msl)
         {
-            var edmItemCollection = new EdmItemCollection(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) });
-            var storeItemCollection = new StoreItemCollection(new XmlReader[] { XmlReader.Create(new StringReader(ssdl)) });
-            var storageMappingItemCollection = new StorageMappingItemCollection(edmItemCollection, storeItemCollection, new XmlReader[] { XmlReader.Create(new StringReader(msl)) });
+            var edmItemCollection = new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) });
+            var storeItemCollection = new StoreItemCollection(new[] { XmlReader.Create(new StringReader(ssdl)) });
+            var storageMappingItemCollection = new StorageMappingItemCollection(
+                edmItemCollection, storeItemCollection, new[] { XmlReader.Create(new StringReader(msl)) });
 
-            var metadataWorkspaceMock = new Mock<MetadataWorkspace> { CallBase = true };
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace>
+                                            {
+                                                CallBase = true
+                                            };
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSpace, It.IsAny<bool>())).Returns(edmItemCollection);
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace, It.IsAny<bool>())).Returns(storeItemCollection);
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>())).Returns(storageMappingItemCollection);
@@ -30,7 +34,8 @@ namespace System.Data.Entity.Query
 
         public static void VerifyQuery(DbExpression query, MetadataWorkspace workspace, string expectedSql)
         {
-            var providerServices = (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
+            var providerServices =
+                (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
             var connection = new EntityConnection(workspace, new EntityConnection());
             var commandTree = workspace.CreateQueryCommandTree(query);
 
@@ -42,7 +47,8 @@ namespace System.Data.Entity.Query
 
         public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql)
         {
-            var providerServices = (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
+            var providerServices =
+                (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
             var connection = new EntityConnection(workspace, new EntityConnection());
             var commandTree = workspace.CreateEntitySqlParser().Parse(query).CommandTree;
 
@@ -54,10 +60,11 @@ namespace System.Data.Entity.Query
 
         public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string expectedExeptionMessage)
         {
-            bool exceptionThrown = false;
+            var exceptionThrown = false;
             try
             {
-                var providerServices = (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
+                var providerServices =
+                    (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
                 var connection = new EntityConnection(workspace, new EntityConnection());
                 var commandTree = workspace.CreateEntitySqlParser().Parse(query).CommandTree;
                 var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
@@ -77,7 +84,7 @@ namespace System.Data.Entity.Query
 
         private static Exception GetInnerMostException(Exception exception)
         {
-            if (exception == null) 
+            if (exception == null)
             {
                 return exception;
             }

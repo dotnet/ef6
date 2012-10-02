@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -12,7 +11,7 @@ namespace System.Data.Entity
         ///     Creates a <see cref="List{T}" /> from the <see cref="IEnumerable" />.
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
-        /// <returns> A  <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         public static List<T> ToList<T>(this IEnumerable source)
         {
             var list = new List<T>();

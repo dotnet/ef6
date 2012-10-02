@@ -3,9 +3,8 @@
 namespace FunctionalTests
 {
     using System;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;

@@ -5,11 +5,8 @@ namespace ProductivityApiTests
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
     using System.Linq;
-    using System.Transactions;
     using Xunit;
     using Xunit.Extensions;
 
@@ -134,6 +131,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Unchanged_dependnent_to_be_Deleted(
+            
             )
         {
             Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(

@@ -5,7 +5,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
 

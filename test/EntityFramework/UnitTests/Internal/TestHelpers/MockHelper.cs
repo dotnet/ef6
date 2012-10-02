@@ -36,8 +36,10 @@ namespace System.Data.Entity.Internal
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("foo container", DataSpace.CSpace));
             mockStateEntry.Setup(e => e.EntitySet).Returns(entitySet);
 
-            mockStateEntry.Setup(e => e.EntityKey).Returns(new EntityKey("foo.bar",
-                new[] { new KeyValuePair<string, object> ("foo", "bar")}));
+            mockStateEntry.Setup(e => e.EntityKey).Returns(
+                new EntityKey(
+                    "foo.bar",
+                    new[] { new KeyValuePair<string, object>("foo", "bar") }));
 
             var modifiedProps = new List<string>
                                     {
@@ -85,7 +87,10 @@ namespace System.Data.Entity.Internal
             where TEntity : class, new()
             where TRelated : class
         {
-            var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<TEntity>>() {CallBase = true};
+            var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<TEntity>>
+                                              {
+                                                  CallBase = true
+                                              };
             mockInternalEntityEntry.SetupGet(e => e.Entity).Returns(entity);
             mockInternalEntityEntry.SetupGet(e => e.EntityType).Returns(typeof(TEntity));
             mockInternalEntityEntry.SetupGet(e => e.IsDetached).Returns(isDetached);

@@ -2,8 +2,6 @@
 
 namespace ProductivityApiTests
 {
-    using ConcurrencyModel;
-    using SimpleModel;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -12,6 +10,8 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using ConcurrencyModel;
+    using SimpleModel;
     using Xunit;
     using Xunit.Sdk;
 
@@ -1197,6 +1197,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Select_Anonymous_Types_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -1262,7 +1263,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1336,7 +1338,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -1825,6 +1828,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             SelectMany_Multiple_from_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -1910,6 +1914,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             SelectMany_Indexed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2274,6 +2279,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             TakeWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2402,6 +2408,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             SkipWhile_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2541,6 +2548,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             OrderBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2615,6 +2623,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             OrderBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2689,6 +2698,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             OrderBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -2764,6 +2774,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             OrderBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3077,7 +3088,7 @@ namespace ProductivityApiTests
         {
             runner(
                 q => from d in q
-                     orderby d.Name.Length, d.Value
+                     orderby d.Name.Length , d.Value
                      select d, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -3218,7 +3229,7 @@ namespace ProductivityApiTests
         {
             runner(
                 q => from p in q
-                     orderby p.Category, p.UnitPrice descending
+                     orderby p.Category , p.UnitPrice descending
                      select p, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -3413,6 +3424,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             GroupBy_Simple_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3433,12 +3445,12 @@ namespace ProductivityApiTests
             runner(
                 q => from n in q
                      group n by n.Value % 5
-                         into g
-                         select new
-                                    {
-                                        Remainder = g.Key,
-                                        Numbers = g
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Remainder = g.Key,
+                                    Numbers = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3492,6 +3504,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             GroupBy_Simple_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3512,12 +3525,12 @@ namespace ProductivityApiTests
             runner(
                 q => from w in q
                      group w by w.Name.Length
-                         into g
-                         select new
-                                    {
-                                        FirstLetter = g.Key,
-                                        Words = g
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    FirstLetter = g.Key,
+                                    Words = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3571,6 +3584,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             GroupBy_Simple_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3591,12 +3605,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        Products = g
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -3673,20 +3687,20 @@ namespace ProductivityApiTests
                                     c.CompanyName,
                                     YearGroups = from o in c.Orders
                                                  group o by o.OrderDate.Year
-                                                     into yg
-                                                     select new
-                                                                {
-                                                                    Year = yg.Key,
-                                                                    MonthGroups = from o in yg
-                                                                                  group o by o.OrderDate.Month
-                                                                                      into mg
-                                                                                      select
-                                                                                          new
-                                                                                              {
-                                                                                                  Month = mg.Key,
-                                                                                                  Orders = mg
-                                                                                              }
-                                                                }
+                                                 into yg
+                                                 select new
+                                                            {
+                                                                Year = yg.Key,
+                                                                MonthGroups = from o in yg
+                                                                              group o by o.OrderDate.Month
+                                                                              into mg
+                                                                              select
+                                                                                  new
+                                                                                      {
+                                                                                          Month = mg.Key,
+                                                                                          Orders = mg
+                                                                                      }
+                                                            }
                                 }, ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -3747,6 +3761,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             GroupBy_Comparer_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3898,6 +3913,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Distinct_1_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -3968,6 +3984,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Distinct_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5031,6 +5048,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             FirstOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5227,7 +5245,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -5388,7 +5407,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            (
+            
             )
         {
             SingleOrDefault_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5479,6 +5500,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Any_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5556,6 +5578,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Any_Where_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5647,13 +5670,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         where g.Any(p => p.UnitsInStock == 0)
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        Products = g
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     where g.Any(p => p.UnitsInStock == 0)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5714,6 +5737,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             All_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5803,13 +5827,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         where g.All(p => p.UnitsInStock > 0)
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        Products = g
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     where g.All(p => p.UnitsInStock > 0)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    Products = g
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -5869,7 +5893,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Contains_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6194,12 +6220,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        ProductCount = g.Count()
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    ProductCount = g.Count()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6252,7 +6278,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6275,7 +6302,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<NumberForLinq>)q).LongCount());
 #else
- q => ((IQueryable<NumberForLinq>)q).LongCountAsync().Result);
+                q => ((IQueryable<NumberForLinq>)q).LongCountAsync().Result);
 #endif
         }
 
@@ -6329,7 +6356,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+        public void
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
             ()
         {
             LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6338,7 +6366,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             LongCount_Conditional_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6353,7 +6382,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<NumberForLinq>)q).LongCount(n => n.Value % 2 == 1));
 #else
- q => ((IQueryable<NumberForLinq>)q).LongCountAsync(n => n.Value % 2 == 1).Result);
+                q => ((IQueryable<NumberForLinq>)q).LongCountAsync(n => n.Value % 2 == 1).Result);
 #endif
         }
 
@@ -6407,7 +6436,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<CustomerForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6427,10 +6457,10 @@ namespace ProductivityApiTests
             runner(
                 q => from c in q
                      select new
-                     {
-                         c.Id,
-                         OrderLongCount = c.Orders.LongCount()
-                     }, ToListExecutor, ToListAsyncExecutor);
+                                {
+                                    c.Id,
+                                    OrderLongCount = c.Orders.LongCount()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6483,7 +6513,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             LongCount_Grouped_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<ProductForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6503,12 +6534,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                         {
-                             Category = g.Key,
-                             ProductLongCount = g.LongCount()
-                         }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    ProductLongCount = g.LongCount()
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -6569,6 +6600,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Sum_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6715,14 +6747,18 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Sum_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6738,7 +6774,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<int?>)q).Sum());
 #else
- q => ((IQueryable<int?>)q).SumAsync().Result);
+                q => ((IQueryable<int?>)q).SumAsync().Result);
 #endif
         }
 
@@ -6792,7 +6828,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6800,7 +6838,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6876,7 +6915,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Sum_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6892,7 +6933,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<long>)q).Sum());
 #else
- q => ((IQueryable<long>)q).SumAsync().Result);
+                q => ((IQueryable<long>)q).SumAsync().Result);
 #endif
         }
 
@@ -6946,7 +6987,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -6954,7 +6996,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7023,14 +7066,19 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7046,7 +7094,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<long?>)q).Sum());
 #else
- q => ((IQueryable<long?>)q).SumAsync().Result);
+                q => ((IQueryable<long?>)q).SumAsync().Result);
 #endif
         }
 
@@ -7100,7 +7148,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7108,7 +7158,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7177,14 +7228,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7200,7 +7254,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<float>)q).Sum());
 #else
- q => ((IQueryable<float>)q).SumAsync().Result);
+                q => ((IQueryable<float>)q).SumAsync().Result);
 #endif
         }
 
@@ -7254,7 +7308,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7262,7 +7317,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7331,14 +7387,19 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Sum_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7354,7 +7415,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<float?>)q).Sum());
 #else
- q => ((IQueryable<float?>)q).SumAsync().Result);
+                q => ((IQueryable<float?>)q).SumAsync().Result);
 #endif
         }
 
@@ -7408,7 +7469,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7416,7 +7479,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7485,14 +7549,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Sum_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7508,7 +7575,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<double>)q).Sum());
 #else
- q => ((IQueryable<double>)q).SumAsync().Result);
+                q => ((IQueryable<double>)q).SumAsync().Result);
 #endif
         }
 
@@ -7562,7 +7629,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7570,7 +7638,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7639,14 +7708,19 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Sum_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7662,7 +7736,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<double?>)q).Sum());
 #else
- q => ((IQueryable<double?>)q).SumAsync().Result);
+                q => ((IQueryable<double?>)q).SumAsync().Result);
 #endif
         }
 
@@ -7716,7 +7790,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7724,7 +7800,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7793,14 +7870,17 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Sum_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7816,7 +7896,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<decimal>)q).Sum());
 #else
- q => ((IQueryable<decimal>)q).SumAsync().Result);
+                q => ((IQueryable<decimal>)q).SumAsync().Result);
 #endif
         }
 
@@ -7870,7 +7950,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7878,7 +7959,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -7896,7 +7978,6 @@ namespace ProductivityApiTests
                 q => ((IQueryable<NumberForLinq>)q).SumAsync(n => (decimal)n.Name.Length).Result);
 #endif
         }
-
 
         [Fact]
         public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery()
@@ -7948,14 +8029,19 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
         }
 
         [Fact]
-        public void Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+        public void
+            Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Sum_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7971,7 +8057,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<decimal?>)q).Sum());
 #else
- q => ((IQueryable<decimal?>)q).SumAsync().Result);
+                q => ((IQueryable<decimal?>)q).SumAsync().Result);
 #endif
         }
 
@@ -8025,7 +8111,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -8033,7 +8121,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Sum_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -8122,12 +8211,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    TotalUnitsInStock = g.Sum(p => p.UnitsInStock)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -8188,6 +8277,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Min_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -8354,12 +8444,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        CheapestPrice = g.Min(p => p.UnitPrice)
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    CheapestPrice = g.Min(p => p.UnitPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -8432,13 +8522,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         let minPrice = g.Min(p => p.UnitPrice)
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        CheapestProducts = g.Where(p => p.UnitPrice == minPrice)
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     let minPrice = g.Min(p => p.UnitPrice)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    CheapestProducts = g.Where(p => p.UnitPrice == minPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -8499,6 +8589,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Max_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -8665,12 +8756,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        MostExpensivePrice = g.Max(p => p.UnitPrice)
-                                    }, ToListExecutor, ToListAsyncExecutor);
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    MostExpensivePrice = g.Max(p => p.UnitPrice)
+                                }, ToListExecutor, ToListAsyncExecutor);
         }
 
         [Fact]
@@ -8743,13 +8834,13 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         let minPrice = g.Max(p => p.UnitPrice)
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice)
-                                    },
+                     into g
+                     let minPrice = g.Max(p => p.UnitPrice)
+                     select new
+                                {
+                                    Category = g.Key,
+                                    MostExpensiveProducts = g.Where(p => p.UnitPrice == minPrice)
+                                },
                 ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -8880,7 +8971,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -8888,7 +8981,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -8957,7 +9051,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -8965,7 +9060,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9034,7 +9130,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9042,7 +9140,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9111,7 +9210,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9119,7 +9219,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9188,7 +9289,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9196,7 +9299,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9265,7 +9369,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9273,7 +9378,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9342,7 +9448,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9350,7 +9458,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9419,7 +9528,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
             Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9427,7 +9537,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9442,7 +9553,7 @@ namespace ProductivityApiTests
 #if NET40
                 q => ((IQueryable<decimal>)q).Average());
 #else
-				q => ((IQueryable<decimal>)q).AverageAsync().Result);
+                q => ((IQueryable<decimal>)q).AverageAsync().Result);
 #endif
         }
 
@@ -9496,7 +9607,9 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+        public void
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9504,7 +9617,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+            Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Simple_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9583,6 +9697,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Average_Projection_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -9653,7 +9768,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9661,7 +9777,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_Nullable_int_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -9740,7 +9858,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -9811,7 +9931,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9819,7 +9940,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -9890,7 +10013,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            )
         {
             Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9898,7 +10022,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -9969,7 +10095,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -9977,7 +10104,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_Nullable_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10048,7 +10177,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10056,7 +10186,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10119,7 +10251,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async(
+            )
         {
             Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
@@ -10127,7 +10260,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10135,7 +10269,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10206,7 +10342,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10214,7 +10351,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10277,7 +10416,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async()
+        public void Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async
+            ()
         {
             Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq>(RunLinqTestWithNonGenericCreateQuery));
@@ -10285,7 +10425,8 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery
+            ()
         {
             Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10293,7 +10434,9 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            (
+            
             )
         {
             Average_Projection_Nullable_decimal_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10383,12 +10526,12 @@ namespace ProductivityApiTests
             runner(
                 q => from p in q
                      group p by p.Category
-                         into g
-                         select new
-                                    {
-                                        Category = g.Key,
-                                        AveragePrice = g.Average(p => p.UnitPrice)
-                                    },
+                     into g
+                     select new
+                                {
+                                    Category = g.Key,
+                                    AveragePrice = g.Average(p => p.UnitPrice)
+                                },
                 ToListExecutor, ToListAsyncExecutor);
         }
 
@@ -10398,6 +10541,7 @@ namespace ProductivityApiTests
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTest));
         }
+
         [Fact]
         public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet()
         {
@@ -10414,6 +10558,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Aggregate_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10449,7 +10594,7 @@ namespace ProductivityApiTests
             Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 SyncRunnerAdapter<NumberForLinq>(RunNotSupportedLinqTestWithNonGenericCreateQuery));
         }
-        
+
         [Fact]
         public void Aggregate_Seed_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery()
         {
@@ -10716,7 +10861,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async
+            ()
         {
             EqualAll_1b_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10782,7 +10928,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async()
+        public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            )
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
                 AsyncRunnerAdapter<NumberForLinq, NumberForLinq>(RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery));
@@ -10858,6 +11005,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Cross_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10938,6 +11086,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             Group_Join_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -11479,6 +11628,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             SelectMany_with_additional_predicate_in_lambda_and_aggregate_works_implementation(
@@ -13080,7 +13230,7 @@ namespace ProductivityApiTests
                 else
                 {
                     // Only do property-based comparison if Object.Equals says they are not equal
-                    if (!Object.Equals(left, right))
+                    if (!Equals(left, right))
                     {
                         var properties = left.GetType().GetProperties();
                         if (properties.Any())

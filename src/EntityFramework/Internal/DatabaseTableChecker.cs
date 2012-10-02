@@ -5,7 +5,6 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Migrations.History;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;

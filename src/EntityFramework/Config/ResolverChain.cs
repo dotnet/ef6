@@ -4,7 +4,6 @@ namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Diagnostics.Contracts;
     using System.Linq;
 

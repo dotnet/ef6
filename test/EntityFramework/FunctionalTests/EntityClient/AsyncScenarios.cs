@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+
 #if !NET40
 
 namespace System.Data.Entity.EntityClient
@@ -71,7 +72,7 @@ COUNT(
                 while (await reader.ReadAsync())
                 {
                     var values = new List<object>();
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
                         values.Add(await reader.GetFieldValueAsync<object>(i));
                     }
@@ -98,7 +99,7 @@ COUNT(
                 while (reader.Read())
                 {
                     var values = new List<object>();
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
                         values.Add(reader.GetFieldValue<object>(i));
                     }
@@ -173,7 +174,6 @@ COUNT(
         {
             public bool Equals(Product x, Product y)
             {
-
                 if (x == null)
                 {
                     return y == null;

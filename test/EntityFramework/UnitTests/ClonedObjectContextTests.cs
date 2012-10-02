@@ -5,9 +5,9 @@ namespace ProductivityApiUnitTests
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.MockingProxies;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.SqlClient;
     using System.Reflection;
     using Moq;
@@ -17,6 +17,7 @@ namespace ProductivityApiUnitTests
     {
         [Fact]
         public void Creating_a_cloned_ObjectContext_causes_the_store_and_entity_connection_to_be_cloned_and_given_connection_string_applied(
+            
             )
         {
             var storeConnection = new SqlConnection();

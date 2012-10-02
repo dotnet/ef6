@@ -6,7 +6,6 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
     using System.Linq;
     using System.Transactions;
     using FunctionalTests.Model;
@@ -217,17 +216,17 @@ namespace FunctionalTests
             modelBuilder.Entity<Dependent_165027>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("Dependent");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("Dependent");
+                        });
             modelBuilder.Entity<BaseDependent_165027>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("BaseDependent");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("BaseDependent");
+                        });
 
             Assert.Throws<InvalidOperationException>(
                 () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
@@ -248,10 +247,10 @@ namespace FunctionalTests
             modelBuilder.Entity<Dependent_165027>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("Dependent");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("Dependent");
+                        });
             modelBuilder.Entity<BaseDependent_165027>()
                 .Map(mapping => mapping.MapInheritedProperties());
 
@@ -398,17 +397,17 @@ namespace FunctionalTests
             modelBuilder.Entity<StyledProduct>()
                 .Map(
                     m =>
-                    {
-                        m.Requires("disc").HasValue("S");
-                        m.ToTable("StyledProducts");
-                    });
+                        {
+                            m.Requires("disc").HasValue("S");
+                            m.ToTable("StyledProducts");
+                        });
             modelBuilder.Entity<ColoredProduct>()
                 .Map(
                     m =>
-                    {
-                        m.Requires("disc").HasValue("C");
-                        m.ToTable("StyledProducts");
-                    });
+                        {
+                            m.Requires("disc").HasValue("C");
+                            m.ToTable("StyledProducts");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -440,10 +439,10 @@ namespace FunctionalTests
             modelBuilder.Entity<StyledProduct>()
                 .Map(
                     m =>
-                    {
-                        m.MapInheritedProperties();
-                        m.ToTable("StyledProducts");
-                    });
+                        {
+                            m.MapInheritedProperties();
+                            m.ToTable("StyledProducts");
+                        });
 
             Assert.Throws<NotSupportedException>(
                 () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
@@ -484,31 +483,31 @@ namespace FunctionalTests
             modelBuilder.Entity<Vendor>()
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            v1 => new
-                                      {
-                                          v1.VendorID,
-                                          v1.Name,
-                                          v1.PreferredVendorStatus,
-                                          v1.AccountNumber,
-                                          v1.ActiveFlag,
-                                          v1.CreditRating
-                                      });
-                        m.ToTable("Vendor");
-                    })
+                        {
+                            m.Properties(
+                                v1 => new
+                                          {
+                                              v1.VendorID,
+                                              v1.Name,
+                                              v1.PreferredVendorStatus,
+                                              v1.AccountNumber,
+                                              v1.ActiveFlag,
+                                              v1.CreditRating
+                                          });
+                            m.ToTable("Vendor");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            v2 => new
-                                      {
-                                          v2.VendorID,
-                                          v2.ModifiedDate,
-                                          v2.PurchasingWebServiceURL
-                                      });
-                        m.ToTable("VendorDetails");
-                    });
+                        {
+                            m.Properties(
+                                v2 => new
+                                          {
+                                              v2.VendorID,
+                                              v2.ModifiedDate,
+                                              v2.PurchasingWebServiceURL
+                                          });
+                            m.ToTable("VendorDetails");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -523,30 +522,30 @@ namespace FunctionalTests
             modelBuilder.Entity<Vendor>()
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            v1 => new
-                                      {
-                                          v1.VendorID,
-                                          v1.Name,
-                                          v1.PreferredVendorStatus,
-                                          v1.AccountNumber,
-                                          v1.ActiveFlag,
-                                          v1.CreditRating
-                                      });
-                        m.ToTable("Vendor");
-                    })
+                        {
+                            m.Properties(
+                                v1 => new
+                                          {
+                                              v1.VendorID,
+                                              v1.Name,
+                                              v1.PreferredVendorStatus,
+                                              v1.AccountNumber,
+                                              v1.ActiveFlag,
+                                              v1.CreditRating
+                                          });
+                            m.ToTable("Vendor");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            v2 => new
-                                      {
-                                          v2.ModifiedDate,
-                                          v2.PurchasingWebServiceURL
-                                      });
-                        m.ToTable("VendorDetails");
-                    });
+                        {
+                            m.Properties(
+                                v2 => new
+                                          {
+                                              v2.ModifiedDate,
+                                              v2.PurchasingWebServiceURL
+                                          });
+                            m.ToTable("VendorDetails");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -564,27 +563,27 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductDescription>()
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            pd1 => new
-                                       {
-                                           pd1.ProductDescriptionID,
-                                           pd1.RowDetails.rowguid
-                                       });
-                        m.ToTable("ProductDescription");
-                    })
+                        {
+                            m.Properties(
+                                pd1 => new
+                                           {
+                                               pd1.ProductDescriptionID,
+                                               pd1.RowDetails.rowguid
+                                           });
+                            m.ToTable("ProductDescription");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            pd2 => new
-                                       {
-                                           pd2.ProductDescriptionID,
-                                           pd2.Description,
-                                           pd2.RowDetails.ModifiedDate
-                                       });
-                        m.ToTable("ProductDescriptionExtended");
-                    });
+                        {
+                            m.Properties(
+                                pd2 => new
+                                           {
+                                               pd2.ProductDescriptionID,
+                                               pd2.Description,
+                                               pd2.RowDetails.ModifiedDate
+                                           });
+                            m.ToTable("ProductDescriptionExtended");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -830,22 +829,22 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Product>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("Products");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("Products");
+                    });
             modelBuilder.Entity<ColoredProduct>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("ColoredProducts");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("ColoredProducts");
+                    });
             modelBuilder.Entity<StyledProduct>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("StyledProducts");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("StyledProducts");
+                    });
 
             SetDerivedEntityColumnNames(modelBuilder);
 
@@ -861,22 +860,22 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Product>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("Products");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("Products");
+                    });
             modelBuilder.Entity<ColoredProduct>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("ColoredProducts");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("ColoredProducts");
+                    });
             modelBuilder.Entity<StyledProduct>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("StyledProducts");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("StyledProducts");
+                    });
 
             ValidateTPTOrTPCWithRenamedColumns(modelBuilder);
         }
@@ -1030,7 +1029,7 @@ namespace FunctionalTests
 
         public class BasePrincipal
         {
-            public System.DateTime BaseProperty { get; set; }
+            public DateTime BaseProperty { get; set; }
             public int Key1 { get; set; }
         }
 
@@ -1046,29 +1045,29 @@ namespace FunctionalTests
 
                 builder.Entity<DerivedDependent>().Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("DerivedDependent");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("DerivedDependent");
+                        });
                 builder.Entity<Principal>().Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("Principal");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("Principal");
+                        });
 
                 builder.Entity<Dependent>().Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("Dependent");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("Dependent");
+                        });
                 builder.Entity<BasePrincipal>().Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("BasePrincipal");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("BasePrincipal");
+                        });
 
                 var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
@@ -1202,7 +1201,7 @@ namespace FunctionalTests
     {
         public class Dependent1
         {
-            public System.DateTimeOffset key1 { get; set; }
+            public DateTimeOffset key1 { get; set; }
             public Principal1 PrincipalNavigation { get; set; }
         }
 
@@ -1236,10 +1235,10 @@ namespace FunctionalTests
 
                 builder.Entity<DerivedPrincipal1>().Map(
                     mapping =>
-                    {
-                        mapping.MapInheritedProperties();
-                        mapping.ToTable("DerivedPrincipal");
-                    });
+                        {
+                            mapping.MapInheritedProperties();
+                            mapping.ToTable("DerivedPrincipal");
+                        });
 
                 builder.Entity<Dependent1>().HasKey(e => e.key1);
 
@@ -1255,6 +1254,8 @@ namespace FunctionalTests
 
     namespace Bug178568
     {
+        using System.Data.Entity.Edm.Db;
+
         public abstract class A
         {
             public virtual int Id { get; set; }
@@ -1301,7 +1302,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.Identity,
+                        DbStoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1323,7 +1324,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1352,11 +1353,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.Identity,
+                        DbStoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1378,26 +1379,26 @@ namespace FunctionalTests
                 modelBuilder.Entity<C>()
                     .Map(
                         m =>
-                        {
-                            m.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.X
-                                         });
-                            m.ToTable("CX");
-                        })
+                            {
+                                m.Properties(
+                                    c => new
+                                             {
+                                                 c.Id,
+                                                 c.X
+                                             });
+                                m.ToTable("CX");
+                            })
                     .Map(
                         m =>
-                        {
-                            m.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.Y
-                                         });
-                            m.ToTable("CY");
-                        });
+                            {
+                                m.Properties(
+                                    c => new
+                                             {
+                                                 c.Id,
+                                                 c.Y
+                                             });
+                                m.ToTable("CY");
+                            });
 
                 var databaseMapping = BuildMapping(modelBuilder);
                 //databaseMapping.ShellEdmx("EntitySplitting_Identity_ShouldNotPropagate.xml");
@@ -1405,11 +1406,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<C>("CX")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.Identity,
+                        DbStoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<C>("CY")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
         }
@@ -1421,6 +1422,8 @@ namespace FunctionalTests
 
     namespace Bug336566
     {
+        using System.Data.Entity.Edm.Db;
+
         public class A
         {
             public virtual int Id { get; set; }
@@ -1459,12 +1462,12 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1485,7 +1488,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1507,11 +1510,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.Identity,
+                        DbStoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1527,26 +1530,26 @@ namespace FunctionalTests
                 modelBuilder.Entity<C>()
                     .Map(
                         m =>
-                        {
-                            m.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.X
-                                         });
-                            m.ToTable("CX");
-                        })
+                            {
+                                m.Properties(
+                                    c => new
+                                             {
+                                                 c.Id,
+                                                 c.X
+                                             });
+                                m.ToTable("CX");
+                            })
                     .Map(
                         m =>
-                        {
-                            m.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.Y
-                                         });
-                            m.ToTable("CY");
-                        });
+                            {
+                                m.Properties(
+                                    c => new
+                                             {
+                                                 c.Id,
+                                                 c.Y
+                                             });
+                                m.ToTable("CY");
+                            });
 
                 var databaseMapping = BuildMapping(modelBuilder);
                 //databaseMapping.ShellEdmx("EntitySplitting_Identity_ShouldNotPropagate.xml");
@@ -1554,11 +1557,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<C>("CX")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.Identity,
+                        DbStoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<C>("CY")
                     .Column("Id").DbEqual(
-                        System.Data.Entity.Edm.Db.DbStoreGeneratedPattern.None,
+                        DbStoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
         }
@@ -1585,16 +1588,16 @@ namespace FunctionalTests
         {
             modelBuilder.Entity<BaseForPKNaming>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("base_table");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("base_table");
+                    });
             modelBuilder.Entity<DerivedForPKNaming>().Map(
                 m =>
-                {
-                    m.MapInheritedProperties();
-                    m.ToTable("derived_table");
-                });
+                    {
+                        m.MapInheritedProperties();
+                        m.ToTable("derived_table");
+                    });
 
             modelBuilder.Entity<BaseForPKNaming>().Property(e => e.Id).HasColumnName("base_id");
             modelBuilder.Entity<DerivedForPKNaming>().Property(e => e.Id).HasColumnName("derived_id");
@@ -1657,6 +1660,8 @@ namespace FunctionalTests
 
     namespace Bug335965
     {
+        using System.Data.Entity.Core;
+
         public class A
         {
             public int Id { get; set; }
@@ -1706,10 +1711,10 @@ namespace FunctionalTests
 
                 modelBuilder.Entity<A>().Map(
                     m =>
-                    {
-                        // Adding IsRequired() does not help.
-                        m.Requires("Disc").HasValue(17);
-                    });
+                        {
+                            // Adding IsRequired() does not help.
+                            m.Requires("Disc").HasValue(17);
+                        });
                 modelBuilder.Entity<C>().Map(m => { m.Requires("Disc").HasValue(7); });
 
                 var databaseMapping = BuildMapping(modelBuilder);

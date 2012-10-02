@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 

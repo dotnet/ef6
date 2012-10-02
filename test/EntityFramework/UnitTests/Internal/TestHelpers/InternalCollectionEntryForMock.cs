@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal
     using Moq;
 
     /// <summary>
-    ///   A derived InternalCollectionEntry implementation that exposes a parameterless constructor for mocking.
+    ///     A derived InternalCollectionEntry implementation that exposes a parameterless constructor for mocking.
     /// </summary>
     internal abstract class InternalCollectionEntryForMock : InternalCollectionEntry
     {

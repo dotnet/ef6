@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             var fkEquivalentToDependentPk
                 = dependentKeyProperties.Count() == foreignKeyProperties.Count()
-                  && dependentKeyProperties.All(kp => foreignKeyProperties.Contains(kp));
+                  && dependentKeyProperties.All(foreignKeyProperties.Contains);
 
             if ((dependentEnd.IsMany() || edmDataModelItem.IsSelfReferencing()) && fkEquivalentToDependentPk)
             {

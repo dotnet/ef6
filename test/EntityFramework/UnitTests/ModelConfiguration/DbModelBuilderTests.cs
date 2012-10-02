@@ -13,8 +13,8 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Data.Entity.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -25,12 +25,6 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
     using DecimalPropertyConfiguration =
         System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
-    using LengthPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration
-        ;
-    using NavigationPropertyConfiguration =
-        System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation.NavigationPropertyConfiguration;
-    using PrimitivePropertyConfiguration =
-        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
     using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
         ;
 

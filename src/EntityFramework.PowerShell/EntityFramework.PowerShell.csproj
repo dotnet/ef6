@@ -233,20 +233,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\EntityFramework\Migrations\Extensions\IEnumerableExtensions.cs">
-      <Link>Migrations\Extensions\IEnumerableExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\EntityFramework\Utilities\DatabaseName.cs">
-      <Link>Utilities\DatabaseName.cs</Link>
-    </Compile>
     <Compile Include="..\EntityFramework\Utilities\RuntimeFailureMethods.cs">
       <Link>Properties\RuntimeFailureMethods.cs</Link>
     </Compile>
     <Compile Include="..\EntityFramework\Properties\Resources.PowerShell.cs">
       <Link>Properties\Resources.PowerShell.cs</Link>
-    </Compile>
-    <Compile Include="..\EntityFramework\Utilities\StringExtensions.cs">
-      <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
@@ -265,6 +256,7 @@
     <Compile Include="ConnectionFactoryConfig\SqlCompactConnectionFactoryConfigurator.cs" />
     <Compile Include="ConnectionFactoryConfig\SqlServerDetector.cs" />
     <Compile Include="Migrations\EnableMigrationsCommand.cs" />
+    <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Migrations\Extensions\ProjectExtensions.cs" />
     <Compile Include="Migrations\Extensions\ProjectItemExtensions.cs" />
     <Compile Include="Migrations\Extensions\XContainerExtensions.cs" />
@@ -280,6 +272,7 @@
     <Compile Include="..\EntityFramework\Properties\Resources.cs">
       <Link>Properties\Resources.cs</Link>
     </Compile>
+    <Compile Include="Migrations\Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\EcmaPublicKey.snk">
@@ -301,6 +294,7 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

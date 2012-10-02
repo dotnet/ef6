@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
 {
-    using System.Data.Entity;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;

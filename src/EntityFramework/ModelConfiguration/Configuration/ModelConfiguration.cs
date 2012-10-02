@@ -12,7 +12,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -215,7 +214,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var structuralTypeConfiguration = GetStructuralTypeConfiguration(type);
 
             return structuralTypeConfiguration != null
-                && structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo));
+                   && structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo));
         }
 
         public void Configure(EdmModel model)
@@ -506,9 +505,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.TypeMappingFragments
                   group etmf by etmf.Table
-                      into g
-                      where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
-                      select g.Single(x => x.GetDefaultDiscriminator() != null))
+                  into g
+                  where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
+                  select g.Single(x => x.GetDefaultDiscriminator() != null))
                         })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
@@ -529,16 +528,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             tables.Each(
                 t =>
-                {
-                    var tableName = t.GetTableName();
-
-                    if (tableName != null)
                     {
-                        throw Error.OrphanedConfiguredTableDetected(tableName);
-                    }
+                        var tableName = t.GetTableName();
 
-                    databaseMapping.Database.RemoveTable(t);
-                });
+                        if (tableName != null)
+                        {
+                            throw Error.OrphanedConfiguredTableDetected(tableName);
+                        }
+
+                        databaseMapping.Database.RemoveTable(t);
+                    });
         }
 
         private IEnumerable<EntityTypeConfiguration> ActiveEntityConfigurations

@@ -6,8 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>

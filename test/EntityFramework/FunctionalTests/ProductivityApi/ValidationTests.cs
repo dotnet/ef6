@@ -5,8 +5,6 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Validation;
@@ -14,6 +12,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
     using System.Linq;
     using System.Linq.Expressions;
     using System.Transactions;
+    using ProductivityApiTests;
     using SimpleModel;
     using Xunit;
 
@@ -336,7 +335,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
     }
 
-    [CustomValidationAttribute(typeof(EntityWithAllKindsOfValidation), "CustomValidate")]
+    [CustomValidation(typeof(EntityWithAllKindsOfValidation), "CustomValidate")]
     public class EntityWithAllKindsOfValidation : EntityWithBuiltInValidationAttributes, IValidatableObject
     {
         [Required]
@@ -613,7 +612,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void GetValidationErrors_calls_DetectChanges_once()
         {
-            using (var context = new ProductivityApiTests.DbContextTests.ValidationTestContext())
+            using (var context = new DbContextTests.ValidationTestContext())
             {
                 context.Database.Initialize(force: false);
 
@@ -791,7 +790,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void DbEntityEntry_GetValidationResult_does_not_call_DetectChanges()
         {
-            using (var context = new ProductivityApiTests.DbContextTests.ValidationTestContext())
+            using (var context = new DbContextTests.ValidationTestContext())
             {
                 context.Database.Initialize(force: false);
 
@@ -829,7 +828,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         [Fact]
         public void Nongeneric_DbEntityEntry_GetValidationResult_does_not_call_DetectChanges()
         {
-            using (var context = new ProductivityApiTests.DbContextTests.ValidationTestContext())
+            using (var context = new DbContextTests.ValidationTestContext())
             {
                 context.Database.Initialize(force: false);
 

@@ -140,9 +140,9 @@ namespace System.Data.Entity.Internal
             }
 
             /// <summary>
-            ///   Validates that the call to set a value on an <see cref="EntityReference{TEntity}" /> is made as
-            ///   expected without mocking EntityReference (since it is sealed). This could be dones with Moq
-            ///   but it turned out easier and clearer this way.
+            ///     Validates that the call to set a value on an <see cref="EntityReference{TEntity}" /> is made as
+            ///     expected without mocking EntityReference (since it is sealed). This could be dones with Moq
+            ///     but it turned out easier and clearer this way.
             /// </summary>
             internal class FakeInternalReferenceEntry : InternalReferenceEntry
             {
@@ -231,7 +231,8 @@ namespace System.Data.Entity.Internal
 
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("LoadAsync", "Reference", "FakeEntity"),
-                    Assert.Throws<InvalidOperationException>(() =>
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
                         internalEntry.LoadAsync(CancellationToken.None).Wait()).Message);
             }
         }

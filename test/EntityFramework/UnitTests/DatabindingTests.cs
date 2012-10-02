@@ -10,7 +10,6 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;

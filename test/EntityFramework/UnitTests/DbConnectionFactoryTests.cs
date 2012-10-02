@@ -3,14 +3,12 @@
 namespace ProductivityApiUnitTests
 {
     using System;
-    using System.Data.Entity.Core;
-    using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;

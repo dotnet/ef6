@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations.Utilities
 {
     // An alias is required because Error, Strings, IEnumerableExtensions etc. are defined in EntityFramework.dll and EntityFramework.PowerShell.dll
     extern alias powershell;
     using System.Collections.Generic;
-    using powershell::System.Data.Entity.Migrations.Utilities;
     using Xunit;
 
     public class TemplateProcessorTests
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Migrations
                                  { "sound", "moo" }
                              };
 
-            var output = new TemplateProcessor().Process(input, tokens);
+            var output = new powershell::System.Data.Entity.Migrations.Utilities.TemplateProcessor().Process(input, tokens);
 
             Assert.Equal(output, "The cow goes moo.");
         }
@@ -34,7 +33,7 @@ namespace System.Data.Entity.Migrations
                                  { "animal", "cow" }
                              };
 
-            var output = new TemplateProcessor().Process(input, tokens);
+            var output = new powershell::System.Data.Entity.Migrations.Utilities.TemplateProcessor().Process(input, tokens);
 
             Assert.Equal(output, "The cow goes .");
         }

@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
-    using System.Data;
     using System.Data.Common;
 
     #region Test Providers

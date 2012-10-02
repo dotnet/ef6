@@ -159,10 +159,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().Map(
                 mapping =>
-                {
-                    mapping.ToTable("Table1");
-                    mapping.Properties(e => e.Geography);
-                });
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.Geography);
+                    });
 
             Assert.Throws<InvalidOperationException>(
                 () =>
@@ -235,10 +235,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Spatial_Customer>().Map(
                 mapping =>
-                {
-                    mapping.ToTable("Table1");
-                    mapping.Properties(e => e.Geometry);
-                });
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.Geometry);
+                    });
 
             Assert.Throws<InvalidOperationException>(
                 () =>

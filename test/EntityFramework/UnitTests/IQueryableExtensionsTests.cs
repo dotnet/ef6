@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+
 #if !NET40
 
 namespace System.Data.Entity
 {
-    using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
@@ -12,6 +12,7 @@ namespace System.Data.Entity
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using Moq;
     using Xunit;
 
     public class IQueryableExtensionsTests
@@ -365,14 +366,22 @@ namespace System.Data.Entity
             SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e, new CancellationToken()));
             SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e, e => e));
             SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e, e => e, new CancellationToken()));
-            SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e,
-                new Mock<IEqualityComparer<int>>().Object));
-            SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e,
-                new Mock<IEqualityComparer<int>>().Object, new CancellationToken()));
-            SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e, e => e,
-                new Mock<IEqualityComparer<int>>().Object));
-            SourceNonAsyncEnumerableTest<int>(() => Source().ToDictionaryAsync(e => e, e => e,
-                new Mock<IEqualityComparer<int>>().Object, new CancellationToken()));
+            SourceNonAsyncEnumerableTest<int>(
+                () => Source().ToDictionaryAsync(
+                    e => e,
+                    new Mock<IEqualityComparer<int>>().Object));
+            SourceNonAsyncEnumerableTest<int>(
+                () => Source().ToDictionaryAsync(
+                    e => e,
+                    new Mock<IEqualityComparer<int>>().Object, new CancellationToken()));
+            SourceNonAsyncEnumerableTest<int>(
+                () => Source().ToDictionaryAsync(
+                    e => e, e => e,
+                    new Mock<IEqualityComparer<int>>().Object));
+            SourceNonAsyncEnumerableTest<int>(
+                () => Source().ToDictionaryAsync(
+                    e => e, e => e,
+                    new Mock<IEqualityComparer<int>>().Object, new CancellationToken()));
 
             SourceNonAsyncEnumerableTest<int>(() => Source().ToListAsync());
             SourceNonAsyncEnumerableTest<int>(() => Source().ToListAsync(new CancellationToken()));
@@ -380,8 +389,8 @@ namespace System.Data.Entity
             SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ForEachAsync(e => e.GetType()));
             SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ForEachAsync(e => e.GetType(), new CancellationToken()));
 
-            SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ToListAsync<double>());
-            SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ToListAsync<double>(new CancellationToken()));
+            SourceNonAsyncEnumerableTest(() => (Source()).ToListAsync<double>());
+            SourceNonAsyncEnumerableTest(() => (Source()).ToListAsync<double>(new CancellationToken()));
         }
 
         [Fact]
@@ -549,7 +558,8 @@ namespace System.Data.Entity
 
         private static void SourceNonAsyncEnumerableTest<T>(Action test)
         {
-            Assert.Equal(Strings.IQueryable_Not_Async("<" + typeof(T) + ">"), Assert.Throws<InvalidOperationException>(() => test()).Message);
+            Assert.Equal(
+                Strings.IQueryable_Not_Async("<" + typeof(T) + ">"), Assert.Throws<InvalidOperationException>(() => test()).Message);
         }
 
         private static void VerifyProducedExpression<TElement, TResult>(
@@ -560,40 +570,40 @@ namespace System.Data.Entity
             providerMock.Setup(m => m.ExecuteAsync<TResult>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
                 .Returns<Expression, CancellationToken>(
                     (e, ct) =>
-                    {
-                        var expectedMethodCall = (MethodCallExpression)testExpression.Body;
-                        var actualMethodCall = (MethodCallExpression)e;
-
-                        Assert.Equal(
-                            expectedMethodCall.Method.Name,
-                            actualMethodCall.Method.Name + "Async");
-
-                        var lastArgument = expectedMethodCall.Arguments[expectedMethodCall.Arguments.Count - 1] as MemberExpression;
-
-                        bool cancellationTokenPresent = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
-
-                        if (cancellationTokenPresent)
                         {
-                            Assert.NotEqual(ct, CancellationToken.None);
-                        }
-                        else
-                        {
-                            Assert.Equal(ct, CancellationToken.None);
-                        }
+                            var expectedMethodCall = (MethodCallExpression)testExpression.Body;
+                            var actualMethodCall = (MethodCallExpression)e;
 
-                        var expectedNumberOfArguments = cancellationTokenPresent
-                                                   ? expectedMethodCall.Arguments.Count - 1
-                                                   : expectedMethodCall.Arguments.Count;
-                        Assert.Equal(expectedNumberOfArguments, actualMethodCall.Arguments.Count);
-                        for (int i = 1; i < expectedNumberOfArguments; i++)
-                        {
-                            var expectedArgument = expectedMethodCall.Arguments[i];
-                            var actualArgument = actualMethodCall.Arguments[i];
-                            Assert.Equal(expectedArgument.ToString(), actualArgument.ToString());
-                        }
+                            Assert.Equal(
+                                expectedMethodCall.Method.Name,
+                                actualMethodCall.Method.Name + "Async");
 
-                        return Task.FromResult(default(TResult));
-                    });
+                            var lastArgument = expectedMethodCall.Arguments[expectedMethodCall.Arguments.Count - 1] as MemberExpression;
+
+                            var cancellationTokenPresent = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
+
+                            if (cancellationTokenPresent)
+                            {
+                                Assert.NotEqual(ct, CancellationToken.None);
+                            }
+                            else
+                            {
+                                Assert.Equal(ct, CancellationToken.None);
+                            }
+
+                            var expectedNumberOfArguments = cancellationTokenPresent
+                                                                ? expectedMethodCall.Arguments.Count - 1
+                                                                : expectedMethodCall.Arguments.Count;
+                            Assert.Equal(expectedNumberOfArguments, actualMethodCall.Arguments.Count);
+                            for (var i = 1; i < expectedNumberOfArguments; i++)
+                            {
+                                var expectedArgument = expectedMethodCall.Arguments[i];
+                                var actualArgument = actualMethodCall.Arguments[i];
+                                Assert.Equal(expectedArgument.ToString(), actualArgument.ToString());
+                            }
+
+                            return Task.FromResult(default(TResult));
+                        });
 
             queryableMock.Setup(m => m.Provider).Returns(providerMock.Object);
 

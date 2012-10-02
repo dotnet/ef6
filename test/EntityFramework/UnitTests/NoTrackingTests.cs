@@ -5,7 +5,6 @@ namespace ProductivityApiUnitTests
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Linq;
     using Moq;
     using Xunit;

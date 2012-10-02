@@ -19,7 +19,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 Assert.Equal(
                     Strings.RelatedEnd_OwnerIsNull,
-                    Assert.Throws<InvalidOperationException>(() =>
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
                         entityReference.GetEnumerator()).Message);
             }
         }
@@ -114,10 +115,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 entityReferenceMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
                     .Callback(
                         (IEnumerable<object> collection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                        {
-                            timesMergeCalled++;
-                            Assert.Equal(mergeOption, actualMergeOption);
-                        });
+                            {
+                                timesMergeCalled++;
+                                Assert.Equal(mergeOption, actualMergeOption);
+                            });
 
                 var entityReference = entityReferenceMock.Object;
                 entityReference.Load(mergeOption);
@@ -145,8 +146,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     multiplicity: RelationshipMultiplicity.One);
                 entityReferenceMock.Setup(m => m.ToEndMember).Returns(toEndMember);
 
-                Assert.Equal(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound,
-                    Assert.Throws<InvalidOperationException>(() =>
+                Assert.Equal(
+                    Strings.EntityReference_LessThanExpectedRelatedEntitiesFound,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
                         entityReferenceMock.Object.Load(MergeOption.NoTracking)).Message);
             }
 
@@ -159,14 +162,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 var hasResults = true;
                 entityReferenceMock.Setup(m => m.ValidateLoad<object>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
-                 .Returns(() => objectQueryMock.Object);
+                    .Returns(() => objectQueryMock.Object);
 
-                Assert.Equal(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound,
-                    Assert.Throws<InvalidOperationException>(() =>
+                Assert.Equal(
+                    Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
                         entityReferenceMock.Object.Load(MergeOption.NoTracking)).Message);
             }
         }
-        
+
 #if !NET40
 
         public class LoadAsync
@@ -178,8 +183,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 Assert.Equal(
                     Strings.RelatedEnd_OwnerIsNull,
-                    Assert.Throws<InvalidOperationException>(() =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
                             entityReference.LoadAsync().Wait())).Message);
             }
 
@@ -261,10 +268,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 entityReferenceMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
                     .Callback(
                         (IEnumerable<object> collection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                        {
-                            timesMergeCalled++;
-                            Assert.Equal(mergeOption, actualMergeOption);
-                        });
+                            {
+                                timesMergeCalled++;
+                                Assert.Equal(mergeOption, actualMergeOption);
+                            });
 
                 var entityReference = entityReferenceMock.Object;
                 entityReference.LoadAsync(mergeOption).Wait();
@@ -292,9 +299,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     multiplicity: RelationshipMultiplicity.One);
                 entityReferenceMock.Setup(m => m.ToEndMember).Returns(toEndMember);
 
-                Assert.Equal(Strings.EntityReference_LessThanExpectedRelatedEntitiesFound,
-                    Assert.Throws<InvalidOperationException>(() =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                Assert.Equal(
+                    Strings.EntityReference_LessThanExpectedRelatedEntitiesFound,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
                             entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking).Wait())).Message);
             }
 
@@ -307,11 +317,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 var hasResults = true;
                 entityReferenceMock.Setup(m => m.ValidateLoad<object>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
-                 .Returns(() => objectQueryMock.Object);
+                    .Returns(() => objectQueryMock.Object);
 
-                Assert.Equal(Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound,
-                    Assert.Throws<InvalidOperationException>(() =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                Assert.Equal(
+                    Strings.EntityReference_MoreThanExpectedRelatedEntitiesFound,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
                             entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking).Wait())).Message);
             }
         }

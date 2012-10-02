@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Spatial;
     using System.Linq;
-    using FunctionalTests.Model;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]

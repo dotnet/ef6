@@ -70,10 +70,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.False(TableExists("dbo.OrderLines"));
-                    Assert.False(TableExists("dbo." + HistoryContext.TableName));
-                });
+                    {
+                        Assert.False(TableExists("dbo.OrderLines"));
+                        Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                    });
 
             Assert.True(TableExists("foo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -91,10 +91,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.False(TableExists("foo.OrderLines"));
-                    Assert.False(TableExists("foo." + HistoryContext.TableName));
-                });
+                    {
+                        Assert.False(TableExists("foo.OrderLines"));
+                        Assert.False(TableExists("foo." + HistoryContext.TableName));
+                    });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -138,10 +138,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.False(TableExists("foo.OrderLines"));
-                    Assert.False(TableExists("foo." + HistoryContext.TableName));
-                });
+                    {
+                        Assert.False(TableExists("foo.OrderLines"));
+                        Assert.False(TableExists("foo." + HistoryContext.TableName));
+                    });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
@@ -206,10 +206,10 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                {
-                    Assert.True(TableExists("foo." + HistoryContext.TableName));
-                    Assert.False(TableExists("dbo." + HistoryContext.TableName));
-                });
+                    {
+                        Assert.True(TableExists("foo." + HistoryContext.TableName));
+                        Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                    });
 
             migrator.Update("0");
 

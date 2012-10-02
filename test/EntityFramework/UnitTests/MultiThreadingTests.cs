@@ -15,10 +15,10 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    ///   Unit tests that execute the various places where we have thread-safe code with multiple threads
-    ///   such that we have at least some chance of finding issues in this code. As with any test of this
-    ///   type just because these tests pass does not mean that the code is correct. On the other hand,
-    ///   if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
+    ///     Unit tests that execute the various places where we have thread-safe code with multiple threads
+    ///     such that we have at least some chance of finding issues in this code. As with any test of this
+    ///     type just because these tests pass does not mean that the code is correct. On the other hand,
+    ///     if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
     /// </summary>
     public class MultiThreadingTests : TestBase
     {

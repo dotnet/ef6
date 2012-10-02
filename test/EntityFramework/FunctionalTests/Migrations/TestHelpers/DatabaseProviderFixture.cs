@@ -25,11 +25,11 @@ namespace System.Data.Entity.Migrations
             }
             _testDatabases[DatabaseProvider.SqlClient] = InitializeTestDatabase(DatabaseProvider.SqlClient, DefaultDatabaseName);
 
-            _codeGenerators[Migrations.ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();
-            _migrationCompilers[Migrations.ProgrammingLanguage.CSharp] = new MigrationCompiler("cs");
+            _codeGenerators[ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();
+            _migrationCompilers[ProgrammingLanguage.CSharp] = new MigrationCompiler("cs");
             ;
-            _codeGenerators[Migrations.ProgrammingLanguage.VB] = new VisualBasicMigrationCodeGenerator();
-            _migrationCompilers[Migrations.ProgrammingLanguage.VB] = new MigrationCompiler("vb");
+            _codeGenerators[ProgrammingLanguage.VB] = new VisualBasicMigrationCodeGenerator();
+            _migrationCompilers[ProgrammingLanguage.VB] = new MigrationCompiler("vb");
         }
 
         public Dictionary<DatabaseProvider, TestDatabase> TestDatabases

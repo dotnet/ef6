@@ -9,7 +9,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;

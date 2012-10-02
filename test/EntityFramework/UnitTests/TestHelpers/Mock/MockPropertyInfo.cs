@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Reflection;
     using Moq;
 

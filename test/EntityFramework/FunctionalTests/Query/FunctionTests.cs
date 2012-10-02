@@ -7,13 +7,14 @@ namespace System.Data.Entity.Query
 
     public class FunctionTests
     {
-        private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
+        private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
+            ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
 
         [Fact]
         public void Inline_function_count_Products()
         {
             var query =
-@"Function CountProducts(products Collection(ProductModel.Product)) as 
+                @"Function CountProducts(products Collection(ProductModel.Product)) as 
     (count(select value 1 from products))
 
 select gkey, CountProducts(GroupPartition(P))
@@ -21,7 +22,7 @@ FROM ProductContainer.Products as P
 Group By P.ProductName as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ProductName], 
 [GroupBy1].[A1] AS [C2]
@@ -40,7 +41,7 @@ FROM ( SELECT
         public void Inline_functions_MaxProductId_and_MinProductId()
         {
             var query =
-@"Function MinProductId(products Collection(ProductModel.Product)) as 
+                @"Function MinProductId(products Collection(ProductModel.Product)) as 
     (min(select value pp.ProductId from products as pp))
 Function MaxProductId(products Collection(ProductModel.Product)) as 
     (max(select value pp.ProductId from products as pp))
@@ -50,7 +51,7 @@ FROM ProductContainer.Products as P
 Group By P.ProductName as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ProductName], 
 [GroupBy1].[A1] AS [C2], 
@@ -71,7 +72,7 @@ FROM ( SELECT
         public void Inline_function_MaxMinProductId()
         {
             var query =
-@"Function MaxMinProductId(products Collection(ProductModel.Product)) as 
+                @"Function MaxMinProductId(products Collection(ProductModel.Product)) as 
 (
     max(select value pp.ProductId from products as pp) - 
     min(select value pp.ProductId from products as pp)
@@ -82,7 +83,7 @@ FROM ProductContainer.Products as P
 Group By P.ProductName as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ProductName], 
 [GroupBy1].[A1] - [GroupBy1].[A2] AS [C2]
@@ -102,7 +103,7 @@ FROM ( SELECT
         public void Inline_function_one_level_above()
         {
             var query =
-@"Function MaxProductId(products Collection(ProductModel.Product)) as 
+                @"Function MaxProductId(products Collection(ProductModel.Product)) as 
 (
     max(select value pp.ProductId from products as pp)
 )
@@ -115,7 +116,7 @@ from (
 ) as i";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ProductName], 
 [GroupBy1].[A1] AS [C2]
@@ -134,14 +135,14 @@ FROM ( SELECT
         public void Inline_function_MaxInt()
         {
             var query =
-@"Function MaxInt(i Collection(Int32)) as (max(i))
+                @"Function MaxInt(i Collection(Int32)) as (max(i))
 
 select gkey, MaxInt(groupPartition(a))
 FROM {1,1,2,2,2} as a
 Group By a as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [GroupBy1].[K1] AS [C1], 
 [GroupBy1].[A1] AS [C2]
 FROM ( SELECT 
@@ -182,7 +183,7 @@ FROM ( SELECT
         public void Inline_aggregate_funtion_MinProductId()
         {
             var query =
-@"Function MinProductId(products Collection(ProductModel.Product)) as 
+                @"Function MinProductId(products Collection(ProductModel.Product)) as 
 (
     anyelement(select value min(pp.ProductId) from products as pp)
 )
@@ -192,7 +193,7 @@ FROM ProductContainer.Products as P
 Group By P.ProductName as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [Project2].[ProductName] AS [ProductName], 
 [Project2].[C1] AS [C2]

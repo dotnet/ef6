@@ -77,10 +77,7 @@ namespace System.Data.Entity.Edm
 
         public IEnumerable<EdmProperty> Properties
         {
-            get
-            {
-                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList);
-            }
+            get { return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList); }
         }
     }
 }

@@ -41,6 +41,5 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
 #endif
-
     }
 }

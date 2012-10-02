@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
@@ -221,11 +220,12 @@ namespace System.Data.Entity
 
         public static void UnwrapAggregateExceptions(Action executor)
         {
-            UnwrapAggregateExceptions<object>(() =>
-                {
-                    executor();
-                    return null;
-                });
+            UnwrapAggregateExceptions<object>(
+                () =>
+                    {
+                        executor();
+                        return null;
+                    });
         }
 
         /// <summary>

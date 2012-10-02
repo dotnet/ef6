@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
             v.VerifyMethod(e => e.ComplexProperty(name), m => m.Property(name, null, true));
             v.VerifyMethod(e => e.ComplexProperty<object>(name), m => m.Property(name, typeof(object), true));
             v.VerifyMethod(e => e.GetDatabaseValues(), m => m.GetDatabaseValues());
-            v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object,object>>()));
+            v.VerifyMethod(e => e.GetValidationResult(), m => m.GetValidationResult(It.IsAny<IDictionary<object, object>>()));
             v.VerifyMethod(e => e.Member(name), m => m.Member(name, null));
             v.VerifyMethod(e => e.Member<object>(name), m => m.Member(name, typeof(object)));
             v.VerifyMethod(e => e.Property(name), m => m.Property(name, null, false));
@@ -1919,6 +1919,7 @@ namespace System.Data.Entity.Infrastructure
 
             [Fact]
             public void Using_non_generic_ComplexProperty_on_DbComplexProperty_with_dotted_string_containing_reference_nav_prop_name_throws(
+                
                 )
             {
                 var propEntry = new DbEntityEntry(FakeWithProps.CreateMockInternalEntityEntry().Object).ComplexProperty("ComplexProp");
@@ -2723,7 +2724,11 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalEntityEntry>(new Mock<InternalContextForMock>() { CallBase = true }.Object,
+                return new Mock<InternalEntityEntry>(
+                    new Mock<InternalContextForMock>
+                        {
+                            CallBase = true
+                        }.Object,
                     MockHelper.CreateMockStateEntry<object>().Object);
             }
         }
@@ -2739,7 +2744,11 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalEntityEntry>(new Mock<InternalContextForMock>() { CallBase = true }.Object,
+                return new Mock<InternalEntityEntry>(
+                    new Mock<InternalContextForMock>
+                        {
+                            CallBase = true
+                        }.Object,
                     MockHelper.CreateMockStateEntry<TEntity>().Object);
             }
         }

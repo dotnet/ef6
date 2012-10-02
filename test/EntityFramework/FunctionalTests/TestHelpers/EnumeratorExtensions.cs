@@ -25,7 +25,7 @@ namespace System.Data.Entity
         }
 
 #if !NET40
-        
+
         public static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerator<T> enumerator)
         {
             return enumerator.ToListAsync(CancellationToken.None);
@@ -46,6 +46,5 @@ namespace System.Data.Entity
         }
 
 #endif
-
     }
 }

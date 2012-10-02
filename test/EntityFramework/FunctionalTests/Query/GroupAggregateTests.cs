@@ -11,25 +11,32 @@ namespace System.Data.Entity.Query
 
     public class GroupAggregateTests
     {
-        private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
+        private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
+            ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
 
         private DbGroupExpressionBinding CreateBasicGroupBinding()
         {
             var entitySet = workspace.GetEntityContainer("ProductContainer", DataSpace.CSpace).GetEntitySetByName("Products", false);
-            var scan = DbExpressionBuilder.Scan(entitySet);
+            var scan = entitySet.Scan();
             return scan.GroupBindAs("input", "group");
         }
 
         [Fact]
         public void Basic_GroupBy_with_group_key_and_group_aggregate()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
-            var keys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel")) };
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> { new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) };
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var groupBinding = CreateBasicGroupBinding();
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel"))
+                           };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
+            var query = groupBinding.GroupBy(keys, aggregates);
 
             var expectedSql =
-            @"SELECT 
+                @"SELECT 
 [Project2].[C1] AS [C1], 
 [Project2].[ReorderLevel] AS [ReorderLevel], 
 [Project2].[C2] AS [C2], 
@@ -59,19 +66,22 @@ ORDER BY [Project2].[ReorderLevel] ASC, [Project2].[C2] ASC";
         [Fact]
         public void GroupBy_with_function_aggregate_and_group_aggregate_being_first()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
+            var groupBinding = CreateBasicGroupBinding();
             var keys = new List<KeyValuePair<string, DbExpression>>();
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> 
-            { 
-                new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
-                new KeyValuePair<string, DbAggregate>("max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-            };
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                 };
 
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project2].[C2] AS [C1], 
 [Project2].[C1] AS [C2], 
 [Project2].[C3] AS [C3], 
@@ -108,19 +118,22 @@ ORDER BY [Project2].[C3] ASC";
         [Fact]
         public void GroupBy_with_function_aggregate_and_group_aggregate_being_second()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
+            var groupBinding = CreateBasicGroupBinding();
             var keys = new List<KeyValuePair<string, DbExpression>>();
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> 
-            { 
-                new KeyValuePair<string, DbAggregate>("max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-                new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
-            };
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
+                                 };
 
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-            @"SELECT 
+                @"SELECT 
 [Project2].[C2] AS [C1], 
 [Project2].[C1] AS [C2], 
 [Project2].[C3] AS [C3], 
@@ -157,21 +170,27 @@ ORDER BY [Project2].[C3] ASC";
         [Fact]
         public void GroupBy_with_two_function_aggregates_and_group_aggregate_being_in_the_middle()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
+            var groupBinding = CreateBasicGroupBinding();
             var keys = new List<KeyValuePair<string, DbExpression>>();
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            EdmFunction minFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Min" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> 
-            { 
-                new KeyValuePair<string, DbAggregate>("max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-                new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
-                new KeyValuePair<string, DbAggregate>("min", minFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-            };
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var minFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Min" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "min", minFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                 };
 
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project2].[C3] AS [C1], 
 [Project2].[C1] AS [C2], 
 [Project2].[C2] AS [C3], 
@@ -211,13 +230,16 @@ ORDER BY [Project2].[C4] ASC";
         [Fact]
         public void GroupBy_with_just_group_aggregate()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
+            var groupBinding = CreateBasicGroupBinding();
             var keys = new List<KeyValuePair<string, DbExpression>>();
-            var aggregates = new List<KeyValuePair<string, DbAggregate>>() { new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
 
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project2].[C1] AS [C1], 
 [Project2].[C2] AS [C2], 
 [Project2].[Discontinued] AS [Discontinued], 
@@ -248,26 +270,32 @@ ORDER BY [Project2].[C2] ASC";
 
         private DbGroupByExpression CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
-            var keys = new List<KeyValuePair<string, DbExpression>>() { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel")) };
+            var groupBinding = CreateBasicGroupBinding();
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel"))
+                           };
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var aggregates = new List<KeyValuePair<string, DbAggregate>>() 
-            { 
-                new KeyValuePair<string, DbAggregate>("max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-                new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) 
-            };
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
 
-            return DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            return groupBinding.GroupBy(keys, aggregates);
         }
 
         [Fact]
         public void GropuBy_with_group_key_function_aggregate_and_group_aggregate()
         {
-            var query = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var query = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
             var expectedSql =
-@"
+                @"
 SELECT 
 [Project1].[C2] AS [C1], 
 [Project1].[ReorderLevel] AS [ReorderLevel], 
@@ -302,21 +330,22 @@ ORDER BY [Project1].[ReorderLevel] ASC, [Project1].[C3] ASC";
         [Fact]
         public void Project_over_group_by_with_group_key_function_aggregate_and_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", groupByBinding.Variable.Property("max")),
-                new KeyValuePair<string, DbExpression>("groupPartition", groupByBinding.Variable.Property("groupPartition")),
-            };
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>("max", groupByBinding.Variable.Property("max")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "groupPartition", groupByBinding.Variable.Property("groupPartition")),
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project1].[C2] AS [C1], 
 [Project1].[ReorderLevel] AS [ReorderLevel], 
 [Project1].[C1] AS [C2], 
@@ -350,20 +379,20 @@ ORDER BY [Project1].[ReorderLevel] ASC, [Project1].[C3] ASC";
         [Fact]
         public void Project_over_group_by_skip_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", groupByBinding.Variable.Property("max")),
-            };
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>("max", groupByBinding.Variable.Property("max")),
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
- @"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ReorderLevel], 
 [GroupBy1].[A1] AS [C2]
@@ -381,19 +410,20 @@ FROM ( SELECT
         [Fact]
         public void Project_over_group_by_only_project_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupPartition", groupByBinding.Variable.Property("groupPartition")),
-            };
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>(
+                                          "groupPartition", groupByBinding.Variable.Property("groupPartition")),
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project2].[ReorderLevel] AS [ReorderLevel], 
 [Project2].[C1] AS [C1], 
 [Project2].[C2] AS [C2], 
@@ -425,20 +455,26 @@ ORDER BY [Project2].[ReorderLevel] ASC, [Project2].[C2] ASC";
         {
             var innerGroupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbGroupExpressionBinding outerGroupBinding = innerGroupBy.GroupBindAs("input2", "group2");
-            var outerKeys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey2", outerGroupBinding.Variable.Property("max")) };
+            var outerGroupBinding = innerGroupBy.GroupBindAs("input2", "group2");
+            var outerKeys = new List<KeyValuePair<string, DbExpression>>
+                                {
+                                    new KeyValuePair<string, DbExpression>("groupKey2", outerGroupBinding.Variable.Property("max"))
+                                };
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
             var outerAggregates = new List<KeyValuePair<string, DbAggregate>>
-            {
-                new KeyValuePair<string, DbAggregate>("groupPartition2", outerGroupBinding.GroupAggregate),
-                new KeyValuePair<string, DbAggregate>("max2", maxFunction.Aggregate(outerGroupBinding.GroupVariable.Property("groupKey"))),
-            };
+                                      {
+                                          new KeyValuePair<string, DbAggregate>("groupPartition2", outerGroupBinding.GroupAggregate),
+                                          new KeyValuePair<string, DbAggregate>(
+                                              "max2", maxFunction.Aggregate(outerGroupBinding.GroupVariable.Property("groupKey"))),
+                                      };
 
-            DbGroupByExpression query = DbExpressionBuilder.GroupBy(outerGroupBinding, outerKeys, outerAggregates);
+            var query = outerGroupBinding.GroupBy(outerKeys, outerAggregates);
 
-            var expectedSql = 
- @"SELECT 
+            var expectedSql =
+                @"SELECT 
 [Project2].[C3] AS [C1], 
 [Project2].[C1] AS [C2], 
 [Project2].[C2] AS [C3], 
@@ -497,19 +533,25 @@ ORDER BY [Project2].[C1] ASC, [Project2].[C6] ASC, [Project2].[ReorderLevel] ASC
         [Fact]
         public void GroupBy_over_union()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
-            var keys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel")) };
+            var groupBinding = CreateBasicGroupBinding();
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable.Property("ReorderLevel"))
+                           };
 
-            EdmFunction maxFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var maxFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Max" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
             var aggregates = new List<KeyValuePair<string, DbAggregate>>
-            {
-                new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
-                new KeyValuePair<string, DbAggregate>("max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
-            };
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate),
+                                     new KeyValuePair<string, DbAggregate>(
+                                         "max", maxFunction.Aggregate(groupBinding.GroupVariable.Property("ProductID"))),
+                                 };
 
-            var query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project1].[C2] AS [C1], 
 [Project1].[ReorderLevel] AS [ReorderLevel], 
 [Project1].[C1] AS [C2], 
@@ -546,15 +588,21 @@ ORDER BY [Project1].[ReorderLevel] ASC, [Project1].[C3] ASC";
             DbExpression one = DbExpressionBuilder.Constant(1);
             DbExpression intNull = one.ResultType.Null();
 
-            var input = DbExpressionBuilder.NewCollection(new DbExpression[] { 1, 2, 3, intNull, intNull, 2, 1, intNull });
+            var input = DbExpressionBuilder.NewCollection(new[] { 1, 2, 3, intNull, intNull, 2, 1, intNull });
 
-            DbGroupExpressionBinding groupBinding = input.GroupBindAs("input", "group");
-            var keys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable)  };
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> { new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) };
-            DbGroupByExpression query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var groupBinding = input.GroupBindAs("input", "group");
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable)
+                           };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
+            var query = groupBinding.GroupBy(keys, aggregates);
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project30].[C2] AS [C1], 
 [Project30].[C1] AS [C2], 
 [Project30].[C4] AS [C3], 
@@ -661,13 +709,19 @@ ORDER BY [Project30].[C1] ASC, [Project30].[C4] ASC";
         [Fact]
         public void GroupBy_on_entity()
         {
-            var groupBinding = this.CreateBasicGroupBinding();
-            var keys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable) };
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> { new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) };
+            var groupBinding = CreateBasicGroupBinding();
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable)
+                           };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
 
-            DbGroupByExpression query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project1].[ProductID] AS [ProductID], 
 [Project1].[Discontinued] AS [Discontinued], 
 [Project1].[ProductName] AS [ProductName], 
@@ -702,34 +756,43 @@ ORDER BY [Project1].[Discontinued] ASC, [Project1].[ProductID] ASC, [Project1].[
             DbExpression one = DbExpressionBuilder.Constant(1);
             DbExpression intNull = one.ResultType.Null();
 
-            DbExpression[] rows = new DbExpression[3]
-            {
-                DbExpressionBuilder.NewRow(new List<KeyValuePair<string, DbExpression>>
-                {
-                    new KeyValuePair<string, DbExpression>("x", one),
-                    new KeyValuePair<string, DbExpression>("y", one),
-                }),
-                DbExpressionBuilder.NewRow(new List<KeyValuePair<string, DbExpression>>
-                {
-                    new KeyValuePair<string, DbExpression>("x", one),
-                    new KeyValuePair<string, DbExpression>("y", intNull),
-                }),
-                DbExpressionBuilder.NewRow(new List<KeyValuePair<string, DbExpression>>
-                {
-                    new KeyValuePair<string, DbExpression>("x", intNull),
-                    new KeyValuePair<string, DbExpression>("y", intNull),
-                }),
-            };
+            var rows = new DbExpression[3]
+                           {
+                               DbExpressionBuilder.NewRow(
+                                   new List<KeyValuePair<string, DbExpression>>
+                                       {
+                                           new KeyValuePair<string, DbExpression>("x", one),
+                                           new KeyValuePair<string, DbExpression>("y", one),
+                                       }),
+                               DbExpressionBuilder.NewRow(
+                                   new List<KeyValuePair<string, DbExpression>>
+                                       {
+                                           new KeyValuePair<string, DbExpression>("x", one),
+                                           new KeyValuePair<string, DbExpression>("y", intNull),
+                                       }),
+                               DbExpressionBuilder.NewRow(
+                                   new List<KeyValuePair<string, DbExpression>>
+                                       {
+                                           new KeyValuePair<string, DbExpression>("x", intNull),
+                                           new KeyValuePair<string, DbExpression>("y", intNull),
+                                       }),
+                           };
 
-            DbNewInstanceExpression input = DbExpressionBuilder.NewCollection(rows);
-            DbGroupExpressionBinding groupBinding = input.GroupBindAs("input", "group");
+            var input = DbExpressionBuilder.NewCollection(rows);
+            var groupBinding = input.GroupBindAs("input", "group");
 
-            var keys = new List<KeyValuePair<string, DbExpression>> { new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable) };
-            var aggregates = new List<KeyValuePair<string, DbAggregate>> { new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate) };
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable)
+                           };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
 
-            DbGroupByExpression query = DbExpressionBuilder.GroupBy(groupBinding, keys, aggregates);
+            var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project10].[C1] AS [C1], 
 [Project10].[C2] AS [C2], 
 [Project10].[C3] AS [C3], 
@@ -784,22 +847,28 @@ ORDER BY [Project10].[C1] ASC, [Project10].[C2] ASC, [Project10].[C3] ASC, [Proj
         [Fact]
         public void Count_over_Group_aggregate_with_group_key_and_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            var countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("groupPartition", groupByBinding.Variable.Property("groupPartition")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(groupByBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID"))))
-            };
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "groupPartition", groupByBinding.Variable.Property("groupPartition")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              groupByBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID"))))
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 [Project1].[C2] AS [C1], 
 [Project1].[ReorderLevel] AS [ReorderLevel], 
 [Project1].[C1] AS [C2], 
@@ -833,21 +902,26 @@ ORDER BY [Project1].[ReorderLevel] ASC, [Project1].[C3] ASC";
         [Fact]
         public void Count_over_Group_aggregate_with_group_key_and_no_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            var countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(groupByBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID"))))
-            };
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              groupByBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID"))))
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ReorderLevel], 
 [GroupBy1].[A1] AS [C2]
@@ -865,21 +939,27 @@ FROM ( SELECT
         [Fact]
         public void Count_over_filter_over_group_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            DbExpressionBinding groupByBinding = groupBy.BindAs("groupBy");
+            var groupByBinding = groupBy.BindAs("groupBy");
 
-            var countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            List<KeyValuePair<string, DbExpression>> projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(groupByBinding.Variable.Property("groupPartition").Where(f => DbExpressionBuilder.LessThan(f.Property("ProductID"), 3)).Select(p => p.Property("ProductID")))),
-            };
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              groupByBinding.Variable.Property("groupPartition").Where(
+                                                  f => f.Property("ProductID").LessThan(3)).Select(p => p.Property("ProductID")))),
+                                  };
 
             var query = groupByBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [Project2].[ReorderLevel] AS [ReorderLevel], 
 [Project2].[C1] AS [C2]
@@ -902,28 +982,37 @@ FROM ( SELECT
         [Fact]
         public void Count_over_project_filtered_group_aggregate_also_include_group_key_and_function_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
-            var filteredGroupAggregateProjection = groupBy.Select(p => new 
-            {
-                groupKey = p.Property("groupKey"),
-                max = p.Property("max"),
-                groupPartition = p.Property("groupPartition").Where(g => DbExpressionBuilder.LessThan(g.Property("ProductID"), 3)),
-            });
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var filteredGroupAggregateProjection = groupBy.Select(
+                p => new
+                         {
+                             groupKey = p.Property("groupKey"),
+                             max = p.Property("max"),
+                             groupPartition = p.Property("groupPartition").Where(g => g.Property("ProductID").LessThan(3)),
+                         });
 
             var filteredGroupAggregateProjectionBinding = filteredGroupAggregateProjection.BindAs("groupBy");
 
-            var countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var projections = new List<KeyValuePair<string, DbExpression>>()
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", filteredGroupAggregateProjectionBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", filteredGroupAggregateProjectionBinding.Variable.Property("max")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(filteredGroupAggregateProjectionBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
-            };
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>(
+                                          "groupKey", filteredGroupAggregateProjectionBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "max", filteredGroupAggregateProjectionBinding.Variable.Property("max")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              filteredGroupAggregateProjectionBinding.Variable.Property("groupPartition").Select(
+                                                  p => p.Property("ProductID")))),
+                                  };
 
             var query = filteredGroupAggregateProjectionBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [Project1].[ReorderLevel] AS [ReorderLevel], 
 [Project1].[C1] AS [C2], 
@@ -950,29 +1039,38 @@ FROM ( SELECT
         [Fact]
         public void Count_over_project_unioned_group_aggregate_also_include_group_key_and_function_aggregate()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            var unionedGroupAggregateProjection = groupBy.Select(p => new
-            {
-                groupKey = p.Property("groupKey"),
-                max = p.Property("max"),
-                groupPartition = p.Property("groupPartition").UnionAll(p.Property("groupPartition")),
-            });
+            var unionedGroupAggregateProjection = groupBy.Select(
+                p => new
+                         {
+                             groupKey = p.Property("groupKey"),
+                             max = p.Property("max"),
+                             groupPartition = p.Property("groupPartition").UnionAll(p.Property("groupPartition")),
+                         });
 
             var unionedGroupAggregateProjectionBinding = unionedGroupAggregateProjection.BindAs("groupBy");
 
-            var countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
-            var projections = new List<KeyValuePair<string, DbExpression>>()
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", unionedGroupAggregateProjectionBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", unionedGroupAggregateProjectionBinding.Variable.Property("max")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(unionedGroupAggregateProjectionBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
-            };
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var projections = new List<KeyValuePair<string, DbExpression>>
+                                  {
+                                      new KeyValuePair<string, DbExpression>(
+                                          "groupKey", unionedGroupAggregateProjectionBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "max", unionedGroupAggregateProjectionBinding.Variable.Property("max")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              unionedGroupAggregateProjectionBinding.Variable.Property("groupPartition").Select(
+                                                  p => p.Property("ProductID")))),
+                                  };
 
             var query = unionedGroupAggregateProjectionBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [Project3].[ReorderLevel] AS [ReorderLevel], 
 [Project3].[C1] AS [C2], 
@@ -1006,15 +1104,17 @@ FROM ( SELECT
         [Fact]
         public void Count_over_group_aggregate_propagated_through_Apply()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            EdmFunction countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
 
             var query = groupBy.OuterApply(c => new KeyValuePair<string, DbExpression>("applyColumn", groupBy)).
                 Select(a => countFunction.Invoke(a.Property("c").Property("groupPartition").Select(p => p.Property("ProductID"))));
 
             var expectedSql =
- @"SELECT 
+                @"SELECT 
 (SELECT 
 	COUNT([Extent3].[ProductID]) AS [A1]
 	FROM [dbo].[Products] AS [Extent3]
@@ -1034,14 +1134,16 @@ LEFT OUTER JOIN  (SELECT DISTINCT
         [Fact]
         public void Count_over_group_aggregate_propagated_throgh_Element()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
 
-            EdmFunction countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
 
             var query = countFunction.Invoke(groupBy.Element().Property("groupPartition").Select(p => p.Property("ProductID")));
 
-            var expectedSql = 
-@"SELECT 
+            var expectedSql =
+                @"SELECT 
 [GroupBy1].[A1] AS [C1]
 FROM ( SELECT 
 	COUNT([Extent2].[ProductID]) AS [A1]
@@ -1061,23 +1163,28 @@ FROM ( SELECT
         [Fact]
         public void Count_over_group_aggregate_propagated_through_Limit()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
             var groupByLimit = groupBy.Limit(2);
 
             var groupByLimitBinding = groupByLimit.BindAs("groupByLimit");
 
-            EdmFunction countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
             var projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByLimitBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", groupByLimitBinding.Variable.Property("max")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(groupByLimitBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
-            };
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByLimitBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>("max", groupByLimitBinding.Variable.Property("max")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              groupByLimitBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
+                                  };
 
             var query = groupByLimitBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [Limit1].[K1] AS [ReorderLevel], 
 [Limit1].[A1] AS [C2], 
@@ -1097,23 +1204,28 @@ FROM ( SELECT TOP (2)
         [Fact]
         public void Count_over_group_aggregate_propagated_through_Filter()
         {
-            var groupBy = this.CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
-            var groupByFilter = groupBy.Where(c => DbExpressionBuilder.LessThan(c.Property("groupKey"), 3));
+            var groupBy = CreateGroupByWithGroupKeyFunctionAggregateAndGroupAggregate();
+            var groupByFilter = groupBy.Where(c => c.Property("groupKey").LessThan(3));
 
             var groupByFilterBinding = groupByFilter.BindAs("groupByLimit");
 
-            EdmFunction countFunction = workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
+            var countFunction =
+                workspace.GetItems<EdmFunction>(DataSpace.CSpace).Where(
+                    a => a.Name == "Count" && a.Parameters[0].TypeUsage.EdmType.Name.Contains("Int32")).First();
             var projections = new List<KeyValuePair<string, DbExpression>>
-            {
-                new KeyValuePair<string, DbExpression>("groupKey", groupByFilterBinding.Variable.Property("groupKey")),
-                new KeyValuePair<string, DbExpression>("max", groupByFilterBinding.Variable.Property("max")),
-                new KeyValuePair<string, DbExpression>("count", countFunction.Invoke(groupByFilterBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
-            };
+                                  {
+                                      new KeyValuePair<string, DbExpression>("groupKey", groupByFilterBinding.Variable.Property("groupKey")),
+                                      new KeyValuePair<string, DbExpression>("max", groupByFilterBinding.Variable.Property("max")),
+                                      new KeyValuePair<string, DbExpression>(
+                                          "count",
+                                          countFunction.Invoke(
+                                              groupByFilterBinding.Variable.Property("groupPartition").Select(p => p.Property("ProductID")))),
+                                  };
 
             var query = groupByFilterBinding.Project(DbExpressionBuilder.NewRow(projections));
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ReorderLevel], 
 [GroupBy1].[A1] AS [C2], 
@@ -1134,12 +1246,12 @@ FROM ( SELECT
         public void Using_model_defined_aggregate_function()
         {
             var query =
-@"select gkey, ProductModel.F_CountProducts(GroupPartition(P))
+                @"select gkey, ProductModel.F_CountProducts(GroupPartition(P))
 FROM ProductContainer.Products as P
 Group By P.ProductName as gkey";
 
             var expectedSql =
-@"SELECT 
+                @"SELECT 
 1 AS [C1], 
 [GroupBy1].[K1] AS [ProductName], 
 [GroupBy1].[A1] AS [C2]

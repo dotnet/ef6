@@ -8,7 +8,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;

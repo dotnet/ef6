@@ -44,7 +44,7 @@ namespace System.Data.Entity.Internal.Linq
             var dbSet = new InternalDbSet<string>(internalSetMock.Object);
 
             dbSet.Cast<object>();
-            
+
             internalContextMock.Verify(m => m.Set<object>(), Times.Once());
         }
 
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             var internalSetMock = new Mock<IInternalSet<string>>();
             var dbSet = new InternalDbSet<string>(internalSetMock.Object);
-            
+
             var sql = "foo";
 
             var query = dbSet.SqlQuery(sql);

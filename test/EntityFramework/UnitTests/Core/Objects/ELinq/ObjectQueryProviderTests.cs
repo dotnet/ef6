@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Core.Objects.ELinq
 {
-    using System;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
@@ -39,7 +37,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Assert.Throws<ArgumentNullException>(
                 () => ((IQueryProvider)CreateObjectQueryProviderMock().Object).Execute<object>(null));
         }
-        
+
         [Fact]
         public void Execute_nongeneric_calls_Single_by_default()
         {
@@ -76,14 +74,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void ExecuteAsync_nongeneric_throws_for_null_argument()
         {
             Assert.Throws<ArgumentNullException>(
-                () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync(null));
+                () => (CreateObjectQueryProviderMock().Object).ExecuteAsync(null));
         }
 
         [Fact]
         public void ExecuteAsync_generic_throws_for_null_argument()
         {
             Assert.Throws<ArgumentNullException>(
-                () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync<object>(null));
+                () => (CreateObjectQueryProviderMock().Object).ExecuteAsync<object>(null));
         }
 
         [Fact]
@@ -120,7 +118,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private Mock<ObjectQueryProvider> CreateObjectQueryProviderMock()
         {
-            return new Mock<ObjectQueryProvider>(new ObjectContext()) { CallBase = true };
+            return new Mock<ObjectQueryProvider>(new ObjectContext())
+                       {
+                           CallBase = true
+                       };
         }
     }
 }

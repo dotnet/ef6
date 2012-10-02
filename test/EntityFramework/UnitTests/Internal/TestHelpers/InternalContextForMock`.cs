@@ -14,7 +14,7 @@ namespace System.Data.Entity.Internal
     internal abstract class InternalContextForMock<TContext> : InternalContext
         where TContext : DbContext
     {
-        private ObjectContext _objectContext;
+        private readonly ObjectContext _objectContext;
 
         protected InternalContextForMock()
             : this(Core.Objects.MockHelper.CreateMockObjectContext<DbDataRecord>())
@@ -22,7 +22,10 @@ namespace System.Data.Entity.Internal
         }
 
         protected InternalContextForMock(ObjectContext objectContext)
-            : base(new Mock<TContext> { CallBase = true }.Object)
+            : base(new Mock<TContext>
+                       {
+                           CallBase = true
+                       }.Object)
         {
             Mock.Get((TContext)Owner).Setup(c => c.InternalContext).Returns(this);
             _objectContext = objectContext;

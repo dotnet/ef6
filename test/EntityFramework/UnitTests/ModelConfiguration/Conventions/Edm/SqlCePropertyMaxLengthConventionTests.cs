@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
-    using System.Data.Entity;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;

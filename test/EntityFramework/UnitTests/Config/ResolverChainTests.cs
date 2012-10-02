@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
-    using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;

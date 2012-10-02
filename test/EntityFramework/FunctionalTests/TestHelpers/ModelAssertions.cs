@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;

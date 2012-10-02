@@ -3,7 +3,6 @@
 namespace CmdLine.Tests
 {
     extern alias migrate;
-    using migrate::CmdLine;
     using System;
 
     /// <summary>
@@ -67,7 +66,7 @@ namespace CmdLine.Tests
     ///     The switch /Y may be preset in the COPYCMD environment variable.
     ///     This may be overridden with /-Y on the command line.
     /// </remarks>
-    [CommandLineArguments(Title = Title, Description = Description)]
+    [migrate::CmdLine.CommandLineArgumentsAttribute(Title = Title, Description = Description)]
     public class XCopyCommandArgs
     {
         public const string Title = "XCopy Example";
@@ -75,29 +74,33 @@ namespace CmdLine.Tests
         public const string Description = "A possible implementation of XCopy as a command args class";
 
         /// source       Specifies the file(s) to copy.
-        [CommandLineParameter(Name = "source", ParameterIndex = 1, Required = true, Description = "Specifies the file(s) to copy.")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Name = "source", ParameterIndex = 1, Required = true,
+            Description = "Specifies the file(s) to copy.")]
         public string Source { get; set; }
 
         /// destination  Specifies the location and/or name of new files.
-        [CommandLineParameter(Name = "destination", ParameterIndex = 2, Description = "Specifies the file(s) to copy.")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Name = "destination", ParameterIndex = 2,
+            Description = "Specifies the file(s) to copy.")]
         public string Destination { get; set; }
 
         //   /A           Copies only files with the archive attribute set,
-        [CommandLineParameter(Command = "A", Description = "Copies only files with the archive attribute set")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "A", Description = "Copies only files with the archive attribute set")]
         public bool ArchivedBit { get; set; }
 
         /// /I           If destination does not exist and copying more than one file,
         /// assumes that destination must be a directory.
-        [CommandLineParameter(Command = "I",
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "I",
             Description = "If destination does not exist and copying more than one file,assumes that destination must be a directory.")]
         public bool InferDirectory { get; set; }
 
         /// /D:m-d-y     Copies files changed on or after the specified date.
-        [CommandLineParameter(Command = "D", ValueExample = "m-d-y", Description = "Copies files changed on or after the specified date.")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "D", ValueExample = "m-d-y",
+            Description = "Copies files changed on or after the specified date.")]
         public DateTime ChangedAfterDate { get; set; }
 
         /// /EXCLUDE:file1[+file2][+file3]...
-        [CommandLineParameter(Command = "EXCLUDE", ValueExample = "file1[+file2][+file3]...", DescriptionResourceId = "ExcludeDescription")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "EXCLUDE", ValueExample = "file1[+file2][+file3]...",
+            DescriptionResourceId = "ExcludeDescription")]
         public string ExcludeFiles { get; set; }
     }
 }

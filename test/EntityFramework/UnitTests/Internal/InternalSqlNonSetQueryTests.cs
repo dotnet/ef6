@@ -51,15 +51,18 @@ namespace System.Data.Entity.Internal
             var parameters = new[] { "bar" };
 
 #if !NET40
-            VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", parameters),
+            VerifyMethod<string>(
+                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", parameters),
                 "foo", parameters);
 #endif
 
-            VerifyMethod<string>(e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", parameters),
+            VerifyMethod<string>(
+                e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", parameters),
                 "foo", parameters);
         }
 
-        internal void VerifyMethod<T>(Action<InternalSqlNonSetQuery> methodInvoke, Expression<Action<InternalContextForMock>> mockMethodInvoke,
+        internal void VerifyMethod<T>(
+            Action<InternalSqlNonSetQuery> methodInvoke, Expression<Action<InternalContextForMock>> mockMethodInvoke,
             string sql, object[] parameters)
             where T : class
         {

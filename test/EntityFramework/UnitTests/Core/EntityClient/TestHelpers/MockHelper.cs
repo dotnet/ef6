@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Linq;
     using Moq;
 

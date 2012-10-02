@@ -2,7 +2,7 @@
 
 using System.Data.Entity;
 
-public class ContextWithNoNamespace : System.Data.Entity.DbContext
+public class ContextWithNoNamespace : DbContext
 {
     public ContextWithNoNamespace()
     {
@@ -19,7 +19,6 @@ public class ForMetadataLookup
 
 namespace This.Is.A.Normal.Namespace
 {
-    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
 
     public class ContextInNormalNamespace : DbContext
@@ -83,8 +82,6 @@ namespace This.Is.A.Normal.Namespace
 
 namespace ____._____.__
 {
-    using System.Data.Entity;
-
     public class _3_1_4_1_5_9_ : DbContext
     {
         public _3_1_4_1_5_9_()
@@ -98,8 +95,6 @@ namespace ____._____.__
 
 namespace __This.Is_3_Not.Compl3t3ly.Invalid
 {
-    using System.Data.Entity;
-
     public class __Context_In_PartiallyInvalidNam3spac3 : DbContext
     {
         public __Context_In_PartiallyInvalidNam3spac3()
@@ -113,8 +108,6 @@ namespace __This.Is_3_Not.Compl3t3ly.Invalid
 
 namespace _3Unicorns.Starts.With.Underscrore.Digit
 {
-    using System.Data.Entity;
-
     public class _3UnicornsContextInUnderscoreDigitNamespace : DbContext
     {
         public _3UnicornsContextInUnderscoreDigitNamespace()
@@ -130,13 +123,12 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using ____._____.__;
-    using __This.Is_3_Not.Compl3t3ly.Invalid;
-    using _3Unicorns.Starts.With.Underscrore.Digit;
     using This.Is.A.Normal.Namespace;
     using Xunit;
+    using _3Unicorns.Starts.With.Underscrore.Digit;
+    using __This.Is_3_Not.Compl3t3ly.Invalid;
+    using ____._____.__;
 
     public class ModelNamespaceAndContainerTests : FunctionalTestBase
     {

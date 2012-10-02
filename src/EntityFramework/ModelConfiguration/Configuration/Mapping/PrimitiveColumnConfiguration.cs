@@ -2,20 +2,22 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Diagnostics.Contracts;
 
-    public class PrimitiveColumnConfiguration : Properties.PropertyConfiguration
+    public class PrimitiveColumnConfiguration : PropertyConfiguration
     {
-        private readonly Properties.Primitive.PrimitivePropertyConfiguration _configuration;
+        private readonly PrimitivePropertyConfiguration _configuration;
 
-        internal PrimitiveColumnConfiguration(Properties.Primitive.PrimitivePropertyConfiguration configuration)
+        internal PrimitiveColumnConfiguration(PrimitivePropertyConfiguration configuration)
         {
             Contract.Requires(configuration != null);
 
             _configuration = configuration;
         }
 
-        internal Properties.Primitive.PrimitivePropertyConfiguration Configuration
+        internal PrimitivePropertyConfiguration Configuration
         {
             get { return _configuration; }
         }

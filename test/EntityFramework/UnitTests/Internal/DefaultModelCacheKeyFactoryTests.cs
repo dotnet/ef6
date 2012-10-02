@@ -4,7 +4,6 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
     using Moq;
-    using Moq.Protected;
     using Xunit;
 
     public class DefaultModelCacheKeyFactoryTests : TestBase
@@ -31,7 +30,7 @@ namespace System.Data.Entity.Internal
             mockInternalContext.SetupGet(ic => ic.ProviderName).Returns("foo");
 
             mockContext.SetupGet(c => c.InternalContext).Returns(mockInternalContext.Object);
-            
+
             var mockCacheKeyProvider = mockContext.As<IDbModelCacheKeyProvider>();
 
             new DefaultModelCacheKeyFactory().Create(mockContext.Object);

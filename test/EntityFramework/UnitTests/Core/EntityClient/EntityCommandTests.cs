@@ -330,7 +330,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-        
+
         public class ExecuteNonQuery
         {
             [Fact]
@@ -474,7 +474,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-        
+
         private static EntityConnection InitializeEntityConnection()
         {
             var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
@@ -509,7 +509,7 @@ namespace System.Data.Entity.Core.EntityClient
 
 #if !NET40
 
-        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Xunit.Assert.ThrowsDelegate testCode)
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
             where TException : Exception
         {
             var exception = Assert.Throws<AggregateException>(testCode);
@@ -519,6 +519,5 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-
     }
 }

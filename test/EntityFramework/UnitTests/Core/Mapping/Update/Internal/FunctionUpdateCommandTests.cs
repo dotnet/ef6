@@ -298,6 +298,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
 #endif
-
     }
 }

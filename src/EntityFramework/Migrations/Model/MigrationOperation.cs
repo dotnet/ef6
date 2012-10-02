@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.Extensions;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an operation to modify a database schema.

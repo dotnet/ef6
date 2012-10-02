@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using Moq;
     using Moq.Protected;
     using Xunit;
+    using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
     public class BridgeDataReaderTests
     {
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             var sourceEnumerable = new[] { new object[] { 1 } };
 
-            var rootCoordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
+            var rootCoordinatorFactory = MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
                 stateSlot: 0,
                 ordinal: 0,
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             var sourceEnumerable = new[] { new object[] { 1 } };
 
-            var rootCoordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
+            var rootCoordinatorFactory = MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
                 stateSlot: 0,
                 ordinal: 0,
@@ -229,7 +230,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             dataReader = dataReader
                          ?? Common.Internal.Materialization.MockHelper.CreateMockDbDataReader(sourceEnumerable1, sourceEnumerable2);
 
-            var rootCoordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
+            var rootCoordinatorFactory = MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
                 stateSlot: 0,
                 ordinal: 0,
@@ -249,7 +250,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                                      CallBase = true
                                  };
 
-            var rootCoordinatorFactory2 = Objects.MockHelper.CreateCoordinatorFactory<int, RecordState>(
+            var rootCoordinatorFactory2 = MockHelper.CreateCoordinatorFactory<int, RecordState>(
                 depth: 0,
                 stateSlot: 0,
                 ordinal: 0,
@@ -378,6 +379,5 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
 #endif
-
     }
 }

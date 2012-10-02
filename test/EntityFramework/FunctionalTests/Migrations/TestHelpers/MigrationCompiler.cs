@@ -7,8 +7,8 @@ namespace System.Data.Entity.Migrations
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Migrations.Design;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;

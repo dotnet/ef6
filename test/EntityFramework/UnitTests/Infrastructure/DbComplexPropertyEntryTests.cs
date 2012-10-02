@@ -718,6 +718,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void
                 Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_lambda_on_generic_API(
+                
                 )
             {
                 var mockInternalEntry = FakeWithProps.CreateMockInternalEntityEntry();
@@ -736,6 +737,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void
                 Can_get_double_nested_complex_property_entry_from_DbComplexProperty_using_ComplexProperty_with_dotted_string_on_generic_API(
+                
                 )
             {
                 var mockInternalEntry = FakeWithProps.CreateMockInternalEntityEntry();

@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Internal.ConfigFile
 {
-    using System;
-    using System.Data.Entity;
     using Xunit;
 
     public class ParameterElementTests : TestBase

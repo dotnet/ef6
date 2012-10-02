@@ -3,11 +3,10 @@
 namespace CmdLine.Tests
 {
     extern alias migrate;
-    using migrate::CmdLine;
 
     public class PropWithNoCommandName
     {
-        [CommandLineParameter(Default = true)]
+        [migrate::CmdLine.CommandLineParameterAttribute(Default = true)]
         public bool b1 { get; set; }
     }
 }

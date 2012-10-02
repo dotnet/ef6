@@ -348,10 +348,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Enum_Product>().Map(
                 mapping =>
-                {
-                    mapping.ToTable("Table1");
-                    mapping.Properties(e => e.CategoryId);
-                });
+                    {
+                        mapping.ToTable("Table1");
+                        mapping.Properties(e => e.CategoryId);
+                    });
 
             Assert.Throws<InvalidOperationException>(
                 () =>

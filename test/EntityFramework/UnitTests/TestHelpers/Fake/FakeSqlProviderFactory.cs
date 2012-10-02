@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
-    using System;
     using System.Data.Common;
 
     /// <summary>

@@ -258,10 +258,10 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var notMatchedAddedProduct = new Product
-                {
-                    Id = -2,
-                    Name = "Yam"
-                };
+                                                 {
+                                                     Id = -2,
+                                                     Name = "Yam"
+                                                 };
                 context.Products.Add(notMatchedAddedProduct);
 
                 var addedProduct = new Product
@@ -326,9 +326,9 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var notMatchedAddedCategory = new Category
-                {
-                    Id = "Green Fruit",
-                };
+                                                  {
+                                                      Id = "Green Fruit",
+                                                  };
                 context.Categories.Add(notMatchedAddedCategory);
 
                 var addedCategory = new Category
@@ -362,10 +362,10 @@ namespace ProductivityApiTests
 
                 var notMatchedByteKey = new byte[] { 4, 3, 2, 1 };
                 var notMatchedWhiteBoard = new Whiteboard
-                {
-                    iD = notMatchedByteKey,
-                    AssetTag = "MSFT-DrWat-1012"
-                };
+                                               {
+                                                   iD = notMatchedByteKey,
+                                                   AssetTag = "MSFT-DrWat-1012"
+                                               };
                 context.Set<Whiteboard>().Add(notMatchedWhiteBoard);
 
                 var byteKey = new byte[] { 1, 2, 3, 4 };
@@ -1053,7 +1053,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Non_generic_FindAsync_Base_type_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test(
-
+            
             )
         {
             Find_returns_derived_entity_in_unchanged_state_in_preference_to_added_from_state_manager_Sanity_test_implementation
@@ -1062,6 +1062,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void FindAsync_on_Derived_set_returns_unchanged_derived_entity_from_state_manager_even_if_key_matches_Added_base_type_entity(
+            
             )
         {
             Find_derived_type_from_state_manager_in_unchanged_state_in_preference_to_Added_base_type_entity
@@ -2320,6 +2321,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             FindAsync_in_derived_set_when_matching_base_type_lives_in_state_manager_in_added_state_and_matching_derived_type_lives_in_store(
+            
             )
         {
             Find_derived_entity_when_matching_base_type_lives_in_state_manager_in_added_unchanged_or_deleted_state_and_matching_derived_type_lives_in_store

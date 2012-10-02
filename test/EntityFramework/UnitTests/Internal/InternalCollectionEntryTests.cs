@@ -28,9 +28,9 @@ namespace System.Data.Entity.Internal
             {
                 var relatedCollection = new List<FakeEntity>();
                 var entity = new FakeWithProps
-                {
-                    Collection = relatedCollection
-                };
+                                 {
+                                     Collection = relatedCollection
+                                 };
                 var internalEntry = new InternalCollectionEntry(
                     MockHelper.CreateMockInternalEntityEntry(
                         entity, isDetached).Object, FakeWithProps.CollectionMetadata);
@@ -55,9 +55,9 @@ namespace System.Data.Entity.Internal
             private void InternalCollectionEntry_sets_current_value_onto_entity_if_property_exists_implementation(bool isDetached)
             {
                 var entity = new FakeWithProps
-                {
-                    Collection = new List<FakeEntity>()
-                };
+                                 {
+                                     Collection = new List<FakeEntity>()
+                                 };
                 var internalEntry = new InternalCollectionEntry(
                     MockHelper.CreateMockInternalEntityEntry(
                         entity, isDetached).Object, FakeWithProps.CollectionMetadata);
@@ -165,7 +165,8 @@ namespace System.Data.Entity.Internal
 
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("LoadAsync", "Collection", "FakeEntity"),
-                    Assert.Throws<InvalidOperationException>(() =>
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
                         internalEntry.LoadAsync(CancellationToken.None)).Message);
             }
         }

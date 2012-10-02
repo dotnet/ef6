@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
 #if !NET40
-        
+
         public class UpdateAsync
         {
             [Fact]
@@ -278,6 +278,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
 #endif
-
     }
 }

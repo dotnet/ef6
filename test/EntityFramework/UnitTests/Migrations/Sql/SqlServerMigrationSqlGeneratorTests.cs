@@ -1,22 +1,15 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations.Sql
 {
-    using System.Data.Common;
-    using System.Data.Entity.Internal;
-    using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.History;
-    using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Utilities;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Threading;
-    using System.Linq;
     using Xunit;
 
     public class SqlServerMigrationSqlGeneratorTests
@@ -393,10 +386,11 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
 
             var insertHistoryOperation
-                = new HistoryOperation(new []
-                                           {
-                                               new InterceptedCommand(sqlCommand)
-                                           });
+                = new HistoryOperation(
+                    new[]
+                        {
+                            new InterceptedCommand(sqlCommand)
+                        });
 
             var sql =
                 migrationSqlGenerator.Generate(
@@ -417,10 +411,11 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
 
             var insertHistoryOperation
-                = new HistoryOperation(new[]
-                                           {
-                                               new InterceptedCommand(sqlCommand)
-                                           });
+                = new HistoryOperation(
+                    new[]
+                        {
+                            new InterceptedCommand(sqlCommand)
+                        });
 
             var sql =
                 migrationSqlGenerator.Generate(

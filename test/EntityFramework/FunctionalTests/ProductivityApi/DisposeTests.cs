@@ -3,16 +3,13 @@
 namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using System.Transactions;
     using SimpleModel;
     using Xunit;
     using Xunit.Extensions;
@@ -21,7 +18,12 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        public DisposeTests()        {            CreateMetadataFilesForSimpleModel();        }        /// <summary>
+        public DisposeTests()
+        {
+            CreateMetadataFilesForSimpleModel();
+        }
+
+        /// <summary>
         ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
         ///     executed, not when the set is created.
         /// </summary>
@@ -276,6 +278,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             DbContext_construction_using_named_connection_string_db_model_constructor_will_dispose_underlying_Object_Context_and_connection(
+            
             )
         {
             DbContext_should_dispose_underlying_context_and_connection_if_it_does_not_own_it(

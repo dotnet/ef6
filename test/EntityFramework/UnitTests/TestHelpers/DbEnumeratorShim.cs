@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Threading;
     using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace System.Data.Entity
 
 #if !NET40
 
-        object Infrastructure.IDbAsyncEnumerator.Current
+        object IDbAsyncEnumerator.Current
         {
             get { return _enumerator.Current; }
         }

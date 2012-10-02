@@ -10,7 +10,7 @@ namespace System.Data.Entity.Query
     public class QueryEnumTests
     {
         private static readonly string csdl =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""MessageModel"">
   <EntityContainer Name=""MessageContainer"">
     <EntitySet Name=""MessageSet"" EntityType=""MessageModel.Message"" />
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Query
 </Schema>";
 
         private static readonly string ssdl =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Schema Namespace=""MessageStore"" Alias=""Self"" Provider=""System.Data.SqlClient"" ProviderManifestToken=""2008"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm/ssdl"">
   <EntityContainer Name=""MessageContainer_Store"">
     <EntitySet Name=""MessageSet"" EntityType=""Self.Message""  Schema=""dbo"" Table=""Message"" />
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Query
 </Schema>";
 
         private static readonly string msl =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Mapping xmlns=""http://schemas.microsoft.com/ado/2009/11/mapping/cs"" Space=""C-S"">
   <EntityContainerMapping CdmEntityContainer=""MessageContainer"" StorageEntityContainer=""MessageContainer_Store"">
     <EntitySetMapping Name=""MessageSet"">
@@ -64,9 +64,9 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Simple_scan_with_Enum()
         {
-            EntitySet entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
+            var entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
 
-            var query = DbExpressionBuilder.Scan(entitySet);
+            var query = entitySet.Scan();
             var expectedSql = "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType]FROM [dbo].[Message] AS [Extent1]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
@@ -75,16 +75,17 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Scan_with_casting_Enum_to_integer()
         {
-            EntitySet entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
+            var entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
 
-            var query = DbExpressionBuilder.Scan(entitySet)
-                    .Where(c => DbExpressionBuilder.Equal(
-                        c.Property("Id"),
-                        DbExpressionBuilder.CastTo(
-                            c.Property("MessageType"),
+            var query = entitySet.Scan()
+                .Where(
+                    c =>
+                    c.Property("Id").Equal(
+                        c.Property("MessageType").CastTo(
                             TypeUsage.CreateDefaultTypeUsage(workspace.GetPrimitiveTypes(DataSpace.CSpace).Single(t => t.Name == "Int32")))));
 
-            var expectedSql = "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[Id] =  CAST( [Extent1].[MessageType] AS int)";
+            var expectedSql =
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[Id] =  CAST( [Extent1].[MessageType] AS int)";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
@@ -92,31 +93,34 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Constant_integer_based_Enum_in_where_clause()
         {
-            EntitySet entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
+            var entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
 
-            var query = DbExpressionBuilder.Scan(entitySet)
-                    .Where(c => DbExpressionBuilder.Equal(
-                        c.Property("MessageType"),
-                        DbExpressionBuilder.Constant(c.Property("MessageType").ResultType, -5)));
+            var query = entitySet.Scan()
+                .Where(c => c.Property("MessageType").Equal(c.Property("MessageType").ResultType.Constant(-5)));
 
-            var expectedSql = "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = -5";
+            var expectedSql =
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = -5";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
 
-        public enum MessageType { Express, Priority, Ground };
+        public enum MessageType
+        {
+            Express,
+            Priority,
+            Ground
+        };
 
         [Fact]
         public void Constant_Enum_value_in_where_clause()
         {
-            EntitySet entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
+            var entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
 
-            var query = DbExpressionBuilder.Scan(entitySet)
-                    .Where(c => DbExpressionBuilder.Equal(
-                        c.Property("MessageType"),
-                        DbExpressionBuilder.Constant(c.Property("MessageType").ResultType, MessageType.Express)));
+            var query = entitySet.Scan()
+                .Where(c => c.Property("MessageType").Equal(c.Property("MessageType").ResultType.Constant(MessageType.Express)));
 
-            var expectedSql = "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = 0";
+            var expectedSql =
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = 0";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
@@ -124,14 +128,13 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Null_Enum_value_in_where_clause()
         {
-            EntitySet entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
-            
-            var query = DbExpressionBuilder.Scan(entitySet)
-                    .Where(c => DbExpressionBuilder.Equal(
-                        c.Property("MessageType"),
-                        DbExpressionBuilder.Null(c.Property("MessageType").ResultType)));
+            var entitySet = workspace.GetEntityContainer("MessageContainer", DataSpace.CSpace).GetEntitySetByName("MessageSet", false);
 
-            var expectedSql = "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = (CAST(NULL AS int))";
+            var query = entitySet.Scan()
+                .Where(c => c.Property("MessageType").Equal(c.Property("MessageType").ResultType.Null()));
+
+            var expectedSql =
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = (CAST(NULL AS int))";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }

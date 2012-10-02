@@ -534,21 +534,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
-                        {
-                            var primitivePropertyConfiguration =
-                                c.GetConfiguration() as PrimitivePropertyConfiguration;
-
-                            if ((primitivePropertyConfiguration != null)
-                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                return;
-                            }
+                                var primitivePropertyConfiguration =
+                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
 
-                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
+                                if ((primitivePropertyConfiguration != null)
+                                    && (primitivePropertyConfiguration.ColumnType != null))
+                                {
+                                    return;
+                                }
 
-                            c.TypeName = principalColumn.TypeName;
-                            c.Facets.CopyFrom(principalColumn.Facets);
-                        });
+                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
+
+                                c.TypeName = principalColumn.TypeName;
+                                c.Facets.CopyFrom(principalColumn.Facets);
+                            });
             }
         }
 

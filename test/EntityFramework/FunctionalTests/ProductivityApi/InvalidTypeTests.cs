@@ -7,8 +7,8 @@ namespace ProductivityApiTests
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.ModelConfiguration;
     using System.Linq;
     using System.Reflection;
     using AdvancedPatternsModel;
@@ -137,7 +137,7 @@ namespace ProductivityApiTests
             {
                 // Create a set for the new type
                 var set = dbContextSetOfDerivedCategory.Invoke(ctx, null);
-                var iQueryableFirstOrDefault = typeof(System.Linq.Queryable)
+                var iQueryableFirstOrDefault = typeof(Queryable)
                     .GetMethods()
                     .Single(m => m.Name == "FirstOrDefault" && m.GetParameters().Count() == 1);
                 var iQueryableOfDerivedCategoryFirstOrDefault =

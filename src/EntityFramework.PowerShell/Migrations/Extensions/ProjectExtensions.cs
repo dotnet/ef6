@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations.Extensions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -184,7 +183,7 @@ namespace System.Data.Entity.Migrations.Extensions
                                 catch
                                 {
                                 }
-                                
+
                                 return pi.AddFromDirectory(projectDir).ProjectItems;
                             });
 

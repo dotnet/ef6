@@ -3,9 +3,8 @@
 namespace CmdLine.Tests
 {
     extern alias migrate;
-    using migrate::CmdLine;
 
-    [CommandLineArguments(Title = TestArgsTitle, Description = TestArgsDescription)]
+    [migrate::CmdLine.CommandLineArgumentsAttribute(Title = TestArgsTitle, Description = TestArgsDescription)]
     public class TestArgs
     {
         private const string SArgDescription = "This is a string argument";
@@ -24,16 +23,17 @@ namespace CmdLine.Tests
 
         public const bool BoolTDefault = true;
 
-        [CommandLineParameter(Command = "Y", Name = "The Y Value", Description = YArgDescription)]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "Y", Name = "The Y Value", Description = YArgDescription)]
         public bool BoolY { get; set; }
 
-        [CommandLineParameter(Command = "T", Default = true, Description = TArgDescription)]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "T", Default = true, Description = TArgDescription)]
         public bool BoolT { get; set; }
 
-        [CommandLineParameter(Command = "S", Description = SArgDescription, Default = StringArgDefault)]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "S", Description = SArgDescription, Default = StringArgDefault)]
         public string StringArg { get; set; }
 
-        [CommandLineParameter(Command = "N", Description = "An Int32 Number", Required = true, ValueExample = "13")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "N", Description = "An Int32 Number", Required = true, ValueExample = "13"
+            )]
         public int Number { get; set; }
     }
 }

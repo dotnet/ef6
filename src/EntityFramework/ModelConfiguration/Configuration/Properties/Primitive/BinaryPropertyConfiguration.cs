@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
-    using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
 
     public class BinaryPropertyConfiguration : LengthPropertyConfiguration
@@ -57,12 +57,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             propertyMappings
                 .Each(
                     pm =>
-                    {
-                        if (IsRowVersion != null)
                         {
-                            pm.Item1.Column.Facets.MaxLength = null;
-                        }
-                    });
+                            if (IsRowVersion != null)
+                            {
+                                pm.Item1.Column.Facets.MaxLength = null;
+                            }
+                        });
         }
 
         internal override void CopyFrom(PrimitivePropertyConfiguration other)

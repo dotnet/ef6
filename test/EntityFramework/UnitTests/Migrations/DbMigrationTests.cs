@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Model;
     using System.Linq;
     using Xunit;
 

@@ -1,13 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
-    using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.Migrations.UserRoles_v2;
@@ -711,7 +709,7 @@ namespace System.Data.Entity.Migrations
 
             var model2 = modelBuilder.Build(ProviderInfo).GetModel();
             model2.Descendants().Each(e => e.SetAttributeValue(EdmXNames.IsSystemName, true));
-            
+
             var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
 
             var moveTableOperation

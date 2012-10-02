@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+
 #if !NET40
 
 namespace System.Data.Entity.Spatial
 {
-    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;

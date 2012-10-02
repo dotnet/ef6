@@ -102,7 +102,9 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Migrations\Extensions\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
@@ -262,7 +264,7 @@
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensionsTests.cs" />
     <Compile Include="Utilities\ExpressionExtensionsTests.cs" />
-    <Compile Include="Migrations\Extensions\IEnumerableExtensionsTests.cs" />
+    <Compile Include="Utilities\IEnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
     <Compile Include="Utilities\PartialTrustAssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ProviderRowFinderTests.cs" />
@@ -425,7 +427,6 @@
     <Compile Include="Utilities\DatabaseNameTests.cs" />
     <Compile Include="Utilities\DbConnectionExtensionsTests.cs" />
     <Compile Include="Utilities\DbProviderInfoExtensionsTests.cs" />
-    <Compile Include="ModelConfiguration\Utilities\IEnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\PropertyInfoExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPathTests.cs" />
     <Compile Include="Utilities\RuntimeFailureMethodsTests.cs" />

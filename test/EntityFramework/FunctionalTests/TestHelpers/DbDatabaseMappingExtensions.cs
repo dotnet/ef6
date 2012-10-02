@@ -4,19 +4,17 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
-    using System.Data;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
-    using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
     using System.Xml;
+    using Xunit;
 
     public static class DbDatabaseMappingExtensions
     {
@@ -82,7 +80,7 @@ namespace System.Data.Entity
                 }
                 else
                 {
-                    Xunit.Assert.True(false, errorMessage.ToString());
+                    Assert.True(false, errorMessage.ToString());
                 }
             }
         }

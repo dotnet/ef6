@@ -134,7 +134,7 @@ namespace ProductivityApiUnitTests
         }
 
 #if !NET40
-        
+
         public class ExecuteSqlCommandAsync
         {
             [Fact]

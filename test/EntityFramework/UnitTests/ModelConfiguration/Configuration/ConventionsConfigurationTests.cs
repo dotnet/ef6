@@ -76,7 +76,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.Equal(
                 Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConventionFixture)),
-                Assert.Throws<InvalidOperationException>(() => conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention.Object)).
+                Assert.Throws<InvalidOperationException>(() => conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention.Object))
+                    .
                     Message);
         }
 

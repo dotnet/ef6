@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -248,7 +247,7 @@ namespace System.Data.Entity
 
             var propertyBuilder = typeBuilder.DefineProperty(
                 propertyInfo.PropertyName,
-                System.Reflection.PropertyAttributes.None,
+                PropertyAttributes.None,
                 propertyType, Type.EmptyTypes);
 
             foreach (var a in propertyInfo.Attributes)

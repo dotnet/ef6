@@ -58,9 +58,9 @@ namespace System.Data.Entity.Core.Objects
                 new DbEnumeratorShim<string>(((IEnumerable<string>)new[] { "foo" }).GetEnumerator()));
             var objectQuery = MockHelper.CreateMockObjectQuery(refreshedValue: null, shaper: shaperMock.Object).Object;
 
-            foreach(var element in objectQuery)
+            foreach (var element in objectQuery)
             {
-                Assert.True(element.StartsWith("foo")); 
+                Assert.True(element.StartsWith("foo"));
             }
         }
     }

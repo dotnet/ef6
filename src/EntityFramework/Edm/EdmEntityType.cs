@@ -87,10 +87,7 @@ namespace System.Data.Entity.Edm
 
         public IEnumerable<EdmProperty> Properties
         {
-            get
-            {
-                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList);
-            }
+            get { return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredPropertiesList); }
         }
 
         /// <summary>
@@ -126,10 +123,7 @@ namespace System.Data.Entity.Edm
 
         public IEnumerable<EdmNavigationProperty> NavigationProperties
         {
-            get
-            {
-                return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredNavigationPropertiesList);
-            }
+            get { return this.ToHierarchy().Reverse().SelectMany(declaringType => declaringType.declaredNavigationPropertiesList); }
         }
     }
 }

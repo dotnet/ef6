@@ -6,8 +6,6 @@ namespace ProductivityApiTests
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -3148,17 +3146,17 @@ namespace ProductivityApiTests
                 // to the generic Set for the proxy type.
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    {
-                        try
                         {
-                            setMethod.Invoke(context, null);
-                        }
-                        catch (TargetInvocationException ex)
-                        {
-                            throw ex.InnerException;
-                        }
-                        ;
-                    }).ValidateMessage("CannotCallGenericSetWithProxyType");
+                            try
+                            {
+                                setMethod.Invoke(context, null);
+                            }
+                            catch (TargetInvocationException ex)
+                            {
+                                throw ex.InnerException;
+                            }
+                            ;
+                        }).ValidateMessage("CannotCallGenericSetWithProxyType");
             }
         }
 

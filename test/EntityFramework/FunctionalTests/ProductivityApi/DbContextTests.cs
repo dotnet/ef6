@@ -8,7 +8,6 @@ namespace ProductivityApiTests
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -31,7 +30,7 @@ namespace ProductivityApiTests
     public class DbContextTests : FunctionalTestBase
     {
         #region Infrastructure/setup
-        
+
         public DbContextTests()
         {
             CreateMetadataFilesForSimpleModel();
@@ -374,6 +373,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context(
+            
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -2362,6 +2362,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change(
+            
             )
         {
             using (var context = new F1Context())

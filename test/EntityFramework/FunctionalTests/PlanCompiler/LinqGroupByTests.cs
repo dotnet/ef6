@@ -14,10 +14,6 @@ namespace PlanCompilerTests
     {
         #region Infrastructure/setup
 
-        static LinqGroupByTests()
-        {
-        }
-
         #endregion
 
         #region Tests for GroupBy that trigger an aggregate pushdown
@@ -28,13 +24,18 @@ namespace PlanCompilerTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 var groupByQuery = from workOrder in context.WorkOrders
-                                   group new { workOrder.WorkOrderId, workOrder.Details } by workOrder.EmployeeId into ordersByEmployeeGroup
+                                   group new
+                                             {
+                                                 workOrder.WorkOrderId,
+                                                 workOrder.Details
+                                             } by workOrder.EmployeeId
+                                   into ordersByEmployeeGroup
                                    select new
-                                   {
-                                       EmployeeId = ordersByEmployeeGroup.Key,
-                                       OrderCount = ordersByEmployeeGroup.Count(),
-                                       MaxOrderId = ordersByEmployeeGroup.Max(o => o.WorkOrderId)
-                                   };
+                                              {
+                                                  EmployeeId = ordersByEmployeeGroup.Key,
+                                                  OrderCount = ordersByEmployeeGroup.Count(),
+                                                  MaxOrderId = ordersByEmployeeGroup.Max(o => o.WorkOrderId)
+                                              };
                 var sql = groupByQuery.ToString();
                 Assert.True(sql != null && sql.ToUpper().Contains("GROUP BY"));
             }
@@ -47,13 +48,21 @@ namespace PlanCompilerTests
             using (var context = new AdvancedPatternsMasterContext())
             {
                 var groupByNewQuery = from workOrder in context.WorkOrders
-                                      group new { workOrder.WorkOrderId, workOrder.Details } by new { workOrder.EmployeeId } into ordersByEmployeeGroup
+                                      group new
+                                                {
+                                                    workOrder.WorkOrderId,
+                                                    workOrder.Details
+                                                } by new
+                                                         {
+                                                             workOrder.EmployeeId
+                                                         }
+                                      into ordersByEmployeeGroup
                                       select new
-                                      {
-                                          ordersByEmployeeGroup.Key.EmployeeId,
-                                          OrderCount = ordersByEmployeeGroup.Count(),
-                                          MaxOrderId = ordersByEmployeeGroup.Max( o => o.WorkOrderId )
-                                      };
+                                                 {
+                                                     ordersByEmployeeGroup.Key.EmployeeId,
+                                                     OrderCount = ordersByEmployeeGroup.Count(),
+                                                     MaxOrderId = ordersByEmployeeGroup.Max(o => o.WorkOrderId)
+                                                 };
                 var sql = groupByNewQuery.ToString();
                 Assert.True(sql != null && sql.ToUpper().Contains("GROUP BY"));
             }

@@ -6,7 +6,6 @@ namespace ProductivityApiTests
     using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.IO;
@@ -243,6 +242,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe(
+            
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -305,6 +305,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe(
+            
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(

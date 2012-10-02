@@ -502,10 +502,12 @@ namespace ProductivityApiTests
             {
                 var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
 
-                Assert.Throws<InvalidOperationException>(() => ExceptionHelpers.UnwrapAggregateExceptions(() =>
-                    query.ToListAsync().Result)).ValidateMessage(
-                    "Materializer_InvalidCastReference", "System.String",
-                    "System.Int32");
+                Assert.Throws<InvalidOperationException>(
+                    () => ExceptionHelpers.UnwrapAggregateExceptions(
+                        () =>
+                        query.ToListAsync().Result)).ValidateMessage(
+                            "Materializer_InvalidCastReference", "System.String",
+                            "System.Int32");
             }
         }
 
@@ -530,16 +532,17 @@ namespace ProductivityApiTests
         {
             SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
                 new
-                {
-                    Id = 2,
-                    Name = "Bovril",
-                    CategoryId = "Foods"
-                }, q => ExceptionHelpers.UnwrapAggregateExceptions(() => q.ToListAsync().Result));
+                    {
+                        Id = 2,
+                        Name = "Bovril",
+                        CategoryId = "Foods"
+                    }, q => ExceptionHelpers.UnwrapAggregateExceptions(() => q.ToListAsync().Result));
         }
 
 #endif
 
-        private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(TElement _,
+        private void SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation<TElement>(
+            TElement _,
             Func<DbRawSqlQuery<TElement>, List<TElement>> execute)
         {
             using (var context = new SimpleModelContext())
@@ -634,7 +637,8 @@ namespace ProductivityApiTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var siteInfos = query(context,
+                var siteInfos = query(
+                    context,
                     "select Address_SiteInfo_Zone as Zone, Address_SiteInfo_Environment as Environment from Buildings");
 
                 Assert.Equal(2, siteInfos.Count);
@@ -715,8 +719,9 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                var result = execute(context.Database,
-                        "update Products set Name = 'Vegemite' where Name = 'Marmite'");
+                var result = execute(
+                    context.Database,
+                    "update Products set Name = 'Vegemite' where Name = 'Marmite'");
 
                 Assert.Equal(1, result);
 
@@ -737,16 +742,19 @@ namespace ProductivityApiTests
         [AutoRollback]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
         {
-            SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommandAsync(q, p).Result);
+            SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(
+                (d, q, p) => d.ExecuteSqlCommandAsync(q, p).Result);
         }
 
 #endif
 
-        private void SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(Func<Database, string, object[], int> execute)
+        private void SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(
+            Func<Database, string, object[], int> execute)
         {
             using (var context = new SimpleModelContext())
             {
-                var result = execute(context.Database,
+                var result = execute(
+                    context.Database,
                     "update Products set Name = {0} where Name = {1}",
                     new object[] { "Vegemite", "Marmite" });
 

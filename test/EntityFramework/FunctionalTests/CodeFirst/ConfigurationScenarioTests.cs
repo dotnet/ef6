@@ -111,16 +111,16 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
-                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
-                    modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
-                        c => new
-                                 {
-                                     c.Id1,
-                                     c.Id2
-                                 });
-                },
+                    {
+                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
+                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
+                        modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
+                            c => new
+                                     {
+                                         c.Id1,
+                                         c.Id2
+                                     });
+                    },
                 new[] { "Id1", "Id2" },
                 new[] { "Id2", "Id1" });
         }
@@ -130,14 +130,14 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
-                        c => new
-                                 {
-                                     c.Id2,
-                                     c.Id1
-                                 });
-                },
+                    {
+                        modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
+                            c => new
+                                     {
+                                         c.Id2,
+                                         c.Id1
+                                     });
+                    },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -147,10 +147,10 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
-                    modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
-                },
+                    {
+                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id2).HasColumnOrder(1);
+                        modelBuilder.Entity<CompositeKeyNoOrder>().Property(c => c.Id1).HasColumnOrder(2);
+                    },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -160,20 +160,20 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                    {
+                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                    configuration.Property(c => c.Id2).HasColumnOrder(1);
-                    configuration.Property(c => c.Id1).HasColumnOrder(2);
-                    configuration.HasKey(
-                        c => new
-                                 {
-                                     c.Id1,
-                                     c.Id2
-                                 });
+                        configuration.Property(c => c.Id2).HasColumnOrder(1);
+                        configuration.Property(c => c.Id1).HasColumnOrder(2);
+                        configuration.HasKey(
+                            c => new
+                                     {
+                                         c.Id1,
+                                         c.Id2
+                                     });
 
-                    modelBuilder.Configurations.Add(configuration);
-                },
+                        modelBuilder.Configurations.Add(configuration);
+                    },
                 new[] { "Id1", "Id2" },
                 new[] { "Id2", "Id1" });
         }
@@ -183,18 +183,18 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                    {
+                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                    configuration.HasKey(
-                        c => new
-                                 {
-                                     c.Id2,
-                                     c.Id1
-                                 });
+                        configuration.HasKey(
+                            c => new
+                                     {
+                                         c.Id2,
+                                         c.Id1
+                                     });
 
-                    modelBuilder.Configurations.Add(configuration);
-                },
+                        modelBuilder.Configurations.Add(configuration);
+                    },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -204,14 +204,14 @@ namespace FunctionalTests
         {
             TestCompositeKeyOrder(
                 modelBuilder =>
-                {
-                    var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
+                    {
+                        var configuration = new EntityTypeConfiguration<CompositeKeyNoOrder>();
 
-                    configuration.Property(c => c.Id2).HasColumnOrder(1);
-                    configuration.Property(c => c.Id1).HasColumnOrder(2);
+                        configuration.Property(c => c.Id2).HasColumnOrder(1);
+                        configuration.Property(c => c.Id1).HasColumnOrder(2);
 
-                    modelBuilder.Configurations.Add(configuration);
-                },
+                        modelBuilder.Configurations.Add(configuration);
+                    },
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }

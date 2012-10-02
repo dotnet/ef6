@@ -2,18 +2,17 @@
 
 namespace System.Data.Entity
 {
-    using System;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
-#if !SILVERLIGHT
     using System.IO.Compression;
-#endif
     using System.Linq;
     using System.Reflection;
     using System.Resources;
     using System.Security;
     using System.Security.Permissions;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+#if !SILVERLIGHT
+#endif
 
     /// <summary>
     ///     Various utilities for dealing with embedded resources

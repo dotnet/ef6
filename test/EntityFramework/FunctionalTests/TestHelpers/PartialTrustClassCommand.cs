@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.TestHelpers
 {
-    using System;
     using System.Collections.Generic;
     using Xunit.Sdk;
 

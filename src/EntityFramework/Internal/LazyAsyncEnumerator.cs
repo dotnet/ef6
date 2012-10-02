@@ -58,7 +58,9 @@ namespace System.Data.Entity.Internal
                 && !_asyncEnumeratorTask.IsCanceled
                 && !_asyncEnumeratorTask.IsFaulted)
             {
-                Contract.Assert(_asyncEnumeratorTask.IsCompleted, "Task hasn't completed, this means that the tasks returned from MoveNextAsync wasn't awaited on.");
+                Contract.Assert(
+                    _asyncEnumeratorTask.IsCompleted,
+                    "Task hasn't completed, this means that the tasks returned from MoveNextAsync wasn't awaited on.");
                 _asyncEnumeratorTask.Result.Dispose();
             }
         }

@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+
 #if !NET40
 
 namespace System.Data.Entity.Internal
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
-    using Moq;
     using System.Data.Entity.Infrastructure;
     using System.Threading;
     using System.Threading.Tasks;
+    using Moq;
     using Xunit;
 
     public class LazyAsyncEnumeratorTests
@@ -21,10 +20,10 @@ namespace System.Data.Entity.Internal
             var initialized = false;
             var _ = new LazyAsyncEnumerator<object>(
                 ct =>
-                {
-                    initialized = true;
-                    return null;
-                });
+                    {
+                        initialized = true;
+                        return null;
+                    });
 
             Assert.False(initialized);
         }
@@ -35,10 +34,10 @@ namespace System.Data.Entity.Internal
             var initialized = false;
             var enumerator = new LazyAsyncEnumerator<object>(
                 ct =>
-                {
-                    initialized = true;
-                    return Task.FromResult(new Mock<IDbAsyncEnumerator<object>>().Object);
-                });
+                    {
+                        initialized = true;
+                        return Task.FromResult(new Mock<IDbAsyncEnumerator<object>>().Object);
+                    });
 
             var _ = enumerator.Current;
 
@@ -51,11 +50,12 @@ namespace System.Data.Entity.Internal
             var initialized = false;
             var enumerator = new LazyAsyncEnumerator<int>(
                 ct =>
-                {
-                    initialized = true;
-                    return Task.FromResult((IDbAsyncEnumerator<int>)new DbEnumeratorShim<int>(
-                        ((IEnumerable<int>)new []{1}).GetEnumerator()));
-                });
+                    {
+                        initialized = true;
+                        return Task.FromResult(
+                            (IDbAsyncEnumerator<int>)new DbEnumeratorShim<int>(
+                                                         ((IEnumerable<int>)new[] { 1 }).GetEnumerator()));
+                    });
 
             Assert.True(enumerator.MoveNextAsync(CancellationToken.None).Result);
 

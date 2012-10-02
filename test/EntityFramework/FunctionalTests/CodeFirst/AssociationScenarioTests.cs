@@ -10,7 +10,6 @@ namespace FunctionalTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
@@ -621,7 +620,7 @@ namespace FunctionalTests
 
     public class Dependent_159001a
     {
-        [ForeignKeyAttribute("PrincipalNavigation")]
+        [ForeignKey("PrincipalNavigation")]
         public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
 
         [Required]
@@ -633,7 +632,7 @@ namespace FunctionalTests
         public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
 
         [Required]
-        [ForeignKeyAttribute("DependentForeignKeyPropertyNotFromConvention1")]
+        [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
         public Principal_159001 PrincipalNavigation { get; set; }
     }
 
@@ -647,7 +646,7 @@ namespace FunctionalTests
 
     public class DependentWithNav_159001a
     {
-        [ForeignKeyAttribute("PrincipalNavigation")]
+        [ForeignKey("PrincipalNavigation")]
         public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
 
         [Required]
@@ -940,17 +939,17 @@ namespace FunctionalTests
             modelBuilder.Entity<Dependent_162348>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.Properties(e => e.Key1);
-                        mapping.ToTable("DependentSplit");
-                    });
+                        {
+                            mapping.Properties(e => e.Key1);
+                            mapping.ToTable("DependentSplit");
+                        });
             modelBuilder.Entity<Dependent_162348>()
                 .Map(
                     mapping =>
-                    {
-                        mapping.Properties(e => e.PrincipalNavigationKey1);
-                        mapping.ToTable("Dependent_162348");
-                    });
+                        {
+                            mapping.Properties(e => e.PrincipalNavigationKey1);
+                            mapping.ToTable("Dependent_162348");
+                        });
             modelBuilder.Entity<Dependent_162348>()
                 .HasOptional(e => e.PrincipalNavigation).WithMany().Map(m => m.ToTable("Dependent_162348"));
 
@@ -1828,16 +1827,16 @@ namespace FunctionalTests
             modelBuilder.Entity<SomeItemDetail>()
                 .Map(
                     c =>
-                    {
-                        c.ToTable("SomeItemDetail");
-                        c.Properties(s => s.Id);
-                    })
+                        {
+                            c.ToTable("SomeItemDetail");
+                            c.Properties(s => s.Id);
+                        })
                 .Map(
                     c =>
-                    {
-                        c.ToTable("SplitTable");
-                        c.Properties(s => s.Id);
-                    });
+                        {
+                            c.ToTable("SplitTable");
+                            c.Properties(s => s.Id);
+                        });
 
             modelBuilder.Entity<SomeItem>()
                 .HasOptional(s => s.Detail)
@@ -1930,10 +1929,10 @@ namespace FunctionalTests
                 .WithMany(p => p.Parents)
                 .Map(
                     m =>
-                    {
-                        m.MapLeftKey("ParentId");
-                        m.MapRightKey("ChildId");
-                    });
+                        {
+                            m.MapLeftKey("ParentId");
+                            m.MapRightKey("ChildId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1972,10 +1971,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("ProductId");
-                        mc.MapRightKey("TagId");
-                    });
+                        {
+                            mc.MapLeftKey("ProductId");
+                            mc.MapRightKey("TagId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1994,12 +1993,12 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("BadId");
-                        mc.MapRightKey("BadId");
-                        mc.MapLeftKey("ProductId");
-                        mc.MapRightKey("TagId");
-                    });
+                        {
+                            mc.MapLeftKey("BadId");
+                            mc.MapRightKey("BadId");
+                            mc.MapLeftKey("ProductId");
+                            mc.MapRightKey("TagId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2018,10 +2017,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("ProductId");
-                        mc.MapRightKey("TagId");
-                    });
+                        {
+                            mc.MapLeftKey("ProductId");
+                            mc.MapRightKey("TagId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2045,10 +2044,10 @@ namespace FunctionalTests
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("TagId");
-                        mc.MapRightKey("ProductId");
-                    });
+                        {
+                            mc.MapLeftKey("TagId");
+                            mc.MapRightKey("ProductId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2067,10 +2066,10 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("ProductId");
-                        mc.MapRightKey("ProductId");
-                    });
+                        {
+                            mc.MapLeftKey("ProductId");
+                            mc.MapRightKey("ProductId");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2428,29 +2427,29 @@ namespace FunctionalTests
             modelBuilder.Entity<SpecialOfferProduct>()
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.rowguid,
-                                    p.SpecialOfferID // FK in table 1
-                                });
-                        m.ToTable("ProductOne");
-                    })
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.rowguid,
+                                        p.SpecialOfferID // FK in table 1
+                                    });
+                            m.ToTable("ProductOne");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.ModifiedDate,
-                                });
-                        m.ToTable("ProductTwo");
-                    });
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.ModifiedDate,
+                                    });
+                            m.ToTable("ProductTwo");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2484,29 +2483,29 @@ namespace FunctionalTests
             modelBuilder.Entity<SpecialOfferProduct>()
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.rowguid
-                                });
-                        m.ToTable("ProductOne");
-                    })
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.rowguid
+                                    });
+                            m.ToTable("ProductOne");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.ModifiedDate,
-                                    p.SpecialOfferID // FK in table 2
-                                });
-                        m.ToTable("ProductTwo");
-                    });
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.ModifiedDate,
+                                        p.SpecialOfferID // FK in table 2
+                                    });
+                            m.ToTable("ProductTwo");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2550,29 +2549,29 @@ namespace FunctionalTests
                 .HasKey(p => p.ProductID)
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.rowguid
-                                });
-                        m.ToTable("ProductOne");
-                    })
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.rowguid
+                                    });
+                            m.ToTable("ProductOne");
+                        })
                 .Map(
                     m =>
-                    {
-                        m.Properties(
-                            p =>
-                            new
-                                {
-                                    p.ProductID,
-                                    p.ModifiedDate,
-                                    p.SpecialOfferID
-                                });
-                        m.ToTable("ProductTwo");
-                    });
+                        {
+                            m.Properties(
+                                p =>
+                                new
+                                    {
+                                        p.ProductID,
+                                        p.ModifiedDate,
+                                        p.SpecialOfferID
+                                    });
+                            m.ToTable("ProductTwo");
+                        });
 
             modelBuilder.Entity<SpecialOffer>()
                 .HasKey(o => o.SpecialOfferID)
@@ -2629,12 +2628,12 @@ namespace FunctionalTests
                 .WithRequired(p => p.SpecialOffer)
                 .Map(
                     mc =>
-                    {
-                        mc.MapKey("BadFK");
-                        mc.ToTable("BadTable");
-                        mc.MapKey("TheFK");
-                        mc.ToTable("SpecialOfferProducts");
-                    });
+                        {
+                            mc.MapKey("BadFK");
+                            mc.ToTable("BadTable");
+                            mc.MapKey("TheFK");
+                            mc.ToTable("SpecialOfferProducts");
+                        });
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -2887,22 +2886,22 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("ProductId");
-                        mc.MapRightKey("TagId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("ProductId");
+                            mc.MapRightKey("TagId");
+                            mc.ToTable("ProductTags");
+                        });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("TagId");
-                        mc.MapRightKey("ProductId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("TagId");
+                            mc.MapRightKey("ProductId");
+                            mc.ToTable("ProductTags");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2919,22 +2918,22 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("TagId");
-                        mc.MapRightKey("ProductId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("TagId");
+                            mc.MapRightKey("ProductId");
+                            mc.ToTable("ProductTags");
+                        });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("TagId");
-                        mc.MapRightKey("ProductId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("TagId");
+                            mc.MapRightKey("ProductId");
+                            mc.ToTable("ProductTags");
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2951,22 +2950,22 @@ namespace FunctionalTests
                 .WithMany(t => t.Products)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("ProductCode");
-                        mc.MapRightKey("TagId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("ProductCode");
+                            mc.MapRightKey("TagId");
+                            mc.ToTable("ProductTags");
+                        });
 
             modelBuilder.Entity<Tag>()
                 .HasMany(t => t.Products)
                 .WithMany(p => p.Tags)
                 .Map(
                     mc =>
-                    {
-                        mc.MapLeftKey("TagId");
-                        mc.MapRightKey("ProductId");
-                        mc.ToTable("ProductTags");
-                    });
+                        {
+                            mc.MapLeftKey("TagId");
+                            mc.MapRightKey("ProductId");
+                            mc.ToTable("ProductTags");
+                        });
 
             Assert.Throws<InvalidOperationException>(
                 () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))

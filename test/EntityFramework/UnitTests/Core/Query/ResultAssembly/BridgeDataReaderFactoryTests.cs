@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.ResultAssembly
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         public void Create_returns_a_new_instance_of_BridgeDataReader_with_two_resultsets()
         {
             var bridgeDataReaderFactory =
-                new BridgeDataReaderFactory(Common.Internal.Materialization.MockHelper.CreateRecordStateTranslator());
+                new BridgeDataReaderFactory(MockHelper.CreateRecordStateTranslator());
 
             var dbDataReaderMock = new Mock<DbDataReader>();
             var hasResult = true;

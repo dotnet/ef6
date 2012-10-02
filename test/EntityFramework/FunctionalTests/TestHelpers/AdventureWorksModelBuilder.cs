@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Infrastructure;
     using System.Linq;

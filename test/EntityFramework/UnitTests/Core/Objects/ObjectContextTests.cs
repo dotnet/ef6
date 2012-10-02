@@ -420,12 +420,13 @@ namespace System.Data.Entity.Core.Objects
             {
                 var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/);
                 objectContextMock.Setup(m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult<int>(0));
+                    .Returns(Task.FromResult(0));
 
                 objectContextMock.Object.SaveChangesAsync().Wait();
 
                 objectContextMock.Verify(
-                    m => m.SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None),
+                    m =>
+                    m.SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None),
                     Times.Once());
             }
 
@@ -458,14 +459,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var mockEntityAdapter = new Mock<IEntityAdapter>();
                 mockEntityAdapter.Setup(m => m.UpdateAsync(mockObjectStateManager.Object, CancellationToken.None))
-                    .Returns(Task.FromResult<int>(1));
+                    .Returns(Task.FromResult(1));
 
                 var mockObjectContext
                     = new Mock<ObjectContext>(
                         mockObjectStateManager.Object, mockCommandInterceptor.Object, mockEntityAdapter.Object)
-                    {
-                        CallBase = true
-                    };
+                          {
+                              CallBase = true
+                          };
 
                 mockObjectContext.SetupGet(oc => oc.Connection).Returns(new Mock<EntityConnection>().Object);
 
@@ -501,7 +502,7 @@ namespace System.Data.Entity.Core.Objects
                 var entityAdapterMock = Mock.Get((IEntityAdapter)mockServiceProvider.GetService(typeof(IEntityAdapter)));
                 entityAdapterMock.Setup(m => m.UpdateAsync(It.IsAny<IEntityStateManager>(), It.IsAny<CancellationToken>())).Verifiable();
 
-                var entriesAffected = mockObjectContext.Object.SaveChangesAsync(SaveOptions.None,CancellationToken.None).Result;
+                var entriesAffected = mockObjectContext.Object.SaveChangesAsync(SaveOptions.None, CancellationToken.None).Result;
 
                 entityAdapterMock.Verify(m => m.UpdateAsync(It.IsAny<IEntityStateManager>(), It.IsAny<CancellationToken>()), Times.Never());
                 Assert.Equal(0, entriesAffected);
@@ -522,11 +523,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
-                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(() =>
-                {
-                    connectionState = ConnectionState.Open;
-                    return Task.FromResult<object>(null);
-                });
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                        {
+                            connectionState = ConnectionState.Open;
+                            return Task.FromResult<object>(null);
+                        });
                 entityConnectionMock.Setup(m => m.BeginTransaction()).Returns(() => entityTransaction);
 
                 // first time return false to by-pass check in the constructor
@@ -562,11 +564,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
-                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(() =>
-                    {
-                        connectionState = ConnectionState.Open;
-                        return Task.FromResult<object>(null);
-                    });
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                        {
+                            connectionState = ConnectionState.Open;
+                            return Task.FromResult<object>(null);
+                        });
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
@@ -596,10 +599,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
-                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(() => {
-                    connectionState = ConnectionState.Open;
-                    return Task.FromResult<object>(null);
-                });
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                        {
+                            connectionState = ConnectionState.Open;
+                            return Task.FromResult<object>(null);
+                        });
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
@@ -613,8 +618,10 @@ namespace System.Data.Entity.Core.Objects
 
                 Assert.Equal(
                     Strings.ObjectContext_AcceptAllChangesFailure(new NotSupportedException().Message),
-                    Assert.Throws<InvalidOperationException>(() => 
-                        ExceptionHelpers.UnwrapAggregateExceptions(() => 
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
                             objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Result)).Message);
             }
         }
@@ -625,7 +632,7 @@ namespace System.Data.Entity.Core.Objects
             public void Command_is_executed_with_correct_CommandText()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
 
@@ -645,10 +652,9 @@ namespace System.Data.Entity.Core.Objects
             public void CommandTimeout_is_set_on_created_DbCommand_if_it_was_set_on_ObjectContext()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
-
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -666,7 +672,7 @@ namespace System.Data.Entity.Core.Objects
             public void Transaction_set_on_created_DbCommand_if_it_was_set_on_EntityConnection()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
 
@@ -699,17 +705,17 @@ namespace System.Data.Entity.Core.Objects
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
                     Callback(
                         (Array p) =>
-                        {
-                            var list = p.ToList<DbParameter>();
-                            if (list.Count == 3 && list[0] == parameter1 && list[1] == parameter2
-                                && list[2] == parameter3)
                             {
-                                correctParameters = true;
-                            }
-                        });
+                                var list = p.ToList<DbParameter>();
+                                if (list.Count == 3 && list[0] == parameter1 && list[1] == parameter2
+                                    && list[2] == parameter3)
+                                {
+                                    correctParameters = true;
+                                }
+                            });
 
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 var dbConnectionMock = new Mock<DbConnection>();
@@ -749,18 +755,18 @@ namespace System.Data.Entity.Core.Objects
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
                     Callback(
                         (Array p) =>
-                        {
-                            var list = p.ToList<DbParameter>();
-                            if (list.Count == 4 && list[0] == parameterMockList[0].Object && list[1] == parameterMockList[1].Object &&
-                                list[2] == parameterMockList[2].Object
-                                && list[3] == parameterMockList[3].Object)
                             {
-                                correctParameters = true;
-                            }
-                        });
+                                var list = p.ToList<DbParameter>();
+                                if (list.Count == 4 && list[0] == parameterMockList[0].Object && list[1] == parameterMockList[1].Object &&
+                                    list[2] == parameterMockList[2].Object
+                                    && list[3] == parameterMockList[3].Object)
+                                {
+                                    correctParameters = true;
+                                }
+                            });
 
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 dbCommandMock.SetupGet(m => m.CommandText).Returns("{0} Foo {1} Bar {2} Baz {3}");
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
@@ -800,7 +806,7 @@ namespace System.Data.Entity.Core.Objects
             public void Exception_thrown_when_parameters_are_mix_of_values_and_DbParameters()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<int>(0));
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
 
@@ -815,7 +821,8 @@ namespace System.Data.Entity.Core.Objects
                     Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues,
                     Assert.Throws<InvalidOperationException>(
                         () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () => objectContext.ExecuteStoreCommandAsync("Foo", 1,
+                            () => objectContext.ExecuteStoreCommandAsync(
+                                "Foo", 1,
                                 new Mock<DbParameter>().Object).Result)).Message);
             }
         }

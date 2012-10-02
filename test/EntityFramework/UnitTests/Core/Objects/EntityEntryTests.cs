@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.Objects
 {
-    using System;
     using Xunit;
 
     public class EntityEntryTests

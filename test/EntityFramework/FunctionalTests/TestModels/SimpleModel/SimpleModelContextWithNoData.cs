@@ -2,11 +2,10 @@
 
 namespace SimpleModel
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -71,6 +70,5 @@ namespace SimpleModel
         }
 
 #endif
-
     }
 }

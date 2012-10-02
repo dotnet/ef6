@@ -1,9 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Migrations.Design
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
     using System.Globalization;
@@ -26,15 +25,15 @@ namespace System.Data.Entity.Migrations
                     = new VisualBasicMigrationCodeGenerator().Generate(
                         "Migration",
                         new[]
-                        {
-                            new AddColumnOperation(
-                                "T",
-                                new ColumnModel(PrimitiveTypeKind.Decimal)
-                                    {
-                                        Name = "C",
-                                        DefaultValue = 123.45m
-                                    })
-                        },
+                            {
+                                new AddColumnOperation(
+                                    "T",
+                                    new ColumnModel(PrimitiveTypeKind.Decimal)
+                                        {
+                                            Name = "C",
+                                            DefaultValue = 123.45m
+                                        })
+                            },
                         "Source",
                         "Target",
                         "Foo",
@@ -79,15 +78,15 @@ End Namespace
                     = new VisualBasicMigrationCodeGenerator().Generate(
                         "Migration",
                         new[]
-                        {
-                            new AddColumnOperation(
-                                "T",
-                                new ColumnModel(PrimitiveTypeKind.Single)
-                                    {
-                                        Name = "C",
-                                        DefaultValue = 123.45f
-                                    })
-                        },
+                            {
+                                new AddColumnOperation(
+                                    "T",
+                                    new ColumnModel(PrimitiveTypeKind.Single)
+                                        {
+                                            Name = "C",
+                                            DefaultValue = 123.45f
+                                        })
+                            },
                         "Source",
                         "Target",
                         "Foo",

@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #if !NET40
-        
+
         [Fact]
         public void NextResultAsync_wraps_exception_into_EntityCommandExecutionException_if_one_was_thrown()
         {
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.EntityClient
                 () => entityDataReader.NextResultAsync().Wait());
         }
 
-        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Xunit.Assert.ThrowsDelegate testCode)
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
             where TException : Exception
         {
             var exception = Assert.Throws<AggregateException>(testCode);
@@ -157,6 +157,5 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
-
     }
 }

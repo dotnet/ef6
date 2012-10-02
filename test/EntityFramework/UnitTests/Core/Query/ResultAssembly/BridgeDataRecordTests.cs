@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.Query
 {
-    using System;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Objects;
@@ -10,6 +9,7 @@ namespace System.Data.Entity.Core.Query
     using System.Threading;
     using Moq;
     using Xunit;
+    using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
     public class BridgeDataRecordTests
     {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query
         }
 
 #endif
-        
+
         [Fact]
         public void CloseImplicitly_doesnt_throw()
         {
@@ -71,12 +71,12 @@ namespace System.Data.Entity.Core.Query
         }
 
 #endif
-        
+
         private BridgeDataRecord CreateBridgeDataRecord()
         {
             var dbDataReaderMock = new Mock<DbDataReader>();
 
-            var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory<RecordState>(shaper => null);
+            var coordinatorFactory = MockHelper.CreateCoordinatorFactory<RecordState>(shaper => null);
 
             var shaperMock = new Mock<Shaper<RecordState>>(
                 dbDataReaderMock.Object,

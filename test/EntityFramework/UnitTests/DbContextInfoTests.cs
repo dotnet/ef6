@@ -12,7 +12,6 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using FunctionalTests.TestHelpers;
@@ -229,9 +228,9 @@ namespace ProductivityApiUnitTests
         {
             var connectionStringSettings
                 = new ConnectionStringSettingsCollection
-                    {
-                        new ConnectionStringSettings("foo", "Initial Catalog=foo", "System.Data.SqlClient")
-                    };
+                      {
+                          new ConnectionStringSettings("foo", "Initial Catalog=foo", "System.Data.SqlClient")
+                      };
 
 #pragma warning disable 618 // Obsolete ctor
             var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), connectionStringSettings);
@@ -432,9 +431,9 @@ namespace ProductivityApiUnitTests
             var contextInfo
                 = new DbContextInfo(
                     typeof(ContextWithExternalOnModelCreating3))
-                    {
-                        OnModelCreating = mb => mb.Ignore<FakeEntity>()
-                    };
+                      {
+                          OnModelCreating = mb => mb.Ignore<FakeEntity>()
+                      };
 
             contextInfo.OnModelCreating = null;
 
@@ -531,17 +530,17 @@ namespace ProductivityApiUnitTests
         {
             RunTestWithConnectionFactory(
                 Database.ResetDefaultConnectionFactory, () =>
-                    {
-                        Assert.False(Database.DefaultConnectionFactoryChanged);
+                                                            {
+                                                                Assert.False(Database.DefaultConnectionFactoryChanged);
 
 #pragma warning disable 612,618
-                        Database.DefaultConnectionFactory = new SqlConnectionFactory();
+                                                                Database.DefaultConnectionFactory = new SqlConnectionFactory();
 #pragma warning restore 612,618
-                        Assert.True(Database.DefaultConnectionFactoryChanged);
+                                                                Assert.True(Database.DefaultConnectionFactoryChanged);
 
-                        Database.ResetDefaultConnectionFactory();
-                        Assert.False(Database.DefaultConnectionFactoryChanged);
-                    });
+                                                                Database.ResetDefaultConnectionFactory();
+                                                                Assert.False(Database.DefaultConnectionFactoryChanged);
+                                                            });
         }
 
         private void RunTestWithConnectionFactory(Action connectionFactorySetter, Action test)

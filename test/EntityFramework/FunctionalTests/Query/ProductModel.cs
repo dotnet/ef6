@@ -5,7 +5,7 @@ namespace System.Data.Entity.Query
     public static class ProductModel
     {
         public static readonly string ssdl =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Schema Namespace=""ProductStore"" Alias=""Self"" Provider=""System.Data.SqlClient"" ProviderManifestToken=""2008"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm/ssdl"">
   <EntityContainer Name=""ProductContainer_Store"">
     <EntitySet Name=""Products"" EntityType=""Self.Product"" Schema=""dbo"" Table=""Products"" />
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Query
 </Schema>";
 
         public static readonly string msl =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Mapping xmlns=""http://schemas.microsoft.com/ado/2009/11/mapping/cs"" Space=""C-S"">
   <EntityContainerMapping CdmEntityContainer=""ProductContainer"" StorageEntityContainer=""ProductContainer_Store"">
     <EntitySetMapping Name=""Products"">
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Query
 </Mapping>";
 
         private static readonly string csdlTemplate =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Schema Namespace=""ProductModel"" Alias=""Self"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
   <EntityContainer Name=""ProductContainer"">
     <EntitySet Name=""Products"" EntityType=""Self.Product"" />
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Query
 </Schema>";
 
         private static readonly string modelDefinedFunctions =
-@" <Function Name=""F_NoBody"" ReturnType=""Int32"" />
+            @" <Function Name=""F_NoBody"" ReturnType=""Int32"" />
   <Function Name=""F_A"" ReturnType=""Int32"">
     <DefiningExpression>
       using ProductModel;

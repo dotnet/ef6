@@ -232,7 +232,8 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddMigrationSqlGenerator("Karl", generator);
 
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(It.IsAny<TransientDependencyResolver<MigrationSqlGenerator>>()));
+                mockInternalConfiguration.Verify(
+                    m => m.AddDependencyResolver(It.IsAny<TransientDependencyResolver<MigrationSqlGenerator>>()));
             }
         }
 

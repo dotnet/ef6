@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             // Make the property required
-            var newConfiguration = new Properties.Primitive.PrimitivePropertyConfiguration
+            var newConfiguration = new PrimitivePropertyConfiguration
                                        {
                                            IsNullable = false,
                                            OverridableConfigurationParts =

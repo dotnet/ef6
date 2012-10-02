@@ -16,15 +16,18 @@ namespace System.Data.Entity.Internal
             var parameters = new[] { "bar" };
 
 #if !NET40
-            VerifyMethod<string>(e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync("foo", isNoTracking, parameters),
+            VerifyMethod<string>(
+                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync("foo", isNoTracking, parameters),
                 "foo", isNoTracking, parameters);
 #endif
 
-            VerifyMethod<string>(e => e.GetEnumerator(), m => m.ExecuteSqlQuery("foo", isNoTracking, parameters),
+            VerifyMethod<string>(
+                e => e.GetEnumerator(), m => m.ExecuteSqlQuery("foo", isNoTracking, parameters),
                 "foo", isNoTracking, parameters);
         }
 
-        internal void VerifyMethod<T>(Action<InternalSqlSetQuery> methodInvoke, Expression<Action<IInternalSet<T>>> mockMethodInvoke,
+        internal void VerifyMethod<T>(
+            Action<InternalSqlSetQuery> methodInvoke, Expression<Action<IInternalSet<T>>> mockMethodInvoke,
             string sql, bool isNoTracking, object[] parameters)
             where T : class
         {

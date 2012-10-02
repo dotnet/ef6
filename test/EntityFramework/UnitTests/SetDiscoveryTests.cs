@@ -6,12 +6,11 @@ namespace ProductivityApiUnitTests
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -374,7 +373,7 @@ namespace ProductivityApiUnitTests
         {
             public DbSet<DBNull> FakeSet1 { get; set; }
 
-            [SuppressDbSetInitializationAttribute]
+            [SuppressDbSetInitialization]
             public DbSet<Random> FakeSet2 { get; set; }
         }
 

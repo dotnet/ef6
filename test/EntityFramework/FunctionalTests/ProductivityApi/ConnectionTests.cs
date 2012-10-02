@@ -3,14 +3,13 @@
 namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
-    using System.Data.Entity.Core.Common;
     using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
     using FunctionalTests.TestHelpers;
@@ -360,6 +359,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             ObjectContext_connection_is_not_disposed_after_use_when_DbContext_owns_ObjectContext_when_ObjectContext_does_not_own_connection(
+            
             )
         {
             ObjectContext_connection_is_not_disposed_after_use_implementation(dbContextOwnsObjectContext: true);

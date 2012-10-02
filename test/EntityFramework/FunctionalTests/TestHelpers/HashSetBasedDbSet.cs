@@ -2,10 +2,11 @@
 
 namespace System.Data.Entity
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -70,7 +71,7 @@ namespace System.Data.Entity
             get { return _query.ElementType; }
         }
 
-        System.Linq.Expressions.Expression IQueryable.Expression
+        Expression IQueryable.Expression
         {
             get { return _query.Expression; }
         }
@@ -80,7 +81,7 @@ namespace System.Data.Entity
             get { return _query.Provider; }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _data.GetEnumerator();
         }

@@ -31,11 +31,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 entityCollectionMock.Setup(m => m.Load(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>()))
                     .Callback(
                         (IEnumerable<object> actualCollection, MergeOption actualMergeOption) =>
-                        {
-                            timesLoadCalled++;
-                            Assert.Equal(null, actualCollection);
-                            Assert.Equal(mergeOption, actualMergeOption);
-                        });
+                            {
+                                timesLoadCalled++;
+                                Assert.Equal(null, actualCollection);
+                                Assert.Equal(mergeOption, actualMergeOption);
+                            });
 
                 var timesCheckOwnerNullCalled = 0;
                 entityCollectionMock.Setup(m => m.CheckOwnerNull())
@@ -71,25 +71,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     entityCollectionMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
                         .Callback(
                             (IEnumerable<object> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
+                                {
+                                    timesMergeCalled++;
 
-                                Assert.Equal(
-                                    refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
-                                Assert.Equal(mergeOption, actualMergeOption);
-                            });
+                                    Assert.Equal(
+                                        refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
                 else
                 {
                     entityCollectionMock.Setup(m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), true))
                         .Callback(
                             (List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
+                                {
+                                    timesMergeCalled++;
 
-                                Assert.Equal(collection, actualCollection);
-                                Assert.Equal(mergeOption, actualMergeOption);
-                            });
+                                    Assert.Equal(collection, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
 
                 entityCollectionMock.Object.Load(collection, mergeOption);
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     () => MockHelper.CreateMockEntityCollection<object>(null).Object.Remove(null));
             }
         }
-        
+
 #if !NET40
 
         public class LoadAsync
@@ -150,15 +150,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var entityCollectionMock = MockHelper.CreateMockEntityCollection<object>(null);
 
                 var timesLoadCalled = 0;
-                entityCollectionMock.Setup(m => m.LoadAsync(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>()))
+                entityCollectionMock.Setup(
+                    m => m.LoadAsync(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>()))
                     .Returns(
                         (IEnumerable<object> actualCollection, MergeOption actualMergeOption, CancellationToken cancellationToken) =>
-                        {
-                            timesLoadCalled++;
-                            Assert.Equal(null, actualCollection);
-                            Assert.Equal(mergeOption, actualMergeOption);
-                            return Task.FromResult<object>(null);
-                        });
+                            {
+                                timesLoadCalled++;
+                                Assert.Equal(null, actualCollection);
+                                Assert.Equal(mergeOption, actualMergeOption);
+                                return Task.FromResult<object>(null);
+                            });
 
                 var timesCheckOwnerNullCalled = 0;
                 entityCollectionMock.Setup(m => m.CheckOwnerNull())
@@ -166,7 +167,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 entityCollectionMock.Object.LoadAsync(mergeOption).Wait();
 
-                entityCollectionMock.Verify(m => m.LoadAsync(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>()));
+                entityCollectionMock.Verify(
+                    m => m.LoadAsync(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>()));
 
                 Assert.True(1 == timesLoadCalled, "Expected Load to be called once for MergeOption." + mergeOption);
                 Assert.True(1 == timesCheckOwnerNullCalled, "Expected CheckOwnerNull to be called once for MergeOption." + mergeOption);
@@ -194,25 +196,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     entityCollectionMock.Setup(m => m.Merge(It.IsAny<IEnumerable<object>>(), It.IsAny<MergeOption>(), true))
                         .Callback(
                             (IEnumerable<object> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
+                                {
+                                    timesMergeCalled++;
 
-                                Assert.Equal(
-                                    refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
-                                Assert.Equal(mergeOption, actualMergeOption);
-                            });
+                                    Assert.Equal(
+                                        refreshedValue == null ? Enumerable.Empty<object>() : new[] { refreshedValue }, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
                 else
                 {
                     entityCollectionMock.Setup(m => m.Merge<object>(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), true))
                         .Callback(
                             (List<IEntityWrapper> actualCollection, MergeOption actualMergeOption, bool setIsLoaded) =>
-                            {
-                                timesMergeCalled++;
+                                {
+                                    timesMergeCalled++;
 
-                                Assert.Equal(collection, actualCollection);
-                                Assert.Equal(mergeOption, actualMergeOption);
-                            });
+                                    Assert.Equal(collection, actualCollection);
+                                    Assert.Equal(mergeOption, actualMergeOption);
+                                });
                 }
 
                 entityCollectionMock.Object.LoadAsync(collection, mergeOption, CancellationToken.None);

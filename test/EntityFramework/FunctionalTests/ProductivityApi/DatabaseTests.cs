@@ -3,7 +3,6 @@
 namespace ProductivityApiTests
 {
     using System;
-    using System.Data.Entity.Core;
     using System.Data;
     using System.Data.Entity;
     using SimpleModel;
@@ -329,6 +328,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Can_delete_database_if_exists_using_static_method_taking_named_connection_string_where_last_token_exists_in_config_file(
+            
             )
         {
             Can_delete_database_if_exists_using_static_method_taking_named_connection_string(

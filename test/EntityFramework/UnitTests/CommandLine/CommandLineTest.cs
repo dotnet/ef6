@@ -7,7 +7,6 @@ namespace CmdLine.Tests
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using migrate::CmdLine;
     using Xunit;
 
     public class CommandLineTest
@@ -17,13 +16,13 @@ namespace CmdLine.Tests
         {
             var args = new[] { "/?" };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
-            var tokens = CommandLine.Tokenize();
+            var tokens = migrate::CmdLine.CommandLine.Tokenize();
 
-            Assert.Equal(1, CommandLine.Args.Length);
-            Assert.Equal(1, CommandLine.GetSwitches(tokens).Count);
-            Assert.Equal(0, CommandLine.GetParameters(tokens).Count);
+            Assert.Equal(1, migrate::CmdLine.CommandLine.Args.Length);
+            Assert.Equal(1, migrate::CmdLine.CommandLine.GetSwitches(tokens).Count);
+            Assert.Equal(0, migrate::CmdLine.CommandLine.GetParameters(tokens).Count);
             Assert.True(tokens[0].IsCommand());
             Assert.Equal("?", tokens[0].Command);
         }
@@ -38,13 +37,13 @@ namespace CmdLine.Tests
                                "Another", "One", "Word", "Args"
                            };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
-            var tokens = CommandLine.Tokenize();
+            var tokens = migrate::CmdLine.CommandLine.Tokenize();
 
-            Assert.Equal(10, CommandLine.Args.Length);
-            Assert.Equal(4, CommandLine.GetSwitches(tokens).Count);
-            Assert.Equal(6, CommandLine.GetParameters(tokens).Count);
+            Assert.Equal(10, migrate::CmdLine.CommandLine.Args.Length);
+            Assert.Equal(4, migrate::CmdLine.CommandLine.GetSwitches(tokens).Count);
+            Assert.Equal(6, migrate::CmdLine.CommandLine.GetParameters(tokens).Count);
             Assert.True(tokens[0].IsParameter());
             Assert.True(tokens[1].IsCommand());
             Assert.True(tokens[2].IsCommand());
@@ -65,53 +64,56 @@ namespace CmdLine.Tests
         [Fact]
         public void ParseDoesNotThrowWhenNullCommandLine()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            CommandLine.Parse<object>();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.Parse<object>();
         }
 
         [Fact]
         public void MissingRequiredSwitchArgShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineRequiredArgumentMissingException(typeof(string), "N", -1).Message,
-                Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<TestArgs>()).Message);
+                new migrate::CmdLine.CommandLineRequiredArgumentMissingException(typeof(string), "N", -1).Message,
+                Assert.Throws<migrate::CmdLine.CommandLineRequiredArgumentMissingException>(
+                    () => migrate::CmdLine.CommandLine.Parse<TestArgs>()).Message);
         }
 
         [Fact]
         public void AttributeWithNoCommandNameShouldUsePropertyName()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment("/b1-");
-            var actual = CommandLine.Parse<PropWithNoCommandName>();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment("/b1-");
+            var actual = migrate::CmdLine.CommandLine.Parse<PropWithNoCommandName>();
             Assert.False(actual.b1);
         }
 
         [Fact]
         public void MissingRequiredPositionArgShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineRequiredArgumentMissingException(typeof(string), "String 1", 1).Message,
-                Assert.Throws<CommandLineRequiredArgumentMissingException>(() => CommandLine.Parse<ThreeRequiredPositionArgs>()).Message);
+                new migrate::CmdLine.CommandLineRequiredArgumentMissingException(typeof(string), "String 1", 1).Message,
+                Assert.Throws<migrate::CmdLine.CommandLineRequiredArgumentMissingException>(
+                    () => migrate::CmdLine.CommandLine.Parse<ThreeRequiredPositionArgs>()).Message);
         }
 
         [Fact]
         public void DuplicateArgsShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment("/N:123 /N:345");
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment("/N:123 /N:345");
 
-            var commandArg = new CommandArgument("/N:345", 7);
+            var commandArg = new migrate::CmdLine.CommandArgument("/N:345", 7);
             commandArg.Command = "N";
             Assert.Equal(
-                new CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
-                Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<TestArgs>()).Message);
+                new migrate::CmdLine.CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
+                Assert.Throws<migrate::CmdLine.CommandLineArgumentInvalidException>(() => migrate::CmdLine.CommandLine.Parse<TestArgs>()).
+                    Message);
         }
 
         [Fact]
         public void DuplicateArgsWithListShouldNotThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment("/N:123 /N:345");
-            var actual = CommandLine.Parse<TestArgsWithList>();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment("/N:123 /N:345");
+            var actual = migrate::CmdLine.CommandLine.Parse<TestArgsWithList>();
             Assert.Equal(2, actual.NList.Count);
             Assert.Equal("123", actual.NList[0]);
             Assert.Equal("345", actual.NList[1]);
@@ -120,8 +122,8 @@ namespace CmdLine.Tests
         [Fact]
         public void DefaultArgsAreApplied()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment("/n:123");
-            var target = CommandLine.Parse<TestArgs>();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment("/n:123");
+            var target = migrate::CmdLine.CommandLine.Parse<TestArgs>();
 
             Assert.True(target.BoolT);
             Assert.False(target.BoolY);
@@ -141,31 +143,31 @@ namespace CmdLine.Tests
                                "Another", "One", "Word", "Args"
                            };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
             // Save the seperators since they are static members
-            var oldSep = CommandLine.CommandSeparators;
-            var oldValueSep = CommandLine.ValueSeparators;
+            var oldSep = migrate::CmdLine.CommandLine.CommandSeparators;
+            var oldValueSep = migrate::CmdLine.CommandLine.ValueSeparators;
 
-            CommandLine.CommandSeparators = new List<string>
-                                                {
-                                                    "~",
-                                                    "_"
-                                                };
-            CommandLine.ValueSeparators = new List<string>
-                                              {
-                                                  "|"
-                                              };
+            migrate::CmdLine.CommandLine.CommandSeparators = new List<string>
+                                                                 {
+                                                                     "~",
+                                                                     "_"
+                                                                 };
+            migrate::CmdLine.CommandLine.ValueSeparators = new List<string>
+                                                               {
+                                                                   "|"
+                                                               };
 
-            var tokens = CommandLine.Tokenize();
+            var tokens = migrate::CmdLine.CommandLine.Tokenize();
 
             // Restore the seperators
-            CommandLine.CommandSeparators = oldSep;
-            CommandLine.ValueSeparators = oldValueSep;
+            migrate::CmdLine.CommandLine.CommandSeparators = oldSep;
+            migrate::CmdLine.CommandLine.ValueSeparators = oldValueSep;
 
-            Assert.Equal(10, CommandLine.Args.Length);
-            Assert.Equal(4, CommandLine.GetSwitches(tokens).Count);
-            Assert.Equal(6, CommandLine.GetParameters(tokens).Count);
+            Assert.Equal(10, migrate::CmdLine.CommandLine.Args.Length);
+            Assert.Equal(4, migrate::CmdLine.CommandLine.GetSwitches(tokens).Count);
+            Assert.Equal(6, migrate::CmdLine.CommandLine.GetParameters(tokens).Count);
             Assert.True(tokens[0].IsParameter());
             Assert.True(tokens[1].IsCommand());
             Assert.True(tokens[2].IsCommand());
@@ -196,8 +198,8 @@ namespace CmdLine.Tests
                                , "/I", "/D:7-8-2011"
                            };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
-            var xcopyCommand = CommandLine.Parse<XCopyCommandArgs>();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            var xcopyCommand = migrate::CmdLine.CommandLine.Parse<XCopyCommandArgs>();
 
             Assert.NotNull(xcopyCommand);
             Assert.Equal(args[0], xcopyCommand.Source);
@@ -213,9 +215,9 @@ namespace CmdLine.Tests
         {
             var args = new[] { "/S:Value/With:Separators", "/Y-", "/t", "/N:123" };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
-            var actual = CommandLine.Parse<TestArgs>();
+            var actual = migrate::CmdLine.CommandLine.Parse<TestArgs>();
 
             Assert.Equal("Value/With:Separators", actual.StringArg);
             Assert.True(actual.BoolT);
@@ -225,13 +227,13 @@ namespace CmdLine.Tests
         [Fact]
         public void CaseSensitiveAllowsUpperAndLowerWithSameSwitch()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment("/t:lower /T:UPPER /y /Y-");
-            var oldValue = CommandLine.CaseSensitive;
-            CommandLine.CaseSensitive = true;
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment("/t:lower /T:UPPER /y /Y-");
+            var oldValue = migrate::CmdLine.CommandLine.CaseSensitive;
+            migrate::CmdLine.CommandLine.CaseSensitive = true;
 
-            var actual = CommandLine.Parse<TypeWithUpperAndLower>();
+            var actual = migrate::CmdLine.CommandLine.Parse<TypeWithUpperAndLower>();
 
-            CommandLine.CaseSensitive = oldValue;
+            migrate::CmdLine.CommandLine.CaseSensitive = oldValue;
 
             Assert.Equal("lower", actual.Lower);
             Assert.Equal("UPPER", actual.Upper);
@@ -244,14 +246,14 @@ namespace CmdLine.Tests
         {
             var args = new[] { "/?" };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
             try
             {
-                CommandLine.Parse<TestArgs>();
+                migrate::CmdLine.CommandLine.Parse<TestArgs>();
                 Assert.True(false, "Parse did not throw an exception");
             }
-            catch (CommandLineArgumentInvalidException exception)
+            catch (migrate::CmdLine.CommandLineArgumentInvalidException exception)
             {
                 Assert.NotNull(exception.ArgumentHelp);
                 Assert.Equal(4, exception.ArgumentHelp.ValidArguments.Count());
@@ -263,22 +265,24 @@ namespace CmdLine.Tests
         {
             var args = new[] { "/NoMatch" };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
-            var commandArg = new CommandArgument("/NoMatch", 0);
+            var commandArg = new migrate::CmdLine.CommandArgument("/NoMatch", 0);
             commandArg.Command = "NoMatch";
             Assert.Equal(
-                new CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
-                Assert.Throws<CommandLineArgumentInvalidException>(() => CommandLine.Parse<InferredTestArgs>()).Message);
+                new migrate::CmdLine.CommandLineArgumentInvalidException(typeof(string), commandArg).Message,
+                Assert.Throws<migrate::CmdLine.CommandLineArgumentInvalidException>(
+                    () => migrate::CmdLine.CommandLine.Parse<InferredTestArgs>()).Message);
         }
 
         [Fact]
         public void TwoPropsWithSameSwitchShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineException("Duplicate Command \"B\"").Message,
-                Assert.Throws<CommandLineException>(() => CommandLine.Parse<TwoPropsWithSameSwitch>()).Message);
+                new migrate::CmdLine.CommandLineException("Duplicate Command \"B\"").Message,
+                Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<TwoPropsWithSameSwitch>()).
+                    Message);
         }
 
         [Fact]
@@ -286,9 +290,9 @@ namespace CmdLine.Tests
         {
             var args = new[] { "/StringArg:Value/With:Separators", "/BoolY-", "/BoolT", "/Date:12-1-2011", "/Number:23" };
 
-            CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment(args);
 
-            var actual = CommandLine.Parse<InferredTestArgs>();
+            var actual = migrate::CmdLine.CommandLine.Parse<InferredTestArgs>();
 
             Assert.Equal("Value/With:Separators", actual.StringArg);
             Assert.True(actual.BoolT);
@@ -300,73 +304,79 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenNoPositionOneShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineException("Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message,
-                Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgNoOne>()).Message);
+                new migrate::CmdLine.CommandLineException(
+                    "Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message,
+                Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgNoOne>()).
+                    Message);
         }
 
         [Fact]
         public void WhenNoPositionTwoShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineException("Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").
-                    Message, Assert.Throws<CommandLineException>(() => CommandLine.Parse<BadPositionArgMissingTwo>()).Message);
+                new migrate::CmdLine.CommandLineException(
+                    "Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").
+                    Message,
+                Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgMissingTwo>()).
+                    Message);
         }
 
         [Fact]
         public void WhenDuplicatePositionShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
-                new CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message,
-                Assert.Throws<CommandLineException>(() => CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
+                new migrate::CmdLine.CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message,
+                Assert.Throws<migrate::CmdLine.CommandLineException>(
+                    () => migrate::CmdLine.CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
         }
 
         [Fact]
         public void WhenBadParameterIndexShouldThrow()
         {
-            CommandLine.CommandEnvironment = new TestCommandEnvironment();
+            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
             Assert.Equal(
                 new CustomAttributeFormatException("'ParameterIndex' property specified was not found.").Message,
-                Assert.Throws<CustomAttributeFormatException>(() => CommandLine.Parse<TypeWithBadParamIndex>()).Message);
+                Assert.Throws<CustomAttributeFormatException>(() => migrate::CmdLine.CommandLine.Parse<TypeWithBadParamIndex>()).Message);
         }
     }
 
     public class TestArgsWithList
     {
-        [CommandLineParameter(Command = "N")]
+        [migrate::CmdLine.CommandLineParameterAttribute(Command = "N")]
         public List<string> NList { get; set; }
     }
 
     public class TypeWithUpperAndLower
     {
-        [CommandLineParameter("t")]
+        [migrate::CmdLine.CommandLineParameterAttribute("t")]
         public string Lower { get; set; }
 
-        [CommandLineParameter("T")]
+        [migrate::CmdLine.CommandLineParameterAttribute("T")]
         public string Upper { get; set; }
 
-        [CommandLineParameter("y")]
+        [migrate::CmdLine.CommandLineParameterAttribute("y")]
         public bool YLower { get; set; }
 
-        [CommandLineParameter("Y")]
+        [migrate::CmdLine.CommandLineParameterAttribute("Y")]
         public bool YUpper { get; set; }
     }
 
     public class TypeWithBadParamIndex
     {
-        [CommandLineParameter(ParameterIndex = -1)]
+        [migrate::CmdLine.CommandLineParameterAttribute(ParameterIndex = -1)]
         public string S1 { get; set; }
     }
 
     public class TypeWithDuplicateParamIndex
     {
-        [CommandLineParameter(ParameterIndex = 1)]
+        [migrate::CmdLine.CommandLineParameterAttribute(ParameterIndex = 1)]
         public string S1 { get; set; }
 
-        [CommandLineParameter(ParameterIndex = 1)]
+        [migrate::CmdLine.CommandLineParameterAttribute(ParameterIndex = 1)]
         public string S2 { get; set; }
     }
 }

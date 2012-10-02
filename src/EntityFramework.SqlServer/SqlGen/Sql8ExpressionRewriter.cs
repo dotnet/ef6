@@ -72,7 +72,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region DbExpressionVisitor<DbExpression> Members
 
         /// <summary>
-        ///     <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///     <see
+        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///         
         ///         <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         /// </summary>
         /// <param name="e"> </param>
@@ -83,7 +85,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///     <see
+        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///         
         ///         <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         /// </summary>
         /// <param name="e"> </param>
@@ -117,6 +121,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     |
         ///     NON-DISTINCT EXCEPT  (specially translated, <see
         ///      cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///                                                     
         ///                                                     <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         ///                                                         |
         ///                                                         | - Left:  clone of input
@@ -169,7 +174,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         /// <summary>
         ///     This method is invoked when tranforming <see cref="DbIntersectExpression" /> and <see cref="DbExceptExpression" /> by doing comparison over all input columns.
-        ///     <see cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///     <see
+        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///         
         ///         <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         /// </summary>
         /// <param name="left"> </param>
@@ -345,6 +352,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method for <see
         ///      cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///                           
         ///                           <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         ///                               Removes all pairs of property expressions from list1 and list2, for which the property expression in list1
         ///                               does not have a 'matching' property expression in list2. 
@@ -449,6 +457,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method for <see
         ///      cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
+        ///                           
         ///                           <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
         ///                               Creates a
         ///                               <see cref="DbProjectExpression" />

@@ -13,7 +13,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -215,10 +214,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                    {
-                        c.Name = renamedColumns.UniquifyName(ColumnName);
-                        renamedColumns.Add(c);
-                    });
+                        {
+                            c.Name = renamedColumns.UniquifyName(ColumnName);
+                            renamedColumns.Add(c);
+                        });
         }
 
         internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
@@ -301,7 +300,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
-        protected bool IsCompatible<TProperty, TConfiguration>(Expression<Func<TConfiguration, TProperty?>> propertyExpression, TConfiguration other, ref string errorMessage)
+        protected bool IsCompatible<TProperty, TConfiguration>(
+            Expression<Func<TConfiguration, TProperty?>> propertyExpression, TConfiguration other, ref string errorMessage)
             where TProperty : struct
             where TConfiguration : PrimitivePropertyConfiguration
         {
@@ -326,7 +326,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
-        protected bool IsCompatible<TConfiguration>(Expression<Func<TConfiguration, string>> propertyExpression, TConfiguration other, ref string errorMessage)
+        protected bool IsCompatible<TConfiguration>(
+            Expression<Func<TConfiguration, string>> propertyExpression, TConfiguration other, ref string errorMessage)
             where TConfiguration : PrimitivePropertyConfiguration
         {
             Contract.Requires(propertyExpression != null);

@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -136,18 +135,18 @@ namespace System.Data.Entity.Infrastructure
         #region IDbAsyncEnumerable extension methods
 
 #if !NET40
-        
+
         [Fact]
         public void Generic_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods()
         {
             IEnumerable<int>[] testCases = new[]
-            { 
-                new int[] {},
-                new[]{ 1 },
-                new[]{ 2 },
-                new[]{ 1, 2 },
-                new[]{ 1, 2, 3 }
-            };
+                                               {
+                                                   new int[] { },
+                                                   new[] { 1 },
+                                                   new[] { 2 },
+                                                   new[] { 1, 2 },
+                                                   new[] { 1, 2, 3 }
+                                               };
 
             foreach (var testCase in testCases)
             {
@@ -194,20 +193,20 @@ namespace System.Data.Entity.Infrastructure
                 AssertSameResult(
                     testCase,
                     q =>
-                    {
-                        int sum = 0;
-                        q.ForEachAsync(e => sum = +e).Wait();
-                        return sum;
-                    },
-                    e =>
-                    {
-                        int sum = 0;
-                        foreach (var i in e)
                         {
-                            sum = +i;
-                        }
-                        return sum;
-                    });
+                            var sum = 0;
+                            q.ForEachAsync(e => sum = +e).Wait();
+                            return sum;
+                        },
+                    e =>
+                        {
+                            var sum = 0;
+                            foreach (var i in e)
+                            {
+                                sum = +i;
+                            }
+                            return sum;
+                        });
                 AssertSameResult(
                     testCase,
                     q => q.MaxAsync().Result,
@@ -301,20 +300,20 @@ namespace System.Data.Entity.Infrastructure
                 AssertSameResult(
                     testCase,
                     q =>
-                    {
-                        int sum = 0;
-                        q.ForEachAsync(e => sum = +e, CancellationToken.None).Wait();
-                        return sum;
-                    },
-                    e =>
-                    {
-                        int sum = 0;
-                        foreach (var i in e)
                         {
-                            sum = +i;
-                        }
-                        return sum;
-                    });
+                            var sum = 0;
+                            q.ForEachAsync(e => sum = +e, CancellationToken.None).Wait();
+                            return sum;
+                        },
+                    e =>
+                        {
+                            var sum = 0;
+                            foreach (var i in e)
+                            {
+                                sum = +i;
+                            }
+                            return sum;
+                        });
                 AssertSameResult(
                     testCase,
                     q => q.MaxAsync(CancellationToken.None).Result,
@@ -370,33 +369,33 @@ namespace System.Data.Entity.Infrastructure
         public void NonGeneric_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods()
         {
             IEnumerable<object>[] testCases = new[]
-            { 
-                new object[] {},
-                new object[]{ 1 },
-                new object[]{ 2 },
-                new object[]{ 1, 2 },
-                new object[]{ 1, 2, 3 }
-            };
+                                                  {
+                                                      new object[] { },
+                                                      new object[] { 1 },
+                                                      new object[] { 2 },
+                                                      new object[] { 1, 2 },
+                                                      new object[] { 1, 2, 3 }
+                                                  };
 
             foreach (var testCase in testCases)
             {
                 AssertSameResult<int>(
                     testCase,
                     q =>
-                    {
-                        int sum = 0;
-                        q.ForEachAsync(e => sum = +(int)e).Wait();
-                        return sum;
-                    },
-                    e =>
-                    {
-                        int sum = 0;
-                        foreach (var i in e)
                         {
-                            sum = +(int)i;
-                        }
-                        return sum;
-                    });
+                            var sum = 0;
+                            q.ForEachAsync(e => sum = +(int)e).Wait();
+                            return sum;
+                        },
+                    e =>
+                        {
+                            var sum = 0;
+                            foreach (var i in e)
+                            {
+                                sum = +(int)i;
+                            }
+                            return sum;
+                        });
                 AssertSameResult(
                     testCase,
                     q => q.ToArrayAsync().Result,
@@ -410,20 +409,20 @@ namespace System.Data.Entity.Infrastructure
                 AssertSameResult<int>(
                     testCase,
                     q =>
-                    {
-                        int sum = 0;
-                        q.ForEachAsync(e => sum = +(int)e, CancellationToken.None).Wait();
-                        return sum;
-                    },
-                    e =>
-                    {
-                        int sum = 0;
-                        foreach (var i in e)
                         {
-                            sum = +(int)i;
-                        }
-                        return sum;
-                    });
+                            var sum = 0;
+                            q.ForEachAsync(e => sum = +(int)e, CancellationToken.None).Wait();
+                            return sum;
+                        },
+                    e =>
+                        {
+                            var sum = 0;
+                            foreach (var i in e)
+                            {
+                                sum = +(int)i;
+                            }
+                            return sum;
+                        });
                 AssertSameResult(
                     testCase,
                     q => q.ToArrayAsync(CancellationToken.None).Result,
@@ -434,7 +433,6 @@ namespace System.Data.Entity.Infrastructure
                     e => e.ToList());
             }
         }
-
 
         [Fact]
         public void Generic_IDbAsyncEnumerable_extension_method_equivalents_validate_arguments()
@@ -452,33 +450,45 @@ namespace System.Data.Entity.Infrastructure
                                   return 0;
                               });
 
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, new CancellationToken()).Result);
 
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, comparer: null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, comparer: null, cancellationToken: new CancellationToken()).Result);
 
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, elementSelector: e => e).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, elementSelector: e => e, cancellationToken: new CancellationToken()).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("elementSelector",
-                q => q.ToDictionaryAsync<int>(e => e, elementSelector: null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("elementSelector",
-                q => q.ToDictionaryAsync<int>(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "elementSelector",
+                q => q.ToDictionaryAsync(e => e, elementSelector: null).Result);
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "elementSelector",
+                q => q.ToDictionaryAsync(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
 
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, e => e, null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("keySelector",
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "keySelector",
                 q => q.ToDictionaryAsync<int>(null, e => e, null, new CancellationToken()).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("elementSelector",
-                q => q.ToDictionaryAsync<int>(e => e, null, null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>("elementSelector",
-                q => q.ToDictionaryAsync<int>(e => e, null, null, new CancellationToken()).Result);
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "elementSelector",
+                q => q.ToDictionaryAsync(e => e, null, null).Result);
+            ArgumentNullTest<int, Dictionary<int, int>>(
+                "elementSelector",
+                q => q.ToDictionaryAsync(e => e, null, null, new CancellationToken()).Result);
 
             ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null).Result);
             ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null, new CancellationToken()).Result);
@@ -509,12 +519,13 @@ namespace System.Data.Entity.Infrastructure
             ArgumentNullTest("action", q => q.ForEachAsync(null, new CancellationToken()));
         }
 
-        private static void AssertSameResult<TElement, TResult>(IEnumerable<TElement> sourceEnumerable,
+        private static void AssertSameResult<TElement, TResult>(
+            IEnumerable<TElement> sourceEnumerable,
             Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest, Func<IEnumerable<TElement>, TResult> invokeOracleMethod)
         {
             var query = CreateDbRawSqlQuery(sourceEnumerable);
 
-            TResult expectedResult = default(TResult);
+            var expectedResult = default(TResult);
             Exception expectedException = null;
             try
             {
@@ -525,7 +536,7 @@ namespace System.Data.Entity.Infrastructure
                 expectedException = e;
             }
 
-            TResult actualResult = default(TResult);
+            var actualResult = default(TResult);
             Exception actualException = null;
             try
             {
@@ -549,12 +560,13 @@ namespace System.Data.Entity.Infrastructure
             }
         }
 
-        private static void AssertSameResult<TResult>(IEnumerable<object> sourceEnumerable,
+        private static void AssertSameResult<TResult>(
+            IEnumerable<object> sourceEnumerable,
             Func<DbRawSqlQuery, TResult> invokeMethodUnderTest, Func<IEnumerable, TResult> invokeOracleMethod)
         {
             var query = CreateDbRawSqlQuery(sourceEnumerable);
 
-            TResult expectedResult = default(TResult);
+            var expectedResult = default(TResult);
             Exception expectedException = null;
             try
             {
@@ -565,7 +577,7 @@ namespace System.Data.Entity.Infrastructure
                 expectedException = e;
             }
 
-            TResult actualResult = default(TResult);
+            var actualResult = default(TResult);
             Exception actualException = null;
             try
             {
@@ -589,7 +601,8 @@ namespace System.Data.Entity.Infrastructure
             }
         }
 
-        private static void ArgumentNullTest<TElement, TResult>(string paramName, Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest)
+        private static void ArgumentNullTest<TElement, TResult>(
+            string paramName, Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest)
         {
             var query = CreateDbRawSqlQuery(new TElement[0]);
             Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
@@ -619,7 +632,8 @@ namespace System.Data.Entity.Infrastructure
 
         private class ModuloEqualityComparer : IEqualityComparer<int>
         {
-            private int _modulo;
+            private readonly int _modulo;
+
             public ModuloEqualityComparer(int modulo)
             {
                 _modulo = modulo;
@@ -637,7 +651,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
 #endif
-        
+
         #endregion
     }
 }

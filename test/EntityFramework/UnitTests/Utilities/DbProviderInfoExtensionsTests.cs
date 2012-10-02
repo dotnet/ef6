@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Utilities;
     using Xunit;
 
     public sealed class DbProviderInfoExtensionsTests

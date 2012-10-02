@@ -85,9 +85,11 @@ namespace System.Data.Entity.Config
 
             _newConfiguration = configuration.Owner;
 
-            if (_configuration.Value.Owner.GetType() != configuration.Owner.GetType())
+            if (_configuration.Value.Owner.GetType()
+                != configuration.Owner.GetType())
             {
-                if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
+                if (_configuration.Value.Owner.GetType()
+                    == typeof(DbConfiguration))
                 {
                     throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.Owner.GetType().Name));
                 }
@@ -138,7 +140,8 @@ namespace System.Data.Entity.Config
                 var foundType = _finder.TryFindConfigurationType(contextType);
                 if (foundType != null)
                 {
-                    if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
+                    if (_configuration.Value.Owner.GetType()
+                        == typeof(DbConfiguration))
                     {
                         throw new InvalidOperationException(Strings.ConfigurationNotDiscovered(foundType.Name));
                     }

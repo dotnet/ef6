@@ -58,6 +58,7 @@ namespace System.Data.Entity.Config
             mockFirstResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
             mockSecondResolver.Verify(m => m.GetService(typeof(IPilkington), "Karl"), Times.Once());
         }
+
         public interface IPilkington
         {
         }

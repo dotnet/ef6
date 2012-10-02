@@ -7,7 +7,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;

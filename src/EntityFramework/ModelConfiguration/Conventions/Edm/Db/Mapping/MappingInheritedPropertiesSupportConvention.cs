@@ -6,8 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>

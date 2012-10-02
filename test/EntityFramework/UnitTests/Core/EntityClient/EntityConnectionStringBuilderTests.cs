@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.EntityClient
 {
-    using System;
     using Xunit;
 
     public class EntityConnectionStringBuilderTests

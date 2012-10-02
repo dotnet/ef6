@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
 {
-    using System.Data.Entity;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;

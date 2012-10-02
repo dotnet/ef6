@@ -8,7 +8,10 @@ namespace System.Data.Entity.Internal
         where TEntity : class, new()
     {
         public InternalEntityEntryForMock()
-            : base(new Mock<InternalContextForMock>{CallBase = true}.Object, MockHelper.CreateMockStateEntry<TEntity>().Object)
+            : base(new Mock<InternalContextForMock>
+                       {
+                           CallBase = true
+                       }.Object, MockHelper.CreateMockStateEntry<TEntity>().Object)
         {
         }
     }

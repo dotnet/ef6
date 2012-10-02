@@ -33,10 +33,11 @@ namespace System.Data.Entity.Core.Objects
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
-    using System.Transactions;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Transactions;
+#if !NET40
+
 #endif
 
     /// <summary>
@@ -2796,7 +2797,7 @@ namespace System.Data.Entity.Core.Objects
                         needLocalTransaction = (null == _lastTransaction);
                     }
                 }
-                
+
                 // else the user already has his own local transaction going; user will do the abort or commit.
                 DbTransaction localTransaction = null;
                 try

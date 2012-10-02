@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Internal;
-    using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
 

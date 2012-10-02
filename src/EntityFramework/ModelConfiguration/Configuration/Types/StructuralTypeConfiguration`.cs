@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -26,11 +27,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration> Property<T>(Expression<Func<TStructuralType, T>> propertyExpression)
+        public PrimitivePropertyConfiguration<PrimitivePropertyConfiguration> Property<T>(
+            Expression<Func<TStructuralType, T>> propertyExpression)
             where T : struct
         {
-            return new PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>(
-                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
+            return new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -41,11 +43,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration> Property<T>(Expression<Func<TStructuralType, T?>> propertyExpression)
+        public PrimitivePropertyConfiguration<PrimitivePropertyConfiguration> Property<T>(
+            Expression<Func<TStructuralType, T?>> propertyExpression)
             where T : struct
         {
-            return new PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>(
-                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
+            return new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -55,10 +58,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration> Property(Expression<Func<TStructuralType, DbGeometry>> propertyExpression)
+        public PrimitivePropertyConfiguration<PrimitivePropertyConfiguration> Property(
+            Expression<Func<TStructuralType, DbGeometry>> propertyExpression)
         {
-            return new PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>(
-                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
+            return new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -68,11 +72,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration> Property(
+        public PrimitivePropertyConfiguration<PrimitivePropertyConfiguration> Property(
             Expression<Func<TStructuralType, DbGeography>> propertyExpression)
         {
-            return new PrimitivePropertyConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>(
-                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
+            return new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -225,7 +229,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal abstract TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
             LambdaExpression lambdaExpression)
-            where TPrimitivePropertyConfiguration : Properties.Primitive.PrimitivePropertyConfiguration, new();
+            where TPrimitivePropertyConfiguration : PrimitivePropertyConfiguration, new();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()

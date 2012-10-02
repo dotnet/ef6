@@ -5,9 +5,9 @@ namespace FunctionalTests
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core;
-    using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
     using System.Linq;
@@ -227,7 +227,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(
-                System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
+                EdmConcurrencyMode.Fixed,
                 databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
                     .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
         }
@@ -250,7 +250,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(
-                System.Data.Entity.Edm.EdmConcurrencyMode.Fixed,
+                EdmConcurrencyMode.Fixed,
                 databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
                     .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
         }

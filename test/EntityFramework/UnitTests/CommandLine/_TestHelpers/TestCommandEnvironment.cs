@@ -5,9 +5,8 @@ namespace CmdLine.Tests
     extern alias migrate;
     using System;
     using System.Collections.Generic;
-    using migrate::CmdLine;
 
-    public class TestCommandEnvironment : ICommandEnvironment
+    public class TestCommandEnvironment : migrate::CmdLine.ICommandEnvironment
     {
         private string[] args;
 

@@ -121,17 +121,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return Property(
                 propertyPath,
                 () =>
-                {
-                    var configuration = (PrimitivePropertyConfiguration)Activator
-                                                                            .CreateInstance(
-                                                                                GetPropertyConfigurationType(
-                                                                                    propertyPath.Last().PropertyType));
-                    if (overridableConfigurationParts.HasValue)
                     {
-                        configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
-                    }
-                    return configuration;
-                });
+                        var configuration = (PrimitivePropertyConfiguration)Activator
+                                                                                .CreateInstance(
+                                                                                    GetPropertyConfigurationType(
+                                                                                        propertyPath.Last().PropertyType));
+                        if (overridableConfigurationParts.HasValue)
+                        {
+                            configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
+                        }
+                        return configuration;
+                    });
         }
 
         internal virtual void RemoveProperty(PropertyPath propertyPath)

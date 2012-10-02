@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Utilities
 {
-    using System;
     using System.Linq;
     using Xunit;
 

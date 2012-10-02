@@ -76,8 +76,10 @@ namespace System.Data.Entity.Internal.Linq
 
             var enumerator = internalSet.GetEnumerator();
 
-            var executionPlanMock = Mock.Get(objectContextMock.Object.CreateQuery<string>("").QueryState.GetExecutionPlan(MergeOption.NoTracking));
-            executionPlanMock.Verify(m => m.Execute<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()), Times.Never());
+            var executionPlanMock =
+                Mock.Get(objectContextMock.Object.CreateQuery<string>("").QueryState.GetExecutionPlan(MergeOption.NoTracking));
+            executionPlanMock.Verify(
+                m => m.Execute<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()), Times.Never());
 
             enumerator.MoveNext();
 
@@ -94,14 +96,21 @@ namespace System.Data.Entity.Internal.Linq
 
             var enumerator = internalSet.GetAsyncEnumerator();
 
-            var executionPlanMock = Mock.Get(objectContextMock.Object.CreateQuery<string>("").QueryState.GetExecutionPlan(MergeOption.NoTracking));
+            var executionPlanMock =
+                Mock.Get(objectContextMock.Object.CreateQuery<string>("").QueryState.GetExecutionPlan(MergeOption.NoTracking));
             executionPlanMock
-                .Verify(m => m.ExecuteAsync<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(), It.IsAny<CancellationToken>()), Times.Never());
+                .Verify(
+                    m =>
+                    m.ExecuteAsync<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(), It.IsAny<CancellationToken>()),
+                    Times.Never());
 
             enumerator.MoveNextAsync(CancellationToken.None).Wait();
 
             executionPlanMock
-                .Verify(m => m.ExecuteAsync<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(), It.IsAny<CancellationToken>()), Times.Once());
+                .Verify(
+                    m =>
+                    m.ExecuteAsync<string>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(), It.IsAny<CancellationToken>()),
+                    Times.Once());
         }
 
 #endif
@@ -134,9 +143,9 @@ namespace System.Data.Entity.Internal.Linq
 #endif
 
             var internalContextMock = new Mock<InternalContextForMock>(objectContextMock.Object)
-                                      {
-                                          CallBase = true
-                                      };
+                                          {
+                                              CallBase = true
+                                          };
 
             var entitySet = new EntitySet("set", "", "", "", new EntityType());
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("container", DataSpace.OSpace));
