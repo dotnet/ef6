@@ -5351,4 +5351,13 @@
     <value>Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. </value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
+  <data name="DbSpatialServicesTypeNotFound" xml:space="preserve">
+    <value>The DbSpatialServices type '{0}' specified in the application config file could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application.</value>
+  </data>
+  <data name="DbSpatialServices_InstanceMissing" xml:space="preserve">
+    <value>The Entity Framework spatial provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework spatial providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.</value>
+  </data>
+  <data name="DbSpatialServices_NotDbSpatialServices" xml:space="preserve">
+    <value>The 'Instance' member of the Entity Framework spatial provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Spatial.DbSpatialServices'. Entity Framework spatial providers must extend from this class and the 'Instance' member must return the Singleton instance of the spatial provider.</value>
+  </data>
 </root>

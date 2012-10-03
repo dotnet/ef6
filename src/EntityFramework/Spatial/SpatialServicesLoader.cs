@@ -33,7 +33,7 @@ namespace System.Data.Entity.Spatial
 
             try
             {
-                spatialProvider = efProvider.GetSpatialServices("2008");
+                spatialProvider = efProvider.GetSpatialServicesInternal(new Lazy<IDbDependencyResolver>(() => _resolver), "2008");
                 if (spatialProvider.NativeTypesAvailable)
                 {
                     return spatialProvider;

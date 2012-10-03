@@ -240,11 +240,16 @@ namespace System.Data.Entity.Core.Common
 
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
+            return GetSpatialServicesInternal(_resolver, manifestToken);
+        }
+
+        internal DbSpatialServices GetSpatialServicesInternal(Lazy<IDbDependencyResolver> resolver, string manifestToken)
+        {
             Contract.Ensures(Contract.Result<DbSpatialServices>() != null);
 
             // First check if spatial services can be resolved and only if this fails
             // go on to ask the provider for spatial services.
-            var spatialProvider = _resolver.Value.GetService<DbSpatialServices>();
+            var spatialProvider = resolver.Value.GetService<DbSpatialServices>();
             if (spatialProvider != null)
             {
                 return spatialProvider;

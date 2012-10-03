@@ -7,6 +7,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using Xunit;
 
@@ -98,6 +100,54 @@ namespace System.Data.Entity.Internal
                         "Learning.To.Fly", typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName)
                         .Providers
                         .TryGetDbProviderServices("Learning.To.Fly"));
+            }
+        }
+
+        public class TryGetSpatialProvider : AppConfigTestBase
+        {
+            [Fact]
+            public void TryGetSpatialProvider_returns_null_if_spatialProviderType_is_not_in_config()
+            {
+                Assert.Null(CreateAppConfig().Providers.TryGetSpatialProvider());
+            }
+
+            [Fact]
+            public void TryGetSpatialProvider_returns_provider_instance()
+            {
+                Assert.Same(SqlSpatialServices.Instance,
+                    CreateAppConfigWithSpatial(typeof(SqlSpatialServices).AssemblyQualifiedName)
+                        .Providers
+                        .TryGetSpatialProvider());
+            }
+
+            [Fact]
+            public void TryLoadFromConfig_throws_if_type_cannot_be_loaded()
+            {
+                var providerConfig = CreateAppConfigWithSpatial("I.Is.Not.A.Type").Providers;
+
+                Assert.Equal(
+                    Strings.DbSpatialServicesTypeNotFound("I.Is.Not.A.Type"),
+                    Assert.Throws<InvalidOperationException>(() => providerConfig.TryGetSpatialProvider()).Message);
+            }
+
+            [Fact]
+            public void TryLoadFromConfig_throws_if_type_does_not_have_Instance_member()
+            {
+                var providerConfig = CreateAppConfigWithSpatial(typeof(Random).AssemblyQualifiedName).Providers;
+
+                Assert.Equal(
+                    Strings.DbSpatialServices_InstanceMissing(typeof(Random).AssemblyQualifiedName),
+                    Assert.Throws<InvalidOperationException>(() => providerConfig.TryGetSpatialProvider()).Message);
+            }
+
+            [Fact]
+            public void TryLoadFromConfig_throws_if_Instance_member_returns_wrong_thing()
+            {
+                var providerConfig = CreateAppConfigWithSpatial(typeof(SqlProviderServices).AssemblyQualifiedName).Providers;
+
+                Assert.Equal(
+                    Strings.DbSpatialServices_NotDbSpatialServices(typeof(SqlProviderServices).AssemblyQualifiedName),
+                    Assert.Throws<InvalidOperationException>(() => providerConfig.TryGetSpatialProvider()).Message);
             }
         }
     }

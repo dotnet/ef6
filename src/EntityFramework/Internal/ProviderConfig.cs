@@ -7,9 +7,11 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Reflection;
 
     internal class ProviderConfig
     {
@@ -58,6 +60,39 @@ namespace System.Data.Entity.Internal
             }
 
             return () => null;
+        }
+
+        public virtual DbSpatialServices TryGetSpatialProvider()
+        {
+            var providerTypeName = _entityFrameworkSettings.SpatialProviderTypeName;
+
+            if (string.IsNullOrWhiteSpace(providerTypeName))
+            {
+                return null;
+            }
+
+            var providerType = Type.GetType(providerTypeName, throwOnError: false);
+
+            if (providerType == null)
+            {
+                throw new InvalidOperationException(Strings.DbSpatialServicesTypeNotFound(providerTypeName));
+            }
+
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            var instanceMember = providerType.GetProperty("Instance", bindingFlags)
+                                 ?? (MemberInfo)providerType.GetField("Instance", bindingFlags);
+            if (instanceMember == null)
+            {
+                throw new InvalidOperationException(Strings.DbSpatialServices_InstanceMissing(providerTypeName));
+            }
+
+            var providerInstance = instanceMember.GetValue() as DbSpatialServices;
+            if (providerInstance == null)
+            {
+                throw new InvalidOperationException(Strings.DbSpatialServices_NotDbSpatialServices(providerTypeName));
+            }
+
+            return providerInstance;
         }
 
         private ProviderElement TryGetProviderElement(string providerInvariantName)

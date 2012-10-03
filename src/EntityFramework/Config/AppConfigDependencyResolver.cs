@@ -7,6 +7,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
 
@@ -61,6 +62,12 @@ namespace System.Data.Entity.Config
             {
                 var initializer = _appConfig.Initializers.TryGetInitializer(contextType);
                 return () => initializer;
+            }
+
+            if (type == typeof(DbSpatialServices))
+            {
+                var connectionFactory = _appConfig.Providers.TryGetSpatialProvider();
+                return () => connectionFactory;
             }
 
             return () => null;

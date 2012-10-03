@@ -13,6 +13,8 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+    using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
@@ -271,6 +273,55 @@ namespace System.Data.Entity.Config
             mockConfig.Verify(m => m.Initializers, Times.Once());
         }
 
+        [Fact]
+        public void GetService_returns_registered_spatial_provider()
+        {
+            Assert.IsType<SqlSpatialServices>(
+                new AppConfigDependencyResolver(CreateAppConfigWithSpatial(typeof(SqlSpatialServices).AssemblyQualifiedName)).GetService
+                    <DbSpatialServices>());
+        }
+
+        [Fact]
+        public void GetService_returns_null_when_no_provider_registered()
+        {
+            Assert.Null(
+                new AppConfigDependencyResolver(CreateAppConfigWithSpatial()).GetService<DbSpatialServices>());
+        }
+
+        [Fact]
+        public void GetService_caches_spatial_provider()
+        {
+            var mockProviders = new Mock<ProviderConfig>();
+            mockProviders.Setup(m => m.TryGetSpatialProvider()).Returns(new Mock<DbSpatialServices>().Object);
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
+
+            var resolver = new AppConfigDependencyResolver(mockConfig.Object);
+
+            var factoryInstance = resolver.GetService<DbSpatialServices>();
+
+            Assert.NotNull(factoryInstance);
+            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
+            Assert.Same(factoryInstance, resolver.GetService<DbSpatialServices>());
+            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
+        }
+
+        [Fact]
+        public void GetService_caches_the_fact_that_no_spatial_provider_is_registered()
+        {
+            var mockProviders = new Mock<ProviderConfig>();
+            mockProviders.Setup(m => m.TryGetSpatialProvider()).Returns((DbSpatialServices)null);
+            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
+
+            var resolver = new AppConfigDependencyResolver(mockConfig.Object);
+
+            Assert.Null(resolver.GetService<DbSpatialServices>());
+            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
+            Assert.Null(resolver.GetService<DbSpatialServices>());
+            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
+        }
+
         private static EntityFrameworkSection CreateEfSection(bool initializerDisabled)
         {
             var mockDatabaseInitializerElement = new Mock<DatabaseInitializerElement>();
@@ -322,6 +373,13 @@ namespace System.Data.Entity.Config
         {
             Assert.IsType<FakeSqlGenerator>(
                 new AppConfigDependencyResolver(AppConfig.DefaultInstance).GetService<MigrationSqlGenerator>("System.Data.FakeSqlClient"));
+        }
+
+        [Fact]
+        public void Spatial_provider_can_be_loaded_from_real_app_config()
+        {
+            Assert.IsType<SqlSpatialServices>(
+                new AppConfigDependencyResolver(AppConfig.DefaultInstance).GetService<DbSpatialServices>());
         }
 
         private static AppConfig CreateAppConfigWithProvider(string sqlGeneratorName = null)
