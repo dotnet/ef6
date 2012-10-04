@@ -4,8 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -41,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             get { return _mappingContext; }
         }
 
-        public EdmEnumType MapEnumType(Type type)
+        public EnumType MapEnumType(Type type)
         {
             Contract.Requires(type != null);
             Contract.Assert(type.IsEnum);
@@ -50,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (enumType == null)
             {
-                EdmPrimitiveType primitiveType;
+                PrimitiveType primitiveType;
                 if (!Enum.GetUnderlyingType(type).IsPrimitiveType(out primitiveType))
                 {
                     return null;
@@ -62,14 +61,13 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 enumType.UnderlyingType = primitiveType;
 
-                Enum.GetNames(type)
-                    .Zip(
-                        Enum.GetValues(type).Cast<object>(), (n, v) => new
-                                                                           {
-                                                                               n,
-                                                                               v
-                                                                           })
-                    .Each(m => enumType.AddMember(m.n, Convert.ToInt64(m.v, CultureInfo.InvariantCulture)));
+                foreach (var name in Enum.GetNames(type))
+                {
+                    enumType.AddMember(
+                        new EnumMember(
+                            name,
+                            Convert.ChangeType(Enum.Parse(type, name), type.GetEnumUnderlyingType(), CultureInfo.InvariantCulture)));
+                }
             }
             else if (type != enumType.GetClrType())
             {
@@ -80,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             return enumType;
         }
 
-        public EdmComplexType MapComplexType(Type type, bool discoverNested = false)
+        public ComplexType MapComplexType(Type type, bool discoverNested = false)
         {
             Contract.Requires(type != null);
 
@@ -124,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             return complexType;
         }
 
-        public EdmEntityType MapEntityType(Type type)
+        public EntityType MapEntityType(Type type)
         {
             Contract.Requires(type != null);
 
@@ -146,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             if (entityType == null)
             {
                 entityType = _mappingContext.Model.AddEntityType(type.Name);
-                entityType.IsAbstract = type.IsAbstract;
+                entityType.Abstract = type.IsAbstract;
 
                 Contract.Assert(type.BaseType != null);
 
@@ -232,7 +230,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             }
         }
 
-        private void MapDerivedTypes(Type type, EdmEntityType entityType)
+        private void MapDerivedTypes(Type type, EntityType entityType)
         {
             Contract.Requires(type != null);
             Contract.Requires(entityType != null);
@@ -260,7 +258,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             }
         }
 
-        private void LiftDerivedType(Type derivedType, EdmEntityType derivedEntityType, EdmEntityType entityType)
+        private void LiftDerivedType(Type derivedType, EntityType derivedEntityType, EntityType entityType)
         {
             Contract.Requires(derivedType != null);
             Contract.Requires(derivedEntityType != null);
@@ -271,7 +269,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             LiftInheritedProperties(derivedType, derivedEntityType);
         }
 
-        private void LiftInheritedProperties(Type type, EdmEntityType entityType)
+        private void LiftInheritedProperties(Type type, EntityType entityType)
         {
             Contract.Requires(type != null);
             Contract.Requires(entityType != null);
@@ -294,40 +292,39 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
             }
 
-            LiftInheritedProperties(type, entityType.DeclaredKeyProperties, entityTypeConfiguration);
-            LiftInheritedProperties(type, entityType.DeclaredProperties, entityTypeConfiguration);
-            LiftInheritedProperties(type, entityType.DeclaredNavigationProperties, entityTypeConfiguration);
+            LiftInheritedProperties(type, entityType, entityTypeConfiguration);
         }
 
-        private void LiftInheritedProperties<TProperty>(
-            Type type, IList<TProperty> properties, EntityTypeConfiguration entityTypeConfiguration)
-            where TProperty : EdmStructuralMember
+        private void LiftInheritedProperties(
+            Type type, EntityType entityType, EntityTypeConfiguration entityTypeConfiguration)
         {
             Contract.Requires(type != null);
-            Contract.Requires(properties != null);
+            Contract.Requires(entityType != null);
 
-            for (var i = properties.Count - 1; i >= 0; i--)
+            var members = entityType.DeclaredMembers.ToList();
+
+            foreach (var member in members)
             {
-                var property = properties[i];
-                var propertyInfo = property.GetClrPropertyInfo();
+                var propertyInfo = member.GetClrPropertyInfo();
 
-                var declaredProperties = new PropertyFilter(_mappingContext.Model.Version)
-                    .GetProperties(
-                        type,
-                        /*declaredOnly:*/ true,
-                        _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
-                        _mappingContext.ModelConfiguration.StructuralTypes);
+                var declaredProperties
+                    = new PropertyFilter(_mappingContext.Model.Version)
+                        .GetProperties(
+                            type,
+                            /*declaredOnly:*/ true,
+                            _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
+                            _mappingContext.ModelConfiguration.StructuralTypes);
 
                 if (!declaredProperties.Contains(propertyInfo))
                 {
-                    var navigationProperty = property as EdmNavigationProperty;
+                    var navigationProperty = member as NavigationProperty;
 
                     if (navigationProperty != null)
                     {
                         _mappingContext.Model.RemoveAssociationType(navigationProperty.Association);
                     }
 
-                    properties.RemoveAt(i);
+                    entityType.RemoveMember(member);
 
                     if (entityTypeConfiguration != null)
                     {

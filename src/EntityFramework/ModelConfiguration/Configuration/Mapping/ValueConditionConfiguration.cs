@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
@@ -128,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static void ValidateValueType(object value)
         {
-            EdmPrimitiveType edmType;
+            PrimitiveType edmType;
             if (value != null
                 && !value.GetType().IsPrimitiveType(out edmType))
             {
@@ -137,15 +136,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal static bool AnyBaseTypeToTableWithoutColumnCondition(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbTableMetadata table,
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbTableMetadata table,
             DbTableColumnMetadata column)
         {
             var baseType = entityType.BaseType;
             while (baseType != null)
             {
-                if (!baseType.IsAbstract)
+                if (!baseType.Abstract)
                 {
-                    var baseTypeTableFragments = databaseMapping.GetEntityTypeMappings(baseType)
+                    var baseTypeTableFragments = databaseMapping.GetEntityTypeMappings((EntityType)baseType)
                         .SelectMany(etm => etm.TypeMappingFragments)
                         .Where(tmf => tmf.Table == table);
                     if (baseTypeTableFragments.Any()
@@ -163,7 +162,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal void Configure(
             DbDatabaseMapping databaseMapping,
             DbEntityTypeMappingFragment fragment,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbProviderManifest providerManifest)
         {
             Contract.Requires(fragment != null);
@@ -191,11 +190,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     (_configuration == null ||
                      _configuration.ColumnType == null))
                 {
-                    EdmPrimitiveType primitiveType;
+                    PrimitiveType primitiveType;
                     Value.GetType().IsPrimitiveType(out primitiveType);
 
                     string inferredTypeName;
-                    if (primitiveType == EdmPrimitiveType.String)
+                    if (primitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
                     {
                         inferredTypeName = providerManifest.GetStoreType(
                             TypeUsage.CreateStringTypeUsage(
@@ -209,7 +208,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     else
                     {
                         inferredTypeName =
-                            providerManifest.GetStoreTypeName((PrimitiveTypeKind)primitiveType.PrimitiveTypeKind);
+                            providerManifest.GetStoreTypeName(primitiveType.PrimitiveTypeKind);
                     }
 
                     if (string.IsNullOrWhiteSpace(discriminatorColumn.TypeName)

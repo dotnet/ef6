@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -18,10 +18,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, NavigationPropertyConfiguration configuration,
             RequiredAttribute attribute)
         {
-            if ((configuration.EndKind == null)
+            if ((configuration.RelationshipMultiplicity == null)
                 && !memberInfo.PropertyType.IsCollection())
             {
-                configuration.EndKind = EdmAssociationEndKind.Required;
+                configuration.RelationshipMultiplicity = RelationshipMultiplicity.One;
             }
         }
     }

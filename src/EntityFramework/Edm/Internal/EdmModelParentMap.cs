@@ -3,16 +3,18 @@
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
 
     internal class EdmModelParentMap
     {
         private readonly EdmModel model;
 
-        private readonly Dictionary<EdmNamespaceItem, EdmNamespace> itemToNamespaceMap =
-            new Dictionary<EdmNamespaceItem, EdmNamespace>();
+        private readonly Dictionary<EdmType, EdmNamespace> itemToNamespaceMap =
+            new Dictionary<EdmType, EdmNamespace>();
 
-        private readonly Dictionary<EdmEntityContainerItem, EdmEntityContainer> itemToContainerMap =
-            new Dictionary<EdmEntityContainerItem, EdmEntityContainer>();
+        private readonly Dictionary<EntitySetBase, EntityContainer> itemToContainerMap =
+            new Dictionary<EntitySetBase, EntityContainer>();
 
         internal EdmModelParentMap(EdmModel edmModel)
         {
@@ -22,7 +24,7 @@ namespace System.Data.Entity.Edm.Internal
         internal void Compute()
         {
             itemToNamespaceMap.Clear();
-            if (model.HasNamespaces)
+            if (model.Namespaces.Any())
             {
                 foreach (var modelNamespace in model.Namespaces)
                 {
@@ -37,11 +39,11 @@ namespace System.Data.Entity.Edm.Internal
             }
 
             itemToContainerMap.Clear();
-            if (model.HasContainers)
+            if (model.Containers.Any())
             {
                 foreach (var modelContainer in model.Containers)
                 {
-                    foreach (var item in modelContainer.ContainerItems)
+                    foreach (var item in modelContainer.BaseEntitySets)
                     {
                         if (item != null)
                         {
@@ -52,12 +54,12 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        internal IEnumerable<EdmNamespaceItem> NamespaceItems
+        internal IEnumerable<EdmType> NamespaceItems
         {
             get { return itemToNamespaceMap.Keys; }
         }
 
-        internal bool TryGetEntityContainer(EdmEntityContainerItem item, out EdmEntityContainer container)
+        internal bool TryGetEntityContainer(EntitySetBase item, out EntityContainer container)
         {
             if (item != null)
             {
@@ -67,7 +69,7 @@ namespace System.Data.Entity.Edm.Internal
             return false;
         }
 
-        internal bool TryGetNamespace(EdmNamespaceItem item, out EdmNamespace itemNamespace)
+        internal bool TryGetNamespace(EdmType item, out EdmNamespace itemNamespace)
         {
             if (item != null)
             {

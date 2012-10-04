@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -242,7 +243,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             var entityType = typeMapper.MapEntityType(mockType);
 
             Assert.NotNull(entityType);
-            Assert.True(entityType.IsAbstract);
+            Assert.True(entityType.Abstract);
         }
 
         [Fact]

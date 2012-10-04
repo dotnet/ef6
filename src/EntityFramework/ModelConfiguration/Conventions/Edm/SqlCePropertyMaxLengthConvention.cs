@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
@@ -11,11 +11,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set a default maximum length of 4000 for properties whose type supports length facets when SqlCe is the provider.
     /// </summary>
-    public class SqlCePropertyMaxLengthConvention : IEdmConvention<EdmEntityType>, IEdmConvention<EdmComplexType>
+    public class SqlCePropertyMaxLengthConvention : IEdmConvention<EntityType>, IEdmConvention<ComplexType>
     {
         private const int DefaultLength = 4000;
 
-        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
+        public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
             var providerInfo = model.GetProviderInfo();
 
@@ -26,14 +26,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        public void Apply(EdmComplexType edmDataModelItem, EdmModel model)
+        public void Apply(ComplexType edmDataModelItem, EdmModel model)
         {
             var providerInfo = model.GetProviderInfo();
 
             if ((providerInfo != null)
                 && providerInfo.IsSqlCe())
             {
-                SetLength(edmDataModelItem.DeclaredProperties);
+                SetLength(edmDataModelItem.Properties);
             }
         }
 
@@ -41,13 +41,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             foreach (var property in properties)
             {
-                if (!property.PropertyType.IsPrimitiveType)
+                if (!property.IsPrimitiveType)
                 {
                     continue;
                 }
 
-                if ((property.PropertyType.PrimitiveType == EdmPrimitiveType.String)
-                    || (property.PropertyType.PrimitiveType == EdmPrimitiveType.Binary))
+                if ((property.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                    || (property.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary)))
                 {
                     SetDefaults(property);
                 }
@@ -58,12 +58,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             Contract.Requires(property != null);
 
-            var primitiveTypeFacets = property.PropertyType.PrimitiveTypeFacets;
-
-            if ((primitiveTypeFacets.MaxLength == null)
-                && (primitiveTypeFacets.IsMaxLength == null))
+            if ((property.MaxLength == null)
+                && (!property.IsMaxLength))
             {
-                primitiveTypeFacets.MaxLength = DefaultLength;
+                property.MaxLength = DefaultLength;
             }
         }
     }

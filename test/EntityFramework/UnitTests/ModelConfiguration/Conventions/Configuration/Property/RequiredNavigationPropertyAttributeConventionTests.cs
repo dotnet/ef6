@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using Xunit;
 
@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
-            Assert.Equal(EdmAssociationEndKind.Required, associationConfiguration.EndKind);
+            Assert.Equal(RelationshipMultiplicity.One, associationConfiguration.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -27,13 +27,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var associationConfiguration
                 = new NavigationPropertyConfiguration(new MockPropertyInfo())
                       {
-                          EndKind = EdmAssociationEndKind.Optional
+                          RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
                       };
 
             new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationConfiguration.EndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -42,13 +42,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             var associationConfiguration
                 = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(List<string>), "N"))
                       {
-                          EndKind = EdmAssociationEndKind.Many
+                          RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
 
             new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
 
-            Assert.Equal(EdmAssociationEndKind.Many, associationConfiguration.EndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, associationConfiguration.RelationshipMultiplicity);
         }
     }
 }

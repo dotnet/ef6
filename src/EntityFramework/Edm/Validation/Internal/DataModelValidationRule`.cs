@@ -2,12 +2,12 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     internal abstract class DataModelValidationRule<TContext, TItem> : DataModelValidationRule
         where TContext : DataModelValidationContext
-        where TItem : DataModelItem
+        where TItem : IMetadataItem
     {
         protected Action<TContext, TItem> _validate;
 
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
             get { return typeof(TItem); }
         }
 
-        internal override void Evaluate(DataModelValidationContext context, DataModelItem item)
+        internal override void Evaluate(DataModelValidationContext context, IMetadataItem item)
         {
             Contract.Assert(context is TContext, "context should be " + typeof(TContext));
             Contract.Assert(item is TItem, "item should be " + typeof(TItem));

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class EdmAssociationEndExtensionsTests
@@ -10,9 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsMany_should_return_true_when_end_kind_is_many()
         {
-            var associationEnd = new EdmAssociationEnd
+            var associationEnd = new AssociationEndMember("E", new EntityType())
                                      {
-                                         EndKind = EdmAssociationEndKind.Many
+                                         RelationshipMultiplicity = RelationshipMultiplicity.Many
                                      };
 
             Assert.True(associationEnd.IsMany());
@@ -21,9 +21,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsOptional_should_return_true_when_end_kind_is_optional()
         {
-            var associationEnd = new EdmAssociationEnd
+            var associationEnd = new AssociationEndMember("E", new EntityType())
                                      {
-                                         EndKind = EdmAssociationEndKind.Optional
+                                         RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
                                      };
 
             Assert.True(associationEnd.IsOptional());
@@ -32,9 +32,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsRequired_should_return_true_when_end_kind_is_required()
         {
-            var associationEnd = new EdmAssociationEnd
+            var associationEnd = new AssociationEndMember("E", new EntityType())
                                      {
-                                         EndKind = EdmAssociationEndKind.Required
+                                         RelationshipMultiplicity = RelationshipMultiplicity.One
                                      };
 
             Assert.True(associationEnd.IsRequired());

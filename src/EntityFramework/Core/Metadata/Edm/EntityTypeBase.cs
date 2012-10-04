@@ -11,9 +11,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EntityTypeBase : StructuralType
     {
-        internal EntityTypeBase()
-        {
-        }
+        private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
+        private string[] _keyMemberNames;
 
         /// <summary>
         ///     Initializes a new instance of Entity Type
@@ -28,9 +27,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _keyMembers = new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>());
         }
-
-        private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
-        private string[] _keyMemberNames;
 
         /// <summary>
         ///     Returns the list of all the key members for this entity type
@@ -47,12 +43,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     && ((EntityTypeBase)BaseType).KeyMembers.Count != 0)
                 {
                     Debug.Assert(_keyMembers.Count == 0, "Since the base type have keys, current type cannot have keys defined");
+
                     return ((EntityTypeBase)BaseType).KeyMembers;
                 }
-                else
-                {
-                    return _keyMembers;
-                }
+
+                return _keyMembers;
             }
         }
 
@@ -65,6 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 var keyNames = _keyMemberNames;
+
                 if (keyNames == null)
                 {
                     keyNames = new string[KeyMembers.Count];
@@ -74,9 +70,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                     _keyMemberNames = keyNames;
                 }
+
                 Debug.Assert(
                     _keyMemberNames.Length == KeyMembers.Count,
                     "This list is out of sync with the key members count. This property was called before all the keymembers were added");
+
                 return _keyMemberNames;
             }
         }
@@ -99,6 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 AddMember(member);
             }
+
             _keyMembers.Source.Add(member);
         }
 
@@ -166,6 +165,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Add the key member to the key member collection 
                 AddKeyMember(member);
             }
+        }
+
+        internal override void RemoveMember(EdmMember member)
+        {
+            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Util.ThrowIfReadOnly(this);
+
+            if (_keyMembers.Contains(member))
+            {
+                _keyMembers.Source.Remove(member);
+            }
+
+            base.RemoveMember(member);
         }
     }
 }

@@ -3,34 +3,34 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
 
     internal class SortedEntityTypeIndex
     {
-        private static readonly EdmEntityType[] _emptyTypes = new EdmEntityType[0];
+        private static readonly EntityType[] _emptyTypes = new EntityType[0];
 
-        private readonly Dictionary<EdmEntitySet, List<EdmEntityType>> _entityTypes;
+        private readonly Dictionary<EntitySet, List<EntityType>> _entityTypes;
         // these are sorted where base types come before derived types
 
         public SortedEntityTypeIndex()
         {
-            _entityTypes = new Dictionary<EdmEntitySet, List<EdmEntityType>>();
+            _entityTypes = new Dictionary<EntitySet, List<EntityType>>();
         }
 
-        public void Add(EdmEntitySet entitySet, EdmEntityType entityType)
+        public void Add(EntitySet entitySet, EntityType entityType)
         {
             Contract.Requires(entitySet != null);
             Contract.Requires(entityType != null);
 
             var i = 0;
 
-            List<EdmEntityType> entityTypes;
+            List<EntityType> entityTypes;
             if (!_entityTypes.TryGetValue(entitySet, out entityTypes))
             {
-                entityTypes = new List<EdmEntityType>();
+                entityTypes = new List<EntityType>();
                 _entityTypes.Add(entitySet, entityTypes);
             }
 
@@ -48,17 +48,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             entityTypes.Insert(i, entityType);
         }
 
-        public bool Contains(EdmEntitySet entitySet, EdmEntityType entityType)
+        public bool Contains(EntitySet entitySet, EntityType entityType)
         {
             Contract.Requires(entitySet != null);
             Contract.Requires(entityType != null);
 
-            List<EdmEntityType> setTypes;
+            List<EntityType> setTypes;
             return _entityTypes.TryGetValue(entitySet, out setTypes) && setTypes.Contains(entityType);
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public bool IsRoot(EdmEntitySet entitySet, EdmEntityType entityType)
+        public bool IsRoot(EntitySet entitySet, EntityType entityType)
         {
             Contract.Requires(entitySet != null);
             Contract.Requires(entityType != null);
@@ -79,14 +79,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return isRoot;
         }
 
-        public IEnumerable<EdmEntitySet> GetEntitySets()
+        public IEnumerable<EntitySet> GetEntitySets()
         {
             return _entityTypes.Keys;
         }
 
-        public IEnumerable<EdmEntityType> GetEntityTypes(EdmEntitySet entitySet)
+        public IEnumerable<EntityType> GetEntityTypes(EntitySet entitySet)
         {
-            List<EdmEntityType> entityTypes;
+            List<EntityType> entityTypes;
             if (_entityTypes.TryGetValue(entitySet, out entityTypes))
             {
                 return entityTypes;

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
@@ -15,8 +16,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T")
-                    .Association("A1", "S", EdmAssociationEndKind.Optional, "T", "T", EdmAssociationEndKind.Many, null)
-                    .Association("A2", "T", EdmAssociationEndKind.Many, "S", "S", EdmAssociationEndKind.Optional, null);
+                    .Association("A1", "S", RelationshipMultiplicity.ZeroOrOne, "T", "T", RelationshipMultiplicity.Many, null)
+                    .Association("A2", "T", RelationshipMultiplicity.Many, "S", "S", RelationshipMultiplicity.ZeroOrOne, null);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -41,8 +42,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T")
-                    .Association("S", EdmAssociationEndKind.Optional, "T", EdmAssociationEndKind.Many)
-                    .Association("T", EdmAssociationEndKind.Many, "S", EdmAssociationEndKind.Optional);
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
+                    .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -51,8 +52,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var associationType = model.GetAssociationTypes().Single();
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -61,8 +62,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T")
-                    .Association("S", EdmAssociationEndKind.Optional, "T", EdmAssociationEndKind.Many)
-                    .Association("T", EdmAssociationEndKind.Optional, "S", EdmAssociationEndKind.Many);
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
+                    .Association("T", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -71,8 +72,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var associationType = model.GetAssociationTypes().Single();
 
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -81,8 +82,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T")
-                    .Association("S", EdmAssociationEndKind.Many, "T", EdmAssociationEndKind.Optional)
-                    .Association("T", EdmAssociationEndKind.Many, "S", EdmAssociationEndKind.Optional);
+                    .Association("S", RelationshipMultiplicity.Many, "T", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -91,8 +92,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var associationType = model.GetAssociationTypes().Single();
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -101,8 +102,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S")
-                    .Association("S", EdmAssociationEndKind.Optional, "S", EdmAssociationEndKind.Many)
-                    .Association("S", EdmAssociationEndKind.Many, "S", EdmAssociationEndKind.Optional);
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many)
+                    .Association("S", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -111,8 +112,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var associationType = model.GetAssociationTypes().Single();
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -121,12 +122,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T", "U")
-                    .Association("S", EdmAssociationEndKind.Many, "T", EdmAssociationEndKind.Optional)
-                    .Association("T", EdmAssociationEndKind.Many, "S", EdmAssociationEndKind.Optional)
-                    .Association("T", EdmAssociationEndKind.Many, "U", EdmAssociationEndKind.Optional)
-                    .Association("U", EdmAssociationEndKind.Many, "T", EdmAssociationEndKind.Optional)
-                    .Association("U", EdmAssociationEndKind.Many, "S", EdmAssociationEndKind.Optional)
-                    .Association("S", EdmAssociationEndKind.Many, "U", EdmAssociationEndKind.Optional);
+                    .Association("S", RelationshipMultiplicity.Many, "T", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("T", RelationshipMultiplicity.Many, "U", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("U", RelationshipMultiplicity.Many, "T", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("U", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne)
+                    .Association("S", RelationshipMultiplicity.Many, "U", RelationshipMultiplicity.ZeroOrOne);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
@@ -140,9 +141,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EdmModel model
                 = new TestModelBuilder()
                     .Entities("S", "T")
-                    .Association("S", EdmAssociationEndKind.Optional, "T", EdmAssociationEndKind.Many)
-                    .Association("S", EdmAssociationEndKind.Optional, "T", EdmAssociationEndKind.Many)
-                    .Association("T", EdmAssociationEndKind.Optional, "S", EdmAssociationEndKind.Many);
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
+                    .Association("T", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many);
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 

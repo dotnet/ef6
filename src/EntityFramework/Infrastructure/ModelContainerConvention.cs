@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Diagnostics.Contracts;

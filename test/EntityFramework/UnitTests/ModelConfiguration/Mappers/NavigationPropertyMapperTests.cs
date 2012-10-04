@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -17,7 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -29,8 +31,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             var associationType = model.Namespaces.Single().AssociationTypes.Single();
 
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -38,10 +40,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Source"
                                  };
+            model.AddEntitySet("Source", entityType);
+
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -63,7 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -75,8 +80,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             var associationType = model.Namespaces.Single().AssociationTypes.Single();
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationType.SourceEnd.EndKind);
-            Assert.Equal(EdmAssociationEndKind.Many, associationType.TargetEnd.EndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -84,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -100,7 +105,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -114,7 +120,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.Equal("Nav", navigationProperty.Name);
             Assert.NotNull(navigationProperty.Association);
-            Assert.NotSame(entityType, navigationProperty.ResultEnd.EntityType);
+            Assert.NotSame(entityType, navigationProperty.ResultEnd.GetEntityType());
         }
 
         [Fact]
@@ -122,7 +128,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             var mockPropertyInfo = new MockPropertyInfo(new MockType("Target"), "Nav");

@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool AtomicAddRange(List<GlobalItem> items)
         {
 #if DEBUG
-            // We failed to add, so undo the setting of the ItemCollection reference
+    // We failed to add, so undo the setting of the ItemCollection reference
             foreach (var item in items)
             {
                 Debug.Assert(item.IsReadOnly, "The item is not readonly, it should be by the time it is added to the item collection");

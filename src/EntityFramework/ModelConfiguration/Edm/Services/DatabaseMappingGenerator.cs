@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -58,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var entityType in model.GetEntityTypes())
             {
-                if (!entityType.IsAbstract)
+                if (!entityType.Abstract)
                 {
                     new EntityTypeMappingGenerator(_providerManifest).
                         Generate(entityType, databaseMapping);

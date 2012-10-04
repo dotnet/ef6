@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -12,9 +12,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
     /// </summary>
-    public class ForeignKeyAssociationMultiplicityConvention : IEdmConvention<EdmAssociationType>
+    public class ForeignKeyAssociationMultiplicityConvention : IEdmConvention<AssociationType>
     {
-        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
+        public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
             var constraint = edmDataModelItem.Constraint;
 
@@ -25,10 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             var navPropConfig = edmDataModelItem.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
 
-            if (constraint.DependentProperties
-                .All(
-                    p => (p.PropertyType.IsNullable != null)
-                         && !p.PropertyType.IsNullable.Value))
+            if (constraint.ToProperties.All(p => !p.Nullable))
             {
                 var principalEnd = edmDataModelItem.GetOtherEnd(constraint.DependentEnd);
 
@@ -41,14 +38,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 if (navPropConfig != null &&
                     navProp != null &&
                     ((navPropInfo = navProp.Annotations.GetClrPropertyInfo()) != null)
-                    &&
-                    ((navPropInfo == navPropConfig.NavigationProperty && navPropConfig.EndKind.HasValue) ||
-                     (navPropInfo == navPropConfig.InverseNavigationProperty && navPropConfig.InverseEndKind.HasValue)))
+                    && ((navPropInfo == navPropConfig.NavigationProperty && navPropConfig.RelationshipMultiplicity.HasValue) ||
+                        (navPropInfo == navPropConfig.InverseNavigationProperty && navPropConfig.InverseEndKind.HasValue)))
                 {
                     return;
                 }
 
-                principalEnd.EndKind = EdmAssociationEndKind.Required;
+                principalEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             }
         }
     }

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using Xunit;
 
@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             new ManyNavigationPropertyConfiguration<S, T>(associationConfiguration);
 
-            Assert.Equal(EdmAssociationEndKind.Many, associationConfiguration.EndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, associationConfiguration.RelationshipMultiplicity);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             new ManyNavigationPropertyConfiguration<S, T>(associationConfiguration).WithMany();
 
-            Assert.Equal(EdmAssociationEndKind.Many, associationConfiguration.InverseEndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, associationConfiguration.InverseEndKind);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             new ManyNavigationPropertyConfiguration<S, T>(associationConfiguration).WithRequired();
 
-            Assert.Equal(EdmAssociationEndKind.Required, associationConfiguration.InverseEndKind);
+            Assert.Equal(RelationshipMultiplicity.One, associationConfiguration.InverseEndKind);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             new ManyNavigationPropertyConfiguration<S, T>(associationConfiguration).WithOptional();
 
-            Assert.Equal(EdmAssociationEndKind.Optional, associationConfiguration.InverseEndKind);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.InverseEndKind);
         }
 
         #region Test Fixtures

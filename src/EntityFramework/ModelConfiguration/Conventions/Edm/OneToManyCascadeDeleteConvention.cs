@@ -2,27 +2,35 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to enable cascade delete for any required relationships.
     /// </summary>
-    public class OneToManyCascadeDeleteConvention : IEdmConvention<EdmAssociationType>
+    public class OneToManyCascadeDeleteConvention : IEdmConvention<AssociationType>
     {
-        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
+        public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
             Contract.Assert(edmDataModelItem.SourceEnd != null);
             Contract.Assert(edmDataModelItem.TargetEnd != null);
 
-            if (edmDataModelItem.IsSelfReferencing() // EF DDL gen will fail for self-ref
-                || edmDataModelItem.HasDeleteAction())
+            if (edmDataModelItem.IsSelfReferencing()) // EF DDL gen will fail for self-ref
             {
                 return;
             }
 
-            EdmAssociationEnd principalEnd = null;
+            var configuration = edmDataModelItem.GetConfiguration() as NavigationPropertyConfiguration;
+
+            if ((configuration != null)
+                && (configuration.DeleteAction != null))
+            {
+                return;
+            }
+
+            AssociationEndMember principalEnd = null;
 
             if (edmDataModelItem.IsRequiredToMany())
             {
@@ -35,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             if (principalEnd != null)
             {
-                principalEnd.DeleteAction = EdmOperationAction.Cascade;
+                principalEnd.DeleteBehavior = OperationAction.Cascade;
             }
         }
     }

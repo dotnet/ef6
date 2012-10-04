@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -13,9 +13,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
     /// </summary>
-    public class ForeignKeyNavigationPropertyAttributeConvention : IEdmConvention<EdmNavigationProperty>
+    public class ForeignKeyNavigationPropertyAttributeConvention : IEdmConvention<NavigationProperty>
     {
-        public void Apply(EdmNavigationProperty edmDataModelItem, EdmModel model)
+        public void Apply(NavigationProperty edmDataModelItem, EdmModel model)
         {
             var associationType = edmDataModelItem.Association;
 
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             if (associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd)
                 || associationType.IsPrincipalConfigured())
             {
@@ -48,33 +48,36 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     = model.GetEntityTypes()
                         .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
 
-                var constraint = new EdmAssociationConstraint
-                                     {
-                                         DependentEnd = dependentEnd,
-                                         DependentProperties
-                                             = GetDependentProperties(
-                                                 dependentEnd.EntityType,
-                                                 dependentPropertyNames,
-                                                 declaringEntityType,
-                                                 edmDataModelItem).ToList()
-                                     };
+                var dependentProperties
+                    = GetDependentProperties(
+                        dependentEnd.GetEntityType(),
+                        dependentPropertyNames,
+                        declaringEntityType,
+                        edmDataModelItem).ToList();
 
-                var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();
+                var constraint
+                    = new ReferentialConstraint(
+                        principalEnd,
+                        dependentEnd,
+                        principalEnd.GetEntityType().KeyProperties().ToList(),
+                        dependentProperties);
 
-                if (dependentKeyProperties.Count() == constraint.DependentProperties.Count()
-                    && dependentKeyProperties.All(kp => constraint.DependentProperties.Contains(kp)))
+                var dependentKeyProperties = dependentEnd.GetEntityType().KeyProperties();
+
+                if (dependentKeyProperties.Count() == constraint.ToProperties.Count()
+                    && dependentKeyProperties.All(kp => constraint.ToProperties.Contains(kp)))
                 {
-                    principalEnd.EndKind = EdmAssociationEndKind.Required;
+                    principalEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-                    if (dependentEnd.EndKind.IsMany())
+                    if (dependentEnd.RelationshipMultiplicity.IsMany())
                     {
-                        dependentEnd.EndKind = EdmAssociationEndKind.Optional;
+                        dependentEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
                     }
                 }
 
                 if (principalEnd.IsRequired())
                 {
-                    constraint.DependentProperties.Each(p => p.PropertyType.IsNullable = false);
+                    constraint.ToProperties.Each(p => p.Nullable = false);
                 }
 
                 associationType.Constraint = constraint;
@@ -82,10 +85,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         private static IEnumerable<EdmProperty> GetDependentProperties(
-            EdmEntityType dependentType,
+            EntityType dependentType,
             IEnumerable<string> dependentPropertyNames,
-            EdmEntityType declaringEntityType,
-            EdmNavigationProperty navigationProperty)
+            EntityType declaringEntityType,
+            NavigationProperty navigationProperty)
         {
             foreach (var dependentPropertyName in dependentPropertyNames)
             {

@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         public void Generate(
-            EdmEntityType entityType,
+            EntityType entityType,
             IEnumerable<EdmProperty> properties,
             DbEntitySetMapping entitySetMapping,
             DbEntityTypeMappingFragment entityTypeMappingFragment,
@@ -35,21 +35,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var property in properties)
             {
-                if (property.PropertyType.IsComplexType
+                if (property.IsComplexType
                     && propertyPath.Any(
-                        p => p.PropertyType.IsComplexType
-                             && (p.PropertyType.ComplexType == property.PropertyType.ComplexType)))
+                        p => p.IsComplexType
+                             && (p.ComplexType == property.ComplexType)))
                 {
                     throw Error.CircularComplexTypeHierarchy();
                 }
 
                 propertyPath.Add(property);
 
-                if (property.PropertyType.IsComplexType)
+                if (property.IsComplexType)
                 {
                     Generate(
                         entityType,
-                        property.PropertyType.ComplexType.DeclaredProperties,
+                        property.ComplexType.Properties,
                         entitySetMapping,
                         entityTypeMappingFragment,
                         propertyPath,

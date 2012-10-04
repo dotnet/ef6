@@ -11,6 +11,24 @@ namespace FunctionalTests
     using System.Data.Services.Common;
     using Xunit;
 
+    public sealed class DataServicesTests : TestBase
+    {
+        [Fact]
+        public void Validate_Basic_DataServices_Attributes()
+        {
+            var modelBuilder = new DataServicesModelBuilder();
+
+            modelBuilder.Entity<DataServiceFoo>();
+
+            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var mws = databaseMapping.ToMetadataWorkspace();
+
+            var edmCollection = mws.GetItemCollection(DataSpace.CSpace);
+            edmCollection.GetItem<EntityType>("CodeFirstNamespace.DataServiceFoo");
+        }
+    }
+
     #region Fixtures
 
     public sealed class DataServicesModelBuilder : DbModelBuilder
@@ -52,22 +70,4 @@ namespace FunctionalTests
     }
 
     #endregion
-
-    public sealed class DataServicesTests : TestBase
-    {
-        [Fact]
-        public void Validate_Basic_DataServices_Attributes()
-        {
-            var modelBuilder = new DataServicesModelBuilder();
-
-            modelBuilder.Entity<DataServiceFoo>();
-
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
-
-            var mws = databaseMapping.ToMetadataWorkspace();
-
-            var edmCollection = mws.GetItemCollection(DataSpace.CSpace);
-            edmCollection.GetItem<EntityType>("CodeFirstNamespace.DataServiceFoo");
-        }
-    }
 }

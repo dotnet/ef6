@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Serialization
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Parsing.Xml.Internal;
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Edm.Serialization
 
     /// <summary>
     ///     Serializes an <see cref="EdmModel" /> that conforms to the restrictions of a single CSDL schema file to an XML writer. The model to be serialized must contain a single <see
-    ///      cref="EdmNamespace" /> and a single <see cref="EdmEntityContainer" /> .
+    ///      cref="EdmNamespace" /> and a single <see cref="Core.Metadata.Edm.EntityContainer" /> .
     /// </summary>
     public class CsdlSerializer
     {
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Edm.Serialization
         ///     Serialize the <see cref="EdmModel" /> to the XmlWriter.
         /// </summary>
         /// <param name="model"> The EdmModel to serialize, mut have only one <see cref="EdmNamespace" /> and one <see
-        ///      cref="EdmEntityContainer" /> </param>
+        ///      cref="Core.Metadata.Edm.EntityContainer" /> </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         public bool Serialize(EdmModel model, XmlWriter xmlWriter)
         {

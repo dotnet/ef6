@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Serialization.Xml.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
     using System.Text;
     using System.Xml;
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal
             return sb.Append(prefix).Append(".").Append(typeName).ToString();
         }
 
-        internal static string GetTypeNameFromPrimitiveTypeKind(EdmPrimitiveTypeKind primitiveTypeKind)
+        internal static string GetTypeNameFromPrimitiveTypeKind(PrimitiveTypeKind primitiveTypeKind)
         {
             return primitiveTypeKind.ToString();
         }

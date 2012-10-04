@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
@@ -16,8 +17,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
     internal class EdmModelCsdlSchemaWriter : XmlSchemaWriter
     {
-        #region Data Services constants
-
         private const string DataServicesPrefix = "m";
         private const string DataServicesNamespace = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
         private const string DataServicesMimeTypeAttribute = "System.Data.Services.MimeTypeAttribute";
@@ -172,7 +171,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                                                                                 XmlConstants.SyndLinkLength,
                                                                                 XmlConstants.SyndLinkRel,
                                                                                 XmlConstants.SyndLinkTitle,
-                                                                                XmlConstants.SyndLinkType,
+                                                                                XmlConstants.SyndLinkType
                                                                             };
 
         private static string SyndicationTextContentKindToString(object value)
@@ -188,8 +187,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                                                                                        XmlConstants.SyndContentKindXHtml
                                                                                    };
 
-        #endregion
-
         internal EdmModelCsdlSchemaWriter(XmlWriter xmlWriter, double edmVersion)
         {
             _xmlWriter = xmlWriter;
@@ -198,7 +195,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         internal void WriteSchemaElementHeader(string schemaNamespace)
         {
-            var xmlNamespace = GetCsdlNamespace(_version);
+            var xmlNamespace = DataModelVersions.GetCsdlNamespace(_version);
             _xmlWriter.WriteStartElement(CsdlConstants.Element_Schema, xmlNamespace);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Namespace, schemaNamespace);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Alias, CsdlConstants.Value_Self);
@@ -210,28 +207,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        private static string GetCsdlNamespace(double edmVersion)
-        {
-            if (edmVersion == DataModelVersions.Version1)
-            {
-                return CsdlConstants.Version1Namespace;
-            }
-            if (edmVersion == DataModelVersions.Version1_1)
-            {
-                return CsdlConstants.Version1_1Namespace;
-            }
-            if (edmVersion == DataModelVersions.Version2)
-            {
-                return CsdlConstants.Version2Namespace;
-            }
-            else
-            {
-                Contract.Assert(edmVersion == DataModelVersions.Version3, "Added a new version?");
-                return CsdlConstants.Version3Namespace;
-            }
-        }
-
-        private void WritePolymorphicTypeAttributes(EdmDataModelType edmType)
+        private void WritePolymorphicTypeAttributes(EdmType edmType)
         {
             if (edmType.BaseType != null)
             {
@@ -240,13 +216,13 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                     GetQualifiedTypeName(CsdlConstants.Value_Self, edmType.BaseType.Name));
             }
 
-            if (edmType.IsAbstract)
+            if (edmType.Abstract)
             {
                 _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Abstract, CsdlConstants.Value_True);
             }
         }
 
-        internal void WriteEntityTypeElementHeader(EdmEntityType entityType)
+        internal void WriteEntityTypeElementHeader(EntityType entityType)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EntityType);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, entityType.Name);
@@ -294,7 +270,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             WritePolymorphicTypeAttributes(entityType);
         }
 
-        internal void WriteEnumTypeElementHeader(EdmEnumType enumType)
+        internal void WriteEnumTypeElementHeader(EnumType enumType)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EnumType);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, enumType.Name);
@@ -309,12 +285,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        internal void WriteEnumTypeMemberElementHeader(EdmEnumTypeMember enumTypeMember)
+        internal void WriteEnumTypeMemberElementHeader(EnumMember enumTypeMember)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EnumTypeMember);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, enumTypeMember.Name);
-            _xmlWriter.WriteAttributeString(
-                CsdlConstants.Attribute_Value, enumTypeMember.Value.ToString(CultureInfo.InvariantCulture));
+            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Value, enumTypeMember.Value.ToString());
         }
 
         private static void AddAttributeAnnotation(EdmProperty property, Attribute a)
@@ -340,32 +315,32 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        internal void WriteComplexTypeElementHeader(EdmComplexType complexType)
+        internal void WriteComplexTypeElementHeader(ComplexType complexType)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_ComplexType);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, complexType.Name);
             WritePolymorphicTypeAttributes(complexType);
         }
 
-        internal void WriteAssociationTypeElementHeader(EdmAssociationType associationType)
+        internal void WriteAssociationTypeElementHeader(AssociationType associationType)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_Association);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, associationType.Name);
         }
 
-        internal void WriteAssociationEndElementHeader(EdmAssociationEnd associationEnd)
+        internal void WriteAssociationEndElementHeader(AssociationEndMember associationEnd)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_End);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Role, associationEnd.Name);
 
-            var typeName = associationEnd.EntityType.Name;
+            var typeName = associationEnd.GetEntityType().Name;
             _xmlWriter.WriteAttributeString(
                 CsdlConstants.Attribute_Type, GetQualifiedTypeName(CsdlConstants.Value_Self, typeName));
             _xmlWriter.WriteAttributeString(
-                CsdlConstants.Attribute_Multiplicity, GetXmlMultiplicity(associationEnd.EndKind));
+                CsdlConstants.Attribute_Multiplicity, GetXmlMultiplicity(associationEnd.RelationshipMultiplicity));
         }
 
-        internal void WriteOperationActionElement(string elementName, EdmOperationAction operationAction)
+        internal void WriteOperationActionElement(string elementName, OperationAction operationAction)
         {
             _xmlWriter.WriteStartElement(elementName);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Action, operationAction.ToString());
@@ -393,17 +368,17 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_Property);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, property.Name);
-            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Type, GetTypeReferenceName(property.PropertyType));
+            _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Type, GetTypeReferenceName(property));
 
             if (property.CollectionKind
-                != EdmCollectionKind.Default)
+                != CollectionKind.None)
             {
                 _xmlWriter.WriteAttributeString(
                     CsdlConstants.Attribute_CollectionKind, property.CollectionKind.ToString());
             }
 
             if (property.ConcurrencyMode
-                == EdmConcurrencyMode.Fixed)
+                == ConcurrencyMode.Fixed)
             {
                 _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_ConcurrencyMode, CsdlConstants.Value_Fixed);
             }
@@ -503,9 +478,52 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                     }
                 }
             }
-            WritePropertyTypeFacets(property.PropertyType);
+
+            if (property.IsMaxLength)
+            {
+                _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max);
+            }
+            else if (property.MaxLength.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_MaxLength,
+                    property.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (property.IsFixedLength.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_FixedLength,
+                    GetLowerCaseStringFromBoolValue(property.IsFixedLength.Value));
+            }
+
+            if (property.IsUnicode.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_Unicode, GetLowerCaseStringFromBoolValue(property.IsUnicode.Value));
+            }
+
+            if (property.Precision.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_Precision,
+                    property.Precision.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (property.Scale.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_Scale, property.Scale.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!property.Nullable)
+            {
+                _xmlWriter.WriteAttributeString(
+                    CsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(property.Nullable));
+            }
 
             DataModelAnnotation annotation;
+
             if (property.Annotations.TryGetByName(SsdlConstants.Attribute_StoreGeneratedPattern, out annotation))
             {
                 _xmlWriter.WriteAttributeString(
@@ -514,90 +532,24 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             }
         }
 
-        private static string GetTypeReferenceName(EdmTypeReference typeReference)
+        private static string GetTypeReferenceName(EdmProperty property)
         {
-            Contract.Assert(!typeReference.IsCollectionType, "Primitive, Enum or Complex property type expected");
-
-            if (typeReference.IsPrimitiveType)
+            if (property.IsPrimitiveType)
             {
-                return GetTypeNameFromPrimitiveTypeKind(typeReference.PrimitiveType.PrimitiveTypeKind);
+                return GetTypeNameFromPrimitiveTypeKind(property.PrimitiveType.PrimitiveTypeKind);
             }
 
-            if (typeReference.IsComplexType)
+            if (property.IsComplexType)
             {
-                return GetQualifiedTypeName(CsdlConstants.Value_Self, typeReference.ComplexType.Name);
+                return GetQualifiedTypeName(CsdlConstants.Value_Self, property.ComplexType.Name);
             }
 
-            Contract.Assert(typeReference.IsEnumType);
+            Contract.Assert(property.IsEnumType);
 
-            return GetQualifiedTypeName(CsdlConstants.Value_Self, typeReference.EnumType.Name);
+            return GetQualifiedTypeName(CsdlConstants.Value_Self, property.EnumType.Name);
         }
 
-        internal static IEnumerable<KeyValuePair<string, string>> GetEnumerableFacetValueFromPrimitiveTypeFacets(
-            EdmPrimitiveTypeFacets facets)
-        {
-            if (facets != null)
-            {
-                if (facets.IsFixedLength.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_FixedLength,
-                            GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
-                }
-                if (facets.IsMaxLength.HasValue
-                    && facets.IsMaxLength.Value)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max);
-                }
-                else if (facets.MaxLength.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_MaxLength,
-                            facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                if (facets.IsUnicode.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_Unicode, GetLowerCaseStringFromBoolValue(facets.IsUnicode.Value));
-                }
-
-                if (facets.Precision.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_Precision,
-                            facets.Precision.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                if (facets.Scale.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(
-                            CsdlConstants.Attribute_Scale, facets.Scale.Value.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-        }
-
-        private void WritePropertyTypeFacets(EdmTypeReference typeRef)
-        {
-            if (typeRef.PrimitiveTypeFacets != null)
-            {
-                foreach (var facet in GetEnumerableFacetValueFromPrimitiveTypeFacets(typeRef.PrimitiveTypeFacets))
-                {
-                    _xmlWriter.WriteAttributeString(facet.Key, facet.Value);
-                }
-            }
-            if (typeRef.IsNullable.HasValue)
-            {
-                _xmlWriter.WriteAttributeString(
-                    CsdlConstants.Attribute_Nullable, GetLowerCaseStringFromBoolValue(typeRef.IsNullable.Value));
-            }
-        }
-
-        internal void WriteNavigationPropertyElementHeader(EdmNavigationProperty member)
+        internal void WriteNavigationPropertyElementHeader(NavigationProperty member)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationProperty);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, member.Name);
@@ -608,15 +560,15 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_ToRole, member.ResultEnd.Name);
         }
 
-        private static string GetXmlMultiplicity(EdmAssociationEndKind endKind)
+        private static string GetXmlMultiplicity(RelationshipMultiplicity endKind)
         {
             switch (endKind)
             {
-                case EdmAssociationEndKind.Many:
+                case RelationshipMultiplicity.Many:
                     return CsdlConstants.Value_EndMany;
-                case EdmAssociationEndKind.Required:
+                case RelationshipMultiplicity.One:
                     return CsdlConstants.Value_EndRequired;
-                case EdmAssociationEndKind.Optional:
+                case RelationshipMultiplicity.ZeroOrOne:
                     return CsdlConstants.Value_EndOptional;
                 default:
                     Debug.Fail("Did you add a new EdmAssociationEndKind?");
@@ -625,7 +577,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         }
 
         internal void WriteReferentialConstraintRoleElement(
-            string roleName, EdmAssociationEnd edmAssociationEnd, IEnumerable<EdmProperty> properties)
+            string roleName, AssociationEndMember edmAssociationEnd, IEnumerable<EdmProperty> properties)
         {
             _xmlWriter.WriteStartElement(roleName);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Role, edmAssociationEnd.Name);
@@ -638,13 +590,13 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteEntityContainerElementHeader(EdmEntityContainer container)
+        internal void WriteEntityContainerElementHeader(EntityContainer container)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EntityContainer);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, container.Name);
         }
 
-        internal void WriteAssociationSetElementHeader(EdmAssociationSet associationSet)
+        internal void WriteAssociationSetElementHeader(AssociationSet associationSet)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_AssociationSet);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, associationSet.Name);
@@ -653,7 +605,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                 GetQualifiedTypeName(CsdlConstants.Value_Self, associationSet.ElementType.Name));
         }
 
-        internal void WriteAssociationSetEndElement(EdmEntitySet end, string roleName)
+        internal void WriteAssociationSetEndElement(EntitySet end, string roleName)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_End);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Role, roleName);
@@ -661,7 +613,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteEntitySetElementHeader(EdmEntitySet entitySet)
+        internal void WriteEntitySetElementHeader(EntitySet entitySet)
         {
             _xmlWriter.WriteStartElement(CsdlConstants.Element_EntitySet);
             _xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Name, entitySet.Name);

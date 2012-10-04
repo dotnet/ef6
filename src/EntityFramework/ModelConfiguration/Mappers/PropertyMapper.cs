@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmComplexType complexType,
+            PropertyInfo propertyInfo, ComplexType complexType,
             Func<ComplexTypeConfiguration> complexTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
@@ -33,12 +33,12 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (property != null)
             {
-                complexType.DeclaredProperties.Add(property);
+                complexType.AddMember(property);
             }
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
+            PropertyInfo propertyInfo, EntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(entityType != null);
@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (property != null)
             {
-                entityType.DeclaredProperties.Add(property);
+                entityType.AddMember(property);
             }
             else
             {
@@ -70,10 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 if (complexType != null)
                 {
-                    property = new EdmProperty
-                                   {
-                                       Name = propertyInfo.Name
-                                   }.AsComplex(complexType);
+                    property = EdmProperty.Complex(propertyInfo.Name, complexType);
                 }
                 else
                 {
@@ -85,11 +82,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                         if (enumType != null)
                         {
-                            property = new EdmProperty
-                                           {
-                                               Name = propertyInfo.Name,
-                                           }.AsEnum(enumType);
-                            property.PropertyType.IsNullable = isNullable;
+                            property = EdmProperty.Enum(propertyInfo.Name, enumType);
+                            property.Nullable = isNullable;
                         }
                     }
                 }
@@ -102,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 new AttributeMapper(_typeMapper.MappingContext.AttributeProvider)
                     .Map(propertyInfo, property.Annotations);
 
-                if (!property.PropertyType.IsComplexType)
+                if (!property.IsComplexType)
                 {
                     _typeMapper.MappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
                         propertyInfo, () => structuralTypeConfiguration().Property(new PropertyPath(propertyInfo)));

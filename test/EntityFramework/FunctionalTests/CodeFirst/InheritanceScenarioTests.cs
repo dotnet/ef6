@@ -11,195 +11,6 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    #region Fixtures
-
-    public abstract class ITFoo
-    {
-        public int Id { get; set; }
-    }
-
-    public class ITBar : ITFoo
-    {
-    }
-
-    public class ITBaz
-    {
-        public int Id { get; set; }
-        public ICollection<ITFoo> ITFoos { get; set; }
-    }
-
-    public abstract class A1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public int Age1 { get; set; }
-        public string Name1 { get; set; }
-    }
-
-    public class A2 : A1
-    {
-        public int Age2 { get; set; }
-        public string Name2 { get; set; }
-    }
-
-    public class A3 : A2
-    {
-        public int Age3 { get; set; }
-        public string Name3 { get; set; }
-    }
-
-    public class A4 : A1
-    {
-        public int Age4 { get; set; }
-        public string Name4 { get; set; }
-    }
-
-    public class B1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public int Age1 { get; set; }
-        public string Name1 { get; set; }
-    }
-
-    public abstract class B2 : B1
-    {
-        public int Age2 { get; set; }
-        public string Name2 { get; set; }
-    }
-
-    public class B3 : B2
-    {
-        public int Age3 { get; set; }
-        public string Name3 { get; set; }
-    }
-
-    public class ITOffice
-    {
-        public int ITOfficeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ITEmployee
-    {
-        public int ITEmployeeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ITOnSiteEmployee : ITEmployee
-    {
-        public ITOffice ITOffice { get; set; }
-    }
-
-    public class ITOffSiteEmployee : ITEmployee
-    {
-        public string SiteName { get; set; }
-    }
-
-    public class IT_Office
-    {
-        public int IT_OfficeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class IT_Employee
-    {
-        public int IT_EmployeeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class IT_OnSiteEmployee : IT_Employee
-    {
-        public int IT_OfficeId { get; set; }
-        public IT_Office IT_Office { get; set; }
-    }
-
-    public class IT_OffSiteEmployee : IT_Employee
-    {
-        public string SiteName { get; set; }
-    }
-
-    public class IT_Context : DbContext
-    {
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IT_Office>();
-            modelBuilder.Entity<IT_Employee>().ToTable("Employees");
-            modelBuilder.Entity<IT_OffSiteEmployee>().ToTable("OffSiteEmployees");
-            modelBuilder.Entity<IT_OnSiteEmployee>().ToTable("OnSiteEmployees");
-            modelBuilder.Entity<IT_OnSiteEmployee>()
-                .HasRequired(e => e.IT_Office);
-        }
-
-        public DbSet<IT_Office> Offices { get; set; }
-        public DbSet<IT_Employee> Employees { get; set; }
-    }
-
-    public abstract class D1
-    {
-        public int D1Id { get; set; }
-    }
-
-    public class DiscontinueD1 : D1
-    {
-        public DateTime DiscontinuedOn { get; set; }
-    }
-
-    public class C1
-    {
-        public int Id { get; set; }
-        public int DiscontinueD1Id { get; set; }
-        public DiscontinueD1 DiscontinueD1 { get; set; }
-    }
-
-    public class BaseEntityDuplicateProps
-    {
-        public int ID { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class Entity1DuplicateProps : BaseEntityDuplicateProps
-    {
-        public string SomeProperty { get; set; }
-        public int Entity2ID { get; set; }
-        public Entity2DuplicateProps Entity2 { get; set; }
-    }
-
-    public class Entity2DuplicateProps : BaseEntityDuplicateProps
-    {
-        public string SomeProperty { get; set; }
-    }
-
-    public class Base_195898
-    {
-        public int Id { get; set; }
-        public Complex_195898 Complex { get; set; }
-    }
-
-    public class Derived_195898 : Base_195898
-    {
-    }
-
-    public class Complex_195898
-    {
-        public string Foo { get; set; }
-    }
-
-    public abstract class BaseDependent_165027
-    {
-        public decimal? BaseProperty { get; set; }
-        public float? Key1 { get; set; }
-        public decimal? Key2 { get; set; }
-    }
-
-    public class Dependent_165027 : BaseDependent_165027
-    {
-    }
-
-    #endregion
-
     public sealed class InheritanceScenarioTests : TestBase
     {
         [Fact]
@@ -957,8 +768,8 @@ namespace FunctionalTests
                     context.Entry(baseEntity).State = EntityState.Detached;
                     context.Entry(derivedEntity).State = EntityState.Detached;
 
-                    var foundBase = context.Bases.Where(e => e.Id == baseEntity.Id).Single();
-                    var foundDerived = context.Deriveds.Where(e => e.Id == derivedEntity.Id).Single();
+                    var foundBase = context.Bases.Single(e => e.Id == baseEntity.Id);
+                    var foundDerived = context.Deriveds.Single(e => e.Id == derivedEntity.Id);
 
                     Assert.Equal("Foo1", foundBase.Foo);
                     Assert.Equal("Foo2", foundDerived.Foo);
@@ -977,6 +788,195 @@ namespace FunctionalTests
             }
         }
     }
+
+    #region Fixtures
+
+    public abstract class ITFoo
+    {
+        public int Id { get; set; }
+    }
+
+    public class ITBar : ITFoo
+    {
+    }
+
+    public class ITBaz
+    {
+        public int Id { get; set; }
+        public ICollection<ITFoo> ITFoos { get; set; }
+    }
+
+    public abstract class A1
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+
+        public int Age1 { get; set; }
+        public string Name1 { get; set; }
+    }
+
+    public class A2 : A1
+    {
+        public int Age2 { get; set; }
+        public string Name2 { get; set; }
+    }
+
+    public class A3 : A2
+    {
+        public int Age3 { get; set; }
+        public string Name3 { get; set; }
+    }
+
+    public class A4 : A1
+    {
+        public int Age4 { get; set; }
+        public string Name4 { get; set; }
+    }
+
+    public class B1
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+
+        public int Age1 { get; set; }
+        public string Name1 { get; set; }
+    }
+
+    public abstract class B2 : B1
+    {
+        public int Age2 { get; set; }
+        public string Name2 { get; set; }
+    }
+
+    public class B3 : B2
+    {
+        public int Age3 { get; set; }
+        public string Name3 { get; set; }
+    }
+
+    public class ITOffice
+    {
+        public int ITOfficeId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class ITEmployee
+    {
+        public int ITEmployeeId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class ITOnSiteEmployee : ITEmployee
+    {
+        public ITOffice ITOffice { get; set; }
+    }
+
+    public class ITOffSiteEmployee : ITEmployee
+    {
+        public string SiteName { get; set; }
+    }
+
+    public class IT_Office
+    {
+        public int IT_OfficeId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class IT_Employee
+    {
+        public int IT_EmployeeId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class IT_OnSiteEmployee : IT_Employee
+    {
+        public int IT_OfficeId { get; set; }
+        public IT_Office IT_Office { get; set; }
+    }
+
+    public class IT_OffSiteEmployee : IT_Employee
+    {
+        public string SiteName { get; set; }
+    }
+
+    public class IT_Context : DbContext
+    {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IT_Office>();
+            modelBuilder.Entity<IT_Employee>().ToTable("Employees");
+            modelBuilder.Entity<IT_OffSiteEmployee>().ToTable("OffSiteEmployees");
+            modelBuilder.Entity<IT_OnSiteEmployee>().ToTable("OnSiteEmployees");
+            modelBuilder.Entity<IT_OnSiteEmployee>()
+                .HasRequired(e => e.IT_Office);
+        }
+
+        public DbSet<IT_Office> Offices { get; set; }
+        public DbSet<IT_Employee> Employees { get; set; }
+    }
+
+    public abstract class D1
+    {
+        public int D1Id { get; set; }
+    }
+
+    public class DiscontinueD1 : D1
+    {
+        public DateTime DiscontinuedOn { get; set; }
+    }
+
+    public class C1
+    {
+        public int Id { get; set; }
+        public int DiscontinueD1Id { get; set; }
+        public DiscontinueD1 DiscontinueD1 { get; set; }
+    }
+
+    public class BaseEntityDuplicateProps
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+    }
+
+    public class Entity1DuplicateProps : BaseEntityDuplicateProps
+    {
+        public string SomeProperty { get; set; }
+        public int Entity2ID { get; set; }
+        public Entity2DuplicateProps Entity2 { get; set; }
+    }
+
+    public class Entity2DuplicateProps : BaseEntityDuplicateProps
+    {
+        public string SomeProperty { get; set; }
+    }
+
+    public class Base_195898
+    {
+        public int Id { get; set; }
+        public Complex_195898 Complex { get; set; }
+    }
+
+    public class Derived_195898 : Base_195898
+    {
+    }
+
+    public class Complex_195898
+    {
+        public string Foo { get; set; }
+    }
+
+    public abstract class BaseDependent_165027
+    {
+        public decimal? BaseProperty { get; set; }
+        public float? Key1 { get; set; }
+        public decimal? Key2 { get; set; }
+    }
+
+    public class Dependent_165027 : BaseDependent_165027
+    {
+    }
+
+    #endregion
 
     #region Bug DevDiv#223284
 
@@ -1254,7 +1254,7 @@ namespace FunctionalTests
 
     namespace Bug178568
     {
-        using System.Data.Entity.Edm.Db;
+        using System.Data.Entity.Core.Metadata.Edm;
 
         public abstract class A
         {
@@ -1302,7 +1302,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.Identity,
+                        StoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1324,7 +1324,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1353,11 +1353,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.Identity,
+                        StoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1406,11 +1406,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<C>("CX")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.Identity,
+                        StoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<C>("CY")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
         }
@@ -1422,7 +1422,7 @@ namespace FunctionalTests
 
     namespace Bug336566
     {
-        using System.Data.Entity.Edm.Db;
+        using System.Data.Entity.Core.Metadata.Edm;
 
         public class A
         {
@@ -1462,12 +1462,12 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
 
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1488,7 +1488,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1510,11 +1510,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<A>("A")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.Identity,
+                        StoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<B>("B")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
 
@@ -1557,11 +1557,11 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<C>("CX")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.Identity,
+                        StoreGeneratedPattern.Identity,
                         c => c.StoreGeneratedPattern);
                 databaseMapping.Assert<C>("CY")
                     .Column("Id").DbEqual(
-                        DbStoreGeneratedPattern.None,
+                        StoreGeneratedPattern.None,
                         c => c.StoreGeneratedPattern);
             }
         }

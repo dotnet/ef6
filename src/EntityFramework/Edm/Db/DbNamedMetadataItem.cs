@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Db
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     NamedDbItem is the base for all types in the Database Metadata construction and modification API with a <see

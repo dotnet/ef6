@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
@@ -140,13 +141,13 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var mockType = new MockType("T").Property<int>("Id");
             modelConfiguration.Entity(mockType)
                 .Property(new PropertyPath(mockType.GetProperty("Id")))
-                .ConcurrencyMode = EdmConcurrencyMode.Fixed;
+                .ConcurrencyMode = ConcurrencyMode.Fixed;
 
             var databaseMapping = new DbModelBuilder(modelConfiguration).Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
             Assert.NotNull(databaseMapping);
             Assert.Equal(
-                EdmConcurrencyMode.Fixed,
+                ConcurrencyMode.Fixed,
                 databaseMapping.Model.Namespaces.Single().EntityTypes.Single().DeclaredProperties.Single().ConcurrencyMode);
         }
 
@@ -344,16 +345,18 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             Assert.Equal(expectedKeyName, entityType.DeclaredKeyProperties.Single().Name);
         }
 
-        private EdmEntityType CreateEntityTypeWithProperties(params PropertyInfo[] props)
+        private EntityType CreateEntityTypeWithProperties(params PropertyInfo[] props)
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
             foreach (var prop in props)
             {
-                entityType.AddPrimitiveProperty(prop.Name).PropertyType.EdmType = EdmPrimitiveType.Int32;
-                entityType.GetDeclaredPrimitiveProperty(prop.Name).SetClrPropertyInfo(prop);
+                var property = EdmProperty.Primitive(prop.Name, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+                entityType.AddMember(property);
+                entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == prop.Name).SetClrPropertyInfo(prop);
             }
 
             return entityType;
@@ -621,7 +624,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             PrimitivePropertyConfiguration configuration)
         {
             configuration.IsNullable = true;
-            configuration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configuration.ConcurrencyMode = ConcurrencyMode.Fixed;
             configuration.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
             configuration.ColumnType = "ColumnType";
             configuration.ColumnName = "ColumnName";
@@ -631,7 +634,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var clone = configuration.Clone();
 
             Assert.True(clone.IsNullable.Value);
-            Assert.Equal(EdmConcurrencyMode.Fixed, clone.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, clone.ConcurrencyMode);
             Assert.Equal(DatabaseGeneratedOption.Identity, clone.DatabaseGeneratedOption);
             Assert.Equal("ColumnType", clone.ColumnType);
             Assert.Equal("ColumnName", clone.ColumnName);
@@ -647,20 +650,20 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var navProp = new MockPropertyInfo(typeof(int), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
-            configuration.EndKind = EdmAssociationEndKind.Many;
+            configuration.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             var inverseNavProp = new MockPropertyInfo(typeof(int), "P2");
             configuration.InverseNavigationProperty = inverseNavProp;
-            configuration.InverseEndKind = EdmAssociationEndKind.Optional;
-            configuration.DeleteAction = EdmOperationAction.Restrict;
+            configuration.InverseEndKind = RelationshipMultiplicity.ZeroOrOne;
+            configuration.DeleteAction = OperationAction.Restrict;
             configuration.IsNavigationPropertyDeclaringTypePrincipal = true;
 
             var clone = configuration.Clone();
 
             Assert.Equal(navProp, clone.NavigationProperty);
-            Assert.Equal(EdmAssociationEndKind.Many, clone.EndKind);
+            Assert.Equal(RelationshipMultiplicity.Many, clone.RelationshipMultiplicity);
             Assert.Equal(inverseNavProp, clone.InverseNavigationProperty);
-            Assert.Equal(EdmAssociationEndKind.Optional, clone.InverseEndKind);
-            Assert.Equal(EdmOperationAction.Restrict, clone.DeleteAction);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, clone.InverseEndKind);
+            Assert.Equal(OperationAction.Restrict, clone.DeleteAction);
             Assert.True(clone.IsNavigationPropertyDeclaringTypePrincipal.Value);
 
             Assert.Null(clone.Constraint);
@@ -721,7 +724,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var clone = (ForeignKeyConstraintConfiguration)configuration.Clone();
 
             Assert.True(clone.IsFullySpecified);
-            Assert.True(clone.DependentProperties.Any(p => p.Name == "P1"));
+            Assert.True(clone.ToProperties.Any(p => p.Name == "P1"));
         }
 
         [Fact]

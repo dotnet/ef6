@@ -28,7 +28,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",
         Target =
-            "System.Data.Entity.ModelConfiguration.Conventions.ForeignKeyDiscoveryConvention.#System.Data.Entity.ModelConfiguration.Conventions.IEdmConvention`1<System.Data.Entity.Edm.EdmAssociationType>.Apply(System.Data.Entity.Edm.EdmAssociationType,System.Data.Entity.Edm.EdmModel)"
+            "System.Data.Entity.ModelConfiguration.Conventions.ForeignKeyDiscoveryConvention.#System.Data.Entity.ModelConfiguration.Conventions.IEdmConvention`1<System.Data.Entity.Edm.AssociationType>.Apply(System.Data.Entity.Edm.AssociationType,System.Data.Entity.Edm.EdmModel)"
         )]
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",

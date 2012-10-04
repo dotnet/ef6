@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     asm => asm.AssociationSet.ElementType.IsManyToMany()
                            && !asm.AssociationSet.ElementType.IsSelfReferencing())
                 .SelectMany(asm => asm.Table.ForeignKeyConstraints)
-                .Each(fk => fk.DeleteAction = DbOperationAction.Cascade);
+                .Each(fk => fk.DeleteAction = OperationAction.Cascade);
         }
     }
 }

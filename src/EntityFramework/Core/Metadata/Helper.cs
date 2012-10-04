@@ -302,6 +302,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                    IsRowType(edmType);
         }
 
+        internal static bool IsAssociationSet(EntitySetBase entitySetBase)
+        {
+            return BuiltInTypeKind.AssociationSet == entitySetBase.BuiltInTypeKind;
+        }
+
         internal static bool IsEntitySet(EntitySetBase entitySetBase)
         {
             return BuiltInTypeKind.EntitySet == entitySetBase.BuiltInTypeKind;

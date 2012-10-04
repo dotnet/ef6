@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -13,7 +12,7 @@ namespace System.Data.Entity.Edm.Db
     public class DbSchemaMetadata
         : DbAliasedMetadataItem
     {
-        private readonly BackingList<DbTableMetadata> tablesList = new BackingList<DbTableMetadata>();
+        private readonly List<DbTableMetadata> tablesList = new List<DbTableMetadata>();
 
         internal override DbItemKind GetMetadataKind()
         {
@@ -26,13 +25,7 @@ namespace System.Data.Entity.Edm.Db
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableMetadata> Tables
         {
-            get { return tablesList.EnsureValue(); }
-            set { tablesList.SetValue(value); }
-        }
-
-        internal bool HasTables
-        {
-            get { return tablesList.HasValue; }
+            get { return tablesList; }
         }
     }
 }

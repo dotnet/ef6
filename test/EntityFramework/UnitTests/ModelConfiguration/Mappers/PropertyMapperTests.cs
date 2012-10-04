@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -15,26 +16,28 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Map_should_map_complex_type_properties()
         {
-            var complexType = new EdmComplexType();
+            var complexType = new ComplexType("C");
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(int), "Foo"), complexType, () => new ComplexTypeConfiguration(typeof(object)));
 
-            Assert.Equal(1, complexType.DeclaredProperties.Count);
+            Assert.Equal(1, complexType.Properties.Count);
 
-            var property = complexType.GetPrimitiveProperty("Foo");
+            var property = complexType.Properties.SingleOrDefault(p => p.Name == "Foo");
 
-            Assert.Equal(EdmPrimitiveType.Int32, property.PropertyType.PrimitiveType);
+            Assert.Equal(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), property.PrimitiveType);
         }
 
         [Fact]
         public void Map_should_map_entity_navigation_properties()
         {
-            var entityType = new EdmEntityType();
+            var model = new EdmModel().Initialize();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
             var mappingContext
-                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
+                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model);
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(new MockType(), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
@@ -52,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             mockModelConfiguration
                 .Setup(m => m.GetStructuralTypeConfiguration(mockComplexType))
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
             var mappingContext
                 = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel().Initialize());
 
@@ -61,13 +64,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.Equal(0, entityType.DeclaredNavigationProperties.Count);
             Assert.Equal(1, entityType.DeclaredProperties.Count);
-            Assert.NotNull(entityType.DeclaredProperties.Single().PropertyType.ComplexType);
+            Assert.NotNull(entityType.DeclaredProperties.Single().ComplexType);
         }
 
         [Fact]
         public void Map_should_set_correct_name_and_type()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
@@ -76,15 +79,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.Equal(1, entityType.DeclaredProperties.Count);
 
-            var property = entityType.GetDeclaredPrimitiveProperty("Foo");
+            var property = entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "Foo");
 
-            Assert.Equal(EdmPrimitiveType.Int32, property.PropertyType.PrimitiveType);
+            Assert.Equal(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), property.PrimitiveType);
         }
 
         [Fact]
         public void Map_should_set_correct_nullability()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
 
@@ -93,20 +96,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                     new MockPropertyInfo(typeof(int?), "Foo"),
                     entityType, () => new EntityTypeConfiguration(typeof(object)));
 
-            var property = entityType.GetDeclaredPrimitiveProperty("Foo");
+            var property = entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "Foo");
 
-            Assert.Equal(EdmPrimitiveType.Int32, property.PropertyType.PrimitiveType);
-            Assert.Equal(true, property.PropertyType.IsNullable);
+            Assert.Equal(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), property.PrimitiveType);
+            Assert.Equal(true, property.Nullable);
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(
                     new MockPropertyInfo(typeof(int), "Bar"),
                     entityType, () => new EntityTypeConfiguration(typeof(object)));
 
-            property = entityType.GetDeclaredPrimitiveProperty("Bar");
+            property = entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "Bar");
 
-            Assert.Equal(EdmPrimitiveType.Int32, property.PropertyType.PrimitiveType);
-            Assert.Equal(false, property.PropertyType.IsNullable);
+            Assert.Equal(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), property.PrimitiveType);
+            Assert.Equal(false, property.Nullable);
         }
     }
 }

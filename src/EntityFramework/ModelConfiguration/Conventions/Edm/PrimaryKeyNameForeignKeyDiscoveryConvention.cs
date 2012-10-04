@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     Convention to discover foreign key properties whose names match the principal type primary key property name(s).
@@ -10,10 +10,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class PrimaryKeyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {
         protected override bool MatchDependentKeyProperty(
-            EdmAssociationType associationType,
-            EdmAssociationEnd dependentAssociationEnd,
+            AssociationType associationType,
+            AssociationEndMember dependentAssociationEnd,
             EdmProperty dependentProperty,
-            EdmEntityType principalEntityType,
+            EntityType principalEntityType,
             EdmProperty principalKeyProperty)
         {
             return string.Equals(

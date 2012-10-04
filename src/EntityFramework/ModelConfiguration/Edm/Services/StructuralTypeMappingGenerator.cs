@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
@@ -12,7 +11,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
     internal abstract class StructuralTypeMappingGenerator
     {
@@ -34,19 +32,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             Contract.Requires(property != null);
             Contract.Requires(tableColumnMetadata != null);
 
-            var storeTypeUsage = _providerManifest.GetStoreType(GetEdmTypeUsage(property.PropertyType));
+            var storeTypeUsage = _providerManifest.GetStoreType(GetEdmTypeUsage(property));
 
             tableColumnMetadata.TypeName = storeTypeUsage.EdmType.Name;
             tableColumnMetadata.IsPrimaryKeyColumn = isKeyProperty;
-
-            if (isInstancePropertyOnDerivedType)
-            {
-                tableColumnMetadata.IsNullable = true;
-            }
-            else if (property.PropertyType.IsNullable != null)
-            {
-                tableColumnMetadata.IsNullable = property.PropertyType.IsNullable.Value;
-            }
+            tableColumnMetadata.IsNullable = isInstancePropertyOnDerivedType || property.Nullable;
 
             if (tableColumnMetadata.IsPrimaryKeyColumn)
             {
@@ -60,88 +50,85 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 tableColumnMetadata.StoreGeneratedPattern = storeGeneratedPattern.Value;
             }
 
-            MapPrimitivePropertyFacets(
-                property.PropertyType.PrimitiveTypeFacets, tableColumnMetadata.Facets, storeTypeUsage);
+            MapPrimitivePropertyFacets(property, tableColumnMetadata.Facets, storeTypeUsage);
         }
 
-        private static TypeUsage GetEdmTypeUsage(EdmTypeReference edmTypeReference)
+        private static TypeUsage GetEdmTypeUsage(EdmProperty property)
         {
-            Contract.Requires(edmTypeReference != null);
+            Contract.Requires(property != null);
 
-            var primitiveTypeFacets = edmTypeReference.PrimitiveTypeFacets;
+            var primitiveTypeKind = property.UnderlyingPrimitiveType.PrimitiveTypeKind;
 
-            var primitiveTypeKind = edmTypeReference.UnderlyingPrimitiveType.PrimitiveTypeKind;
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(primitiveTypeKind);
 
-            var primitiveType = PrimitiveType.GetEdmPrimitiveType((PrimitiveTypeKind)primitiveTypeKind);
-
-            if (edmTypeReference.PrimitiveType
-                == EdmPrimitiveType.String)
+            if (property.PrimitiveType
+                == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
             {
-                if ((primitiveTypeFacets.IsUnicode != null)
-                    && (primitiveTypeFacets.IsFixedLength != null))
+                if ((property.IsUnicode != null)
+                    && (property.IsFixedLength != null))
                 {
-                    return (primitiveTypeFacets.MaxLength != null)
+                    return (property.MaxLength != null)
                                ? TypeUsage.CreateStringTypeUsage(
                                    primitiveType,
-                                   primitiveTypeFacets.IsUnicode.Value,
-                                   primitiveTypeFacets.IsFixedLength.Value,
-                                   primitiveTypeFacets.MaxLength.Value)
+                                   property.IsUnicode.Value,
+                                   property.IsFixedLength.Value,
+                                   property.MaxLength.Value)
                                : TypeUsage.CreateStringTypeUsage(
                                    primitiveType,
-                                   primitiveTypeFacets.IsUnicode.Value,
-                                   primitiveTypeFacets.IsFixedLength.Value);
+                                   property.IsUnicode.Value,
+                                   property.IsFixedLength.Value);
                 }
             }
 
-            if (edmTypeReference.PrimitiveType
-                == EdmPrimitiveType.Binary)
+            if (property.PrimitiveType
+                == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary))
             {
-                if (primitiveTypeFacets.IsFixedLength != null)
+                if (property.IsFixedLength != null)
                 {
-                    return (primitiveTypeFacets.MaxLength != null)
+                    return (property.MaxLength != null)
                                ? TypeUsage.CreateBinaryTypeUsage(
                                    primitiveType,
-                                   primitiveTypeFacets.IsFixedLength.Value,
-                                   primitiveTypeFacets.MaxLength.Value)
+                                   property.IsFixedLength.Value,
+                                   property.MaxLength.Value)
                                : TypeUsage.CreateBinaryTypeUsage(
                                    primitiveType,
-                                   primitiveTypeFacets.IsFixedLength.Value);
+                                   property.IsFixedLength.Value);
                 }
             }
 
-            if ((edmTypeReference.PrimitiveType == EdmPrimitiveType.Time)
-                && (primitiveTypeFacets.Precision != null))
+            if ((property.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Time))
+                && (property.Precision != null))
             {
                 return TypeUsage.CreateTimeTypeUsage(
                     primitiveType,
-                    primitiveTypeFacets.Precision);
+                    property.Precision);
             }
 
-            if ((edmTypeReference.PrimitiveType == EdmPrimitiveType.DateTime)
-                && (primitiveTypeFacets.Precision != null))
+            if ((property.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.DateTime))
+                && (property.Precision != null))
             {
                 return TypeUsage.CreateDateTimeTypeUsage(
                     primitiveType,
-                    primitiveTypeFacets.Precision);
+                    property.Precision);
             }
 
-            if ((edmTypeReference.PrimitiveType == EdmPrimitiveType.DateTimeOffset)
-                && (primitiveTypeFacets.Precision != null))
+            if ((property.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.DateTimeOffset))
+                && (property.Precision != null))
             {
                 return TypeUsage.CreateDateTimeOffsetTypeUsage(
                     primitiveType,
-                    primitiveTypeFacets.Precision);
+                    property.Precision);
             }
 
-            if (edmTypeReference.PrimitiveType
-                == EdmPrimitiveType.Decimal)
+            if (property.PrimitiveType
+                == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal))
             {
-                return ((primitiveTypeFacets.Precision != null)
-                        && primitiveTypeFacets.Scale != null)
+                return ((property.Precision != null)
+                        && property.Scale != null)
                            ? TypeUsage.CreateDecimalTypeUsage(
                                primitiveType,
-                               primitiveTypeFacets.Precision.Value,
-                               primitiveTypeFacets.Scale.Value)
+                               property.Precision.Value,
+                               property.Scale.Value)
                            : TypeUsage.CreateDecimalTypeUsage(primitiveType);
             }
 
@@ -149,47 +136,36 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         internal static void MapPrimitivePropertyFacets(
-            EdmPrimitiveTypeFacets primitiveTypeFacets, DbPrimitiveTypeFacets dbPrimitiveTypeFacets, TypeUsage typeUsage)
+            EdmProperty property, DbPrimitiveTypeFacets dbPrimitiveTypeFacets, TypeUsage typeUsage)
         {
-            Contract.Requires(primitiveTypeFacets != null);
+            Contract.Requires(property != null);
             Contract.Requires(dbPrimitiveTypeFacets != null);
             Contract.Requires(typeUsage != null);
 
             if (IsValidFacet(typeUsage, SsdlConstants.Attribute_FixedLength))
             {
-                dbPrimitiveTypeFacets.IsFixedLength = primitiveTypeFacets.IsFixedLength;
+                dbPrimitiveTypeFacets.IsFixedLength = property.IsFixedLength;
             }
 
             if (IsValidFacet(typeUsage, SsdlConstants.Attribute_MaxLength))
             {
-                dbPrimitiveTypeFacets.IsMaxLength = primitiveTypeFacets.IsMaxLength;
-                dbPrimitiveTypeFacets.MaxLength = primitiveTypeFacets.MaxLength;
+                dbPrimitiveTypeFacets.IsMaxLength = property.IsMaxLength;
+                dbPrimitiveTypeFacets.MaxLength = property.MaxLength;
             }
 
             if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Unicode))
             {
-                dbPrimitiveTypeFacets.IsUnicode = primitiveTypeFacets.IsUnicode;
+                dbPrimitiveTypeFacets.IsUnicode = property.IsUnicode;
             }
 
             if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Precision))
             {
-                dbPrimitiveTypeFacets.Precision = primitiveTypeFacets.Precision;
+                dbPrimitiveTypeFacets.Precision = property.Precision;
             }
 
             if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Scale))
             {
-                dbPrimitiveTypeFacets.Scale = primitiveTypeFacets.Scale;
-            }
-
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Srid))
-            {
-                dbPrimitiveTypeFacets.IsVariableSrid = primitiveTypeFacets.IsVariableSrid;
-                dbPrimitiveTypeFacets.Srid = primitiveTypeFacets.Srid;
-            }
-
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_IsStrict))
-            {
-                dbPrimitiveTypeFacets.IsStrict = primitiveTypeFacets.IsStrict;
+                dbPrimitiveTypeFacets.Scale = property.Scale;
             }
         }
 
@@ -205,7 +181,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         protected static DbEntityTypeMapping GetEntityTypeMappingInHierarchy(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType)
+            DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entityType != null);

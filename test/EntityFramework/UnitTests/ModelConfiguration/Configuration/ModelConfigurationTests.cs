@@ -3,12 +3,14 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
@@ -80,9 +82,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(mockEntityType);
+
+            entityType.Annotations.SetClrType(mockEntityType);
             var complexType = model.AddComplexType("C");
-            complexType.SetClrType(mockComplexType);
+
+            complexType.Annotations.SetClrType(mockComplexType);
 
             var modelConfiguration = new ModelConfiguration();
             var mockComplexTypeConfiguration = new Mock<ComplexTypeConfiguration>(mockComplexType.Object);
@@ -292,7 +296,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
             var entityType3 = model.GetEntityType("E3");
-            entityType1.GetDeclaredPrimitiveProperty("P1").SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+            (entityType1.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetStoreGeneratedPattern(
+                StoreGeneratedPattern.Identity);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -318,13 +323,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(2, table1.Columns.Count);
             Assert.Equal("P1", table1.Columns[0].Name);
             Assert.Equal("P2", table1.Columns[1].Name);
-            Assert.Equal(DbStoreGeneratedPattern.Identity, table1.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Identity, table1.Columns[0].StoreGeneratedPattern);
             Assert.Equal(2, entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings.Count);
             Assert.Equal("P1", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
             Assert.Equal("P2", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
 
             Assert.True(entityTypeMapping2.IsHierarchyMapping);
-            Assert.Equal(DbStoreGeneratedPattern.None, table2.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.None, table2.Columns[0].StoreGeneratedPattern);
             Assert.Equal(2, entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings.Count);
             Assert.Equal("P1", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
             Assert.Equal("P3", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
@@ -334,7 +339,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table1.Columns[0], table2.Columns[0]);
 
             Assert.False(entityTypeMapping3.IsHierarchyMapping);
-            Assert.Equal(DbStoreGeneratedPattern.None, table3.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.None, table3.Columns[0].StoreGeneratedPattern);
             Assert.Equal(2, entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings.Count);
             Assert.Equal("P1", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
             Assert.Equal("P4", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
@@ -358,7 +363,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
             var entityType3 = model.GetEntityType("E3");
-            entityType1.GetDeclaredPrimitiveProperty("P1").SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+            (entityType1.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetStoreGeneratedPattern(
+                StoreGeneratedPattern.Identity);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
             var modelConfiguration = new ModelConfiguration();
@@ -382,7 +388,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.True(entityTypeMapping1.IsHierarchyMapping);
             Assert.Equal(2, table1.Columns.Count);
             Assert.Equal("P1", table1.Columns[0].Name);
-            Assert.Equal(DbStoreGeneratedPattern.Identity, table1.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Identity, table1.Columns[0].StoreGeneratedPattern);
             Assert.Equal("P2", table1.Columns[1].Name);
             Assert.Equal(2, entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings.Count);
             Assert.Equal("P1", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
@@ -391,7 +397,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.False(entityTypeMapping2.IsHierarchyMapping);
             Assert.Equal(2, entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings.Count);
             Assert.Equal("P1", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal(DbStoreGeneratedPattern.None, table2.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.None, table2.Columns[0].StoreGeneratedPattern);
             Assert.Equal("P3", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
             Assert.Equal(2, table2.Columns.Count);
             Assert.Equal("P1", table2.Columns[0].Name);
@@ -400,7 +406,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.False(entityTypeMapping3.IsHierarchyMapping);
             Assert.Equal(2, entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal(DbStoreGeneratedPattern.None, table3.Columns[0].StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.None, table3.Columns[0].StoreGeneratedPattern);
             Assert.Equal("P1", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
             Assert.Equal("P4", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
             Assert.Equal(2, table3.Columns.Count);
@@ -771,7 +777,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 .AddNullabilityCondition(
                     new NotNullConditionConfiguration(
                         entity1SubTypeMappingConfiguration,
-                        new PropertyPath(entityType3.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo())));
+                        new PropertyPath(
+                            entityType3.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P4").GetClrPropertyInfo())));
             entity1Configuration.AddSubTypeMappingConfiguration(entityType3.GetClrType(), entity1SubTypeMappingConfiguration);
             var entity2Configuration = modelConfiguration.Entity(entityType2.GetClrType());
             var entity2MappingConfiguration =
@@ -892,7 +899,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 .AddNullabilityCondition(
                     new NotNullConditionConfiguration(
                         entity1SubTypeMappingConfiguration,
-                        new PropertyPath(entityType3.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo())));
+                        new PropertyPath(
+                            entityType3.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P4").GetClrPropertyInfo())));
             entity1Configuration.AddSubTypeMappingConfiguration(entityType3.GetClrType(), entity1SubTypeMappingConfiguration);
             var entity2Configuration = modelConfiguration.Entity(entityType2.GetClrType());
             var entity2MappingConfiguration =
@@ -903,7 +911,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             entity2MappingConfiguration
                 .AddNullabilityCondition(
                     new NotNullConditionConfiguration(
-                        entity2MappingConfiguration, new PropertyPath(entityType2.GetDeclaredPrimitiveProperty("P3").GetClrPropertyInfo())));
+                        entity2MappingConfiguration,
+                        new PropertyPath(
+                            entityType2.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P3").GetClrPropertyInfo())));
             entity2MappingConfiguration
                 .AddValueCondition(
                     new ValueConditionConfiguration(entity2MappingConfiguration, "P4")
@@ -988,9 +998,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                         Properties =
                             new List<PropertyPath>
                                 {
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P1").GetClrPropertyInfo()),
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P2").GetClrPropertyInfo()),
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P3").GetClrPropertyInfo())
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1").GetClrPropertyInfo(
+                                            
+                                        )),
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P2").GetClrPropertyInfo(
+                                            
+                                        )),
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P3").GetClrPropertyInfo(
+                                            
+                                        ))
                                 },
                         TableName = new DatabaseName("E1")
                     };
@@ -1000,9 +1019,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                         Properties =
                             new List<PropertyPath>
                                 {
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P1").GetClrPropertyInfo()),
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P4").GetClrPropertyInfo()),
-                                    new PropertyPath(entityType.GetDeclaredPrimitiveProperty("P5").GetClrPropertyInfo())
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1").GetClrPropertyInfo(
+                                            
+                                        )),
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P4").GetClrPropertyInfo(
+                                            
+                                        )),
+                                    new PropertyPath(
+                                        entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P5").GetClrPropertyInfo(
+                                            
+                                        ))
                                 },
                         TableName = new DatabaseName("E2")
                     };
@@ -1044,7 +1072,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityType = model.GetEntityType("E");
             var modelConfiguration = new ModelConfiguration();
             var entityConfiguration = modelConfiguration.Entity(entityType.GetClrType());
-            var p1PropertyInfo = entityType.GetDeclaredPrimitiveProperty("P1").GetClrPropertyInfo();
+            var p1PropertyInfo = entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1").GetClrPropertyInfo();
             var entityMappingConfiguration1 =
                 new EntityMappingConfiguration
                     {

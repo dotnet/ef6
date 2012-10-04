@@ -4,6 +4,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -12,6 +14,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public sealed class AssociationType : RelationshipType
     {
+        internal AssociationType()
+            : this("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
+        {
+            // testing only
+        }
+
         /// <summary>
         ///     Initializes a new instance of Association Type with the given name, namespace, version and ends
         /// </summary>
@@ -27,7 +35,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
-            _referentialConstraints = new ReadOnlyMetadataCollection<ReferentialConstraint>(new MetadataCollection<ReferentialConstraint>());
+            _referentialConstraints
+                = new ReadOnlyMetadataCollection<ReferentialConstraint>(
+                    new MetadataCollection<ReferentialConstraint>());
+
             _isForeignKey = foreignKey;
         }
 
@@ -61,6 +72,64 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             Members, Helper.IsAssociationEndMember), null);
                 }
                 return _associationEndMembers;
+            }
+        }
+
+        internal ReferentialConstraint Constraint
+        {
+            get { return ReferentialConstraints.SingleOrDefault(); }
+            set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+
+                var constraint = Constraint;
+
+                if (constraint != null)
+                {
+                    ReferentialConstraints.Source.Remove(constraint);
+                }
+
+                AddReferentialConstraint(value);
+            }
+        }
+
+        internal AssociationEndMember SourceEnd
+        {
+            get { return KeyMembers.FirstOrDefault() as AssociationEndMember; }
+            set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+
+                if (KeyMembers.Count == 0)
+                {
+                    AddKeyMember(value);
+                }
+                else
+                {
+                    KeyMembers.Source[0] = value;
+                }
+            }
+        }
+
+        internal AssociationEndMember TargetEnd
+        {
+            get { return KeyMembers.ElementAtOrDefault(1) as AssociationEndMember; }
+            set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+                Contract.Assert(KeyMembers.Any());
+
+                if (KeyMembers.Count == 1)
+                {
+                    AddKeyMember(value);
+                }
+                else
+                {
+                    KeyMembers.Source[1] = value;
+                }
             }
         }
 

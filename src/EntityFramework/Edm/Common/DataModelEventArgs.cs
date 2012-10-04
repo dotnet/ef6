@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Edm.Common
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     ///     DataModelEventArgs is the base argument type for all events raised by consumers of Entity Data Model (EDM) models.
     /// </summary>
@@ -11,13 +13,13 @@ namespace System.Data.Entity.Edm.Common
         /// <summary>
         ///     Gets a value indicating the <see cref="DataModelItem" /> that caused the event to be raised.
         /// </summary>
-        public DataModelItem Item
+        public IMetadataItem Item
         {
             get { return _item; }
             set { _item = value; }
         }
 
         [NonSerialized]
-        private DataModelItem _item;
+        private IMetadataItem _item;
     }
 }

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public void AddEntityTypeMappingFragment(
-            EdmEntitySet entitySet, EdmEntityType entityType, DbEntityTypeMappingFragment fragment)
+            EntitySet entitySet, EntityType entityType, DbEntityTypeMappingFragment fragment)
         {
             Contract.Assert(fragment.Table == Table);
 

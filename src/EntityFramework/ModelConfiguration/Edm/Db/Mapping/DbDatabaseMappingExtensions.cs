@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Serialization;
@@ -98,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static DbEntityTypeMapping GetEntityTypeMapping(
-            this DbDatabaseMapping databaseMapping, EdmEntityType entityType)
+            this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entityType != null);
@@ -115,7 +114,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static IEnumerable<DbEntityTypeMapping> GetEntityTypeMappings(
-            this DbDatabaseMapping databaseMapping, EdmEntityType entityType)
+            this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entityType != null);
@@ -158,13 +157,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                    from epm in etmf.PropertyMappings
                    where epm.PropertyPath
                        .Any(
-                           p => p.PropertyType.IsComplexType
-                                && p.PropertyType.ComplexType.GetClrType() == complexType)
+                           p => p.IsComplexType
+                                && p.ComplexType.GetClrType() == complexType)
                    select Tuple.Create(epm, etmf.Table);
         }
 
         public static DbEntitySetMapping GetEntitySetMapping(
-            this DbDatabaseMapping databaseMapping, EdmEntitySet entitySet)
+            this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entitySet != null);
@@ -198,7 +197,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static DbEntitySetMapping AddEntitySetMapping(
-            this DbDatabaseMapping databaseMapping, EdmEntitySet entitySet)
+            this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entitySet != null);
@@ -218,7 +217,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static DbAssociationSetMapping AddAssociationSetMapping(
-            this DbDatabaseMapping databaseMapping, EdmAssociationSet associationSet)
+            this DbDatabaseMapping databaseMapping, AssociationSet associationSet)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(associationSet != null);

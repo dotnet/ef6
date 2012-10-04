@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Base EdmType class for all the model types
     /// </summary>
-    public abstract class EdmType : GlobalItem
+    public abstract class EdmType : GlobalItem, IQualifiedNameMetadataItem
     {
         /// <summary>
         ///     Initializes a new instance of EdmType
@@ -128,7 +128,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal set
             {
                 Util.ThrowIfReadOnly(this);
-                Debug.Assert(_baseType == null, "BaseType can't be set multiple times");
 
                 // Check to make sure there won't be a loop in the inheritance
                 var type = value;

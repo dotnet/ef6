@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Validation.Internal.EdmModel;
 
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// </summary>
         /// <param name="root"> The root of the model to be validated </param>
         /// <param name="validateSyntax"> True to validate the syntax, otherwise false </param>
-        internal void Validate(Edm.EdmModel root, bool validateSyntax)
+        internal void Validate(Core.Metadata.Edm.EdmModel root, bool validateSyntax)
         {
             // Build up the validation context
             var context = new EdmModelValidationContext(validateSyntax);

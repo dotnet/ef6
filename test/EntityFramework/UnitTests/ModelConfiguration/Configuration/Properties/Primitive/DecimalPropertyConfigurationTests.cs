@@ -3,9 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -16,12 +15,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = CreateConfiguration();
             configuration.Precision = 8;
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             configuration.Configure(property);
 
-            Assert.Equal((byte)8, property.PropertyType.PrimitiveTypeFacets.Precision);
-            Assert.Equal(null, property.PropertyType.PrimitiveTypeFacets.Scale);
+            Assert.Equal((byte)8, property.Precision);
+            Assert.Equal(null, property.Scale);
         }
 
         [Fact]
@@ -29,12 +28,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = CreateConfiguration();
             configuration.Scale = 70;
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             configuration.Configure(property);
 
-            Assert.Equal((byte)70, property.PropertyType.PrimitiveTypeFacets.Scale);
-            Assert.Equal(null, property.PropertyType.PrimitiveTypeFacets.Precision);
+            Assert.Equal((byte)70, property.Scale);
+            Assert.Equal(null, property.Precision);
         }
 
         [Fact]
@@ -195,7 +194,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationA.ColumnType = "bar";
             configurationA.ColumnOrder = 1;
             configurationA.IsNullable = true;
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
             configurationA.Precision = 16;
             configurationA.Scale = 16;
@@ -205,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnType = "foo";
             configurationB.ColumnOrder = 2;
             configurationB.IsNullable = false;
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
             configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
             configurationB.Precision = 255;
             configurationB.Scale = 255;
@@ -216,7 +215,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(
-                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                         "ConcurrencyMode", ConcurrencyMode.None, "ConcurrencyMode", ConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(

@@ -33,7 +33,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // of item attributes
         }
 
-        private ReadOnlyMetadataCollection<EdmProperty> _properties;
+        internal ComplexType(string name)
+            : this(name, EdmConstants.TransientNamespace, DataSpace.CSpace)
+        {
+            // testing only
+        }
 
         /// <summary>
         ///     Returns the kind of the type
@@ -51,17 +55,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(
-                    IsReadOnly,
-                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
-                if (null == _properties)
-                {
-                    Interlocked.CompareExchange(
-                        ref _properties,
-                        new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
-                            Members, Helper.IsEdmProperty), null);
-                }
-                return _properties;
+                return new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
+                    Members, Helper.IsEdmProperty);
             }
         }
 
@@ -74,8 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
-            Debug.Assert(
-                Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
+            Debug.Assert(Helper.IsEdmProperty(member),
                 "Only members of type Property may be added to ComplexType.");
         }
     }

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Db
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -23,9 +24,9 @@ namespace System.Data.Entity.Edm.Db
         public virtual bool IsPrimaryKeyColumn { get; set; }
 
         /// <summary>
-        ///     Gets or sets a <see cref="DbStoreGeneratedPattern" /> value indicating if and how the value of the column is automatically generated.
+        ///     Gets or sets a <see cref="StoreGeneratedPattern" /> value indicating if and how the value of the column is automatically generated.
         /// </summary>
-        public virtual DbStoreGeneratedPattern StoreGeneratedPattern { get; set; }
+        public virtual StoreGeneratedPattern StoreGeneratedPattern { get; set; }
 
         /// <summary>
         ///     Gets or sets an optional value indicating the collation specific to this table column.

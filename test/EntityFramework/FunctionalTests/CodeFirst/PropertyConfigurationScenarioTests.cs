@@ -7,30 +7,11 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
-
-    #region Fixtures
-
-    public class DuplicatePropNames
-    {
-        public int Id { get; set; }
-        public string name { get; set; }
-        public string NAME { get; set; }
-    }
-
-    public class AllBinaryDataTypes
-    {
-        public int ID { get; set; }
-        public byte[] Prop_binary_10 { get; set; }
-        public byte[] NProp_binary_10 { get; set; }
-    }
-
-    #endregion
 
     public sealed class PropertyConfigurationScenarioTests : TestBase
     {
@@ -46,9 +27,9 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<AllBinaryDataTypes>(p => p.Prop_binary_10).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<AllBinaryDataTypes>(p => p.Prop_binary_10).DbFacetEqual(null, f => f.IsMaxLength);
+            databaseMapping.Assert<AllBinaryDataTypes>(p => p.Prop_binary_10).DbFacetEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<AllBinaryDataTypes>(p => p.NProp_binary_10).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<AllBinaryDataTypes>(p => p.NProp_binary_10).DbFacetEqual(null, f => f.IsMaxLength);
+            databaseMapping.Assert<AllBinaryDataTypes>(p => p.NProp_binary_10).DbFacetEqual(false, f => f.IsMaxLength);
         }
 
         [Fact]
@@ -178,7 +159,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<Location>(l => l.LocationID).IsFalse(t => t.IsNullable);
+            databaseMapping.Assert<Location>(l => l.LocationID).IsFalse(t => t.Nullable);
         }
 
         [Fact]
@@ -193,7 +174,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<Location>(l => l.LocationID).IsTrue(t => t.IsNullable);
+            databaseMapping.Assert<Location>(l => l.LocationID).IsTrue(t => t.Nullable);
         }
 
         [Fact]
@@ -210,7 +191,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<SpecialOffer>(s => s.MaxQty)
-                .AnnotationEqual(DbStoreGeneratedPattern.Identity, "StoreGeneratedPattern");
+                .AnnotationEqual(StoreGeneratedPattern.Identity, "StoreGeneratedPattern");
             databaseMapping.Assert<SpecialOffer>(s => s.MaxQty).DbIsFalse(t => t.IsNullable);
         }
 
@@ -227,9 +208,9 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(
-                EdmConcurrencyMode.Fixed,
+                ConcurrencyMode.Fixed,
                 databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
-                    .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
+                    .Properties.Single(p => p.Name == "UnitMeasureCode").ConcurrencyMode);
         }
 
         [Fact]
@@ -250,9 +231,9 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(
-                EdmConcurrencyMode.Fixed,
+                ConcurrencyMode.Fixed,
                 databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
-                    .Properties.Where(p => p.Name == "UnitMeasureCode").Single().ConcurrencyMode);
+                    .Properties.Single(p => p.Name == "UnitMeasureCode").ConcurrencyMode);
         }
 
         [Fact]
@@ -264,7 +245,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            databaseMapping.Assert<Product>(p => p.SellEndDate).IsFalse(t => t.IsNullable);
+            databaseMapping.Assert<Product>(p => p.SellEndDate).IsFalse(t => t.Nullable);
         }
 
         [Fact]
@@ -276,7 +257,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            databaseMapping.Assert<Product>(p => p.ProductSubcategoryID).IsFalse(t => t.IsNullable);
+            databaseMapping.Assert<Product>(p => p.ProductSubcategoryID).IsFalse(t => t.Nullable);
         }
 
         [Fact]
@@ -292,7 +273,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             databaseMapping.Assert<WorkOrder>(w => w.OrderQty)
-                .AnnotationEqual(DbStoreGeneratedPattern.Identity, "StoreGeneratedPattern");
+                .AnnotationEqual(StoreGeneratedPattern.Identity, "StoreGeneratedPattern");
             databaseMapping.Assert<WorkOrder>(w => w.WorkOrderID)
                 .AnnotationNull("StoreGeneratedPattern");
         }
@@ -310,11 +291,11 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(
-                DbStoreGeneratedPattern.Identity,
-                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single().Properties
-                    .Where(p => p.Name == "OrderQty").Single().Annotations.Where(
-                        a => a.Name == "StoreGeneratedPattern")
-                    .Single().Value);
+                StoreGeneratedPattern.Identity,
+                databaseMapping.Model.Namespaces
+                    .Single().ComplexTypes.Single()
+                    .Properties.Single(p => p.Name == "OrderQty")
+                    .Annotations.Single(a => a.Name == "StoreGeneratedPattern").Value);
         }
 
         [Fact]
@@ -536,6 +517,24 @@ namespace FunctionalTests
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
         }
     }
+
+    #region Fixtures
+
+    public class DuplicatePropNames
+    {
+        public int Id { get; set; }
+        public string name { get; set; }
+        public string NAME { get; set; }
+    }
+
+    public class AllBinaryDataTypes
+    {
+        public int ID { get; set; }
+        public byte[] Prop_binary_10 { get; set; }
+        public byte[] NProp_binary_10 { get; set; }
+    }
+
+    #endregion
 
     public class TwoManyKeys
     {

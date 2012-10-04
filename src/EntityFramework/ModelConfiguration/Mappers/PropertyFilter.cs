@@ -27,7 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             Type type,
             bool declaredOnly,
             IEnumerable<PropertyInfo> explicitlyMappedProperties = null,
-            IEnumerable<Type> knownTypes = null)
+            IEnumerable<Type> knownTypes = null,
+            bool includePrivate = false)
         {
             Contract.Requires(type != null);
 
@@ -45,8 +46,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 = from p in type.GetProperties(bindingFlags)
                   where p.IsValidStructuralProperty()
                   let m = p.GetGetMethod(true)
-                  where (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType))
-                        && (!declaredOnly || !type.BaseType.GetProperties(DefaultBindingFlags).Any(bp => bp.Name == p.Name))
+                  where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))
+                        && (!declaredOnly || type.BaseType.GetProperties(DefaultBindingFlags).All(bp => bp.Name != p.Name))
                         && (EdmV3FeaturesSupported || !IsEnumType(p.PropertyType)
                             && (EdmV3FeaturesSupported || !IsSpatialType(p.PropertyType)))
                   select p;

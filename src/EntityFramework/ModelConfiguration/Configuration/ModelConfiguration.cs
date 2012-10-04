@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    /// Allows configuration to be performed for a model.
+    ///     Allows configuration to be performed for a model.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public class ModelConfiguration : ConfigurationBase
@@ -54,8 +54,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Gets a collection of types that have been configured in this model including
-        /// entity types, complex types, and ignored types.
+        ///     Gets a collection of types that have been configured in this model including
+        ///     entity types, complex types, and ignored types.
         /// </summary>
         public virtual IEnumerable<Type> ConfiguredTypes
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the default schema name.
+        ///     Gets or sets the default schema name.
         /// </summary>
         public string DefaultSchema { get; set; }
 
@@ -123,15 +123,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Registers an entity type as part of the model and returns an object that can
-        /// be used to configure the entity. This method can be called multiple times
-        /// for the same entity to perform multiple configurations.
+        ///     Registers an entity type as part of the model and returns an object that can
+        ///     be used to configure the entity. This method can be called multiple times
+        ///     for the same entity to perform multiple configurations.
         /// </summary>
-        /// <param name="entityType">The type to be registered or configured.</param>
-        /// <returns>The configuration object for the specified entity type.</returns>
+        /// <param name="entityType"> The type to be registered or configured. </param>
+        /// <returns> The configuration object for the specified entity type. </returns>
         /// <remarks>
-        /// Types registered as an entity type may later be changed to a complex type by
-        /// the <see cref="ComplexTypeDiscoveryConvention" />.
+        ///     Types registered as an entity type may later be changed to a complex type by
+        ///     the <see cref="ComplexTypeDiscoveryConvention" />.
         /// </remarks>
         public virtual EntityTypeConfiguration Entity(Type entityType)
         {
@@ -164,12 +164,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Registers a type as a complex type in the model and returns an object that
-        /// can be used to configure the complex type. This method can be called
-        /// multiple times for the same type to perform multiple configurations.
+        ///     Registers a type as a complex type in the model and returns an object that
+        ///     can be used to configure the complex type. This method can be called
+        ///     multiple times for the same type to perform multiple configurations.
         /// </summary>
-        /// <param name="complexType">The type to be registered or configured.</param>
-        /// <returns>The configuration object for the specified entity type.</returns>
+        /// <param name="complexType"> The type to be registered or configured. </param>
+        /// <returns> The configuration object for the specified entity type. </returns>
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         public virtual ComplexTypeConfiguration ComplexType(Type complexType)
         {
@@ -191,9 +191,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Excludes a type from the model.
+        ///     Excludes a type from the model.
         /// </summary>
-        /// <param name="type">The type to be excluded.</param>
+        /// <param name="type"> The type to be excluded. </param>
         public virtual void Ignore(Type type)
         {
             Contract.Requires(type != null);
@@ -221,11 +221,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Gets a value indicating whether the specified type has been configured as a
-        /// complex type in the model.
+        ///     Gets a value indicating whether the specified type has been configured as a
+        ///     complex type in the model.
         /// </summary>
-        /// <param name="type">The type to test.</param>
-        /// <returns>True if the type is a complex type; false otherwise.</returns>
+        /// <param name="type"> The type to test. </param>
+        /// <returns> True if the type is a complex type; false otherwise. </returns>
         public virtual bool IsComplexType(Type type)
         {
             Contract.Requires(type != null);
@@ -234,11 +234,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Gets a value indicating whether the specified type has been excluded from
-        /// the model.
+        ///     Gets a value indicating whether the specified type has been excluded from
+        ///     the model.
         /// </summary>
-        /// <param name="type">The type to test.</param>
-        /// <returns>True if the type is excluded; false otherwise.</returns>
+        /// <param name="type"> The type to test. </param>
+        /// <returns> True if the type is excluded; false otherwise. </returns>
         public virtual bool IsIgnoredType(Type type)
         {
             Contract.Requires(type != null);
@@ -375,7 +375,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void ConfigureUnconfiguredDerivedTypes(
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest,
-            EdmEntityType entityType,
+            EntityType entityType,
             IEnumerable<EntityTypeConfiguration> sortedEntityConfigurations)
         {
             var derivedTypes = databaseMapping.Model.GetDerivedTypes(entityType).ToList();
@@ -386,7 +386,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 // Configure the derived type if it is not abstract and is not otherwise configured
                 // if the type is not configured, then also run through that type's derived types
-                if (!currentType.IsAbstract
+                if (!currentType.Abstract
                     &&
                     !sortedEntityConfigurations.Any(etc => etc.ClrType == currentType.GetClrType()))
                 {
@@ -476,11 +476,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
                 else
                 {
-                    var derivedTypes = new Stack<EdmEntityType>();
+                    var derivedTypes = new Stack<EntityType>();
                     while (entityType != null)
                     {
                         derivedTypes.Push(entityType);
-                        entityType = entityType.BaseType;
+                        entityType = (EntityType)entityType.BaseType;
                     }
 
                     while (derivedTypes.Count > 0)
@@ -556,9 +556,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.TypeMappingFragments
                   group etmf by etmf.Table
-                      into g
-                      where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
-                      select g.Single(x => x.GetDefaultDiscriminator() != null))
+                  into g
+                  where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
+                  select g.Single(x => x.GetDefaultDiscriminator() != null))
                         })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
@@ -579,16 +579,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             tables.Each(
                 t =>
-                {
-                    var tableName = t.GetTableName();
-
-                    if (tableName != null)
                     {
-                        throw Error.OrphanedConfiguredTableDetected(tableName);
-                    }
+                        var tableName = t.GetTableName();
 
-                    databaseMapping.Database.RemoveTable(t);
-                });
+                        if (tableName != null)
+                        {
+                            throw Error.OrphanedConfiguredTableDetected(tableName);
+                        }
+
+                        databaseMapping.Database.RemoveTable(t);
+                    });
         }
 
         private IEnumerable<EntityTypeConfiguration> ActiveEntityConfigurations

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
         }
 
-        public void Generate(EdmAssociationType associationType, DbDatabaseMapping databaseMapping)
+        public void Generate(AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(associationType != null);
             Contract.Requires(databaseMapping != null);
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private static void GenerateForeignKeyAssociationType(
-            EdmAssociationType associationType, DbDatabaseMapping databaseMapping)
+            AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(associationType != null);
             Contract.Requires(databaseMapping != null);
@@ -47,20 +47,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var dependentEnd = associationType.Constraint.DependentEnd;
             var principalEnd = associationType.GetOtherEnd(dependentEnd);
-            var principalEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, principalEnd.EntityType);
-            var dependentEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, dependentEnd.EntityType);
+            var principalEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, principalEnd.GetEntityType());
+            var dependentEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, dependentEnd.GetEntityType());
 
             var foreignKeyConstraint = new DbForeignKeyConstraintMetadata
                                            {
                                                Name = associationType.Name,
                                                PrincipalTable =
                                                    principalEntityTypeMapping.TypeMappingFragments.Single().Table,
-                                               DeleteAction = principalEnd.DeleteAction.HasValue
-                                                                  ? (DbOperationAction)principalEnd.DeleteAction.Value
-                                                                  : DbOperationAction.None
+                                               DeleteAction = principalEnd.DeleteBehavior != OperationAction.None
+                                                                  ? principalEnd.DeleteBehavior
+                                                                  : OperationAction.None
                                            };
 
-            foreach (var dependentProperty in associationType.Constraint.DependentProperties)
+            foreach (var dependentProperty in associationType.Constraint.ToProperties)
             {
                 foreignKeyConstraint.DependentColumns.Add(
                     dependentEntityTypeMapping.GetPropertyMapping(dependentProperty).Column);
@@ -76,13 +76,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private void GenerateManyToManyAssociation(
-            EdmAssociationType associationType, DbDatabaseMapping databaseMapping)
+            AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(associationType != null);
             Contract.Requires(databaseMapping != null);
 
-            var sourceEntityType = associationType.SourceEnd.EntityType;
-            var targetEntityType = associationType.TargetEnd.EntityType;
+            var sourceEntityType = associationType.SourceEnd.GetEntityType();
+            var targetEntityType = associationType.TargetEnd.GetEntityType();
 
             var joinTable
                 = databaseMapping.Database.AddTable(sourceEntityType.Name + targetEntityType.Name);
@@ -115,26 +115,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private void GenerateIndependentAssociationType(
-            EdmAssociationType associationType, DbDatabaseMapping databaseMapping)
+            AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(associationType != null);
             Contract.Requires(databaseMapping != null);
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             if (!associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
             {
                 if (!associationType.IsPrincipalConfigured())
                 {
                     throw Error.UnableToDeterminePrincipal(
-                        associationType.SourceEnd.EntityType.GetClrType(),
-                        associationType.TargetEnd.EntityType.GetClrType());
+                        associationType.SourceEnd.GetEntityType().GetClrType(),
+                        associationType.TargetEnd.GetEntityType().GetClrType());
                 }
 
                 principalEnd = associationType.SourceEnd;
                 dependentEnd = associationType.TargetEnd;
             }
 
-            var dependentEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, dependentEnd.EntityType);
+            var dependentEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, dependentEnd.GetEntityType());
 
             var dependentTable = dependentEntityTypeMapping
                 .TypeMappingFragments
@@ -147,15 +147,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             GenerateIndependentForeignKeyConstraint(
                 databaseMapping,
-                principalEnd.EntityType,
-                dependentEnd.EntityType,
+                principalEnd.GetEntityType(),
+                dependentEnd.GetEntityType(),
                 dependentTable,
                 associationSetMapping,
                 associationSetMapping.SourceEndMapping,
                 associationType.Name,
                 principalEnd);
 
-            foreach (var property in dependentEnd.EntityType.KeyProperties())
+            foreach (var property in dependentEnd.GetEntityType().KeyProperties())
             {
                 associationSetMapping.TargetEndMapping.PropertyMappings.Add(
                     new DbEdmPropertyMapping
@@ -167,10 +167,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private static DbAssociationSetMapping GenerateAssociationSetMapping(
-            EdmAssociationType associationType,
+            AssociationType associationType,
             DbDatabaseMapping databaseMapping,
-            EdmAssociationEnd principalEnd,
-            EdmAssociationEnd dependentEnd,
+            AssociationEndMember principalEnd,
+            AssociationEndMember dependentEnd,
             DbTableMetadata dependentTable)
         {
             Contract.Requires(associationType != null);
@@ -192,13 +192,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private void GenerateIndependentForeignKeyConstraint(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType principalEntityType,
-            EdmEntityType dependentEntityType,
+            EntityType principalEntityType,
+            EntityType dependentEntityType,
             DbTableMetadata dependentTable,
             DbAssociationSetMapping associationSetMapping,
             DbAssociationEndMapping associationEndMapping,
             string name,
-            EdmAssociationEnd principalEnd,
+            AssociationEndMember principalEnd,
             bool isPrimaryKeyColumn = false)
         {
             Contract.Requires(databaseMapping != null);
@@ -213,16 +213,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     .Single()
                     .Table;
 
-            var foreignKeyConstraint = new DbForeignKeyConstraintMetadata
-                                           {
-                                               Name = name,
-                                               PrincipalTable = principalTable,
-                                               DeleteAction = associationEndMapping.AssociationEnd.DeleteAction.HasValue
-                                                                  ? (DbOperationAction)
-                                                                    associationEndMapping.AssociationEnd.DeleteAction.
-                                                                        Value
-                                                                  : DbOperationAction.None
-                                           };
+            var foreignKeyConstraint
+                = new DbForeignKeyConstraintMetadata
+                      {
+                          Name = name,
+                          PrincipalTable = principalTable,
+                          DeleteAction = associationEndMapping.AssociationEnd.DeleteBehavior != OperationAction.None
+                                             ? associationEndMapping.AssociationEnd.DeleteBehavior
+                                             : OperationAction.None
+                      };
 
             var principalNavigationProperty
                 = databaseMapping.Model.GetEntityTypes()
@@ -243,14 +242,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private void GenerateIndependentForeignKeyColumns(
-            EdmEntityType principalEntityType,
-            EdmEntityType dependentEntityType,
+            EntityType principalEntityType,
+            EntityType dependentEntityType,
             DbAssociationSetMapping associationSetMapping,
             DbAssociationEndMapping associationEndMapping,
             DbTableMetadata dependentTable,
             DbForeignKeyConstraintMetadata foreignKeyConstraint,
             bool isPrimaryKeyColumn,
-            EdmNavigationProperty principalNavigationProperty)
+            NavigationProperty principalNavigationProperty)
         {
             Contract.Requires(principalEntityType != null);
             Contract.Requires(associationEndMapping != null);
@@ -272,7 +271,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                                                ||
                                                (associationEndMapping.AssociationEnd.IsRequired()
                                                 && dependentEntityType.BaseType != null));
-                foreignKeyColumn.StoreGeneratedPattern = DbStoreGeneratedPattern.None;
+                foreignKeyColumn.StoreGeneratedPattern = StoreGeneratedPattern.None;
 
                 foreignKeyConstraint.DependentColumns.Add(foreignKeyColumn);
 

@@ -1838,7 +1838,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "DependentProperties must not be empty."
+        /// A string like "ToProperties must not be empty."
         /// </summary>
         internal static string EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty
         {

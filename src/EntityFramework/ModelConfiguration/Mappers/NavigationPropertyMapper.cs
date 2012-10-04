@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -24,18 +24,18 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         public void Map(
-            PropertyInfo propertyInfo, EdmEntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
+            PropertyInfo propertyInfo, EntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
             Contract.Requires(propertyInfo != null);
             Contract.Requires(entityType != null);
             Contract.Requires(entityTypeConfiguration != null);
 
             var targetType = propertyInfo.PropertyType;
-            var targetAssociationEndKind = EdmAssociationEndKind.Optional;
+            var targetAssociationEndKind = RelationshipMultiplicity.ZeroOrOne;
 
             if (targetType.IsCollection(out targetType))
             {
-                targetAssociationEndKind = EdmAssociationEndKind.Many;
+                targetAssociationEndKind = RelationshipMultiplicity.Many;
             }
 
             var targetEntityType = _typeMapper.MapEntityType(targetType);
@@ -44,8 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 var sourceAssociationEndKind
                     = targetAssociationEndKind.IsMany()
-                          ? EdmAssociationEndKind.Optional
-                          : EdmAssociationEndKind.Many;
+                          ? RelationshipMultiplicity.ZeroOrOne
+                          : RelationshipMultiplicity.Many;
 
                 var associationType
                     = _typeMapper.MappingContext.Model.AddAssociationType(

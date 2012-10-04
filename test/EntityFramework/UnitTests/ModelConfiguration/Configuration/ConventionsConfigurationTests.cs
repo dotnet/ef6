@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
@@ -114,7 +115,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            var mockConvention = new Mock<IEdmConvention<EdmEntityType>>();
+            var mockConvention = new Mock<IEdmConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new IConvention[]
                     {

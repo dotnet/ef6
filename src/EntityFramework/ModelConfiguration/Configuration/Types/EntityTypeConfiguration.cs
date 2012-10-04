@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Reflection;
 
     /// <summary>
-    /// Allows configuration to be performed for an entity type in a model.
+    ///     Allows configuration to be performed for an entity type in a model.
     /// </summary>
     public class EntityTypeConfiguration : StructuralTypeConfiguration
     {
@@ -123,12 +123,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the primary key property(s) for this entity type.
+        ///     Configures the primary key property(s) for this entity type.
         /// </summary>
-        /// <param name="propertyInfo">
-        /// The property to be used as the primary key. If the primary key is made up of
-        /// multiple properties, call this method once for each of them.
-        /// </param>
+        /// <param name="propertyInfo"> The property to be used as the primary key. If the primary key is made up of multiple properties, call this method once for each of them. </param>
         public void Key(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
@@ -166,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets a value indicating whether the name of the table has been configured.
+        ///     Gets a value indicating whether the name of the table has been configured.
         /// </summary>
         public bool IsTableNameConfigured { get; private set; }
 
@@ -187,7 +184,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets or sets the entity set name to be used for this entity type.
+        ///     Gets or sets the entity set name to be used for this entity type.
         /// </summary>
         public virtual string EntitySetName
         {
@@ -216,9 +213,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the table name that this entity type is mapped to.
+        ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name="tableName">The name of the table.</param>
+        /// <param name="tableName"> The name of the table. </param>
         public void ToTable(string tableName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -227,10 +224,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the table name that this entity type is mapped to.
+        ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        /// <param name="schemaName">The database schema of the table.</param>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <param name="schemaName"> The database schema of the table. </param>
         public void ToTable(string tableName, string schemaName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -330,7 +327,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return navigationPropertyConfiguration;
         }
 
-        internal virtual void Configure(EdmEntityType entityType, EdmModel model)
+        internal virtual void Configure(EntityType entityType, EdmModel model)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(model != null);
@@ -341,7 +338,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigureEntitySetName(entityType, model);
         }
 
-        private void ConfigureEntitySetName(EdmEntityType entityType, EdmModel model)
+        private void ConfigureEntitySetName(EntityType entityType, EdmModel model)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(model != null);
@@ -356,12 +353,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             Contract.Assert(entitySet != null);
 
-            entitySet.Name = model.GetEntitySets().Except(new[] { entitySet }).UniquifyName(EntitySetName);
+            entitySet.Name
+                = model.GetEntitySets().Except(new[] { entitySet }).UniquifyName(EntitySetName);
 
             entitySet.SetConfiguration(this);
         }
 
-        private void ConfigureKey(EdmEntityType entityType)
+        private void ConfigureKey(EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
@@ -405,12 +403,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     throw Error.KeyPropertyNotFound(keyProperty.Name, entityType.Name);
                 }
 
-                property.PropertyType.IsNullable = false;
-                entityType.DeclaredKeyProperties.Add(property);
+                property.Nullable = false;
+                entityType.AddKeyMember(property);
             }
         }
 
-        private void ConfigureAssociations(EdmEntityType entityType, EdmModel model)
+        private void ConfigureAssociations(EntityType entityType, EdmModel model)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(model != null);
@@ -464,13 +462,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        internal bool IsMappingAnyInheritedProperty(EdmEntityType entityType)
+        internal bool IsMappingAnyInheritedProperty(EntityType entityType)
         {
             return _entityMappingConfigurations.Any(emc => emc.MapsAnyInheritedProperties(entityType));
         }
 
         internal static void ConfigureUnconfiguredType(
-            DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest, EdmEntityType entityType)
+            DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest, EntityType entityType)
         {
             var c = new EntityMappingConfiguration();
             var entityTypeMapping
@@ -479,7 +477,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal void Configure(
-            EdmEntityType entityType,
+            EntityType entityType,
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest)
         {
@@ -504,7 +502,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private void ConfigurePropertyMappings(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbProviderManifest providerManifest,
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
             Contract.Requires(databaseMapping != null);
@@ -528,7 +526,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private void ConfigureAssociationMappings(DbDatabaseMapping databaseMapping, EdmEntityType entityType)
+        private void ConfigureAssociationMappings(DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -566,21 +564,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
-                        {
-                            var primitivePropertyConfiguration =
-                                c.GetConfiguration() as PrimitivePropertyConfiguration;
-
-                            if ((primitivePropertyConfiguration != null)
-                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                return;
-                            }
+                                var primitivePropertyConfiguration =
+                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
 
-                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
+                                if ((primitivePropertyConfiguration != null)
+                                    && (primitivePropertyConfiguration.ColumnType != null))
+                                {
+                                    return;
+                                }
 
-                            c.TypeName = principalColumn.TypeName;
-                            c.Facets.CopyFrom(principalColumn.Facets);
-                        });
+                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
+
+                                c.TypeName = principalColumn.TypeName;
+                                c.Facets.CopyFrom(principalColumn.Facets);
+                            });
             }
         }
 
@@ -596,17 +594,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             {
                 propertyPath.Add(property);
 
-                if (property.PropertyType.IsComplexType)
+                if (property.IsComplexType)
                 {
                     VerifyAllCSpacePropertiesAreMapped(
                         entityTypeMappings,
-                        property.PropertyType.ComplexType.DeclaredProperties,
+                        property.ComplexType.Properties,
                         propertyPath);
                 }
                 else if (!entityTypeMappings.SelectMany(etm => etm.TypeMappingFragments)
                               .SelectMany(mf => mf.PropertyMappings)
                               .Any(pm => pm.PropertyPath.SequenceEqual(propertyPath))
-                         && !entityType.IsAbstract)
+                         && !entityType.Abstract)
                 {
                     throw Error.InvalidEntitySplittingProperties(entityType.Name);
                 }

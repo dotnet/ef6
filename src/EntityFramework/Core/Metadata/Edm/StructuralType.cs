@@ -9,6 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class StructuralType : EdmType
     {
+        private readonly MemberCollection _members;
+        private readonly ReadOnlyMetadataCollection<EdmMember> _readOnlyMembers;
+
         /// <summary>
         ///     Internal parameterless constructor for bootstrapping edmtypes
         /// </summary>
@@ -33,9 +36,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _readOnlyMembers = _members.AsReadOnlyMetadataCollection();
         }
 
-        private readonly MemberCollection _members;
-        private readonly ReadOnlyMetadataCollection<EdmMember> _readOnlyMembers;
-
         /// <summary>
         ///     Returns the collection of members.
         /// </summary>
@@ -48,7 +48,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Get the declared only members of a particular type
         /// </summary>
-        internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
+        internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>()
+            where T : EdmMember
         {
             return _members.GetDeclaredOnlyMembers<T>();
         }
@@ -104,6 +105,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
             _members.Add(member);
+        }
+
+        internal virtual void RemoveMember(EdmMember member)
+        {
+            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Util.ThrowIfReadOnly(this);
+
+            _members.Remove(member);
         }
     }
 }

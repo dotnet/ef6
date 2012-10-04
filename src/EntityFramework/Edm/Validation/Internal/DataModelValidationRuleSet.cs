@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -33,9 +34,9 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// </summary>
         /// <param name="itemToValidate"> The <see cref="DataModelItem" /> to validate </param>
         /// <returns> A collection of <see cref="DataModelValidationRule" /> </returns>
-        internal IEnumerable<DataModelValidationRule> GetRules(DataModelItem itemToValidate)
+        internal IEnumerable<DataModelValidationRule> GetRules(MetadataItem itemToValidate)
         {
-            return _rules.Where(r => r.ValidatedType.IsAssignableFrom(itemToValidate.GetType()));
+            return _rules.Where(r => r.ValidatedType.IsInstanceOfType(itemToValidate));
         }
     }
 }

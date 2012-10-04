@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
@@ -10,10 +11,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
     internal static class EdmModelSyntacticValidationRules
     {
-        #region EdmNamedDataModelItem
-
-        internal static readonly EdmModelValidationRule<EdmNamedMetadataItem> EdmModel_NameMustNotBeEmptyOrWhiteSpace =
-            new EdmModelValidationRule<EdmNamedMetadataItem>(
+        internal static readonly EdmModelValidationRule<INamedDataModelItem> EdmModel_NameMustNotBeEmptyOrWhiteSpace =
+            new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
                         if (!item.Name.HasContent())
@@ -27,8 +26,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        internal static readonly EdmModelValidationRule<EdmNamedMetadataItem> EdmModel_NameIsTooLong =
-            new EdmModelValidationRule<EdmNamedMetadataItem>(
+        internal static readonly EdmModelValidationRule<INamedDataModelItem> EdmModel_NameIsTooLong =
+            new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
                         if (item.Name.HasContent())
@@ -46,8 +45,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        internal static readonly EdmModelValidationRule<EdmNamedMetadataItem> EdmModel_NameIsNotAllowed =
-            new EdmModelValidationRule<EdmNamedMetadataItem>(
+        internal static readonly EdmModelValidationRule<INamedDataModelItem> EdmModel_NameIsNotAllowed =
+            new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
                         if (item.Name.HasContent())
@@ -55,12 +54,12 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             // max length is hard coded in the xsd
                             if (item.Name.Length < 480)
                             {
-                                if (!(item is EdmQualifiedNameMetadataItem
+                                if (!(item is IQualifiedNameMetadataItem
                                           ? EdmUtil.IsValidQualifiedItemName(item.Name)
                                           : EdmUtil.IsValidDataModelItemName(item.Name)))
                                 {
                                     context.AddError(
-                                        item,
+                                        (MetadataItem)item,
                                         CsdlConstants.Attribute_Name,
                                         Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name),
                                         XmlErrorCode.InvalidName);
@@ -70,17 +69,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        #endregion
-
-        #region EdmProperty
-
-        #endregion
-
-        #region EdmAssociationType
-
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_AssocationEndMustNotBeNull =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (edmAssociationType.SourceEnd == null
@@ -96,13 +87,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     );
 
-        #endregion
-
-        #region EdmAssociationConstraint
-
-        internal static readonly EdmModelValidationRule<EdmAssociationConstraint>
+        internal static readonly EdmModelValidationRule<ReferentialConstraint>
             EdmAssociationConstraint_DependentEndMustNotBeNull =
-                new EdmModelValidationRule<EdmAssociationConstraint>(
+                new EdmModelValidationRule<ReferentialConstraint>(
                     (context, edmAssociationConstraint) =>
                         {
                             if (edmAssociationConstraint.DependentEnd == null)
@@ -110,22 +97,20 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 context.AddError(
                                     edmAssociationConstraint,
                                     CsdlConstants.Element_Dependent,
-                                    Strings.
-                                        EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull,
+                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull,
                                     XmlErrorCode.EdmAssociationConstraint_DependentEndMustNotBeNull);
                             }
                         }
                     );
 
-        internal static readonly EdmModelValidationRule<EdmAssociationConstraint>
+        internal static readonly EdmModelValidationRule<ReferentialConstraint>
             EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty
                 =
-                new EdmModelValidationRule<EdmAssociationConstraint>(
+                new EdmModelValidationRule<ReferentialConstraint>(
                     (context, edmAssociationConstraint) =>
                         {
-                            if (edmAssociationConstraint.DependentProperties == null
-                                ||
-                                edmAssociationConstraint.DependentProperties.Count() == 0)
+                            if (edmAssociationConstraint.ToProperties == null
+                                || !edmAssociationConstraint.ToProperties.Any())
                             {
                                 context.AddError(
                                     edmAssociationConstraint,
@@ -137,13 +122,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     );
 
-        #endregion
-
-        #region EdmNavigationProperty
-
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+        internal static readonly EdmModelValidationRule<NavigationProperty>
             EdmNavigationProperty_AssocationMustNotBeNull =
-                new EdmModelValidationRule<EdmNavigationProperty>(
+                new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.Association == null)
@@ -157,9 +138,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     );
 
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+        internal static readonly EdmModelValidationRule<NavigationProperty>
             EdmNavigationProperty_ResultEndMustNotBeNull =
-                new EdmModelValidationRule<EdmNavigationProperty>(
+                new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.ResultEnd == null)
@@ -173,15 +154,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     );
 
-        #endregion
-
-        #region EdmAssociationEnd
-
-        internal static readonly EdmModelValidationRule<EdmAssociationEnd> EdmAssociationEnd_EntityTypeMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationEnd>(
+        internal static readonly EdmModelValidationRule<AssociationEndMember> EdmAssociationEnd_EntityTypeMustNotBeNull =
+            new EdmModelValidationRule<AssociationEndMember>(
                 (context, edmAssociationEnd) =>
                     {
-                        if (edmAssociationEnd.EntityType == null)
+                        if (edmAssociationEnd.GetEntityType() == null)
                         {
                             context.AddError(
                                 edmAssociationEnd,
@@ -192,12 +169,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        #endregion
-
-        #region EdmEntitySet
-
-        internal static readonly EdmModelValidationRule<EdmEntitySet> EdmEntitySet_ElementTypeMustNotBeNull =
-            new EdmModelValidationRule<EdmEntitySet>(
+        internal static readonly EdmModelValidationRule<EntitySet> EdmEntitySet_ElementTypeMustNotBeNull =
+            new EdmModelValidationRule<EntitySet>(
                 (context, edmEntitySet) =>
                     {
                         if (edmEntitySet.ElementType == null)
@@ -211,12 +184,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        #endregion
-
-        #region EdmAssociationSet
-
-        internal static readonly EdmModelValidationRule<EdmAssociationSet> EdmAssociationSet_ElementTypeMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationSet>(
+        internal static readonly EdmModelValidationRule<AssociationSet> EdmAssociationSet_ElementTypeMustNotBeNull =
+            new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
                         if (edmAssociationSet.ElementType == null)
@@ -230,8 +199,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        internal static readonly EdmModelValidationRule<EdmAssociationSet> EdmAssociationSet_SourceSetMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationSet>(
+        internal static readonly EdmModelValidationRule<AssociationSet> EdmAssociationSet_SourceSetMustNotBeNull =
+            new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
                         if (edmAssociationSet.SourceSet == null)
@@ -246,8 +215,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        internal static readonly EdmModelValidationRule<EdmAssociationSet> EdmAssociationSet_TargetSetMustNotBeNull =
-            new EdmModelValidationRule<EdmAssociationSet>(
+        internal static readonly EdmModelValidationRule<AssociationSet> EdmAssociationSet_TargetSetMustNotBeNull =
+            new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
                         if (edmAssociationSet.TargetSet == null)
@@ -262,15 +231,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                     }
                 );
 
-        #endregion
-
-        #region EdmTypeReference
-
-        internal static readonly EdmModelValidationRule<EdmTypeReference> EdmTypeReference_TypeNotValid =
-            new EdmModelValidationRule<EdmTypeReference>(
+        internal static readonly EdmModelValidationRule<TypeUsage> EdmTypeReference_TypeNotValid =
+            new EdmModelValidationRule<TypeUsage>(
                 (context, edmTypeReference) =>
                     {
-                        if (!DataModelValidationHelper.IsEdmTypeReferenceValid(edmTypeReference))
+                        if (!DataModelValidationHelper.IsEdmTypeUsageValid(edmTypeReference))
                         {
                             context.AddError(
                                 edmTypeReference,
@@ -280,7 +245,5 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     }
                 );
-
-        #endregion
     }
 }

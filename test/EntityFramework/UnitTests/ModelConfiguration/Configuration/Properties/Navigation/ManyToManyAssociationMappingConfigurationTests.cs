@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());
             associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());
             associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -83,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());
             associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.AssociationEnd = new EdmAssociationEnd();
+            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());
             associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             Assert.Equal(

@@ -2,8 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class EdmPropertyExtensionsTests
@@ -11,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetStoreGeneratedPattern_should_return_null_when_not_set()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var storeGeneratedPattern = property.GetStoreGeneratedPattern();
 
@@ -21,34 +20,34 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void SetStoreGeneratedPattern_should_create_annotation_and_add_to_property_facets()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Computed);
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
 
             var storeGeneratedPattern = property.GetStoreGeneratedPattern();
 
             Assert.NotNull(storeGeneratedPattern);
-            Assert.Equal(DbStoreGeneratedPattern.Computed, storeGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Computed, storeGeneratedPattern);
         }
 
         [Fact]
         public void SetStoreGeneratedPattern_should_update_existing_annotation()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Computed);
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.None);
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
 
             var storeGeneratedPattern = property.GetStoreGeneratedPattern();
 
             Assert.NotNull(storeGeneratedPattern);
-            Assert.Equal(DbStoreGeneratedPattern.None, storeGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.None, storeGeneratedPattern);
         }
 
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var property = new EdmProperty();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.SetConfiguration(42);
 
@@ -58,29 +57,28 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AsPrimitive_should_create_property_type_and_facets()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            Assert.NotNull(property.PropertyType);
-            Assert.NotNull(property.PropertyType.PrimitiveTypeFacets);
+            Assert.NotNull(property.TypeUsage);
         }
 
         [Fact]
         public void AsComplex_should_create_property_type()
         {
-            var property = new EdmProperty().AsComplex(new EdmComplexType());
+            var property = EdmProperty.Complex("P", new ComplexType("C"));
 
-            Assert.NotNull(property.PropertyType);
-            Assert.True(property.PropertyType.IsComplexType);
-            Assert.Equal(false, property.PropertyType.IsNullable);
+            Assert.NotNull(property.TypeUsage);
+            Assert.True(property.IsComplexType);
+            Assert.Equal(false, property.Nullable);
         }
 
         [Fact]
-        public void AsEnum_should_create_property_type()
+        public void Enum_should_create_property_type()
         {
-            var property = new EdmProperty().AsEnum(new EdmEnumType());
+            var property = EdmProperty.Enum("P", new EnumType());
 
-            Assert.NotNull(property.PropertyType);
-            Assert.True(property.PropertyType.IsEnumType);
+            Assert.NotNull(property.TypeUsage);
+            Assert.True(property.IsEnumType);
         }
     }
 }

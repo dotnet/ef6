@@ -954,7 +954,7 @@
     <value>DependentEnd must not be null.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty" xml:space="preserve">
-    <value>DependentProperties must not be empty.</value>
+    <value>ToProperties must not be empty.</value>
   </data>
   <data name="EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull" xml:space="preserve">
     <value>Association must not be null.</value>

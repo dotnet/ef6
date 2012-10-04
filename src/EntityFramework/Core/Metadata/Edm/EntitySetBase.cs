@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     ///     Class for representing a entity set
     /// </summary>
-    public abstract class EntitySetBase : MetadataItem
+    public abstract class EntitySetBase : MetadataItem, INamedDataModelItem
     {
         //----------------------------------------------------------------------------------------------
         // Possible Future Enhancement: revisit factoring of EntitySetBase and delta between C constructs and S constructs
@@ -57,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private EntityContainer _entityContainer;
-        private readonly string _name;
+        private string _name;
         private EntityTypeBase _elementType;
         private readonly string _table;
         private readonly string _schema;
@@ -93,6 +95,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual String Name
         {
             get { return _name; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Util.ThrowIfReadOnly(this);
+
+                _name = value;
+            }
         }
 
         /// <summary>

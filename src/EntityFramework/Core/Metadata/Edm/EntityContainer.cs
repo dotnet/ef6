@@ -12,6 +12,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EntityContainer : GlobalItem
     {
+        private string _name;
+        private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
+        private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
+
         internal EntityContainer()
         {
         }
@@ -33,10 +37,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _baseEntitySets = new ReadOnlyMetadataCollection<EntitySetBase>(new EntitySetBaseCollection(this));
             _functionImports = new ReadOnlyMetadataCollection<EdmFunction>(new MetadataCollection<EdmFunction>());
         }
-
-        private readonly string _name;
-        private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
-        private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
 
         /// <summary>
         ///     Returns the kind of the type
@@ -61,6 +61,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual String Name
         {
             get { return _name; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Util.ThrowIfReadOnly(this);
+
+                _name = value;
+            }
         }
 
         /// <summary>
@@ -70,6 +77,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public ReadOnlyMetadataCollection<EntitySetBase> BaseEntitySets
         {
             get { return _baseEntitySets; }
+        }
+
+        public ReadOnlyMetadataCollection<AssociationSet> AssociationSets
+        {
+            get
+            {
+                return new FilteredReadOnlyMetadataCollection<AssociationSet, EntitySetBase>(
+                    _baseEntitySets, Helper.IsAssociationSet);
+            }
+        }
+
+        public ReadOnlyMetadataCollection<EntitySet> EntitySets
+        {
+            get
+            {
+                return new FilteredReadOnlyMetadataCollection<EntitySet, EntitySetBase>(
+                    _baseEntitySets, Helper.IsEntitySet);
+            }
         }
 
         /// <summary>
@@ -186,6 +211,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void AddEntitySetBase(EntitySetBase entitySetBase)
         {
             _baseEntitySets.Source.Add(entitySetBase);
+        }
+
+        internal void RemoveEntitySetBase(EntitySetBase entitySetBase)
+        {
+            Contract.Requires(entitySetBase != null);
+            Util.ThrowIfReadOnly(this);
+
+            _baseEntitySets.Source.Remove(entitySetBase);
         }
 
         internal void AddFunctionImport(EdmFunction function)

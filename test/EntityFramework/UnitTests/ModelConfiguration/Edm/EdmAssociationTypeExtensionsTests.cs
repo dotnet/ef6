@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class EdmAssociationTypeExtensionsTests
@@ -10,7 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Initialize_should_create_association_ends()
         {
-            var associationType = new EdmAssociationType().Initialize();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
             Assert.NotNull(associationType.SourceEnd);
             Assert.NotNull(associationType.TargetEnd);
@@ -19,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_mark_association_as_independent()
         {
-            var associationType = new EdmAssociationType();
+            var associationType = new AssociationType();
 
             Assert.False(associationType.IsIndependent());
 
@@ -31,7 +33,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetOtherEnd_should_return_correct_end()
         {
-            var associationType = new EdmAssociationType().Initialize();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
             Assert.Same(associationType.SourceEnd, associationType.GetOtherEnd(associationType.TargetEnd));
             Assert.Same(associationType.TargetEnd, associationType.GetOtherEnd(associationType.SourceEnd));
@@ -40,35 +44,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_get_and_set_configuration_facet()
         {
-            var associationType = new EdmAssociationType().Initialize();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
             associationType.SetConfiguration(42);
 
             Assert.Equal(42, associationType.GetConfiguration());
         }
 
         [Fact]
-        public void HasDeleteAction_should_be_true_if_either_end_is_not_none_action()
-        {
-            var associationType = new EdmAssociationType().Initialize();
-
-            Assert.False(associationType.HasDeleteAction());
-
-            associationType.SourceEnd.DeleteAction = EdmOperationAction.Cascade;
-
-            Assert.True(associationType.HasDeleteAction());
-
-            associationType = new EdmAssociationType().Initialize();
-            associationType.TargetEnd.DeleteAction = EdmOperationAction.Cascade;
-
-            Assert.True(associationType.HasDeleteAction());
-        }
-
-        [Fact]
         public void IsRequiredToMany_should_be_true_when_source_required_and_target_many()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Required;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Many;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             Assert.True(associationType.IsRequiredToMany());
         }
@@ -76,9 +67,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsManyToRequired_should_be_true_when_source_many_and_target_required()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Required;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
             Assert.True(associationType.IsManyToRequired());
         }
@@ -86,9 +79,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsManyToMany_should_be_true_when_source_many_and_target_many()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Many;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             Assert.True(associationType.IsManyToMany());
         }
@@ -96,10 +91,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsSelfReferencing_returns_true_when_source_type_matches_target_type()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EntityType
-                = associationType.TargetEnd.EntityType
-                  = new EdmEntityType();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", associationType.SourceEnd.GetEntityType());
 
             Assert.True(associationType.IsSelfReferencing());
         }
@@ -107,15 +101,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsSelfReferencing_returns_true_when_ends_have_same_base_type()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EntityType = new EdmEntityType();
-            associationType.TargetEnd.EntityType = new EdmEntityType();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
             Assert.False(associationType.IsSelfReferencing());
 
-            associationType.SourceEnd.EntityType.BaseType
-                = associationType.TargetEnd.EntityType.BaseType
-                  = new EdmEntityType();
+            associationType.SourceEnd.GetEntityType().BaseType
+                = associationType.TargetEnd.GetEntityType().BaseType
+                  = new EntityType();
 
             Assert.True(associationType.IsSelfReferencing());
         }
@@ -123,11 +117,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_optional_to_many()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Optional;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Many;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.SourceEnd, principalEnd);
@@ -137,11 +133,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_required_to_many()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Required;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Many;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.SourceEnd, principalEnd);
@@ -151,11 +149,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_many_to_optional()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Optional;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.TargetEnd, principalEnd);
@@ -165,11 +165,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_many_to_required()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Required;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.TargetEnd, principalEnd);
@@ -179,11 +181,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_required_to_optional()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Required;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Optional;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.SourceEnd, principalEnd);
@@ -193,11 +197,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_optional_to_required()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Optional;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Required;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd);
 
             Assert.Same(associationType.TargetEnd, principalEnd);

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -22,8 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 = (from a1 in model.GetAssociationTypes()
                    from a2 in model.GetAssociationTypes()
                    where a1 != a2
-                   where a1.SourceEnd.EntityType == a2.TargetEnd.EntityType
-                         && a1.TargetEnd.EntityType == a2.SourceEnd.EntityType
+                   where a1.SourceEnd.GetEntityType() == a2.TargetEnd.GetEntityType()
+                         && a1.TargetEnd.GetEntityType() == a2.SourceEnd.GetEntityType()
                    let a1Configuration = a1.GetConfiguration() as NavigationPropertyConfiguration
                    let a2Configuration = a2.GetConfiguration() as NavigationPropertyConfiguration
                    where (((a1Configuration == null)
@@ -39,8 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                               })
                     .Distinct((a, b) => a.a1 == b.a2 && a.a2 == b.a1)
                     .GroupBy(
-                        (a, b) => a.a1.SourceEnd.EntityType == b.a2.TargetEnd.EntityType
-                                  && a.a1.TargetEnd.EntityType == b.a2.SourceEnd.EntityType)
+                        (a, b) => a.a1.SourceEnd.GetEntityType() == b.a2.TargetEnd.GetEntityType()
+                                  && a.a1.TargetEnd.GetEntityType() == b.a2.SourceEnd.GetEntityType())
                     .Where(g => g.Count() == 1)
                     .Select(g => g.Single());
 
@@ -49,13 +49,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var unifiedAssociation = pair.a2.GetConfiguration() != null ? pair.a2 : pair.a1;
                 var redundantAssociation = unifiedAssociation == pair.a1 ? pair.a2 : pair.a1;
 
-                unifiedAssociation.SourceEnd.EndKind = redundantAssociation.TargetEnd.EndKind;
+                unifiedAssociation.SourceEnd.RelationshipMultiplicity
+                    = redundantAssociation.TargetEnd.RelationshipMultiplicity;
 
                 if (redundantAssociation.Constraint != null)
                 {
                     unifiedAssociation.Constraint = redundantAssociation.Constraint;
                     unifiedAssociation.Constraint.DependentEnd =
-                        unifiedAssociation.Constraint.DependentEnd.EntityType == unifiedAssociation.SourceEnd.EntityType
+                        unifiedAssociation.Constraint.DependentEnd.GetEntityType() == unifiedAssociation.SourceEnd.GetEntityType()
                             ? unifiedAssociation.SourceEnd
                             : unifiedAssociation.TargetEnd;
                 }
@@ -67,15 +68,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         private static void FixNavigationProperties(
-            EdmModel model, EdmAssociationType unifiedAssociation, EdmAssociationType redundantAssociation)
+            EdmModel model, AssociationType unifiedAssociation, AssociationType redundantAssociation)
         {
             foreach (var navigationProperty
                 in model.GetEntityTypes()
                     .SelectMany(e => e.NavigationProperties)
                     .Where(np => np.Association == redundantAssociation))
             {
-                navigationProperty.Association = unifiedAssociation;
-                navigationProperty.ResultEnd = unifiedAssociation.SourceEnd;
+                navigationProperty.RelationshipType = unifiedAssociation;
+                navigationProperty.ToEndMember = unifiedAssociation.SourceEnd;
             }
         }
     }

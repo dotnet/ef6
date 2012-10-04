@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -21,27 +22,25 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var foreignKeyConstraint = new DbForeignKeyConstraintMetadata();
 
-            Assert.Equal(DbOperationAction.None, foreignKeyConstraint.DeleteAction);
+            Assert.Equal(OperationAction.None, foreignKeyConstraint.DeleteAction);
 
             var table = new DbTableMetadata();
             table.ForeignKeyConstraints.Add(foreignKeyConstraint);
 
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.SourceEnd.EntityType = new EdmEntityType();
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Many;
-            associationType.TargetEnd.EntityType = new EdmEntityType();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
-                new EdmAssociationSet
-                    {
-                        ElementType = associationType
-                    });
+                new AssociationSet("AS", associationType));
             associationSetMapping.Table = table;
 
             ((IDbMappingConvention)new ManyToManyCascadeDeleteConvention()).Apply(databaseMapping);
 
-            Assert.Equal(DbOperationAction.Cascade, foreignKeyConstraint.DeleteAction);
+            Assert.Equal(OperationAction.Cascade, foreignKeyConstraint.DeleteAction);
         }
     }
 }

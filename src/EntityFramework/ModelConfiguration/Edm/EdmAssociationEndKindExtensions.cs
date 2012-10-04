@@ -2,23 +2,23 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     internal static class EdmAssociationEndKindExtensions
     {
-        public static bool IsMany(this EdmAssociationEndKind associationEndKind)
+        public static bool IsMany(this RelationshipMultiplicity associationEndKind)
         {
-            return associationEndKind == EdmAssociationEndKind.Many;
+            return associationEndKind == RelationshipMultiplicity.Many;
         }
 
-        public static bool IsOptional(this EdmAssociationEndKind associationEndKind)
+        public static bool IsOptional(this RelationshipMultiplicity associationEndKind)
         {
-            return associationEndKind == EdmAssociationEndKind.Optional;
+            return associationEndKind == RelationshipMultiplicity.ZeroOrOne;
         }
 
-        public static bool IsRequired(this EdmAssociationEndKind associationEndKind)
+        public static bool IsRequired(this RelationshipMultiplicity associationEndKind)
         {
-            return associationEndKind == EdmAssociationEndKind.Required;
+            return associationEndKind == RelationshipMultiplicity.One;
         }
     }
 }

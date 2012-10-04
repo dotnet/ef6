@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text;
     using System.Threading;
@@ -11,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Represents the base item class for all the metadata
     /// </summary>
-    public abstract partial class MetadataItem
+    public abstract partial class MetadataItem : IMetadataItem
     {
         /// <summary>
         ///     Implementing this internal constructor so that this class can't be derived
@@ -57,6 +58,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private MetadataFlags _flags;
         private readonly object _flagsLock = new object();
         private MetadataCollection<MetadataProperty> _itemAttributes;
+        private readonly List<DataModelAnnotation> annotationsList = new List<DataModelAnnotation>();
+
+        /// <summary>
+        ///     Gets the currently assigned annotations.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual IList<DataModelAnnotation> Annotations
+        {
+            get { return annotationsList; }
+        }
 
         /// <summary>
         ///     Returns the kind of the type

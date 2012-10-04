@@ -12,65 +12,6 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    #region Fixtures
-
-    public class BasicType
-    {
-        public int Id { get; set; }
-    }
-
-    public class BasicTypeConfiguration : EntityTypeConfiguration<BasicType>
-    {
-        public BasicTypeConfiguration()
-        {
-            ToTable("Blah");
-        }
-    }
-
-    public class BasicTypeContext : DbContext
-    {
-        public DbSet<BasicType> BasicTypes { get; set; }
-
-        private readonly BasicTypeConfiguration _basicTypeConfiguration = new BasicTypeConfiguration();
-
-        internal BasicTypeConfiguration BasicTypeConfiguration
-        {
-            get { return _basicTypeConfiguration; }
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Configurations.Add(BasicTypeConfiguration);
-            modelBuilder.Entity<BasicType>();
-            Assert.Equal("BasicTypes", modelBuilder.ModelConfiguration.Entity(typeof(BasicType)).EntitySetName);
-            Assert.Equal("Blah", modelBuilder.ModelConfiguration.Entity(typeof(BasicType)).GetTableName().Name);
-        }
-    }
-
-    public class CompositeKeyNoOrder
-    {
-        [Key]
-        public int Id1 { get; set; }
-
-        [Key]
-        public int Id2 { get; set; }
-    }
-
-    public abstract class BaseEntity_155894
-    {
-        public int Id { get; set; }
-
-        [Column(TypeName = "timestamp")]
-        public byte[] Property1 { get; set; }
-    }
-
-    public class DerivedEntity_155894 : BaseEntity_155894
-    {
-        public string Property2 { get; set; }
-    }
-
-    #endregion
-
     public sealed class ConfigurationScenarioTests : TestBase
     {
         [Fact]
@@ -129,15 +70,12 @@ namespace FunctionalTests
         public void Composite_key_should_result_in_correct_order_when_key_configured_using_api()
         {
             TestCompositeKeyOrder(
-                modelBuilder =>
-                    {
-                        modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
-                            c => new
-                                     {
-                                         c.Id2,
-                                         c.Id1
-                                     });
-                    },
+                modelBuilder => modelBuilder.Entity<CompositeKeyNoOrder>().HasKey(
+                    c => new
+                             {
+                                 c.Id2,
+                                 c.Id1
+                             }),
                 new[] { "Id2", "Id1" },
                 new[] { "Id2", "Id1" });
         }
@@ -348,4 +286,63 @@ namespace FunctionalTests
             databaseMapping.Assert<CreditCard>().HasColumn("CardNumber");
         }
     }
+
+    #region Fixtures
+
+    public class BasicType
+    {
+        public int Id { get; set; }
+    }
+
+    public class BasicTypeConfiguration : EntityTypeConfiguration<BasicType>
+    {
+        public BasicTypeConfiguration()
+        {
+            ToTable("Blah");
+        }
+    }
+
+    public class BasicTypeContext : DbContext
+    {
+        public DbSet<BasicType> BasicTypes { get; set; }
+
+        private readonly BasicTypeConfiguration _basicTypeConfiguration = new BasicTypeConfiguration();
+
+        internal BasicTypeConfiguration BasicTypeConfiguration
+        {
+            get { return _basicTypeConfiguration; }
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(BasicTypeConfiguration);
+            modelBuilder.Entity<BasicType>();
+            Assert.Equal("BasicTypes", modelBuilder.ModelConfiguration.Entity(typeof(BasicType)).EntitySetName);
+            Assert.Equal("Blah", modelBuilder.ModelConfiguration.Entity(typeof(BasicType)).GetTableName().Name);
+        }
+    }
+
+    public class CompositeKeyNoOrder
+    {
+        [Key]
+        public int Id1 { get; set; }
+
+        [Key]
+        public int Id2 { get; set; }
+    }
+
+    public abstract class BaseEntity_155894
+    {
+        public int Id { get; set; }
+
+        [Column(TypeName = "timestamp")]
+        public byte[] Property1 { get; set; }
+    }
+
+    public class DerivedEntity_155894 : BaseEntity_155894
+    {
+        public string Property2 { get; set; }
+    }
+
+    #endregion
 }

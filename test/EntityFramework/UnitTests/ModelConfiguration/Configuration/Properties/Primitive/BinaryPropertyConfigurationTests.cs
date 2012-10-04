@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -18,14 +18,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = CreateConfiguration();
             configuration.IsRowVersion = true;
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
-            Assert.Equal(8, property.PropertyType.PrimitiveTypeFacets.MaxLength);
-            Assert.Equal(false, property.PropertyType.IsNullable);
-            Assert.Equal(EdmConcurrencyMode.Fixed, property.ConcurrencyMode);
-            Assert.Equal(DbStoreGeneratedPattern.Computed, property.GetStoreGeneratedPattern());
+            Assert.Equal(8, property.MaxLength);
+            Assert.Equal(false, property.Nullable);
+            Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
+            Assert.Equal(StoreGeneratedPattern.Computed, property.GetStoreGeneratedPattern());
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationA.ColumnType = "bar";
             configurationA.ColumnOrder = 1;
             configurationA.IsNullable = true;
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
             configurationA.MaxLength = 1;
             configurationA.IsFixedLength = false;
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnType = "foo";
             configurationB.ColumnOrder = 2;
             configurationB.IsNullable = false;
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
             configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
             configurationB.MaxLength = 2;
             configurationB.IsFixedLength = true;
@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(
-                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                         "ConcurrencyMode", ConcurrencyMode.None, "ConcurrencyMode", ConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(

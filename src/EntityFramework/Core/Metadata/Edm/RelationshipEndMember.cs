@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private OperationAction _deleteBehavior;
-        private readonly RelationshipMultiplicity _relationshipMultiplicity;
+        private RelationshipMultiplicity _relationshipMultiplicity;
 
         /// <summary>
         ///     Returns the operational behaviour for this end
@@ -56,6 +56,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipMultiplicity RelationshipMultiplicity
         {
             get { return _relationshipMultiplicity; }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                _relationshipMultiplicity = value;
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]

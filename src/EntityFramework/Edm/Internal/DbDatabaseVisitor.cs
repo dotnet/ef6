@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Db;
+    using System.Linq;
 
     internal class DbDatabaseVisitor : DataModelItemVisitor
     {
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbAliasedMetadataItem(item);
             if (item != null)
             {
-                if (item.HasSchemas)
+                if (item.Schemas.Any())
                 {
                     VisitCollection(item.Schemas, VisitDbSchemaMetadata);
                 }
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbAliasedMetadataItem(item);
             if (item != null)
             {
-                if (item.HasTables)
+                if (item.Tables.Any())
                 {
                     VisitCollection(item.Tables, VisitDbTableMetadata);
                 }
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbDataModelItem(item);
             if (item != null)
             {
-                if (item.HasAnnotations)
+                if (item.Annotations.Any())
                 {
                     VisitAnnotations(item, item.Annotations);
                 }
@@ -67,12 +68,12 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbSchemaMetadataItem(item);
             if (item != null)
             {
-                if (item.HasColumns)
+                if (item.Columns.Any())
                 {
                     VisitKeyColumns(item, item.KeyColumns);
                     VisitColumns(item, item.Columns);
                 }
-                if (item.HasForeignKeyConstraints)
+                if (item.ForeignKeyConstraints.Any())
                 {
                     VisitForeignKeyConstraints(item, item.ForeignKeyConstraints);
                 }
@@ -132,7 +133,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitDbConstraintMetadata(item);
             if (item != null)
             {
-                if (item.HasDependentColumns)
+                if (item.DependentColumns.Any())
                 {
                     VisitCollection(item.DependentColumns, VisitDbTableColumnMetadata);
                 }

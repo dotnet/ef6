@@ -3,13 +3,12 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
     using System.Diagnostics.CodeAnalysis;
 
     public class DbEntityTypeMappingFragment : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEdmPropertyMapping> propertyMappings = new BackingList<DbEdmPropertyMapping>();
-        private readonly BackingList<DbColumnCondition> columnConditions = new BackingList<DbColumnCondition>();
+        private readonly List<DbEdmPropertyMapping> propertyMappings = new List<DbEdmPropertyMapping>();
+        private readonly List<DbColumnCondition> columnConditions = new List<DbColumnCondition>();
 
         /// <summary>
         ///     Gets a <see cref="DbTableMetadata" /> value representing the table to which the entity type's properties are being mapped.
@@ -22,8 +21,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEdmPropertyMapping> PropertyMappings
         {
-            get { return propertyMappings.EnsureValue(); }
-            set { propertyMappings.SetValue(value); }
+            get { return propertyMappings; }
         }
 
         /// <summary>
@@ -33,8 +31,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbColumnCondition> ColumnConditions
         {
-            get { return columnConditions.EnsureValue(); }
-            set { columnConditions.SetValue(value); }
+            get { return columnConditions; }
         }
 
         internal override DbMappingItemKind GetItemKind()

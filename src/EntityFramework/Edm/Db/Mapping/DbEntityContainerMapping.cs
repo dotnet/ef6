@@ -3,20 +3,20 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows the construction and modification of the mapping of an EDM entity container ( <see cref="EdmEntityContainer" /> ) to a database ( <see
+    ///     Allows the construction and modification of the mapping of an EDM entity container ( <see cref="EntityContainer" /> ) to a database ( <see
     ///      cref="DbDatabaseMetadata" /> ).
     /// </summary>
     public class DbEntityContainerMapping
         : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntitySetMapping> entitySetMappingsList = new BackingList<DbEntitySetMapping>();
+        private readonly List<DbEntitySetMapping> entitySetMappingsList = new List<DbEntitySetMapping>();
 
-        private readonly BackingList<DbAssociationSetMapping> associationSetMappings =
-            new BackingList<DbAssociationSetMapping>();
+        private readonly List<DbAssociationSetMapping> associationSetMappings =
+            new List<DbAssociationSetMapping>();
 
         internal override DbMappingItemKind GetItemKind()
         {
@@ -24,9 +24,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets an <see cref="EdmEntityContainer" /> value representing the entity container that is being mapped.
+        ///     Gets or sets an <see cref="EntityContainer" /> value representing the entity container that is being mapped.
         /// </summary>
-        public virtual EdmEntityContainer EntityContainer { get; set; }
+        public virtual EntityContainer EntityContainer { get; set; }
 
         /// <summary>
         ///     Gets or sets the collection of <see cref="DbEntitySetMapping" /> s that specifies how the container's entity sets are mapped to the database.
@@ -34,8 +34,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEntitySetMapping> EntitySetMappings
         {
-            get { return entitySetMappingsList.EnsureValue(); }
-            set { entitySetMappingsList.SetValue(value); }
+            get { return entitySetMappingsList; }
         }
 
         /// <summary>
@@ -44,8 +43,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbAssociationSetMapping> AssociationSetMappings
         {
-            get { return associationSetMappings.EnsureValue(); }
-            set { associationSetMappings.SetValue(value); }
+            get { return associationSetMappings; }
         }
     }
 }

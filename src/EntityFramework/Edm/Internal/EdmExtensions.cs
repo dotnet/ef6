@@ -3,13 +3,14 @@
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal static class EdmExtensions
     {
-        internal static IEnumerable<EdmProperty> GetValidKey(this EdmEntityType entityType)
+        internal static IEnumerable<EdmProperty> GetValidKey(this EntityType entityType)
         {
             List<EdmProperty> keyProps = null;
             foreach (var declaringType in entityType.ToHierarchy().Reverse())
@@ -55,16 +56,16 @@ namespace System.Data.Entity.Edm.Internal
             return (keyProps ?? Enumerable.Empty<EdmProperty>());
         }
 
-        public static List<EdmProperty> GetKeyProperties(this EdmEntityType entityType)
+        public static List<EdmProperty> GetKeyProperties(this EntityType entityType)
         {
-            var visitedTypes = new HashSet<EdmEntityType>();
+            var visitedTypes = new HashSet<EntityType>();
             var keyProperties = new List<EdmProperty>();
             GetKeyProperties(visitedTypes, entityType, keyProperties);
             return keyProperties;
         }
 
         private static void GetKeyProperties(
-            HashSet<EdmEntityType> visitedTypes, EdmEntityType visitingType, List<EdmProperty> keyProperties)
+            HashSet<EntityType> visitedTypes, EntityType visitingType, List<EdmProperty> keyProperties)
         {
             if (visitedTypes.Contains(visitingType))
             {
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Edm.Internal
             visitedTypes.Add(visitingType);
             if (visitingType.BaseType != null)
             {
-                GetKeyProperties(visitedTypes, visitingType.BaseType, keyProperties);
+                GetKeyProperties(visitedTypes, (EntityType)visitingType.BaseType, keyProperties);
             }
             else
             {
@@ -86,18 +87,18 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        internal static IEnumerable<EdmEntityType> ToHierarchy(this EdmEntityType edmType)
+        internal static IEnumerable<EntityType> ToHierarchy(this EntityType edmType)
         {
             return SafeTraverseHierarchy(edmType);
         }
 
-        internal static IEnumerable<EdmComplexType> ToHierarchy(this EdmComplexType edmType)
+        internal static IEnumerable<ComplexType> ToHierarchy(this ComplexType edmType)
         {
             return SafeTraverseHierarchy(edmType);
         }
 
         private static IEnumerable<T> SafeTraverseHierarchy<T>(T startFrom)
-            where T : EdmDataModelType
+            where T : EdmType
         {
             var visitedTypes = new HashSet<T>();
             var thisType = startFrom;
@@ -110,35 +111,30 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        internal static EdmAssociationEnd GetFromEnd(this EdmNavigationProperty navProp)
+        internal static AssociationEndMember GetFromEnd(this NavigationProperty navProp)
         {
             Contract.Assert(
                 navProp.Association != null,
-                "Association on EdmNavigationProperty should not be null, consider adding a null check");
+                "Association on NavigationProperty should not be null, consider adding a null check");
             return navProp.Association.SourceEnd == navProp.ResultEnd
                        ? navProp.Association.TargetEnd
                        : navProp.Association.SourceEnd;
         }
 
-        internal static EdmAssociationEnd PrincipalEnd(
-            this EdmAssociationConstraint constraint, EdmAssociationType association)
+        internal static AssociationEndMember PrincipalEnd(
+            this ReferentialConstraint constraint, AssociationType association)
         {
             Contract.Assert(constraint != null, "Constraint cannot be null");
-            Contract.Assert(association != null, "EdmAssociationType cannot be null");
+            Contract.Assert(association != null, "AssociationType cannot be null");
             return constraint.DependentEnd == association.SourceEnd ? association.TargetEnd : association.SourceEnd;
         }
 
-        internal static bool IsTypeHierarchyRoot(this EdmEntityType entityType)
+        internal static bool IsTypeHierarchyRoot(this EntityType entityType)
         {
             return entityType.BaseType == null;
         }
 
-        internal static string GetQualifiedName(this EdmNamedMetadataItem item, string qualifiedPrefix)
-        {
-            return qualifiedPrefix + "." + item.Name;
-        }
-
-        internal static bool IsForeignKey(this EdmAssociationType association, double version)
+        internal static bool IsForeignKey(this AssociationType association, double version)
         {
             if (version >= DataModelVersions.Version2
                 &&

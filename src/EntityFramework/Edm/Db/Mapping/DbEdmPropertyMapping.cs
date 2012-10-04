@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -12,7 +12,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
     public class DbEdmPropertyMapping
         : DbMappingMetadataItem
     {
-        private readonly BackingList<EdmProperty> propertyPathList = new BackingList<EdmProperty>();
+        private IList<EdmProperty> propertyPathList = new List<EdmProperty>();
 
         internal override DbMappingItemKind GetItemKind()
         {
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<EdmProperty> PropertyPath
         {
-            get { return propertyPathList.EnsureValue(); }
-            set { propertyPathList.SetValue(value); }
+            get { return propertyPathList; }
+            set { propertyPathList = value; }
         }
 
         /// <summary>

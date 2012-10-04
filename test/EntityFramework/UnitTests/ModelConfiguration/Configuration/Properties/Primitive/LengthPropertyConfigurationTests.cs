@@ -2,9 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -13,40 +12,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_update_MaxLength()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.MaxLength = 1;
 
             configuration.Configure(property);
 
-            Assert.Equal(1, property.PropertyType.PrimitiveTypeFacets.MaxLength);
+            Assert.Equal(1, property.MaxLength);
         }
 
         [Fact]
         public void Configure_should_update_IsFixedLength()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.IsFixedLength = true;
 
             configuration.Configure(property);
 
-            Assert.Equal(true, property.PropertyType.PrimitiveTypeFacets.IsFixedLength);
+            Assert.Equal(true, property.IsFixedLength);
         }
 
         [Fact]
         public void Configure_should_update_IsMaxLength()
         {
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.IsMaxLength = true;
 
             configuration.Configure(property);
 
-            Assert.Equal(true, property.PropertyType.PrimitiveTypeFacets.IsMaxLength);
+            Assert.Equal(true, property.IsMaxLength);
         }
 
         [Fact]

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
@@ -11,21 +12,23 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_introduce_constraint_when_one_to_one()
         {
-            var associationType = new EdmAssociationType().Initialize();
-            var entityType1 = new EdmEntityType();
-            entityType1.DeclaredKeyProperties.Add(new EdmProperty().AsPrimitive());
-            var entityType2 = new EdmEntityType();
-            entityType2.DeclaredKeyProperties.Add(new EdmProperty().AsPrimitive());
+            var entityType1 = new EntityType();
+            entityType1.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            associationType.SourceEnd.EntityType = entityType2;
-            associationType.TargetEnd.EntityType = entityType1;
+            var entityType2 = new EntityType();
+            entityType2.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", entityType2);
+            associationType.TargetEnd = new AssociationEndMember("T", entityType1);
+
             associationType.MarkPrincipalConfigured();
 
-            ((IEdmConvention<EdmAssociationType>)new OneToOneConstraintIntroductionConvention())
+            ((IEdmConvention<AssociationType>)new OneToOneConstraintIntroductionConvention())
                 .Apply(associationType, new EdmModel());
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Equal(1, associationType.Constraint.DependentProperties.Count);
+            Assert.Equal(1, associationType.Constraint.ToProperties.Count);
         }
     }
 }

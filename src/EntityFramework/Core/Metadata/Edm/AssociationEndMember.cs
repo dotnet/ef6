@@ -25,6 +25,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
+        internal AssociationEndMember(string name, EntityType entityType)
+            : base(name, new RefType(entityType), default(RelationshipMultiplicity))
+        {
+            // testing only
+        }
+
         /// <summary>
         ///     Returns the kind of the type
         /// </summary>

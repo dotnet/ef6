@@ -6,7 +6,6 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -14,20 +13,17 @@ namespace System.Data.Entity.Utilities
 
     internal static class TypeExtensions
     {
-        private static readonly Dictionary<Type, EdmPrimitiveType> _primitiveTypesMap
-            = new Dictionary<Type, EdmPrimitiveType>();
+        private static readonly Dictionary<Type, PrimitiveType> _primitiveTypesMap
+            = new Dictionary<Type, PrimitiveType>();
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static TypeExtensions()
         {
-            foreach (var efPrimitiveType in PrimitiveType.GetEdmPrimitiveTypes())
+            foreach (var primitiveType in PrimitiveType.GetEdmPrimitiveTypes())
             {
-                EdmPrimitiveType primitiveType;
-                if (EdmPrimitiveType.TryGetByName(efPrimitiveType.Name, out primitiveType))
+                if (!_primitiveTypesMap.ContainsKey(primitiveType.ClrEquivalentType))
                 {
-                    Contract.Assert(primitiveType != null);
-
-                    _primitiveTypesMap.Add(efPrimitiveType.ClrEquivalentType, primitiveType);
+                    _primitiveTypesMap.Add(primitiveType.ClrEquivalentType, primitiveType);
                 }
             }
         }
@@ -141,7 +137,7 @@ namespace System.Data.Entity.Utilities
                      || typeof(EntityReference).IsAssignableFrom(type));
         }
 
-        public static bool IsPrimitiveType(this Type type, out EdmPrimitiveType primitiveType)
+        public static bool IsPrimitiveType(this Type type, out PrimitiveType primitiveType)
         {
             return _primitiveTypesMap.TryGetValue(type, out primitiveType);
         }

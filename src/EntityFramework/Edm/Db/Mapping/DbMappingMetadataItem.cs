@@ -3,8 +3,7 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -12,9 +11,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
     ///      cref="DataModelAnnotation" /> .
     /// </summary>
     public abstract class DbMappingMetadataItem
-        : DbMappingModelItem, IAnnotatedDataModelItem
+        : DbMappingModelItem
     {
-        private readonly BackingList<DataModelAnnotation> annotationsList = new BackingList<DataModelAnnotation>();
+        private readonly List<DataModelAnnotation> annotationsList = new List<DataModelAnnotation>();
 
         /// <summary>
         ///     Gets or sets the currently assigned annotations.
@@ -22,8 +21,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DataModelAnnotation> Annotations
         {
-            get { return annotationsList.EnsureValue(); }
-            set { annotationsList.SetValue(value); }
+            get { return annotationsList; }
         }
     }
 }

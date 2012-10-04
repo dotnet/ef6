@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal void Configure(
-            DbDatabaseMapping databaseMapping, DbEntityTypeMappingFragment fragment, EdmEntityType entityType)
+            DbDatabaseMapping databaseMapping, DbEntityTypeMappingFragment fragment, EntityType entityType)
         {
             Contract.Requires(fragment != null);
 

@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Globalization;
 
     /// <summary>
     ///     Class representing a collection of member objects
@@ -307,12 +306,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // Check to make sure the given member is not associated with another type
             EntityUtil.GenericCheckArgumentNull(member, argumentName);
-
-            Debug.Assert(
-                member.DeclaringType == null,
-                string.Format(
-                    CultureInfo.CurrentCulture, "The member {0} already has a declaring type, it cannot be added to this collection.",
-                    argumentName));
 
             // Validate the item with the declaring type. 
             _declaringType.ValidateMemberForAdd(member);

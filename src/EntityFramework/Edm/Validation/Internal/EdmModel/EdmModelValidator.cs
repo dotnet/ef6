@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
-    using EdmModel = System.Data.Entity.Edm.EdmModel;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     Edm Model Validator

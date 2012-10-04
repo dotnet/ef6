@@ -5,7 +5,7 @@ namespace FunctionalTests
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -57,7 +57,7 @@ namespace FunctionalTests
             private const string Code = "Code";
 
             protected override EdmProperty MatchKeyProperty(
-                EdmEntityType entityType,
+                EntityType entityType,
                 IEnumerable<EdmProperty> primitiveProperties)
             {
                 return primitiveProperties

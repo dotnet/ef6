@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -12,12 +12,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the entity set name to be a pluralized version of the entity type name.
     /// </summary>
-    public class PluralizingEntitySetNameConvention : IEdmConvention<EdmEntitySet>
+    public class PluralizingEntitySetNameConvention : IEdmConvention<EntitySet>
     {
         private static readonly PluralizationService _pluralizationService
             = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
 
-        public void Apply(EdmEntitySet edmDataModelItem, EdmModel model)
+        public void Apply(EntitySet edmDataModelItem, EdmModel model)
         {
             if (edmDataModelItem.GetConfiguration() == null)
             {

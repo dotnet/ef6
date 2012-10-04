@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -40,8 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             _navigationPropertyConfiguration.DeleteAction
                 = value
-                      ? EdmOperationAction.Cascade
-                      : EdmOperationAction.None;
+                      ? OperationAction.Cascade
+                      : OperationAction.None;
         }
 
         internal NavigationPropertyConfiguration NavigationPropertyConfiguration

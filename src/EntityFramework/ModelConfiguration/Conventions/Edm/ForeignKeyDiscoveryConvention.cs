@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     [ContractClass(typeof(ForeignKeyDiscoveryConventionContracts))]
-    public abstract class ForeignKeyDiscoveryConvention : IEdmConvention<EdmAssociationType>
+    public abstract class ForeignKeyDiscoveryConvention : IEdmConvention<AssociationType>
     {
         protected virtual bool SupportsMultipleAssociations
         {
@@ -18,14 +18,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         protected abstract bool MatchDependentKeyProperty(
-            EdmAssociationType associationType,
-            EdmAssociationEnd dependentAssociationEnd,
+            AssociationType associationType,
+            AssociationEndMember dependentAssociationEnd,
             EdmProperty dependentProperty,
-            EdmEntityType principalEntityType,
+            EntityType principalEntityType,
             EdmProperty principalKeyProperty);
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void Apply(EdmAssociationType edmDataModelItem, EdmModel model)
+        public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
             Contract.Assert(edmDataModelItem.SourceEnd != null);
             Contract.Assert(edmDataModelItem.TargetEnd != null);
@@ -37,18 +37,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            EdmAssociationEnd principalEnd, dependentEnd;
+            AssociationEndMember principalEnd, dependentEnd;
             if (!edmDataModelItem.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
             {
                 return;
             }
 
             Contract.Assert(principalEnd != null);
-            Contract.Assert(principalEnd.EntityType != null);
+            Contract.Assert(principalEnd.GetEntityType() != null);
             Contract.Assert(dependentEnd != null);
-            Contract.Assert(dependentEnd.EntityType != null);
+            Contract.Assert(dependentEnd.GetEntityType() != null);
 
-            var principalKeyProperties = principalEnd.EntityType.KeyProperties();
+            var principalKeyProperties = principalEnd.GetEntityType().KeyProperties();
 
             if (!principalKeyProperties.Any())
             {
@@ -56,16 +56,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             if (!SupportsMultipleAssociations
-                && model.GetAssociationTypesBetween(principalEnd.EntityType, dependentEnd.EntityType).Count() > 1)
+                && model.GetAssociationTypesBetween(principalEnd.GetEntityType(), dependentEnd.GetEntityType()).Count() > 1)
             {
                 return;
             }
 
             var foreignKeyProperties
                 = from p in principalKeyProperties
-                  from d in dependentEnd.EntityType.DeclaredProperties
-                  where MatchDependentKeyProperty(edmDataModelItem, dependentEnd, d, principalEnd.EntityType, p)
-                        && (p.PropertyType.UnderlyingPrimitiveType == d.PropertyType.UnderlyingPrimitiveType)
+                  from d in dependentEnd.GetEntityType().DeclaredProperties
+                  where MatchDependentKeyProperty(edmDataModelItem, dependentEnd, d, principalEnd.GetEntityType(), p)
+                        && (p.UnderlyingPrimitiveType == d.UnderlyingPrimitiveType)
                   select d;
 
             if (!foreignKeyProperties.Any()
@@ -74,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            var dependentKeyProperties = dependentEnd.EntityType.KeyProperties();
+            var dependentKeyProperties = dependentEnd.GetEntityType().KeyProperties();
 
             var fkEquivalentToDependentPk
                 = dependentKeyProperties.Count() == foreignKeyProperties.Count()
@@ -92,17 +92,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             var constraint
-                = new EdmAssociationConstraint
-                      {
-                          DependentEnd = dependentEnd,
-                          DependentProperties = foreignKeyProperties.ToList()
-                      };
+                = new ReferentialConstraint(
+                    principalEnd,
+                    dependentEnd,
+                    principalKeyProperties.ToList(),
+                    foreignKeyProperties.ToList());
 
             edmDataModelItem.Constraint = constraint;
 
             if (principalEnd.IsRequired())
             {
-                constraint.DependentProperties.Each(p => p.PropertyType.IsNullable = false);
+                constraint.ToProperties.Each(p => p.Nullable = false);
             }
         }
 
@@ -112,10 +112,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private abstract class ForeignKeyDiscoveryConventionContracts : ForeignKeyDiscoveryConvention
         {
             protected override bool MatchDependentKeyProperty(
-                EdmAssociationType associationType,
-                EdmAssociationEnd dependentAssociationEnd,
+                AssociationType associationType,
+                AssociationEndMember dependentAssociationEnd,
                 EdmProperty dependentProperty,
-                EdmEntityType principalEntityType,
+                EntityType principalEntityType,
                 EdmProperty principalKeyProperty)
             {
                 Contract.Requires(associationType != null);

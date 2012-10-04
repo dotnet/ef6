@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Common
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;

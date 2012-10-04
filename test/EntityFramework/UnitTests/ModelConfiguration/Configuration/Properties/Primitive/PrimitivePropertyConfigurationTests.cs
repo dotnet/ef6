@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Configure_should_set_CSpace_configuration_annotation()
         {
             var configuration = CreateConfiguration();
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
@@ -62,21 +62,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Configure_should_merge_CSpace_configurations()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
             var configurationB = CreateConfiguration();
             configurationB.IsNullable = false;
 
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
             configurationA.Configure(property);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
 
             configurationB.Configure(property);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
             Assert.Equal(false, ((PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
         }
 
@@ -84,21 +84,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Configure_should_preserve_the_most_derived_configuration()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
             var configurationB = new PrimitivePropertyConfiguration();
             configurationB.IsNullable = false;
 
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
             configurationA.Configure(property);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
 
             configurationB.Configure(property);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
             Assert.Equal(false, ((PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
             Assert.Equal(GetConfigurationType(), property.GetConfiguration().GetType());
         }
@@ -108,24 +108,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configuration = CreateConfiguration();
             configuration.IsNullable = true;
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
-            Assert.Equal(true, property.PropertyType.IsNullable);
+            Assert.Equal(true, property.Nullable);
         }
 
         [Fact]
         public void Configure_should_update_model_property_concurrency_mode()
         {
             var configuration = CreateConfiguration();
-            configuration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configuration.ConcurrencyMode = ConcurrencyMode.Fixed;
 
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, property.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
         }
 
         [Fact]
@@ -134,12 +134,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configuration = CreateConfiguration();
             configuration.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
 
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
-            Assert.Equal(DbStoreGeneratedPattern.Identity, property.GetStoreGeneratedPattern());
-            Assert.Equal(false, property.PropertyType.IsNullable);
+            Assert.Equal(StoreGeneratedPattern.Identity, property.GetStoreGeneratedPattern());
+            Assert.Equal(false, property.Nullable);
         }
 
         [Fact]
@@ -253,12 +253,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var configurationRequired = CreateConfiguration();
             configurationRequired.IsNullable = false;
 
-            var property = new EdmProperty().AsPrimitive();
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configurationNullable.Configure(property);
             Assert.Equal(
                 Strings.ConflictingPropertyConfiguration(
-                    string.Empty, string.Empty, Environment.NewLine + "\tIsNullable = True conflicts with IsNullable = False"),
+                    "P", string.Empty, Environment.NewLine + "\tIsNullable = True conflicts with IsNullable = False"),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     configurationRequired.Configure(property)).Message);
@@ -344,24 +344,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.CopyFrom(configurationB);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
         }
 
         [Fact]
         public void CopyFrom_overwrites_non_null_ConcurrencyMode()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.CopyFrom(configurationB);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
         }
 
         [Fact]
@@ -597,24 +597,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
         }
 
         [Fact]
         public void FillFrom_does_not_overwrite_non_null_ConcurrencyMode()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(EdmConcurrencyMode.None, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.None, configurationA.ConcurrencyMode);
         }
 
         [Fact]
@@ -622,24 +622,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.FillFrom(configurationB, inCSpace: true);
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
         }
 
         [Fact]
         public void FillFrom_does_not_overwrite_non_null_ConcurrencyMode_in_CSpace()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             configurationA.FillFrom(configurationB, inCSpace: true);
 
-            Assert.Equal(EdmConcurrencyMode.None, configurationA.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.None, configurationA.ConcurrencyMode);
         }
 
         [Fact]
@@ -804,7 +804,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationA.ColumnType = "bar";
             configurationA.ColumnOrder = 1;
             configurationA.IsNullable = true;
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
 
             var configurationB = CreateConfiguration();
@@ -812,7 +812,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             configurationB.ColumnType = "foo";
             configurationB.ColumnOrder = 2;
             configurationB.IsNullable = false;
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
             configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
 
             var expectedMessageCSpace = Environment.NewLine + "\t" +
@@ -821,7 +821,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(
-                                         "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                         "ConcurrencyMode", ConcurrencyMode.None, "ConcurrencyMode", ConcurrencyMode.Fixed);
 
             expectedMessageCSpace += Environment.NewLine + "\t" +
                                      Strings.ConflictingConfigurationValue(
@@ -1043,9 +1043,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void IsCompatible_returns_true_for_matching_ConcurrencyMode()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             string errorMessage;
             Assert.True(configurationA.IsCompatible(configurationB, false, out errorMessage));
@@ -1056,13 +1056,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void IsCompatible_returns_false_for_mismatched_ConcurrencyMode()
         {
             var configurationA = CreateConfiguration();
-            configurationA.ConcurrencyMode = EdmConcurrencyMode.None;
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             var expectedMessage = Environment.NewLine + "\t" +
                                   Strings.ConflictingConfigurationValue(
-                                      "ConcurrencyMode", EdmConcurrencyMode.None, "ConcurrencyMode", EdmConcurrencyMode.Fixed);
+                                      "ConcurrencyMode", ConcurrencyMode.None, "ConcurrencyMode", ConcurrencyMode.Fixed);
 
             string errorMessage;
             Assert.False(configurationA.IsCompatible(configurationB, true, out errorMessage));
@@ -1077,7 +1077,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
-            configurationB.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
 
             string errorMessage;
             Assert.True(configurationA.IsCompatible(configurationB, false, out errorMessage));

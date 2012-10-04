@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
                                                  };
             var entityTypeMapping = new DbEntityTypeMapping
                                         {
-                                            EntityType = new EdmEntityType()
+                                            EntityType = new EntityType()
                                         };
             var table = new DbTableMetadata
                             {

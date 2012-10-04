@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
 
-            Assert.Equal("Fk1", foreignKeyConstraint.DependentProperties.Single().Name);
+            Assert.Equal("Fk1", foreignKeyConstraint.ToProperties.Single().Name);
         }
 
         [Fact]
@@ -37,9 +37,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
 
-            Assert.Equal(2, foreignKeyConstraint.DependentProperties.Count());
-            Assert.Equal("Fk1", foreignKeyConstraint.DependentProperties.First().Name);
-            Assert.Equal("Fk2", foreignKeyConstraint.DependentProperties.ElementAt(1).Name);
+            Assert.Equal(2, foreignKeyConstraint.ToProperties.Count());
+            Assert.Equal("Fk1", foreignKeyConstraint.ToProperties.First().Name);
+            Assert.Equal("Fk2", foreignKeyConstraint.ToProperties.ElementAt(1).Name);
         }
 
         [Fact]

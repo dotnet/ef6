@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.Contracts;
@@ -86,9 +87,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             Contract.Requires(tableColumn != null);
 
             if (tableColumn.StoreGeneratedPattern
-                == DbStoreGeneratedPattern.Identity)
+                == StoreGeneratedPattern.Identity)
             {
-                tableColumn.StoreGeneratedPattern = DbStoreGeneratedPattern.None;
+                tableColumn.StoreGeneratedPattern = StoreGeneratedPattern.None;
             }
         }
 

@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;
@@ -16,12 +18,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_add_set_mapping_and_table_and_set_clr_type()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
 
             new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
@@ -35,14 +39,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_map_scalar_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
-            entityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
-            entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
+            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
 
             new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
@@ -57,19 +67,23 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_should_flatten_complex_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
-            var complexType = new EdmComplexType
-                                  {
-                                      Name = "C"
-                                  };
-            complexType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var complexType = new ComplexType("C");
+
+            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            complexType.AddMember(property);
             entityType.AddComplexProperty("C1", complexType);
-            entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
+            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
 
             new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             new ConcurrencyCheckAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ConcurrencyCheckAttribute());
 
-            Assert.Equal(EdmConcurrencyMode.Fixed, propertyConfiguration.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, propertyConfiguration.ConcurrencyMode);
         }
 
         [Fact]
@@ -25,13 +25,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new PrimitivePropertyConfiguration
                                             {
-                                                ConcurrencyMode = EdmConcurrencyMode.None
+                                                ConcurrencyMode = ConcurrencyMode.None
                                             };
 
             new ConcurrencyCheckAttributeConvention()
                 .Apply(new MockPropertyInfo(), propertyConfiguration, new ConcurrencyCheckAttribute());
 
-            Assert.Equal(EdmConcurrencyMode.None, propertyConfiguration.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.None, propertyConfiguration.ConcurrencyMode);
         }
     }
 }

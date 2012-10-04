@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class EdmEntitySetExtensionsTests
@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var entitySet = new EdmEntitySet();
+            var entitySet = new EntitySet();
 
             entitySet.SetConfiguration(42);
 

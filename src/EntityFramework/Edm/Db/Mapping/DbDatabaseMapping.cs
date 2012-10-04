@@ -3,13 +3,13 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     public class DbDatabaseMapping : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntityContainerMapping> entityContainerMappingsList =
-            new BackingList<DbEntityContainerMapping>();
+        private readonly List<DbEntityContainerMapping> entityContainerMappingsList =
+            new List<DbEntityContainerMapping>();
 
         internal override DbMappingItemKind GetItemKind()
         {
@@ -32,8 +32,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEntityContainerMapping> EntityContainerMappings
         {
-            get { return entityContainerMappingsList.EnsureValue(); }
-            set { entityContainerMappingsList.SetValue(value); }
+            get { return entityContainerMappingsList; }
         }
     }
 }

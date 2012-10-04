@@ -21,3 +21,4 @@ EntityFramework.SqlServerCompact.xml
 *.REMOTE.*
 *.LOCAL.*
 StyleCop.Cache
+*.csproj.DotSettings

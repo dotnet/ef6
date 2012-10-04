@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.Contracts;
 
@@ -11,24 +11,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         private const string IsIndependentAnnotation = "IsIndependent";
         private const string IsPrincipalConfiguredAnnotation = "IsPrincipalConfigured";
 
-        public static EdmAssociationType Initialize(this EdmAssociationType associationType)
-        {
-            Contract.Requires(associationType != null);
-
-            associationType.SourceEnd = new EdmAssociationEnd();
-            associationType.TargetEnd = new EdmAssociationEnd();
-
-            return associationType;
-        }
-
-        public static void MarkIndependent(this EdmAssociationType associationType)
+        public static void MarkIndependent(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
             associationType.Annotations.SetAnnotation(IsIndependentAnnotation, true);
         }
 
-        public static bool IsIndependent(this EdmAssociationType associationType)
+        public static bool IsIndependent(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
@@ -38,14 +28,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return isIndependent != null && (bool)isIndependent;
         }
 
-        public static void MarkPrincipalConfigured(this EdmAssociationType associationType)
+        public static void MarkPrincipalConfigured(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
             associationType.Annotations.SetAnnotation(IsPrincipalConfiguredAnnotation, true);
         }
 
-        public static bool IsPrincipalConfigured(this EdmAssociationType associationType)
+        public static bool IsPrincipalConfigured(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
@@ -55,8 +45,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return isPrincipalConfigured != null && (bool)isPrincipalConfigured;
         }
 
-        public static EdmAssociationEnd GetOtherEnd(
-            this EdmAssociationType associationType, EdmAssociationEnd associationEnd)
+        public static AssociationEndMember GetOtherEnd(
+            this AssociationType associationType, AssociationEndMember associationEnd)
         {
             Contract.Requires(associationType != null);
             Contract.Requires(associationEnd != null);
@@ -66,31 +56,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                        : associationType.SourceEnd;
         }
 
-        public static object GetConfiguration(this EdmAssociationType associationType)
+        public static object GetConfiguration(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
             return associationType.Annotations.GetConfiguration();
         }
 
-        public static void SetConfiguration(this EdmAssociationType associationType, object configuration)
+        public static void SetConfiguration(this AssociationType associationType, object configuration)
         {
             Contract.Requires(associationType != null);
 
             associationType.Annotations.SetConfiguration(configuration);
         }
 
-        public static bool HasDeleteAction(this EdmAssociationType associationType)
-        {
-            Contract.Requires(associationType != null);
-            Contract.Assert(associationType.SourceEnd != null);
-            Contract.Assert(associationType.TargetEnd != null);
-
-            return (associationType.SourceEnd.DeleteAction.HasValue
-                    || associationType.TargetEnd.DeleteAction.HasValue);
-        }
-
-        public static bool IsRequiredToMany(this EdmAssociationType associationType)
+        public static bool IsRequiredToMany(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -100,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    && associationType.TargetEnd.IsMany();
         }
 
-        public static bool IsManyToRequired(this EdmAssociationType associationType)
+        public static bool IsManyToRequired(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -110,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    && associationType.TargetEnd.IsRequired();
         }
 
-        public static bool IsManyToMany(this EdmAssociationType associationType)
+        public static bool IsManyToMany(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -120,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    && associationType.TargetEnd.IsMany();
         }
 
-        public static bool IsOneToOne(this EdmAssociationType associationType)
+        public static bool IsOneToOne(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -130,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    && !associationType.TargetEnd.IsMany();
         }
 
-        public static bool IsSelfReferencing(this EdmAssociationType associationType)
+        public static bool IsSelfReferencing(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
 
@@ -139,13 +119,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             Contract.Assert(sourceEnd != null);
             Contract.Assert(targetEnd != null);
-            Contract.Assert(sourceEnd.EntityType != null);
-            Contract.Assert(targetEnd.EntityType != null);
+            Contract.Assert(sourceEnd.GetEntityType() != null);
+            Contract.Assert(targetEnd.GetEntityType() != null);
 
-            return ((sourceEnd.EntityType.GetRootType() == targetEnd.EntityType.GetRootType()));
+            return ((sourceEnd.GetEntityType().GetRootType() == targetEnd.GetEntityType().GetRootType()));
         }
 
-        public static bool IsRequiredToNonRequired(this EdmAssociationType associationType)
+        public static bool IsRequiredToNonRequired(this AssociationType associationType)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -173,9 +153,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         ///     *      | *      || -     | -     |
         /// </summary>
         public static bool TryGuessPrincipalAndDependentEnds(
-            this EdmAssociationType associationType,
-            out EdmAssociationEnd principalEnd,
-            out EdmAssociationEnd dependentEnd)
+            this AssociationType associationType,
+            out AssociationEndMember principalEnd,
+            out AssociationEndMember dependentEnd)
         {
             Contract.Requires(associationType != null);
             Contract.Assert(associationType.SourceEnd != null);
@@ -186,8 +166,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var sourceEnd = associationType.SourceEnd;
             var targetEnd = associationType.TargetEnd;
 
-            if (sourceEnd.EndKind
-                != targetEnd.EndKind)
+            if (sourceEnd.RelationshipMultiplicity
+                != targetEnd.RelationshipMultiplicity)
             {
                 principalEnd
                     = (sourceEnd.IsRequired()

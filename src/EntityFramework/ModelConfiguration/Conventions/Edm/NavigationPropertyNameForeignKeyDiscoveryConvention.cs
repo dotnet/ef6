@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
 
@@ -13,16 +13,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class NavigationPropertyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {
         protected override bool MatchDependentKeyProperty(
-            EdmAssociationType associationType,
-            EdmAssociationEnd dependentAssociationEnd,
+            AssociationType associationType,
+            AssociationEndMember dependentAssociationEnd,
             EdmProperty dependentProperty,
-            EdmEntityType principalEntityType,
+            EntityType principalEntityType,
             EdmProperty principalKeyProperty)
         {
             var otherEnd = associationType.GetOtherEnd(dependentAssociationEnd);
 
             var navigationProperty
-                = dependentAssociationEnd.EntityType.NavigationProperties
+                = dependentAssociationEnd.GetEntityType().NavigationProperties
                     .SingleOrDefault(n => n.ResultEnd == otherEnd);
 
             if (navigationProperty == null)

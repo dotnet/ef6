@@ -2,41 +2,44 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Utilities;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     ///     Convention to move primary key properties to appear first.
     /// </summary>
-    public class DeclaredPropertyOrderingConvention : IEdmConvention<EdmEntityType>
+    public class DeclaredPropertyOrderingConvention : IEdmConvention<EntityType>
     {
-        private const BindingFlags DefaultBindingFlags =
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
-        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
+        public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
-            // Orders the declared properties in the same order as the CLR properties
-            edmDataModelItem.GetClrType().GetProperties(DefaultBindingFlags).Reverse().Each(
-                p =>
-                    {
-                        var edmProperty = edmDataModelItem.DeclaredProperties.SingleOrDefault(ep => ep.Name == p.Name);
-                        if (edmProperty != null)
+            edmDataModelItem.DeclaredKeyProperties
+                .Each(
+                    p =>
                         {
-                            edmDataModelItem.DeclaredProperties.Remove(edmProperty);
-                            edmDataModelItem.DeclaredProperties.Insert(0, edmProperty);
-                        }
-                    });
+                            edmDataModelItem.RemoveMember(p);
+                            edmDataModelItem.AddKeyMember(p);
+                        });
 
-            // Moves the declared keys to the head of the declared properties list.
-            edmDataModelItem.DeclaredKeyProperties.Reverse().Each(
-                p =>
-                    {
-                        edmDataModelItem.DeclaredProperties.Remove(p);
-                        edmDataModelItem.DeclaredProperties.Insert(0, p);
-                    });
+            new PropertyFilter(model.Version)
+                .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true)
+                .Each(
+                    p =>
+                        {
+                            var property
+                                = edmDataModelItem
+                                    .DeclaredProperties
+                                    .SingleOrDefault(ep => ep.Name == p.Name);
+
+                            if ((property != null)
+                                && !edmDataModelItem.DeclaredKeyProperties.Contains(property))
+                            {
+                                edmDataModelItem.RemoveMember(property);
+                                edmDataModelItem.AddMember(property);
+                            }
+                        });
         }
     }
 }

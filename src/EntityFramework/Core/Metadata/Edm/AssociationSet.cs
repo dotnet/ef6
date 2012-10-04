@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
     /// <summary>
     ///     Class for representing an Association set
     /// </summary>
@@ -17,8 +20,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        private readonly ReadOnlyMetadataCollection<AssociationSetEnd> _associationSetEnds =
-            new ReadOnlyMetadataCollection<AssociationSetEnd>(new MetadataCollection<AssociationSetEnd>());
+        private readonly ReadOnlyMetadataCollection<AssociationSetEnd> _associationSetEnds
+            = new ReadOnlyMetadataCollection<AssociationSetEnd>(new MetadataCollection<AssociationSetEnd>());
 
         /// <summary>
         ///     Returns the association type associated with this association set
@@ -35,6 +38,65 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public ReadOnlyMetadataCollection<AssociationSetEnd> AssociationSetEnds
         {
             get { return _associationSetEnds; }
+        }
+
+        internal EntitySet SourceSet
+        {
+            get
+            {
+                var associationSetEnd = AssociationSetEnds.FirstOrDefault();
+
+                return (associationSetEnd != null)
+                           ? associationSetEnd.EntitySet
+                           : null;
+            }
+            set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+                Contract.Assert(ElementType.SourceEnd != null);
+
+                var associationSetEnd = new AssociationSetEnd(value, this, ElementType.SourceEnd);
+
+                if (AssociationSetEnds.Count == 0)
+                {
+                    AddAssociationSetEnd(associationSetEnd);
+                }
+                else
+                {
+                    AssociationSetEnds.Source[0] = associationSetEnd;
+                }
+            }
+        }
+
+        internal EntitySet TargetSet
+        {
+            get
+            {
+                var associationSetEnd = AssociationSetEnds.ElementAtOrDefault(1);
+
+                return (associationSetEnd != null)
+                           ? associationSetEnd.EntitySet
+                           : null;
+            }
+            set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+                Contract.Assert(AssociationSetEnds.Any());
+                Contract.Assert(ElementType.TargetEnd != null);
+
+                var associationSetEnd = new AssociationSetEnd(value, this, ElementType.TargetEnd);
+
+                if (AssociationSetEnds.Count == 1)
+                {
+                    AddAssociationSetEnd(associationSetEnd);
+                }
+                else
+                {
+                    AssociationSetEnds.Source[1] = associationSetEnd;
+                }
+            }
         }
 
         /// <summary>

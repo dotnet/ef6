@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Can_initialize_and_enumerate_dependent_keys()
         {
-            Assert.True(new ForeignKeyConstraintConfiguration(new[] { new MockPropertyInfo().Object }).DependentProperties.Any());
+            Assert.True(new ForeignKeyConstraintConfiguration(new[] { new MockPropertyInfo().Object }).ToProperties.Any());
         }
 
         [Fact]
@@ -36,17 +36,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
             property.SetClrPropertyInfo(mockPropertyInfo);
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EntityType = entityType;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", entityType);
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
             constraintConfiguration.Configure(
                 associationType, associationType.SourceEnd, new EntityTypeConfiguration(typeof(object)));
 
-            Assert.Equal(1, associationType.Constraint.DependentProperties.Count);
+            Assert.Equal(1, associationType.Constraint.ToProperties.Count);
         }
 
         [Fact]
@@ -54,40 +57,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            property.PropertyType.IsNullable = true;
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
+            property.Nullable = true;
             property.SetClrPropertyInfo(mockPropertyInfo);
-            var associationType = new EdmAssociationType().Initialize();
-            associationType.SourceEnd.EntityType = entityType;
-            associationType.TargetEnd.EndKind = EdmAssociationEndKind.Required;
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", entityType);
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
             constraintConfiguration.Configure(
                 associationType, associationType.SourceEnd, new EntityTypeConfiguration(typeof(object)));
 
-            Assert.Equal(1, associationType.Constraint.DependentProperties.Count);
-            Assert.Equal(false, property.PropertyType.IsNullable);
+            Assert.Equal(1, associationType.Constraint.ToProperties.Count);
+            Assert.Equal(false, property.Nullable);
         }
 
         [Fact]
         public void Configure_should_throw_when_dependent_property_not_found()
         {
-            var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { new MockPropertyInfo(typeof(int), "P").Object });
-            var associationType = new EdmAssociationType();
+            var constraintConfiguration
+                = new ForeignKeyConstraintConfiguration(
+                    new[]
+                        {
+                            new MockPropertyInfo(typeof(int), "P").Object
+                        });
+            var associationType = new AssociationType();
 
             Assert.Equal(
                 Strings.ForeignKeyPropertyNotFound("P", "T"),
                 Assert.Throws<InvalidOperationException>(
                     () => constraintConfiguration.Configure(
                         associationType,
-                        new EdmAssociationEnd
-                            {
-                                EntityType = new EdmEntityType
-                                                 {
-                                                     Name = "T"
-                                                 }
-                            }, new EntityTypeConfiguration(typeof(object)))).Message);
+                        new AssociationEndMember(
+                              "E", new EntityType
+                                       {
+                                           Name = "T"
+                                       })
+                              , new EntityTypeConfiguration(typeof(object)))).Message);
         }
     }
 }

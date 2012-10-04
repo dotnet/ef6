@@ -2,13 +2,16 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     ///     Represents the edm member class
     /// </summary>
-    public abstract class EdmMember : MetadataItem
+    public abstract class EdmMember : MetadataItem, INamedDataModelItem
     {
         internal EdmMember()
         {
+            // for testing
         }
 
         /// <summary>
@@ -20,11 +23,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.CheckStringArgument(name, "name");
             EntityUtil.GenericCheckArgumentNull(memberTypeUsage, "memberTypeUsage");
+
             _name = name;
             _typeUsage = memberTypeUsage;
         }
 
-        private readonly TypeUsage _typeUsage;
+        private TypeUsage _typeUsage;
         private readonly string _name;
         private StructuralType _declaringType;
 
@@ -61,6 +65,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public TypeUsage TypeUsage
         {
             get { return _typeUsage; }
+            internal set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+
+                _typeUsage = value;
+            }
         }
 
         /// <summary>
@@ -101,11 +112,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Facet item = null;
+                Facet item;
                 if (TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out item))
                 {
                     return ((StoreGeneratedPattern)item.Value) == StoreGeneratedPattern.Computed;
                 }
+
                 return false;
             }
         }
@@ -117,11 +129,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Facet item = null;
+                Facet item;
                 if (TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out item))
                 {
                     return ((StoreGeneratedPattern)item.Value) == StoreGeneratedPattern.Identity;
                 }
+
                 return false;
             }
         }

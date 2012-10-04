@@ -2,10 +2,10 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
     using System.Diagnostics.Contracts;
-    using EdmModel = System.Data.Entity.Edm.EdmModel;
 
     /// <summary>
     ///     The context for EdmModel Validation
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         internal EdmModelParentMap ModelParentMap { get; private set; }
 
-        internal string GetQualifiedPrefix(EdmNamespaceItem item)
+        internal string GetQualifiedPrefix(EdmType item)
         {
             Contract.Assert(
                 ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
@@ -36,13 +36,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             return qualifiedPrefix;
         }
 
-        internal string GetQualifiedPrefix(EdmEntityContainerItem item)
+        internal string GetQualifiedPrefix(EntitySetBase item)
         {
             Contract.Assert(
                 ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
 
             string qualifiedPrefix = null;
-            EdmEntityContainer parentContainer = null;
+            EntityContainer parentContainer = null;
             if (ModelParentMap.TryGetEntityContainer(item, out parentContainer))
             {
                 qualifiedPrefix = parentContainer.Name;
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             EdmModelValidator.Validate(root, this);
         }
 
-        internal override void AddError(DataModelItem item, string propertyName, string errorMessage, int errorCode)
+        internal override void AddError(IMetadataItem item, string propertyName, string errorMessage, int errorCode)
         {
             RaiseDataModelValidationEvent(
                 new DataModelErrorEventArgs
@@ -82,11 +82,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         PropertyName = propertyName,
                     }
                 );
-        }
-
-        internal override void AddWarning(DataModelItem item, string propertyName, string errorMessage, int errorCode)
-        {
-            throw new NotImplementedException();
         }
     }
 }

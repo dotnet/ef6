@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.Contracts;
@@ -39,15 +39,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             fk.Annotations.SetAnnotation(IsSplitConstraint, true);
         }
 
-        public static EdmAssociationType GetAssociationType(this DbForeignKeyConstraintMetadata fk)
+        public static AssociationType GetAssociationType(this DbForeignKeyConstraintMetadata fk)
         {
             Contract.Requires(fk != null);
 
-            return fk.Annotations.GetAnnotation(AssociationType) as EdmAssociationType;
+            return fk.Annotations.GetAnnotation(AssociationType) as AssociationType;
         }
 
         public static void SetAssociationType(
-            this DbForeignKeyConstraintMetadata fk, EdmAssociationType associationType)
+            this DbForeignKeyConstraintMetadata fk, AssociationType associationType)
         {
             Contract.Requires(fk != null);
             Contract.Requires(associationType != null);

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
@@ -189,7 +190,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
                     _xmlWriter.WriteAttributeString(MslConstants.Attribute_Name, property.Name);
                     _xmlWriter.WriteAttributeString(
                         MslConstants.Attribute_TypeName,
-                        _entityTypeNamespace + "." + property.PropertyType.ComplexType.Name);
+                        _entityTypeNamespace + "." + property.ComplexType.Name);
 
                     WritePropertyMappings(group, level + 1);
 

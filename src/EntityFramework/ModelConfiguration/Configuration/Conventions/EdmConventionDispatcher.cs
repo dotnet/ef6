@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Diagnostics.Contracts;
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             private void Dispatch<TEdmDataModelItem>(TEdmDataModelItem item)
-                where TEdmDataModelItem : EdmDataModelItem
+                where TEdmDataModelItem : MetadataItem
             {
                 var convention = _convention as IEdmConvention<TEdmDataModelItem>;
 
@@ -51,24 +51,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmModel(item);
             }
 
-            protected override void VisitEdmNavigationProperty(EdmNavigationProperty item)
+            protected override void VisitEdmNavigationProperty(NavigationProperty item)
             {
                 Dispatch(item);
 
                 base.VisitEdmNavigationProperty(item);
             }
 
-            protected override void VisitEdmAssociationConstraint(EdmAssociationConstraint item)
+            protected override void VisitEdmAssociationConstraint(ReferentialConstraint item)
             {
                 Dispatch(item);
 
                 if (item != null)
                 {
-                    VisitEdmMetadataItem(item);
+                    VisitMetadataItem(item);
                 }
             }
 
-            protected override void VisitEdmAssociationEnd(EdmAssociationEnd item)
+            protected override void VisitEdmAssociationEnd(AssociationEndMember item)
             {
                 Dispatch(item);
 
@@ -82,56 +82,35 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmProperty(item);
             }
 
-            protected override void VisitEdmDataModelItem(EdmDataModelItem item)
+            protected override void VisitMetadataItem(MetadataItem item)
             {
                 Dispatch(item);
 
-                base.VisitEdmDataModelItem(item);
+                base.VisitMetadataItem(item);
             }
 
-            protected override void VisitEdmMetadataItem(EdmMetadataItem item)
-            {
-                Dispatch(item);
-
-                base.VisitEdmMetadataItem(item);
-            }
-
-            protected override void VisitEdmNamedMetadataItem(EdmNamedMetadataItem item)
-            {
-                Dispatch(item);
-
-                base.VisitEdmNamedMetadataItem(item);
-            }
-
-            protected override void VisitEdmNamespaceItem(EdmNamespaceItem item)
-            {
-                Dispatch(item);
-
-                base.VisitEdmNamespaceItem(item);
-            }
-
-            protected override void VisitEdmEntityContainer(EdmEntityContainer item)
+            protected override void VisitEdmEntityContainer(EntityContainer item)
             {
                 Dispatch(item);
 
                 base.VisitEdmEntityContainer(item);
             }
 
-            protected override void VisitEdmEntitySet(EdmEntitySet item)
+            protected override void VisitEdmEntitySet(EntitySet item)
             {
                 Dispatch(item);
 
                 base.VisitEdmEntitySet(item);
             }
 
-            protected override void VisitEdmAssociationSet(EdmAssociationSet item)
+            protected override void VisitEdmAssociationSet(AssociationSet item)
             {
                 Dispatch(item);
 
                 base.VisitEdmAssociationSet(item);
             }
 
-            protected override void VisitEdmAssociationSetEnd(EdmEntitySet item)
+            protected override void VisitEdmAssociationSetEnd(EntitySet item)
             {
                 Dispatch(item);
 
@@ -145,18 +124,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmNamespace(item);
             }
 
-            protected override void VisitComplexType(EdmComplexType item)
+            protected override void VisitComplexType(ComplexType item)
             {
                 Dispatch(item);
 
                 base.VisitComplexType(item);
             }
 
-            protected override void VisitEdmEntityType(EdmEntityType item)
+            protected override void VisitEdmEntityType(EntityType item)
             {
                 Dispatch(item);
 
-                VisitEdmNamedMetadataItem(item);
+                VisitMetadataItem(item);
 
                 if (item != null)
                 {
@@ -165,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
             }
 
-            protected override void VisitEdmAssociationType(EdmAssociationType item)
+            protected override void VisitEdmAssociationType(AssociationType item)
             {
                 Dispatch(item);
 

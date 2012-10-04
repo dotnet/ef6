@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using Xunit;
 
@@ -12,14 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void GetPropertyMapping_should_return_mapping_with_path()
         {
             var entityTypeMapping = new DbEntityTypeMapping();
-            var propertyFoo = new EdmProperty
-                                  {
-                                      Name = "Foo"
-                                  };
-            var propertyBar = new EdmProperty
-                                  {
-                                      Name = "Bar"
-                                  };
+            var propertyFoo = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var propertyBar = EdmProperty.Primitive("Bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             var entityPropertyMapping = new DbEdmPropertyMapping
                                             {
                                                 PropertyPath = new[]

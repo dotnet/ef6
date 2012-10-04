@@ -3,11 +3,13 @@
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
     using System.Diagnostics.Contracts;
     using System.Linq;
+    using EdmConstants = System.Data.Entity.Edm.Internal.EdmConstants;
 
     internal static class DataModelValidationHelper
     {
@@ -18,7 +20,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <param name="right"> </param>
         /// <returns> </returns>
         internal static bool AreRelationshipEndsEqual(
-            KeyValuePair<EdmAssociationSet, EdmEntitySet> left, KeyValuePair<EdmAssociationSet, EdmEntitySet> right)
+            KeyValuePair<AssociationSet, EntitySet> left, KeyValuePair<AssociationSet, EntitySet> right)
         {
             if (ReferenceEquals(left.Value, right.Value)
                 && ReferenceEquals(left.Key.ElementType, right.Key.ElementType))
@@ -34,7 +36,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// </summary>
         /// <param name="association"> </param>
         /// <returns> </returns>
-        internal static bool IsReferentialConstraintReadyForValidation(EdmAssociationType association)
+        internal static bool IsReferentialConstraintReadyForValidation(AssociationType association)
         {
             var constraint = association.Constraint;
             if (constraint == null)
@@ -48,23 +50,23 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 return false;
             }
 
-            if (constraint.PrincipalEnd(association).EntityType == null
-                || constraint.DependentEnd.EntityType == null)
+            if (constraint.PrincipalEnd(association).GetEntityType() == null
+                || constraint.DependentEnd.GetEntityType() == null)
             {
                 return false;
             }
 
-            if (constraint.DependentProperties.Count() > 0)
+            if (constraint.ToProperties.Any())
             {
-                foreach (var propRef in constraint.DependentProperties)
+                foreach (var propRef in constraint.ToProperties)
                 {
                     if (propRef == null)
                     {
                         return false;
                     }
 
-                    if (propRef.PropertyType == null
-                        || propRef.PropertyType.EdmType == null)
+                    if (propRef.TypeUsage == null
+                        || propRef.TypeUsage.EdmType == null)
                     {
                         return false;
                     }
@@ -74,26 +76,17 @@ namespace System.Data.Entity.Edm.Validation.Internal
             {
                 return false;
             }
-            var keyList = constraint.PrincipalEnd(association).EntityType.GetValidKey();
+            var keyList = constraint.PrincipalEnd(association).GetEntityType().GetValidKey();
 
-            if (keyList.Count() > 0)
+            if (keyList.Any())
             {
-                foreach (var propRef in keyList)
-                {
-                    if (propRef == null ||
-                        propRef.PropertyType == null
-                        ||
-                        propRef.PropertyType.EdmType == null)
-                    {
-                        return false;
-                    }
-                }
+                return keyList.All(
+                    propRef => propRef != null
+                               && propRef.TypeUsage != null
+                               && propRef.TypeUsage.EdmType != null);
             }
-            else
-            {
-                return false;
-            }
-            return true;
+
+            return false;
         }
 
         /// <summary>
@@ -107,7 +100,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <param name="isSubsetOfKeyProperties"> </param>
         internal static void IsKeyProperty(
             List<EdmProperty> roleProperties,
-            EdmAssociationEnd roleElement,
+            AssociationEndMember roleElement,
             out bool isKeyProperty,
             out bool areAllPropertiesNullable,
             out bool isAnyPropertyNullable,
@@ -118,7 +111,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
             isAnyPropertyNullable = false;
             isSubsetOfKeyProperties = true;
 
-            if (roleElement.EntityType.GetValidKey().Count()
+            if (roleElement.GetEntityType().GetValidKey().Count()
                 != roleProperties.Count())
             {
                 isKeyProperty = false;
@@ -131,18 +124,10 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 // Key, one need not search for it every time
                 if (isSubsetOfKeyProperties)
                 {
-                    var foundKeyProperty = false;
-                    var keyProperties = roleElement.EntityType.GetValidKey().ToList();
+                    var keyProperties = roleElement.GetEntityType().GetValidKey().ToList();
 
                     // All properties that are defined in ToProperties must be the key property on the entity type
-                    for (var j = 0; j < keyProperties.Count; j++)
-                    {
-                        if (keyProperties[j].Equals(roleProperties[i]))
-                        {
-                            foundKeyProperty = true;
-                            break;
-                        }
-                    }
+                    var foundKeyProperty = keyProperties.Contains(roleProperties[i]);
 
                     if (!foundKeyProperty)
                     {
@@ -152,11 +137,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 }
 
                 // by default if IsNullable doesn't have a value, the IsNullable is true
-                var isNullable = true;
-                if (roleProperties[i].PropertyType.IsNullable.HasValue)
-                {
-                    isNullable = roleProperties[i].PropertyType.IsNullable.Value;
-                }
+                var isNullable = roleProperties[i].Nullable;
 
                 areAllPropertiesNullable &= isNullable;
                 isAnyPropertyNullable |= isNullable;
@@ -183,7 +164,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <param name="set"> </param>
         /// <returns> </returns>
         internal static bool TypeIsSubTypeOf(
-            EdmEntityType entityType, Dictionary<EdmEntityType, EdmEntitySet> baseEntitySetTypes, out EdmEntitySet set)
+            EntityType entityType, Dictionary<EntityType, EntitySet> baseEntitySetTypes, out EntitySet set)
         {
             if (entityType.IsTypeHierarchyRoot())
             {
@@ -207,25 +188,16 @@ namespace System.Data.Entity.Edm.Validation.Internal
         }
 
         /// <summary>
-        ///     Return true if any of the properties in the EdmEntityType defines ConcurrencyMode. Otherwise return false.
+        ///     Return true if any of the properties in the EntityType defines ConcurrencyMode. Otherwise return false.
         /// </summary>
         /// <param name="entityType"> </param>
         /// <returns> </returns>
-        internal static bool IsTypeDefinesNewConcurrencyProperties(EdmEntityType entityType)
+        internal static bool IsTypeDefinesNewConcurrencyProperties(EntityType entityType)
         {
-            foreach (var property in entityType.DeclaredProperties)
-            {
-                if (property.PropertyType != null)
-                {
-                    if (property.PropertyType.PrimitiveType != null
-                        && property.ConcurrencyMode != EdmConcurrencyMode.None)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return entityType.DeclaredProperties.Where(property => property.TypeUsage != null)
+                .Any(
+                    property => property.PrimitiveType != null
+                                && property.ConcurrencyMode != ConcurrencyMode.None);
         }
 
         /// <summary>
@@ -236,7 +208,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
         /// <param name="context"> </param>
         /// <param name="getErrorString"> </param>
         internal static void AddMemberNameToHashSet(
-            EdmNamedMetadataItem item,
+            INamedDataModelItem item,
             HashSet<string> memberNameList,
             DataModelValidationContext context,
             Func<string, string> getErrorString)
@@ -246,7 +218,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
                 if (!memberNameList.Add(item.Name))
                 {
                     context.AddError(
-                        item,
+                        (MetadataItem)item,
                         CsdlConstants.Attribute_Name,
                         getErrorString(item.Name),
                         XmlErrorCode.AlreadyDefined);
@@ -303,10 +275,11 @@ namespace System.Data.Entity.Edm.Validation.Internal
             return false;
         }
 
-        internal static bool IsPrimitiveTypesEqual(EdmTypeReference primitiveType1, EdmTypeReference primitiveType2)
+        internal static bool IsPrimitiveTypesEqual(EdmProperty primitiveType1, EdmProperty primitiveType2)
         {
             Contract.Assert(primitiveType1.IsPrimitiveType, "primitiveType1 must be a PrimitiveType");
             Contract.Assert(primitiveType2.IsPrimitiveType, "primitiveType2 must be a PrimitiveType");
+
             if (primitiveType1.PrimitiveType.PrimitiveTypeKind
                 == primitiveType2.PrimitiveType.PrimitiveTypeKind)
             {
@@ -315,28 +288,21 @@ namespace System.Data.Entity.Edm.Validation.Internal
             return false;
         }
 
-        internal static bool IsEdmTypeReferenceValid(EdmTypeReference typeReference)
+        internal static bool IsEdmTypeUsageValid(TypeUsage typeUsage)
         {
-            var visitedValidTypeReferences = new HashSet<EdmTypeReference>();
-            return IsEdmTypeReferenceValid(typeReference, visitedValidTypeReferences);
+            var visitedValidTypeReferences = new HashSet<TypeUsage>();
+            return IsEdmTypeUsageValid(typeUsage, visitedValidTypeReferences);
         }
 
-        private static bool IsEdmTypeReferenceValid(
-            EdmTypeReference typeReference, HashSet<EdmTypeReference> visitedValidTypeReferences)
+        private static bool IsEdmTypeUsageValid(
+            TypeUsage typeUsage, HashSet<TypeUsage> visitedValidTypeUsages)
         {
-            if (visitedValidTypeReferences.Contains(typeReference))
+            if (visitedValidTypeUsages.Contains(typeUsage))
             {
                 return false;
             }
 
-            if (typeReference.EdmType == null)
-            {
-                return false;
-            }
-            else
-            {
-                visitedValidTypeReferences.Add(typeReference);
-            }
+            visitedValidTypeUsages.Add(typeUsage);
 
             return true;
         }

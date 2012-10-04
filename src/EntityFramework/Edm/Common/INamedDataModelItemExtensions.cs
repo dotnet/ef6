@@ -3,12 +3,11 @@
 namespace System.Data.Entity.Edm.Common
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
 
-    public static class INamedDataModelItemExtensions
+    internal static class INamedDataModelItemExtensions
     {
-        public static bool TryGetByName<TNamedItem>(
-            this IEnumerable<TNamedItem> list, string itemName, out TNamedItem result)
-            where TNamedItem : INamedDataModelItem
+        public static bool TryGetByName(this IEnumerable<DataModelAnnotation> list, string itemName, out DataModelAnnotation result)
         {
             foreach (var listItem in list)
             {
@@ -19,8 +18,13 @@ namespace System.Data.Entity.Edm.Common
                     return true;
                 }
             }
-            result = default(TNamedItem);
+            result = default(DataModelAnnotation);
             return false;
+        }
+
+        internal static string GetQualifiedName(this INamedDataModelItem item, string qualifiedPrefix)
+        {
+            return qualifiedPrefix + "." + item.Name;
         }
     }
 }

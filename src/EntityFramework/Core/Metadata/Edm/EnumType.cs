@@ -19,14 +19,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             new ReadOnlyMetadataCollection<EnumMember>(new MetadataCollection<EnumMember>());
 
         /// <summary>
-        ///     Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field)
-        /// </summary>
-        private readonly bool _isFlags;
-
-        /// <summary>
         ///     Underlying type of this enumeration type.
         /// </summary>
-        private readonly PrimitiveType _underlyingType;
+        private PrimitiveType _underlyingType;
+
+        private bool _isFlags;
 
         /// <summary>
         ///     Initializes a new instance of the EnumType class. This default constructor is used for bootstraping
@@ -122,6 +119,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public bool IsFlags
         {
             get { return _isFlags; }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                _isFlags = value;
+            }
         }
 
         /// <summary>
@@ -131,6 +134,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public PrimitiveType UnderlyingType
         {
             get { return _underlyingType; }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                _underlyingType = value;
+            }
         }
 
         /// <summary>

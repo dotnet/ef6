@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -111,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     {
         public static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbTableMetadata fromTable,
             DbTableMetadata toTable,
             bool isMappingAnyInheritedProperty)
@@ -129,16 +129,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 if (isMappingAnyInheritedProperty)
                 {
                     // if mapping inherited properties, remove FKs that have the base type as the principal
-                    UpdatePrincipalTables(databaseMapping, toTable, entityType.BaseType, removeFks: true);
+                    UpdatePrincipalTables(databaseMapping, toTable, (EntityType)entityType.BaseType, removeFks: true);
                 }
             }
         }
 
         private static void UpdatePrincipalTables(
-            DbDatabaseMapping databaseMapping, DbTableMetadata toTable, EdmEntityType entityType, bool removeFks)
+            DbDatabaseMapping databaseMapping, DbTableMetadata toTable, EntityType entityType, bool removeFks)
         {
             foreach (var associationType in databaseMapping.Model.Namespaces.Single().AssociationTypes
-                .Where(at => at.SourceEnd.EntityType.Equals(entityType) || at.TargetEnd.EntityType.Equals(entityType)))
+                .Where(at => at.SourceEnd.GetEntityType().Equals(entityType) || at.TargetEnd.GetEntityType().Equals(entityType)))
             {
                 UpdatePrincipalTables(databaseMapping, toTable, removeFks, associationType, entityType);
             }
@@ -148,16 +148,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping, DbTableMetadata toTable, bool removeFks,
-            EdmAssociationType associationType, EdmEntityType et)
+            AssociationType associationType, EntityType et)
         {
-            EdmAssociationEnd principalEnd, dependentEnd;
-            var endsToCheck = new List<EdmAssociationEnd>();
+            AssociationEndMember principalEnd, dependentEnd;
+            var endsToCheck = new List<AssociationEndMember>();
             if (associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
             {
                 endsToCheck.Add(principalEnd);
             }
-            else if (associationType.SourceEnd.EndKind == EdmAssociationEndKind.Many
-                     && associationType.TargetEnd.EndKind == EdmAssociationEndKind.Many)
+            else if (associationType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many
+                     && associationType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
             {
                 // many to many consider both ends
                 endsToCheck.Add(associationType.SourceEnd);
@@ -171,12 +171,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             foreach (var end in endsToCheck)
             {
-                if (end.EntityType == et)
+                if (end.GetEntityType() == et)
                 {
                     IEnumerable<KeyValuePair<DbTableMetadata, IEnumerable<DbTableColumnMetadata>>> dependentTableInfos;
                     if (associationType.Constraint != null)
                     {
-                        var originalDependentType = associationType.GetOtherEnd(end).EntityType;
+                        var originalDependentType = associationType.GetOtherEnd(end).GetEntityType();
                         var allDependentTypes = databaseMapping.Model.GetSelfAndAllDerivedTypes(originalDependentType);
 
                         dependentTableInfos =
@@ -185,7 +185,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                 .SelectMany(
                                     dm => dm.TypeMappingFragments
                                               .Where(
-                                                  tmf => associationType.Constraint.DependentProperties
+                                                  tmf => associationType.Constraint.ToProperties
                                                              .All(
                                                                  p =>
                                                                  tmf.PropertyMappings.Any(
@@ -197,7 +197,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                         df.Table,
                                         df.PropertyMappings.Where(
                                             pm =>
-                                            associationType.Constraint.DependentProperties.Contains(
+                                            associationType.Constraint.ToProperties.Contains(
                                                 pm.PropertyPath.First())).Select(
                                                     pm => pm.Column)));
                     }
@@ -342,7 +342,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void MoveAllDeclaredForeignKeyConstraintsForPrimaryKeyColumns(
-            EdmEntityType entityType, DbTableMetadata fromTable, DbTableMetadata toTable)
+            EntityType entityType, DbTableMetadata fromTable, DbTableMetadata toTable)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
@@ -355,7 +355,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         fk =>
                             {
                                 var at = fk.GetAssociationType();
-                                if (at != null && at.Constraint.DependentEnd.EntityType == entityType
+                                if (at != null && at.Constraint.DependentEnd.GetEntityType() == entityType
                                     && !fk.GetIsTypeConstraint())
                                 {
                                     MoveForeignKeyConstraint(fromTable, toTable, fk);
@@ -586,7 +586,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static void MoveAllDeclaredAssociationSetMappings(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbTableMetadata fromTable,
             DbTableMetadata toTable,
             bool useExistingColumns)
@@ -602,10 +602,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         .Where(
                             a =>
                             a.Table == fromTable &&
-                            (a.AssociationSet.ElementType.SourceEnd.EntityType == entityType ||
-                             a.AssociationSet.ElementType.TargetEnd.EntityType == entityType)).ToArray())
+                            (a.AssociationSet.ElementType.SourceEnd.GetEntityType() == entityType ||
+                             a.AssociationSet.ElementType.TargetEnd.GetEntityType() == entityType)).ToArray())
             {
-                EdmAssociationEnd _, dependentEnd;
+                AssociationEndMember _, dependentEnd;
                 if (
                     !associationSetMapping.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(
                         out _, out dependentEnd))
@@ -613,7 +613,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     dependentEnd = associationSetMapping.AssociationSet.ElementType.TargetEnd;
                 }
 
-                if (dependentEnd.EntityType == entityType)
+                if (dependentEnd.GetEntityType() == entityType)
                 {
                     var dependentMapping = dependentEnd == associationSetMapping.TargetEndMapping.AssociationEnd
                                                ? associationSetMapping.SourceEndMapping
@@ -629,7 +629,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class DatabaseOperations
     {
         public static void AddTypeConstraint(
-            EdmEntityType entityType, DbTableMetadata principalTable, DbTableMetadata dependentTable, bool isSplitting)
+            EntityType entityType, DbTableMetadata principalTable, DbTableMetadata dependentTable, bool isSplitting)
         {
             Contract.Requires(principalTable != null);
             Contract.Requires(dependentTable != null);

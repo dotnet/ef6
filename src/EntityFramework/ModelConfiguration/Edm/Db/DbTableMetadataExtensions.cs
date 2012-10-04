@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
@@ -73,14 +73,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             table.Annotations.SetAnnotation(TableNameAnnotation, tableName);
         }
 
-        public static EdmEntityType GetKeyNamesType(this DbTableMetadata table)
+        public static EntityType GetKeyNamesType(this DbTableMetadata table)
         {
             Contract.Requires(table != null);
 
-            return (EdmEntityType)table.Annotations.GetAnnotation(KeyNamesTypeAnnotation);
+            return (EntityType)table.Annotations.GetAnnotation(KeyNamesTypeAnnotation);
         }
 
-        public static void SetKeyNamesType(this DbTableMetadata table, EdmEntityType entityType)
+        public static void SetKeyNamesType(this DbTableMetadata table, EntityType entityType)
         {
             Contract.Requires(table != null);
             Contract.Requires(entityType != null);

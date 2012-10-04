@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Serialization;
@@ -30,11 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             model.Name = "CodeFirstModel";
             model.Version = version;
-            model.Containers.Add(
-                new EdmEntityContainer
-                    {
-                        Name = "CodeFirstContainer"
-                    });
+            model.Containers.Add(new EntityContainer("CodeFirstContainer", DataSpace.CSpace));
             model.Namespaces.Add(
                 new EdmNamespace
                     {
@@ -60,17 +55,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static bool HasCascadeDeletePath(
-            this EdmModel model, EdmEntityType sourceEntityType, EdmEntityType targetEntityType)
+            this EdmModel model, EntityType sourceEntityType, EntityType targetEntityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(sourceEntityType != null);
             Contract.Requires(targetEntityType != null);
 
             return (from a in model.GetAssociationTypes()
-                    from ae in a.Members.Cast<EdmAssociationEnd>()
-                    where ae.EntityType == sourceEntityType
-                          && ae.DeleteAction == EdmOperationAction.Cascade
-                    select a.GetOtherEnd(ae).EntityType)
+                    from ae in a.Members.Cast<AssociationEndMember>()
+                    where ae.GetEntityType() == sourceEntityType
+                          && ae.DeleteBehavior == OperationAction.Cascade
+                    select a.GetOtherEnd(ae).GetEntityType())
                 .Any(
                     et => (et == targetEntityType)
                           || model.HasCascadeDeletePath(et, targetEntityType));
@@ -85,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .Union(model.GetComplexTypes().Select(ct => ct.GetClrType()));
         }
 
-        public static EdmNavigationProperty GetNavigationProperty(this EdmModel model, PropertyInfo propertyInfo)
+        public static NavigationProperty GetNavigationProperty(this EdmModel model, PropertyInfo propertyInfo)
         {
             Contract.Requires(model != null);
             Contract.Requires(propertyInfo != null);
@@ -176,16 +171,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static EdmNamespaceItem GetStructuralType(this EdmModel model, string name)
+        public static EdmType GetStructuralType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            return (EdmNamespaceItem)model.GetEntityType(name) ?? model.GetComplexType(name);
+            return (EdmType)model.GetEntityType(name) ?? model.GetComplexType(name);
         }
 
-        public static EdmEntityType GetEntityType(this EdmModel model, string name)
+        public static EntityType GetEntityType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -194,7 +189,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().EntityTypes.SingleOrDefault(e => e.Name == name);
         }
 
-        public static EdmEntityType GetEntityType(this EdmModel model, Type clrType)
+        public static EntityType GetEntityType(this EdmModel model, Type clrType)
         {
             Contract.Requires(model != null);
             Contract.Requires(clrType != null);
@@ -203,7 +198,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().EntityTypes.SingleOrDefault(e => e.GetClrType() == clrType);
         }
 
-        public static EdmComplexType GetComplexType(this EdmModel model, string name)
+        public static ComplexType GetComplexType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -212,7 +207,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().ComplexTypes.SingleOrDefault(e => e.Name == name);
         }
 
-        public static EdmComplexType GetComplexType(this EdmModel model, Type clrType)
+        public static ComplexType GetComplexType(this EdmModel model, Type clrType)
         {
             Contract.Requires(model != null);
             Contract.Requires(clrType != null);
@@ -221,7 +216,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().ComplexTypes.SingleOrDefault(e => e.GetClrType() == clrType);
         }
 
-        public static EdmEnumType GetEnumType(this EdmModel model, string name)
+        public static EnumType GetEnumType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -230,23 +225,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().EnumTypes.SingleOrDefault(e => e.Name == name);
         }
 
-        public static EdmEntityType AddEntityType(this EdmModel model, string name)
+        public static EntityType AddEntityType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var entityType = new EdmEntityType
-                                 {
-                                     Name = name
-                                 };
+            var entityType
+                = new EntityType(
+                    name,
+                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    DataSpace.CSpace);
 
             model.Namespaces.Single().EntityTypes.Add(entityType);
 
             return entityType;
         }
 
-        public static EdmEntitySet GetEntitySet(this EdmModel model, EdmEntityType entityType)
+        public static EntitySet GetEntitySet(this EdmModel model, EntityType entityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(entityType != null);
@@ -255,7 +251,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.GetEntitySets().SingleOrDefault(e => e.ElementType == entityType.GetRootType());
         }
 
-        public static EdmAssociationSet GetAssociationSet(this EdmModel model, EdmAssociationType associationType)
+        public static AssociationSet GetAssociationSet(this EdmModel model, AssociationType associationType)
         {
             Contract.Requires(model != null);
             Contract.Requires(associationType != null);
@@ -264,7 +260,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Containers.Single().AssociationSets.SingleOrDefault(a => a.ElementType == associationType);
         }
 
-        public static IEnumerable<EdmEntitySet> GetEntitySets(this EdmModel model)
+        public static IEnumerable<EntitySet> GetEntitySets(this EdmModel model)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Containers.Count == 1);
@@ -272,51 +268,52 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Containers.Single().EntitySets;
         }
 
-        public static EdmEntitySet AddEntitySet(
-            this EdmModel model, string name, EdmEntityType elementType)
+        public static EntitySet AddEntitySet(
+            this EdmModel model, string name, EntityType elementType)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(elementType != null);
             Contract.Assert(model.Containers.Count == 1);
 
-            var entitySet = new EdmEntitySet
-                                {
-                                    Name = name,
-                                    ElementType = elementType
-                                };
+            var entitySet = new EntitySet(name, null, null, null, elementType);
 
-            model.Containers.Single().EntitySets.Add(entitySet);
+            // TODO: METADATA: Naming uniqueness constraint
+            model.Containers.Single().AddEntitySetBase(entitySet);
 
             return entitySet;
         }
 
-        public static EdmComplexType AddComplexType(this EdmModel model, string name)
+        public static ComplexType AddComplexType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var complexType = new EdmComplexType
-                                  {
-                                      Name = name
-                                  };
+            var complexType
+                = new ComplexType(
+                    name,
+                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    DataSpace.CSpace);
 
             model.Namespaces.Single().ComplexTypes.Add(complexType);
 
             return complexType;
         }
 
-        public static EdmEnumType AddEnumType(this EdmModel model, string name)
+        public static EnumType AddEnumType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var enumType = new EdmEnumType
-                               {
-                                   Name = name
-                               };
+            var enumType
+                = new EnumType(
+                    name,
+                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
+                    false,
+                    DataSpace.CSpace);
 
             model.Namespaces.Single().EnumTypes.Add(enumType);
 
@@ -325,7 +322,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static EdmAssociationType GetAssociationType(this EdmModel model, string name)
+        public static AssociationType GetAssociationType(this EdmModel model, string name)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -334,7 +331,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().AssociationTypes.SingleOrDefault(a => a.Name == name);
         }
 
-        public static IEnumerable<EdmAssociationType> GetAssociationTypes(this EdmModel model)
+        public static IEnumerable<AssociationType> GetAssociationTypes(this EdmModel model)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Namespaces.Count == 1);
@@ -342,7 +339,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().AssociationTypes;
         }
 
-        public static IEnumerable<EdmEntityType> GetEntityTypes(this EdmModel model)
+        public static IEnumerable<EntityType> GetEntityTypes(this EdmModel model)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Namespaces.Count == 1);
@@ -350,7 +347,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().EntityTypes;
         }
 
-        public static IEnumerable<EdmComplexType> GetComplexTypes(this EdmModel model)
+        public static IEnumerable<ComplexType> GetComplexTypes(this EdmModel model)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Namespaces.Count == 1);
@@ -358,24 +355,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.Namespaces.Single().ComplexTypes;
         }
 
-        public static IEnumerable<EdmAssociationType> GetAssociationTypesBetween(
-            this EdmModel model, EdmEntityType first, EdmEntityType second)
+        public static IEnumerable<AssociationType> GetAssociationTypesBetween(
+            this EdmModel model, EntityType first, EntityType second)
         {
             Contract.Requires(model != null);
             Contract.Assert(model.Namespaces.Count == 1);
 
             return model.GetAssociationTypes().Where(
-                a => (a.SourceEnd.EntityType == first && a.TargetEnd.EntityType == second)
-                     || (a.SourceEnd.EntityType == second && a.TargetEnd.EntityType == first));
+                a => (a.SourceEnd.GetEntityType() == first && a.TargetEnd.GetEntityType() == second)
+                     || (a.SourceEnd.GetEntityType() == second && a.TargetEnd.GetEntityType() == first));
         }
 
-        public static EdmAssociationType AddAssociationType(
+        public static AssociationType AddAssociationType(
             this EdmModel model,
             string name,
-            EdmEntityType sourceEntityType,
-            EdmAssociationEndKind sourceAssociationEndKind,
-            EdmEntityType targetEntityType,
-            EdmAssociationEndKind targetAssociationEndKind)
+            EntityType sourceEntityType,
+            RelationshipMultiplicity sourceAssociationEndKind,
+            EntityType targetEntityType,
+            RelationshipMultiplicity targetAssociationEndKind)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
@@ -383,22 +380,27 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(targetEntityType != null);
             Contract.Assert(model.Namespaces.Count == 1);
 
-            var associationType = new EdmAssociationType().Initialize();
-
-            associationType.Name = name;
-            associationType.SourceEnd.Name = name + "_Source";
-            associationType.SourceEnd.EntityType = sourceEntityType;
-            associationType.SourceEnd.EndKind = sourceAssociationEndKind;
-            associationType.TargetEnd.Name = name + "_Target";
-            associationType.TargetEnd.EntityType = targetEntityType;
-            associationType.TargetEnd.EndKind = targetAssociationEndKind;
+            var associationType
+                = new AssociationType(
+                    name,
+                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    false,
+                    DataSpace.CSpace)
+                      {
+                          SourceEnd =
+                              new AssociationEndMember(
+                              name + "_Source", new RefType(sourceEntityType), sourceAssociationEndKind),
+                          TargetEnd =
+                              new AssociationEndMember(
+                              name + "_Target", new RefType(targetEntityType), targetAssociationEndKind)
+                      };
 
             model.AddAssociationType(associationType);
 
             return associationType;
         }
 
-        public static void AddAssociationType(this EdmModel model, EdmAssociationType associationType)
+        public static void AddAssociationType(this EdmModel model, AssociationType associationType)
         {
             Contract.Requires(model != null);
             Contract.Requires(associationType != null);
@@ -407,7 +409,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void RemoveEntityType(
-            this EdmModel model, EdmEntityType entityType)
+            this EdmModel model, EntityType entityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(entityType != null);
@@ -418,41 +420,48 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var container = model.Containers.Single();
 
-            container.EntitySets.Remove(container.EntitySets.SingleOrDefault(a => a.ElementType == entityType));
+            var entitySet = container.EntitySets.SingleOrDefault(a => a.ElementType == entityType);
+
+            if (entitySet != null)
+            {
+                container.RemoveEntitySetBase(entitySet);
+            }
         }
 
         public static void ReplaceEntitySet(
-            this EdmModel model, EdmEntityType entityType, EdmEntitySet newSet)
+            this EdmModel model, EntityType entityType, EntitySet newSet)
         {
             Contract.Requires(model != null);
             Contract.Requires(entityType != null);
             Contract.Assert(model.Containers.Count == 1);
 
             var container = model.Containers.Single();
-
             var entitySet = container.EntitySets.SingleOrDefault(a => a.ElementType == entityType);
-            container.EntitySets.Remove(entitySet);
 
-            if (entitySet != null
-                && newSet != null)
+            if (entitySet != null)
             {
-                // Update AssociationSets to point to entitySet instead of derivedEntitySet
-                foreach (var associationSet in model.Containers.Single().AssociationSets)
+                container.RemoveEntitySetBase(entitySet);
+
+                if (newSet != null)
                 {
-                    if (associationSet.SourceSet == entitySet)
+                    // Update AssociationSets to point to entitySet instead of derivedEntitySet
+                    foreach (var associationSet in model.Containers.Single().AssociationSets)
                     {
-                        associationSet.SourceSet = newSet;
-                    }
-                    if (associationSet.TargetSet == entitySet)
-                    {
-                        associationSet.TargetSet = newSet;
+                        if (associationSet.SourceSet == entitySet)
+                        {
+                            associationSet.SourceSet = newSet;
+                        }
+                        if (associationSet.TargetSet == entitySet)
+                        {
+                            associationSet.TargetSet = newSet;
+                        }
                     }
                 }
             }
         }
 
         public static void RemoveAssociationType(
-            this EdmModel model, EdmAssociationType associationType)
+            this EdmModel model, AssociationType associationType)
         {
             Contract.Requires(model != null);
             Contract.Requires(associationType != null);
@@ -463,33 +472,37 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var container = model.Containers.Single();
 
-            container.AssociationSets.Remove(
-                container.AssociationSets.SingleOrDefault(a => a.ElementType == associationType));
+            var associationSet
+                = container.AssociationSets.SingleOrDefault(a => a.ElementType == associationType);
+
+            if (associationSet != null)
+            {
+                container.RemoveEntitySetBase(associationSet);
+            }
         }
 
-        public static EdmAssociationSet AddAssociationSet(
-            this EdmModel model, string name, EdmAssociationType associationType)
+        public static AssociationSet AddAssociationSet(
+            this EdmModel model, string name, AssociationType associationType)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(associationType != null);
             Contract.Assert(model.Containers.Count == 1);
 
-            var associationSet = new EdmAssociationSet
-                                     {
-                                         Name = name,
-                                         ElementType = associationType,
-                                         SourceSet = model.GetEntitySet(associationType.SourceEnd.EntityType),
-                                         TargetSet = model.GetEntitySet(associationType.TargetEnd.EntityType)
-                                     };
+            var associationSet
+                = new AssociationSet(name, associationType)
+                      {
+                          SourceSet = model.GetEntitySet(associationType.SourceEnd.GetEntityType()),
+                          TargetSet = model.GetEntitySet(associationType.TargetEnd.GetEntityType())
+                      };
 
-            model.Containers.Single().AssociationSets.Add(associationSet);
+            model.Containers.Single().AddEntitySetBase(associationSet);
 
             return associationSet;
         }
 
-        public static IEnumerable<EdmEntityType> GetDerivedTypes(
-            this EdmModel model, EdmEntityType entityType)
+        public static IEnumerable<EntityType> GetDerivedTypes(
+            this EdmModel model, EntityType entityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(entityType != null);
@@ -497,19 +510,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.GetEntityTypes().Where(et => et.BaseType == entityType);
         }
 
-        public static IEnumerable<EdmEntityType> GetSelfAndAllDerivedTypes(
-            this EdmModel model, EdmEntityType entityType)
+        public static IEnumerable<EntityType> GetSelfAndAllDerivedTypes(
+            this EdmModel model, EntityType entityType)
         {
             Contract.Requires(model != null);
             Contract.Requires(entityType != null);
 
-            var entityTypes = new List<EdmEntityType>();
+            var entityTypes = new List<EntityType>();
             AddSelfAndAllDerivedTypes(model, entityType, entityTypes);
             return entityTypes;
         }
 
         private static void AddSelfAndAllDerivedTypes(
-            EdmModel model, EdmEntityType entityType, List<EdmEntityType> entityTypes)
+            EdmModel model, EntityType entityType, List<EntityType> entityTypes)
         {
             entityTypes.Add(entityType);
             foreach (var derivedType in model.GetEntityTypes().Where(et => et.BaseType == entityType))

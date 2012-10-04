@@ -3,7 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Linq;
     using Xunit;
 
@@ -12,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetRootType_should_return_same_type_when_no_base_type()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
 
             Assert.Same(entityType, entityType.GetRootType());
         }
@@ -20,9 +22,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetRootType_should_return_base_type_when_has_base_type()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
-                                     BaseType = new EdmEntityType()
+                                     BaseType = new EntityType()
                                  };
 
             Assert.Same(entityType.BaseType, entityType.GetRootType());
@@ -31,10 +33,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetPrimitiveProperties_should_return_only_primitive_properties()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Foo");
-            property.PropertyType.EdmType = EdmPrimitiveType.DateTime;
-            entityType.AddComplexProperty("Bar", new EdmComplexType());
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
+            entityType.AddComplexProperty("Bar", new ComplexType("C"));
 
             Assert.Equal(1, entityType.GetDeclaredPrimitiveProperties().Count());
             Assert.True(entityType.GetDeclaredPrimitiveProperties().Contains(property));
@@ -43,9 +47,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
 
-            entityType.SetConfiguration(42);
+            entityType.Annotations.SetConfiguration(42);
 
             Assert.Equal(42, entityType.GetConfiguration());
         }
@@ -53,11 +57,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_get_and_set_clr_type_annotation()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
 
             Assert.Null(entityType.GetClrType());
 
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
 
             Assert.Equal(typeof(object), entityType.GetClrType());
         }
@@ -65,22 +71,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddComplexProperty_should_create_and_add_complex_property()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
 
-            var complexType = new EdmComplexType();
+            var complexType = new ComplexType("C");
             var property = entityType.AddComplexProperty("Foo", complexType);
 
             Assert.NotNull(property);
             Assert.Equal("Foo", property.Name);
-            Assert.Same(complexType, property.PropertyType.ComplexType);
+            Assert.Same(complexType, property.ComplexType);
             Assert.True(entityType.DeclaredProperties.Contains(property));
         }
 
         [Fact]
         public void AddNavigationProperty_should_create_and_add_navigation_property()
         {
-            var entityType = new EdmEntityType();
-            var associationType = new EdmAssociationType();
+            var entityType = new EntityType();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
 
@@ -93,9 +101,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddPrimitiveProperty_should_create_and_add_to_declared_properties()
         {
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
 
-            var property = entityType.AddPrimitiveProperty("Foo");
+            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
 
             Assert.NotNull(property);
             Assert.Equal("Foo", property.Name);
@@ -105,11 +116,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetPrimitiveProperty_should_return_correct_property()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Foo");
-            property.PropertyType.EdmType = EdmPrimitiveType.Guid;
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            var foundProperty = entityType.GetDeclaredPrimitiveProperty("Foo");
+            entityType.AddMember(property1);
+            var property = property1;
+
+            var foundProperty = entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "Foo");
 
             Assert.NotNull(foundProperty);
             Assert.Same(property, foundProperty);
@@ -118,11 +131,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetNavigationProperty_should_return_correct_property()
         {
-            var entityType = new EdmEntityType();
-            var associationType = new EdmAssociationType().Initialize();
+            var entityType = new EntityType();
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
             var property = entityType.AddNavigationProperty("Foo", associationType);
 
-            var foundProperty = entityType.GetNavigationProperty("Foo");
+            var foundProperty = entityType.NavigationProperties.SingleOrDefault(np => np.Name == "Foo");
 
             Assert.NotNull(foundProperty);
             Assert.Same(property, foundProperty);
@@ -142,13 +157,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             derivedType1_1.BaseType = derivedType1;
             derivedType1_2.BaseType = derivedType1;
 
-            var typesVisited = new List<EdmEntityType>();
+            var typesVisited = new List<EntityType>();
             foreach (var derivedType in entityTypeRoot.TypeHierarchyIterator(model))
             {
                 typesVisited.Add(derivedType);
             }
 
-            var oracle = new List<EdmEntityType>
+            var oracle = new List<EntityType>
                              {
                                  entityTypeRoot,
                                  derivedType1,
@@ -162,21 +177,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsAncestorOf_should_return_correct_answer()
         {
-            var entityType1 = new EdmEntityType
+            var entityType1 = new EntityType
                                   {
                                       Name = "E1"
                                   };
-            var entityType2 = new EdmEntityType
+            var entityType2 = new EntityType
                                   {
                                       Name = "E2"
                                   };
             entityType2.BaseType = entityType1;
-            var entityType3 = new EdmEntityType
+            var entityType3 = new EntityType
                                   {
                                       Name = "E3"
                                   };
             entityType3.BaseType = entityType1;
-            var entityType4 = new EdmEntityType
+            var entityType4 = new EntityType
                                   {
                                       Name = "E4"
                                   };

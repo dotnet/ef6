@@ -6,32 +6,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Diagnostics.Contracts;
-    using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
     /// <summary>
-    /// Used to configure a property with length facets for an entity type or
-    /// complex type.
+    ///     Used to configure a property with length facets for an entity type or
+    ///     complex type.
     /// </summary>
     public abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the property is fixed length.
+        ///     Gets or sets a value indicating whether the property is fixed length.
         /// </summary>
         public bool? IsFixedLength { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum length of the property.
+        ///     Gets or sets the maximum length of the property.
         /// </summary>
         public int? MaxLength { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property allows the maximum
-        /// length supported by the database provider.
+        ///     Gets or sets a value indicating whether the property allows the maximum
+        ///     length supported by the database provider.
         /// </summary>
         public bool? IsMaxLength { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the LengthPropertyConfiguration class.
+        ///     Initializes a new instance of the LengthPropertyConfiguration class.
         /// </summary>
         protected LengthPropertyConfiguration()
         {
@@ -53,17 +52,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             if (IsFixedLength != null)
             {
-                property.PropertyType.PrimitiveTypeFacets.IsFixedLength = IsFixedLength;
+                property.IsFixedLength = IsFixedLength;
             }
 
             if (MaxLength != null)
             {
-                property.PropertyType.PrimitiveTypeFacets.MaxLength = MaxLength;
+                property.MaxLength = MaxLength;
             }
 
             if (IsMaxLength != null)
             {
-                property.PropertyType.PrimitiveTypeFacets.IsMaxLength = IsMaxLength;
+                property.IsMaxLength = IsMaxLength.Value;
             }
         }
 

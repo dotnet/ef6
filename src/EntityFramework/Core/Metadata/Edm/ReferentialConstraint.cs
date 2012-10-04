@@ -34,7 +34,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private readonly RelationshipEndMember _fromRole;
-        private readonly RelationshipEndMember _toRole;
+        private RelationshipEndMember _toRole;
+
         private readonly ReadOnlyMetadataCollection<EdmProperty> _fromProperties;
         private readonly ReadOnlyMetadataCollection<EdmProperty> _toProperties;
 
@@ -74,6 +75,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipEndMember ToRole
         {
             get { return _toRole; }
+        }
+
+        internal AssociationEndMember DependentEnd
+        {
+            get { return (AssociationEndMember)ToRole; }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                _toRole = value;
+            }
         }
 
         /// <summary>

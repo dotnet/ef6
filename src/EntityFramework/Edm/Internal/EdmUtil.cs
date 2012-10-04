@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Edm.Internal
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Text;
@@ -19,82 +20,82 @@ namespace System.Data.Entity.Edm.Internal
             return string.Equals(string1, string2, StringComparison.Ordinal);
         }
 
-        internal static bool TryGetPrimitiveTypeKindFromString(string value, out EdmPrimitiveTypeKind typeKind)
+        internal static bool TryGetPrimitiveTypeKindFromString(string value, out PrimitiveTypeKind typeKind)
         {
             Contract.Assert(value != null, "Ensure value is non-null before calling PrimitiveTypeKindFromString");
 
             switch (value)
             {
                 case "Binary":
-                    typeKind = EdmPrimitiveTypeKind.Binary;
+                    typeKind = PrimitiveTypeKind.Binary;
                     return true;
 
                 case "Boolean":
-                    typeKind = EdmPrimitiveTypeKind.Boolean;
+                    typeKind = PrimitiveTypeKind.Boolean;
                     return true;
 
                 case "Byte":
-                    typeKind = EdmPrimitiveTypeKind.Byte;
+                    typeKind = PrimitiveTypeKind.Byte;
                     return true;
 
                 case "DateTime":
-                    typeKind = EdmPrimitiveTypeKind.DateTime;
+                    typeKind = PrimitiveTypeKind.DateTime;
                     return true;
 
                 case "DateTimeOffset":
-                    typeKind = EdmPrimitiveTypeKind.DateTimeOffset;
+                    typeKind = PrimitiveTypeKind.DateTimeOffset;
                     return true;
 
                 case "Decimal":
-                    typeKind = EdmPrimitiveTypeKind.Decimal;
+                    typeKind = PrimitiveTypeKind.Decimal;
                     return true;
 
                 case "Double":
-                    typeKind = EdmPrimitiveTypeKind.Double;
+                    typeKind = PrimitiveTypeKind.Double;
                     return true;
 
                 case "Guid":
-                    typeKind = EdmPrimitiveTypeKind.Guid;
+                    typeKind = PrimitiveTypeKind.Guid;
                     return true;
 
                 case "Single":
-                    typeKind = EdmPrimitiveTypeKind.Single;
+                    typeKind = PrimitiveTypeKind.Single;
                     return true;
 
                 case "SByte":
-                    typeKind = EdmPrimitiveTypeKind.SByte;
+                    typeKind = PrimitiveTypeKind.SByte;
                     return true;
 
                 case "Int16":
-                    typeKind = EdmPrimitiveTypeKind.Int16;
+                    typeKind = PrimitiveTypeKind.Int16;
                     return true;
 
                 case "Int32":
-                    typeKind = EdmPrimitiveTypeKind.Int32;
+                    typeKind = PrimitiveTypeKind.Int32;
                     return true;
 
                 case "Int64":
-                    typeKind = EdmPrimitiveTypeKind.Int64;
+                    typeKind = PrimitiveTypeKind.Int64;
                     return true;
 
                 case "String":
-                    typeKind = EdmPrimitiveTypeKind.String;
+                    typeKind = PrimitiveTypeKind.String;
                     return true;
 
                 case "Time":
-                    typeKind = EdmPrimitiveTypeKind.Time;
+                    typeKind = PrimitiveTypeKind.Time;
                     return true;
 
                 case "Geometry":
-                    typeKind = EdmPrimitiveTypeKind.Geometry;
+                    typeKind = PrimitiveTypeKind.Geometry;
                     return true;
 
                 case "Geography":
-                    typeKind = EdmPrimitiveTypeKind.Geography;
+                    typeKind = PrimitiveTypeKind.Geography;
                     return true;
 
                 default:
-                    typeKind = default(EdmPrimitiveTypeKind);
+                    typeKind = default(PrimitiveTypeKind);
                     return false;
             }
         }
@@ -108,8 +109,6 @@ namespace System.Data.Entity.Edm.Internal
         {
             return IsValidDottedName(name);
         }
-
-        #region Extremely Dubious SOM Utility methods that we should strongly consider removing
 
         // this is what we should be doing for CDM schemas
         // the RegEx for valid identifiers are taken from the C# Language Specification (2.4.2 Identifiers)
@@ -283,7 +282,5 @@ namespace System.Data.Entity.Edm.Internal
             }
             return builder.ToString();
         }
-
-        #endregion
     }
 }

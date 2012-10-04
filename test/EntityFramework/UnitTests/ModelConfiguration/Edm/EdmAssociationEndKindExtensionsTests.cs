@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class EdmAssociationEndKindExtensionsTests
@@ -10,9 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void IsX_should_return_true_when_end_kind_is_X()
         {
-            Assert.True(EdmAssociationEndKind.Required.IsRequired());
-            Assert.True(EdmAssociationEndKind.Optional.IsOptional());
-            Assert.True(EdmAssociationEndKind.Many.IsMany());
+            Assert.True(RelationshipMultiplicity.One.IsRequired());
+            Assert.True(RelationshipMultiplicity.ZeroOrOne.IsOptional());
+            Assert.True(RelationshipMultiplicity.Many.IsMany());
         }
     }
 }

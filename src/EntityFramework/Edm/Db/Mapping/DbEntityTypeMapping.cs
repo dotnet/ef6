@@ -3,18 +3,18 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Allows the construction and modification of a complete or partial mapping of an EDM entity type ( <see
-    ///      cref="EdmEntityType" /> ) or type hierarchy to a specific database table ( <see cref="DbTableMetadata" /> ).
+    ///      cref="EntityType" /> ) or type hierarchy to a specific database table ( <see cref="DbTableMetadata" /> ).
     /// </summary>
     public class DbEntityTypeMapping
         : DbMappingMetadataItem
     {
-        private readonly BackingList<DbEntityTypeMappingFragment> typeMappingFragments =
-            new BackingList<DbEntityTypeMappingFragment>();
+        private readonly List<DbEntityTypeMappingFragment> typeMappingFragments =
+            new List<DbEntityTypeMappingFragment>();
 
         internal override DbMappingItemKind GetItemKind()
         {
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets an <see cref="EdmEntityType" /> value representing the entity type or hierarchy that is being mapped.
+        ///     Gets or sets an <see cref="EntityType" /> value representing the entity type or hierarchy that is being mapped.
         /// </summary>
-        public virtual EdmEntityType EntityType { get; set; }
+        public virtual EntityType EntityType { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether this type mapping applies to <see cref="EntityType" /> and all its direct or indirect subtypes ( <code>true</code> ), or only to <see
@@ -35,8 +35,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbEntityTypeMappingFragment> TypeMappingFragments
         {
-            get { return typeMappingFragments.EnsureValue(); }
-            set { typeMappingFragments.SetValue(value); }
+            get { return typeMappingFragments; }
         }
     }
 }

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -14,7 +15,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class EntityType : EntityTypeBase
     {
         internal EntityType()
+            : this("E", XmlConstants.ModelNamespace_3, DataSpace.CSpace)
         {
+            // testing only
         }
 
         /// <summary>
@@ -63,8 +66,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         private RefType _referenceType;
 
-        private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private RowType _keyRow;
+
+        public ReadOnlyMetadataCollection<EdmProperty> DeclaredKeyProperties
+        {
+            get
+            {
+                return new ReadOnlyMetadataCollection<EdmProperty>(
+                    KeyMembers.Where(km => DeclaredMembers.Contains(km)).Cast<EdmProperty>().ToList());
+            }
+        }
 
         /// <summary>
         ///     Returns the kind of the type
@@ -88,6 +99,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 "Only members of type Property may be added to Entity types.");
         }
 
+        public ReadOnlyMetadataCollection<NavigationProperty> DeclaredNavigationProperties
+        {
+            get { return GetDeclaredOnlyMembers<NavigationProperty>(); }
+        }
+
         /// <summary>
         ///     Returns the list of Navigation Properties for this entity type
         /// </summary>
@@ -96,8 +112,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 return new FilteredReadOnlyMetadataCollection<NavigationProperty, EdmMember>(
-                    (Members), Helper.IsNavigationProperty);
+                    Members, Helper.IsNavigationProperty);
             }
+        }
+
+        public ReadOnlyMetadataCollection<EdmProperty> DeclaredProperties
+        {
+            get { return GetDeclaredOnlyMembers<EdmProperty>(); }
+        }
+
+        public ReadOnlyMetadataCollection<EdmMember> DeclaredMembers
+        {
+            get { return GetDeclaredOnlyMembers<EdmMember>(); }
         }
 
         /// <summary>
@@ -108,17 +134,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                Debug.Assert(
-                    IsReadOnly,
-                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to readonly");
-                if (null == _properties)
-                {
-                    Interlocked.CompareExchange(
-                        ref _properties,
-                        new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
-                            Members, Helper.IsEdmProperty), null);
-                }
-                return _properties;
+                return new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
+                    Members, Helper.IsEdmProperty);
             }
         }
 
@@ -141,10 +158,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (_keyRow == null)
             {
                 var keyProperties = new List<EdmProperty>(KeyMembers.Count);
-                foreach (var keyMember in KeyMembers)
-                {
-                    keyProperties.Add(new EdmProperty(keyMember.Name, Helper.GetModelTypeUsage(keyMember)));
-                }
+                keyProperties.AddRange(KeyMembers.Select(keyMember => new EdmProperty(keyMember.Name, Helper.GetModelTypeUsage(keyMember))));
                 Interlocked.CompareExchange(ref _keyRow, new RowType(keyProperties), null);
             }
             return _keyRow;

@@ -2,12 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
 
     /// <summary>
-    /// Used to configure an independent constraint on a navigation property.
+    ///     Used to configure an independent constraint on a navigation property.
     /// </summary>
     public class IndependentConstraintConfiguration : ConstraintConfiguration
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        /// Gets the Singleton instance of the IndependentConstraintConfiguration class.
+        ///     Gets the Singleton instance of the IndependentConstraintConfiguration class.
         /// </summary>
         public static ConstraintConfiguration Instance
         {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         internal override void Configure(
-            EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+            AssociationType associationType, AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration)
         {
             associationType.MarkIndependent();

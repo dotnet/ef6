@@ -5,8 +5,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Text;
     using System.Threading;
 
@@ -87,6 +89,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal TypeUsage ShallowCopy(FacetValues facetValues)
         {
             return Create(_edmType, OverrideFacetValues(Facets, facetValues));
+        }
+
+        internal TypeUsage ShallowCopy(params Facet[] facetValues)
+        {
+            return Create(_edmType, OverrideFacetValues(Facets, facetValues));
+        }
+
+        private static IEnumerable<Facet> OverrideFacetValues(IEnumerable<Facet> facets, IEnumerable<Facet> facetValues)
+        {
+            return facets.Except(facetValues, (f1, f2) => f1.EdmEquals(f2)).Union(facetValues);
         }
 
         /// <summary>
@@ -388,7 +400,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                                    DbProviderManifest.PrecisionFacetName,
                                                                    DbProviderManifest.ScaleFacetName,
                                                                    DbProviderManifest.UnicodeFacetName,
-                                                                   DbProviderManifest.SridFacetName,
+                                                                   DbProviderManifest.SridFacetName
                                                                };
 
         internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
@@ -530,10 +542,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private IEnumerable<Facet> GetFacets()
         {
-            foreach (var facetDescription in _edmType.GetAssociatedFacetDescriptions())
-            {
-                yield return facetDescription.DefaultValueFacet;
-            }
+            return _edmType.GetAssociatedFacetDescriptions().Select(facetDescription => facetDescription.DefaultValueFacet);
         }
 
         internal override void SetReadOnly()

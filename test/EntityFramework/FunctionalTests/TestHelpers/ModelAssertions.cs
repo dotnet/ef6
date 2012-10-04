@@ -3,12 +3,14 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    
 
     internal static class ModelAssertions
     {
@@ -16,20 +18,20 @@ namespace System.Data.Entity
             this DbDatabaseMapping databaseMapping, Expression<Func<TStructuralType, object>> propertyExpression)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems
-                    .OfType<EdmStructuralType>()
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems
+                    .OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var property
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>()
                     .Where(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
                                  && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
-                    .SelectMany(th => th.ChildItems.OfType<EdmProperty>()).Single(
+                    .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrPropertyInfo"
                                  && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)));
@@ -37,7 +39,7 @@ namespace System.Data.Entity
             var columns
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
-                    .Where(etm => !(structuralType is EdmEntityType) || etm.EntityType == structuralType)
+                    .Where(etm => !(structuralType is EntityType) || etm.EntityType == structuralType)
                     .SelectMany(etm => etm.TypeMappingFragments)
                     .SelectMany(tmf => tmf.PropertyMappings)
                     .Where(pm => pm.PropertyPath.Contains(property))
@@ -49,7 +51,7 @@ namespace System.Data.Entity
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -69,7 +71,7 @@ namespace System.Data.Entity
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping, string tableName)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>()
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
@@ -104,7 +106,7 @@ namespace System.Data.Entity
             string tableName)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -128,7 +130,7 @@ namespace System.Data.Entity
             string tableName, bool isTypeOfMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -145,7 +147,7 @@ namespace System.Data.Entity
         internal static void AssertNoMapping<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().ChildItems.OfType<EdmStructuralType>().Single(
+                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -206,16 +208,30 @@ namespace System.Data.Entity
                 _column = column;
             }
 
-            public PropertyAssertions IsTrue(Func<EdmTypeReference, bool?> facet)
+            public PropertyAssertions IsTrue(Func<TypeUsage, bool?> facet)
             {
-                Xunit.Assert.Equal(true, facet(_property.PropertyType));
+                Xunit.Assert.Equal(true, facet(_property.TypeUsage));
 
                 return this;
             }
 
-            public PropertyAssertions IsFalse(Func<EdmTypeReference, bool?> facet)
+            public PropertyAssertions IsTrue(Func<EdmProperty, bool?> facet)
             {
-                Xunit.Assert.Equal(false, facet(_property.PropertyType));
+                Xunit.Assert.Equal(true, facet(_property));
+
+                return this;
+            }
+
+            public PropertyAssertions IsFalse(Func<TypeUsage, bool?> facet)
+            {
+                Xunit.Assert.Equal(false, facet(_property.TypeUsage));
+
+                return this;
+            }
+
+            public PropertyAssertions IsFalse(Func<EdmProperty, bool?> facet)
+            {
+                Xunit.Assert.Equal(false, facet(_property));
 
                 return this;
             }
@@ -234,9 +250,16 @@ namespace System.Data.Entity
                 return this;
             }
 
-            public PropertyAssertions FacetEqual(object expected, Func<EdmPrimitiveTypeFacets, object> facet)
+            public PropertyAssertions FacetEqual(object expected, Func<TypeUsage, object> facet)
             {
-                Xunit.Assert.Equal(expected, facet(_property.PropertyType.PrimitiveTypeFacets));
+                Xunit.Assert.Equal(expected, facet(_property.TypeUsage));
+
+                return this;
+            }
+
+            public PropertyAssertions FacetEqual(object expected, Func<EdmProperty, object> facet)
+            {
+                Xunit.Assert.Equal(expected, facet(_property));
 
                 return this;
             }

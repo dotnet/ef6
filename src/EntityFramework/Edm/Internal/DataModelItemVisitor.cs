@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
 
     internal abstract class DataModelItemVisitor
@@ -18,9 +19,12 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        #region Documentation, Annotations
-
         protected virtual void VisitAnnotations(DataModelItem item, IEnumerable<DataModelAnnotation> annotations)
+        {
+            VisitCollection(annotations, VisitAnnotation);
+        }
+
+        protected virtual void VisitAnnotations(MetadataItem item, IEnumerable<DataModelAnnotation> annotations)
         {
             VisitCollection(annotations, VisitAnnotation);
         }
@@ -28,8 +32,6 @@ namespace System.Data.Entity.Edm.Internal
         protected virtual void VisitAnnotation(DataModelAnnotation item)
         {
         }
-
-        #endregion
 
         protected virtual void VisitDataModelItem(DataModelItem item)
         {

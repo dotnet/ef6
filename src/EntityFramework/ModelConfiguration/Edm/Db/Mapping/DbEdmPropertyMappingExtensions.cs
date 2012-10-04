@@ -12,12 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             Contract.Requires(propertyMapping != null);
 
-            var isNullable = propertyMapping.PropertyPath.Last().PropertyType.IsNullable;
-
-            if (isNullable != null)
-            {
-                propertyMapping.Column.IsNullable = (bool)isNullable;
-            }
+            propertyMapping.Column.IsNullable = propertyMapping.PropertyPath.Last().Nullable;
         }
     }
 }

@@ -4,9 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
     public sealed class TimestampAttributeConventionTests
@@ -55,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var propertyConfiguration = new BinaryPropertyConfiguration
                                             {
-                                                ConcurrencyMode = EdmConcurrencyMode.Fixed
+                                                ConcurrencyMode = ConcurrencyMode.Fixed
                                             };
 
             new TimestampAttributeConvention()
@@ -108,11 +107,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
         private void Assert_Timestamp(BinaryPropertyConfiguration binaryPropertyConfiguration)
         {
-            binaryPropertyConfiguration.Configure(new EdmProperty().AsPrimitive());
+            binaryPropertyConfiguration.Configure(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             Assert.Equal("rowversion", binaryPropertyConfiguration.ColumnType);
             Assert.Equal(false, binaryPropertyConfiguration.IsNullable);
-            Assert.Equal(EdmConcurrencyMode.Fixed, binaryPropertyConfiguration.ConcurrencyMode);
+            Assert.Equal(ConcurrencyMode.Fixed, binaryPropertyConfiguration.ConcurrencyMode);
             Assert.Equal(DatabaseGeneratedOption.Computed, binaryPropertyConfiguration.DatabaseGeneratedOption);
             Assert.Equal(8, binaryPropertyConfiguration.MaxLength.Value);
         }

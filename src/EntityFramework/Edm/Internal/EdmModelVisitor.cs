@@ -3,78 +3,63 @@
 namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
 
     internal abstract class EdmModelVisitor : DataModelItemVisitor
     {
-        protected virtual void VisitEdmDataModelItem(EdmDataModelItem item)
+        protected virtual void VisitMetadataItem(MetadataItem item)
         {
-        }
-
-        protected virtual void VisitEdmMetadataItem(EdmMetadataItem item)
-        {
-            VisitEdmDataModelItem(item);
             if (item != null)
             {
-                if (item.HasAnnotations)
+                if (item.Annotations.Any())
                 {
                     VisitAnnotations(item, item.Annotations);
                 }
             }
         }
 
-        protected virtual void VisitEdmNamedMetadataItem(EdmNamedMetadataItem item)
-        {
-            VisitEdmMetadataItem(item);
-        }
-
-        protected virtual void VisitEdmNamespaceItem(EdmNamespaceItem item)
-        {
-            VisitEdmNamedMetadataItem(item);
-        }
-
-        #region Container, EntitySet, AssociationSet, FunctionImport
-
-        protected virtual void VisitEntityContainers(EdmModel model, IEnumerable<EdmEntityContainer> entityContainers)
+        protected virtual void VisitEntityContainers(EdmModel model, IEnumerable<EntityContainer> entityContainers)
         {
             VisitCollection(entityContainers, VisitEdmEntityContainer);
         }
 
-        protected virtual void VisitEdmEntityContainer(EdmEntityContainer item)
+        protected virtual void VisitEdmEntityContainer(EntityContainer item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.HasEntitySets)
+                if (item.EntitySets.Any())
                 {
                     VisitEntitySets(item, item.EntitySets);
                 }
 
-                if (item.HasAssociationSets)
+                if (item.AssociationSets.Any())
                 {
                     VisitAssociationSets(item, item.AssociationSets);
                 }
             }
         }
 
-        protected virtual void VisitEntitySets(EdmEntityContainer container, IEnumerable<EdmEntitySet> entitySets)
+        protected virtual void VisitEntitySets(EntityContainer container, IEnumerable<EntitySet> entitySets)
         {
             VisitCollection(entitySets, VisitEdmEntitySet);
         }
 
-        protected virtual void VisitEdmEntitySet(EdmEntitySet item)
+        protected virtual void VisitEdmEntitySet(EntitySet item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
         }
 
         protected virtual void VisitAssociationSets(
-            EdmEntityContainer container, IEnumerable<EdmAssociationSet> associationSets)
+            EntityContainer container, IEnumerable<AssociationSet> associationSets)
         {
             VisitCollection(associationSets, VisitEdmAssociationSet);
         }
 
-        protected virtual void VisitEdmAssociationSet(EdmAssociationSet item)
+        protected virtual void VisitEdmAssociationSet(AssociationSet item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
             if (item.SourceSet != null)
             {
                 VisitEdmAssociationSetEnd(item.SourceSet);
@@ -85,14 +70,10 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        protected virtual void VisitEdmAssociationSetEnd(EdmEntitySet item)
+        protected virtual void VisitEdmAssociationSetEnd(EntitySet item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
         }
-
-        #endregion
-
-        #region Namespace, EntityType, ComplexType, Association, Function
 
         protected virtual void VisitNamespaces(EdmModel model, IEnumerable<EdmNamespace> namespaces)
         {
@@ -101,124 +82,124 @@ namespace System.Data.Entity.Edm.Internal
 
         protected virtual void VisitEdmNamespace(EdmNamespace item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.HasComplexTypes)
+                if (item.ComplexTypes.Any())
                 {
                     VisitComplexTypes(item, item.ComplexTypes);
                 }
 
-                if (item.HasEntityTypes)
+                if (item.EntityTypes.Any())
                 {
                     VisitEntityTypes(item, item.EntityTypes);
                 }
 
-                if (item.HasEnumTypes)
+                if (item.EnumTypes.Any())
                 {
                     VisitEnumTypes(item, item.EnumTypes);
                 }
 
-                if (item.HasAssociationTypes)
+                if (item.AssociationTypes.Any())
                 {
                     VisitAssociationTypes(item, item.AssociationTypes);
                 }
             }
         }
 
-        protected virtual void VisitComplexTypes(EdmNamespace edmNamespace, IEnumerable<EdmComplexType> complexTypes)
+        protected virtual void VisitComplexTypes(EdmNamespace edmNamespace, IEnumerable<ComplexType> complexTypes)
         {
             VisitCollection(complexTypes, VisitComplexType);
         }
 
-        protected virtual void VisitComplexType(EdmComplexType item)
+        protected virtual void VisitComplexType(ComplexType item)
         {
-            VisitEdmNamedMetadataItem(item);
-            if (item.HasDeclaredProperties)
+            VisitMetadataItem(item);
+            if (item.Properties.Any())
             {
-                VisitCollection(item.DeclaredProperties, VisitEdmProperty);
+                VisitCollection(item.Properties, VisitEdmProperty);
             }
         }
 
-        protected virtual void VisitDeclaredProperties(EdmComplexType complexType, IEnumerable<EdmProperty> properties)
+        protected virtual void VisitDeclaredProperties(ComplexType complexType, IEnumerable<EdmProperty> properties)
         {
             VisitCollection(properties, VisitEdmProperty);
         }
 
-        protected virtual void VisitEntityTypes(EdmNamespace edmNamespace, IEnumerable<EdmEntityType> entityTypes)
+        protected virtual void VisitEntityTypes(EdmNamespace edmNamespace, IEnumerable<EntityType> entityTypes)
         {
             VisitCollection(entityTypes, VisitEdmEntityType);
         }
 
-        protected virtual void VisitEnumTypes(EdmNamespace edmNamespace, IEnumerable<EdmEnumType> enumTypes)
+        protected virtual void VisitEnumTypes(EdmNamespace edmNamespace, IEnumerable<EnumType> enumTypes)
         {
             VisitCollection(enumTypes, VisitEdmEnumType);
         }
 
-        protected virtual void VisitEdmEnumType(EdmEnumType item)
+        protected virtual void VisitEdmEnumType(EnumType item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.HasMembers)
+                if (item.Members.Any())
                 {
                     VisitEnumMembers(item, item.Members);
                 }
             }
         }
 
-        protected virtual void VisitEnumMembers(EdmEnumType enumType, IEnumerable<EdmEnumTypeMember> members)
+        protected virtual void VisitEnumMembers(EnumType enumType, IEnumerable<EnumMember> members)
         {
             VisitCollection(members, VisitEdmEnumTypeMember);
         }
 
-        protected virtual void VisitEdmEntityType(EdmEntityType item)
+        protected virtual void VisitEdmEntityType(EntityType item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.HasDeclaredKeyProperties)
+                if (item.DeclaredKeyProperties.Any())
                 {
                     VisitDeclaredKeyProperties(item, item.DeclaredKeyProperties);
                 }
 
-                if (item.HasDeclaredProperties)
+                if (item.DeclaredProperties.Any())
                 {
                     VisitDeclaredProperties(item, item.DeclaredProperties);
                 }
 
-                if (item.HasDeclaredNavigationProperties)
+                if (item.DeclaredNavigationProperties.Any())
                 {
                     VisitDeclaredNavigationProperties(item, item.DeclaredNavigationProperties);
                 }
             }
         }
 
-        protected virtual void VisitDeclaredKeyProperties(EdmEntityType entityType, IEnumerable<EdmProperty> properties)
+        protected virtual void VisitDeclaredKeyProperties(EntityType entityType, IEnumerable<EdmProperty> properties)
         {
             VisitCollection(properties, VisitEdmProperty);
         }
 
-        protected virtual void VisitDeclaredProperties(EdmEntityType entityType, IEnumerable<EdmProperty> properties)
+        protected virtual void VisitDeclaredProperties(EntityType entityType, IEnumerable<EdmProperty> properties)
         {
             VisitCollection(properties, VisitEdmProperty);
         }
 
         protected virtual void VisitDeclaredNavigationProperties(
-            EdmEntityType entityType, IEnumerable<EdmNavigationProperty> navigationProperties)
+            EntityType entityType, IEnumerable<NavigationProperty> navigationProperties)
         {
             VisitCollection(navigationProperties, VisitEdmNavigationProperty);
         }
 
         protected virtual void VisitAssociationTypes(
-            EdmNamespace edmNamespace, IEnumerable<EdmAssociationType> associationTypes)
+            EdmNamespace edmNamespace, IEnumerable<AssociationType> associationTypes)
         {
             VisitCollection(associationTypes, VisitEdmAssociationType);
         }
 
-        protected virtual void VisitEdmAssociationType(EdmAssociationType item)
+        protected virtual void VisitEdmAssociationType(AssociationType item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
 
             if (item != null)
             {
@@ -237,70 +218,49 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        protected virtual void VisitEdmTypeReference(EdmTypeReference reference)
-        {
-            VisitEdmMetadataItem(reference);
-            if (reference.HasFacets)
-            {
-                VisitEdmPrimitiveTypeFacets(reference.PrimitiveTypeFacets);
-            }
-        }
-
-        protected virtual void VisitEdmPrimitiveTypeFacets(EdmPrimitiveTypeFacets facets)
-        {
-            VisitEdmDataModelItem(facets);
-        }
-
         protected virtual void VisitEdmProperty(EdmProperty item)
         {
-            VisitEdmNamedMetadataItem(item);
-            if (item.PropertyType != null)
-            {
-                VisitEdmTypeReference(item.PropertyType);
-            }
+            VisitMetadataItem(item);
         }
 
-        protected virtual void VisitEdmEnumTypeMember(EdmEnumTypeMember item)
+        protected virtual void VisitEdmEnumTypeMember(EnumMember item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
         }
 
-        protected virtual void VisitEdmAssociationEnd(EdmAssociationEnd item)
+        protected virtual void VisitEdmAssociationEnd(AssociationEndMember item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
         }
 
-        protected virtual void VisitEdmAssociationConstraint(EdmAssociationConstraint item)
+        protected virtual void VisitEdmAssociationConstraint(ReferentialConstraint item)
         {
             if (item != null)
             {
-                VisitEdmMetadataItem(item);
+                VisitMetadataItem(item);
                 if (item.DependentEnd != null)
                 {
                     VisitEdmAssociationEnd(item.DependentEnd);
                 }
-                VisitCollection(item.DependentProperties, VisitEdmProperty);
+                VisitCollection(item.ToProperties, VisitEdmProperty);
             }
         }
 
-        protected virtual void VisitEdmNavigationProperty(EdmNavigationProperty item)
+        protected virtual void VisitEdmNavigationProperty(NavigationProperty item)
         {
-            VisitEdmNamedMetadataItem(item);
+            VisitMetadataItem(item);
         }
-
-        #endregion
 
         protected virtual void VisitEdmModel(EdmModel item)
         {
-            VisitEdmNamedMetadataItem(item);
             if (item != null)
             {
-                if (item.HasNamespaces)
+                if (item.Namespaces.Any())
                 {
                     VisitNamespaces(item, item.Namespaces);
                 }
 
-                if (item.HasContainers)
+                if (item.Containers.Any())
                 {
                     VisitEntityContainers(item, item.Containers);
                 }

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 if (fragment != null)
                 {
                     // find if this inherited property is mapped to another table by a base type
-                    var baseType = entityTypeMapping.EntityType.BaseType;
+                    var baseType = (EntityType)entityTypeMapping.EntityType.BaseType;
                     while (baseType != null)
                     {
                         if (databaseMapping.GetEntityTypeMappings(baseType)
@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         {
                             return true;
                         }
-                        baseType = baseType.BaseType;
+                        baseType = (EntityType)baseType.BaseType;
                     }
                 }
             }
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 .SingleOrDefault(tmf => tmf.PropertyMappings.Any(pm => pm.PropertyPath.Last() == property));
         }
 
-        private static bool HasBaseWithIsTypeOf(DbEntitySetMapping entitySetMapping, EdmEntityType entityType)
+        private static bool HasBaseWithIsTypeOf(DbEntitySetMapping entitySetMapping, EntityType entityType)
         {
             var baseType = entityType.BaseType;
 

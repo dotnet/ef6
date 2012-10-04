@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Threading;
 
     /// <summary>
@@ -121,11 +122,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="index"> The index to search for </param>
         /// <returns> An item from the collection </returns>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the index is out of the range for the Collection</exception>
-        /// <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public virtual T this[int index]
         {
             get { return _collectionData.OrderedList[index]; }
-            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
+            set
+            {
+                ThrowIfReadOnly();
+
+                _collectionData.OrderedList[index] = value;
+                _collectionData.IdentityDictionary = null;
+            }
         }
 
         /// <summary>
@@ -173,6 +179,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             AddInternal(item);
         }
 
+        internal void Remove(T item)
+        {
+            Contract.Requires(item != null);
+            Contract.Requires(Contains(item));
+            ThrowIfReadOnly();
+
+            _collectionData.OrderedList.Remove(item);
+            _collectionData.IdentityDictionary = null;
+        }
+
         /// <summary>
         ///     Adds an item to the identityDictionary
         /// </summary>
@@ -203,7 +219,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                     throw new ArgumentException(Strings.ItemDuplicateIdentity(identity), "item", null);
                 }
-                else if (null != orderIndex.InexactIndexes)
+
+                if (null != orderIndex.InexactIndexes)
                 {
                     // search against the ExactIndex and all InexactIndexes
                     // identity was already tracking multiple items, verify its not a duplicate by exact name
@@ -235,6 +252,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // else this is a new identity
 
             collectionData.IdentityDictionary[identity] = new OrderedIndex(exactIndex, inexact);
+
             return index;
         }
 

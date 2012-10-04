@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -18,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_set_configuration()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
@@ -33,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         public void Configure_should_configure_entity_set_name()
         {
             var model = new EdmModel().Initialize();
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
@@ -53,12 +55,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_properties()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             var mockPropertyConfiguration = new Mock<PrimitivePropertyConfiguration>();
             var mockPropertyInfo = new MockPropertyInfo();
@@ -73,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_throw_when_property_not_found()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
@@ -120,22 +124,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_and_order_keys_when_keys_and_order_specified()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };
-            entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.Int32;
-            entityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var property1 = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             var mockPropertyInfo2 = new MockPropertyInfo(typeof(int), "P2");
             entityTypeConfiguration.Key(mockPropertyInfo2);
             entityTypeConfiguration.Property(new PropertyPath(mockPropertyInfo2)).ColumnOrder = 1;
-            entityType.GetDeclaredPrimitiveProperty("P2").SetClrPropertyInfo(mockPropertyInfo2);
+            (entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P2")).SetClrPropertyInfo(mockPropertyInfo2);
             var mockPropertyInfo1 = new MockPropertyInfo(typeof(int), "P1");
             entityTypeConfiguration.Key(mockPropertyInfo1);
             entityTypeConfiguration.Property(new PropertyPath(mockPropertyInfo1)).ColumnOrder = 0;
-            entityType.GetDeclaredPrimitiveProperty("P1").SetClrPropertyInfo(mockPropertyInfo1);
+            (entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetClrPropertyInfo(mockPropertyInfo1);
 
             entityTypeConfiguration.Configure(entityType, new EdmModel());
 
@@ -146,12 +154,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_throw_when_key_properties_and_not_root_type()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E",
-                                     BaseType = new EdmEntityType()
+                                     BaseType = new EntityType()
                                  };
-            entityType.BaseType.SetClrType(typeof(string));
+            var type = typeof(string);
+            var tempQualifier = entityType.BaseType;
+
+            tempQualifier.Annotations.SetClrType(type);
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             entityTypeConfiguration.Key(new MockPropertyInfo(typeof(int), "Id"));
 
@@ -163,7 +174,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_throw_when_key_property_not_found()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "E"
                                  };

@@ -749,8 +749,7 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             Facet concurrencyFacet;
             if (typeUsage.Facets.TryGetValue(EdmProviderManifest.ConcurrencyModeFacetName, false, out concurrencyFacet)
-                &&
-                concurrencyFacet.Value != null)
+                && concurrencyFacet.Value != null)
             {
                 var concurrencyMode = (ConcurrencyMode)concurrencyFacet.Value;
                 return concurrencyMode;

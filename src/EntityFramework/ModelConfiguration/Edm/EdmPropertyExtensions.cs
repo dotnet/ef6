@@ -3,8 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -12,17 +11,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
     internal static class EdmPropertyExtensions
     {
-        public static DbStoreGeneratedPattern? GetStoreGeneratedPattern(this EdmProperty property)
+        public static StoreGeneratedPattern? GetStoreGeneratedPattern(this EdmProperty property)
         {
             Contract.Requires(property != null);
 
             return
-                (DbStoreGeneratedPattern?)
+                (StoreGeneratedPattern?)
                 property.Annotations.GetAnnotation(SsdlConstants.Attribute_StoreGeneratedPattern);
         }
 
         public static void SetStoreGeneratedPattern(
-            this EdmProperty property, DbStoreGeneratedPattern storeGeneratedPattern)
+            this EdmProperty property, StoreGeneratedPattern storeGeneratedPattern)
         {
             Contract.Requires(property != null);
 
@@ -43,46 +42,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             property.Annotations.SetConfiguration(configuration);
         }
 
-        public static EdmProperty AsPrimitive(this EdmProperty property)
-        {
-            Contract.Requires(property != null);
-
-            property.PropertyType = new EdmTypeReference
-                                        {
-                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                                        };
-
-            return property;
-        }
-
-        public static EdmProperty AsComplex(this EdmProperty property, EdmComplexType complexType)
-        {
-            Contract.Requires(property != null);
-            Contract.Requires(complexType != null);
-
-            property.PropertyType = new EdmTypeReference
-                                        {
-                                            EdmType = complexType,
-                                            IsNullable = false
-                                        };
-
-            return property;
-        }
-
-        public static EdmProperty AsEnum(this EdmProperty property, EdmEnumType enumType)
-        {
-            Contract.Requires(property != null);
-            Contract.Requires(enumType != null);
-
-            property.PropertyType = new EdmTypeReference
-                                        {
-                                            EdmType = enumType,
-                                            PrimitiveTypeFacets = new EdmPrimitiveTypeFacets()
-                                        };
-
-            return property;
-        }
-
         public static List<EdmPropertyPath> ToPropertyPathList(this EdmProperty property)
         {
             return ToPropertyPathList(property, new List<EdmProperty>());
@@ -99,13 +58,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             List<EdmPropertyPath> propertyPaths, List<EdmProperty> currentPath, EdmProperty property)
         {
             currentPath.Add(property);
-            if (property.PropertyType.IsUnderlyingPrimitiveType)
+            if (property.IsUnderlyingPrimitiveType)
             {
                 propertyPaths.Add(new EdmPropertyPath(currentPath));
             }
-            else if (property.PropertyType.IsComplexType)
+            else if (property.IsComplexType)
             {
-                foreach (var p in property.PropertyType.ComplexType.Properties)
+                foreach (var p in property.ComplexType.Properties)
                 {
                     IncludePropertyPath(propertyPaths, currentPath, p);
                 }

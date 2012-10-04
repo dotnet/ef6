@@ -3,19 +3,19 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Diagnostics.Contracts;
 
     internal class PropertyMappingSpecification
     {
-        private readonly EdmEntityType _entityType;
+        private readonly EntityType _entityType;
         private readonly IList<EdmProperty> _propertyPath;
         private readonly IList<DbColumnCondition> _conditions;
         private readonly bool _isDefaultDiscriminatorCondition;
 
         public PropertyMappingSpecification(
-            EdmEntityType entityType,
+            EntityType entityType,
             IList<EdmProperty> propertyPath,
             IList<DbColumnCondition> conditions,
             bool isDefaultDiscriminatorCondition)
@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             _isDefaultDiscriminatorCondition = isDefaultDiscriminatorCondition;
         }
 
-        public EdmEntityType EntityType
+        public EntityType EntityType
         {
             get { return _entityType; }
         }

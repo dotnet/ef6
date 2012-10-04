@@ -7,158 +7,11 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
     using Xunit;
-
-    #region Fixtures
-
-    public class MaxLengthAnnotationClass
-    {
-        public int Id { get; set; }
-
-        [StringLength(500)]
-        [MaxLength]
-        public string PersonFirstName { get; set; }
-    }
-
-    public class MaxLengthWithLengthAnnotationClass
-    {
-        public int Id { get; set; }
-
-        [StringLength(500)]
-        [MaxLength(30)]
-        public string PersonFirstName { get; set; }
-    }
-
-    public class ColumnKeyAnnotationClass
-    {
-        [Key]
-        [Column("dsdsd", Order = 1, TypeName = "nvarchar")]
-        public string PersonFirstName { get; set; }
-    }
-
-    public class ReferencingClass
-    {
-        public int Id { get; set; }
-        public ColumnKeyAnnotationClass Person { get; set; }
-    }
-
-    public class DASimple
-    {
-        public int Id { get; set; }
-    }
-
-    public class KeyOnNavProp
-    {
-        public int Id { get; set; }
-
-        [Key]
-        public ICollection<DASimple> Simples { get; set; }
-
-        [Key]
-        public DASimple SpecialSimple { get; set; }
-    }
-
-    public class SRelated
-    {
-        public int SRelatedId { get; set; }
-        public ICollection<DODerived> DADeriveds { get; set; }
-    }
-
-    public class OKeyBase
-    {
-        [Key]
-        public int OrderLineNo { get; set; }
-
-        public int Quantity { get; set; }
-    }
-
-    public class DODerived : OKeyBase
-    {
-        public SRelated DARelated { get; set; }
-        public string Special { get; set; }
-    }
-
-    public class TimestampAndMaxlen
-    {
-        public int Id { get; set; }
-
-        [MaxLength]
-        [Timestamp]
-        public byte[] MaxTimestamp { get; set; }
-
-        [MaxLength(100)]
-        [Timestamp]
-        public byte[] NonMaxTimestamp { get; set; }
-    }
-
-    public class Login
-    {
-        public int LoginId { get; set; }
-        public string UserName { get; set; }
-        public virtual Profile Profile { get; set; }
-    }
-
-    public class Profile
-    {
-        public int ProfileId { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public virtual Login User { get; set; }
-    }
-
-    [Table("A")]
-    public class TNAttrBase
-    {
-        public int Id { get; set; }
-        public string BaseData { get; set; }
-    }
-
-    public class TNAttrDerived : TNAttrBase
-    {
-        public string DerivedData { get; set; }
-    }
-
-    [NotMapped]
-    public class NotMappedBase
-    {
-        public int Id { get; set; }
-    }
-
-    public class NotMappedDerived : NotMappedBase
-    {
-    }
-
-    public class PrivateMemberAnnotationClass
-    {
-        public static Expression<Func<PrivateMemberAnnotationClass, string>> PersonFirstNameExpr =
-            p => p.PersonFirstName;
-
-        public static Expression<Func<PrivateMemberAnnotationClass, object>> PersonFirstNameObjectExpr =
-            p => p.PersonFirstName;
-
-        [Key]
-        [Column("dsdsd", Order = 1, TypeName = "nvarchar")]
-        private string PersonFirstName { get; set; }
-    }
-
-    public class Entity_10558
-    {
-        [Key]
-        [Column(Order = 1)]
-        public int Key1 { get; set; }
-
-        [Key]
-        [Column(Order = 1)]
-        public int Key2 { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    #endregion
 
     public sealed class DataAnnotationScenarioTests : TestBase
     {
@@ -327,9 +180,10 @@ namespace FunctionalTests
                 modelBuilder.Entity<BaseEntity>();
 
                 Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-                   .ValidateMessage("CannotIgnoreMappedBaseProperty",
-                       "VirtualBaseClassProperty", "FunctionalTests.Unit",
-                       "FunctionalTests.BaseEntity");
+                    .ValidateMessage(
+                        "CannotIgnoreMappedBaseProperty",
+                        "VirtualBaseClassProperty", "FunctionalTests.Unit",
+                        "FunctionalTests.BaseEntity");
             }
         }
 
@@ -823,11 +677,11 @@ namespace FunctionalTests
                     databaseMapping.AssertValid();
 
                     var association = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
-                    Assert.Equal("Profile", association.SourceEnd.EntityType.Name);
-                    Assert.Equal(EdmAssociationEndKind.Optional, association.SourceEnd.EndKind);
-                    Assert.Equal("Login", association.TargetEnd.EntityType.Name);
-                    Assert.Equal(EdmAssociationEndKind.Required, association.TargetEnd.EndKind);
-                    Assert.Equal("Profile", association.Constraint.DependentEnd.EntityType.Name);
+                    Assert.Equal("Profile", association.SourceEnd.GetEntityType().Name);
+                    Assert.Equal(RelationshipMultiplicity.ZeroOrOne, association.SourceEnd.RelationshipMultiplicity);
+                    Assert.Equal("Login", association.TargetEnd.GetEntityType().Name);
+                    Assert.Equal(RelationshipMultiplicity.One, association.TargetEnd.RelationshipMultiplicity);
+                    Assert.Equal("Profile", association.Constraint.DependentEnd.GetEntityType().Name);
                 }
             }
         }
@@ -885,6 +739,153 @@ namespace FunctionalTests
             databaseMapping.AssertMapping<TNAttrDerived>("A").HasColumnCondition("disc", "B");
         }
     }
+
+    #region Fixtures
+
+    public class MaxLengthAnnotationClass
+    {
+        public int Id { get; set; }
+
+        [StringLength(500)]
+        [MaxLength]
+        public string PersonFirstName { get; set; }
+    }
+
+    public class MaxLengthWithLengthAnnotationClass
+    {
+        public int Id { get; set; }
+
+        [StringLength(500)]
+        [MaxLength(30)]
+        public string PersonFirstName { get; set; }
+    }
+
+    public class ColumnKeyAnnotationClass
+    {
+        [Key]
+        [Column("dsdsd", Order = 1, TypeName = "nvarchar")]
+        public string PersonFirstName { get; set; }
+    }
+
+    public class ReferencingClass
+    {
+        public int Id { get; set; }
+        public ColumnKeyAnnotationClass Person { get; set; }
+    }
+
+    public class DASimple
+    {
+        public int Id { get; set; }
+    }
+
+    public class KeyOnNavProp
+    {
+        public int Id { get; set; }
+
+        [Key]
+        public ICollection<DASimple> Simples { get; set; }
+
+        [Key]
+        public DASimple SpecialSimple { get; set; }
+    }
+
+    public class SRelated
+    {
+        public int SRelatedId { get; set; }
+        public ICollection<DODerived> DADeriveds { get; set; }
+    }
+
+    public class OKeyBase
+    {
+        [Key]
+        public int OrderLineNo { get; set; }
+
+        public int Quantity { get; set; }
+    }
+
+    public class DODerived : OKeyBase
+    {
+        public SRelated DARelated { get; set; }
+        public string Special { get; set; }
+    }
+
+    public class TimestampAndMaxlen
+    {
+        public int Id { get; set; }
+
+        [MaxLength]
+        [Timestamp]
+        public byte[] MaxTimestamp { get; set; }
+
+        [MaxLength(100)]
+        [Timestamp]
+        public byte[] NonMaxTimestamp { get; set; }
+    }
+
+    public class Login
+    {
+        public int LoginId { get; set; }
+        public string UserName { get; set; }
+        public virtual Profile Profile { get; set; }
+    }
+
+    public class Profile
+    {
+        public int ProfileId { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public virtual Login User { get; set; }
+    }
+
+    [Table("A")]
+    public class TNAttrBase
+    {
+        public int Id { get; set; }
+        public string BaseData { get; set; }
+    }
+
+    public class TNAttrDerived : TNAttrBase
+    {
+        public string DerivedData { get; set; }
+    }
+
+    [NotMapped]
+    public class NotMappedBase
+    {
+        public int Id { get; set; }
+    }
+
+    public class NotMappedDerived : NotMappedBase
+    {
+    }
+
+    public class PrivateMemberAnnotationClass
+    {
+        public static Expression<Func<PrivateMemberAnnotationClass, string>> PersonFirstNameExpr =
+            p => p.PersonFirstName;
+
+        public static Expression<Func<PrivateMemberAnnotationClass, object>> PersonFirstNameObjectExpr =
+            p => p.PersonFirstName;
+
+        [Key]
+        [Column("dsdsd", Order = 1, TypeName = "nvarchar")]
+        private string PersonFirstName { get; set; }
+    }
+
+    public class Entity_10558
+    {
+        [Key]
+        [Column(Order = 1)]
+        public int Key1 { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public int Key2 { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    #endregion
 
     #region Bug324763
 

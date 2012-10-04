@@ -3,8 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.Contracts;
@@ -13,33 +12,33 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure integer primary keys to be identity.
     /// </summary>
-    public class StoreGeneratedIdentityKeyConvention : IEdmConvention<EdmEntityType>
+    public class StoreGeneratedIdentityKeyConvention : IEdmConvention<EntityType>
     {
-        private static readonly IEnumerable<EdmPrimitiveTypeKind> _applicableTypes
-            = new[] { EdmPrimitiveTypeKind.Int16, EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.Int64 };
+        private static readonly IEnumerable<PrimitiveTypeKind> _applicableTypes
+            = new[] { PrimitiveTypeKind.Int16, PrimitiveTypeKind.Int32, PrimitiveTypeKind.Int64 };
 
-        public void Apply(EdmEntityType edmDataModelItem, EdmModel model)
+        public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
             Contract.Assert(edmDataModelItem.DeclaredKeyProperties != null);
 
             if ((edmDataModelItem.DeclaredKeyProperties.Count == 1)
                 && !(from p in edmDataModelItem.DeclaredProperties
                      let sgp = p.GetStoreGeneratedPattern()
-                     where sgp != null && sgp == DbStoreGeneratedPattern.Identity
+                     where sgp != null && sgp == StoreGeneratedPattern.Identity
                      select sgp).Any()) // Entity already has an Identity property.
             {
                 var property = edmDataModelItem.DeclaredKeyProperties.Single();
 
-                Contract.Assert(property.PropertyType != null);
+                Contract.Assert(property.TypeUsage != null);
 
                 if ((property.GetStoreGeneratedPattern() == null)
-                    && property.PropertyType.PrimitiveType != null
-                    && _applicableTypes.Contains(property.PropertyType.PrimitiveType.PrimitiveTypeKind))
+                    && property.PrimitiveType != null
+                    && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
                     if (!model.GetAssociationTypes().Any(a => IsNonTableSplittingForeignKey(a, property))
                         && !ParentOfTpc(edmDataModelItem, model))
                     {
-                        property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+                        property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
                     }
                 }
             }
@@ -50,13 +49,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         ///     in the same table is used for table splitting and can still be an identity column because
         ///     the update pipeline is only inserting into one column of one table.
         /// </summary>
-        private static bool IsNonTableSplittingForeignKey(EdmAssociationType association, EdmProperty property)
+        private static bool IsNonTableSplittingForeignKey(AssociationType association, EdmProperty property)
         {
             if (association.Constraint != null
-                && association.Constraint.DependentProperties.Contains(property))
+                && association.Constraint.ToProperties.Contains(property))
             {
-                var sourceConfig = (EntityTypeConfiguration)association.SourceEnd.EntityType.GetConfiguration();
-                var targetConfig = (EntityTypeConfiguration)association.TargetEnd.EntityType.GetConfiguration();
+                var sourceConfig = (EntityTypeConfiguration)association.SourceEnd.GetEntityType().GetConfiguration();
+                var targetConfig = (EntityTypeConfiguration)association.TargetEnd.GetEntityType().GetConfiguration();
 
                 return sourceConfig == null
                        || targetConfig == null
@@ -67,7 +66,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             return false;
         }
 
-        private static bool ParentOfTpc(EdmEntityType entityType, EdmModel model)
+        private static bool ParentOfTpc(EntityType entityType, EdmModel model)
         {
             return (from e in model.GetEntityTypes().Where(et => et.GetRootType() == entityType)
                     let configuration = e.GetConfiguration() as EntityTypeConfiguration

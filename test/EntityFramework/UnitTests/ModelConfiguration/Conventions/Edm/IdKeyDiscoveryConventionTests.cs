@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -12,11 +12,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_match_simple_id()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Id");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.True(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -24,26 +26,30 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_make_key_not_nullable()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Id");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
 
-            Assert.False(property.PropertyType.IsNullable.Value);
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+
+            Assert.False(property.Nullable);
         }
 
         [Fact]
         public void Apply_should_match_type_prefixed_id()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            var property = entityType.AddPrimitiveProperty("FooId");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property1 = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.True(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -51,16 +57,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_match_id_ahead_of_type_and_id()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            var typeIdProperty = entityType.AddPrimitiveProperty("FooId");
-            var idProperty = entityType.AddPrimitiveProperty("Id");
-            typeIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            idProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property);
+            var typeIdProperty = property;
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var idProperty = property1;
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.Equal(1, entityType.DeclaredKeyProperties.Count);
             Assert.True(entityType.DeclaredKeyProperties.Contains(idProperty));
@@ -69,14 +79,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_case()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            var property = entityType.AddPrimitiveProperty("foOid");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property1 = EdmProperty.Primitive("foOid", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.True(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -84,10 +96,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_non_primitive_type()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Id");
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Complex("Id", new ComplexType("C"));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.False(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -95,11 +110,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_when_key_already_specified()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Id");
-            entityType.DeclaredKeyProperties.Add(new EdmProperty());
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+            entityType.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.False(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -107,11 +125,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_when_type_is_derived()
         {
-            var entityType = new EdmEntityType();
-            var property = entityType.AddPrimitiveProperty("Id");
-            entityType.BaseType = new EdmEntityType();
+            var entityType = new EntityType();
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
+            entityType.AddMember(property1);
+            var property = property1;
+            entityType.BaseType = new EntityType();
+
+            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel());
 
             Assert.False(entityType.DeclaredKeyProperties.Contains(property));
         }
@@ -119,37 +140,45 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact] // Dev11 347225
         public void Apply_should_throw_if_two_Id_properties_are_matched_that_differ_only_by_case()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            var IDProperty = entityType.AddPrimitiveProperty("ID");
-            var IdProperty = entityType.AddPrimitiveProperty("Id");
-            IDProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            IdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property = EdmProperty.Primitive("ID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var IDProperty = property;
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var IdProperty = property1;
 
             Assert.Equal(
                 Strings.MultiplePropertiesMatchedAsKeys("ID", "Foo"),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
+                    () => ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
         }
 
         [Fact] // Dev11 347225
         public void Apply_should_throw_if_two_type_Id_properties_are_matched_that_differ_only_by_case()
         {
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            var FOOIdProperty = entityType.AddPrimitiveProperty("FOOId");
-            var FooIdProperty = entityType.AddPrimitiveProperty("FooId");
-            FOOIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            FooIdProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var property = EdmProperty.Primitive("FOOId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var FOOIdProperty = property;
+            var property1 = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var FooIdProperty = property1;
 
             Assert.Equal(
                 Strings.MultiplePropertiesMatchedAsKeys("FOOId", "Foo"),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<EdmEntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
+                    () => ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel())).Message);
         }
     }
 }

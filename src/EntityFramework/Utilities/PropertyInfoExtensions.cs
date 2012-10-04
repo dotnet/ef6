@@ -3,10 +3,12 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Reflection;
+    
 
     internal static class PropertyInfoExtensions
     {
@@ -27,14 +29,7 @@ namespace System.Data.Entity.Utilities
             Contract.Requires(enumerable != null);
             Contract.Requires(propertyInfo != null);
 
-            foreach (var member in enumerable)
-            {
-                if (propertyInfo.IsSameAs(member))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return enumerable.Any(propertyInfo.IsSameAs);
         }
 
         public static bool IsValidStructuralProperty(this PropertyInfo propertyInfo)
@@ -55,7 +50,7 @@ namespace System.Data.Entity.Utilities
 
             propertyType.TryUnwrapNullableType(out propertyType);
 
-            EdmPrimitiveType _;
+            PrimitiveType _;
             return propertyType.IsPrimitiveType(out _) || propertyType.IsEnum;
         }
 
@@ -66,16 +61,12 @@ namespace System.Data.Entity.Utilities
             var propertyType = propertyInfo.PropertyType;
             var isNullable = propertyType.TryUnwrapNullableType(out propertyType) || !propertyType.IsValueType;
 
-            EdmPrimitiveType primitiveType;
+            PrimitiveType primitiveType;
             if (propertyType.IsPrimitiveType(out primitiveType))
             {
-                var property = new EdmProperty
-                                   {
-                                       Name = propertyInfo.Name
-                                   }.AsPrimitive();
+                var property = EdmProperty.Primitive(propertyInfo.Name, primitiveType);
 
-                property.PropertyType.EdmType = primitiveType;
-                property.PropertyType.IsNullable = isNullable;
+                property.Nullable = isNullable;
 
                 return property;
             }

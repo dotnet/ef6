@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -12,8 +12,7 @@ namespace System.Data.Entity.Edm.Db
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class DbForeignKeyConstraintMetadata : DbConstraintMetadata
     {
-        private readonly BackingList<DbTableColumnMetadata> dependentColumnsList =
-            new BackingList<DbTableColumnMetadata>();
+        private IList<DbTableColumnMetadata> dependentColumnsList = new List<DbTableColumnMetadata>();
 
         internal override DbItemKind GetMetadataKind()
         {
@@ -26,18 +25,13 @@ namespace System.Data.Entity.Edm.Db
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableColumnMetadata> DependentColumns
         {
-            get { return dependentColumnsList.EnsureValue(); }
-            set { dependentColumnsList.SetValue(value); }
-        }
-
-        internal bool HasDependentColumns
-        {
-            get { return dependentColumnsList.HasValue; }
+            get { return dependentColumnsList; }
+            set { dependentColumnsList = value; }
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="DbOperationAction" /> to take when a delete operation is attempted.
+        ///     Gets or sets the <see cref="OperationAction" /> to take when a delete operation is attempted.
         /// </summary>
-        public virtual DbOperationAction DeleteAction { get; set; }
+        public virtual OperationAction DeleteAction { get; set; }
     }
 }

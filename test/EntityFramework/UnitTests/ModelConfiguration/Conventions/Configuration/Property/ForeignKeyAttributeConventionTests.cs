@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
 
-            Assert.Equal(new[] { mockTypeB.GetProperty("AId1") }, foreignKeyConstraint.DependentProperties);
+            Assert.Equal(new[] { mockTypeB.GetProperty("AId1") }, foreignKeyConstraint.ToProperties);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
 
-            Assert.Equal(new[] { mockTypeB.GetProperty("AId") }, foreignKeyConstraint.DependentProperties);
+            Assert.Equal(new[] { mockTypeB.GetProperty("AId") }, foreignKeyConstraint.ToProperties);
             Assert.Null(navigationPropertyConfiguration.InverseNavigationProperty);
         }
 

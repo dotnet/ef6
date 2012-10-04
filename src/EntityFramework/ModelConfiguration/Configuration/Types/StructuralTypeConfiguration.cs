@@ -4,8 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
@@ -21,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Reflection;
 
     /// <summary>
-    /// Allows configuration to be performed for a type in a model.
+    ///     Allows configuration to be performed for a type in a model.
     /// </summary>
     public abstract class StructuralTypeConfiguration : ConfigurationBase
     {
@@ -110,9 +109,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Excludes a property from the model so that it will not be mapped to the database.
+        ///     Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
-        /// <param name="propertyInfo">The property to be configured.</param>
+        /// <param name="propertyInfo"> The property to be configured. </param>
         public void Ignore(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
@@ -128,17 +127,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return Property(
                 propertyPath,
                 () =>
-                {
-                    var configuration = (PrimitivePropertyConfiguration)Activator
-                                                                            .CreateInstance(
-                                                                                GetPropertyConfigurationType(
-                                                                                    propertyPath.Last().PropertyType));
-                    if (overridableConfigurationParts.HasValue)
                     {
-                        configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
-                    }
-                    return configuration;
-                });
+                        var configuration = (PrimitivePropertyConfiguration)Activator
+                                                                                .CreateInstance(
+                                                                                    GetPropertyConfigurationType(
+                                                                                        propertyPath.Last().PropertyType));
+                        if (overridableConfigurationParts.HasValue)
+                        {
+                            configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
+                        }
+                        return configuration;
+                    });
         }
 
         internal virtual void RemoveProperty(PropertyPath propertyPath)
@@ -222,15 +221,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 throw Error.PropertyNotFound(propertyPath.First().Name, structuralTypeName);
             }
 
-            if (property.PropertyType.IsUnderlyingPrimitiveType)
+            if (property.IsUnderlyingPrimitiveType)
             {
                 propertyConfiguration.Configure(property);
             }
             else
             {
                 Configure(
-                    property.PropertyType.ComplexType.Name,
-                    property.PropertyType.ComplexType.DeclaredProperties,
+                    property.ComplexType.Name,
+                    property.ComplexType.Properties,
                     new PropertyPath(propertyPath.Skip(1)),
                     propertyConfiguration);
             }

@@ -2,12 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Used to configure a constraint on a navigation property.
+    ///     Used to configure a constraint on a navigation property.
     /// </summary>
     [ContractClass(typeof(ConstraintConfigurationContracts))]
     public abstract class ConstraintConfiguration
@@ -15,12 +15,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         internal abstract ConstraintConfiguration Clone();
 
         internal abstract void Configure(
-            EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+            AssociationType associationType, AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration);
 
         /// <summary>
-        /// Gets a value indicating whether the constraint has been fully specified
-        /// using the Code First Fluent API.
+        ///     Gets a value indicating whether the constraint has been fully specified
+        ///     using the Code First Fluent API.
         /// </summary>
         public virtual bool IsFullySpecified
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private abstract class ConstraintConfigurationContracts : ConstraintConfiguration
         {
             internal override void Configure(
-                EdmAssociationType associationType, EdmAssociationEnd dependentEnd,
+                AssociationType associationType, AssociationEndMember dependentEnd,
                 EntityTypeConfiguration entityTypeConfiguration)
             {
                 Contract.Requires(associationType != null);

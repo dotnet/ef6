@@ -2,14 +2,13 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     internal class EdmModelValidationRule<TItem> : DataModelValidationRule<EdmModelValidationContext, TItem>
-        where TItem : DataModelItem
+        where TItem : IMetadataItem
     {
         internal EdmModelValidationRule(Action<EdmModelValidationContext, TItem> validate)
-            :
-                base(validate)
+            : base(validate)
         {
         }
     }

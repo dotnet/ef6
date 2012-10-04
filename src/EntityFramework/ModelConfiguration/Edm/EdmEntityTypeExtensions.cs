@@ -3,17 +3,16 @@
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
     internal static class EdmEntityTypeExtensions
     {
-        public static EdmEntityType GetRootType(this EdmEntityType entityType)
+        public static EntityType GetRootType(this EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
@@ -21,15 +20,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             while (rootType.BaseType != null)
             {
-                rootType = rootType.BaseType;
+                rootType = (EntityType)rootType.BaseType;
             }
 
             return rootType;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static bool IsAncestorOf(this EdmEntityType ancestor, EdmEntityType entityType)
+        public static bool IsAncestorOf(this EntityType ancestor, EntityType entityType)
         {
             Contract.Requires(ancestor != null);
             Contract.Requires(entityType != null);
@@ -40,54 +37,35 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 {
                     return true;
                 }
-                entityType = entityType.BaseType;
+                entityType = (EntityType)entityType.BaseType;
             }
             return false;
         }
 
-        public static IEnumerable<EdmProperty> KeyProperties(this EdmEntityType entityType)
+        public static IEnumerable<EdmProperty> KeyProperties(this EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
             return entityType.GetRootType().DeclaredKeyProperties;
         }
 
-        public static object GetConfiguration(this EdmEntityType entityType)
+        public static object GetConfiguration(this EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
             return entityType.Annotations.GetConfiguration();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static void SetConfiguration(this EdmEntityType entityType, object configuration)
-        {
-            Contract.Requires(entityType != null);
-
-            entityType.Annotations.SetConfiguration(configuration);
-        }
-
-        public static Type GetClrType(this EdmEntityType entityType)
+        public static Type GetClrType(this EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
             return entityType.Annotations.GetClrType();
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static void SetClrType(this EdmEntityType entityType, Type type)
-        {
-            Contract.Requires(entityType != null);
-            Contract.Requires(type != null);
-
-            entityType.Annotations.SetClrType(type);
-        }
-
         // Depth-first, pre-order visitor.
         // Note that the pre-order traversal is important for correctness of the transformations.
-        public static IEnumerable<EdmEntityType> TypeHierarchyIterator(this EdmEntityType entityType, EdmModel model)
+        public static IEnumerable<EntityType> TypeHierarchyIterator(this EntityType entityType, EdmModel model)
         {
             Contract.Requires(entityType != null);
 
@@ -107,50 +85,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static EdmProperty AddPrimitiveProperty(this EdmEntityType entityType, string name)
-        {
-            Contract.Requires(entityType != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-
-            var property = new EdmProperty().AsPrimitive();
-
-            property.Name = name;
-
-            entityType.DeclaredProperties.Add(property);
-
-            return property;
-        }
-
         public static EdmProperty AddComplexProperty(
-            this EdmEntityType entityType, string name, EdmComplexType complexType)
+            this EntityType entityType, string name, ComplexType complexType)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(complexType != null);
 
-            var property = new EdmProperty
-                               {
-                                   Name = name
-                               }.AsComplex(complexType);
+            var property = EdmProperty.Complex(name, complexType);
 
-            entityType.DeclaredProperties.Add(property);
+            entityType.AddMember(property);
 
             return property;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static EdmProperty GetDeclaredPrimitiveProperty(this EdmEntityType entityType, string name)
-        {
-            Contract.Requires(entityType != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-
-            return entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == name);
-        }
-
-        public static EdmProperty GetDeclaredPrimitiveProperty(this EdmEntityType entityType, PropertyInfo propertyInfo)
+        public static EdmProperty GetDeclaredPrimitiveProperty(this EntityType entityType, PropertyInfo propertyInfo)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(propertyInfo != null);
@@ -160,44 +109,34 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .SingleOrDefault(p => p.GetClrPropertyInfo().IsSameAs(propertyInfo));
         }
 
-        public static IEnumerable<EdmProperty> GetDeclaredPrimitiveProperties(this EdmEntityType entityType)
+        public static IEnumerable<EdmProperty> GetDeclaredPrimitiveProperties(this EntityType entityType)
         {
             Contract.Requires(entityType != null);
 
-            return entityType.DeclaredProperties.Where(p => p.PropertyType.IsUnderlyingPrimitiveType);
+            return entityType.DeclaredProperties.Where(p => p.IsUnderlyingPrimitiveType);
         }
 
-        public static EdmNavigationProperty AddNavigationProperty(
-            this EdmEntityType entityType, string name, EdmAssociationType associationType)
+        public static NavigationProperty AddNavigationProperty(
+            this EntityType entityType, string name, AssociationType associationType)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(associationType != null);
 
-            var navigationProperty = new EdmNavigationProperty
-                                         {
-                                             Name = name,
-                                             Association = associationType,
-                                             ResultEnd = associationType.TargetEnd
-                                         };
+            var navigationProperty
+                = new NavigationProperty(name, TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
+                      {
+                          RelationshipType = associationType,
+                          ToEndMember = associationType.TargetEnd
+                      };
 
-            entityType.DeclaredNavigationProperties.Add(navigationProperty);
+            entityType.AddMember(navigationProperty);
 
             return navigationProperty;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static EdmNavigationProperty GetNavigationProperty(this EdmEntityType entityType, string name)
-        {
-            Contract.Requires(entityType != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-
-            return entityType.NavigationProperties.SingleOrDefault(np => np.Name == name);
-        }
-
-        public static EdmNavigationProperty GetNavigationProperty(
-            this EdmEntityType entityType, PropertyInfo propertyInfo)
+        public static NavigationProperty GetNavigationProperty(
+            this EntityType entityType, PropertyInfo propertyInfo)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(propertyInfo != null);
@@ -205,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return entityType.NavigationProperties.SingleOrDefault(np => np.GetClrPropertyInfo().IsSameAs(propertyInfo));
         }
 
-        public static bool IsRootOfSet(this EdmEntityType entityType, IEnumerable<EdmEntityType> set)
+        public static bool IsRootOfSet(this EntityType entityType, IEnumerable<EntityType> set)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(set != null);

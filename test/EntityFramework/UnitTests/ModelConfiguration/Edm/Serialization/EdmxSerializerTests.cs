@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Reflection;
     using System.Xml;
@@ -46,13 +48,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
             var model = new EdmModel().Initialize(version);
 
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
             model.AddEntitySet("ESet", entityType);
 
-            var property = entityType.AddPrimitiveProperty("Id");
-            property.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            property.PropertyType.IsNullable = false;
-            entityType.DeclaredKeyProperties.Add(property);
+            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
+            var property = property1;
+            property.Nullable = false;
+            entityType.AddKeyMember(property);
 
             return new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
         }

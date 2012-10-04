@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             navigationPropertyConfiguration.Reset();
             _navigationPropertyConfiguration = navigationPropertyConfiguration;
-            _navigationPropertyConfiguration.EndKind = EdmAssociationEndKind.Many;
+            _navigationPropertyConfiguration.RelationshipMultiplicity = RelationshipMultiplicity.Many;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ManyToManyNavigationPropertyConfiguration WithMany()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Many;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.Many;
 
             return new ManyToManyNavigationPropertyConfiguration(_navigationPropertyConfiguration);
         }
@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public DependentNavigationPropertyConfiguration<TTargetEntityType> WithRequired()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Required;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.One;
 
             return new DependentNavigationPropertyConfiguration<TTargetEntityType>(_navigationPropertyConfiguration);
         }
@@ -114,7 +114,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public DependentNavigationPropertyConfiguration<TTargetEntityType> WithOptional()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Optional;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.ZeroOrOne;
 
             return new DependentNavigationPropertyConfiguration<TTargetEntityType>(_navigationPropertyConfiguration);
         }

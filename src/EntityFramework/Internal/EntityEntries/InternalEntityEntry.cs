@@ -129,8 +129,6 @@ namespace System.Data.Entity.Internal
                             Contract.Assert(_stateEntry != null, "_stateEntry should not be null after Attach.");
                             _stateEntry.ChangeState(value);
                             break;
-                        default:
-                            break;
                     }
                 }
             }
@@ -724,7 +722,7 @@ namespace System.Data.Entity.Internal
 
             var originalLazyLoadingFlag = InternalContext.LazyLoadingEnabled;
             InternalContext.LazyLoadingEnabled = false;
-            DbEntityValidationResult result = null;
+            DbEntityValidationResult result;
             try
             {
                 result = entityValidator != null

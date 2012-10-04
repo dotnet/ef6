@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Edm.Db
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -15,10 +14,10 @@ namespace System.Data.Entity.Edm.Db
     [DebuggerDisplay("{Name}")]
     public class DbTableMetadata : DbSchemaMetadataItem
     {
-        private readonly BackingList<DbTableColumnMetadata> columnsList = new BackingList<DbTableColumnMetadata>();
+        private IList<DbTableColumnMetadata> columnsList = new List<DbTableColumnMetadata>();
 
-        private readonly BackingList<DbForeignKeyConstraintMetadata> fkConstraintsList =
-            new BackingList<DbForeignKeyConstraintMetadata>();
+        private readonly List<DbForeignKeyConstraintMetadata> fkConstraintsList =
+            new List<DbForeignKeyConstraintMetadata>();
 
         internal override DbItemKind GetMetadataKind()
         {
@@ -31,13 +30,8 @@ namespace System.Data.Entity.Edm.Db
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbTableColumnMetadata> Columns
         {
-            get { return columnsList.EnsureValue(); }
-            set { columnsList.SetValue(value); }
-        }
-
-        internal bool HasColumns
-        {
-            get { return columnsList.HasValue; }
+            get { return columnsList; }
+            set { columnsList = value; }
         }
 
         /// <summary>
@@ -54,21 +48,7 @@ namespace System.Data.Entity.Edm.Db
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbForeignKeyConstraintMetadata> ForeignKeyConstraints
         {
-            get { return fkConstraintsList.EnsureValue(); }
-            set { fkConstraintsList.SetValue(value); }
+            get { return fkConstraintsList; }
         }
-
-        internal bool HasForeignKeyConstraints
-        {
-            get { return fkConstraintsList.HasValue; }
-        }
-
-        /*
-        /// <summary>
-        /// Gets or sets the collection of <see cref="DbUniqueConstraintMetadata"/> instances that specifies the unique constraints defined using columns from the table.
-        /// </summary>
-        public virtual IList<DbUniqueConstraintMetadata> UniqueConstraints { get { return this.uniqueConstraintsList.EnsureValue(); } set { this.uniqueConstraintsList.SetValue(value); } }
-
-        internal bool HasUniqueConstraints { get { return this.uniqueConstraintsList.HasValue; } }*/
     }
 }

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.CodeAnalysis;
@@ -42,17 +42,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                   // (3)
                   let matchingAssociations
                       = from associationType in model.GetAssociationTypes()
-                        where associationType.SourceEnd.EntityType == entityType ||
-                              associationType.TargetEnd.EntityType == entityType
+                        where associationType.SourceEnd.GetEntityType() == entityType ||
+                              associationType.TargetEnd.GetEntityType() == entityType
                         let declaringEnd
-                            = associationType.SourceEnd.EntityType == entityType
+                            = associationType.SourceEnd.GetEntityType() == entityType
                                   ? associationType.SourceEnd
                                   : associationType.TargetEnd
                         let declaringEntity
-                            = associationType.GetOtherEnd(declaringEnd).EntityType
+                            = associationType.GetOtherEnd(declaringEnd).GetEntityType()
                         let navigationProperties
                             = declaringEntity.NavigationProperties
-                            .Where(n => n.ResultEnd.EntityType == entityType)
+                            .Where(n => n.ResultEnd.GetEntityType() == entityType)
                         select new
                                    {
                                        DeclaringEnd = declaringEnd,
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 foreach (var property in candidate.EntityType.DeclaredProperties)
                 {
-                    complexType.DeclaredProperties.Add(property);
+                    complexType.AddMember(property);
                 }
 
                 foreach (var annotation in candidate.EntityType.Annotations)
@@ -94,9 +94,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     {
                         if (association.DeclaringEntityType.NavigationProperties.Contains(navigationProperty))
                         {
-                            association.DeclaringEntityType.DeclaredNavigationProperties.Remove(navigationProperty);
-                            var complexProperty =
-                                association.DeclaringEntityType.AddComplexProperty(navigationProperty.Name, complexType);
+                            association.DeclaringEntityType.RemoveMember(navigationProperty);
+
+                            var complexProperty
+                                = association.DeclaringEntityType
+                                    .AddComplexProperty(navigationProperty.Name, complexType);
+
                             foreach (var annotation in navigationProperty.Annotations)
                             {
                                 complexProperty.Annotations.Add(annotation);

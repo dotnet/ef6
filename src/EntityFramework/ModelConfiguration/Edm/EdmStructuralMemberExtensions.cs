@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -11,21 +11,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
     internal static class EdmStructuralMemberExtensions
     {
-        public static PropertyInfo GetClrPropertyInfo(this EdmStructuralMember property)
+        public static PropertyInfo GetClrPropertyInfo(this EdmMember property)
         {
             Contract.Requires(property != null);
 
             return property.Annotations.GetClrPropertyInfo();
         }
 
-        public static void SetClrPropertyInfo(this EdmStructuralMember property, PropertyInfo propertyInfo)
+        public static void SetClrPropertyInfo(this EdmMember property, PropertyInfo propertyInfo)
         {
             Contract.Requires(property != null);
 
             property.Annotations.SetClrPropertyInfo(propertyInfo);
         }
 
-        public static IEnumerable<T> GetClrAttributes<T>(this EdmStructuralMember property) where T : Attribute
+        public static IEnumerable<T> GetClrAttributes<T>(this EdmMember property) where T : Attribute
         {
             Contract.Requires(property != null);
 

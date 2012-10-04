@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             EntityUtil.CheckStringArgument(name, "name");
             EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
+
             _accessor = new NavigationPropertyAccessor(name);
         }
 
@@ -38,6 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : this(name, typeUsage)
         {
             Debug.Assert(name == propertyInfo.Name, "different PropertyName?");
+
             if (null != propertyInfo)
             {
                 MethodInfo method;
@@ -88,6 +90,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
         public RelationshipEndMember FromEndMember { get; internal set; }
+
+        internal AssociationType Association
+        {
+            get { return (AssociationType)RelationshipType; }
+        }
+
+        internal AssociationEndMember ResultEnd
+        {
+            get { return (AssociationEndMember)ToEndMember; }
+        }
 
         internal NavigationPropertyAccessor Accessor
         {

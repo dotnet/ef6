@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Internal;
@@ -19,15 +18,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
-    using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
     /// <summary>
-    /// Used to configure a primitive property of an entity type or complex type.
+    ///     Used to configure a primitive property of an entity type or complex type.
     /// </summary>
     public class PrimitivePropertyConfiguration : PropertyConfiguration
     {
         /// <summary>
-        /// Initializes a new instance of the PrimitivePropertyConfiguration class.
+        ///     Initializes a new instance of the PrimitivePropertyConfiguration class.
         /// </summary>
         public PrimitivePropertyConfiguration()
         {
@@ -54,33 +52,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets a value indicating whether the property is optional.
+        ///     Gets a value indicating whether the property is optional.
         /// </summary>
         public bool? IsNullable { get; set; }
 
         /// <summary>
-        /// Gets or sets the concurrency mode to use for the property.
+        ///     Gets or sets the concurrency mode to use for the property.
         /// </summary>
-        public EdmConcurrencyMode? ConcurrencyMode { get; set; }
+        public ConcurrencyMode? ConcurrencyMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the pattern used to generate values in the database for the
-        /// property.
+        ///     Gets or sets the pattern used to generate values in the database for the
+        ///     property.
         /// </summary>
         public DatabaseGeneratedOption? DatabaseGeneratedOption { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the database column used to store the property.
+        ///     Gets or sets the type of the database column used to store the property.
         /// </summary>
         public string ColumnType { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the database column used to store the property.
+        ///     Gets or sets the name of the database column used to store the property.
         /// </summary>
         public string ColumnName { get; set; }
 
         /// <summary>
-        /// Gets or sets the order of the database column used to store the property.
+        ///     Gets or sets the order of the database column used to store the property.
         /// </summary>
         public int? ColumnOrder { get; set; }
 
@@ -89,8 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         internal virtual void Configure(EdmProperty property)
         {
             Contract.Requires(property != null);
-            Contract.Assert(property.PropertyType != null);
-            Contract.Assert(property.PropertyType.PrimitiveTypeFacets != null);
+            Contract.Assert(property.TypeUsage != null);
 
             var existingConfiguration = property.GetConfiguration() as PrimitivePropertyConfiguration;
             if (existingConfiguration != null)
@@ -130,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             if (IsNullable != null)
             {
-                property.PropertyType.IsNullable = IsNullable;
+                property.Nullable = IsNullable.Value;
             }
 
             if (ConcurrencyMode != null)
@@ -140,12 +137,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             if (DatabaseGeneratedOption != null)
             {
-                property.SetStoreGeneratedPattern((DbStoreGeneratedPattern)DatabaseGeneratedOption.Value);
+                property.SetStoreGeneratedPattern((StoreGeneratedPattern)DatabaseGeneratedOption.Value);
 
                 if (DatabaseGeneratedOption.Value
                     == ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)
                 {
-                    property.PropertyType.IsNullable = false;
+                    property.Nullable = false;
                 }
             }
         }
@@ -242,10 +239,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                    {
-                        c.Name = renamedColumns.UniquifyName(ColumnName);
-                        renamedColumns.Add(c);
-                    });
+                        {
+                            c.Name = renamedColumns.UniquifyName(ColumnName);
+                            renamedColumns.Add(c);
+                        });
         }
 
         internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)

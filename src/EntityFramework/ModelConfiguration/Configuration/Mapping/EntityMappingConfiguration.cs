@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Internal;
@@ -152,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         #endregion
 
-        public bool MapsAnyInheritedProperties(EdmEntityType entityType)
+        public bool MapsAnyInheritedProperties(EntityType entityType)
         {
             var properties = new HashSet<EdmPropertyPath>();
             if (Properties != null)
@@ -171,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public void Configure(
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest,
-            EdmEntityType entityType,
+            EntityType entityType,
             ref DbEntityTypeMapping entityTypeMapping,
             bool isMappingAnyInheritedProperty,
             int configurationIndex,
@@ -326,7 +326,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void ConfigureDefaultDiscriminator(
-            EdmEntityType entityType, DbEntityTypeMappingFragment fragment, bool isSharingTableWithBase)
+            EntityType entityType, DbEntityTypeMappingFragment fragment, bool isSharingTableWithBase)
         {
             if ((entityType.BaseType != null && !isSharingTableWithBase)
                 || ValueConditions.Any()
@@ -361,7 +361,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static DbTableMetadata FindTableForTemporaryExtraPropertyMapping(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbTableMetadata fromTable,
             DbTableMetadata toTable,
             DbEdmPropertyMapping pm)
@@ -389,7 +389,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static DbTableMetadata FindTableForExtraPropertyMapping(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbTableMetadata fromTable,
             DbTableMetadata toTable,
             ref DbTableMetadata unmappedTable,
@@ -416,9 +416,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static DbTableMetadata FindBaseTableForExtraPropertyMapping(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbEdmPropertyMapping pm)
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbEdmPropertyMapping pm)
         {
-            var baseType = entityType.BaseType;
+            var baseType = (EntityType)entityType.BaseType;
 
             DbEntityTypeMappingFragment baseFragment = null;
 
@@ -437,13 +437,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         return baseFragment.Table;
                     }
                 }
-                baseType = baseType.BaseType;
+                baseType = (EntityType)baseType.BaseType;
             }
             return null;
         }
 
         private bool DiscoverIsSharingWithBase(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbTableMetadata toTable)
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbTableMetadata toTable)
         {
             var isSharingTableWithBase = false;
 
@@ -455,7 +455,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 while (baseType != null
                        && !isSharingTableWithBase)
                 {
-                    var baseMappings = databaseMapping.GetEntityTypeMappings(baseType);
+                    var baseMappings = databaseMapping.GetEntityTypeMappings((EntityType)baseType);
 
                     if (baseMappings.Any())
                     {
@@ -508,7 +508,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                        && parentTable == null)
                 {
                     // Traverse to first anscestor with a mapping
-                    var baseMapping = databaseMapping.GetEntityTypeMappings(baseType).FirstOrDefault();
+                    var baseMapping = databaseMapping.GetEntityTypeMappings((EntityType)baseType).FirstOrDefault();
                     if (baseMapping != null)
                     {
                         parentTable = baseMapping.GetPrimaryTable();
@@ -524,14 +524,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DbDatabaseMapping databaseMapping,
             ref DbEntityTypeMapping entityTypeMapping,
             int configurationIndex,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbProviderManifest providerManifest)
         {
             DbEntityTypeMappingFragment fragment = null;
 
             if (entityTypeMapping == null)
             {
-                Contract.Assert(entityType.IsAbstract);
+                Contract.Assert(entityType.Abstract);
                 new EntityTypeMappingGenerator(providerManifest).
                     Generate(entityType, databaseMapping);
                 entityTypeMapping = databaseMapping.GetEntityTypeMapping(entityType);
@@ -581,7 +581,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private DbTableMetadata FindOrCreateTargetTable(
             DbDatabaseMapping databaseMapping,
             DbEntityTypeMappingFragment fragment,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbTableMetadata fromTable,
             out bool isTableSharing)
         {
@@ -620,7 +620,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private HashSet<EdmPropertyPath> DiscoverAllMappingsToContain(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbTableMetadata toTable,
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbTableMetadata toTable,
             bool isSharingTableWithBase)
         {
             // Ensure all specified properties are the only ones present in this fragment and table
@@ -643,7 +643,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             if (isSharingTableWithBase)
             {
                 var baseMappingsToContain = new HashSet<EdmPropertyPath>();
-                var baseType = entityType.BaseType;
+                var baseType = (EntityType)entityType.BaseType;
                 DbEntityTypeMapping baseMapping = null;
                 DbEntityTypeMappingFragment baseFragment = null;
                 // if the base is abstract it may have no mapping so look upwards until you find either:
@@ -652,7 +652,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 while (baseType != null
                        && baseMapping == null)
                 {
-                    baseMapping = databaseMapping.GetEntityTypeMapping(entityType.BaseType);
+                    baseMapping = databaseMapping.GetEntityTypeMapping((EntityType)entityType.BaseType);
                     if (baseMapping != null)
                     {
                         baseFragment = baseMapping.TypeMappingFragments.SingleOrDefault(tmf => tmf.Table == toTable);
@@ -665,7 +665,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                             baseMappingsToContain.AddRange(p.ToPropertyPathList()));
                     }
 
-                    baseType = baseType.BaseType;
+                    baseType = (EntityType)baseType.BaseType;
                 }
 
                 if (baseFragment != null)
@@ -699,7 +699,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private void ConfigureConditions(
             DbDatabaseMapping databaseMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             DbEntityTypeMappingFragment fragment,
             DbProviderManifest providerManifest)
         {
@@ -764,10 +764,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         internal static IEnumerable<EdmPropertyPath> PropertyPathToEdmPropertyPath(
-            PropertyPath path, EdmEntityType entityType)
+            PropertyPath path, EntityType entityType)
         {
             var propertyPath = new List<EdmProperty>();
-            EdmStructuralType propertyOwner = entityType;
+            StructuralType propertyOwner = entityType;
             for (var i = 0; i < path.Count; i++)
             {
                 var edmProperty =
@@ -778,18 +778,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     throw Error.EntityMappingConfiguration_CannotMapIgnoredProperty(entityType.Name, path.ToString());
                 }
                 propertyPath.Add(edmProperty);
-                if (edmProperty.PropertyType.IsComplexType)
+                if (edmProperty.IsComplexType)
                 {
-                    propertyOwner = edmProperty.PropertyType.ComplexType;
+                    propertyOwner = edmProperty.ComplexType;
                 }
             }
 
             var lastProperty = propertyPath.Last();
-            if (lastProperty.PropertyType.IsUnderlyingPrimitiveType)
+            if (lastProperty.IsUnderlyingPrimitiveType)
             {
                 return new[] { new EdmPropertyPath(propertyPath) };
             }
-            else if (lastProperty.PropertyType.IsComplexType)
+            else if (lastProperty.IsComplexType)
             {
                 propertyPath.Remove(lastProperty);
                 return lastProperty.ToPropertyPathList(propertyPath);
@@ -798,7 +798,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return new[] { EdmPropertyPath.Empty };
         }
 
-        private static IEnumerable<EdmEntityType> FindAllTypesUsingTable(
+        private static IEnumerable<EntityType> FindAllTypesUsingTable(
             DbDatabaseMapping databaseMapping, DbTableMetadata toTable)
         {
             return databaseMapping.EntityContainerMappings
@@ -808,23 +808,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 .Select(etm => etm.EntityType);
         }
 
-        private static IEnumerable<EdmAssociationType> FindAllOneToOneFKAssociationTypes(
-            EdmModel model, EdmEntityType entityType, EdmEntityType candidateType)
+        private static IEnumerable<AssociationType> FindAllOneToOneFKAssociationTypes(
+            EdmModel model, EntityType entityType, EntityType candidateType)
         {
             return model.Containers.SelectMany(ec => ec.AssociationSets)
                 .Where(
                     aset => (aset.ElementType.Constraint != null &&
-                             aset.ElementType.SourceEnd.EndKind == EdmAssociationEndKind.Required &&
-                             aset.ElementType.TargetEnd.EndKind == EdmAssociationEndKind.Required) &&
-                            ((aset.ElementType.SourceEnd.EntityType == entityType
-                              && aset.ElementType.TargetEnd.EntityType == candidateType) ||
-                             (aset.ElementType.TargetEnd.EntityType == entityType
-                              && aset.ElementType.SourceEnd.EntityType == candidateType)))
+                             aset.ElementType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.One &&
+                             aset.ElementType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
+                            ((aset.ElementType.SourceEnd.GetEntityType() == entityType
+                              && aset.ElementType.TargetEnd.GetEntityType() == candidateType) ||
+                             (aset.ElementType.TargetEnd.GetEntityType() == entityType
+                              && aset.ElementType.SourceEnd.GetEntityType() == candidateType)))
                 .Select(aset => aset.ElementType);
         }
 
         private static bool UpdateColumnNamesForTableSharing(
-            DbDatabaseMapping databaseMapping, EdmEntityType entityType, DbTableMetadata toTable,
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbTableMetadata toTable,
             DbEntityTypeMappingFragment fragment)
         {
             // Validate: this table can be used only if:
@@ -832,7 +832,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             //  2. The table is used only by types in the same type hierarchy (TPH)
             //  3. There is a 1:1 relationship and the PK count and types match (Table Splitting)
             var typesSharingTable = FindAllTypesUsingTable(databaseMapping, toTable);
-            var associationsToSharedTable = new Dictionary<EdmEntityType, List<EdmAssociationType>>();
+            var associationsToSharedTable = new Dictionary<EntityType, List<AssociationType>>();
 
             foreach (var candidateType in typesSharingTable)
             {
@@ -871,9 +871,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 {
                     // grab a candidate
                     var association = allAssociations.First();
-                    principalKeyNamesType = association.Constraint.PrincipalEnd(association).EntityType;
+                    principalKeyNamesType = association.Constraint.PrincipalEnd(association).GetEntityType();
 
-                    if (allAssociations.All(x => x.Constraint.PrincipalEnd(x).EntityType == principalKeyNamesType))
+                    if (allAssociations.All(x => x.Constraint.PrincipalEnd(x).GetEntityType() == principalKeyNamesType))
                     {
                         toTable.SetKeyNamesType(principalKeyNamesType);
                     }

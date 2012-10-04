@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
-    using EdmModel = System.Data.Entity.Edm.EdmModel;
 
     /// <summary>
     ///     Visitor for EdmModel Validation
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     {
         private readonly EdmModelValidationContext _context;
         private readonly EdmModelRuleSet _ruleSet;
-        private readonly HashSet<EdmDataModelItem> _visitedItems = new HashSet<EdmDataModelItem>();
+        private readonly HashSet<MetadataItem> _visitedItems = new HashSet<MetadataItem>();
 
         internal EdmModelValidationVisitor(EdmModelValidationContext context, EdmModelRuleSet ruleSet)
         {
@@ -21,16 +21,15 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             _ruleSet = ruleSet;
         }
 
-        protected override void VisitEdmDataModelItem(EdmDataModelItem item)
+        protected override void VisitMetadataItem(MetadataItem item)
         {
             if (_visitedItems.Add(item))
             {
                 EvaluateItem(item);
-                base.VisitEdmDataModelItem(item);
             }
         }
 
-        private void EvaluateItem(EdmDataModelItem item)
+        private void EvaluateItem(MetadataItem item)
         {
             foreach (var rule in _ruleSet.GetRules(item))
             {

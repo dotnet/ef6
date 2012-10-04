@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;
     using Xunit;
@@ -27,9 +28,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
-            entityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
-            entityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
+            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property1);
             var entitySet = model.AddEntitySet("ESet", entityType);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
@@ -53,19 +60,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
-            model.AddEntitySet("ESet", entityType);
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.String;
+            var type = typeof(object);
 
-            property.PropertyType.IsNullable = false;
-            property.PropertyType.PrimitiveTypeFacets.IsFixedLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsMaxLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsUnicode = true;
-            property.PropertyType.PrimitiveTypeFacets.MaxLength = 42;
-            property.PropertyType.PrimitiveTypeFacets.Precision = 23;
-            property.PropertyType.PrimitiveTypeFacets.Scale = 77;
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+            entityType.Annotations.SetClrType(type);
+            model.AddEntitySet("ESet", entityType);
+
+            var property
+                = EdmProperty
+                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+
+            property.Nullable = false;
+            property.IsFixedLength = true;
+            property.IsMaxLength = true;
+            property.IsUnicode = true;
+            property.MaxLength = 42;
+            property.Precision = 23;
+            property.Scale = 77;
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -73,12 +86,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             Assert.False(column.IsNullable);
             Assert.Null(column.Facets.IsFixedLength);
-            Assert.Equal(true, column.Facets.IsMaxLength);
+            Assert.Equal(false, column.Facets.IsMaxLength);
             Assert.Null(column.Facets.IsUnicode);
             Assert.Equal(42, column.Facets.MaxLength);
             Assert.Null(column.Facets.Precision);
             Assert.Null(column.Facets.Scale);
-            Assert.Equal(DbStoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
         }
 
         [Fact]
@@ -86,19 +99,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
-            model.AddEntitySet("ESet", entityType);
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.Time;
+            var type = typeof(object);
 
-            property.PropertyType.IsNullable = false;
-            property.PropertyType.PrimitiveTypeFacets.IsFixedLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsMaxLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsUnicode = false;
-            property.PropertyType.PrimitiveTypeFacets.MaxLength = 42;
-            property.PropertyType.PrimitiveTypeFacets.Precision = 23;
-            property.PropertyType.PrimitiveTypeFacets.Scale = 77;
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+            entityType.Annotations.SetClrType(type);
+            model.AddEntitySet("ESet", entityType);
+
+            var property
+                = EdmProperty
+                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Time));
+
+            entityType.AddMember(property);
+
+            property.Nullable = false;
+            property.IsFixedLength = true;
+            property.IsMaxLength = true;
+            property.IsUnicode = false;
+            property.MaxLength = 42;
+            property.Precision = 23;
+            property.Scale = 77;
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -111,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.Null(column.Facets.MaxLength);
             Assert.Equal<byte?>(23, column.Facets.Precision);
             Assert.Null(column.Facets.Scale);
-            Assert.Equal(DbStoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
         }
 
         [Fact]
@@ -119,19 +138,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
-            model.AddEntitySet("ESet", entityType);
-            var property = entityType.AddPrimitiveProperty("P");
-            property.PropertyType.EdmType = EdmPrimitiveType.Decimal;
+            var type = typeof(object);
 
-            property.PropertyType.IsNullable = false;
-            property.PropertyType.PrimitiveTypeFacets.IsFixedLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsMaxLength = true;
-            property.PropertyType.PrimitiveTypeFacets.IsUnicode = false;
-            property.PropertyType.PrimitiveTypeFacets.MaxLength = 42;
-            property.PropertyType.PrimitiveTypeFacets.Precision = 23;
-            property.PropertyType.PrimitiveTypeFacets.Scale = 77;
-            property.SetStoreGeneratedPattern(DbStoreGeneratedPattern.Identity);
+            entityType.Annotations.SetClrType(type);
+            model.AddEntitySet("ESet", entityType);
+
+            var property
+                = EdmProperty
+                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+
+            entityType.AddMember(property);
+
+            property.Nullable = false;
+            property.IsFixedLength = true;
+            property.IsMaxLength = true;
+            property.IsUnicode = false;
+            property.MaxLength = 42;
+            property.Precision = 23;
+            property.Scale = 77;
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -144,7 +169,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.Null(column.Facets.MaxLength);
             Assert.Equal<byte?>(23, column.Facets.Precision);
             Assert.Equal<byte?>(77, column.Facets.Scale);
-            Assert.Equal(DbStoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
+            Assert.Equal(StoreGeneratedPattern.Identity, column.StoreGeneratedPattern);
         }
 
         [Fact]
@@ -152,10 +177,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var entityType = model.AddEntityType("E");
-            entityType.SetClrType(typeof(object));
-            var idProperty = entityType.AddPrimitiveProperty("Id");
-            idProperty.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            entityType.DeclaredKeyProperties.Add(idProperty);
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
+            var property = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType.AddMember(property);
+            var idProperty = property;
+            entityType.AddKeyMember(idProperty);
             var entitySet = model.AddEntitySet("ESet", entityType);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
@@ -173,24 +202,32 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var principalEntityType = model.AddEntityType("P");
-            principalEntityType.SetClrType(typeof(object));
-            var idProperty1 = principalEntityType.AddPrimitiveProperty("Id1");
-            idProperty1.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            principalEntityType.DeclaredKeyProperties.Add(idProperty1);
-            var idProperty2 = principalEntityType.AddPrimitiveProperty("Id2");
-            idProperty2.PropertyType.EdmType = EdmPrimitiveType.String;
-            principalEntityType.DeclaredKeyProperties.Add(idProperty2);
+            var type = typeof(object);
+
+            principalEntityType.Annotations.SetClrType(type);
+            var property = EdmProperty.Primitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            principalEntityType.AddMember(property);
+            var idProperty1 = property;
+            principalEntityType.AddKeyMember(idProperty1);
+            var property1 = EdmProperty.Primitive("Id2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            principalEntityType.AddMember(property1);
+            var idProperty2 = property1;
+            principalEntityType.AddKeyMember(idProperty2);
             var dependentEntityType = model.AddEntityType("D");
-            dependentEntityType.SetClrType(typeof(string));
+            var type1 = typeof(string);
+
+            dependentEntityType.Annotations.SetClrType(type1);
             model.AddEntitySet("PSet", principalEntityType);
             model.AddEntitySet("DSet", dependentEntityType);
             var associationType
                 = model.AddAssociationType(
                     "P_D",
-                    principalEntityType, EdmAssociationEndKind.Required,
-                    dependentEntityType, EdmAssociationEndKind.Many);
+                    principalEntityType, RelationshipMultiplicity.One,
+                    dependentEntityType, RelationshipMultiplicity.Many);
             model.AddAssociationSet("P_DSet", associationType);
-            associationType.SourceEnd.DeleteAction = EdmOperationAction.Cascade;
+            associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -201,7 +238,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.Equal(2, foreignKeyConstraint.DependentColumns.Count);
             Assert.Equal(associationType.Name, foreignKeyConstraint.Name);
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
-            Assert.Equal(DbOperationAction.Cascade, foreignKeyConstraint.DeleteAction);
+            Assert.Equal(OperationAction.Cascade, foreignKeyConstraint.DeleteAction);
 
             var foreignKeyColumn = foreignKeyConstraint.DependentColumns.First();
 
@@ -213,37 +250,47 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_can_map_foreign_key_association_type()
         {
             var model = new EdmModel().Initialize();
+
             var principalEntityType = model.AddEntityType("P");
-            principalEntityType.SetClrType(typeof(object));
+            principalEntityType.Annotations.SetClrType(typeof(object));
+
             var dependentEntityType = model.AddEntityType("D");
-            dependentEntityType.SetClrType(typeof(string));
-            var dependentProperty1 = dependentEntityType.AddPrimitiveProperty("FK1");
-            dependentProperty1.PropertyType.EdmType = EdmPrimitiveType.Int32;
-            var dependentProperty2 = dependentEntityType.AddPrimitiveProperty("FK2");
-            dependentProperty2.PropertyType.EdmType = EdmPrimitiveType.String;
+            dependentEntityType.Annotations.SetClrType(typeof(string));
+
+            var dependentProperty1 = EdmProperty.Primitive("FK1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            dependentProperty1.Nullable = false;
+            dependentEntityType.AddMember(dependentProperty1);
+
+            var dependentProperty2 = EdmProperty.Primitive("FK2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            dependentEntityType.AddMember(dependentProperty2);
+
             model.AddEntitySet("PSet", principalEntityType);
             model.AddEntitySet("DSet", dependentEntityType);
+
             var associationType
                 = model.AddAssociationType(
                     "P_D",
-                    principalEntityType, EdmAssociationEndKind.Required,
-                    dependentEntityType, EdmAssociationEndKind.Many);
-            associationType.Constraint
-                = new EdmAssociationConstraint
-                      {
-                          DependentEnd = associationType.TargetEnd,
-                          DependentProperties = new[] { dependentProperty1, dependentProperty2 },
-                      };
-            associationType.SourceEnd.DeleteAction = EdmOperationAction.Cascade;
+                    principalEntityType, RelationshipMultiplicity.One,
+                    dependentEntityType, RelationshipMultiplicity.Many);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            associationType.Constraint
+                = new ReferentialConstraint(
+                    associationType.SourceEnd,
+                    associationType.TargetEnd,
+                    principalEntityType.DeclaredKeyProperties,
+                    new[] { dependentProperty1, dependentProperty2 });
+
+            associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
+
+            var databaseMapping
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var dependentTable = databaseMapping.GetEntityTypeMapping(dependentEntityType).TypeMappingFragments.Single().Table;
             var foreignKeyConstraint = dependentTable.ForeignKeyConstraints.Single();
 
             Assert.Equal(2, dependentTable.Columns.Count());
             Assert.Equal(2, foreignKeyConstraint.DependentColumns.Count);
-            Assert.Equal(DbOperationAction.Cascade, foreignKeyConstraint.DeleteAction);
+            Assert.Equal(OperationAction.Cascade, foreignKeyConstraint.DeleteAction);
             Assert.Equal(associationType.Name, foreignKeyConstraint.Name);
 
             var foreignKeyColumn = foreignKeyConstraint.DependentColumns.First();
@@ -257,17 +304,31 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         {
             var model = new EdmModel().Initialize();
             var rootEntityType = model.AddEntityType("E");
-            rootEntityType.SetClrType(typeof(object));
-            rootEntityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
-            rootEntityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
+            var type = typeof(object);
+
+            rootEntityType.Annotations.SetClrType(type);
+            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            rootEntityType.AddMember(property);
+            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            rootEntityType.AddMember(property1);
             var entitySet = model.AddEntitySet("ESet", rootEntityType);
             var entityType2 = model.AddEntityType("E2");
-            entityType2.AddPrimitiveProperty("P3").PropertyType.EdmType = EdmPrimitiveType.Decimal;
-            entityType2.SetClrType(typeof(string));
+            var property2 = EdmProperty.Primitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType2.AddMember(property2);
+            var type1 = typeof(string);
+
+            entityType2.Annotations.SetClrType(type1);
             entityType2.BaseType = rootEntityType;
             var entityType3 = model.AddEntityType("E3");
-            entityType3.SetClrType(typeof(int));
-            entityType3.AddPrimitiveProperty("P4").PropertyType.EdmType = EdmPrimitiveType.Int32;
+            var type2 = typeof(int);
+
+            entityType3.Annotations.SetClrType(type2);
+            var property3 = EdmProperty.Primitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
@@ -302,20 +363,42 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Generate_maps_abstract_type_hierarchies_correctly()
         {
             var model = new EdmModel().Initialize();
+
             var rootEntityType = model.AddEntityType("E");
-            rootEntityType.SetClrType(typeof(object));
-            rootEntityType.AddPrimitiveProperty("P1").PropertyType.EdmType = EdmPrimitiveType.Int32;
-            rootEntityType.DeclaredKeyProperties.Add(rootEntityType.Properties.First());
-            rootEntityType.AddPrimitiveProperty("P2").PropertyType.EdmType = EdmPrimitiveType.String;
+
+            rootEntityType.Annotations.SetClrType(typeof(object));
+
+            var property0
+                = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            rootEntityType.AddMember(property0);
+            rootEntityType.AddKeyMember(rootEntityType.Properties.First());
+
+            var property1
+                = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            rootEntityType.AddMember(property1);
+
             model.AddEntitySet("ESet", rootEntityType);
+
             var entityType2 = model.AddEntityType("E2");
-            entityType2.AddPrimitiveProperty("P3").PropertyType.EdmType = EdmPrimitiveType.Decimal;
-            entityType2.SetClrType(typeof(string));
-            entityType2.IsAbstract = true;
+
+            var property2
+                = EdmProperty.Primitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType2.AddMember(property2);
+            entityType2.Annotations.SetClrType(typeof(string));
+            entityType2.Abstract = true;
             entityType2.BaseType = rootEntityType;
+
             var entityType3 = model.AddEntityType("E3");
-            entityType3.SetClrType(typeof(int));
-            entityType3.AddPrimitiveProperty("P4").PropertyType.EdmType = EdmPrimitiveType.Int32;
+
+            entityType3.Annotations.SetClrType(typeof(int));
+
+            var property3
+                = EdmProperty.Primitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);

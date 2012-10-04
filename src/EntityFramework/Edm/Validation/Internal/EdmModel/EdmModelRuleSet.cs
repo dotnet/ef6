@@ -18,24 +18,17 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             {
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationConstraint_DependentEndMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationEnd_EntityTypeMustNotBeNull);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_ElementTypeMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_SourceSetMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationSet_TargetSetMustNotBeNull);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationType_AssocationEndMustNotBeNull);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmEntitySet_ElementTypeMustNotBeNull);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameMustNotBeEmptyOrWhiteSpace);
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameIsTooLong);
                 AddRule(EdmModelSyntacticValidationRules.EdmModel_NameIsNotAllowed);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmNavigationProperty_AssocationMustNotBeNull);
                 AddRule(EdmModelSyntacticValidationRules.EdmNavigationProperty_ResultEndMustNotBeNull);
-
                 AddRule(EdmModelSyntacticValidationRules.EdmTypeReference_TypeNotValid);
             }
 
@@ -83,7 +76,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         private abstract class NonV1_1RuleSet : EdmModelRuleSet
         {
-            internal NonV1_1RuleSet(bool validateSyntax)
+            protected NonV1_1RuleSet(bool validateSyntax)
                 : base(validateSyntax)
             {
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_NullableComplexType);
@@ -110,7 +103,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             {
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_PropertyNameAlreadyDefinedDuplicate_V1_1);
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_CycleInTypeHierarchy_V1_1);
-
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidCollectionKind_V1_1);
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType_V1_1);
             }
@@ -146,14 +138,17 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             {
                 return new V1RuleSet(validateSyntax);
             }
+
             if (version == DataModelVersions.Version1_1)
             {
                 return new V1_1RuleSet(validateSyntax);
             }
+
             if (version == DataModelVersions.Version2)
             {
                 return new V2RuleSet(validateSyntax);
             }
+
             if (version == DataModelVersions.Version3)
             {
                 return new V3RuleSet(validateSyntax);

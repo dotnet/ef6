@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
         }
 
-        public void Generate(EdmEntityType entityType, DbDatabaseMapping databaseMapping)
+        public void Generate(EntityType entityType, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(entityType != null);
             Contract.Requires(databaseMapping != null);

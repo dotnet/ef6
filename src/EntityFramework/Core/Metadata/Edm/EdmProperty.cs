@@ -3,7 +3,10 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Reflection;
     using System.Threading;
 
@@ -12,6 +15,49 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class EdmProperty : EdmMember
     {
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static EdmProperty Primitive(string name, PrimitiveType primitiveType)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Contract.Requires(primitiveType != null);
+
+            return CreateProperty(name, primitiveType);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static EdmProperty Enum(string name, EnumType enumType)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Contract.Requires(enumType != null);
+
+            return CreateProperty(name, enumType);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public static EdmProperty Complex(string name, ComplexType complexType)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Contract.Requires(complexType != null);
+
+            var property = CreateProperty(name, complexType);
+
+            property.Nullable = false;
+
+            return property;
+        }
+
+        private static EdmProperty CreateProperty(string name, EdmType edmType)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Contract.Requires(edmType != null);
+
+            var typeUsage = TypeUsage.Create(edmType, new FacetValues());
+
+            var property = new EdmProperty(name, typeUsage);
+
+            return property;
+        }
+
         /// <summary>
         ///     Initializes a new instance of the property class
         /// </summary>
@@ -36,12 +82,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, RuntimeTypeHandle entityDeclaringType)
             : this(name, typeUsage)
         {
-            Debug.Assert(name == propertyInfo.Name, "different PropertyName");
-            if (null != propertyInfo)
+            if (propertyInfo != null)
             {
-                MethodInfo method;
+                Debug.Assert(name == propertyInfo.Name, "different PropertyName");
 
-                method = propertyInfo.GetGetMethod(true); // return public or non-public getter
+                var method = propertyInfo.GetGetMethod(true);
                 PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
 
                 method = propertyInfo.GetSetMethod(true); // return public or non-public getter
@@ -108,6 +153,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public bool Nullable
         {
             get { return (bool)TypeUsage.Facets[DbProviderManifest.NullableFacetName].Value; }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(NullableFacetDescription, value));
+            }
         }
 
         /// <summary>
@@ -144,6 +195,217 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Debug.Assert(null != value, "clearing ValueSetter");
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberSetter, value, null);
+            }
+        }
+
+        public bool IsCollectionType
+        {
+            get { return TypeUsage.EdmType is CollectionType; }
+        }
+
+        public bool IsComplexType
+        {
+            get { return TypeUsage.EdmType is ComplexType; }
+        }
+
+        public bool IsPrimitiveType
+        {
+            get { return TypeUsage.EdmType is PrimitiveType; }
+        }
+
+        public bool IsEnumType
+        {
+            get { return TypeUsage.EdmType is EnumType; }
+        }
+
+        public bool IsUnderlyingPrimitiveType
+        {
+            get { return IsPrimitiveType || IsEnumType; }
+        }
+
+        public ComplexType ComplexType
+        {
+            get { return TypeUsage.EdmType as ComplexType; }
+        }
+
+        public PrimitiveType PrimitiveType
+        {
+            get { return TypeUsage.EdmType as PrimitiveType; }
+        }
+
+        public EnumType EnumType
+        {
+            get { return TypeUsage.EdmType as EnumType; }
+        }
+
+        public PrimitiveType UnderlyingPrimitiveType
+        {
+            get
+            {
+                if (!IsUnderlyingPrimitiveType)
+                {
+                    return null;
+                }
+
+                return IsEnumType
+                           ? EnumType.UnderlyingType
+                           : PrimitiveType;
+            }
+        }
+
+        public ConcurrencyMode ConcurrencyMode
+        {
+            get { return MetadataHelper.GetConcurrencyMode(TypeUsage); }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(Converter.ConcurrencyModeFacet, value));
+            }
+        }
+
+        public CollectionKind CollectionKind
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(EdmConstants.CollectionKind, false, out facet)
+                           ? (CollectionKind)facet.Value
+                           : CollectionKind.None;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(CollectionKindFacetDescription, value));
+            }
+        }
+
+        public int? MaxLength
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                           ? facet.Value as int?
+                           : null;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                        {
+                            MaxLength = value
+                        });
+            }
+        }
+
+        public bool IsMaxLength
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                       && facet.IsUnbounded;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                if (value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                MaxLength = EdmConstants.UnboundedValue
+                            });
+                }
+            }
+        }
+
+        public bool? IsFixedLength
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, false, out facet)
+                           ? facet.Value as bool?
+                           : null;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                        {
+                            FixedLength = value
+                        });
+            }
+        }
+
+        public bool? IsUnicode
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, false, out facet)
+                           ? facet.Value as bool?
+                           : null;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                        {
+                            Unicode = value
+                        });
+            }
+        }
+
+        public byte? Precision
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
+                           ? facet.Value as byte?
+                           : null;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                        {
+                            Precision = value
+                        });
+            }
+        }
+
+        public byte? Scale
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
+                           ? facet.Value as byte?
+                           : null;
+            }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                        {
+                            Scale = value
+                        });
             }
         }
     }

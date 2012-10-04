@@ -2,7 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Linq;
     using Xunit;
 
@@ -11,9 +12,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddPrimitiveProperty_should_create_and_add_to_primitive_properties()
         {
-            var complexType = new EdmComplexType();
+            var complexType = new ComplexType("C");
+            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            var property = complexType.AddPrimitiveProperty("Foo");
+            complexType.AddMember(property1);
+            var property = property1;
 
             Assert.NotNull(property);
             Assert.Equal("Foo", property.Name);
@@ -23,10 +26,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetPrimitiveProperty_should_return_correct_property()
         {
-            var complexType = new EdmComplexType();
-            var property = complexType.AddPrimitiveProperty("Foo");
+            var complexType = new ComplexType("C");
+            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            var foundProperty = complexType.GetPrimitiveProperty("Foo");
+            complexType.AddMember(property1);
+            var property = property1;
+
+            var foundProperty = complexType.Properties.SingleOrDefault(p => p.Name == "Foo");
 
             Assert.NotNull(foundProperty);
             Assert.Same(property, foundProperty);
@@ -35,35 +41,27 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Should_be_able_to_get_and_set_clr_type()
         {
-            var complexType = new EdmComplexType();
+            var complexType = new ComplexType("C");
 
             Assert.Null(complexType.GetClrType());
 
-            complexType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            complexType.Annotations.SetClrType(type);
 
             Assert.Equal(typeof(object), complexType.GetClrType());
         }
 
         [Fact]
-        public void Can_get_and_set_configuration_facet()
-        {
-            var complexType = new EdmComplexType();
-            complexType.SetConfiguration(42);
-
-            Assert.Equal(42, complexType.GetConfiguration());
-        }
-
-        [Fact]
         public void AddComplexProperty_should_create_and_add_complex_property()
         {
-            var complexType = new EdmComplexType();
-
-            var complexTypeProperty = new EdmComplexType();
+            var complexType = new ComplexType("C");
+            var complexTypeProperty = new ComplexType("D");
             var property = complexType.AddComplexProperty("Foo", complexTypeProperty);
 
             Assert.NotNull(property);
             Assert.Equal("Foo", property.Name);
-            Assert.Same(complexTypeProperty, property.PropertyType.ComplexType);
+            Assert.Same(complexTypeProperty, property.ComplexType);
             Assert.True(complexType.Properties.Contains(property));
         }
     }

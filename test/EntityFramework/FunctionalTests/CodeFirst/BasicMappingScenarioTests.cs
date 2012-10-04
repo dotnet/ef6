@@ -9,7 +9,6 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -1433,10 +1432,10 @@ namespace FunctionalTests
 
             Assert.False(
                 databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
-                .Any(p => p.Name == "BaseClassProperty"));
+                    .Any(p => p.Name == "BaseClassProperty"));
             Assert.False(
                 databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
-                .Any(p => p.Name == "VirtualBaseClassProperty"));
+                    .Any(p => p.Name == "VirtualBaseClassProperty"));
         }
 
         [Fact]
@@ -1450,9 +1449,10 @@ namespace FunctionalTests
             modelBuilder.Entity<Unit>().Ignore(b => b.VirtualBaseClassProperty);
 
             Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-               .ValidateMessage("CannotIgnoreMappedBaseProperty",
-                   "BaseClassProperty", "FunctionalTests.Unit",
-                   "FunctionalTests.BaseEntity");
+                .ValidateMessage(
+                    "CannotIgnoreMappedBaseProperty",
+                    "BaseClassProperty", "FunctionalTests.Unit",
+                    "FunctionalTests.BaseEntity");
         }
 
         [Fact]
@@ -1470,7 +1470,7 @@ namespace FunctionalTests
 
             Assert.False(
                 databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
-                .Any(p => p.Name == "AbstractBaseClassProperty"));
+                    .Any(p => p.Name == "AbstractBaseClassProperty"));
         }
 
         [Fact]
@@ -1482,9 +1482,10 @@ namespace FunctionalTests
             modelBuilder.Entity<Unit>().Ignore(u => u.BaseClassProperty);
 
             Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-               .ValidateMessage("CannotIgnoreMappedBaseProperty",
-                   "BaseClassProperty", "FunctionalTests.Unit",
-                   "FunctionalTests.BaseEntity");
+                .ValidateMessage(
+                    "CannotIgnoreMappedBaseProperty",
+                    "BaseClassProperty", "FunctionalTests.Unit",
+                    "FunctionalTests.BaseEntity");
         }
 
         [Fact]
@@ -1518,9 +1519,10 @@ namespace FunctionalTests
             modelBuilder.Entity<DifferentUnit>().Ignore(u => u.VirtualBaseClassProperty);
 
             Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
-               .ValidateMessage("CannotIgnoreMappedBaseProperty",
-                   "VirtualBaseClassProperty", "FunctionalTests.DifferentUnit",
-                   "FunctionalTests.BaseEntity");
+                .ValidateMessage(
+                    "CannotIgnoreMappedBaseProperty",
+                    "VirtualBaseClassProperty", "FunctionalTests.DifferentUnit",
+                    "FunctionalTests.BaseEntity");
         }
 
         [Fact]
@@ -2278,7 +2280,7 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
             Assert.False(
                 databaseMapping.Model.Namespaces[0].EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
-                    p => p.Name == "DerivedData").PropertyType.IsNullable.Value);
+                    p => p.Name == "DerivedData").Nullable);
 
             databaseMapping.Assert<TPHBase>()
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData");
@@ -2308,7 +2310,7 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
             Assert.False(
                 databaseMapping.Model.Namespaces[0].EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
-                    p => p.Name == "DerivedData").PropertyType.IsNullable.Value);
+                    p => p.Name == "DerivedData").Nullable);
             databaseMapping.Assert<TPHBase>()
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData");
             databaseMapping.Assert<TPHBase>("TPHBases")
@@ -4559,12 +4561,12 @@ namespace FunctionalTests
             databaseMapping.Assert<AssocBase>("NameTbl")
                 .HasColumns("Id", "Name")
                 .DbEqual(
-                    DbStoreGeneratedPattern.Identity,
+                    StoreGeneratedPattern.Identity,
                     t => t.Columns.Single(c => c.Name == "Id").StoreGeneratedPattern);
             databaseMapping.Assert<AssocBase>("DataTbl")
                 .HasColumns("Id", "BaseData")
                 .HasForeignKeyColumn("Id", "NameTbl")
-                .DbEqual(DbStoreGeneratedPattern.None, t => t.Columns.Single(c => c.Name == "Id").StoreGeneratedPattern);
+                .DbEqual(StoreGeneratedPattern.None, t => t.Columns.Single(c => c.Name == "Id").StoreGeneratedPattern);
         }
 
         [Fact]

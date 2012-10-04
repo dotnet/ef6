@@ -3,17 +3,17 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     public class DbAssociationSetMapping : DbMappingMetadataItem
     {
-        private readonly BackingList<DbColumnCondition> columnConditions = new BackingList<DbColumnCondition>();
+        private readonly List<DbColumnCondition> columnConditions = new List<DbColumnCondition>();
 
         /// <summary>
-        ///     Gets an <see cref="EdmAssociationSet" /> value representing the association set that is being mapped.
+        ///     Gets an <see cref="AssociationSet" /> value representing the association set that is being mapped.
         /// </summary>
-        public virtual EdmAssociationSet AssociationSet { get; set; }
+        public virtual AssociationSet AssociationSet { get; set; }
 
         /// <summary>
         ///     Gets a <see cref="DbTableMetadata" /> value representing the table to which the entity type's properties are being mapped.
@@ -31,8 +31,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual IList<DbColumnCondition> ColumnConditions
         {
-            get { return columnConditions.EnsureValue(); }
-            set { columnConditions.SetValue(value); }
+            get { return columnConditions; }
         }
 
         internal override DbMappingItemKind GetItemKind()

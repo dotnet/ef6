@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal;
@@ -11,13 +12,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using EdmModel = System.Data.Entity.Edm.EdmModel;
+    using EdmConstants = System.Data.Entity.Edm.Internal.EdmConstants;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
     internal static class EdmModelSemanticValidationRules
     {
-        #region EdmModel
-
         internal static readonly EdmModelValidationRule<EdmModel> EdmModel_SystemNamespaceEncountered =
             new EdmModelValidationRule<EdmModel>(
                 (context, edmModel) =>
@@ -35,24 +34,20 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        #endregion
-
-        #region EdmEntityContainer
-
-        internal static readonly EdmModelValidationRule<EdmEntityContainer> EdmEntityContainer_SimilarRelationshipEnd =
-            new EdmModelValidationRule<EdmEntityContainer>(
+        internal static readonly EdmModelValidationRule<EntityContainer> EdmEntityContainer_SimilarRelationshipEnd =
+            new EdmModelValidationRule<EntityContainer>(
                 (context, edmEntityContainer) =>
                     {
                         var sourceEndList =
-                            new List<KeyValuePair<EdmAssociationSet, EdmEntitySet>>();
+                            new List<KeyValuePair<AssociationSet, EntitySet>>();
                         var targetEndList =
-                            new List<KeyValuePair<EdmAssociationSet, EdmEntitySet>>();
+                            new List<KeyValuePair<AssociationSet, EntitySet>>();
                         foreach (var set in edmEntityContainer.AssociationSets)
                         {
                             var sourceEnd =
-                                new KeyValuePair<EdmAssociationSet, EdmEntitySet>(set, set.SourceSet);
+                                new KeyValuePair<AssociationSet, EntitySet>(set, set.SourceSet);
                             var targetEnd =
-                                new KeyValuePair<EdmAssociationSet, EdmEntitySet>(set, set.TargetSet);
+                                new KeyValuePair<AssociationSet, EntitySet>(set, set.TargetSet);
 
                             var existSourceEnd =
                                 sourceEndList.FirstOrDefault(
@@ -61,7 +56,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 targetEndList.FirstOrDefault(
                                     e => DataModelValidationHelper.AreRelationshipEndsEqual(e, targetEnd));
 
-                            if (!existSourceEnd.Equals(default(KeyValuePair<EdmAssociationSet, EdmEntitySet>)))
+                            if (!existSourceEnd.Equals(default(KeyValuePair<AssociationSet, EntitySet>)))
                             {
                                 context.AddError(
                                     edmEntityContainer,
@@ -79,7 +74,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 sourceEndList.Add(sourceEnd);
                             }
 
-                            if (!existTargetEnd.Equals(default(KeyValuePair<EdmAssociationSet, EdmEntitySet>)))
+                            if (!existTargetEnd.Equals(default(KeyValuePair<AssociationSet, EntitySet>)))
                             {
                                 context.AddError(
                                     edmEntityContainer,
@@ -99,9 +94,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityContainer>
+        internal static readonly EdmModelValidationRule<EntityContainer>
             EdmEntityContainer_InvalidEntitySetNameReference =
-                new EdmModelValidationRule<EdmEntityContainer>(
+                new EdmModelValidationRule<EntityContainer>(
                     (context, edmEntityContainer) =>
                         {
                             if (edmEntityContainer.AssociationSets != null)
@@ -141,13 +136,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmEntityContainer>
+        internal static readonly EdmModelValidationRule<EntityContainer>
             EdmEntityContainer_ConcurrencyRedefinedOnSubTypeOfEntitySetType
                 =
-                new EdmModelValidationRule<EdmEntityContainer>(
+                new EdmModelValidationRule<EntityContainer>(
                     (context, edmEntityContainer) =>
                         {
-                            var baseEntitySetTypes = new Dictionary<EdmEntityType, EdmEntitySet>();
+                            var baseEntitySetTypes = new Dictionary<EntityType, EntitySet>();
                             foreach (var entitySet in edmEntityContainer.EntitySets)
                             {
                                 if (entitySet != null && entitySet.ElementType != null
@@ -159,9 +154,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
                             // look through each type in this schema and see if it is derived from a base
                             // type if it is then see if it has some "new" Concurrency fields
-                            foreach (var entityType in context.ModelParentMap.NamespaceItems.OfType<EdmEntityType>())
+                            foreach (var entityType in context.ModelParentMap.NamespaceItems.OfType<EntityType>())
                             {
-                                EdmEntitySet set;
+                                EntitySet set;
                                 if (DataModelValidationHelper.TypeIsSubTypeOf(entityType, baseEntitySetTypes, out set)
                                     &&
                                     DataModelValidationHelper.IsTypeDefinesNewConcurrencyProperties(entityType))
@@ -180,13 +175,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmEntityContainer>
+        internal static readonly EdmModelValidationRule<EntityContainer>
             EdmEntityContainer_DuplicateEntityContainerMemberName =
-                new EdmModelValidationRule<EdmEntityContainer>(
+                new EdmModelValidationRule<EntityContainer>(
                     (context, edmEntityContainer) =>
                         {
                             var memberNameList = new HashSet<string>();
-                            foreach (var item in edmEntityContainer.ContainerItems)
+                            foreach (var item in edmEntityContainer.BaseEntitySets)
                             {
                                 DataModelValidationHelper.AddMemberNameToHashSet(
                                     item,
@@ -197,17 +192,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     );
 
-        #endregion
-
-        #region EdmEntitySet
-
-        internal static readonly EdmModelValidationRule<EdmEntitySet> EdmEntitySet_EntitySetTypeHasNoKeys =
-            new EdmModelValidationRule<EdmEntitySet>(
+        internal static readonly EdmModelValidationRule<EntitySet> EdmEntitySet_EntitySetTypeHasNoKeys =
+            new EdmModelValidationRule<EntitySet>(
                 (context, edmEntitySet) =>
                     {
                         if (edmEntitySet.ElementType != null)
                         {
-                            if (edmEntitySet.ElementType.GetValidKey().Count() == 0)
+                            if (!edmEntitySet.ElementType.GetValidKey().Any())
                             {
                                 context.AddError(
                                     edmEntitySet,
@@ -219,12 +210,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        #endregion
-
-        #region EdmAssociationSet
-
-        internal static readonly EdmModelValidationRule<EdmAssociationSet> EdmAssociationSet_DuplicateEndName =
-            new EdmModelValidationRule<EdmAssociationSet>(
+        internal static readonly EdmModelValidationRule<AssociationSet> EdmAssociationSet_DuplicateEndName =
+            new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
                         if (edmAssociationSet.ElementType != null && edmAssociationSet.ElementType.SourceEnd != null
@@ -243,13 +230,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        #endregion
-
-        #region EdmEntityType
-
-        internal static readonly EdmModelValidationRule<EdmEntityType>
+        internal static readonly EdmModelValidationRule<EntityType>
             EdmEntityType_DuplicatePropertyNameSpecifiedInEntityKey =
-                new EdmModelValidationRule<EdmEntityType>(
+                new EdmModelValidationRule<EntityType>(
                     (context, edmEntityType) =>
                         {
                             var keyProperties = edmEntityType.GetKeyProperties().ToList();
@@ -280,17 +263,15 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_InvalidKeyNullablePart =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_InvalidKeyNullablePart =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         foreach (var key in edmEntityType.GetValidKey())
                         {
-                            if (key.PropertyType.IsPrimitiveType)
+                            if (key.IsPrimitiveType)
                             {
-                                if (key.PropertyType.IsNullable.HasValue
-                                    &&
-                                    key.PropertyType.IsNullable.Value)
+                                if (key.Nullable)
                                 {
                                     context.AddError(
                                         key,
@@ -303,13 +284,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_EntityKeyMustBeScalar =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_EntityKeyMustBeScalar =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         foreach (var key in edmEntityType.GetValidKey())
                         {
-                            if (!key.PropertyType.IsUnderlyingPrimitiveType)
+                            if (!key.IsUnderlyingPrimitiveType)
                             {
                                 context.AddError(
                                     key,
@@ -321,14 +302,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_InvalidKeyKeyDefinedInBaseClass =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_InvalidKeyKeyDefinedInBaseClass =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         if (edmEntityType.BaseType != null &&
                             edmEntityType.DeclaredKeyProperties != null
-                            &&
-                            edmEntityType.DeclaredKeyProperties.Count() > 0)
+                            && edmEntityType.DeclaredKeyProperties.Any())
                         {
                             context.AddError(
                                 edmEntityType.BaseType,
@@ -339,12 +319,12 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_KeyMissingOnEntityType =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_KeyMissingOnEntityType =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         if (edmEntityType.BaseType == null
-                            && edmEntityType.DeclaredKeyProperties.Count() == 0)
+                            && !edmEntityType.DeclaredKeyProperties.Any())
                         {
                             context.AddError(
                                 edmEntityType,
@@ -354,8 +334,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_InvalidMemberNameMatchesTypeName =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_InvalidMemberNameMatchesTypeName =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         var properties = edmEntityType.Properties.ToList();
@@ -380,7 +360,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 }
                             }
 
-                            if (edmEntityType.HasDeclaredNavigationProperties)
+                            if (edmEntityType.DeclaredNavigationProperties.Any())
                             {
                                 foreach (var property in edmEntityType.DeclaredNavigationProperties)
                                 {
@@ -403,9 +383,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_PropertyNameAlreadyDefinedDuplicate
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_PropertyNameAlreadyDefinedDuplicate
             =
-            new EdmModelValidationRule<EdmEntityType>(
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
                         var propertyNames = new HashSet<string>();
@@ -419,13 +399,12 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                         property,
                                         propertyNames,
                                         context,
-                                        (name) =>
-                                        Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate(name));
+                                        Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate);
                                 }
                             }
                         }
 
-                        if (edmEntityType.HasDeclaredNavigationProperties)
+                        if (edmEntityType.DeclaredNavigationProperties.Any())
                         {
                             foreach (var property in edmEntityType.DeclaredNavigationProperties)
                             {
@@ -437,20 +416,18 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                             property,
                                             propertyNames,
                                             context,
-                                            (name) =>
-                                            Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate(
-                                                name));
+                                            Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate);
                                     }
                                 }
                             }
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmEntityType> EdmEntityType_CycleInTypeHierarchy =
-            new EdmModelValidationRule<EdmEntityType>(
+        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_CycleInTypeHierarchy =
+            new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
                     {
-                        if (DataModelValidationHelper.CheckForInheritanceCycle(edmEntityType, et => et.BaseType))
+                        if (DataModelValidationHelper.CheckForInheritanceCycle(edmEntityType, et => (EntityType)et.BaseType))
                         {
                             context.AddError(
                                 edmEntityType,
@@ -461,13 +438,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        #endregion
-
-        #region EdmNavigationProperty
-
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+        internal static readonly EdmModelValidationRule<NavigationProperty>
             EdmNavigationProperty_BadNavigationPropertyUndefinedRole =
-                new EdmModelValidationRule<EdmNavigationProperty>(
+                new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.Association != null &&
@@ -493,9 +466,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmNavigationProperty>
+        internal static readonly EdmModelValidationRule<NavigationProperty>
             EdmNavigationProperty_BadNavigationPropertyRolesCannotBeTheSame =
-                new EdmModelValidationRule<EdmNavigationProperty>(
+                new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.Association != null &&
@@ -515,22 +488,16 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        #endregion
-
-        #region EdmAssociationType
-
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_InvalidOperationMultipleEndsInAssociation =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if ((edmAssociationType.SourceEnd != null
-                                 && edmAssociationType.SourceEnd.DeleteAction.HasValue
-                                 && edmAssociationType.SourceEnd.DeleteAction.Value != EdmOperationAction.None)
+                                 && edmAssociationType.SourceEnd.DeleteBehavior != OperationAction.None)
                                 &&
                                 (edmAssociationType.TargetEnd != null
-                                 && edmAssociationType.TargetEnd.DeleteAction.HasValue
-                                 && edmAssociationType.TargetEnd.DeleteAction.Value != EdmOperationAction.None))
+                                 && edmAssociationType.TargetEnd.DeleteBehavior != OperationAction.None))
                             {
                                 context.AddError(
                                     edmAssociationType,
@@ -540,18 +507,16 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_EndWithManyMultiplicityCannotHaveOperationsSpecified =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (edmAssociationType.SourceEnd != null)
                             {
                                 // Check if the end has multiplicity as many, it cannot have any operation behaviour
-                                if (edmAssociationType.SourceEnd.EndKind == EdmAssociationEndKind.Many &&
-                                    edmAssociationType.SourceEnd.DeleteAction.HasValue
-                                    &&
-                                    edmAssociationType.SourceEnd.DeleteAction.Value != EdmOperationAction.None)
+                                if (edmAssociationType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many
+                                    && edmAssociationType.SourceEnd.DeleteBehavior != OperationAction.None)
                                 {
                                     context.AddError(
                                         edmAssociationType.SourceEnd,
@@ -567,10 +532,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
                             if (edmAssociationType.TargetEnd != null)
                             {
-                                if (edmAssociationType.TargetEnd.EndKind == EdmAssociationEndKind.Many &&
-                                    edmAssociationType.TargetEnd.DeleteAction.HasValue
-                                    &&
-                                    edmAssociationType.TargetEnd.DeleteAction.Value != EdmOperationAction.None)
+                                if (edmAssociationType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many
+                                    && edmAssociationType.TargetEnd.DeleteBehavior != OperationAction.None)
                                 {
                                     context.AddError(
                                         edmAssociationType.TargetEnd,
@@ -585,9 +548,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_EndNameAlreadyDefinedDuplicate =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (edmAssociationType.SourceEnd != null
@@ -606,9 +569,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_SameRoleReferredInReferentialConstraint =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (DataModelValidationHelper.IsReferentialConstraintReadyForValidation(edmAssociationType))
@@ -628,9 +591,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_ValidateReferentialConstraint =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (DataModelValidationHelper.IsReferentialConstraintReadyForValidation(edmAssociationType))
@@ -650,7 +613,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 // Resolve all the property in the dependent end attribute. Also checks whether this is nullable or not and 
                                 // whether the properties are the keys for the type in the dependent end
                                 DataModelValidationHelper.IsKeyProperty(
-                                    constraint.DependentProperties.ToList(),
+                                    constraint.ToProperties.ToList(),
                                     dependentRoleEnd,
                                     out isPrincipalRoleKeyProperty,
                                     out areAllDependentRolePropertiesNullable,
@@ -660,7 +623,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 // Resolve all the property in the principal end attribute. Also checks whether this is nullable or not and 
                                 // whether the properties are the keys for the type in the principal role
                                 DataModelValidationHelper.IsKeyProperty(
-                                    constraint.PrincipalEnd(edmAssociationType).EntityType.GetValidKey().ToList(),
+                                    constraint.PrincipalEnd(edmAssociationType).GetEntityType().GetValidKey().ToList(),
                                     principalRoleEnd,
                                     out isDependentRoleKeyProperty,
                                     out areAllPrinicipalRolePropertiesNullable,
@@ -668,10 +631,10 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                     out isPrinicipalRolePropertiesSubsetofKeyProperties);
 
                                 Contract.Assert(
-                                    constraint.PrincipalEnd(edmAssociationType).EntityType.GetValidKey().Count() > 0,
+                                    constraint.PrincipalEnd(edmAssociationType).GetEntityType().GetValidKey().Any(),
                                     "There should be some ref properties in Principal Role");
                                 Contract.Assert(
-                                    constraint.DependentProperties.Count() != 0,
+                                    constraint.ToProperties.Count() != 0,
                                     "There should be some ref properties in Dependent Role");
                                 Contract.Assert(
                                     isDependentRoleKeyProperty,
@@ -683,8 +646,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 // Also the lower bound of multiplicity of FromRole can be zero if and only if all the properties in 
                                 // ToProperties are nullable
                                 // for v2+
-                                if (principalRoleEnd.EndKind
-                                    == EdmAssociationEndKind.Many)
+                                if (principalRoleEnd.RelationshipMultiplicity
+                                    == RelationshipMultiplicity.Many)
                                 {
                                     context.AddError(
                                         principalRoleEnd,
@@ -695,7 +658,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                         XmlErrorCode.InvalidMultiplicityInRoleInRelationshipConstraint);
                                 }
                                 else if (areAllDependentRolePropertiesNullable
-                                         && principalRoleEnd.EndKind == EdmAssociationEndKind.Required)
+                                         && principalRoleEnd.RelationshipMultiplicity == RelationshipMultiplicity.One)
                                 {
                                     var message =
                                         Strings.
@@ -711,7 +674,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                              (v1Behavior && !areAllDependentRolePropertiesNullable) ||
                                              (!v1Behavior && !isAnyDependentRolePropertyNullable)
                                          )
-                                         && principalRoleEnd.EndKind != EdmAssociationEndKind.Required)
+                                         && principalRoleEnd.RelationshipMultiplicity != RelationshipMultiplicity.One)
                                 {
                                     string message;
                                     if (v1Behavior)
@@ -748,8 +711,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                         null,
                                         Strings.EdmModel_Validator_Semantic_InvalidToPropertyInRelationshipConstraint(
                                             dependentRoleEnd.Name,
-                                            dependentRoleEnd.EntityType.GetQualifiedName(
-                                                context.GetQualifiedPrefix(dependentRoleEnd.EntityType)),
+                                            dependentRoleEnd.GetEntityType().GetQualifiedName(
+                                                context.GetQualifiedPrefix(dependentRoleEnd.GetEntityType())),
                                             edmAssociationType.GetQualifiedName(
                                                 context.GetQualifiedPrefix(edmAssociationType))),
                                         XmlErrorCode.InvalidPropertyInRelationshipConstraint);
@@ -759,8 +722,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 // have exactly one child
                                 if (isPrincipalRoleKeyProperty)
                                 {
-                                    if (dependentRoleEnd.EndKind
-                                        == EdmAssociationEndKind.Many)
+                                    if (dependentRoleEnd.RelationshipMultiplicity
+                                        == RelationshipMultiplicity.Many)
                                     {
                                         context.AddError(
                                             dependentRoleEnd,
@@ -774,8 +737,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 }
                                     // if the principal role property is not the key, then the upper bound must be many i.e every parent (from property) can
                                     // be related to many childs
-                                else if (dependentRoleEnd.EndKind
-                                         != EdmAssociationEndKind.Many)
+                                else if (dependentRoleEnd.RelationshipMultiplicity
+                                         != RelationshipMultiplicity.Many)
                                 {
                                     context.AddError(
                                         dependentRoleEnd,
@@ -785,8 +748,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                                 dependentRoleEnd.Name, edmAssociationType.Name),
                                         XmlErrorCode.InvalidMultiplicityInRoleInRelationshipConstraint);
                                 }
-                                var keyProperties_PrincipalRoleEnd = principalRoleEnd.EntityType.GetValidKey().ToList();
-                                var dependentProperties = constraint.DependentProperties.ToList();
+                                var keyProperties_PrincipalRoleEnd = principalRoleEnd.GetEntityType().GetValidKey().ToList();
+                                var dependentProperties = constraint.ToProperties.ToList();
 
                                 if (dependentProperties.Count
                                     != keyProperties_PrincipalRoleEnd.Count)
@@ -807,24 +770,24 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                         var principalProperty = keyProperties_PrincipalRoleEnd[i];
                                         var dependentProperty = dependentProperties[i];
                                         if (principalProperty != null && dependentProperty != null &&
-                                            principalProperty.PropertyType != null
-                                            && dependentProperty.PropertyType != null &&
-                                            principalProperty.PropertyType.IsPrimitiveType
-                                            && dependentProperty.PropertyType.IsPrimitiveType)
+                                            principalProperty.TypeUsage != null
+                                            && dependentProperty.TypeUsage != null &&
+                                            principalProperty.IsPrimitiveType
+                                            && dependentProperty.IsPrimitiveType)
                                         {
                                             if (!DataModelValidationHelper.IsPrimitiveTypesEqual(
-                                                dependentProperty.PropertyType,
-                                                principalProperty.PropertyType))
+                                                dependentProperty,
+                                                principalProperty))
                                             {
                                                 context.AddError(
                                                     constraint,
                                                     null,
                                                     Strings.
                                                         EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(
-                                                            constraint.DependentProperties.ToList()[i].Name,
-                                                            dependentRoleEnd.EntityType.Name,
+                                                            constraint.ToProperties.ToList()[i].Name,
+                                                            dependentRoleEnd.GetEntityType().Name,
                                                             keyProperties_PrincipalRoleEnd[i].Name,
-                                                            principalRoleEnd.EntityType.Name,
+                                                            principalRoleEnd.GetEntityType().Name,
                                                             edmAssociationType.Name
                                                         ),
                                                     XmlErrorCode.TypeMismatchRelationshipConstraint);
@@ -835,19 +798,19 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmAssociationType>
+        internal static readonly EdmModelValidationRule<AssociationType>
             EdmAssociationType_InvalidPropertyInRelationshipConstraint =
-                new EdmModelValidationRule<EdmAssociationType>(
+                new EdmModelValidationRule<AssociationType>(
                     (context, edmAssociationType) =>
                         {
                             if (edmAssociationType.Constraint != null &&
                                 edmAssociationType.Constraint.DependentEnd != null
                                 &&
-                                edmAssociationType.Constraint.DependentEnd.EntityType != null)
+                                edmAssociationType.Constraint.DependentEnd.GetEntityType() != null)
                             {
                                 var dependentEndProperties =
-                                    edmAssociationType.Constraint.DependentEnd.EntityType.Properties.ToList();
-                                foreach (var property in edmAssociationType.Constraint.DependentProperties)
+                                    edmAssociationType.Constraint.DependentEnd.GetEntityType().Properties.ToList();
+                                foreach (var property in edmAssociationType.Constraint.ToProperties)
                                 {
                                     if (property != null)
                                     {
@@ -867,15 +830,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             }
                         });
 
-        #endregion
-
-        #region EdmComplexType
-
-        internal static readonly EdmModelValidationRule<EdmComplexType> EdmComplexType_InvalidIsAbstract =
-            new EdmModelValidationRule<EdmComplexType>(
+        internal static readonly EdmModelValidationRule<ComplexType> EdmComplexType_InvalidIsAbstract =
+            new EdmModelValidationRule<ComplexType>(
                 (context, edmComplexType) =>
                     {
-                        if (edmComplexType.IsAbstract)
+                        if (edmComplexType.Abstract)
                         {
                             context.AddError(
                                 edmComplexType,
@@ -886,8 +845,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmComplexType> EdmComplexType_InvalidIsPolymorphic =
-            new EdmModelValidationRule<EdmComplexType>(
+        internal static readonly EdmModelValidationRule<ComplexType> EdmComplexType_InvalidIsPolymorphic =
+            new EdmModelValidationRule<ComplexType>(
                 (context, edmComplexType) =>
                     {
                         if (edmComplexType.BaseType != null)
@@ -901,15 +860,15 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmComplexType> EdmComplexType_InvalidMemberNameMatchesTypeName
+        internal static readonly EdmModelValidationRule<ComplexType> EdmComplexType_InvalidMemberNameMatchesTypeName
             =
-            new EdmModelValidationRule<EdmComplexType>(
+            new EdmModelValidationRule<ComplexType>(
                 (context, edmComplexType) =>
                     {
                         if (edmComplexType.Name.HasContent()
-                            && edmComplexType.HasDeclaredProperties)
+                            && edmComplexType.Properties.Any())
                         {
-                            foreach (var property in edmComplexType.DeclaredProperties)
+                            foreach (var property in edmComplexType.Properties)
                             {
                                 if (property != null)
                                 {
@@ -929,15 +888,15 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EdmComplexType>
+        internal static readonly EdmModelValidationRule<ComplexType>
             EdmComplexType_PropertyNameAlreadyDefinedDuplicate =
-                new EdmModelValidationRule<EdmComplexType>(
+                new EdmModelValidationRule<ComplexType>(
                     (context, edmComplexType) =>
                         {
-                            if (edmComplexType.HasDeclaredProperties)
+                            if (edmComplexType.Properties.Any())
                             {
                                 var propertyNames = new HashSet<string>();
-                                foreach (var property in edmComplexType.DeclaredProperties)
+                                foreach (var property in edmComplexType.Properties)
                                 {
                                     if (property.Name.HasContent())
                                     {
@@ -945,20 +904,18 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                             property,
                                             propertyNames,
                                             context,
-                                            (name) =>
-                                            Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate(
-                                                name));
+                                            Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate);
                                     }
                                 }
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmComplexType>
+        internal static readonly EdmModelValidationRule<ComplexType>
             EdmComplexType_PropertyNameAlreadyDefinedDuplicate_V1_1 =
-                new EdmModelValidationRule<EdmComplexType>(
+                new EdmModelValidationRule<ComplexType>(
                     (context, edmComplexType) =>
                         {
-                            if (edmComplexType.HasDeclaredProperties)
+                            if (edmComplexType.Properties.Any())
                             {
                                 var propertyNames = new HashSet<string>();
                                 foreach (var property in edmComplexType.Properties)
@@ -971,20 +928,18 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                                 property,
                                                 propertyNames,
                                                 context,
-                                                (name) =>
-                                                Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate(
-                                                    name));
+                                                Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefinedDuplicate);
                                         }
                                     }
                                 }
                             }
                         });
 
-        internal static readonly EdmModelValidationRule<EdmComplexType> EdmComplexType_CycleInTypeHierarchy_V1_1 =
-            new EdmModelValidationRule<EdmComplexType>(
+        internal static readonly EdmModelValidationRule<ComplexType> EdmComplexType_CycleInTypeHierarchy_V1_1 =
+            new EdmModelValidationRule<ComplexType>(
                 (context, edmComplexType) =>
                     {
-                        if (DataModelValidationHelper.CheckForInheritanceCycle(edmComplexType, ct => ct.BaseType))
+                        if (DataModelValidationHelper.CheckForInheritanceCycle(edmComplexType, ct => (ComplexType)ct.BaseType))
                         {
                             context.AddError(
                                 edmComplexType,
@@ -995,16 +950,12 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     });
 
-        #endregion
-
-        #region EdmProperty
-
         internal static readonly EdmModelValidationRule<EdmProperty> EdmProperty_InvalidCollectionKind =
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
                         if (edmProperty.CollectionKind
-                            != EdmCollectionKind.Default)
+                            != CollectionKind.None)
                         {
                             context.AddError(
                                 edmProperty,
@@ -1018,10 +969,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
-                        if (edmProperty.CollectionKind != EdmCollectionKind.Default &&
-                            edmProperty.PropertyType != null
-                            &&
-                            !edmProperty.PropertyType.IsCollectionType)
+                        if (edmProperty.CollectionKind != CollectionKind.None &&
+                            edmProperty.TypeUsage != null
+                            && !edmProperty.IsCollectionType)
                         {
                             context.AddError(
                                 edmProperty,
@@ -1035,13 +985,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
-                        if (edmProperty.PropertyType != null)
+                        if (edmProperty.TypeUsage != null)
                         {
-                            if (edmProperty.PropertyType.ComplexType != null)
+                            if (edmProperty.ComplexType != null)
                             {
-                                if (edmProperty.PropertyType.IsNullable.HasValue
-                                    &&
-                                    edmProperty.PropertyType.IsNullable.Value)
+                                if (edmProperty.Nullable)
                                 {
                                     context.AddError(
                                         edmProperty,
@@ -1057,21 +1005,18 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
-                        if (edmProperty.PropertyType != null
-                            &&
-                            edmProperty.PropertyType.EdmType != null)
+                        if (edmProperty.TypeUsage.EdmType != null)
                         {
-                            if (!edmProperty.PropertyType.IsPrimitiveType
-                                &&
-                                !edmProperty.PropertyType.IsComplexType)
+                            if (!edmProperty.IsPrimitiveType
+                                && !edmProperty.IsComplexType)
                             {
                                 context.AddError(
                                     edmProperty,
                                     CsdlConstants.Attribute_Type,
                                     Strings.EdmModel_Validator_Semantic_InvalidPropertyType(
-                                        (edmProperty.PropertyType.IsCollectionType
+                                        (edmProperty.IsCollectionType
                                              ? EdmConstants.Value_CollectionType
-                                             : edmProperty.PropertyType.EdmType.ItemKind.ToString())),
+                                             : edmProperty.TypeUsage.EdmType.BuiltInTypeKind.ToString())),
                                     XmlErrorCode.InvalidPropertyType);
                             }
                         }
@@ -1081,20 +1026,19 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
-                        if (edmProperty.PropertyType != null
+                        if (edmProperty.TypeUsage != null
                             &&
-                            edmProperty.PropertyType.EdmType != null)
+                            edmProperty.TypeUsage.EdmType != null)
                         {
-                            if (!edmProperty.PropertyType.IsPrimitiveType &&
-                                !edmProperty.PropertyType.IsComplexType
-                                &&
-                                !edmProperty.PropertyType.IsCollectionType)
+                            if (!edmProperty.IsPrimitiveType &&
+                                !edmProperty.IsComplexType
+                                && !edmProperty.IsCollectionType)
                             {
                                 context.AddError(
                                     edmProperty,
                                     CsdlConstants.Attribute_Type,
                                     Strings.EdmModel_Validator_Semantic_InvalidPropertyType_V1_1(
-                                        edmProperty.PropertyType.EdmType.ItemKind.ToString()),
+                                        edmProperty.TypeUsage.EdmType.BuiltInTypeKind.ToString()),
                                     XmlErrorCode.InvalidPropertyType);
                             }
                         }
@@ -1104,28 +1048,23 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<EdmProperty>(
                 (context, edmProperty) =>
                     {
-                        if (edmProperty.PropertyType != null
+                        if (edmProperty.TypeUsage != null
                             &&
-                            edmProperty.PropertyType.EdmType != null)
+                            edmProperty.TypeUsage.EdmType != null)
                         {
-                            if (!edmProperty.PropertyType.IsPrimitiveType &&
-                                !edmProperty.PropertyType.IsComplexType
-                                &&
-                                !edmProperty.PropertyType.IsEnumType)
+                            if (!edmProperty.IsPrimitiveType &&
+                                !edmProperty.IsComplexType
+                                && !edmProperty.IsEnumType)
                             {
                                 context.AddError(
                                     edmProperty,
                                     CsdlConstants.Attribute_Type,
                                     Strings.EdmModel_Validator_Semantic_InvalidPropertyType_V3(
-                                        edmProperty.PropertyType.EdmType.ItemKind.ToString()),
+                                        edmProperty.TypeUsage.EdmType.BuiltInTypeKind.ToString()),
                                     XmlErrorCode.InvalidPropertyType);
                             }
                         }
                     });
-
-        #endregion
-
-        #region EdmNamespace
 
         internal static readonly EdmModelValidationRule<EdmNamespace> EdmNamespace_TypeNameAlreadyDefinedDuplicate =
             new EdmModelValidationRule<EdmNamespace>(
@@ -1142,7 +1081,5 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         }
                     }
                 );
-
-        #endregion
     }
 }

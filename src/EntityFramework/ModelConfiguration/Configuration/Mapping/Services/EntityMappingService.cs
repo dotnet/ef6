@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Internal;
@@ -63,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             foreach (var entitySet in _entityTypes.GetEntitySets())
             {
-                var setRootMappings = new Dictionary<TableMapping, Dictionary<EdmEntityType, DbEntityTypeMapping>>();
+                var setRootMappings = new Dictionary<TableMapping, Dictionary<EntityType, DbEntityTypeMapping>>();
 
                 foreach (var entityType in _entityTypes.GetEntityTypes(entitySet))
                 {
@@ -71,10 +71,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         var tableMapping in
                             _tableMappings.Values.Where(tm => tm.EntityTypes.Contains(entitySet, entityType)))
                     {
-                        Dictionary<EdmEntityType, DbEntityTypeMapping> rootMappings;
+                        Dictionary<EntityType, DbEntityTypeMapping> rootMappings;
                         if (!setRootMappings.TryGetValue(tableMapping, out rootMappings))
                         {
-                            rootMappings = new Dictionary<EdmEntityType, DbEntityTypeMapping>();
+                            rootMappings = new Dictionary<EntityType, DbEntityTypeMapping>();
                             setRootMappings.Add(tableMapping, rootMappings);
                         }
 
@@ -184,11 +184,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                             if (associationType != null
                                 && associationType.IsRequiredToNonRequired())
                             {
-                                EdmAssociationEnd _, dependentEnd;
+                                AssociationEndMember _, dependentEnd;
                                 fkConstraint.GetAssociationType().TryGuessPrincipalAndDependentEnds(
                                     out _, out dependentEnd);
 
-                                if (dependentEnd.EntityType == entityType)
+                                if (dependentEnd.GetEntityType() == entityType)
                                 {
                                     MarkColumnsAsNonNullableIfNoTableSharing(
                                         entitySet, tableMapping.Table, entityType, fkConstraint.DependentColumns);
@@ -206,7 +206,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         ///     Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
         ///     when no base types share the the association set mapping's table
         /// </summary>
-        private void ConfigureAssociationSetMappingForeignKeys(EdmEntitySet entitySet)
+        private void ConfigureAssociationSetMappingForeignKeys(EntitySet entitySet)
         {
             foreach (var asm in _databaseMapping.EntityContainerMappings
                 .SelectMany(ecm => ecm.AssociationSetMappings)
@@ -214,7 +214,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     asm => (asm.AssociationSet.SourceSet == entitySet || asm.AssociationSet.TargetSet == entitySet)
                            && asm.AssociationSet.ElementType.IsRequiredToNonRequired()))
             {
-                EdmAssociationEnd _, dependentEnd;
+                AssociationEndMember _, dependentEnd;
                 asm.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd);
 
                 if ((dependentEnd == asm.AssociationSet.ElementType.SourceEnd &&
@@ -227,14 +227,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                                : asm.SourceEndMapping;
 
                     MarkColumnsAsNonNullableIfNoTableSharing(
-                        entitySet, asm.Table, dependentEnd.EntityType,
+                        entitySet, asm.Table, dependentEnd.GetEntityType(),
                         dependentMapping.PropertyMappings.Select(pm => pm.Column));
                 }
             }
         }
 
         private void MarkColumnsAsNonNullableIfNoTableSharing(
-            EdmEntitySet entitySet, DbTableMetadata table, EdmEntityType dependentEndEntityType,
+            EntitySet entitySet, DbTableMetadata table, EntityType dependentEndEntityType,
             IEnumerable<DbTableColumnMetadata> columns)
         {
             // determine if base entities share this table, if not, the foreign keys can be non-nullable
@@ -244,7 +244,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     et != dependentEndEntityType &&
                     (et.IsAncestorOf(dependentEndEntityType) || !dependentEndEntityType.IsAncestorOf(et)));
             if (mappedBaseTypes.Count() == 0
-                || mappedBaseTypes.All(et => et.IsAbstract))
+                || mappedBaseTypes.All(et => et.Abstract))
             {
                 columns.Each(c => c.IsNullable = false);
             }
@@ -255,8 +255,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         /// </summary>
         private static void ConfigureTypeMappings(
             TableMapping tableMapping,
-            Dictionary<EdmEntityType, DbEntityTypeMapping> rootMappings,
-            EdmEntityType entityType,
+            Dictionary<EntityType, DbEntityTypeMapping> rootMappings,
+            EntityType entityType,
             DbEntityTypeMappingFragment propertiesTypeMappingFragment,
             DbEntityTypeMappingFragment conditionTypeMappingFragment)
         {
@@ -305,7 +305,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         {
                             existingConditions.Remove(condition);
                         }
-                        else if (!entityType.IsAbstract)
+                        else if (!entityType.Abstract)
                         {
                             conditionTypeMappingFragment.ColumnConditions.Add(condition);
                         }
@@ -324,7 +324,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 conditionTypeMappingFragment.ColumnConditions.Remove(leftoverCondition);
             }
 
-            if (entityType.IsAbstract)
+            if (entityType.Abstract)
             {
                 propertiesTypeMappingFragment.ColumnConditions.Clear();
             }
@@ -352,13 +352,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private DbEntityTypeMapping FindConditionTypeMapping(
-            EdmEntityType entityType, bool requiresSplit, DbEntityTypeMapping propertiesTypeMapping)
+            EntityType entityType, bool requiresSplit, DbEntityTypeMapping propertiesTypeMapping)
         {
             var conditionTypeMapping = propertiesTypeMapping;
 
             if (requiresSplit)
             {
-                if (!entityType.IsAbstract)
+                if (!entityType.Abstract)
                 {
                     conditionTypeMapping = propertiesTypeMapping.Clone();
                     conditionTypeMapping.IsHierarchyMapping = false;
@@ -374,12 +374,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private bool DetermineRequiresIsTypeOf(
-            TableMapping tableMapping, EdmEntitySet entitySet, EdmEntityType entityType)
+            TableMapping tableMapping, EntitySet entitySet, EntityType entityType)
         {
             // IsTypeOf if this is the root for this table and any derived type shares a property mapping
             return entityType.IsRootOfSet(tableMapping.EntityTypes.GetEntityTypes(entitySet)) &&
                    ((tableMapping.EntityTypes.GetEntityTypes(entitySet).Count() > 1
-                     && tableMapping.EntityTypes.GetEntityTypes(entitySet).Any(et => et != entityType && !et.IsAbstract))
+                     && tableMapping.EntityTypes.GetEntityTypes(entitySet).Any(et => et != entityType && !et.Abstract))
                     ||
                     _tableMappings.Values.Any(
                         tm =>
@@ -391,7 +391,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static bool DetermineRequiresSplitEntityTypeMapping(
             TableMapping tableMapping,
-            EdmEntityType entityType,
+            EntityType entityType,
             bool requiresIsTypeOf)
         {
             return requiresIsTypeOf && HasConditions(tableMapping, entityType);
@@ -402,8 +402,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         /// </summary>
         private bool FindPropertyEntityTypeMapping(
             TableMapping tableMapping,
-            EdmEntitySet entitySet,
-            EdmEntityType entityType,
+            EntitySet entitySet,
+            EntityType entityType,
             bool requiresIsTypeOf,
             out DbEntityTypeMapping entityTypeMapping,
             out DbEntityTypeMappingFragment fragment)
@@ -424,7 +424,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 entityTypeMapping = mapping.TypeMapping;
                 fragment = mapping.Fragment;
                 if (!requiresIsTypeOf
-                    && entityType.IsAbstract)
+                    && entityType.Abstract)
                 {
                     RemoveFragment(entitySet, mapping.TypeMapping, mapping.Fragment);
                     return false;
@@ -438,7 +438,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void RemoveFragment(
-            EdmEntitySet entitySet, DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment fragment)
+            EntitySet entitySet, DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment fragment)
         {
             // Make the default discriminator nullable if this type isn't using it but there is a base type
             var defaultDiscriminator = fragment.GetDefaultDiscriminator();
@@ -492,17 +492,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private static bool HasConditions(TableMapping tableMapping, EdmEntityType entityType)
+        private static bool HasConditions(TableMapping tableMapping, EntityType entityType)
         {
             return tableMapping.ColumnMappings.SelectMany(cm => cm.PropertyMappings)
                 .Any(pm => pm.EntityType == entityType && pm.Conditions.Count > 0);
         }
 
         private static bool IsRootTypeMapping(
-            Dictionary<EdmEntityType, DbEntityTypeMapping> rootMappings, EdmEntityType entityType,
+            Dictionary<EntityType, DbEntityTypeMapping> rootMappings, EntityType entityType,
             IList<EdmProperty> propertyPath)
         {
-            var baseType = entityType.BaseType;
+            var baseType = (EntityType)entityType.BaseType;
             while (baseType != null)
             {
                 DbEntityTypeMapping rootMapping;
@@ -512,7 +512,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         rootMapping.TypeMappingFragments.SelectMany(etmf => etmf.PropertyMappings).Any(
                             pm => pm.PropertyPath.SequenceEqual(propertyPath));
                 }
-                baseType = baseType.BaseType;
+                baseType = (EntityType)baseType.BaseType;
             }
             return false;
         }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             WriteAssociationEndElementHeader(roleNames[0], tableFKConstraint.PrincipalTable, multiplicity.Key);
 
             if (tableFKConstraint.DeleteAction
-                != DbOperationAction.None)
+                != OperationAction.None)
             {
                 WriteOperationActionElement(SsdlConstants.Element_OnDelete, tableFKConstraint.DeleteAction);
             }
@@ -88,7 +89,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             WriteEndElement();
         }
 
-        internal void WriteOperationActionElement(string elementName, DbOperationAction operationAction)
+        internal void WriteOperationActionElement(string elementName, OperationAction operationAction)
         {
             _xmlWriter.WriteStartElement(elementName);
             _xmlWriter.WriteAttributeString(SsdlConstants.Attribute_Action, operationAction.ToString());
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
             IEnumerable<DbTableColumnMetadata> dependentProperties = constraint.DependentColumns;
 
             if (dependentTable.KeyColumns.Count() == dependentProperties.Count()
-                && dependentTable.KeyColumns.All(k => dependentProperties.Contains(k)))
+                && dependentTable.KeyColumns.All(dependentProperties.Contains))
             {
                 isDependentPropertiesFullyCoverKey = true;
             }
@@ -180,11 +181,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                             SsdlConstants.Attribute_FixedLength,
                             GetLowerCaseStringFromBoolValue(facets.IsFixedLength.Value));
                 }
-                if (facets.IsMaxLength.HasValue)
-                {
-                    yield return
-                        new KeyValuePair<string, string>(SsdlConstants.Attribute_MaxLength, SsdlConstants.Value_Max);
-                }
                 if (facets.IsUnicode.HasValue)
                 {
                     yield return
@@ -197,6 +193,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                         new KeyValuePair<string, string>(
                             SsdlConstants.Attribute_MaxLength,
                             facets.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
+                }
+                else if (facets.IsMaxLength.HasValue)
+                {
+                    yield return
+                        new KeyValuePair<string, string>(SsdlConstants.Attribute_MaxLength, SsdlConstants.Value_Max);
                 }
                 if (facets.Precision.HasValue)
                 {
@@ -211,7 +212,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                         new KeyValuePair<string, string>(
                             SsdlConstants.Attribute_Scale, facets.Scale.Value.ToString(CultureInfo.InvariantCulture));
                 }
-                yield break;
             }
         }
 
@@ -225,11 +225,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Ssdl
                 }
             }
             if (property.StoreGeneratedPattern
-                != DbStoreGeneratedPattern.None)
+                != StoreGeneratedPattern.None)
             {
                 _xmlWriter.WriteAttributeString(
                     SsdlConstants.Attribute_StoreGeneratedPattern,
-                    property.StoreGeneratedPattern == DbStoreGeneratedPattern.Computed
+                    property.StoreGeneratedPattern == StoreGeneratedPattern.Computed
                         ? CsdlConstants.Value_Computed
                         : CsdlConstants.Value_Identity);
             }

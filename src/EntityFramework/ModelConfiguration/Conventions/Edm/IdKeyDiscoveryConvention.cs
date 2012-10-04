@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
 
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private const string Id = "Id";
 
         protected override EdmProperty MatchKeyProperty(
-            EdmEntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
+            EntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
         {
             var matches = primitiveProperties
                 .Where(p => Id.Equals(p.Name, StringComparison.OrdinalIgnoreCase));

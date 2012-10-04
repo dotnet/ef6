@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Linq;
     using Xunit;
 
@@ -15,38 +17,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var entitySet = new EdmEntitySet();
+            var entitySet = new EntitySet();
             var entitySetMapping = databaseMapping.AddEntitySetMapping(entitySet);
             var entityTypeMapping = new DbEntityTypeMapping();
             entitySetMapping.EntityTypeMappings.Add(entityTypeMapping);
             var entityTypeMappingFragment = new DbEntityTypeMappingFragment();
             entityTypeMapping.TypeMappingFragments.Add(entityTypeMappingFragment);
             var propertyMapping1 = new DbEdmPropertyMapping();
-            var complexType = new EdmComplexType();
-            complexType.SetClrType(typeof(object));
-            propertyMapping1.PropertyPath.Add(
-                new EdmProperty
-                    {
-                        PropertyType = new EdmTypeReference
-                                           {
-                                               EdmType = complexType
-                                           }
-                    });
+            var complexType = new ComplexType("C");
+            var type = typeof(object);
+
+            complexType.Annotations.SetClrType(type);
+            propertyMapping1.PropertyPath.Add(EdmProperty.Complex("P1", complexType));
             entityTypeMappingFragment.PropertyMappings.Add(propertyMapping1);
             var propertyMapping2 = new DbEdmPropertyMapping();
-            propertyMapping2.PropertyPath.Add(
-                new EdmProperty
-                    {
-                        PropertyType = new EdmTypeReference()
-                    });
-            propertyMapping2.PropertyPath.Add(
-                new EdmProperty
-                    {
-                        PropertyType = new EdmTypeReference
-                                           {
-                                               EdmType = complexType
-                                           }
-                    });
+            propertyMapping2.PropertyPath.Add(EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            propertyMapping2.PropertyPath.Add(EdmProperty.Complex("P3", complexType));
             entityTypeMappingFragment.PropertyMappings.Add(propertyMapping2);
 
             Assert.Equal(2, databaseMapping.GetComplexPropertyMappings(typeof(object)).Count());
@@ -58,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
 
-            databaseMapping.AddAssociationSetMapping(new EdmAssociationSet());
+            databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", new AssociationType()));
 
             Assert.Equal(1, databaseMapping.GetAssociationSetMappings().Count());
         }
@@ -68,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var entitySet = new EdmEntitySet();
+            var entitySet = new EntitySet();
 
             var entitySetMapping = databaseMapping.AddEntitySetMapping(entitySet);
 
@@ -91,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var associationSet = new EdmAssociationSet();
+            var associationSet = new AssociationSet("AS", new AssociationType());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(associationSet);
 
@@ -105,12 +91,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var entityType = new EdmEntityType();
+            var entityType = new EntityType();
             var entityTypeMapping = new DbEntityTypeMapping
                                         {
                                             EntityType = entityType
                                         };
-            databaseMapping.AddEntitySetMapping(new EdmEntitySet()).EntityTypeMappings.Add(entityTypeMapping);
+            databaseMapping.AddEntitySetMapping(new EntitySet()).EntityTypeMappings.Add(entityTypeMapping);
 
             Assert.Same(entityTypeMapping, databaseMapping.GetEntityTypeMapping(entityType));
         }
@@ -120,17 +106,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var entityType = new EdmEntityType
+            var entityType = new EntityType
                                  {
                                      Name = "Foo"
                                  };
-            entityType.SetClrType(typeof(object));
+            var type = typeof(object);
+
+            entityType.Annotations.SetClrType(type);
             var entityTypeMapping = new DbEntityTypeMapping
                                         {
                                             EntityType = entityType
                                         };
             entityTypeMapping.SetClrType(typeof(object));
-            databaseMapping.AddEntitySetMapping(new EdmEntitySet()).EntityTypeMappings.Add(entityTypeMapping);
+            databaseMapping.AddEntitySetMapping(new EntitySet()).EntityTypeMappings.Add(entityTypeMapping);
 
             Assert.Same(entityTypeMapping, databaseMapping.GetEntityTypeMapping(typeof(object)));
         }
@@ -140,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
-            var entitySet = new EdmEntitySet();
+            var entitySet = new EntitySet();
 
             Assert.Same(databaseMapping.AddEntitySetMapping(entitySet), databaseMapping.GetEntitySetMapping(entitySet));
         }

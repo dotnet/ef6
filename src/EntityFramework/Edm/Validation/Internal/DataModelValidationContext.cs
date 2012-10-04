@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     The context for DataModel Validation
@@ -12,8 +12,6 @@ namespace System.Data.Entity.Edm.Validation.Internal
         internal bool ValidateSyntax { get; set; }
         internal double ValidationContextVersion { get; set; }
 
-        internal abstract void AddError(DataModelItem item, string propertyName, string errorMessage, int errorCode);
-
-        internal abstract void AddWarning(DataModelItem item, string propertyName, string errorMessage, int errorCode);
+        internal abstract void AddError(IMetadataItem item, string propertyName, string errorMessage, int errorCode);
     }
 }

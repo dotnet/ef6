@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -93,10 +93,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Configuration.ConcurrencyMode
                 = (concurrencyToken == null)
-                      ? (EdmConcurrencyMode?)null
+                      ? (ConcurrencyMode?)null
                       : (concurrencyToken.Value
-                             ? EdmConcurrencyMode.Fixed
-                             : EdmConcurrencyMode.None);
+                             ? ConcurrencyMode.Fixed
+                             : ConcurrencyMode.None);
 
             return this;
         }

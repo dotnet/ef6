@@ -2,12 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(IEdmConventionContracts<>))]
     public interface IEdmConvention<TEdmDataModelItem> : IConvention
-        where TEdmDataModelItem : EdmDataModelItem
+        where TEdmDataModelItem : MetadataItem
     {
         void Apply(TEdmDataModelItem edmDataModelItem, EdmModel model);
     }
@@ -16,11 +16,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
     [ContractClassFor(typeof(IEdmConvention<>))]
     internal abstract class IEdmConventionContracts<TEdmDataModelItem> : IEdmConvention<TEdmDataModelItem>
-        where TEdmDataModelItem : EdmDataModelItem
+        where TEdmDataModelItem : MetadataItem
     {
-        void IEdmConvention<TEdmDataModelItem>.Apply(TEdmDataModelItem dataModelItem, EdmModel model)
+        void IEdmConvention<TEdmDataModelItem>.Apply(TEdmDataModelItem edmDataModelItem, EdmModel model)
         {
-            Contract.Requires(dataModelItem != null);
+            Contract.Requires(edmDataModelItem != null);
             Contract.Requires(model != null);
         }
     }

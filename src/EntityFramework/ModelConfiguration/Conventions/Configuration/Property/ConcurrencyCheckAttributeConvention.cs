@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Reflection;
 
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             if (configuration.ConcurrencyMode == null)
             {
-                configuration.ConcurrencyMode = EdmConcurrencyMode.Fixed;
+                configuration.ConcurrencyMode = ConcurrencyMode.Fixed;
             }
         }
     }

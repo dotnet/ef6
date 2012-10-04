@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Edm;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             navigationPropertyConfiguration.Reset();
             _navigationPropertyConfiguration = navigationPropertyConfiguration;
-            _navigationPropertyConfiguration.EndKind = EdmAssociationEndKind.Required;
+            _navigationPropertyConfiguration.RelationshipMultiplicity = RelationshipMultiplicity.One;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public DependentNavigationPropertyConfiguration<TEntityType> WithMany()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Many;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.Many;
 
             return new DependentNavigationPropertyConfiguration<TEntityType>(_navigationPropertyConfiguration);
         }
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithOptional()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Optional;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.ZeroOrOne;
 
             return new ForeignKeyNavigationPropertyConfiguration(_navigationPropertyConfiguration);
         }
@@ -119,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithRequiredDependent()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Required;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.One;
 
             _navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal = false;
 
@@ -154,7 +154,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         public ForeignKeyNavigationPropertyConfiguration WithRequiredPrincipal()
         {
-            _navigationPropertyConfiguration.InverseEndKind = EdmAssociationEndKind.Required;
+            _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.One;
 
             _navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal = true;
 

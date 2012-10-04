@@ -7,37 +7,6 @@ namespace FunctionalTests
     using FunctionalTests.Fixtures;
     using Xunit;
 
-    namespace Fixtures
-    {
-        using System.ComponentModel.DataAnnotations;
-        using System.ComponentModel.DataAnnotations.Schema;
-        using System.Data.Entity.Spatial;
-
-        public class Spatial_Customer
-        {
-            public int Id { get; set; }
-            public DbGeometry Geometry { get; set; }
-
-            [Required]
-            public DbGeography Geography { get; set; }
-        }
-
-        public class Spatial_ComplexClass
-        {
-            public int Id { get; set; }
-            public Spatial_ComplexType Complex { get; set; }
-        }
-
-        [ComplexType]
-        public class Spatial_ComplexType
-        {
-            [Column("c")]
-            public DbGeometry Geometry { get; set; }
-
-            public DbGeography Geography { get; set; }
-        }
-    }
-
     public sealed class SpatialScenarioTests : TestBase
     {
         [Fact]
@@ -245,6 +214,37 @@ namespace FunctionalTests
                 modelBuilder.Build(
                     ProviderRegistry.Sql2008_ProviderInfo))
                 .ValidateMessage("EntityMappingConfiguration_CannotMapIgnoredProperty", "Spatial_Customer", "Geometry");
+        }
+    }
+
+    namespace Fixtures
+    {
+        using System.ComponentModel.DataAnnotations;
+        using System.ComponentModel.DataAnnotations.Schema;
+        using System.Data.Entity.Spatial;
+
+        public class Spatial_Customer
+        {
+            public int Id { get; set; }
+            public DbGeometry Geometry { get; set; }
+
+            [Required]
+            public DbGeography Geography { get; set; }
+        }
+
+        public class Spatial_ComplexClass
+        {
+            public int Id { get; set; }
+            public Spatial_ComplexType Complex { get; set; }
+        }
+
+        [ComplexType]
+        public class Spatial_ComplexType
+        {
+            [Column("c")]
+            public DbGeometry Geometry { get; set; }
+
+            public DbGeography Geography { get; set; }
         }
     }
 }
