@@ -5,6 +5,8 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -333,6 +335,42 @@ namespace System.Data.Entity.Config
                 new DbConfiguration(mockInternalConfiguration.Object).SetModelCacheKeyFactory(factory);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, null));
+            }
+        }
+
+        public class SetHistoryContextFactory
+        {
+            [Fact]
+            public void Throws_if_given_a_null_factory()
+            {
+                Assert.Equal(
+                    "historyContextFactory",
+                    Assert.Throws<ArgumentNullException>(
+                    () => new DbConfiguration().SetHistoryContextFactory<DbMigrationsConfiguration>(null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetHistoryContextFactory"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetHistoryContextFactory<DbMigrationsConfiguration>(
+                            new Mock<IHistoryContextFactory>().Object)).Message);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var factory = new Mock<IHistoryContextFactory>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object)
+                    .SetHistoryContextFactory<DbMigrationsConfiguration>(factory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, typeof(DbMigrationsConfiguration)));
             }
         }
 

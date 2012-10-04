@@ -6,6 +6,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
@@ -256,6 +257,29 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("SetModelCacheKeyFactory");
             _internalConfiguration.RegisterSingleton(keyFactory, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="IHistoryContextFactory" /> which allows for configuration of the
+        ///     internal Migrations <see cref="HistoryContext" /> for a given <see cref="DbMigrationsConfiguration"/>.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IHistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="historyContextFactory"> The  <see cref="HistoryContext" /> factory. </param>
+        /// <typeparam name="TMigrationsConfiguration">The <see cref="DbMigrationsConfiguration"/> that this factory will apply to.</typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        protected internal void SetHistoryContextFactory<TMigrationsConfiguration>(IHistoryContextFactory historyContextFactory)
+            where TMigrationsConfiguration : DbMigrationsConfiguration
+        {
+            Contract.Requires(historyContextFactory != null);
+
+            _internalConfiguration.CheckNotLocked("SetHistoryContextFactory");
+            _internalConfiguration.RegisterSingleton(historyContextFactory, typeof(TMigrationsConfiguration));
         }
 
         /// <summary>
