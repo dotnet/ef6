@@ -11,8 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationEndMember : RelationshipEndMember
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of AssociationEndMember
         /// </summary>
@@ -26,8 +24,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, endRefType, multiplicity)
         {
         }
-
-        #endregion
 
         /// <summary>
         ///     Returns the kind of the type

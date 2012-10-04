@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
     {
-        #region Constructors
-
         internal EntityType()
         {
         }
@@ -60,10 +58,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     cached dynamic method to construct a CLR instance
         /// </summary>
@@ -71,10 +65,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private RowType _keyRow;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns the kind of the type
@@ -97,10 +87,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
                 "Only members of type Property may be added to Entity types.");
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the list of Navigation Properties for this entity type
@@ -135,8 +121,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _properties;
             }
         }
-
-        #endregion // Properties
 
         /// <summary>
         ///     Returns the Reference type pointing to this entity type

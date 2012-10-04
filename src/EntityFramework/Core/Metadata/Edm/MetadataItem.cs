@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract partial class MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Implementing this internal constructor so that this class can't be derived
         ///     outside this assembly
@@ -27,10 +25,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _flags = flags;
         }
-
-        #endregion
-
-        #region Fields
 
         [Flags]
         internal enum MetadataFlags
@@ -63,10 +57,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private MetadataFlags _flags;
         private readonly object _flagsLock = new object();
         private MetadataCollection<MetadataProperty> _itemAttributes;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -134,10 +124,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetFlag(MetadataFlags.Readonly); }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
         ///     it can never be changed.
@@ -171,10 +157,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             MetadataProperties.Source.AtomicAddRange(metadataProperties);
         }
-
-        #endregion
-
-        #region MetadataFlags
 
         internal DataSpace GetDataSpace()
         {
@@ -294,7 +276,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
-
-        #endregion
     }
 }

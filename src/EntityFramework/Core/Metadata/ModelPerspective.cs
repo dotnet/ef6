@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class ModelPerspective : Perspective
     {
-        #region Contructors
-
         /// <summary>
         ///     Creates a new instance of perspective class so that query can work
         ///     ignorant of all spaces
@@ -18,10 +16,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(metadataWorkspace, DataSpace.CSpace)
         {
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Look up a type in the target data space based upon the fullName
@@ -48,7 +42,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return typeUsage != null;
         }
-
-        #endregion
     }
 }

@@ -11,18 +11,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [Serializable]
     public sealed class EdmSchemaError : EdmError
     {
-        #region Instance Fields
-
         private int _errorCode;
         private EdmSchemaErrorSeverity _severity = EdmSchemaErrorSeverity.Warning;
         private string _schemaLocation;
         private int _line = -1;
         private int _column = -1;
         private string _stackTrace = string.Empty;
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         ///     Constructs a EdmSchemaError object.
@@ -150,10 +144,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return text;
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         ///     Gets the ErrorCode.
         /// </summary>
@@ -211,8 +201,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _stackTrace; }
         }
-
-        #endregion
 
         private static string GetNameFromSchemaLocation(string schemaLocation)
         {

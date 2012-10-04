@@ -21,8 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // maintaining this metadata.
         //----------------------------------------------------------------------------------------------
 
-        #region Constructors
-
         internal EntitySetBase()
         {
         }
@@ -58,19 +56,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ElementType = entityType;
         }
 
-        #endregion
-
-        #region Fields
-
         private EntityContainer _entityContainer;
         private readonly string _name;
         private EntityTypeBase _elementType;
         private readonly string _table;
         private readonly string _schema;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -144,10 +134,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _schema; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
         ///     for this type.
@@ -181,7 +167,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             _entityContainer = newEntityContainer;
         }
-
-        #endregion
     }
 }

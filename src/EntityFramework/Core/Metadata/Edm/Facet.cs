@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [DebuggerDisplay("{Name,nq}={Value}")]
     public class Facet : MetadataItem
     {
-        #region Constructors
-
         internal Facet()
         {
         }
@@ -100,10 +98,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return result;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The object describing this facet.
         /// </summary>
@@ -113,10 +107,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     The value assigned to this facet.
         /// </summary>
         private readonly object _value;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -178,10 +168,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return ReferenceEquals(Value, EdmConstants.UnboundedValue); }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
         ///     for this type.
@@ -190,7 +176,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return Name;
         }
-
-        #endregion
     }
 }

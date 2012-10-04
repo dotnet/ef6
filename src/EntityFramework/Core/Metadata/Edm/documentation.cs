@@ -7,14 +7,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class Documentation : MetadataItem
     {
-        #region Fields
-
         private string _summary = "";
         private string _longDescription = "";
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Default constructor - primarily created for supporting usage of this Documentation class by SOM.
@@ -22,10 +16,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal Documentation()
         {
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -99,17 +89,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// </summary>
         public override string ToString()
         {
             return _summary;
         }
-
-        #endregion
     }
 }

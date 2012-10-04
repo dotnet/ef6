@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class RefType : EdmType
     {
-        #region Constructors
-
         internal RefType()
         {
         }
@@ -30,15 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SetReadOnly();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntityTypeBase _elementType;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -57,10 +47,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _elementType; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Constructs the name of the collection type
         /// </summary>
@@ -74,7 +60,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             builder.Append("]");
             return builder.ToString();
         }
-
-        #endregion
     }
 }

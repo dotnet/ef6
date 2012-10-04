@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private EntityContainer _defaultContainer;
 
-        #region Constructors
-
         /// <summary>
         ///     Creates a new instance of perspective class so that query can work
         ///     ignorant of all spaces
@@ -24,10 +22,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(metadataWorkspace, DataSpace.CSpace)
         {
         }
-
-        #endregion //Constructors
-
-        #region Methods
 
         /// <summary>
         ///     Given a clrType attempt to return the corresponding target type from
@@ -161,7 +155,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return typeUsage;
         }
-
-        #endregion
     }
 }

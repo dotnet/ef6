@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal static class Util
     {
-        #region Methods
-
         /// <summary>
         ///     Throws an appropriate exception if the given item is a readonly, used when an attempt is made to change
         ///     a property
@@ -37,7 +35,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(!string.IsNullOrEmpty(item.Identity), "Item has empty identity.");
             EntityUtil.GenericCheckArgumentNull(item, argumentName);
         }
-
-        #endregion
     }
 }

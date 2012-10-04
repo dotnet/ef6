@@ -11,8 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal abstract class Perspective
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a new instance of perspective class so that query can work
         ///     ignorant of all spaces
@@ -29,16 +27,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             m_targetDataspace = targetDataspace;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MetadataWorkspace m_metadataWorkspace;
         private readonly DataSpace m_targetDataspace;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Given the type in the target space and the member name in the source space,
@@ -224,7 +214,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return m_targetDataspace; }
         }
-
-        #endregion
     }
 }

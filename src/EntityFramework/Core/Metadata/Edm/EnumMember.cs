@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class EnumMember : MetadataItem
     {
-        #region Fields
-
         /// <summary>
         ///     The name of this enumeration member.
         /// </summary>
@@ -20,10 +18,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     The value of this enumeration member.
         /// </summary>
         private readonly object _value;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="EnumMember" /> type by using the specified name and value.
@@ -44,10 +38,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _name = name;
             _value = value;
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets the kind of this type.
@@ -83,10 +73,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Name; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation for this type.
         /// </summary>
@@ -94,7 +80,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return Name;
         }
-
-        #endregion
     }
 }

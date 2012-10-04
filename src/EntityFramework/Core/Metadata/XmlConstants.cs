@@ -51,8 +51,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const double StoreVersionForV2 = 2.0;
         internal const double StoreVersionForV3 = 3.0;
 
-        #region CDM Schema Xml NodeNames
-
         // Const element names in the CDM schema xml
         internal const string Association = "Association";
         internal const string AssociationSet = "AssociationSet";
@@ -181,7 +179,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal const string XmlCommentStartString = "<!--";
         internal const string XmlCommentEndString = "-->";
-
-        #endregion // CDM Schema Xml NodeNames
     }
 }

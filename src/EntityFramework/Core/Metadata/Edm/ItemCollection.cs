@@ -21,8 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [CLSCompliant(false)]
     public abstract class ItemCollection : ReadOnlyMetadataCollection<GlobalItem>
     {
-        #region Constructors
-
         internal ItemCollection()
         {
         }
@@ -36,18 +34,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _space = dataspace;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly DataSpace _space;
         private Dictionary<string, ReadOnlyCollection<EdmFunction>> _functionLookUpTable;
         private Memoizer<Type, ICollection> _itemsCache;
         private int _itemCount;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Dataspace associated with ItemCollection
@@ -73,10 +63,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _functionLookUpTable;
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Adds an item to the collection
@@ -519,8 +505,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return functionLookUpTable;
         }
-
-        #endregion
     }
 
 //---- ItemCollection

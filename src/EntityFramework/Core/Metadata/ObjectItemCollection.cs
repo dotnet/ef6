@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [CLSCompliant(false)]
     public sealed class ObjectItemCollection : ItemCollection
     {
-        #region Constructors
-
         /// <summary>
         ///     The ObjectItemCollection that loads metadata from assemblies
         /// </summary>
@@ -33,10 +31,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _primitiveTypeMaps.Add(type);
             }
         }
-
-        #endregion
-
-        #region Fields
 
         // Cache for primitive type maps for Edm to provider
         private readonly CacheForPrimitiveTypes _primitiveTypeMaps = new CacheForPrimitiveTypes();
@@ -64,10 +58,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return AssemblyCache.ViewGenerationAssemblies; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal static bool IsCompiledViewGenAttributePresent(Assembly assembly)
         {
@@ -622,7 +612,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return base.InternalGetItems(typeof(T)) as ReadOnlyCollection<T>;
         }
-
-        #endregion
     }
 }

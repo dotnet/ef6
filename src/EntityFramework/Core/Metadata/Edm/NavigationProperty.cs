@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class NavigationProperty : EdmMember
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of the navigation property class
         /// </summary>
@@ -49,8 +47,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
         /// <summary>
         ///     Returns the kind of the type
         /// </summary>
@@ -58,8 +54,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return BuiltInTypeKind.NavigationProperty; }
         }
-
-        #region Fields
 
         internal const string RelationshipTypeNamePropertyName = "RelationshipType";
         internal const string ToEndMemberNamePropertyName = "ToEndMember";
@@ -73,8 +67,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     cached dynamic methods to access the property values from a CLR instance
         /// </summary>
         private readonly NavigationPropertyAccessor _accessor;
-
-        #endregion
 
         /// <summary>
         ///     Gets/Sets the relationship type that this navigation property operates on

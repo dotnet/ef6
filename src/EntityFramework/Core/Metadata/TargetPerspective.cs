@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class TargetPerspective : Perspective
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a new instance of perspective class so that query can work
         ///     ignorant of all spaces
@@ -20,17 +18,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _modelPerspective = new ModelPerspective(metadataWorkspace);
         }
 
-        #endregion
-
-        #region Fields
-
         internal const DataSpace TargetPerspectiveDataSpace = DataSpace.SSpace;
         // TargetPerspective uses a ModelPerspective for a second lookup in type lookup
         private readonly ModelPerspective _modelPerspective;
-
-        #endregion
-
-        #region Methods 
 
         /// <summary>
         ///     Look up a type in the target data space based upon the fullName
@@ -70,7 +60,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return true;
         }
-
-        #endregion
     }
 }

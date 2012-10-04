@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
         private readonly InitializerMetadata _initializerMetadata;
 
-        #region Constructors
-
         internal RowType()
         {
         }
@@ -58,10 +56,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // to be read-only.
             SetReadOnly();
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets or sets LINQ initializer Metadata for this row type. If there is no associated
@@ -192,10 +186,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return properties;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     EdmEquals override verifying the equivalence of all members and their type usages.
         /// </summary>
@@ -241,7 +231,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return true;
         }
-
-        #endregion
     }
 }

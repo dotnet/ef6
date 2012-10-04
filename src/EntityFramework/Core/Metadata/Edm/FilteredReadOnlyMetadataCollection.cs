@@ -29,8 +29,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         where TDerived : TBase
         where TBase : MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
@@ -47,17 +45,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _predicate = predicate;
         }
 
-        #endregion
-
-        #region Private Fields
-
         // The original metadata collection over which this filtered collection is the view
         private readonly ReadOnlyMetadataCollection<TBase> _source;
         private readonly Predicate<TBase> _predicate;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets an item from the collection with the given identity
@@ -78,10 +68,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Gets an item from the collection with the given identity
@@ -176,10 +162,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return -1;
         }
 
-        #endregion
-
-        #region IBaseList<TBaseItem> Members
-
         TBase IBaseList<TBase>.this[string identity]
         {
             get { return this[identity]; }
@@ -204,8 +186,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return -1;
         }
-
-        #endregion
     }
 #pragma warning restore 1711
 }

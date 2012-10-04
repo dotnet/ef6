@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // This collection allows changes to be intercepted before and after they are passed to MetadataCollection.  The interception
         // is required to update the EntitySet's back-reference to the EntityContainer.
 
-        #region Constructors
-
         /// <summary>
         ///     Default constructor for constructing an empty collection
         /// </summary>
@@ -38,15 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _entityContainer = entityContainer;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntityContainer _entityContainer;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets an item from the collection with the given index
@@ -74,10 +64,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return base[identity]; }
             set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Adds an item to the collection
@@ -111,7 +97,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw new ArgumentException(Strings.EntitySetInAnotherContainer, argumentName);
             }
         }
-
-        #endregion
     }
 }

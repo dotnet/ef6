@@ -131,8 +131,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return errors;
         }
 
-        #region Fields
-
         // Cache for primitive type maps for Edm to provider
         private readonly CacheForPrimitiveTypes _primitiveTypeMaps = new CacheForPrimitiveTypes();
 
@@ -151,10 +149,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly OcAssemblyCache _conventionalOcCache = new OcAssemblyCache();
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     Version of the EDM that this ItemCollection represents.
         /// </summary>
@@ -171,10 +165,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _conventionalOcCache; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Given an InitializerMetadata instance, returns the canonical version of that instance.
@@ -451,8 +441,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return generatedDefinition;
         }
-
-        #endregion
     }
 
 //---- ItemCollection

@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class ReferentialConstraint : MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Constructs a new constraint on the relationship
         /// </summary>
@@ -35,18 +33,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     EntityUtil.GenericCheckArgumentNull(toProperties, "toProperties")));
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly RelationshipEndMember _fromRole;
         private readonly RelationshipEndMember _toRole;
         private readonly ReadOnlyMetadataCollection<EdmProperty> _fromProperties;
         private readonly ReadOnlyMetadataCollection<EdmProperty> _toProperties;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -104,10 +94,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _toProperties; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
         ///     for this type.
@@ -141,7 +127,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 ToProperties.Source.SetReadOnly();
             }
         }
-
-        #endregion
     }
 }

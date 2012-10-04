@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal sealed class ObjectItemAttributeAssemblyLoader : ObjectItemAssemblyLoader
     {
-        #region Fields
-
         // list of unresolved navigation properties
         private readonly List<Action> _unresolvedNavigationProperties = new List<Action>();
 
@@ -30,19 +28,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly List<Action> _referenceResolutions = new List<Action>();
 
-        #endregion
-
-        #region Constructor
-
         internal ObjectItemAttributeAssemblyLoader(Assembly assembly, ObjectItemLoadingSessionData sessionData)
             : base(assembly, new MutableAssemblyCacheEntry(), sessionData)
         {
             Debug.Assert(Create == sessionData.ObjectItemAssemblyLoaderFactory, "Why is there a different factory creating this class");
         }
-
-        #endregion
-
-        #region Methods
 
         internal override void OnLevel1SessionProcessing()
         {
@@ -166,8 +156,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             edmType = null;
             return false;
         }
-
-        #endregion
 
         /// <summary>
         ///     Loads the set of types from the given assembly and adds it to the given list of types

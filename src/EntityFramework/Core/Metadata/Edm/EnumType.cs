@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EnumType : SimpleType
     {
-        #region Fields
-
         /// <summary>
         ///     A collection of enumeration members for this enumeration type
         /// </summary>
@@ -29,10 +27,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Underlying type of this enumeration type.
         /// </summary>
         private readonly PrimitiveType _underlyingType;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Initializes a new instance of the EnumType class. This default constructor is used for bootstraping
@@ -103,10 +97,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     Returns the kind of the type
         /// </summary>
@@ -143,10 +133,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _underlyingType; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -173,7 +159,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Members.Source.Add(enumMember);
         }
-
-        #endregion
     }
 }

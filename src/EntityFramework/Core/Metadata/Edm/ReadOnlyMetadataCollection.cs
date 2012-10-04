@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class ReadOnlyMetadataCollection<T> : ReadOnlyCollection<T>
         where T : MetadataItem
     {
-        #region Constructors
-
         internal ReadOnlyMetadataCollection()
             : base(new List<T>())
         {
@@ -30,10 +28,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(collection)
         {
         }
-
-        #endregion
-
-        #region InnerClasses
 
         // On the surface, this Enumerator doesn't do anything but delegating to the underlying enumerator
 
@@ -109,10 +103,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     Gets whether the collection is a readonly collection
         /// </summary>
@@ -140,10 +130,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return (MetadataCollection<T>)Items; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Gets an item from the collection with the given identity
@@ -201,7 +187,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return base.IndexOf(value);
         }
-
-        #endregion
     }
 }

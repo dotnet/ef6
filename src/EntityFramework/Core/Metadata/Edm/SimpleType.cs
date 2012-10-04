@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class SimpleType : EdmType
     {
-        #region Constructors
-
         /// <summary>
         ///     The default constructor for SimpleType
         /// </summary>
@@ -29,7 +27,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, namespaceName, dataSpace)
         {
         }
-
-        #endregion
     }
 }

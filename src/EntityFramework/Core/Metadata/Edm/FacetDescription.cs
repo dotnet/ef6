@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class FacetDescription
     {
-        #region Constructors
-
         internal FacetDescription()
         {
         }
@@ -88,10 +86,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _defaultValue = defaultValue;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly string _facetName;
         private readonly EdmType _facetType;
         private readonly int? _minValue;
@@ -116,10 +110,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // we need to differentiate when the default value is null vs when the default value is not initialized
         private static readonly object _notInitializedSentinel = new object();
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets the name of this facet
@@ -184,8 +174,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _defaultValue == _notInitializedSentinel; }
         }
 
-        #region Internal properties
-
         /// <summary>
         ///     Gets a facet with the default value for this description.
         /// </summary>
@@ -217,12 +205,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _nullValueFacet;
             }
         }
-
-        #endregion Internal properties
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
@@ -339,7 +321,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
-
-        #endregion
     }
 }

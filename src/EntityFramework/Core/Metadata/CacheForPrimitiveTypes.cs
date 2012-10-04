@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     internal class CacheForPrimitiveTypes
     {
-        #region Fields
-
         // The primitive type kind is a list of enum which the EDM model 
         // Every specific instantiation of the model should map their 
         // primitive types to the edm primitive types.
@@ -22,10 +20,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // same primitive type kind.  For example, sqlserver has multiple string types.
 
         private readonly List<PrimitiveType>[] _primitiveTypeMap = new List<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Add the given primitive type to the primitive type cache
@@ -195,7 +189,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return primitiveTypes.AsReadOnly();
         }
-
-        #endregion
     }
 }

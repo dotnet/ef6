@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         internal static Func<FunctionParameter, SafeLink<EdmFunction>> DeclaringFunctionLinker = fp => fp._declaringFunction;
 
-        #region Constructors
-
         /// <summary>
         ///     The constructor for FunctionParameter taking in a name and a TypeUsage object
         /// </summary>
@@ -28,17 +26,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SetParameterMode(parameterMode);
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly TypeUsage _typeUsage;
         private readonly string _name;
         private readonly SafeLink<EdmFunction> _declaringFunction = new SafeLink<EdmFunction>();
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -94,10 +84,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _declaringFunction.Value; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
         ///     for this type.
@@ -119,7 +105,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // TypeUsage is always readonly, no reason to set it
             }
         }
-
-        #endregion
     }
 }

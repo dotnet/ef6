@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [DebuggerDisplay("EdmType={EdmType}, Facets.Count={Facets.Count}")]
     public class TypeUsage : MetadataItem
     {
-        #region Constructors
-
         internal TypeUsage()
         {
         }
@@ -52,10 +50,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             facetCollection.SetReadOnly();
             _facets = facetCollection.AsReadOnlyMetadataCollection();
         }
-
-        #endregion
-
-        #region Factory Methods
 
         /// <summary>
         ///     Factory method for creating a TypeUsage with specified EdmType
@@ -374,10 +368,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return typeUsage;
         }
 
-        #endregion
-
-        #region Fields
-
         private TypeUsage _modelTypeUsage;
         private readonly EdmType _edmType;
         private ReadOnlyMetadataCollection<Facet> _facets;
@@ -407,10 +397,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const bool DefaultUnicodeFacetValue = true;
         internal const bool DefaultFixedLengthFacetValue = false;
         internal static readonly byte? DefaultDateTimePrecisionFacetValue = null;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -447,10 +433,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _facets;
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns a Model type usage for a provider type
@@ -739,7 +721,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw new ArgumentOutOfRangeException("maxLength", Strings.InvalidMaxLengthSize);
             }
         }
-
-        #endregion
     }
 }

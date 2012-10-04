@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Common
     /// </summary>
     internal static class TypeHelpers
     {
-        #region Assert Types
-
         /// <summary>
         ///     Asserts types are in Model space
         /// </summary>
@@ -70,13 +68,9 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        #endregion
-
         //
         // Type Semantics
         //
-
-        #region Type Semantics
 
         /// <summary>
         ///     Determines whether a given typeUsage is valid as OrderBy sort key
@@ -203,13 +197,9 @@ namespace System.Data.Entity.Core.Common
             return commonType;
         }
 
-        #endregion
-
         //
         // Type property extractors
         //
-
-        #region Type property extractors
 
         internal static bool TryGetClosestPromotableType(TypeUsage fromType, out TypeUsage promotableType)
         {
@@ -228,13 +218,9 @@ namespace System.Data.Entity.Core.Common
             return (null != promotableType);
         }
 
-        #endregion
-
         //
         // Facet Helpers
         //
-
-        #region Facet Helpers
 
         internal static bool TryGetBooleanFacetValue(TypeUsage type, string facetName, out bool boolValue)
         {
@@ -358,13 +344,9 @@ namespace System.Data.Entity.Core.Common
             return false;
         }
 
-        #endregion
-
         //
         // Type Constructors
         //
-
-        #region Type Constructors
 
         internal static CollectionType CreateCollectionType(TypeUsage elementType)
         {
@@ -479,13 +461,9 @@ namespace System.Data.Entity.Core.Common
             return TypeUsage.Create(Helper.GetSpatialNormalizedPrimitiveType(spatialTypeUsage.EdmType), spatialTypeUsage.Facets);
         }
 
-        #endregion
-
         //
         // Type extractors
         //
-
-        #region Type Extractors
 
         /// <summary>
         ///     Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
@@ -655,13 +633,9 @@ namespace System.Data.Entity.Core.Common
             return (type != null);
         }
 
-        #endregion
-
         //
         // Misc
         //
-
-        #region Misc
 
         internal static TypeUsage GetReadOnlyType(TypeUsage type)
         {
@@ -839,10 +813,6 @@ namespace System.Data.Entity.Core.Common
             return typeusage;
         }
 
-        #endregion
-
-        #region EdmFunction Helpers
-
         internal static bool IsCanonicalFunction(EdmFunction function)
         {
             var isCanonicalFunction = (function.DataSpace == DataSpace.CSpace && function.NamespaceName == EdmConstants.EdmNamespace);
@@ -853,7 +823,5 @@ namespace System.Data.Entity.Core.Common
 
             return isCanonicalFunction;
         }
-
-        #endregion
     }
 }

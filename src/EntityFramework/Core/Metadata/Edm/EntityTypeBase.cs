@@ -11,8 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EntityTypeBase : StructuralType
     {
-        #region Constructors
-
         internal EntityTypeBase()
         {
         }
@@ -31,16 +29,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _keyMembers = new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>());
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
         private string[] _keyMemberNames;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the list of all the key members for this entity type
@@ -90,10 +80,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _keyMemberNames;
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns the list of all the key members for this entity type
@@ -181,7 +167,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 AddKeyMember(member);
             }
         }
-
-        #endregion
     }
 }

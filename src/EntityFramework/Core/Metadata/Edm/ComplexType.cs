@@ -11,8 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class ComplexType : StructuralType
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of Complex Type with the given properties
         /// </summary>
@@ -35,15 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // of item attributes
         }
 
-        #endregion
-
-        #region Fields
-
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -75,10 +65,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Validates a EdmMember object to determine if it can be added to this type's 
         ///     Members collection. If this method returns without throwing, it is assumed
@@ -92,8 +78,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Helper.IsEdmProperty(member) || Helper.IsNavigationProperty(member),
                 "Only members of type Property may be added to ComplexType.");
         }
-
-        #endregion
     }
 
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]

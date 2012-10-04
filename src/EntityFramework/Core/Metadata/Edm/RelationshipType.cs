@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private ReadOnlyMetadataCollection<RelationshipEndMember> _relationshipEndMembers;
 
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of relationship type
         /// </summary>
@@ -31,10 +29,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, namespaceName, dataSpace)
         {
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the list of ends for this relationship type
@@ -55,7 +49,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _relationshipEndMembers;
             }
         }
-
-        #endregion
     }
 }

@@ -8,13 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [Serializable]
     public abstract class EdmError
     {
-        #region Instance Fields
-
         private readonly string _message;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Constructs a EdmSchemaError object.
@@ -28,10 +22,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _message = message;
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     Gets the error message.
         /// </summary>
@@ -39,7 +29,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _message; }
         }
-
-        #endregion
     }
 }

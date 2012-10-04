@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class PrimitiveType : SimpleType
     {
-        #region constructors
-
         /// <summary>
         ///     Initializes a new instance of PrimitiveType
         /// </summary>
@@ -68,16 +66,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(clrType == ClrEquivalentType, "not equivalent to ClrEquivalentType");
         }
 
-        #endregion
-
-        #region Fields
-
         private PrimitiveTypeKind _primitiveTypeKind;
         private DbProviderManifest _providerManifest;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -196,10 +186,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Methods
-
         internal override IEnumerable<FacetDescription> GetAssociatedFacetDescriptions()
         {
             // return all general facets and facets associated with this type
@@ -247,7 +233,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return EdmProviderManifest.GetPrimitiveType(primitiveTypeKind);
         }
-
-        #endregion
     }
 }

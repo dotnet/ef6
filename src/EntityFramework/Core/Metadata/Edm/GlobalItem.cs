@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class GlobalItem : MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Implementing this internal constructor so that this class can't be derived
         ///     outside this assembly
@@ -23,10 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(flags)
         {
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the DataSpace in which this type belongs to
@@ -52,7 +46,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 SetDataSpace(value);
             }
         }
-
-        #endregion
     }
 }

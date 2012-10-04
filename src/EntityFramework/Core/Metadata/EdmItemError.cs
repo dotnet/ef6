@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class EdmItemError : EdmError
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct the EdmItemError with an error message
         /// </summary>
@@ -17,11 +15,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(message)
         {
         }
-
-        #endregion
-
-        #region Fields
-
-        #endregion
     }
 }

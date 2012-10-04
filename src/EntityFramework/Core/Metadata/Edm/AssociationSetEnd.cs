@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationSetEnd : MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of AssocationSetEnd
         /// </summary>
@@ -23,17 +21,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _endMember = EntityUtil.GenericCheckArgumentNull(endMember, "endMember");
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntitySet _entitySet;
         private readonly AssociationSet _parentSet;
         private readonly AssociationEndMember _endMember;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -103,10 +93,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Name; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Overriding System.Object.ToString to provide better String representation 
         ///     for this type.
@@ -144,7 +130,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
-
-        #endregion
     }
 }

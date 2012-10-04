@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class EdmProperty : EdmMember
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of the property class
         /// </summary>
@@ -53,10 +51,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
         /// </summary>
@@ -81,8 +75,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     cached dynamic method to set a CLR property value on a CLR instance
         /// </summary>
         private Action<object, object> _memberSetter;
-
-        #endregion
 
         /// <summary>
         ///     Returns the kind of the type

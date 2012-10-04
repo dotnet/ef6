@@ -160,8 +160,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #region Methods
-
         /// <summary>
         ///     Create an <see cref="EntitySqlParser" /> configured to use the <see cref="DataSpace.CSpace" /> data space.
         /// </summary>
@@ -1559,7 +1557,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return false;
         }
-
-        #endregion
     }
 }

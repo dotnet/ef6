@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [CLSCompliant(false)]
     public partial class StoreItemCollection : ItemCollection
     {
-        #region Fields
-
         private double _schemaVersion = XmlConstants.UndefinedVersion;
 
         // Cache for primitive type maps for Edm to provider
@@ -42,10 +40,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // before it tries to do object materialization, since we might not have loaded an assembly in another workspace
         // where this store item collection is getting reused
         private readonly QueryCacheManager _queryCacheManager = QueryCacheManager.Create();
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     For testing purposes only.
@@ -199,10 +193,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return loader.Errors;
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     Returns the query cache manager
         /// </summary>
@@ -234,10 +224,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _schemaVersion; }
             internal set { _schemaVersion = value; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Get the list of primitive types for the given space
@@ -281,8 +267,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 AddInternal(function);
             }
         }
-
-        #endregion
 
         /// <summary>
         ///     Get all the overloads of the function with the given name, this method is used for internal perspective

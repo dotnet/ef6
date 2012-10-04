@@ -27,21 +27,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </remarks>
     internal static class TypeSemantics
     {
-        #region Fields
-
         //
         // cache commom super type closure
         //
         [SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Member")]
         private static objectModel.ReadOnlyCollection<PrimitiveType>[,] _commonTypeClosure;
 
-        #endregion
-
         //
         // 'Public' Interface
         //
-
-        #region 'Public' Interface
 
         /// <summary>
         ///     Determines whether two types are exactly equal.
@@ -732,15 +726,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 "Type invariant check FAILED\n" + message);
         }
 
-        #endregion // Internal interface
-
         //
         // Private Interface
         //
-
-        #region Private Interface
-
-        #region Subtyping
 
         private static bool IsPrimitiveTypeSubTypeOf(TypeUsage fromType, TypeUsage toType)
         {
@@ -773,10 +761,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return (-1 != superTypes.IndexOf(superPrimitiveType));
         }
-
-        #endregion // Subtyping
-
-        #region Promotability
 
         private static bool IsPromotableTo(RowType fromRowType, RowType toRowType)
         {
@@ -813,10 +797,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return true;
         }
-
-        #endregion // promotability
-
-        #region Common Super-Type
 
         private static bool TryGetCommonType(EdmType edmType1, EdmType edmType2, out EdmType commonEdmType)
         {
@@ -1021,10 +1001,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return (null != TypeHelpers.GetCommonTypeUsage(type1, type2));
         }
 
-        #endregion // common super-type helpers
-
-        #region Comparability
-
         /// <summary>
         ///     Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification", 
         ///     section 7 - Comparison and Dependent Operations for details.
@@ -1064,10 +1040,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // may still fail during runtime depending on the provider specific behavior
             return Helper.IsScalarType(edmType);
         }
-
-        #endregion
-
-        #region Private Helpers
 
         private static bool CompareTypes(TypeUsage fromType, TypeUsage toType, bool equivalenceOnly)
         {
@@ -1242,9 +1214,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ComputeCommonTypeClosure();
             return _commonTypeClosure[(int)primitiveType1.PrimitiveTypeKind, (int)primitiveType2.PrimitiveTypeKind];
         }
-
-        #endregion // Private Helpers
-
-        #endregion // Private interface
     }
 }

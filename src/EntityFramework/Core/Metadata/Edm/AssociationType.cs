@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public sealed class AssociationType : RelationshipType
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of Association Type with the given name, namespace, version and ends
         /// </summary>
@@ -33,17 +31,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _isForeignKey = foreignKey;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ReadOnlyMetadataCollection<ReferentialConstraint> _referentialConstraints;
         private FilteredReadOnlyMetadataCollection<AssociationEndMember, EdmMember> _associationEndMembers;
         private readonly bool _isForeignKey;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -92,10 +82,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _isForeignKey; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Validates a EdmMember object to determine if it can be added to this type's 
         ///     Members collection. If this method returns without throwing, it is assumed
@@ -130,7 +116,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             ReferentialConstraints.Source.Add(referentialConstraint);
         }
-
-        #endregion
     }
 }

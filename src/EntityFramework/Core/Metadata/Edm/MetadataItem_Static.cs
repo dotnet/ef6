@@ -11,8 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract partial class MetadataItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Static Constructor which initializes all the built in types and primitive types
         /// </summary>
@@ -536,19 +534,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private static readonly EdmType[] _builtInTypes = new EdmType[EdmConstants.NumBuiltInTypes];
         private static readonly ReadOnlyCollection<FacetDescription> _generalFacetDescriptions;
         private static readonly FacetDescription _nullableFacetDescription;
         private static readonly FacetDescription _defaultValueFacetDescription;
         private static readonly FacetDescription _collectionKindFacetDescription;
-
-        #endregion
-
-        #region Properties
 
         internal static FacetDescription DefaultValueFacetDescription
         {
@@ -569,10 +559,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return EdmProviderManifest.Instance; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns the list of EDM builtin types
@@ -653,7 +639,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 enumType.AddMember(new EnumMember(enumMemberNames[i], i));
             }
         }
-
-        #endregion
     }
 }

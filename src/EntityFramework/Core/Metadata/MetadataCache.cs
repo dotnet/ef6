@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal static class MetadataCache
     {
-        #region Fields
-
         private const string s_dataDirectory = "|datadirectory|";
         private const string s_metadataPathSeparator = "|";
 
@@ -64,10 +62,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // every item in other store and edm cache and tries to do some cleanup
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private static Timer timer = new Timer(PeriodicCleanupCallback, null, cleanupPeriod, cleanupPeriod);
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The purpose of the thread is to do cleanup. It marks the object in various stages before it actually cleans up the object
@@ -415,10 +409,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Interlocked.CompareExchange(ref _artifactLoaderCache, artifactLoaderCacheTemp, _artifactLoaderCache);
         }
-
-        #endregion
-
-        #region InlineClasses
 
         /// <summary>
         ///     The base class having common implementation for all metadata entry classes
@@ -866,7 +856,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 entry.LoadStoreCollection(_edmItemCollection, _loader);
             }
         }
-
-        #endregion
     }
 }

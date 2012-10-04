@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EntityContainer : GlobalItem
     {
-        #region Constructors
-
         internal EntityContainer()
         {
         }
@@ -36,17 +34,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _functionImports = new ReadOnlyMetadataCollection<EdmFunction>(new MetadataCollection<EdmFunction>());
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly string _name;
         private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
         private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -90,10 +80,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _functionImports; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Sets this item to be readonly, once this is set, the item will never be writable again.
@@ -208,7 +194,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(function.IsFunctionImport, "function.IsFunctionImport");
             _functionImports.Source.Add(function);
         }
-
-        #endregion
     }
 }

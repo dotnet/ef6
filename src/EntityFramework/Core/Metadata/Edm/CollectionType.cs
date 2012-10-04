@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class CollectionType : EdmType
     {
-        #region Constructors
-
         internal CollectionType()
         {
         }
@@ -42,15 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SetReadOnly();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly TypeUsage _typeUsage;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -68,10 +58,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _typeUsage; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Constructs the name of the collection type
@@ -111,7 +97,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // compare type usage
             return TypeUsage.EdmEquals(other.TypeUsage);
         }
-
-        #endregion
     }
 }

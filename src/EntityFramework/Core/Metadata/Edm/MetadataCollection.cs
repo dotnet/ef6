@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // can be override by a derived class, the possible results must be thought through.  If needed, add an internal method and
         // have the public virtual method delegates to it.
 
-        #region Constructors
-
         /// <summary>
         ///     Default constructor for constructing an empty collection
         /// </summary>
@@ -60,10 +58,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     structure to contain the indexes of items whose identity match by OrdinalIgnoreCase
         /// </summary>
@@ -88,10 +82,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private CollectionData _collectionData;
         private bool _readOnly;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets whether the collection is a readonly collection
@@ -151,10 +141,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetValue(identity, false); }
             set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Gets an item from the collection with the given identity
@@ -665,10 +651,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region InnerClasses
-
         /// <summary>
         ///     The data structures for this collection, which contains a list and a dictionary
         /// </summary>
@@ -720,7 +702,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
-
-        #endregion
     }
 }

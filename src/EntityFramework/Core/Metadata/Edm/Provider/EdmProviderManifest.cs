@@ -895,8 +895,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Interlocked.CompareExchange(ref _functions, readOnlyFunctions, null);
         }
 
-        #region Edm Provider Specific Functionality
-
         /// <summary>
         ///     Returns the list of super-types for the given primitiveType
         /// </summary>
@@ -1060,10 +1058,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Interlocked.CompareExchange(ref _canonicalModelTypes, canonicalTypes, null);
         }
 
-        #endregion
-
-        #region DbProviderManifest Interface
-
         /// <summary>
         ///     Returns all the primitive types supported by the provider manifest
         /// </summary>
@@ -1109,7 +1103,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }

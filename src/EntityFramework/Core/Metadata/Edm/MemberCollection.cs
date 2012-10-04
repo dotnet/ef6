@@ -27,8 +27,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // enumeration requirement, we have a specialized enumerator class for this MemberCollection. See the
         // Enumerator class for details on how it works.
 
-        #region Constructors
-
         /// <summary>
         ///     Default constructor for constructing an empty collection
         /// </summary>
@@ -52,15 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _declaringType = declaringType;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly StructuralType _declaringType;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the collection as a readonly collection
@@ -327,7 +317,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Validate the item with the declaring type. 
             _declaringType.ValidateMemberForAdd(member);
         }
-
-        #endregion
     }
 }

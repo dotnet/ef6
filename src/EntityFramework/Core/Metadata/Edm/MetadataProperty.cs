@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class MetadataProperty : MetadataItem
     {
-        #region Constructors
-
         internal MetadataProperty()
         {
         }
@@ -56,18 +54,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _propertyKind = PropertyKind.System;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly string _name;
         private readonly PropertyKind _propertyKind;
         private readonly object _value;
         private readonly TypeUsage _typeUsage;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -130,10 +120,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _typeUsage; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -154,7 +140,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _propertyKind; }
         }
-
-        #endregion
     }
 }

@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class Converter
     {
-        #region Constructor
-
         /// <summary>
         ///     Static constructor for creating FacetDescription objects that we use
         /// </summary>
@@ -84,17 +82,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 string.Empty);
         }
 
-        #endregion
-
-        #region Fields
-
         internal static readonly FacetDescription ConcurrencyModeFacet;
         internal static readonly FacetDescription StoreGeneratedPatternFacet;
         internal static readonly FacetDescription CollationFacet;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Converts a schema from SOM into Metadata
@@ -1483,25 +1473,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Nested types
-
         /// <summary>
         ///     Cache containing item collection and type usages to support looking up and generating
         ///     metadata types.
         /// </summary>
         internal class ConversionCache
         {
-            #region Fields
-
             internal readonly ItemCollection ItemCollection;
             private readonly Dictionary<EdmType, TypeUsage> _nullFacetsTypeUsage;
             private readonly Dictionary<EdmType, TypeUsage> _nullFacetsCollectionTypeUsage;
-
-            #endregion
-
-            #region Constructors
 
             internal ConversionCache(ItemCollection itemCollection)
             {
@@ -1509,10 +1489,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _nullFacetsTypeUsage = new Dictionary<EdmType, TypeUsage>();
                 _nullFacetsCollectionTypeUsage = new Dictionary<EdmType, TypeUsage>();
             }
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Gets type usage for the given type with null facet values. Caches usage to avoid creating
@@ -1558,10 +1534,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return result;
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

@@ -109,8 +109,6 @@ namespace System.Data.Entity.Core.Objects
             return getRelatedEnd(sourceRelationshipManager, existingRelatedEnd);
         }
 
-        #region Navigation Property
-
         internal static Action<object, object> CreateNavigationPropertySetter(Type declaringType, PropertyInfo navigationProperty)
         {
             var mi = navigationProperty.GetSetMethod(true);
@@ -144,10 +142,6 @@ namespace System.Data.Entity.Core.Objects
 
             return (Action<object, object>)method.CreateDelegate(typeof(Action<object, object>));
         }
-
-        #endregion
-
-        #region get the delegate
 
         /// <summary>
         ///     Gets a parameterless constructor for the specified type.
@@ -617,10 +611,6 @@ namespace System.Data.Entity.Core.Objects
             throw new InvalidOperationException(Strings.CodeGen_PropertyNoSetter);
         }
 
-        #endregion
-
-        #region Lightweight code generation
-
         internal static readonly ReflectionPermission MemberAccessReflectionPermission =
             new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
 
@@ -651,7 +641,5 @@ namespace System.Data.Entity.Core.Objects
             // in method callees.
             return new DynamicMethod(name, returnType, parameterTypes, true);
         }
-
-        #endregion
     }
 }

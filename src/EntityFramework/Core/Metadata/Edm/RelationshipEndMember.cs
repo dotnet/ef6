@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class RelationshipEndMember : EdmMember
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of RelationshipEndMember
         /// </summary>
@@ -34,16 +32,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _deleteBehavior = OperationAction.None;
         }
 
-        #endregion
-
-        #region Fields
-
         private OperationAction _deleteBehavior;
         private readonly RelationshipMultiplicity _relationshipMultiplicity;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the operational behaviour for this end
@@ -67,8 +57,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _relationshipMultiplicity; }
         }
-
-        #endregion
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public EntityType GetEntityType()

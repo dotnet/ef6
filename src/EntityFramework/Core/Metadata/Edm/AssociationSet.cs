@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationSet : RelationshipSet
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of AssocationSet with the given name and the association type
         /// </summary>
@@ -19,16 +17,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ReadOnlyMetadataCollection<AssociationSetEnd> _associationSetEnds =
             new ReadOnlyMetadataCollection<AssociationSetEnd>(new MetadataCollection<AssociationSetEnd>());
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the association type associated with this association set
@@ -55,10 +45,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.AssociationSet; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -79,7 +65,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             AssociationSetEnds.Source.Add(associationSetEnd);
         }
-
-        #endregion
     }
 }

@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal static partial class Helper
     {
-        #region Fields
-
         // List of all the static empty list used all over the code
         internal static readonly ReadOnlyCollection<KeyValuePair<string, object>> EmptyKeyValueStringObjectList =
             new ReadOnlyCollection<KeyValuePair<string, object>>(new KeyValuePair<string, object>[0]);
@@ -38,10 +36,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal const char PeriodSymbol = '.';
         internal const char CommaSymbol = ',';
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns the single error message from the list of errors
@@ -174,8 +168,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             return null;
         }
-
-        #endregion
 
         /// <summary>
         ///     Validates whether cspace and sspace types are compatible.

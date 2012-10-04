@@ -21,13 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal static partial class Helper
     {
-        #region Fields
-
         internal static readonly EdmMember[] EmptyArrayEdmProperty = new EdmMember[0];
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The method wraps the GetAttribute method on XPathNavigator.
@@ -229,8 +223,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 ((IDisposable)xmlReader).Dispose();
             }
         }
-
-        #region IsXXXType Methods
 
         internal static bool IsStructuralType(EdmType type)
         {
@@ -467,8 +459,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        #endregion /// IsXXXType region
-
         /// <remarks>
         ///     Performance of Enum.ToString() is slow and we use this value in building Identity
         /// </remarks>
@@ -601,7 +591,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return primitiveType;
             }
         }
-
-        #endregion
     }
 }

@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EdmFunction : EdmType
     {
-        #region Constructors
-
         internal EdmFunction()
         {
         }
@@ -130,10 +128,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ReadOnlyMetadataCollection<FunctionParameter> _returnParameters;
         private readonly ReadOnlyMetadataCollection<FunctionParameter> _parameters;
         private readonly FunctionAttributes _functionAttributes = FunctionAttributes.Default;
@@ -143,10 +137,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _schemaName;
         private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
         private readonly string _fullName;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -290,10 +280,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _schemaName; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
@@ -406,10 +392,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Nested types
-
         [Flags]
         private enum FunctionAttributes : byte
         {
@@ -423,8 +405,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IsFunctionImport = 64,
             Default = IsComposable,
         }
-
-        #endregion
     }
 
     internal struct EdmFunctionPayload

@@ -10,16 +10,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal class NavigationPropertyAccessor
     {
-        #region Constructors
-
         public NavigationPropertyAccessor(string propertyName)
         {
             _propertyName = propertyName;
         }
-
-        #endregion
-
-        #region Fields
 
         private Func<object, object> _memberGetter;
         private Action<object, object> _memberSetter;
@@ -27,10 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Func<object, object, bool> _collectionRemove;
         private Func<object> _collectionCreate;
         private readonly string _propertyName;
-
-        #endregion
-
-        #region Properties
 
         public bool HasProperty
         {
@@ -103,15 +93,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Static Properties
-
         public static NavigationPropertyAccessor NoNavigationProperty
         {
             get { return new NavigationPropertyAccessor(null); }
         }
-
-        #endregion
     }
 }

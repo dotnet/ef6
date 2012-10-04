@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class RelationshipSet : EntitySetBase
     {
-        #region Constructors
-
         /// <summary>
         ///     The constructor for constructing the RelationshipSet with a given name and an relationship type
         /// </summary>
@@ -22,10 +20,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name, schema, table, definingQuery, relationshipType)
         {
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the relationship type associated with this relationship set
@@ -42,7 +36,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return BuiltInTypeKind.RelationshipSet; }
         }
-
-        #endregion
     }
 }

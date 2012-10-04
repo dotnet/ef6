@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EdmType : GlobalItem
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new instance of EdmType
         /// </summary>
@@ -50,18 +48,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 null);
         }
 
-        #endregion
-
-        #region Fields
-
         private CollectionType _collectionType;
         private string _name;
         private string _namespace;
         private EdmType _baseType;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Direct accessor for the field Identity. The reason we need to do this is that for derived class,
@@ -206,10 +196,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return identity;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Initialize the type. This method must be called since for bootstraping we only call the constructor. 
         ///     This method will help us initialize the type
@@ -322,7 +308,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             return GetGeneralFacetDescriptions();
         }
-
-        #endregion
     }
 }

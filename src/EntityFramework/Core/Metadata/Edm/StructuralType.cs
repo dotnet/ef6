@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class StructuralType : EdmType
     {
-        #region Constructors
-
         /// <summary>
         ///     Internal parameterless constructor for bootstrapping edmtypes
         /// </summary>
@@ -35,16 +33,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _readOnlyMembers = _members.AsReadOnlyMetadataCollection();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MemberCollection _members;
         private readonly ReadOnlyMetadataCollection<EdmMember> _readOnlyMembers;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the collection of members.
@@ -54,10 +44,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _readOnlyMembers; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Get the declared only members of a particular type
@@ -119,7 +105,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             _members.Add(member);
         }
-
-        #endregion
     }
 }

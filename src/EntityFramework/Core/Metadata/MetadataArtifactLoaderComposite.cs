@@ -152,22 +152,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        #region IEnumerable<MetadataArtifactLoader> Members
-
         public IEnumerator<MetadataArtifactLoader> GetEnumerator()
         {
             return _children.GetEnumerator();
         }
 
-        #endregion
-
-        #region IEnumerable Members
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _children.GetEnumerator();
         }
-
-        #endregion
     }
 }

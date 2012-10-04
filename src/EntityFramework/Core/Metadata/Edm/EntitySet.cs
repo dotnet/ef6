@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EntitySet : EntitySetBase
     {
-        #region Constructors
-
         internal EntitySet()
         {
         }
@@ -33,18 +31,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        #endregion
-
-        #region Fields
-
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyDependents;
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyPrincipals;
         private volatile bool _hasForeignKeyRelationships;
         private volatile bool _hasIndependentRelationships;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the kind of the type
@@ -124,10 +114,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        #endregion
-
-        #region Methods
-
         private void InitializeForeignKeyLists()
         {
             var dependents = new List<Tuple<AssociationSet, ReferentialConstraint>>();
@@ -171,7 +157,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Interlocked.CompareExchange(ref _foreignKeyDependents, readOnlyDependents, null);
             Interlocked.CompareExchange(ref _foreignKeyPrincipals, readOnlyPrincipals, null);
         }
-
-        #endregion
     }
 }
