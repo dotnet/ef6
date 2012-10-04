@@ -101,6 +101,18 @@ namespace ProductivityApiTests
             ThrowsWithDisposedContext(context => context.SaveChanges());
         }
 
+#if !NET40
+
+        [Fact]
+        public void SaveChangesAsync_throws_on_disposed_context()
+        {
+            ThrowsWithDisposedContext(
+                (context) => ExceptionHelpers.UnwrapAggregateExceptions(
+                    () => context.SaveChangesAsync().Wait()));
+        }
+
+#endif
+
         [Fact]
         public void ObjectContext_property_throws_on_disposed_context()
         {

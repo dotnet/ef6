@@ -220,6 +220,104 @@ namespace System.Data.Entity.Core.Objects
                     Strings.ObjectContext_AcceptAllChangesFailure(new NotSupportedException().Message),
                     Assert.Throws<InvalidOperationException>(() => objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave)).Message);
             }
+
+            [Fact]
+            public void OnSavingChanges_event_gets_called()
+            {
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                mockObjectContext.CallBase = true;
+
+                int callCount = 0;
+                EventHandler saveChangesDelegate = delegate(object obj, EventArgs e) { callCount++; };
+                mockObjectContext.Object.SavingChanges += saveChangesDelegate;
+
+                var entriesAffected = mockObjectContext.Object.SaveChanges(SaveOptions.None);
+
+                Assert.Equal(1, callCount);
+                Assert.Equal(0, entriesAffected);
+
+                //Ensure that event does not get called when removed
+                callCount = 0;
+                mockObjectContext.Object.SavingChanges -= saveChangesDelegate;
+
+                entriesAffected = mockObjectContext.Object.SaveChanges(SaveOptions.None);
+
+                Assert.Equal(0, callCount);
+                Assert.Equal(0, entriesAffected);
+            }
+
+            [Fact]
+            public void Raises_expected_exception_from_OnSavingChanges_event()
+            {
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                mockObjectContext.CallBase = true;
+
+                EventHandler saveChangesDelegate = delegate(object obj, EventArgs e)
+                {
+                    throw new InvalidOperationException();
+                };
+                mockObjectContext.Object.SavingChanges += saveChangesDelegate;
+
+                Assert.Throws<InvalidOperationException>(() => 
+                    mockObjectContext.Object.SaveChanges(SaveOptions.None));
+            }
+        }
+
+        public class EnsureConnection
+        {
+            [Fact]
+            public void Calls_EnsureMetadata_if_connection_open()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
+                {
+                    CallBase = true
+                };
+                objectContextMock.Setup(m => m.EnsureMetadata()).Verifiable();
+
+                objectContextMock.Object.EnsureConnection();
+
+                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Once());
+            }
+
+            [Fact]
+            public void Releases_connection_when_exception_caught()
+            {
+                var connectionMock = new Mock<EntityConnection>();
+                connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                {
+                    CallBase = true
+                };
+                objectContextMock.Setup(m => m.EnsureMetadata()).Throws(new MetadataException());
+
+                try
+                {
+                    objectContextMock.Object.EnsureConnection();
+                }
+                catch (MetadataException)
+                {
+                    objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
+                }
+            }
+
+            [Fact]
+            public void Throws_InvalidOperationException_if_connection_state_is_broken()
+            {
+                var connectionMock = new Mock<EntityConnection>();
+                connectionMock.Setup(m => m.State).Returns(ConnectionState.Broken);
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                {
+                    CallBase = true
+                };
+
+                Assert.Equal(
+                    Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateBroken),
+                    Assert.Throws<InvalidOperationException>(
+                            () => objectContextMock.Object.EnsureConnection()).Message);
+                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Never());
+            }
         }
 
         public class ExecuteStoreCommand
@@ -701,6 +799,106 @@ namespace System.Data.Entity.Core.Objects
                     Assert.Throws<InvalidOperationException>(
                         () => ExceptionHelpers.UnwrapAggregateExceptions(
                             () => objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Result)).Message);
+            }
+
+            [Fact]
+            public void OnSavingChanges_event_gets_called()
+            {
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                mockObjectContext.CallBase = true;
+
+                int callCount = 0;
+                EventHandler saveChangesDelegate = delegate(object obj, EventArgs e) { callCount++; };
+                mockObjectContext.Object.SavingChanges += saveChangesDelegate;
+
+                var entriesAffected = mockObjectContext.Object.SaveChanges(SaveOptions.None);
+
+                Assert.Equal(1, callCount);
+                Assert.Equal(0, entriesAffected);
+
+                //Ensure that event does not get called when removed
+                callCount = 0;
+                mockObjectContext.Object.SavingChanges -= saveChangesDelegate;
+
+                entriesAffected = mockObjectContext.Object.SaveChangesAsync(SaveOptions.None).Result;
+
+                Assert.Equal(0, callCount);
+                Assert.Equal(0, entriesAffected);
+            }
+
+            [Fact]
+            public void Raises_expected_exception_from_OnSavingChanges_event()
+            {
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                mockObjectContext.CallBase = true;
+
+                EventHandler saveChangesDelegate = delegate(object obj, EventArgs e)
+                {
+                    throw new InvalidOperationException();
+                };
+                mockObjectContext.Object.SavingChanges += saveChangesDelegate;
+
+                Assert.Throws<InvalidOperationException>(() => 
+                    ExceptionHelpers.UnwrapAggregateExceptions(() => 
+                      mockObjectContext.Object.SaveChangesAsync(SaveOptions.None).Wait()));
+            }
+        }
+
+        public class EnsureConnectionAsync
+        {
+            [Fact]
+            public void Calls_EnsureMetadata_if_connection_open()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
+                {
+                    CallBase = true
+                };
+                objectContextMock.Setup(m => m.EnsureMetadata()).Verifiable();
+
+                objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
+
+                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Once());
+            }
+
+            [Fact]
+            public void Releases_connection_when_exception_caught()
+            {
+                var connectionMock = new Mock<EntityConnection>();
+                connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                {
+                    CallBase = true
+                };
+                objectContextMock.Setup(m => m.EnsureMetadata()).Throws(new MetadataException());
+
+                try
+                {
+                    objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
+                }
+                catch (AggregateException)
+                {
+                    objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
+                }
+            }
+
+            [Fact]
+            public void Throws_InvalidOperationException_if_connection_state_is_broken()
+            {
+                var connectionMock = new Mock<EntityConnection>();
+                connectionMock.Setup(m => m.State).Returns(ConnectionState.Broken);
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                {
+                    CallBase = true
+                };
+
+                Assert.Equal(
+                    Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateBroken),
+                    Assert.Throws<InvalidOperationException>(() =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(() =>
+                            objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait())).Message);
+                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Never());
             }
         }
 
