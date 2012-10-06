@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
     internal static class IDbAsyncEnumerableExtensions
     {
         /// <summary>
-        ///     Executes the provided action on each element of the <see cref="IDbAsyncEnumerable" />.
+        ///     Asynchronously executes the provided action on each element of the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
         /// <param name="action"> The action to be executed. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Executes the provided action on each element of the <see cref="IDbAsyncEnumerable{T}" />.
+        ///     Asynchronously executes the provided action on each element of the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
         /// <param name="action"> The action to be executed. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
@@ -76,11 +76,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
+        ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source)
         {
             Contract.Requires(source != null);
@@ -90,11 +90,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
+        ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
         {
             // TODO: Uncomment when code contracts support async
@@ -107,10 +107,10 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
+        ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source)
         {
@@ -121,10 +121,10 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
+        ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
@@ -138,11 +138,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
+        ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <returns> A Task containing a T[] that contains elements from the input sequence. </returns>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <returns> A <see cref="Task"/> containing a T[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source)
         {
@@ -153,12 +153,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
+        ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a T[] that contains elements from the input sequence. </returns>
+        /// <returns> A <see cref="Task"/> containing a T[] that contains elements from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
@@ -171,13 +171,13 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector)
@@ -190,14 +190,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
@@ -210,14 +210,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function and a comparer.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
@@ -230,15 +230,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function and a comparer.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
@@ -252,16 +252,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector and an element selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
         ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -276,16 +276,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector and an element selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
         ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -301,16 +301,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function, a comparer, and an element selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
         ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -326,17 +326,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IDbAsyncEnumerable{TSource}" /> by enumerating it asynchronously
-        ///     according to a specified key selector function, a comparer, and an element selector function.
+        ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
+        ///     by enumerating it asynchronously according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" />. </typeparam>
         /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
+        /// <returns> A <see cref="Task"/> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
         ///      name="TElement" /> selected from the input sequence. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(

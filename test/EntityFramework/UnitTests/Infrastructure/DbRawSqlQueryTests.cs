@@ -242,12 +242,12 @@ namespace System.Data.Entity.Infrastructure
                     e => e.ToDictionary(i => i + 2));
                 AssertSameResult(
                     testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1));
+                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1L).Result,
+                    e => e.ToDictionary(i => i + 2, i => i - 1L));
                 AssertSameResult(
                     testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1, new ModuloEqualityComparer(2)).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1, new ModuloEqualityComparer(2)));
+                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)).Result,
+                    e => e.ToDictionary(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)));
                 AssertSameResult(
                     testCase,
                     q => q.ToDictionaryAsync(i => i + 2, new ModuloEqualityComparer(2)).Result,
@@ -467,29 +467,29 @@ namespace System.Data.Entity.Infrastructure
 
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "keySelector",
-                q => q.ToDictionaryAsync<int>(null, elementSelector: e => e).Result);
+                q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "keySelector",
-                q => q.ToDictionaryAsync<int>(null, elementSelector: e => e, cancellationToken: new CancellationToken()).Result);
+                q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e, cancellationToken: new CancellationToken()).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "elementSelector",
-                q => q.ToDictionaryAsync(e => e, elementSelector: null).Result);
+                q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "elementSelector",
-                q => q.ToDictionaryAsync(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
+                q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
 
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "keySelector",
-                q => q.ToDictionaryAsync<int>(null, e => e, null).Result);
+                q => q.ToDictionaryAsync<int, int>(null, e => e, null).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "keySelector",
-                q => q.ToDictionaryAsync<int>(null, e => e, null, new CancellationToken()).Result);
+                q => q.ToDictionaryAsync<int, int>(null, e => e, null, new CancellationToken()).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "elementSelector",
-                q => q.ToDictionaryAsync(e => e, null, null).Result);
+                q => q.ToDictionaryAsync<int, int>(e => e, null, null).Result);
             ArgumentNullTest<int, Dictionary<int, int>>(
                 "elementSelector",
-                q => q.ToDictionaryAsync(e => e, null, null, new CancellationToken()).Result);
+                q => q.ToDictionaryAsync<int, int>(e => e, null, null, new CancellationToken()).Result);
 
             ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null).Result);
             ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null, new CancellationToken()).Result);
