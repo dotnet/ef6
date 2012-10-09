@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Indicates what parts of a configuration are overridable.
     /// </summary>
     [Flags]
-    public enum OverridableConfigurationParts
+    internal enum OverridableConfigurationParts
     {
         /// <summary>
         ///     Nothing in the configuration is overridable.

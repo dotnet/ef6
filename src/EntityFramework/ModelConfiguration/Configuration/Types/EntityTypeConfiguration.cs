@@ -21,6 +21,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Allows configuration to be performed for an entity type in a model.
+    /// </summary>
     public class EntityTypeConfiguration : StructuralTypeConfiguration
     {
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
@@ -41,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private bool _isKeyConfigured;
         private string _entitySetName;
 
-        public EntityTypeConfiguration(Type structuralType)
+        internal EntityTypeConfiguration(Type structuralType)
             : base(structuralType)
         {
             IsReplaceable = false;
@@ -119,9 +122,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = true;
         }
 
+        /// <summary>
+        /// Configures the primary key property(s) for this entity type.
+        /// </summary>
+        /// <param name="propertyInfo">
+        /// The property to be used as the primary key. If the primary key is made up of
+        /// multiple properties, call this method once for each of them.
+        /// </param>
+        public void Key(PropertyInfo propertyInfo)
+        {
+            Contract.Requires(propertyInfo != null);
+
+            Key(propertyInfo, null);
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public virtual void Key(
-            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts = null)
+        internal virtual void Key(
+            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts)
         {
             Contract.Requires(propertyInfo != null);
 
@@ -148,6 +165,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = false;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the name of the table has been configured.
+        /// </summary>
         public bool IsTableNameConfigured { get; private set; }
 
         /// <summary>
@@ -166,6 +186,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        /// <summary>
+        /// Gets or sets the entity set name to be used for this entity type.
+        /// </summary>
         public virtual string EntitySetName
         {
             get { return _entitySetName; }
@@ -192,6 +215,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return _entityMappingConfigurations.First().TableName;
         }
 
+        /// <summary>
+        /// Configures the table name that this entity type is mapped to.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
         public void ToTable(string tableName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -199,6 +226,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ToTable(tableName, null);
         }
 
+        /// <summary>
+        /// Configures the table name that this entity type is mapped to.
+        /// </summary>
+        /// <param name="tableName">The name of the table.</param>
+        /// <param name="schemaName">The database schema of the table.</param>
         public void ToTable(string tableName, string schemaName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -534,21 +566,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
+                        {
+                            var primitivePropertyConfiguration =
+                                c.GetConfiguration() as PrimitivePropertyConfiguration;
+
+                            if ((primitivePropertyConfiguration != null)
+                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                return;
+                            }
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
-
-                                c.TypeName = principalColumn.TypeName;
-                                c.Facets.CopyFrom(principalColumn.Facets);
-                            });
+                            c.TypeName = principalColumn.TypeName;
+                            c.Facets.CopyFrom(principalColumn.Facets);
+                        });
             }
         }
 

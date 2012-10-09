@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Edm;
@@ -21,10 +20,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
-    ///     Currently removal of one or more default conventions is the only supported operation.
     ///     The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
     /// </summary>
-    public partial class ConventionsConfiguration : ConfigurationBase, IEnumerable<IConvention>
+    public partial class ConventionsConfiguration
     {
         private readonly List<IConvention> _conventions = new List<IConvention>();
 
@@ -53,6 +51,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ConventionsConfiguration(this);
         }
 
+        /// <summary>
+        /// Enables one or more conventions for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <param name="conventions">The conventions to be enabled.</param>
         public void Add(params IConvention[] conventions)
         {
             Contract.Requires(conventions != null);
@@ -61,6 +63,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             conventions.Each(c => _conventions.Add(c));
         }
 
+        /// <summary>
+        /// Enables a convention for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <typeparam name="TConvention">The type of the convention to be enabled.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void Add<TConvention>()
             where TConvention : IConvention, new()
@@ -68,6 +74,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Add(new TConvention());
         }
 
+        /// <summary>
+        /// Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        /// will run after the one specified.
+        /// </summary>
+        /// <typeparam name="TExistingConvention">
+        /// The type of the convention after which the enabled one will run.
+        /// </typeparam>
+        /// <param name="newConvention">The convention to enable.</param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddAfter<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
@@ -84,6 +98,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _conventions.Insert(index + 1, newConvention);
         }
 
+        /// <summary>
+        /// Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        /// will run before the one specified.
+        /// </summary>
+        /// <typeparam name="TExistingConvention">
+        /// The type of the convention before which the enabled one will run.
+        /// </typeparam>
+        /// <param name="newConvention">The convention to enable.</param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddBefore<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
@@ -118,6 +140,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return -1;
         }
 
+        /// <summary>
+        /// Disables one or more conventions for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <param name="conventions">The conventions to be disabled.</param>
         public void Remove(params IConvention[] conventions)
         {
             Contract.Requires(conventions != null);
@@ -164,7 +190,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        public void ApplyMapping(DbDatabaseMapping databaseMapping)
+        internal void ApplyMapping(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -294,18 +320,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 new DatabaseConventionDispatcher(convention, database).Dispatch();
             }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IEnumerator<IConvention> IEnumerable<IConvention>.GetEnumerator()
-        {
-            return _conventions.GetEnumerator();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _conventions.GetEnumerator();
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

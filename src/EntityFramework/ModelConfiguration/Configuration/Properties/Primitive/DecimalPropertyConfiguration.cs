@@ -8,11 +8,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
+    /// <summary>
+    /// Used to configure a <see cref="Decimal" /> property of an entity type or
+    /// complex type.
+    /// </summary>
     public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
     {
+        /// <summary>
+        /// Gets or sets the precision of the property.
+        /// </summary>
         public byte? Precision { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scale of the property.
+        /// </summary>
         public byte? Scale { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the DecimalPropertyConfiguration class.
+        /// </summary>
         public DecimalPropertyConfiguration()
         {
         }
@@ -72,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
+        internal override void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             base.FillFrom(other, inCSpace);
             var lenConfigRhs = other as DecimalPropertyConfiguration;
@@ -89,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
+        internal override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var decRhs = other as DecimalPropertyConfiguration;
 

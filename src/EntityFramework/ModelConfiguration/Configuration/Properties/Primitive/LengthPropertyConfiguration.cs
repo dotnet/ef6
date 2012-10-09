@@ -8,12 +8,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Diagnostics.Contracts;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
+    /// <summary>
+    /// Used to configure a property with length facets for an entity type or
+    /// complex type.
+    /// </summary>
     public abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether the property is fixed length.
+        /// </summary>
         public bool? IsFixedLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum length of the property.
+        /// </summary>
         public int? MaxLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the property allows the maximum
+        /// length supported by the database provider.
+        /// </summary>
         public bool? IsMaxLength { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the LengthPropertyConfiguration class.
+        /// </summary>
         protected LengthPropertyConfiguration()
         {
         }
@@ -74,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
+        internal override void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             base.FillFrom(other, inCSpace);
             var lenConfigRhs = other as LengthPropertyConfiguration;
@@ -95,7 +114,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        public override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
+        internal override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var lenRhs = other as LengthPropertyConfiguration;
 

@@ -14,12 +14,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Used to configure a foreign key constraint on a navigation property.
+    /// </summary>
     public class ForeignKeyConstraintConfiguration : ConstraintConfiguration
     {
         private readonly List<PropertyInfo> _dependentProperties = new List<PropertyInfo>();
         private readonly bool _isFullySpecified;
 
-        internal ForeignKeyConstraintConfiguration()
+        /// <summary>
+        /// Initializes a new instance of the ForeignKeyConstraintConfiguration class.
+        /// </summary>
+        public ForeignKeyConstraintConfiguration()
         {
         }
 
@@ -46,7 +52,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             return new ForeignKeyConstraintConfiguration(this);
         }
 
-        internal override bool IsFullySpecified
+        /// <inheritdoc />
+        public override bool IsFullySpecified
         {
             get { return _isFullySpecified; }
         }
@@ -56,7 +63,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _dependentProperties; }
         }
 
-        internal void AddColumn(PropertyInfo propertyInfo)
+        /// <summary>
+        /// Configures the foreign key property(s) for this end of the navigation property.
+        /// </summary>
+        /// <param name="propertyInfo">
+        /// The property to be used as the foreign key. If the foreign key is made up of
+        /// multiple properties, call this method once for each of them.
+        /// </param>
+        public void AddColumn(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
 

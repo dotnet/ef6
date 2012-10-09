@@ -21,15 +21,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Linq.Expressions;
     using EdmProperty = System.Data.Entity.Edm.EdmProperty;
 
+    /// <summary>
+    /// Used to configure a primitive property of an entity type or complex type.
+    /// </summary>
     public class PrimitivePropertyConfiguration : PropertyConfiguration
     {
+        /// <summary>
+        /// Initializes a new instance of the PrimitivePropertyConfiguration class.
+        /// </summary>
         public PrimitivePropertyConfiguration()
         {
             OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace |
                                             OverridableConfigurationParts.OverridableInSSpace;
         }
 
-        public PrimitivePropertyConfiguration(PrimitivePropertyConfiguration source)
+        protected PrimitivePropertyConfiguration(PrimitivePropertyConfiguration source)
         {
             Contract.Requires(source != null);
 
@@ -47,16 +53,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return new PrimitivePropertyConfiguration(this);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the property is optional.
+        /// </summary>
         public bool? IsNullable { get; set; }
 
+        /// <summary>
+        /// Gets or sets the concurrency mode to use for the property.
+        /// </summary>
         public EdmConcurrencyMode? ConcurrencyMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pattern used to generate values in the database for the
+        /// property.
+        /// </summary>
         public DatabaseGeneratedOption? DatabaseGeneratedOption { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type of the database column used to store the property.
+        /// </summary>
         public string ColumnType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the database column used to store the property.
+        /// </summary>
         public string ColumnName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order of the database column used to store the property.
+        /// </summary>
         public int? ColumnOrder { get; set; }
 
-        public OverridableConfigurationParts OverridableConfigurationParts { get; set; }
+        internal OverridableConfigurationParts OverridableConfigurationParts { get; set; }
 
         internal virtual void Configure(EdmProperty property)
         {
@@ -214,10 +242,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                        {
-                            c.Name = renamedColumns.UniquifyName(ColumnName);
-                            renamedColumns.Add(c);
-                        });
+                    {
+                        c.Name = renamedColumns.UniquifyName(ColumnName);
+                        renamedColumns.Add(c);
+                    });
         }
 
         internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
@@ -237,7 +265,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             OverridableConfigurationParts = other.OverridableConfigurationParts;
         }
 
-        public virtual void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
+        internal virtual void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             if (ColumnName == null
                 && !inCSpace)
@@ -271,7 +299,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#")]
-        public virtual bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
+        internal virtual bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             errorMessage = string.Empty;
             if (other == null)

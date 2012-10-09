@@ -20,3 +20,4 @@ EntityFramework.SqlServerCompact.xml
 *.BASE.*
 *.REMOTE.*
 *.LOCAL.*
+StyleCop.Cache

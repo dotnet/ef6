@@ -13,6 +13,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Used to configure a navigation property.
+    /// </summary>
     public class NavigationPropertyConfiguration : PropertyConfiguration
     {
         private readonly PropertyInfo _navigationProperty;
@@ -53,6 +56,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             return new NavigationPropertyConfiguration(this);
         }
 
+        /// <summary>
+        /// Gets or sets the action to take when a delete operation is attempted.
+        /// </summary>
         public EdmOperationAction? DeleteAction { get; set; }
 
         internal PropertyInfo NavigationProperty
@@ -60,6 +66,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _navigationProperty; }
         }
 
+        /// <summary>
+        /// Gets or sets the multiplicity of this end of the navigation property.
+        /// </summary>
         public EdmAssociationEndKind? EndKind
         {
             get { return _endKind; }
@@ -98,6 +107,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
+        /// <summary>
+        /// Gets or sets the constraint associated with the navigation property.
+        /// </summary>
+        /// <remarks>
+        /// This property uses <see cref="ForeignKeyConstraintConfiguration" /> for
+        /// foreign key constraints and <see cref="IndependentConstraintConfiguration" />
+        /// for independent constraints.
+        /// </remarks>
         public ConstraintConfiguration Constraint
         {
             get { return _constraint; }

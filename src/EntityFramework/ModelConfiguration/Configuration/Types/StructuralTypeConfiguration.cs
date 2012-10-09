@@ -20,6 +20,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    /// Allows configuration to be performed for a type in a model.
+    /// </summary>
     public abstract class StructuralTypeConfiguration : ConfigurationBase
     {
         internal static Type GetPropertyConfigurationType(Type propertyType)
@@ -106,6 +109,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return _primitivePropertyConfigurations; }
         }
 
+        /// <summary>
+        /// Excludes a property from the model so that it will not be mapped to the database.
+        /// </summary>
+        /// <param name="propertyInfo">The property to be configured.</param>
         public void Ignore(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
@@ -121,17 +128,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return Property(
                 propertyPath,
                 () =>
+                {
+                    var configuration = (PrimitivePropertyConfiguration)Activator
+                                                                            .CreateInstance(
+                                                                                GetPropertyConfigurationType(
+                                                                                    propertyPath.Last().PropertyType));
+                    if (overridableConfigurationParts.HasValue)
                     {
-                        var configuration = (PrimitivePropertyConfiguration)Activator
-                                                                                .CreateInstance(
-                                                                                    GetPropertyConfigurationType(
-                                                                                        propertyPath.Last().PropertyType));
-                        if (overridableConfigurationParts.HasValue)
-                        {
-                            configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
-                        }
-                        return configuration;
-                    });
+                        configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
+                    }
+                    return configuration;
+                });
         }
 
         internal virtual void RemoveProperty(PropertyPath propertyPath)
