@@ -207,6 +207,7 @@
     <Compile Include="Migrations\TransactionScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
+    <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
