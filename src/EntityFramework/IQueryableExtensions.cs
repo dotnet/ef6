@@ -4487,7 +4487,6 @@ namespace System.Data.Entity
             var dummyTypes = new Type[genericArgumentsCount];
             for (var i = 0; i < genericArgumentsCount; i++)
             {
-                // TODO: Replace the dummy types with T1, T2, etc.
                 dummyTypes[i] = typeof(object);
             }
 

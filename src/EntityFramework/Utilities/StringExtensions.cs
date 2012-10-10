@@ -4,13 +4,10 @@ namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
-    [SuppressMessage("Microsoft.Contracts", "CC1036",
-        Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     internal static class StringExtensions
     {
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");

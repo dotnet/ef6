@@ -24,10 +24,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task ForEachAsync(
             this IDbAsyncEnumerable source, Action<object> action, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(action != null);
-            //Contract.Ensures(Contract.Result<Task>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
             using (var enumerator = source.GetAsyncEnumerator())
             {
@@ -54,10 +53,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task ForEachAsync<T>(
             this IDbAsyncEnumerable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(action != null);
-            //Contract.Ensures(Contract.Result<Task>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(action != null);
+            Contract.Ensures(Contract.Result<Task>() != null);
 
             using (var enumerator = source.GetAsyncEnumerator())
             {
@@ -97,9 +95,8 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> A <see cref="Task"/> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
 
             var list = new List<T>();
             await source.ForEachAsync(e => list.Add((T)e), cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -128,9 +125,8 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
 
             var list = new List<T>();
             await source.ForEachAsync(list.Add, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -162,9 +158,8 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
 
             var list = await source.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return list.ToArray();
@@ -343,11 +338,10 @@ namespace System.Data.Entity.Infrastructure
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(keySelector != null);
-            //Contract.Requires(elementSelector != null);
-            //Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(keySelector != null);
+            Contract.Requires(elementSelector != null);
+            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
 
             var d = new Dictionary<TKey, TElement>(comparer);
             await
@@ -384,9 +378,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -402,10 +395,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -438,8 +430,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
+            Contract.Requires(source != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -455,8 +446,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
+            Contract.Requires(source != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -482,8 +472,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
+            Contract.Requires(source != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -515,10 +504,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             var result = default(TSource);
             long count = 0;
@@ -559,9 +547,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -593,10 +580,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             var result = default(TSource);
             long count = 0;
@@ -634,9 +620,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> ContainsAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, TSource value, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -662,9 +647,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<bool> AnyAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -690,10 +674,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> AnyAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -722,10 +705,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> AllAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -751,9 +733,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<int> CountAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
 
             var count = 0;
 
@@ -784,10 +765,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<int> CountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
 
             var count = 0;
 
@@ -819,9 +799,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<long> LongCountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
 
             long count = 0;
 
@@ -852,10 +831,9 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<long> LongCountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Requires(predicate != null);
-            //Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Contract.Requires(source != null);
+            Contract.Requires(predicate != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
 
             long count = 0;
 
@@ -886,9 +864,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<TSource> MinAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             var comparer = Comparer<TSource>.Default;
             var value = default(TSource);
@@ -949,9 +926,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<TSource> MaxAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
 
             var comparer = Comparer<TSource>.Default;
             var value = default(TSource);
@@ -1012,9 +988,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<int> SumAsync(this IDbAsyncEnumerable<int> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int>>() != null);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1041,9 +1016,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<int?> SumAsync(this IDbAsyncEnumerable<int?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<int?>>() != null);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1073,9 +1047,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<long> SumAsync(this IDbAsyncEnumerable<long> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long>>() != null);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1102,9 +1075,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<long?> SumAsync(this IDbAsyncEnumerable<long?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<long?>>() != null);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1134,9 +1106,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<float> SumAsync(this IDbAsyncEnumerable<float> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1163,9 +1134,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<float?> SumAsync(this IDbAsyncEnumerable<float?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1195,9 +1165,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double> SumAsync(this IDbAsyncEnumerable<double> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1224,9 +1193,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double?> SumAsync(this IDbAsyncEnumerable<double?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1256,9 +1224,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<decimal> SumAsync(this IDbAsyncEnumerable<decimal> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
 
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1285,9 +1252,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<decimal?> SumAsync(this IDbAsyncEnumerable<decimal?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
 
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1317,9 +1283,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<int> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
 
             long sum = 0;
             long count = 0;
@@ -1352,9 +1317,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<int?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
 
             long sum = 0;
             long count = 0;
@@ -1390,9 +1354,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<long> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
 
             long sum = 0;
             long count = 0;
@@ -1425,9 +1388,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<long?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
 
             long sum = 0;
             long count = 0;
@@ -1463,9 +1425,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<float> AverageAsync(this IDbAsyncEnumerable<float> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float>>() != null);
 
             double sum = 0;
             long count = 0;
@@ -1498,9 +1459,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<float?> AverageAsync(this IDbAsyncEnumerable<float?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<float?>>() != null);
 
             double sum = 0;
             long count = 0;
@@ -1536,9 +1496,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<double> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double>>() != null);
 
             double sum = 0;
             long count = 0;
@@ -1571,9 +1530,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<double?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<double?>>() != null);
 
             double sum = 0;
             long count = 0;
@@ -1609,9 +1567,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<decimal> AverageAsync(this IDbAsyncEnumerable<decimal> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
 
             decimal sum = 0;
             long count = 0;
@@ -1644,9 +1601,8 @@ namespace System.Data.Entity.Infrastructure
 
         internal static async Task<decimal?> AverageAsync(this IDbAsyncEnumerable<decimal?> source, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(source != null);
-            //Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Contract.Requires(source != null);
+            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
 
             decimal sum = 0;
             long count = 0;

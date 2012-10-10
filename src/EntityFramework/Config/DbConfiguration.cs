@@ -20,8 +20,6 @@ namespace System.Data.Entity.Config
     ///     The type to use can also be registered in the config file of the application.
     ///     See http://go.microsoft.com/fwlink/?LinkId=260883 for more information about Entity Framework configuration.
     /// </summary>
-    [SuppressMessage("Microsoft.Contracts", "CC1036",
-        Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     public class DbConfiguration
     {
         private readonly InternalConfiguration _internalConfiguration;

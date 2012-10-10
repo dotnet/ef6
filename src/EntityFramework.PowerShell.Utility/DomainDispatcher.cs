@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Management.Automation;
     using EnvDTE;
@@ -11,8 +10,6 @@ namespace System.Data.Entity.Migrations.Utilities
     ///     Provides a way of dispatching specific calls form the PowerShell commands'
     ///     AppDomain to the Visual Studio's main AppDomain.
     /// </summary>
-    [SuppressMessage("Microsoft.Contracts", "CC1036",
-        Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     [CLSCompliant(false)]
     public class DomainDispatcher : MarshalByRefObject
     {

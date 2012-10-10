@@ -67,8 +67,7 @@ namespace System.Data.Entity.Internal
 
         public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Contract.Ensures(Contract.Result<Task<bool>>() != null);
 
             var enumerator = await GetEnumeratorAsync(CancellationToken.None).ConfigureAwait(continueOnCapturedContext: false);
             return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);

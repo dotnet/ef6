@@ -242,9 +242,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
         {
-            // TODO: Uncomment when code contracts support async
-            //Contract.Requires(key != null);
-            DbHelpers.ThrowIfNull(key, "key");
+            Contract.Requires(key != null);
 
             // If the key has null values, then we cannot query it from the store, so it cannot
             // be found, so just return null.
