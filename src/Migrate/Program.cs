@@ -40,8 +40,15 @@ namespace System.Data.Entity.Migrations.Console
             }
             catch (CommandLineException ex)
             {
-                WriteError(ex.ArgumentHelp.Message);
-                WriteLine(ex.ArgumentHelp.GetHelpText(Console.BufferWidth));
+                try
+                {
+                    WriteError(ex.ArgumentHelp.Message);
+                    WriteLine(ex.ArgumentHelp.GetHelpText(Console.BufferWidth));
+                }
+                catch (Exception)
+                {
+                    WriteError(ex.Message);
+                }                               
             }
             catch (Exception ex)
             {
