@@ -587,7 +587,7 @@ namespace System.Data.Entity.Migrations.Sql
             else
             {
                 Contract.Assert(moveTableOperation.CreateTableOperation != null);
-                Contract.Assert(moveTableOperation.ContextKey != null);
+                Contract.Assert(!string.IsNullOrWhiteSpace(moveTableOperation.ContextKey)); 
 
                 using (var writer = Writer())
                 {

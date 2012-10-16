@@ -34,6 +34,7 @@ namespace System.Data.Entity.Migrations
         private string _migrationsDirectory = DefaultMigrationsDirectory;
         private readonly Lazy<IDbDependencyResolver> _resolver;
         private IHistoryContextFactory _historyContextFactory;
+        private string _contextKey;
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
@@ -55,7 +56,16 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         public bool AutomaticMigrationsEnabled { get; set; }
 
-        public string ContextKey { get; set; }
+        public string ContextKey
+        {
+            get { return _contextKey; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+
+                _contextKey = value;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating if data loss is acceptable during automatic migration.
