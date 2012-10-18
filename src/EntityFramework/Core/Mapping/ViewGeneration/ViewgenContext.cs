@@ -130,17 +130,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var entityTypes = m_cellWrappers.Select(it => it.RightExtent).OfType<EntitySet>().Select(it => it.ElementType);
             //Get all the foreign key association sets in these entity sets
             var allForeignKeyAssociationSets =
-                m_entityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>().Where(it => it.ElementType.IsForeignKey);
-            //Find all the foreign key associations that have corresponding sets
-            var oneToOneForeignKeyAssociationsForThisWrapper = allForeignKeyAssociationSets.Select(it => it.ElementType);
-            //Find all the 1:1 associations from the above list
-            oneToOneForeignKeyAssociationsForThisWrapper =
-                oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                    it => (it.AssociationEndMembers.All(endMember => endMember.RelationshipMultiplicity == RelationshipMultiplicity.One)));
+                m_entityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>().Where(it => it.ElementType.IsForeignKey).ToList();
+            //Find all the 1:1 foreign key associations that have corresponding sets
+            var oneToOneForeignKeyAssociationsForThisWrapper = allForeignKeyAssociationSets.Select(it => it.ElementType).Where(
+                    it => (it.AssociationEndMembers.All(endMember => endMember.RelationshipMultiplicity == RelationshipMultiplicity.One))).ToList();
             //Filter the 1:1 foreign key associations to the ones relating the sets used in these cell wrappers.
             oneToOneForeignKeyAssociationsForThisWrapper =
                 oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                    it => (it.AssociationEndMembers.All(endMember => entityTypes.Contains(endMember.GetEntityType()))));
+                    it => (it.AssociationEndMembers.All(endMember => entityTypes.Contains(endMember.GetEntityType())))).ToList();
 
             //filter foreign key association sets to the sets that are 1:1 and affecting this wrapper.
             var oneToOneForeignKeyAssociationSetsForThisWrapper =
