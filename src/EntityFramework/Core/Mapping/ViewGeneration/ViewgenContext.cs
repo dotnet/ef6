@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -126,30 +127,51 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private void CreateConstraintsForForeignKeyAssociationsAffectingThisWarapper(
             FragmentQueryKB rightKB, MemberDomainMap rightDomainMap)
         {
-            //First find the entity types of the sets in these cell wrappers.
-            var entityTypes = m_cellWrappers.Select(it => it.RightExtent).OfType<EntitySet>().Select(it => it.ElementType);
-            //Get all the foreign key association sets in these entity sets
-            var allForeignKeyAssociationSets =
-                m_entityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>().Where(it => it.ElementType.IsForeignKey);
-            //Find all the foreign key associations that have corresponding sets
-            var oneToOneForeignKeyAssociationsForThisWrapper = allForeignKeyAssociationSets.Select(it => it.ElementType);
-            //Find all the 1:1 associations from the above list
-            oneToOneForeignKeyAssociationsForThisWrapper =
-                oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                    it => (it.AssociationEndMembers.All(endMember => endMember.RelationshipMultiplicity == RelationshipMultiplicity.One)));
-            //Filter the 1:1 foreign key associations to the ones relating the sets used in these cell wrappers.
-            oneToOneForeignKeyAssociationsForThisWrapper =
-                oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                    it => (it.AssociationEndMembers.All(endMember => entityTypes.Contains(endMember.GetEntityType()))));
+            var oneToOneForeignKeyAssociationSetsForThisWrapper
+                = new OneToOneFkAssociationsForEntitiesFilter()
+                    .Filter(
+                        m_cellWrappers.Select(it => it.RightExtent).OfType<EntitySet>().Select(it => it.ElementType),
+                        m_entityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>());
 
-            //filter foreign key association sets to the sets that are 1:1 and affecting this wrapper.
-            var oneToOneForeignKeyAssociationSetsForThisWrapper =
-                allForeignKeyAssociationSets.Where(it => oneToOneForeignKeyAssociationsForThisWrapper.Contains(it.ElementType));
-
-            //Collect the facts for the foreign key association sets that are 1:1 and affecting this wrapper
+            // Collect the facts for the foreign key association sets that are 1:1 and affecting this wrapper
             foreach (var assocSet in oneToOneForeignKeyAssociationSetsForThisWrapper)
             {
                 rightKB.CreateEquivalenceConstraintForOneToOneForeignKeyAssociation(assocSet, rightDomainMap);
+            }
+        }
+
+        internal class OneToOneFkAssociationsForEntitiesFilter
+        {
+            public IEnumerable<AssociationSet> Filter(
+                IEnumerable<EntityType> entityTypes, IEnumerable<AssociationSet> associationSets)
+            {
+                Contract.Requires(entityTypes != null);
+                Contract.Requires(associationSets != null);
+
+                //Get all the foreign key association sets in these entity sets
+                var allForeignKeyAssociationSets =
+                    associationSets.Where(
+                        it => it.ElementType.IsForeignKey);
+
+                //Find all the foreign key associations that have corresponding sets
+                var oneToOneForeignKeyAssociationsForThisWrapper = allForeignKeyAssociationSets.Select(it => it.ElementType);
+
+                //Find all the 1:1 associations from the above list
+                oneToOneForeignKeyAssociationsForThisWrapper =
+                    oneToOneForeignKeyAssociationsForThisWrapper.Where(
+                        it =>
+                        (it.AssociationEndMembers.All(endMember => endMember.RelationshipMultiplicity == RelationshipMultiplicity.One)));
+
+                //Filter the 1:1 foreign key associations to the ones relating the sets used in these cell wrappers.
+                oneToOneForeignKeyAssociationsForThisWrapper =
+                    oneToOneForeignKeyAssociationsForThisWrapper.Where(
+                        it => (it.AssociationEndMembers.All(endMember => entityTypes.Contains(endMember.GetEntityType()))));
+
+                //filter foreign key association sets to the sets that are 1:1 and affecting this wrapper.
+                var oneToOneForeignKeyAssociationSetsForThisWrapper =
+                    allForeignKeyAssociationSets.Where(it => oneToOneForeignKeyAssociationsForThisWrapper.Contains(it.ElementType));
+
+                return oneToOneForeignKeyAssociationSetsForThisWrapper;
             }
         }
 

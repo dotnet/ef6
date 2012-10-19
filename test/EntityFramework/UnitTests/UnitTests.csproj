@@ -144,6 +144,7 @@
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewgenContextTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationEndMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationTypeTests.cs" />
