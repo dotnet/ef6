@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         internal class OneToOneFkAssociationsForEntitiesFilter
         {
-            public IEnumerable<AssociationSet> Filter(
+            public virtual IEnumerable<AssociationSet> Filter(
                 IList<EntityType> entityTypes, IEnumerable<AssociationSet> associationSets)
             {
                 Contract.Requires(entityTypes != null);
