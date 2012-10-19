@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         #region Constructors
 
         internal ViewgenContext(
-            ViewTarget viewTarget, EntitySetBase extent, IEnumerable<Cell> extentCells,
+            ViewTarget viewTarget, EntitySetBase extent, IList<Cell> extentCells,
             CqlIdentifiers identifiers, ConfigViewGenerator config, MemberDomainMap queryDomainMap,
             MemberDomainMap updateDomainMap, StorageEntityContainerMapping entityContainerMapping)
         {
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             if (m_viewTarget == ViewTarget.UpdateView)
             {
-                CreateConstraintsForForeignKeyAssociationsAffectingThisWarapper(rightKB, rightDomainMap);
+                CreateConstraintsForForeignKeyAssociationsAffectingThisWrapper(rightKB, rightDomainMap);
             }
 
             m_rightFragmentQP = new FragmentQueryProcessor(rightKB);
@@ -124,13 +124,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// </summary>
         /// <param name="rightKB"> </param>
         /// <param name="rightDomainMap"> </param>
-        private void CreateConstraintsForForeignKeyAssociationsAffectingThisWarapper(
+        private void CreateConstraintsForForeignKeyAssociationsAffectingThisWrapper(
             FragmentQueryKB rightKB, MemberDomainMap rightDomainMap)
         {
             var oneToOneForeignKeyAssociationSetsForThisWrapper
                 = new OneToOneFkAssociationsForEntitiesFilter()
                     .Filter(
-                        m_cellWrappers.Select(it => it.RightExtent).OfType<EntitySet>().Select(it => it.ElementType),
+                        m_cellWrappers.Select(it => it.RightExtent).OfType<EntitySet>().Select(it => it.ElementType).ToList(),
                         m_entityContainerMapping.EdmEntityContainer.BaseEntitySets.OfType<AssociationSet>());
 
             // Collect the facts for the foreign key association sets that are 1:1 and affecting this wrapper
@@ -143,35 +143,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         internal class OneToOneFkAssociationsForEntitiesFilter
         {
             public IEnumerable<AssociationSet> Filter(
-                IEnumerable<EntityType> entityTypes, IEnumerable<AssociationSet> associationSets)
+                IList<EntityType> entityTypes, IEnumerable<AssociationSet> associationSets)
             {
                 Contract.Requires(entityTypes != null);
                 Contract.Requires(associationSets != null);
 
-                //Get all the foreign key association sets in these entity sets
-                var allForeignKeyAssociationSets =
-                    associationSets.Where(
-                        it => it.ElementType.IsForeignKey);
-
-                //Find all the foreign key associations that have corresponding sets
-                var oneToOneForeignKeyAssociationsForThisWrapper = allForeignKeyAssociationSets.Select(it => it.ElementType);
-
-                //Find all the 1:1 associations from the above list
-                oneToOneForeignKeyAssociationsForThisWrapper =
-                    oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                        it =>
-                        (it.AssociationEndMembers.All(endMember => endMember.RelationshipMultiplicity == RelationshipMultiplicity.One)));
-
-                //Filter the 1:1 foreign key associations to the ones relating the sets used in these cell wrappers.
-                oneToOneForeignKeyAssociationsForThisWrapper =
-                    oneToOneForeignKeyAssociationsForThisWrapper.Where(
-                        it => (it.AssociationEndMembers.All(endMember => entityTypes.Contains(endMember.GetEntityType()))));
-
-                //filter foreign key association sets to the sets that are 1:1 and affecting this wrapper.
-                var oneToOneForeignKeyAssociationSetsForThisWrapper =
-                    allForeignKeyAssociationSets.Where(it => oneToOneForeignKeyAssociationsForThisWrapper.Contains(it.ElementType));
-
-                return oneToOneForeignKeyAssociationSetsForThisWrapper;
+                return associationSets
+                    .Where(
+                        a => a.ElementType.IsForeignKey
+                             && a.ElementType.AssociationEndMembers
+                                    .All(
+                                        aem => (aem.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                                               && entityTypes.Contains(aem.GetEntityType())));
             }
         }
 
@@ -325,7 +308,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var fromVariable = BoolExpression.CreateLiteral(
                     new CellIdBoolean(m_identifiers, extentCellsList[i].CellNumber), m_memberMaps.LeftDomainMap);
                 var leftFragmentQuery = FragmentQuery.Create(fromVariable, left);
-                var rightFragmentQuery = FragmentQuery.Create(fromVariable, right);
+
                 if (viewTarget == ViewTarget.UpdateView)
                 {
                     leftFragmentQuery = m_leftFragmentQP.CreateDerivedViewBySelectingConstantAttributes(leftFragmentQuery)
