@@ -287,11 +287,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // the left cell wrappers for it extent (viewTarget indicates whether
         // the view is for querying or update purposes
         // Modifies m_cellWrappers to contain this list
-        private bool CreateLeftCellWrappers(IEnumerable<Cell> extentCells, ViewTarget viewTarget)
+        private bool CreateLeftCellWrappers(IList<Cell> extentCells, ViewTarget viewTarget)
         {
-            var extentCellsList = new List<Cell>(extentCells);
-            var alignedCells = AlignFields(extentCellsList, m_memberMaps.ProjectedSlotMap, viewTarget);
-            Debug.Assert(alignedCells.Count == extentCellsList.Count, "Cell counts disagree");
+            var alignedCells = AlignFields(extentCells, m_memberMaps.ProjectedSlotMap, viewTarget);
+            Debug.Assert(alignedCells.Count == extentCells.Count, "Cell counts disagree");
 
             // Go through all the cells and create cell wrappers that can be used for generating the view
             m_cellWrappers = new List<LeftCellWrapper>();
@@ -306,7 +305,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var attributes = left.GetNonNullSlots();
 
                 var fromVariable = BoolExpression.CreateLiteral(
-                    new CellIdBoolean(m_identifiers, extentCellsList[i].CellNumber), m_memberMaps.LeftDomainMap);
+                    new CellIdBoolean(m_identifiers, extentCells[i].CellNumber), m_memberMaps.LeftDomainMap);
                 var leftFragmentQuery = FragmentQuery.Create(fromVariable, left);
 
                 if (viewTarget == ViewTarget.UpdateView)
@@ -317,7 +316,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 var leftWrapper = new LeftCellWrapper(
                     m_viewTarget, attributes, leftFragmentQuery, left, right, m_memberMaps,
-                    extentCellsList[i]);
+                    extentCells[i]);
                 m_cellWrappers.Add(leftWrapper);
             }
             return true;

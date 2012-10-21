@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 associationType2.SetReadOnly();
 
-                var associationSet2 = new AssociationSet("AS1", associationType2);
+                var associationSet2 = new AssociationSet("AS2", associationType2);
 
                 var query
                     = filter.Filter(
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 associationType2.SetReadOnly();
 
-                var associationSet2 = new AssociationSet("AS1", associationType2);
+                var associationSet2 = new AssociationSet("AS2", associationType2);
 
                 var query
                     = filter.Filter(
@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 associationType2.SetReadOnly();
 
-                var associationSet2 = new AssociationSet("AS1", associationType2);
+                var associationSet2 = new AssociationSet("AS2", associationType2);
 
                 var query
                     = filter.Filter(
