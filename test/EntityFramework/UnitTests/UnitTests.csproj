@@ -213,6 +213,11 @@
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\LightweightConventionTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />

@@ -34,6 +34,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         }
 
         [Fact]
+        public void Add_lightweight_should_append_convention_on_to_internal_list()
+        {
+            var mockConvention1 = new Mock<IConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention1.Object });
+
+            conventionsConfiguration.Add(entities => { });
+
+            Assert.Equal(2, conventionsConfiguration.Conventions.Count());
+            Assert.IsType<LightweightConvention>(conventionsConfiguration.Conventions.Last());
+        }
+
+        [Fact]
         public void AddAfter_should_add_after_existing_convention()
         {
             var mockConvention = new Mock<IConvention>();
@@ -43,6 +55,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.Equal(2, conventionsConfiguration.Conventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.Conventions.Last());
+        }
+
+        [Fact]
+        public void AddAfter_lightweight_should_add_after_existing_convention()
+        {
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { new ConventionFixture() });
+
+            conventionsConfiguration.AddAfter<ConventionFixture>(entities => { });
+
+            Assert.Equal(2, conventionsConfiguration.Conventions.Count());
+            Assert.IsType<LightweightConvention>(conventionsConfiguration.Conventions.Last());
         }
 
         [Fact]
@@ -67,6 +90,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.Equal(2, conventionsConfiguration.Conventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.Conventions.First());
+        }
+
+        [Fact]
+        public void AddBefore_lightweight_should_add_before_existing_convention()
+        {
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { new ConventionFixture() });
+
+            conventionsConfiguration.AddBefore<ConventionFixture>(entities => { });
+
+            Assert.Equal(2, conventionsConfiguration.Conventions.Count());
+            Assert.IsType<LightweightConvention>(conventionsConfiguration.Conventions.First());
         }
 
         [Fact]

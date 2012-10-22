@@ -487,6 +487,11 @@
     <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
     <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\LightweightConvention.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
