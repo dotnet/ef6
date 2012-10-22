@@ -142,6 +142,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void TypeName_returns_edm_type_name()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var property = EdmProperty.Primitive("P", primitiveType);
+
+            Assert.Equal("Int32", property.TypeName);
+        }
+
+        [Fact]
         public void EnumType_returns_type_when_enum_property()
         {
             var enumType = new EnumType();
@@ -206,6 +216,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(42, property.Precision.Value);
             Assert.Equal(42, property.Scale.Value);
+
+            property.StoreGeneratedPattern = StoreGeneratedPattern.Identity;
+
+            Assert.Equal(StoreGeneratedPattern.Identity, property.StoreGeneratedPattern);
+        }
+
+        [Fact]
+        public void Can_set_primitive_type_and_new_type_usage_is_create_with_facets()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String);
+
+            var property = EdmProperty.Primitive("P", primitiveType);
+            property.StoreGeneratedPattern = StoreGeneratedPattern.Computed;
+            property.ConcurrencyMode = ConcurrencyMode.Fixed;
+            property.MaxLength = 42;
+
+            property.PrimitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary);
+
+            Assert.Equal(StoreGeneratedPattern.Computed, property.StoreGeneratedPattern);
+            Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
+            Assert.Equal(42, property.MaxLength);
         }
     }
 }

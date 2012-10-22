@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal override void Configure(
-            IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> propertyMappings,
+            IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                         {
                             if (IsRowVersion != null)
                             {
-                                pm.Item1.Column.Facets.MaxLength = null;
+                                pm.Item1.Column.MaxLength = null;
                             }
                         });
         }

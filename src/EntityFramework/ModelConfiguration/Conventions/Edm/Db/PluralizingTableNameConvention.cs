@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Globalization;
     using System.Linq;
@@ -11,20 +13,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the table name to be a pluralized version of the entity type name.
     /// </summary>
-    public class PluralizingTableNameConvention : IDbConvention<DbTableMetadata>
+    public class PluralizingTableNameConvention : IDbConvention<EntityType>
     {
         private static readonly PluralizationService _pluralizationService
             = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
 
-        public void Apply(DbTableMetadata dbDataModelItem, DbDatabaseMetadata database)
+        public void Apply(EntityType dbDataModelItem, EdmModel model)
         {
             if (dbDataModelItem.GetTableName() == null)
             {
-                var schema = database.Schemas.Single(s => s.Tables.Contains(dbDataModelItem));
+                var entitySet = model.GetEntitySet(dbDataModelItem);
 
-                dbDataModelItem.DatabaseIdentifier
-                    = schema.Tables.Except(new[] { dbDataModelItem })
-                        .UniquifyIdentifier(_pluralizationService.Pluralize(dbDataModelItem.DatabaseIdentifier));
+                entitySet.Table
+                    = model.GetEntitySets()
+                        .Where(es => es.Schema == entitySet.Schema)
+                        .Except(new[] { entitySet })
+                        .UniquifyIdentifier(_pluralizationService.Pluralize(entitySet.Table));
             }
         }
     }

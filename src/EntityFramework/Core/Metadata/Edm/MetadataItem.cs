@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Gets the currently assigned annotations.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual IList<DataModelAnnotation> Annotations
+        public virtual ICollection<DataModelAnnotation> Annotations
         {
             get { return annotationsList; }
         }

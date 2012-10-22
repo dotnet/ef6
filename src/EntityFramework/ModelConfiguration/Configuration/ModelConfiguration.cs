@@ -321,24 +321,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     providerManifest);
             }
 
-            ConfigureDefaultSchema(databaseMapping);
             ConfigureEntityTypes(databaseMapping, providerManifest);
             RemoveRedundantColumnConditions(databaseMapping);
             RemoveRedundantTables(databaseMapping);
             ConfigureTables(databaseMapping.Database);
+            ConfigureDefaultSchema(databaseMapping);
         }
 
         private void ConfigureDefaultSchema(DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
-            if (!string.IsNullOrWhiteSpace(DefaultSchema))
-            {
-                var defaultSchema = databaseMapping.Database.Schemas.Single();
-
-                defaultSchema.Name = DefaultSchema;
-                defaultSchema.DatabaseIdentifier = DefaultSchema;
-            }
+            databaseMapping.Database.GetEntitySets()
+                .Where(es => string.IsNullOrWhiteSpace(es.Schema))
+                .Each(es => es.Schema = DefaultSchema ?? DbDatabaseMetadataExtensions.DefaultSchema);
         }
 
         private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
@@ -376,7 +372,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest,
             EntityType entityType,
-            IEnumerable<EntityTypeConfiguration> sortedEntityConfigurations)
+            IList<EntityTypeConfiguration> sortedEntityConfigurations)
         {
             var derivedTypes = databaseMapping.Model.GetDerivedTypes(entityType).ToList();
             while (derivedTypes.Count > 0)
@@ -387,8 +383,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 // Configure the derived type if it is not abstract and is not otherwise configured
                 // if the type is not configured, then also run through that type's derived types
                 if (!currentType.Abstract
-                    &&
-                    !sortedEntityConfigurations.Any(etc => etc.ClrType == currentType.GetClrType()))
+                    && sortedEntityConfigurations.All(etc => etc.ClrType != currentType.GetClrType()))
                 {
                     // run through mapping configuration to make sure property mappings point to where the base type is now mapping them
                     EntityTypeConfiguration.ConfigureUnconfiguredType(databaseMapping, providerManifest, currentType);
@@ -397,24 +392,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private static void ConfigureTables(DbDatabaseMetadata database)
+        private static void ConfigureTables(EdmModel database)
         {
             Contract.Requires(database != null);
-            Contract.Assert(database.Schemas.Count() == 1);
 
-            var defaultSchema = database.Schemas.Single();
-
-            foreach (var table in defaultSchema.Tables.ToList())
+            foreach (var table in database.GetEntityTypes().ToList())
             {
-                ConfigureTable(database, defaultSchema, table);
+                ConfigureTable(database, table);
             }
         }
 
         private static void ConfigureTable(
-            DbDatabaseMetadata database, DbSchemaMetadata containingSchema, DbTableMetadata table)
+            EdmModel database, EntityType table)
         {
             Contract.Requires(database != null);
-            Contract.Requires(containingSchema != null);
             Contract.Requires(table != null);
 
             var tableName = table.GetTableName();
@@ -424,35 +415,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(tableName.Schema)
-                && !string.Equals(containingSchema.Name, tableName.Schema, StringComparison.Ordinal))
+            var entitySet = database.GetEntitySet(table);
+
+            if (!string.IsNullOrWhiteSpace(tableName.Schema))
             {
-                containingSchema
-                    = database.Schemas
-                        .SingleOrDefault(s => string.Equals(s.Name, tableName.Schema, StringComparison.Ordinal));
-
-                if (containingSchema == null)
-                {
-                    database.Schemas.Add(
-                        containingSchema = new DbSchemaMetadata
-                                               {
-                                                   Name = tableName.Schema,
-                                                   DatabaseIdentifier = tableName.Schema
-                                               });
-                }
-
-                database.RemoveTable(table);
-                containingSchema.Tables.Add(table);
+                entitySet.Schema = tableName.Schema;
             }
 
-            if (!string.Equals(table.DatabaseIdentifier, tableName.Name, StringComparison.Ordinal))
-            {
-                table.DatabaseIdentifier = tableName.Name;
-            }
+            entitySet.Table = tableName.Name;
         }
 
-        private IEnumerable<EntityTypeConfiguration> SortEntityConfigurationsByInheritance(
-            DbDatabaseMapping databaseMapping)
+        private IList<EntityTypeConfiguration> SortEntityConfigurationsByInheritance(DbDatabaseMapping databaseMapping)
         {
             var entityConfigurationsSortedByInheritance = new List<EntityTypeConfiguration>();
 
@@ -568,13 +541,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Contract.Assert(databaseMapping != null);
 
             var tables
-                = (from t in databaseMapping.Database.Schemas.SelectMany(s => s.Tables)
-                   where !databaseMapping.GetEntitySetMappings()
-                              .SelectMany(esm => esm.EntityTypeMappings)
-                              .SelectMany(etm => etm.TypeMappingFragments)
-                              .Any(etmf => etmf.Table == t)
-                         && !databaseMapping.GetAssociationSetMappings()
-                                 .Any(asm => asm.Table == t)
+                = (from t in databaseMapping.Database.GetEntityTypes()
+                   where databaseMapping.GetEntitySetMappings()
+                             .SelectMany(esm => esm.EntityTypeMappings)
+                             .SelectMany(etm => etm.TypeMappingFragments).All(etmf => etmf.Table != t)
+                         && databaseMapping.GetAssociationSetMappings().All(asm => asm.Table != t)
                    select t).ToList();
 
             tables.Each(
@@ -587,7 +558,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                             throw Error.OrphanedConfiguredTableDetected(tableName);
                         }
 
-                        databaseMapping.Database.RemoveTable(t);
+                        databaseMapping.Database.RemoveEntityType(t);
                     });
         }
 

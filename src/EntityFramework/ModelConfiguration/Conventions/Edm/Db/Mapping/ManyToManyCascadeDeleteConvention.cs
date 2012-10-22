@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 .Where(
                     asm => asm.AssociationSet.ElementType.IsManyToMany()
                            && !asm.AssociationSet.ElementType.IsSelfReferencing())
-                .SelectMany(asm => asm.Table.ForeignKeyConstraints)
+                .SelectMany(asm => asm.Table.ForeignKeyBuilders)
                 .Each(fk => fk.DeleteAction = OperationAction.Cascade);
         }
     }

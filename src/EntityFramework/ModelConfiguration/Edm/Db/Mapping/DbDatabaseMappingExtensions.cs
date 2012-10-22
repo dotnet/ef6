@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     internal static class DbDatabaseMappingExtensions
     {
         public static DbDatabaseMapping Initialize(
-            this DbDatabaseMapping databaseMapping, EdmModel model, DbDatabaseMetadata database)
+            this DbDatabaseMapping databaseMapping, EdmModel model, EdmModel database)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(databaseMapping != null);
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> GetComplexPropertyMappings(
+        public static IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> GetComplexPropertyMappings(
             this DbDatabaseMapping databaseMapping, Type complexType)
         {
             Contract.Requires(databaseMapping != null);

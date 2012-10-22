@@ -21,5 +21,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("Foo", entitySetBase.Name);
         }
+
+        [Fact]
+        public void Can_set_and_get_table()
+        {
+            var entitySetBase
+                = new TestEntitySetBase
+                {
+                    Table = "Foo"
+                };
+
+            Assert.Equal("Foo", entitySetBase.Table);
+        }
+
+        [Fact]
+        public void Can_set_and_get_schema()
+        {
+            var entitySetBase
+                = new TestEntitySetBase
+                {
+                    Schema = "Foo"
+                };
+
+            Assert.Equal("Foo", entitySetBase.Schema);
+        }
     }
 }

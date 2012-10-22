@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.Edm.Common
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+
     /// <summary>
     /// </summary>
     [Serializable]
-    public class DataModelErrorEventArgs : DataModelEventArgs
+    public class DataModelErrorEventArgs : EventArgs
     {
         /// <summary>
         ///     Gets an optional value indicating which property of the source item caused the event to be raised.
@@ -21,5 +23,17 @@ namespace System.Data.Entity.Edm.Common
         ///     Gets an optional descriptive message the describes the error that is being raised.
         /// </summary>
         public string ErrorMessage { get; internal set; }
+
+        /// <summary>
+        ///     Gets a value indicating the <see cref="DataModelItem" /> that caused the event to be raised.
+        /// </summary>
+        public IMetadataItem Item
+        {
+            get { return _item; }
+            set { _item = value; }
+        }
+
+        [NonSerialized]
+        private IMetadataItem _item;
     }
 }

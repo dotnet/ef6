@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -15,18 +16,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         private const string ConditionOnlyFragmentAnnotation = "ConditionOnlyFragment";
         private const string UnmappedPropertiesFragmentAnnotation = "UnmappedPropertiesFragment";
 
-        public static DbTableColumnMetadata GetDefaultDiscriminator(
+        public static EdmProperty GetDefaultDiscriminator(
             this DbEntityTypeMappingFragment entityTypeMapppingFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
             return
-                (DbTableColumnMetadata)
+                (EdmProperty)
                 entityTypeMapppingFragment.Annotations.GetAnnotation(DefaultDiscriminatorAnnotation);
         }
 
         public static void SetDefaultDiscriminator(
-            this DbEntityTypeMappingFragment entityTypeMappingFragment, DbTableColumnMetadata discriminator)
+            this DbEntityTypeMappingFragment entityTypeMappingFragment, EdmProperty discriminator)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
@@ -51,10 +52,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             {
                 var table = entityTypeMappingFragment.Table;
 
-                table.Columns
+                table.Properties
                     .Where(c => c.Name.Equals(discriminatorColumn.Name, StringComparison.Ordinal))
                     .ToList()
-                    .Each(column => table.Columns.Remove(column));
+                    .Each(table.RemoveMember);
             }
 
             if (entitySetMapping != null && entityTypeMappingFragment.IsConditionOnlyFragment()
@@ -72,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             }
         }
 
-        public static DbTableColumnMetadata RemoveDefaultDiscriminatorCondition(
+        public static EdmProperty RemoveDefaultDiscriminatorCondition(
             this DbEntityTypeMappingFragment entityTypeMappingFragment)
         {
             Contract.Requires(entityTypeMappingFragment != null);
@@ -92,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         public static void AddDiscriminatorCondition(
             this DbEntityTypeMappingFragment entityTypeMapppingFragment,
-            DbTableColumnMetadata discriminatorColumn,
+            EdmProperty discriminatorColumn,
             object value)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
@@ -111,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         public static void AddNullabilityCondition(
             this DbEntityTypeMappingFragment entityTypeMapppingFragment,
-            DbTableColumnMetadata column,
+            EdmProperty column,
             bool isNull)
         {
             Contract.Requires(entityTypeMapppingFragment != null);

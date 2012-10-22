@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -18,14 +17,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata().Initialize());
+                    .Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
 
-            var foreignKeyConstraint = new DbForeignKeyConstraintMetadata();
+            var foreignKeyConstraint
+                = new ForeignKeyBuilder(databaseMapping.Database, "FK")
+                      {
+                          PrincipalTable
+                              = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace)
+                      };
 
             Assert.Equal(OperationAction.None, foreignKeyConstraint.DeleteAction);
 
-            var table = new DbTableMetadata();
-            table.ForeignKeyConstraints.Add(foreignKeyConstraint);
+            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            table.AddForeignKey(foreignKeyConstraint);
 
             var associationType = new AssociationType();
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType());

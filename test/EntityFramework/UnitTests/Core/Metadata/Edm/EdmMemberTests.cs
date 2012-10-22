@@ -6,25 +6,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     public class EdmMemberTests
     {
-        private class TestEdmMember : EdmMember
+        [Fact]
+        public void Can_set_name_property()
         {
-            public override BuiltInTypeKind BuiltInTypeKind
-            {
-                get { throw new NotImplementedException(); }
-            }
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var property = EdmProperty.Primitive("P", primitiveType);
+
+            property.Name = "Foo";
+
+            Assert.Equal("Foo", property.Name);
         }
 
         [Fact]
-        public void Can_set_type_usage()
+        public void IsPrimaryKeyColumn_should_return_true_when_parent_key_members_contains_member()
         {
-            var member = new TestEdmMember();
-            var typeUsage = new TypeUsage();
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            Assert.Null(member.TypeUsage);
+            var property = EdmProperty.Primitive("P", primitiveType);
 
-            member.TypeUsage = typeUsage;
+            Assert.False(property.IsPrimaryKeyColumn);
 
-            Assert.Same(typeUsage, member.TypeUsage);
+            new EntityType().AddKeyMember(property);
+
+            Assert.True(property.IsPrimaryKeyColumn);
         }
     }
 }

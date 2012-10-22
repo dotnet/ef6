@@ -180,11 +180,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration
                       };
 
-            var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
+            var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new EdmModel());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
                 new AssociationSet("AS", new AssociationType()));
-            associationSetMapping.Table = new DbTableMetadata();
+            associationSetMapping.Table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
 
             associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());

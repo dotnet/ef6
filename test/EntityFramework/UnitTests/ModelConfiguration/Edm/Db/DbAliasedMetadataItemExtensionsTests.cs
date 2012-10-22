@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
     public sealed class DbAliasedMetadataItemExtensionsTests
@@ -11,23 +11,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         [Fact]
         public void UniquifyName_should_assign_unique_names()
         {
-            var namedItems = new List<DbAliasedMetadataItem>();
+            var namedItems = new List<EntitySet>();
 
             Assert.Equal("Foo", namedItems.UniquifyIdentifier("Foo"));
 
-            namedItems.Add(
-                new DbTableMetadata
-                    {
-                        DatabaseIdentifier = "Foo"
-                    });
+            namedItems.Add(new EntitySet("ES1", null, "Foo", null, new EntityType()));
 
             Assert.Equal("Foo1", namedItems.UniquifyIdentifier("Foo"));
 
-            namedItems.Add(
-                new DbTableMetadata
-                    {
-                        DatabaseIdentifier = "Foo1"
-                    });
+            namedItems.Add(new EntitySet("ES2", null, "Foo1", null, new EntityType()));
 
             Assert.Equal("Foo2", namedItems.UniquifyIdentifier("Foo"));
         }

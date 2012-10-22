@@ -219,6 +219,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Util.ThrowIfReadOnly(this);
 
             _baseEntitySets.Source.Remove(entitySetBase);
+            entitySetBase.ChangeEntityContainerWithoutCollectionFixup(null);
         }
 
         internal void AddFunctionImport(EdmFunction function)

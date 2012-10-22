@@ -523,14 +523,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             if (entityTypeMapping != null)
             {
                 VerifyAllCSpacePropertiesAreMapped(
-                    databaseMapping.GetEntityTypeMappings(entityType),
+                    databaseMapping.GetEntityTypeMappings(entityType).ToList(),
                     entityTypeMapping.EntityType.DeclaredProperties,
                     new List<EdmProperty>());
             }
 
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureAssociationMappings(databaseMapping, entityType);
-            ConfigureDependentKeys(databaseMapping);
+            ConfigureDependentKeys(databaseMapping, providerManifest);
         }
 
         private void ConfigurePropertyMappings(
@@ -584,38 +584,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private static void ConfigureDependentKeys(DbDatabaseMapping databaseMapping)
+        private static void ConfigureDependentKeys(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
         {
             Contract.Requires(databaseMapping != null);
+            Contract.Requires(providerManifest != null);
 
-            var defaultSchema = databaseMapping.Database.Schemas.Single();
-
-            foreach (var foreignKeyConstraint in defaultSchema.Tables.SelectMany(t => t.ForeignKeyConstraints))
+            foreach (var foreignKeyConstraint in databaseMapping.Database.GetEntityTypes().SelectMany(t => t.ForeignKeyBuilders))
             {
                 foreignKeyConstraint
                     .DependentColumns
                     .Each(
                         (c, i) =>
-                        {
-                            var primitivePropertyConfiguration =
-                                c.GetConfiguration() as PrimitivePropertyConfiguration;
-
-                            if ((primitivePropertyConfiguration != null)
-                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                return;
-                            }
+                                var primitivePropertyConfiguration =
+                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
 
-                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
+                                if ((primitivePropertyConfiguration != null)
+                                    && (primitivePropertyConfiguration.ColumnType != null))
+                                {
+                                    return;
+                                }
 
-                            c.TypeName = principalColumn.TypeName;
-                            c.Facets.CopyFrom(principalColumn.Facets);
-                        });
+                                var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
+
+                                c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
+
+                                c.CopyFrom(principalColumn);
+                            });
             }
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(
-            IEnumerable<DbEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
+            ICollection<DbEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
             IList<EdmProperty> propertyPath)
         {
             Contract.Requires(entityTypeMappings != null);

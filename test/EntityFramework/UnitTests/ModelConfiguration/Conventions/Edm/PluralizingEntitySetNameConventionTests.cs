@@ -46,6 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal("Cats1", entitySet.Name);
         }
 
+        // TODO: METADATA
 //        [Fact(Skip = "Need to figure out name duplication in core Metadata")]
 //        public void Apply_should_uniquify_names_multiple()
 //        {

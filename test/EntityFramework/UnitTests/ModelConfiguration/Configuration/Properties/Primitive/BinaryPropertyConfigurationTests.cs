@@ -29,14 +29,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata
-                                                          {
-                                                              Facets = new DbPrimitiveTypeFacets()
-                                                          }
+                                             Column = new EdmProperty("C")
                                          };
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
             Assert.Equal("rowversion", edmPropertyMapping.Column.TypeName);
         }
 

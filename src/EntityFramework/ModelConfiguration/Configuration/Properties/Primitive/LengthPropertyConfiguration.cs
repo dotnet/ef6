@@ -66,16 +66,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
+        internal override void Configure(EdmProperty column, FacetDescription facetDescription)
         {
             switch (facetDescription.FacetName)
             {
                 case SsdlConstants.Attribute_FixedLength:
-                    facets.IsFixedLength = facetDescription.IsConstant ? null : IsFixedLength ?? facets.IsFixedLength;
+                    column.IsFixedLength = facetDescription.IsConstant ? null : IsFixedLength ?? column.IsFixedLength;
                     break;
                 case SsdlConstants.Attribute_MaxLength:
-                    facets.MaxLength = facetDescription.IsConstant ? null : MaxLength ?? facets.MaxLength;
-                    facets.IsMaxLength = facetDescription.IsConstant ? null : IsMaxLength ?? facets.IsMaxLength;
+                    column.MaxLength = facetDescription.IsConstant ? null : MaxLength ?? column.MaxLength;
+                    column.IsMaxLength = !facetDescription.IsConstant && (IsMaxLength ?? column.IsMaxLength);
                     break;
             }
         }

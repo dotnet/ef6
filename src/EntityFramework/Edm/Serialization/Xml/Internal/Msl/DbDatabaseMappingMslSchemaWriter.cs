@@ -199,7 +199,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             }
         }
 
-        private void WriteScalarPropertyElement(EdmProperty property, DbTableColumnMetadata column)
+        private void WriteScalarPropertyElement(EdmProperty property, EdmProperty column)
         {
             _xmlWriter.WriteStartElement(MslConstants.Element_ScalarProperty);
             _xmlWriter.WriteAttributeString(MslConstants.Attribute_Name, property.Name);

@@ -59,17 +59,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
+        internal override void Configure(EdmProperty column, FacetDescription facetDescription)
         {
-            base.Configure(facets, facetDescription);
+            base.Configure(column, facetDescription);
 
             switch (facetDescription.FacetName)
             {
                 case SsdlConstants.Attribute_Precision:
-                    facets.Precision = facetDescription.IsConstant ? null : Precision ?? facets.Precision;
+                    column.Precision = facetDescription.IsConstant ? null : Precision ?? column.Precision;
                     break;
                 case SsdlConstants.Attribute_Scale:
-                    facets.Scale = facetDescription.IsConstant ? null : Scale ?? facets.Scale;
+                    column.Scale = facetDescription.IsConstant ? null : Scale ?? column.Scale;
                     break;
             }
         }

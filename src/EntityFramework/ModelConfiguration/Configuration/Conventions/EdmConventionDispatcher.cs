@@ -13,14 +13,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             private readonly IConvention _convention;
             private readonly EdmModel _model;
+            private readonly DataSpace _dataSpace;
 
-            public EdmConventionDispatcher(IConvention convention, EdmModel model)
+            public EdmConventionDispatcher(IConvention convention, EdmModel model, DataSpace dataSpace = DataSpace.CSpace)
             {
                 Contract.Requires(convention != null);
                 Contract.Requires(model != null);
 
                 _convention = convention;
                 _model = model;
+                _dataSpace = dataSpace;
             }
 
             public void Dispatch()
@@ -31,21 +33,45 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             private void Dispatch<TEdmDataModelItem>(TEdmDataModelItem item)
                 where TEdmDataModelItem : MetadataItem
             {
-                var convention = _convention as IEdmConvention<TEdmDataModelItem>;
-
-                if (convention != null)
+                if (_dataSpace == DataSpace.CSpace)
                 {
-                    convention.Apply(item, _model);
+                    var convention = _convention as IEdmConvention<TEdmDataModelItem>;
+
+                    if (convention != null)
+                    {
+                        convention.Apply(item, _model);
+                    }
+                }
+                else if (_dataSpace == DataSpace.SSpace)
+                {
+                    var convention = _convention as IDbConvention<TEdmDataModelItem>;
+
+                    if (convention != null)
+                    {
+                        convention.Apply(item, _model);
+                    }
                 }
             }
 
             protected override void VisitEdmModel(EdmModel item)
             {
-                var convention = _convention as IEdmConvention;
-
-                if (convention != null)
+                if (_dataSpace == DataSpace.CSpace)
                 {
-                    convention.Apply(item);
+                    var convention = _convention as IEdmConvention;
+
+                    if (convention != null)
+                    {
+                        convention.Apply(item);
+                    }
+                }
+                else if (_dataSpace == DataSpace.SSpace)
+                {
+                    var convention = _convention as IDbConvention;
+
+                    if (convention != null)
+                    {
+                        convention.Apply(item);
+                    }
                 }
 
                 base.VisitEdmModel(item);
@@ -96,14 +122,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmEntityContainer(item);
             }
 
-            protected override void VisitEdmEntitySet(EntitySet item)
+            public override void VisitEdmEntitySet(EntitySet item)
             {
                 Dispatch(item);
 
                 base.VisitEdmEntitySet(item);
             }
 
-            protected override void VisitEdmAssociationSet(AssociationSet item)
+            public override void VisitEdmAssociationSet(AssociationSet item)
             {
                 Dispatch(item);
 
@@ -131,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitComplexType(item);
             }
 
-            protected override void VisitEdmEntityType(EntityType item)
+            public override void VisitEdmEntityType(EntityType item)
             {
                 Dispatch(item);
 
@@ -144,7 +170,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
             }
 
-            protected override void VisitEdmAssociationType(AssociationType item)
+            public override void VisitEdmAssociationType(AssociationType item)
             {
                 Dispatch(item);
 

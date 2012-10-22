@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Common.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using Xunit;
 
@@ -11,23 +12,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common.UnitTests
         [Fact]
         public void UniquifyName_should_assign_unique_names()
         {
-            var namedItems = new List<DbNamedMetadataItem>();
+            var namedItems = new List<EdmProperty>();
 
             Assert.Equal("Foo", namedItems.UniquifyName("Foo"));
 
-            namedItems.Add(
-                new DbTableColumnMetadata
-                    {
-                        Name = "Foo"
-                    });
+            namedItems.Add(new EdmProperty("Foo"));
 
             Assert.Equal("Foo1", namedItems.UniquifyName("Foo"));
 
-            namedItems.Add(
-                new DbTableColumnMetadata
-                    {
-                        Name = "Foo1"
-                    });
+            namedItems.Add(new EdmProperty("Foo1"));
 
             Assert.Equal("Foo2", namedItems.UniquifyName("Foo"));
         }

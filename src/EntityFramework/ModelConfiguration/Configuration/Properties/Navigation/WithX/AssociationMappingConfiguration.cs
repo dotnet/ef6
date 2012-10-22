@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Diagnostics.Contracts;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         internal abstract void Configure(
             DbAssociationSetMapping associationSetMapping,
-            DbDatabaseMetadata database,
+            EdmModel database,
             PropertyInfo navigationProperty);
 
         internal abstract AssociationMappingConfiguration Clone();
@@ -28,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             internal override void Configure(
                 DbAssociationSetMapping associationSetMapping,
-                DbDatabaseMetadata database,
+                EdmModel database,
                 PropertyInfo navigationProperty)
             {
                 Contract.Requires(associationSetMapping != null);

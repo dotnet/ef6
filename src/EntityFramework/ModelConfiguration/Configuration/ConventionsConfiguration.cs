@@ -240,13 +240,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyDatabase(DbDatabaseMetadata database)
+        internal void ApplyDatabase(EdmModel database)
         {
             Contract.Requires(database != null);
 
             foreach (var convention in _conventions)
             {
-                new DatabaseConventionDispatcher(convention, database).Dispatch();
+                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
             }
         }
 
@@ -369,7 +369,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyPluralizingTableNameConvention(DbDatabaseMetadata database)
+        internal void ApplyPluralizingTableNameConvention(EdmModel database)
         {
             if (database == null)
             {
@@ -378,7 +378,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var convention in _conventions.Where(c => c is PluralizingTableNameConvention))
             {
-                new DatabaseConventionDispatcher(convention, database).Dispatch();
+                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
             }
         }
 

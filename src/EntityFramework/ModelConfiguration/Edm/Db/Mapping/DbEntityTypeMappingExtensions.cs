@@ -43,12 +43,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .Single(p => p.PropertyPath.SequenceEqual(propertyPath));
         }
 
-        public static DbTableMetadata GetPrimaryTable(this DbEntityTypeMapping entityTypeMapping)
+        public static EntityType GetPrimaryTable(this DbEntityTypeMapping entityTypeMapping)
         {
             return entityTypeMapping.TypeMappingFragments.First().Table;
         }
 
-        public static bool UsesOtherTables(this DbEntityTypeMapping entityTypeMapping, DbTableMetadata table)
+        public static bool UsesOtherTables(this DbEntityTypeMapping entityTypeMapping, EntityType table)
         {
             return entityTypeMapping.TypeMappingFragments.Any(f => f.Table != table);
         }

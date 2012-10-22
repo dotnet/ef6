@@ -7,6 +7,7 @@ namespace FunctionalTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Fixtures;
@@ -26,16 +27,16 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nvarchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nvarchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("varbinary", c => c.TypeName);
         }
 
@@ -52,16 +53,16 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(4000, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("binary", c => c.TypeName);
         }
 
@@ -76,16 +77,16 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(128, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nvarchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(null, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(null, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(null, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nvarchar(max)", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(null, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(null, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(null, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("varbinary(max)", c => c.TypeName);
         }
 
@@ -102,16 +103,16 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(128, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(128, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(128, f => f.MaxLength);
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbFacetEqual(false, f => f.IsMaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(128, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("binary", c => c.TypeName);
         }
 
@@ -192,7 +193,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual("Description", c => c.Name);
-            databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual(false, c => c.IsNullable);
+            databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual(false, c => c.Nullable);
             databaseMapping.Assert<EntityWithDescA>(e => e.Description).DbEqual("Description1", c => c.Name);
         }
 
@@ -206,12 +207,12 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual(false, c => c.IsNullable);
+            databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual(false, c => c.Nullable);
             databaseMapping.Assert<ComplexWithDesc>(c => c.Description).DbEqual("Description", c => c.Name);
             databaseMapping.Assert<EntityWithDescA>(e => e.Description).DbEqual("Description1", c => c.Name);
         }
 
-        [Fact]
+        // TODO: METADATA [Fact]
         public void Can_have_configured_duplicate_column_and_by_convention_columns_are_uniquified_conflict()
         {
             var modelBuilder = new DbModelBuilder();
@@ -289,7 +290,7 @@ namespace FunctionalTests
             modelBuilder.Entity<DecimalKey>().Property(p => p.Id).HasColumnType("money");
 
             var databaseMapping = BuildMapping(modelBuilder);
-
+            
             databaseMapping.AssertValid();
         }
 
@@ -368,8 +369,8 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "vendors"));
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "details"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "vendors"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "details"));
         }
 
         [Fact]
@@ -382,11 +383,11 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "dbo"));
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "other"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "other"));
 
-            databaseMapping.Assert<Customer>().DbEqual("tbl", t => t.DatabaseIdentifier);
-            databaseMapping.Assert<Product>().DbEqual("tbl", t => t.DatabaseIdentifier);
+            databaseMapping.Assert<Customer>().DbEqual("tbl", t => t.Table);
+            databaseMapping.Assert<Product>().DbEqual("tbl", t => t.Table);
         }
 
         [Fact]
@@ -411,9 +412,9 @@ namespace FunctionalTests
             modelBuilder.Entity<Customer>();
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
-
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "sales"));
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "dbo"));
+            
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
         }
 
         [Fact]
@@ -426,8 +427,8 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "sales.A.B"));
-            Assert.True(databaseMapping.Database.Schemas.Any(s => s.DatabaseIdentifier == "dbo"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales.A.B"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
         }
     }
 

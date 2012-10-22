@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_table_when_table_configured()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var table = database.AddTable("OriginalName");
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             associationSetMapping.Table = table;
@@ -40,9 +40,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_columns_when_left_keys_configured()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
-            var column = new DbTableColumnMetadata();
+            var column = new EdmProperty("C");
             associationSetMapping.SourceEndMapping.PropertyMappings.Add(
                 new DbEdmPropertyMapping
                     {
@@ -67,9 +67,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_columns_when_right_keys_configured()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
-            var column = new DbTableColumnMetadata();
+            var column = new EdmProperty("C");
             associationSetMapping.TargetEndMapping.PropertyMappings.Add(
                 new DbEdmPropertyMapping
                     {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_throw_when_incorrect_number_of_columns_configured()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
 
             var manyToManyAssociationMappingConfiguration

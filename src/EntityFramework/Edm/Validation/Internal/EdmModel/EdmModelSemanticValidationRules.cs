@@ -8,6 +8,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
+    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;

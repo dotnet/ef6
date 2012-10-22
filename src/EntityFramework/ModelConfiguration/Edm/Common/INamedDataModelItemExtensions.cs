@@ -24,5 +24,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 
             return uniqueName;
         }
+
+        public static bool TryGetByName(this IEnumerable<DataModelAnnotation> list, string itemName, out DataModelAnnotation result)
+        {
+            foreach (var listItem in list)
+            {
+                if (listItem != null
+                    && string.Equals(listItem.Name, itemName, StringComparison.Ordinal))
+                {
+                    result = listItem;
+                    return true;
+                }
+            }
+            result = default(DataModelAnnotation);
+            return false;
+        }
+
+        internal static string GetQualifiedName(this INamedDataModelItem item, string qualifiedPrefix)
+        {
+            return qualifiedPrefix + "." + item.Name;
+        }
     }
 }

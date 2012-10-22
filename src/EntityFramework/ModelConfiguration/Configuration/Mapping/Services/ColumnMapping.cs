@@ -13,17 +13,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     [DebuggerDisplay("{Column.Name}")]
     internal class ColumnMapping
     {
-        private readonly DbTableColumnMetadata _column;
+        private readonly EdmProperty _column;
         private readonly List<PropertyMappingSpecification> _propertyMappings;
 
-        public ColumnMapping(DbTableColumnMetadata column)
+        public ColumnMapping(EdmProperty column)
         {
             Contract.Requires(column != null);
             _column = column;
             _propertyMappings = new List<PropertyMappingSpecification>();
         }
 
-        public DbTableColumnMetadata Column
+        public EdmProperty Column
         {
             get { return _column; }
         }

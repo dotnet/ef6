@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Resources;
@@ -30,6 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal string Discriminator { get; set; }
         internal object Value { get; set; }
+
         private PrimitivePropertyConfiguration _configuration;
 
         internal ValueConditionConfiguration(EntityMappingConfiguration entityMapConfiguration, string discriminator)
@@ -38,6 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Contract.Requires(!string.IsNullOrWhiteSpace(discriminator));
 
             _entityMappingConfiguration = entityMapConfiguration;
+
             Discriminator = discriminator;
         }
 
@@ -49,7 +51,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Discriminator = source.Discriminator;
             Value = source.Value;
-            _configuration = source._configuration == null ? null : source._configuration.Clone();
+
+            _configuration
+                = (source._configuration == null)
+                      ? null
+                      : source._configuration.Clone();
         }
 
         internal virtual ValueConditionConfiguration Clone(EntityMappingConfiguration owner)
@@ -63,14 +69,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 _configuration = new T();
             }
-            else if (!typeof(T).IsAssignableFrom(_configuration.GetType()))
+            else if (!(_configuration is T))
             {
                 var newConfig = new T();
+
                 newConfig.CopyFrom(_configuration);
+
                 _configuration = newConfig;
             }
-            _configuration.OverridableConfigurationParts =
-                OverridableConfigurationParts.None;
+
+            _configuration.OverridableConfigurationParts = OverridableConfigurationParts.None;
+
             return (T)_configuration;
         }
 
@@ -119,7 +128,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public StringColumnConfiguration HasValue(string value)
         {
             Value = value;
+
             _entityMappingConfiguration.AddValueCondition(this);
+
             return
                 new StringColumnConfiguration(
                     GetOrCreateConfiguration<Properties.Primitive.StringPropertyConfiguration>());
@@ -128,6 +139,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void ValidateValueType(object value)
         {
             PrimitiveType edmType;
+
             if (value != null
                 && !value.GetType().IsPrimitiveType(out edmType))
             {
@@ -136,26 +148,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal static bool AnyBaseTypeToTableWithoutColumnCondition(
-            DbDatabaseMapping databaseMapping, EntityType entityType, DbTableMetadata table,
-            DbTableColumnMetadata column)
+            DbDatabaseMapping databaseMapping, EntityType entityType, EntityType table,
+            EdmProperty column)
         {
             var baseType = entityType.BaseType;
+
             while (baseType != null)
             {
                 if (!baseType.Abstract)
                 {
-                    var baseTypeTableFragments = databaseMapping.GetEntityTypeMappings((EntityType)baseType)
-                        .SelectMany(etm => etm.TypeMappingFragments)
-                        .Where(tmf => tmf.Table == table);
+                    var baseTypeTableFragments
+                        = databaseMapping.GetEntityTypeMappings((EntityType)baseType)
+                            .SelectMany(etm => etm.TypeMappingFragments)
+                            .Where(tmf => tmf.Table == table)
+                            .ToList();
+
                     if (baseTypeTableFragments.Any()
-                        && !baseTypeTableFragments.SelectMany(etmf => etmf.ColumnConditions)
-                                .Any(cc => cc.Column == column))
+                        && baseTypeTableFragments
+                               .SelectMany(etmf => etmf.ColumnConditions)
+                               .All(cc => cc.Column != column))
                     {
                         return true;
                     }
                 }
+
                 baseType = baseType.BaseType;
             }
+
             return false;
         }
 
@@ -168,61 +187,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Contract.Requires(fragment != null);
             Contract.Requires(providerManifest != null);
 
-            var discriminatorColumn = TablePrimitiveOperations.IncludeColumn(fragment.Table, Discriminator, true);
+            var discriminatorColumn
+                = fragment.Table.Properties
+                    .SingleOrDefault(c => string.Equals(c.Name, Discriminator, StringComparison.Ordinal));
 
-            Contract.Assert(
-                discriminatorColumn.TypeName == null || !string.IsNullOrWhiteSpace(discriminatorColumn.TypeName));
+            if (discriminatorColumn == null)
+            {
+                var typeUsage
+                    = providerManifest.GetStoreType(DatabaseMappingGenerator.DiscriminatorTypeUsage);
+
+                discriminatorColumn
+                    = new EdmProperty(Discriminator, typeUsage)
+                          {
+                              Nullable = false
+                          };
+
+                TablePrimitiveOperations.AddColumn(fragment.Table, discriminatorColumn);
+            }
 
             if (AnyBaseTypeToTableWithoutColumnCondition(
                 databaseMapping, entityType, fragment.Table, discriminatorColumn))
             {
-                discriminatorColumn.IsNullable = true;
+                discriminatorColumn.Nullable = true;
             }
 
-            var existingConfiguration = discriminatorColumn.GetConfiguration()
-                                        as PrimitivePropertyConfiguration;
+            var existingConfiguration
+                = discriminatorColumn.GetConfiguration() as PrimitivePropertyConfiguration;
 
             if (Value != null)
             {
-                if ((existingConfiguration == null ||
-                     existingConfiguration.ColumnType == null)
-                    &&
-                    (_configuration == null ||
-                     _configuration.ColumnType == null))
-                {
-                    PrimitiveType primitiveType;
-                    Value.GetType().IsPrimitiveType(out primitiveType);
-
-                    string inferredTypeName;
-                    if (primitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
-                    {
-                        inferredTypeName = providerManifest.GetStoreType(
-                            TypeUsage.CreateStringTypeUsage(
-                                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
-                                isUnicode: true,
-                                isFixedLength: false,
-                                maxLength: DatabaseMappingGenerator.DiscriminatorLength)).EdmType.Name;
-
-                        discriminatorColumn.Facets.MaxLength = DatabaseMappingGenerator.DiscriminatorLength;
-                    }
-                    else
-                    {
-                        inferredTypeName =
-                            providerManifest.GetStoreTypeName(primitiveType.PrimitiveTypeKind);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(discriminatorColumn.TypeName)
-                        ||
-                        discriminatorColumn.TypeName.Equals(inferredTypeName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        discriminatorColumn.TypeName = inferredTypeName;
-                    }
-                    else
-                    {
-                        throw Error.ConflictingInferredColumnType(
-                            discriminatorColumn.Name, discriminatorColumn.TypeName, inferredTypeName);
-                    }
-                }
+                ConfigureColumnType(providerManifest, existingConfiguration, discriminatorColumn);
 
                 fragment.AddDiscriminatorCondition(discriminatorColumn, Value);
             }
@@ -230,37 +224,76 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 if (string.IsNullOrWhiteSpace(discriminatorColumn.TypeName))
                 {
-                    new DatabaseMappingGenerator(providerManifest).InitializeDefaultDiscriminatorColumn(
-                        discriminatorColumn);
+                    var typeUsage
+                        = providerManifest.GetStoreType(DatabaseMappingGenerator.DiscriminatorTypeUsage);
+
+                    discriminatorColumn.PrimitiveType = (PrimitiveType)typeUsage.EdmType;
+                    discriminatorColumn.MaxLength = DatabaseMappingGenerator.DiscriminatorMaxLength;
+                    discriminatorColumn.Nullable = false;
                 }
 
                 GetOrCreateConfiguration<PrimitivePropertyConfiguration>().IsNullable = true;
+
                 fragment.AddNullabilityCondition(discriminatorColumn, true);
             }
 
-            if (_configuration != null)
+            if (_configuration == null)
             {
-                if (existingConfiguration != null)
-                {
-                    string errorMessage;
-                    if ((existingConfiguration.OverridableConfigurationParts &
-                         OverridableConfigurationParts.OverridableInCSpace) !=
-                        OverridableConfigurationParts.OverridableInCSpace
-                        &&
-                        !existingConfiguration.IsCompatible(
-                            _configuration, inCSpace: true, errorMessage: out errorMessage))
-                    {
-                        throw Error.ConflictingColumnConfiguration(discriminatorColumn, fragment.Table, errorMessage);
-                    }
-                }
-
-                if (_configuration.IsNullable != null)
-                {
-                    discriminatorColumn.IsNullable = _configuration.IsNullable.Value;
-                }
-
-                _configuration.Configure(discriminatorColumn, fragment.Table, providerManifest);
+                return;
             }
+
+            if (existingConfiguration != null)
+            {
+                string errorMessage;
+                if ((existingConfiguration.OverridableConfigurationParts &
+                     OverridableConfigurationParts.OverridableInCSpace) !=
+                    OverridableConfigurationParts.OverridableInCSpace
+                    && !existingConfiguration.IsCompatible(
+                        _configuration, inCSpace: true, errorMessage: out errorMessage))
+                {
+                    throw Error.ConflictingColumnConfiguration(discriminatorColumn, fragment.Table, errorMessage);
+                }
+            }
+
+            if (_configuration.IsNullable != null)
+            {
+                discriminatorColumn.Nullable = _configuration.IsNullable.Value;
+            }
+
+            _configuration.Configure(discriminatorColumn, fragment.Table, providerManifest);
+        }
+
+        private void ConfigureColumnType(
+            DbProviderManifest providerManifest,
+            PrimitivePropertyConfiguration existingConfiguration,
+            EdmProperty discriminatorColumn)
+        {
+            if (((existingConfiguration != null)
+                 && existingConfiguration.ColumnType != null)
+                || ((_configuration != null)
+                    && (_configuration.ColumnType != null)))
+            {
+                return;
+            }
+
+            PrimitiveType primitiveType;
+
+            Value.GetType().IsPrimitiveType(out primitiveType);
+
+            var edmType
+                = (PrimitiveType)providerManifest.GetStoreType(
+                    (primitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                        ? DatabaseMappingGenerator.DiscriminatorTypeUsage
+                        : TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(primitiveType.PrimitiveTypeKind))).EdmType;
+
+            if ((existingConfiguration != null)
+                && !discriminatorColumn.TypeName.Equals(edmType.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                throw Error.ConflictingInferredColumnType(
+                    discriminatorColumn.Name, discriminatorColumn.TypeName, edmType.Name);
+            }
+
+            discriminatorColumn.PrimitiveType = edmType;
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

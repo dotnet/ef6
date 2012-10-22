@@ -164,7 +164,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal void Configure(
-            IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> propertyMappings,
+            IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {

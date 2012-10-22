@@ -2,102 +2,15 @@
 
 namespace System.Data.Entity.Edm.Internal
 {
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Text;
     using System.Text.RegularExpressions;
 
     internal static class EdmUtil
     {
-        internal static NotSupportedException NotSupported(string message)
-        {
-            return new NotSupportedException(message);
-        }
-
         internal static bool EqualsOrdinal(this string string1, string string2)
         {
             return string.Equals(string1, string2, StringComparison.Ordinal);
-        }
-
-        internal static bool TryGetPrimitiveTypeKindFromString(string value, out PrimitiveTypeKind typeKind)
-        {
-            Contract.Assert(value != null, "Ensure value is non-null before calling PrimitiveTypeKindFromString");
-
-            switch (value)
-            {
-                case "Binary":
-                    typeKind = PrimitiveTypeKind.Binary;
-                    return true;
-
-                case "Boolean":
-                    typeKind = PrimitiveTypeKind.Boolean;
-                    return true;
-
-                case "Byte":
-                    typeKind = PrimitiveTypeKind.Byte;
-                    return true;
-
-                case "DateTime":
-                    typeKind = PrimitiveTypeKind.DateTime;
-                    return true;
-
-                case "DateTimeOffset":
-                    typeKind = PrimitiveTypeKind.DateTimeOffset;
-                    return true;
-
-                case "Decimal":
-                    typeKind = PrimitiveTypeKind.Decimal;
-                    return true;
-
-                case "Double":
-                    typeKind = PrimitiveTypeKind.Double;
-                    return true;
-
-                case "Guid":
-                    typeKind = PrimitiveTypeKind.Guid;
-                    return true;
-
-                case "Single":
-                    typeKind = PrimitiveTypeKind.Single;
-                    return true;
-
-                case "SByte":
-                    typeKind = PrimitiveTypeKind.SByte;
-                    return true;
-
-                case "Int16":
-                    typeKind = PrimitiveTypeKind.Int16;
-                    return true;
-
-                case "Int32":
-                    typeKind = PrimitiveTypeKind.Int32;
-                    return true;
-
-                case "Int64":
-                    typeKind = PrimitiveTypeKind.Int64;
-                    return true;
-
-                case "String":
-                    typeKind = PrimitiveTypeKind.String;
-                    return true;
-
-                case "Time":
-                    typeKind = PrimitiveTypeKind.Time;
-                    return true;
-
-                case "Geometry":
-                    typeKind = PrimitiveTypeKind.Geometry;
-                    return true;
-
-                case "Geography":
-                    typeKind = PrimitiveTypeKind.Geography;
-                    return true;
-
-                default:
-                    typeKind = default(PrimitiveTypeKind);
-                    return false;
-            }
         }
 
         internal static bool IsValidDataModelItemName(string name)

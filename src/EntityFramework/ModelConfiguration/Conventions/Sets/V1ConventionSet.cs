@@ -43,7 +43,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
                       new DeclaredPropertyOrderingConvention(),
                       new PluralizingTableNameConvention(),
                       new ColumnOrderingConvention(),
-                      new ColumnTypeCasingConvention(),
                       new SqlCePropertyMaxLengthConvention(),
                       new PropertyMaxLengthConvention(),
                       new DecimalPropertyConvention(),

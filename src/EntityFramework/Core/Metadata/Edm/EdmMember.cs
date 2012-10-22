@@ -9,6 +9,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EdmMember : MetadataItem, INamedDataModelItem
     {
+        private StructuralType _declaringType;
+        private TypeUsage _typeUsage;
+        private string _name;
+
         internal EdmMember()
         {
             // for testing
@@ -28,10 +32,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _typeUsage = memberTypeUsage;
         }
 
-        private TypeUsage _typeUsage;
-        private readonly string _name;
-        private StructuralType _declaringType;
-
         /// <summary>
         ///     Returns the identity of the member
         /// </summary>
@@ -47,6 +47,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual String Name
         {
             get { return _name; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Util.ThrowIfReadOnly(this);
+
+                _name = value;
+            }
         }
 
         /// <summary>
@@ -65,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public TypeUsage TypeUsage
         {
             get { return _typeUsage; }
-            internal set
+            protected set
             {
                 Contract.Requires(value != null);
                 Util.ThrowIfReadOnly(this);
@@ -136,6 +143,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 return false;
+            }
+        }
+
+        internal virtual bool IsPrimaryKeyColumn
+        {
+            get
+            {
+                var entityTypeBase = _declaringType as EntityTypeBase;
+
+                return (entityTypeBase != null)
+                       && entityTypeBase.KeyMembers.Contains(this);
             }
         }
     }

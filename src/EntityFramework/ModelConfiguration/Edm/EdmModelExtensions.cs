@@ -269,14 +269,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static EntitySet AddEntitySet(
-            this EdmModel model, string name, EntityType elementType)
+            this EdmModel model, string name, EntityType elementType, string table = null)
         {
             Contract.Requires(model != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(elementType != null);
             Contract.Assert(model.Containers.Count == 1);
 
-            var entitySet = new EntitySet(name, null, null, null, elementType);
+            var entitySet = new EntitySet(name, null, table, null, elementType);
 
             // TODO: METADATA: Naming uniqueness constraint
             model.Containers.Single().AddEntitySetBase(entitySet);
@@ -406,6 +406,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Requires(associationType != null);
 
             model.Namespaces.Single().AssociationTypes.Add(associationType);
+        }
+
+        public static void AddAssociationSet(this EdmModel model, AssociationSet associationSet)
+        {
+            Contract.Requires(model != null);
+            Contract.Requires(associationSet != null);
+
+            model.Containers.Single().AddEntitySetBase(associationSet);
         }
 
         public static void RemoveEntityType(

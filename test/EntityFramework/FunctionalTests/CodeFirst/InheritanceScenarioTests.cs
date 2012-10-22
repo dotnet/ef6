@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Transactions;
     using FunctionalTests.Model;
@@ -69,7 +70,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Database.Schemas.Single().Tables.Count());
+            Assert.Equal(1, databaseMapping.Database.GetEntityTypes().Count());
         }
 
         [Fact]
@@ -515,9 +516,9 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<ITEmployee>().DbEqual("Employees", t => t.DatabaseIdentifier);
-            databaseMapping.Assert<ITOffSiteEmployee>().DbEqual("OffSiteEmployees", t => t.DatabaseIdentifier);
-            databaseMapping.Assert<ITOnSiteEmployee>().DbEqual("OnSiteEmployees", t => t.DatabaseIdentifier);
+            databaseMapping.Assert<ITEmployee>().DbEqual("Employees", t => t.Table);
+            databaseMapping.Assert<ITOffSiteEmployee>().DbEqual("OffSiteEmployees", t => t.Table);
+            databaseMapping.Assert<ITOnSiteEmployee>().DbEqual("OnSiteEmployees", t => t.Table);
 
             // IA FK was properly moved
             databaseMapping.Assert<ITEmployee>().HasNoForeignKeyColumn("ITOffice_ITOfficeId");
@@ -526,7 +527,9 @@ namespace FunctionalTests
             // AssociationSet mapping updated properly
             Assert.Equal(
                 "OnSiteEmployees",
-                databaseMapping.EntityContainerMappings[0].AssociationSetMappings[0].Table.DatabaseIdentifier);
+                databaseMapping.Database.GetEntitySet(
+                    databaseMapping.EntityContainerMappings[0].AssociationSetMappings[0].Table).Table);
+
             Assert.Equal(
                 "ITOffice_ITOfficeId",
                 databaseMapping.EntityContainerMappings[0].AssociationSetMappings[0].SourceEndMapping.
@@ -550,9 +553,9 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<IT_Employee>().DbEqual("Employees", t => t.DatabaseIdentifier);
-            databaseMapping.Assert<IT_OffSiteEmployee>().DbEqual("OffSiteEmployees", t => t.DatabaseIdentifier);
-            databaseMapping.Assert<IT_OnSiteEmployee>().DbEqual("OnSiteEmployees", t => t.DatabaseIdentifier);
+            databaseMapping.Assert<IT_Employee>().DbEqual("Employees", t => t.Table);
+            databaseMapping.Assert<IT_OffSiteEmployee>().DbEqual("OffSiteEmployees", t => t.Table);
+            databaseMapping.Assert<IT_OnSiteEmployee>().DbEqual("OnSiteEmployees", t => t.Table);
 
             databaseMapping.Assert<IT_Employee>().HasNoForeignKeyColumn("IT_OfficeId");
             databaseMapping.Assert<IT_OnSiteEmployee>().HasForeignKeyColumn("IT_OfficeId");
@@ -1072,18 +1075,18 @@ namespace FunctionalTests
                 var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
                 databaseMapping.AssertValid();
-                //databaseMapping.ShellEdmx("Res3.xml");
+
                 var derivedTypeMappings =
-                    databaseMapping.EntityContainerMappings[0].EntitySetMappings.Where(
-                        es => es.EntitySet.Name.Contains("Dependent")).First().EntityTypeMappings;
+                    databaseMapping.EntityContainerMappings[0].EntitySetMappings
+                        .First(es => es.EntitySet.Name.Contains("Dependent")).EntityTypeMappings;
 
                 Assert.Equal(
                     "Principal",
-                    derivedTypeMappings[0].TypeMappingFragments[0].Table.ForeignKeyConstraints[0].
+                    derivedTypeMappings[0].TypeMappingFragments[0].Table.ForeignKeyBuilders.ElementAt(0).
                         PrincipalTable.Name);
                 Assert.Equal(
                     "Principal",
-                    derivedTypeMappings[1].TypeMappingFragments[0].Table.ForeignKeyConstraints[0].
+                    derivedTypeMappings[1].TypeMappingFragments[0].Table.ForeignKeyBuilders.ElementAt(0).
                         PrincipalTable.Name);
             }
         }
@@ -1709,20 +1712,17 @@ namespace FunctionalTests
                 // Adding this configuration makes the discriminator nullable.
                 modelBuilder.Entity<B>();
 
-                modelBuilder.Entity<A>().Map(
-                    m =>
-                        {
-                            // Adding IsRequired() does not help.
-                            m.Requires("Disc").HasValue(17);
-                        });
-                modelBuilder.Entity<C>().Map(m => { m.Requires("Disc").HasValue(7); });
+                modelBuilder.Entity<A>().Map(m => m.Requires("Disc").HasValue(17));
+                modelBuilder.Entity<C>().Map(m => m.Requires("Disc").HasValue(7));
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("DiscriminatorShouldNotBeNull.xml");
+
                 databaseMapping.AssertValid();
 
-                databaseMapping.Assert<A>("A")
-                    .Column("Disc").DbEqual(false, c => c.IsNullable);
+                databaseMapping
+                    .Assert<A>("A")
+                    .Column("Disc")
+                    .DbEqual(false, c => c.Nullable);
             }
 
             [Fact]
@@ -1730,14 +1730,14 @@ namespace FunctionalTests
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<A2>().Map(m => { m.Requires("Disc").HasValue(17); });
-                modelBuilder.Entity<C2>().Map(m => { m.Requires("Disc").HasValue(7); });
+                modelBuilder.Entity<A2>().Map(m => m.Requires("Disc").HasValue(17));
+                modelBuilder.Entity<C2>().Map(m => m.Requires("Disc").HasValue(7));
 
                 modelBuilder.Entity<B2>();
                 modelBuilder.Entity<D2>();
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("ExplicitDiscriminatorShouldNotBeNull.xml");
+
                 Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
             }
 
@@ -1751,11 +1751,12 @@ namespace FunctionalTests
                 modelBuilder.Entity<B>();
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("ImplicitDiscriminatorShouldNotBeNull.xml");
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
-                    .Column("Discriminator").DbEqual(false, c => c.IsNullable);
+                    .Column("Discriminator")
+                    .DbEqual(false, c => c.Nullable);
             }
         }
     }
@@ -1836,7 +1837,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<Dependent>("BaseDependents")
                     .HasForeignKeyColumn("PrincipalNavigationId")
-                    .DbEqual(false, t => t.Columns.Single(c => c.Name == "PrincipalNavigationId").IsNullable);
+                    .DbEqual(false, t => t.Properties.Single(c => c.Name == "PrincipalNavigationId").Nullable);
 
                 //databaseMapping.ShellEdmx("TPH_with_self_ref_FK_on_derived_type_has_non_nullable_FK_when_base_type_is_abstract.xml");
                 databaseMapping.AssertValid();

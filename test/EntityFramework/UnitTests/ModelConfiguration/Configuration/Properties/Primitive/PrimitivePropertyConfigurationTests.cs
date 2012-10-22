@@ -149,13 +149,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata()
+                                             Column = new EdmProperty("C")
                                          };
 
             Assert.Null(edmPropertyMapping.Column.GetConfiguration());
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[]
+                    {
+                        Tuple.Create(
+                            edmPropertyMapping,
+                            new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace))
+                    },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Same(configuration, edmPropertyMapping.Column.GetConfiguration());
         }
@@ -170,19 +176,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata
-                                                          {
-                                                              Facets = new DbPrimitiveTypeFacets()
-                                                          }
+                                             Column = new EdmProperty("C")
                                          };
 
             configurationA.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnName);
 
             configurationB.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnName);
             Assert.Equal("nvarchar", ((PrimitivePropertyConfiguration)edmPropertyMapping.Column.GetConfiguration()).ColumnType);
@@ -196,11 +201,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata()
+                                             Column = new EdmProperty("C")
                                          };
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", edmPropertyMapping.Column.Name);
         }
@@ -214,14 +220,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata
-                                                          {
-                                                              Facets = new DbPrimitiveTypeFacets()
-                                                          }
+                                             Column = new EdmProperty("C")
                                          };
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal(2, edmPropertyMapping.Column.GetOrder());
         }
@@ -230,17 +234,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Configure_should_update_mapped_column_type()
         {
             var configuration = CreateConfiguration();
-            configuration.ColumnType = "Foo";
+            configuration.ColumnType = "NVarchaR(max)";
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata()
+                                             Column = new EdmProperty("C")
                                          };
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.Equal("Foo", edmPropertyMapping.Column.TypeName);
+            Assert.Equal("nvarchar(max)", edmPropertyMapping.Column.TypeName);
         }
 
         [Fact]

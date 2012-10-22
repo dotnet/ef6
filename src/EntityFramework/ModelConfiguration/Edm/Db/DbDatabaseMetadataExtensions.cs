@@ -4,9 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Serialization;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -19,27 +17,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
     internal static class DbDatabaseMetadataExtensions
     {
         public const string DefaultSchema = "dbo";
-        private const string ProviderInfoAnnotation = "ProviderInfo";
 
-        public static DbDatabaseMetadata Initialize(
-            this DbDatabaseMetadata database, double version = DataModelVersions.Version3)
+        public static EdmModel DbInitialize(
+            this EdmModel database, double version = DataModelVersions.Version3)
         {
             Contract.Requires(database != null);
 
             database.Version = version;
             database.Name = "CodeFirstDatabase";
-            database.Schemas.Add(
-                new DbSchemaMetadata
+            database.Containers.Add(new EntityContainer(database.Name, DataSpace.SSpace));
+            database.Namespaces.Add(
+                new EdmNamespace
                     {
-                        Name = DefaultSchema,
-                        DatabaseIdentifier = DefaultSchema
+                        Name = database.Name + "Schema"
                     });
 
             return database;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public static StoreItemCollection ToStoreItemCollection(this DbDatabaseMetadata database)
+        public static StoreItemCollection ToStoreItemCollection(this EdmModel database)
         {
             Contract.Requires(database != null);
 
@@ -69,55 +66,42 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             }
         }
 
-        public static DbTableMetadata AddTable(this DbDatabaseMetadata database, string name)
+        public static EntityType AddTable(this EdmModel database, string name)
         {
             Contract.Requires(database != null);
             Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(database.Schemas.Count == 1);
 
-            var schema = database.Schemas.Single();
-            var uniqueIdentifier = schema.Tables.UniquifyName(name);
+            var uniqueIdentifier = database.GetEntityTypes().UniquifyName(name);
 
-            var table = new DbTableMetadata
-                            {
-                                Name = uniqueIdentifier,
-                                DatabaseIdentifier = uniqueIdentifier
-                            };
+            var table
+                = new EntityType(uniqueIdentifier, XmlConstants.TargetNamespace_3, DataSpace.SSpace);
 
-            schema.Tables.Add(table);
+            database.Namespaces.Single().EntityTypes.Add(table);
+            database.AddEntitySet(table.Name, table, uniqueIdentifier);
 
             return table;
         }
 
-        public static DbTableMetadata AddTable(
-            this DbDatabaseMetadata database, string name, DbTableMetadata pkSource)
+        public static EntityType AddTable(
+            this EdmModel database, string name, EntityType pkSource)
         {
             var table = database.AddTable(name);
 
             // Add PK columns to the new table
-            foreach (var col in pkSource.KeyColumns)
+            foreach (var property in pkSource.DeclaredKeyProperties)
             {
-                var pk = col.Clone();
-                table.Columns.Add(pk);
+                table.AddKeyMember(property.Clone());
             }
 
             return table;
         }
 
-        public static void RemoveTable(this DbDatabaseMetadata database, DbTableMetadata table)
-        {
-            Contract.Requires(database != null);
-            Contract.Requires(table != null);
-
-            database.Schemas.Select(s => s.Tables).Each(ts => ts.Remove(table));
-        }
-
-        public static DbTableMetadata FindTableByName(this DbDatabaseMetadata database, DatabaseName tableName)
+        public static EntityType FindTableByName(this EdmModel database, DatabaseName tableName)
         {
             Contract.Requires(database != null);
             Contract.Requires(tableName != null);
 
-            return database.Schemas.Single().Tables.SingleOrDefault(
+            return database.GetEntityTypes().SingleOrDefault(
                 t =>
                     {
                         var databaseName = t.GetTableName();
@@ -125,21 +109,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
                                    ? databaseName.Equals(tableName)
                                    : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal);
                     });
-        }
-
-        public static DbProviderInfo GetProviderInfo(this DbDatabaseMetadata database)
-        {
-            Contract.Requires(database != null);
-
-            return (DbProviderInfo)database.Annotations.GetAnnotation(ProviderInfoAnnotation);
-        }
-
-        public static void SetProviderInfo(this DbDatabaseMetadata database, DbProviderInfo providerInfo)
-        {
-            Contract.Requires(database != null);
-            Contract.Requires(providerInfo != null);
-
-            database.Annotations.SetAnnotation(ProviderInfoAnnotation, providerInfo);
         }
     }
 }
