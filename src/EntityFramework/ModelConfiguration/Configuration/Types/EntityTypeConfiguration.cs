@@ -202,6 +202,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return base.ConfiguredProperties.Union(_navigationPropertyConfigurations.Keys); }
         }
 
+        /// <summary>
+        /// Gets the name of the table that this entity type is mapped to.
+        /// </summary>
+        public string TableName
+        {
+            get
+            {
+                if (!IsTableNameConfigured)
+                {
+                    return null;
+                }
+
+                return GetTableName().Name;
+            }
+        }
+
+        /// <summary>
+        /// Gets the database schema of the table that this entity type is mapped to.
+        /// </summary>
+        public string SchemaName
+        {
+            get
+            {
+                if (!IsTableNameConfigured)
+                {
+                    return null;
+                }
+
+                return GetTableName().Schema;
+            }
+        }
+
         internal DatabaseName GetTableName()
         {
             if (!IsTableNameConfigured)
@@ -564,21 +596,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
+                        {
+                            var primitivePropertyConfiguration =
+                                c.GetConfiguration() as PrimitivePropertyConfiguration;
+
+                            if ((primitivePropertyConfiguration != null)
+                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                return;
+                            }
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                            var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyColumns.ElementAt(i);
-
-                                c.TypeName = principalColumn.TypeName;
-                                c.Facets.CopyFrom(principalColumn.Facets);
-                            });
+                            c.TypeName = principalColumn.TypeName;
+                            c.Facets.CopyFrom(principalColumn.Facets);
+                        });
             }
         }
 

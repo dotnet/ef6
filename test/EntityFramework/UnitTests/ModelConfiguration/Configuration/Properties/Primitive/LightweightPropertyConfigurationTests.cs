@@ -4,6 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using Moq;
     using Xunit;
 
     public class LightweightPropertyConfigurationTests
@@ -12,7 +14,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Ctor_evaluates_preconditions()
         {
             var ex = Assert.Throws<ArgumentNullException>(
-                () => new LightweightPropertyConfiguration(null));
+                () => new LightweightPropertyConfiguration(null, () => new PrimitivePropertyConfiguration()));
+
+            Assert.Equal("propertyInfo", ex.ParamName);
+
+            ex = Assert.Throws<ArgumentNullException>(
+                () => new LightweightPropertyConfiguration(new MockPropertyInfo(), null));
 
             Assert.Equal("configuration", ex.ParamName);
         }
@@ -23,6 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var initialized = false;
 
             new LightweightPropertyConfiguration(
+                new MockPropertyInfo(),
                 () =>
                 {
                     initialized = true;
@@ -45,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     DatabaseGeneratedOption = DatabaseGeneratedOption.None,
                     IsNullable = false
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal("Column1", config.ColumnName);
             Assert.Equal(1, config.ColumnOrder);
@@ -72,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     IsMaxLength = false,
                     IsRowVersion = false
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(false, config.IsFixedLength);
             Assert.Equal(256, config.MaxLength);
@@ -87,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 {
                     Precision = 8
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal<byte?>(8, config.Precision);
         }
@@ -100,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     Scale = 2,
                     Precision = 8
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal<byte?>(2, config.Scale);
             Assert.Equal<byte?>(8, config.Precision);
@@ -116,7 +124,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     IsMaxLength = false,
                     IsUnicode = false
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(false, config.IsFixedLength);
             Assert.Equal(256, config.MaxLength);
@@ -128,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_set_applicable_unset_inner_values()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.ColumnName = "Column1";
             config.ColumnOrder = 1;
@@ -163,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_set_unset_inner_values_when_binary()
         {
             var innerConfig = new BinaryPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = false;
             config.MaxLength = 256;
@@ -180,7 +188,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_set_unset_inner_values_when_dateTime()
         {
             var innerConfig = new DateTimePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Precision = 8;
 
@@ -191,7 +199,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_set_unset_inner_values_when_decimal()
         {
             var innerConfig = new DecimalPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Scale = 2;
             config.Precision = 8;
@@ -204,7 +212,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_set_unset_inner_values_when_string()
         {
             var innerConfig = new StringPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = false;
             config.MaxLength = 256;
@@ -229,7 +237,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     DatabaseGeneratedOption = DatabaseGeneratedOption.None,
                     IsNullable = false
                 };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.ColumnName = "Column2";
             config.ColumnOrder = 2;
@@ -270,7 +278,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 IsMaxLength = false,
                 IsRowVersion = false
             };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = true;
             config.MaxLength = -1;
@@ -290,7 +298,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 Precision = 8
             };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Precision = 16;
 
@@ -305,7 +313,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 Scale = 2,
                 Precision = 8
             };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Scale = 4;
             config.Precision = 16;
@@ -324,7 +332,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 IsMaxLength = false,
                 IsUnicode = false
             };
-            var config = new LightweightPropertyConfiguration(() => innerConfig);
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = true;
             config.MaxLength = -1;
@@ -335,6 +343,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             Assert.Equal(256, config.MaxLength);
             Assert.Equal(false, config.IsMaxLength);
             Assert.Equal(false, config.IsUnicode);
+        }
+
+        [Fact]
+        public void IsKey_calls_entity_configuration_key_for_property()
+        {
+            var typeConfig = new Mock<EntityTypeConfiguration>((Type)new MockType());
+            var innerConfig = new PrimitivePropertyConfiguration
+                {
+                    TypeConfiguration = typeConfig.Object
+                };
+            var propertyInfo = new MockPropertyInfo();
+            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+
+            config.IsKey();
+
+            typeConfig.Verify(e => e.Key(propertyInfo, null), Times.Once());
+        }
+
+        [Fact]
+        public void ClrPropertyInfo_returns_propertyInfo()
+        {
+            var propertyInfo = new MockPropertyInfo();
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+
+            Assert.Same(propertyInfo.Object, config.ClrPropertyInfo);
         }
     }
 }

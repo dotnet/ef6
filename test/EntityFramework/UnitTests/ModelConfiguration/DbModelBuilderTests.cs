@@ -520,7 +520,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void PrimitivePropertyConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<PrimitivePropertyConfiguration>(7);
+            VerifyFieldCount<PrimitivePropertyConfiguration>(8);
         }
 
         [Fact]

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -97,6 +96,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             entityTypeConfiguration.ToTable("Foo");
 
             Assert.Equal("Foo", entityTypeConfiguration.GetTableName().Name);
+        }
+
+        [Fact]
+        public void TableName_returns_current_TableName()
+        {
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+
+            Assert.Equal(null, entityTypeConfiguration.TableName);
+
+            entityTypeConfiguration.ToTable("Foo");
+            Assert.Equal("Foo", entityTypeConfiguration.TableName);
+        }
+
+        [Fact]
+        public void SchemaName_returns_current_SchemaName()
+        {
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+
+            Assert.Equal(null, entityTypeConfiguration.SchemaName);
+
+            entityTypeConfiguration.ToTable("Foo", "Bar");
+            Assert.Equal("Bar", entityTypeConfiguration.SchemaName);
         }
 
         [Fact]

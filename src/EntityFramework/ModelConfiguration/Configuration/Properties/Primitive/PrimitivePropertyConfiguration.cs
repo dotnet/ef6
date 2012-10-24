@@ -9,6 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -37,6 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             Contract.Requires(source != null);
 
+            TypeConfiguration = source.TypeConfiguration;
             IsNullable = source.IsNullable;
             ConcurrencyMode = source.ConcurrencyMode;
             DatabaseGeneratedOption = source.DatabaseGeneratedOption;
@@ -83,6 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public int? ColumnOrder { get; set; }
 
         internal OverridableConfigurationParts OverridableConfigurationParts { get; set; }
+        internal StructuralTypeConfiguration TypeConfiguration { get; set; }
 
         internal virtual void Configure(EdmProperty property)
         {
@@ -239,10 +242,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                        {
-                            c.Name = renamedColumns.UniquifyName(ColumnName);
-                            renamedColumns.Add(c);
-                        });
+                    {
+                        c.Name = renamedColumns.UniquifyName(ColumnName);
+                        renamedColumns.Add(c);
+                    });
         }
 
         internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)

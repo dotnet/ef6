@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if (_configuration.ConfigurationAction != null
                 && _configuration.Predicates.All(p => p(memberInfo)))
             {
-                _configuration.ConfigurationAction(new LightweightEntityConfiguration(configuration));
+                _configuration.ConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration));
             }
         }
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 && _configuration.Predicates.All(p => p(memberInfo.ReflectedType))
                 && _configuration.PropertyConfiguration.Predicates.All(p => p(memberInfo)))
             {
-                _configuration.PropertyConfiguration.ConfigurationAction(new LightweightPropertyConfiguration(configuration));
+                _configuration.PropertyConfiguration.ConfigurationAction(new LightweightPropertyConfiguration(memberInfo, configuration));
             }
         }
     }

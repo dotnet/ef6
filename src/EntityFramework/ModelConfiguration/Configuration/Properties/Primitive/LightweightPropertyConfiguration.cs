@@ -4,7 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Diagnostics.Contracts;
+    using System.Reflection;
 
     /// <summary>
     /// Used to configure a primitive property of an entity type or complex type. 
@@ -12,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     /// </summary>
     public class LightweightPropertyConfiguration
     {
+        private readonly PropertyInfo _propertyInfo;
         private readonly Func<PrimitivePropertyConfiguration> _configuration;
         private readonly Lazy<BinaryPropertyConfiguration> _binaryConfiguration;
         private readonly Lazy<DateTimePropertyConfiguration> _dateTimeConfiguration;
@@ -22,11 +25,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <summary>
         /// Initializes a new instance of the <see cref="LightweightPropertyConfiguration" /> class.
         /// </summary>
+        /// <param name="propertyInfo">The <see cref="PropertyInfo" /> for this property</param>
         /// <param name="configuration">The configuration object that this instance wraps.</param>
-        public LightweightPropertyConfiguration(Func<PrimitivePropertyConfiguration> configuration)
+        public LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
+            Contract.Requires(propertyInfo != null);
             Contract.Requires(configuration != null);
 
+            _propertyInfo = propertyInfo;
             _configuration = configuration;
             _binaryConfiguration = new Lazy<BinaryPropertyConfiguration>(
                 () => _configuration() as BinaryPropertyConfiguration);
@@ -38,6 +44,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 () => _configuration() as LengthPropertyConfiguration);
             _stringConfiguration = new Lazy<StringPropertyConfiguration>(
                 () => _configuration() as StringPropertyConfiguration);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="PropertyInfo" /> for this property.
+        /// </summary>
+        public PropertyInfo ClrPropertyInfo
+        {
+            get { return _propertyInfo; }
         }
 
         /// <summary>
@@ -338,6 +352,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     _binaryConfiguration.Value.IsRowVersion = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Configures this property to be part of the entity type's primary key.
+        /// </summary>
+        public void IsKey()
+        {
+            var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
+
+            if (entityTypeConfig != null)
+            {
+                entityTypeConfig.Key(ClrPropertyInfo);
+            }
+        }
+
+        /// <summary>
+        /// Configures this property to be part of the entity type's primary key.
+        /// </summary>
+        /// <param name="columnOrder">
+        /// The order of the database column. This is useful when specifying a composite
+        /// primary key.
+        /// </param>
+        public void IsKey(int columnOrder)
+        {
+            Contract.Requires(columnOrder >= 0);
+
+            IsKey();
+            ColumnOrder = columnOrder;
         }
     }
 }
