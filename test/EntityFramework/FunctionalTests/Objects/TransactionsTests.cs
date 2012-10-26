@@ -1,0 +1,707 @@
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
+namespace System.Data.Entity.Objects
+{
+    using Moq;
+    using System;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
+    using System.Diagnostics.Contracts;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Transactions;
+    using System.Xml;
+    using Xunit;
+
+    public class TransactionLogEntry
+    {
+        public int ID { get; set; }
+        public int TransactionCount { get; set; }
+    }
+
+    public class TransactionContext : ObjectContext
+    {
+        public TransactionContext(string connectionString) :
+            base(connectionString)
+        { }
+
+        public IQueryable<TransactionLogEntry> LogEntries
+        {
+            get { return CreateObjectSet<TransactionLogEntry>("Entities.TransactionLog"); }
+        }
+    }
+
+    public class TransactionsTests : IUseFixture<TransactionFixture>
+    {
+        private string connectionString;
+        private string modelDirectory;
+
+        private MetadataWorkspace workspace;
+        private SqlConnection globalConnection;
+
+        public void SetFixture(TransactionFixture data)
+        {
+            this.globalConnection = data.GlobalConnection;
+
+            this.connectionString = 
+            @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_closed()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionContext())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_open()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionContext())
+                {
+                    ctx.Connection.Open();
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+
+                    // Implicit transaction committed. 1 entity expected.
+                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
+        {
+            using (var transactionScope = new TransactionScope())
+            {
+                using (var ctx = CreateTransactionContext())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                }
+            }
+
+            // Transaction not commited. No entities should be saved to the database.
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_open()
+        {
+            using (var transactionScope = new TransactionScope())
+            {
+                using (var ctx = CreateTransactionContext())
+                {
+                    ctx.Connection.Open();
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // Transaction not commited. No entities should be saved to the database.
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_tranasction_is_not_created_when_executing_multiple_operations_in_the_same_TransactionScope()
+        {
+            using (var transactionScope = new TransactionScope())
+            {
+                using (var ctx = CreateTransactionContext())
+                {
+                    ctx.Connection.Open();
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+
+                    transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_explicitly_using_CommittableTransaction()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_enlists_TransactionScope()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var transactionScope = new TransactionScope())
+                {
+                    ctx.Connection.EnlistTransaction(Transaction.Current);
+
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_ambient_CommittableTransaction()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction(new TimeSpan(1, 0, 0)))
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+                    Transaction.Current = committableTransaction;
+
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+
+                    Transaction.Current = null;
+                }
+            }
+
+            // Transaction not commited. No entities should be saved to the database.
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_is_not_created_when_user_starts_DbTransaction_explicitly()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var dbTransaction = ctx.Connection.BeginTransaction())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_DbTransaction_cannot_be_mixed_with_TransactionScope()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var dbTransaction = ctx.Connection.BeginTransaction())
+                {
+                    using (var transactionScope = new TransactionScope())
+                    {
+                        var transactionLogEntry = new TransactionLogEntry();
+                        ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
+
+                        Assert.Equal(
+                            Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
+                            Assert.Throws<EntityException>(() => ctx.SaveChanges()).Message);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_DbTransaction_cannot_be_mixed_with_CommittableTransaction()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var dbTransaction = ctx.Connection.BeginTransaction())
+                {
+                    using (var committableTransaction = new CommittableTransaction())
+                    {
+                        Assert.Equal(
+                            Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
+                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction)).Message);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_using_TransactionScope_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                using (var transactionScope = new TransactionScope())
+                {
+                    ctx.Connection.Open();
+                    using (var dbTransaction = ctx.Connection.BeginTransaction())
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(2, transactionLogEntry.TransactionCount);
+                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    }
+                }
+            }
+            
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+
+                    using (var dbTransaction = ctx.Connection.BeginTransaction())
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(2, transactionLogEntry.TransactionCount);
+                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    }
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_TransactionScope_cannot_be_mixed_with_CommitableTransaction()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                using (var transactionScope = new TransactionScope())
+                {
+                    ctx.Connection.Open();
+                    using (var committableTransaction = new CommittableTransaction())
+                    {
+                        Assert.Equal(
+                            Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
+                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction)).Message);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_CommitableTransaction_cannot_be_mixed_with_TransactionScope()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+                    using (var transactionScope = new TransactionScope())
+                    {
+                        var transactionLogEntry = new TransactionLogEntry();
+                        ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
+
+                        Assert.Equal(
+                            Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
+                            Assert.Throws<EntityException>(() => ctx.SaveChanges()).Message);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_created_when_transaction_from_previous_operation_disposed_and_connection_opened()
+        {
+            try
+            {
+                using (var ctx = CreateObjectContext())
+                {
+                    ctx.Connection.Open();
+                    using (var transactionScope = new TransactionScope())
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    }
+
+                    // "Transaction not commited. No entities should be saved to the database."
+                    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+
+                    AddLogEntryToDatabase(ctx);
+
+                    // "Implicit transaction committed. 1 entity expected."
+                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed()
+        {
+            using (var ctx = CreateObjectContext())
+            {
+                ctx.Connection.Open();
+                using (var transactionScope = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+
+                // "Transaction not commited. No entities should be saved to the database."
+                Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+
+                // "Transaction not commited. No entities should be saved to the database."
+                Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+            }
+        }
+
+        [Fact]
+        public void Verify_implicit_transaction_created_when_transaction_from_previous_operation_disposed_and_connection_closed()
+        {
+            try
+            {
+                using (var ctx = CreateObjectContext())
+                {
+                    using (var transactionScope = new TransactionScope())
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                    }
+
+                    // "Transaction not commited. No entities should be saved to the database."
+                    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+
+                    var newTransactionLogEntry = AddLogEntryToDatabase(ctx);
+
+                    // "Implicit transaction committed. 1 entity expected."
+                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_explicit_transaction_cleared_after_disposing()
+        {
+            try
+            {
+                using (var ctx = CreateObjectContext())
+                {
+                    ctx.Connection.Open();
+
+                    using (var committableTransaction = new CommittableTransaction())
+                    {
+                        ctx.Connection.EnlistTransaction(committableTransaction);
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    }
+
+                    // "Transaction not commited. No entities should be saved to the database."
+                    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+
+                    var newTransactionLogEntry = AddLogEntryToDatabase(ctx);
+
+                    // "Implicit transaction committed. 1 entity expected."
+                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_no_implicit_transaction_created_when_transactions_change_between_requests()
+        {
+            using (var ctx = CreateObjectContext())
+            {
+                ctx.Connection.Open();
+
+                using (var transaction1 = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+
+                using (var transaction2 = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact] 
+        public void Verify_no_implicit_transaction_created_when_enlisting_in_transaction_between_requests()
+        {
+            using (var ctx = CreateObjectContext())
+            {
+                ctx.Connection.Open();
+
+                using (var transaction1 = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_no_implicit_transaction_created_when_transaction_change_and_connection_is_closed_between_requests()
+        {
+            using (var ctx = CreateObjectContext())
+            {
+                ctx.Connection.Open();
+
+                using (var trx = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    ctx.Connection.Close();
+                }
+
+                using (var trx = new TransactionScope())
+                {
+                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                }
+            }
+
+            // "Transaction not commited. No entities should be saved to the database."
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+
+        [Fact]
+        public void Verify_cannot_enlist_in_more_than_one_active_transaction_on_the_same_opened_connection()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction())
+                using (var newCommittableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+
+                    Assert.Equal(
+                        Strings.EntityClient_ProviderSpecificError("EnlistTransaction"), 
+                        Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction)).Message);
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_closing_connection_invalidates_explicit_transaction()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                ctx.Connection.Open();
+                using (var committableTransaction = new CommittableTransaction())
+                {
+                    ctx.Connection.EnlistTransaction(committableTransaction);
+                    ctx.Connection.Close();
+
+                    ctx.Connection.Open();
+                    using (var newCommittableTransaction = new CommittableTransaction())
+                    {
+                        ctx.Connection.EnlistTransaction(newCommittableTransaction);
+                    }
+                }
+            }
+        }
+
+        private TransactionContext CreateTransactionContext()
+        {
+            var ctx = new TransactionContext(this.connectionString);
+            ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
+
+            return ctx;
+        }
+
+        private ObjectContext CreateObjectContext()
+        {
+            var ctx = new ObjectContext(this.connectionString);
+            ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
+
+            return ctx;
+        }
+
+        private int LogEntriesCount()
+        {
+            using (var ctx = CreateTransactionContext())
+            {
+                return ctx.LogEntries.Count();
+            }
+        }
+
+        private TransactionLogEntry AddLogEntryToDatabase(ObjectContext ctx)
+        {
+            var transactionLogEntry = new TransactionLogEntry();
+            ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
+            ctx.SaveChanges();
+
+            return transactionLogEntry;
+        }
+
+        /// <summary>
+        /// Removes all entries from the tables used for tests. Must be called from tests that are committing transactions
+        /// as each test expects that the db will be initially clean.
+        /// </summary>
+        private void ResetTables()
+        {
+            new SqlCommand("DELETE FROM ##TransactionLog", globalConnection).ExecuteNonQuery();
+            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        }
+    }
+
+    public class TransactionFixture : FunctionalTestBase, IDisposable
+    {
+        public SqlConnection GlobalConnection { get; private set; }
+
+        public TransactionFixture()
+        {
+            if (this.GlobalConnection != null)
+            {
+                throw new InvalidOperationException("Database is still in use and cannot be initialized.");
+            }
+
+            // we are using tempdb and SQLExpress instance so we don't want this to be configurable
+            this.GlobalConnection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=tempdb;Integrated Security=SSPI;");
+            this.GlobalConnection.Open();
+
+            try
+            {
+                new SqlCommand(
+@"
+    CREATE TABLE [dbo].[##TransactionLog](
+	    [ID] [int] IDENTITY(1,1) NOT NULL,
+	    [TransactionCount] [int] NOT NULL,
+     CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED 
+    (
+	    [ID] ASC
+    )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+    ) ON [PRIMARY]", this.GlobalConnection).ExecuteNonQuery();
+
+                new SqlCommand(
+@"
+    CREATE PROCEDURE [dbo].[##CreateTransactionLogEntry] 
+    AS
+    BEGIN
+        DECLARE @tranCount AS int = @@TRANCOUNT  -- assigning to a variable prevents from counting an implicit transaction created for insert
+	    INSERT INTO ##TransactionLog Values(@tranCount)
+	    SELECT ID, TransactionCount 
+        FROM ##TransactionLog
+        WHERE ID = SCOPE_IDENTITY()
+    END", this.GlobalConnection).ExecuteNonQuery();
+
+            }
+            catch
+            {
+                CleanupDatabase();
+
+                throw;
+            }
+        }
+
+        private void CleanupDatabase()
+        {
+            Contract.Assert(this.GlobalConnection != null);
+
+            this.GlobalConnection.Close();
+            this.GlobalConnection.Dispose();
+            this.GlobalConnection = null;
+        }
+
+        public void Dispose()
+        {
+            this.CleanupDatabase();
+        }
+    }
+}
