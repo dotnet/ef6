@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using Moq;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Resources;
     using Xunit;
 
     public class TypeUsageTests

@@ -183,6 +183,7 @@
     <Compile Include="CodeFirst\DataAnnotationScenarioTests.cs" />
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="EntityClient\AsyncScenarios.cs" />
+    <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Migrations\AddColumnScenarios.cs" />
     <Compile Include="Migrations\AddForeignKeyScenarios.cs" />
     <Compile Include="Migrations\AlterColumnScenarios.cs" />
