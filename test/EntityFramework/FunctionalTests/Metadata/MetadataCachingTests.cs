@@ -101,22 +101,6 @@ namespace MetadataCachingTests
             this.MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }
 
-        [Fact]
-        public void Metadata_does_not_get_garbage_collected_after_cleanup_is_performed_thrice_if_references_are_alive()
-        {
-            Action garbageCollection = () =>
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                CallPeriodicCleanupMethod();
-                CallPeriodicCleanupMethod();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            };
-
-            this.MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
-        }
-
         private void MetadataCachingWithGarbageCollectionTemplate(Action garbageCollection)
         {
             MetadataWorkspace.ClearCache();
