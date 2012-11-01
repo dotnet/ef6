@@ -109,6 +109,9 @@
     <EmbeddedResource Include="Objects\TransactionsModel.csdl" />
     <EmbeddedResource Include="Objects\TransactionsModel.msl" />
     <EmbeddedResource Include="Objects\TransactionsModel.ssdl" />
+    <EmbeddedResource Include="Metadata\MetadataCachingModel.csdl" />
+    <EmbeddedResource Include="Metadata\MetadataCachingModel.msl" />
+    <EmbeddedResource Include="Metadata\MetadataCachingModel.ssdl" />
     <None Include="packages.config" />
     <None Include="App.config">
       <SubType>Designer</SubType>
