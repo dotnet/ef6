@@ -17,19 +17,12 @@ namespace MetadataCachingTests
         {
             var connection1 = new EntityConnection(connectionString);
             var connection2 = new EntityConnection(connectionString);
-            MetadataWorkspace workspace1 = connection1.GetMetadataWorkspace();
-            MetadataWorkspace workspace2 = connection2.GetMetadataWorkspace();
+            var workspace1 = connection1.GetMetadataWorkspace();
+            var workspace2 = connection2.GetMetadataWorkspace();
 
-            var edmCollection1 = workspace1.GetItemCollection(DataSpace.CSpace);
-            var edmCollection2 = workspace2.GetItemCollection(DataSpace.CSpace);
-            var storeCollection1 = workspace1.GetItemCollection(DataSpace.SSpace);
-            var storeCollection2 = workspace2.GetItemCollection(DataSpace.SSpace);
-            var mappingCollection1 = workspace1.GetItemCollection(DataSpace.CSSpace);
-            var mappingCollection2 = workspace2.GetItemCollection(DataSpace.CSSpace);
-
-            Assert.Same(edmCollection1, edmCollection2);
-            Assert.Same(storeCollection1, storeCollection2);
-            Assert.Same(mappingCollection1, mappingCollection2);
+            Assert.Same(workspace1.GetItemCollection(DataSpace.CSpace), workspace2.GetItemCollection(DataSpace.CSpace));
+            Assert.Same(workspace1.GetItemCollection(DataSpace.SSpace), workspace2.GetItemCollection(DataSpace.SSpace));
+            Assert.Same(workspace1.GetItemCollection(DataSpace.CSSpace), workspace2.GetItemCollection(DataSpace.CSSpace));
         }
 
         [Fact]
@@ -41,16 +34,9 @@ namespace MetadataCachingTests
             var workspace1 = connection1.GetMetadataWorkspace();
             var workspace2 = connection2.GetMetadataWorkspace();
 
-            var edmCollection1 = workspace1.GetItemCollection(DataSpace.CSpace);
-            var edmCollection2 = workspace2.GetItemCollection(DataSpace.CSpace);
-            var storeCollection1 = workspace1.GetItemCollection(DataSpace.SSpace);
-            var storeCollection2 = workspace2.GetItemCollection(DataSpace.SSpace);
-            var mappingCollection1 = workspace1.GetItemCollection(DataSpace.CSSpace);
-            var mappingCollection2 = workspace2.GetItemCollection(DataSpace.CSSpace);
-
-            Assert.Same(edmCollection1, edmCollection2);
-            Assert.Same(storeCollection1, storeCollection2);
-            Assert.Same(mappingCollection1, mappingCollection2);
+            Assert.Same(workspace1.GetItemCollection(DataSpace.CSpace), workspace2.GetItemCollection(DataSpace.CSpace));
+            Assert.Same(workspace1.GetItemCollection(DataSpace.SSpace), workspace2.GetItemCollection(DataSpace.SSpace));
+            Assert.Same(workspace1.GetItemCollection(DataSpace.CSSpace), workspace2.GetItemCollection(DataSpace.CSSpace));
         }
 
         [Fact]
@@ -63,10 +49,7 @@ namespace MetadataCachingTests
             var workspace1 = connection1.GetMetadataWorkspace();
             var workspace2 = connection2.GetMetadataWorkspace();
 
-            var edmCollection1 = workspace1.GetItemCollection(DataSpace.CSpace);
-            var edmCollection2 = workspace2.GetItemCollection(DataSpace.CSpace);
-
-            Assert.Same(edmCollection1, edmCollection2);
+            Assert.Same(workspace1.GetItemCollection(DataSpace.CSpace), workspace2.GetItemCollection(DataSpace.CSpace));
         }
 
         [Fact]
@@ -100,6 +83,8 @@ namespace MetadataCachingTests
                 GC.WaitForPendingFinalizers();
                 CallPeriodicCleanupMethod();
             };
+
+            this.MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }
 
         [Fact]
@@ -112,6 +97,8 @@ namespace MetadataCachingTests
                 CallPeriodicCleanupMethod();
                 CallPeriodicCleanupMethod();
             };
+
+            this.MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }
 
         [Fact]
@@ -126,6 +113,8 @@ namespace MetadataCachingTests
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             };
+
+            this.MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }
 
         private void MetadataCachingWithGarbageCollectionTemplate(Action garbageCollection)
