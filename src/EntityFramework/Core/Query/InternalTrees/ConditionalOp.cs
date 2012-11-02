@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
     /// <summary>
     ///     Represents a conditional operation - and,or,not, is null
-    ///     A little hacky - since it represents and/or/not as optypes - could I not
-    ///     have done the same with the comparison operators?
     /// </summary>
     internal sealed class ConditionalOp : ScalarOp
     {

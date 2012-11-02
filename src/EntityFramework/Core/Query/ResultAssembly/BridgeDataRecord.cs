@@ -744,7 +744,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <returns> </returns>
         public override bool IsDBNull(int ordinal)
         {
-            // This seems like a hack, but the the problem is that I need 
+            // This doesn't seem ideal, but the the problem is that I need 
             // to make sure I don't monkey with caching things, and if I
             // call IsDBNull directly on the store reader, I'll potentially
             // lose data because I'm expecting SequentialAccess rules.
@@ -753,7 +753,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             // Need to backup one because we technically didn't read the
             // value yet but the GetValue method advanced our pointer to
-            // what the value was.  Another hack, but it's way less code
+            // what the value was.  Again, not ideal, but it's way less code
             // than trying to avoid advancing to begin with.
             _lastColumnRead--;
             _lastDataOffsetRead = -1;

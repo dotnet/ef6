@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Model
                                  MaxLength = 42,
                                  Precision = 23,
                                  Scale = 1,
-                                 StoreType = "foobar"
+                                 StoreType = "goobar"
                              };
 
             Assert.Equal("C", column.Name);
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal(42, column.MaxLength);
             Assert.Equal((byte)23, column.Precision);
             Assert.Equal((byte)1, column.Scale);
-            Assert.Equal("foobar", column.StoreType);
+            Assert.Equal("goobar", column.StoreType);
         }
 
         [Fact]

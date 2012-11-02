@@ -363,7 +363,7 @@ namespace System.Data.Entity.Migrations.Design
                 }
                 catch (Exception ex)
                 {
-                    // HACK: Not sure why exceptions won't just serialize straight across
+                    // Not ideal; not sure why exceptions won't just serialize straight across
                     AppDomain.CurrentDomain.SetData("error", ex.Message);
                     AppDomain.CurrentDomain.SetData("typeName", ex.GetType().FullName);
                     AppDomain.CurrentDomain.SetData("stackTrace", ex.ToString());

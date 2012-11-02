@@ -175,8 +175,8 @@ namespace System.Data.Entity.Migrations
         {
             get
             {
-                // HACK: The SqlCe provider does not support schemas. In order to map to these
-                //       special schema-qualified views, we need to create wrappers for them.
+                // This is not ideal, but the SqlCe provider does not support schemas. In order
+                // to map to these special schema-qualified views, we need to create wrappers for them.
                 SyncInfoWrappers();
 
                 return base.Info;

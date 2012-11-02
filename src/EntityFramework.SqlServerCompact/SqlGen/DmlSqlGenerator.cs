@@ -100,12 +100,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 // - server-gen columns (e.g. timestamp) get recomputed
                 //
 
-                // Bug fix #13533 : A fake update DML updating some column item 
+                // Fix #13533 : A fake update DML updating some column item 
                 // with the same value as before to acquire the lock on the table 
                 // while updating some columns in another table. This happens when
                 // both the table are dependent on an entity and the members of entity
                 // which is mapped to one table is being updated and the other table 
-                // needs to be locked for consistancy.
+                // needs to be locked for consistency.
                 string updatableColumnName;
                 if (GetUpdatableColumn(tree, out updatableColumnName))
                 {
