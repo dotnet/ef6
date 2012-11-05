@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _baseEntitySets.Source.Add(entitySetBase);
         }
 
-        internal void RemoveEntitySetBase(EntitySetBase entitySetBase)
+        public void RemoveEntitySetBase(EntitySetBase entitySetBase)
         {
             Contract.Requires(entitySetBase != null);
             Util.ThrowIfReadOnly(this);

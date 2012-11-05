@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal ReferentialConstraint Constraint
+        public ReferentialConstraint Constraint
         {
             get { return ReferentialConstraints.SingleOrDefault(); }
             set
