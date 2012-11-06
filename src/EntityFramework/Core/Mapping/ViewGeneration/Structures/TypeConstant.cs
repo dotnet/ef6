@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class TypeConstant : Constant
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a type constant corresponding to the <paramref name="type" />.
         /// </summary>
@@ -28,18 +26,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_edmType = type;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The EDM type denoted by this type constant.
         /// </summary>
         private readonly EdmType m_edmType;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the EDM type corresponding to the type constant.
@@ -48,10 +38,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_edmType; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal override bool IsNull()
         {
@@ -209,7 +195,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             builder.Append(m_edmType.Name);
         }
-
-        #endregion
     }
 }

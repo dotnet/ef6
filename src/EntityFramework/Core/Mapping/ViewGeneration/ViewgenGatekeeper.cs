@@ -30,13 +30,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             Contract.Requires(config != null);
             Debug.Assert(containerMapping.HasViews, "Precondition Violated: No mapping exists to generate views for!");
 
-#if DEBUG
-            if (config.IsNormalTracing)
-            {
-                containerMapping.Print(0);
-            }
-#endif
-
             //Create Cells from StorageEntityContainerMapping
             var cellCreator = new CellCreator(containerMapping);
             var cells = cellCreator.GenerateCells();
@@ -285,8 +278,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return errorLog;
         }
 
-        #region Static Helpers
-
         private static bool DoesCellGroupContainEntitySet(CellGroup group, EntitySetBase entity)
         {
             foreach (var cell in group)
@@ -299,8 +290,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return false;
         }
-
-        #endregion
 
         internal override void ToCompactString(StringBuilder builder)
         {

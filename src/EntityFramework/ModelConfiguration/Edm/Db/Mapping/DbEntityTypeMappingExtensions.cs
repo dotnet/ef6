@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static object GetConfiguration(this DbEntityTypeMapping entityTypeMapping)
+        public static object GetConfiguration(this StorageEntityTypeMapping entityTypeMapping)
         {
             Contract.Requires(entityTypeMapping != null);
 
@@ -22,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static void SetConfiguration(this DbEntityTypeMapping entityTypeMapping, object configuration)
+        public static void SetConfiguration(this StorageEntityTypeMapping entityTypeMapping, object configuration)
         {
             Contract.Requires(entityTypeMapping != null);
             Contract.Requires(configuration != null);
@@ -30,36 +31,36 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             entityTypeMapping.Annotations.SetConfiguration(configuration);
         }
 
-        public static DbEdmPropertyMapping GetPropertyMapping(
-            this DbEntityTypeMapping entityTypeMapping, params EdmProperty[] propertyPath)
+        public static ColumnMappingBuilder GetPropertyMapping(
+            this StorageEntityTypeMapping entityTypeMapping, params EdmProperty[] propertyPath)
         {
             Contract.Requires(entityTypeMapping != null);
             Contract.Requires(propertyPath != null);
             Contract.Assert(propertyPath.Length > 0);
 
-            return entityTypeMapping.TypeMappingFragments
-                .SelectMany(f => f.PropertyMappings)
+            return entityTypeMapping.MappingFragments
+                .SelectMany(f => f.ColumnMappings)
                 .Single(p => p.PropertyPath.SequenceEqual(propertyPath));
         }
 
-        public static EntityType GetPrimaryTable(this DbEntityTypeMapping entityTypeMapping)
+        public static EntityType GetPrimaryTable(this StorageEntityTypeMapping entityTypeMapping)
         {
-            return entityTypeMapping.TypeMappingFragments.First().Table;
+            return entityTypeMapping.MappingFragments.First().Table;
         }
 
-        public static bool UsesOtherTables(this DbEntityTypeMapping entityTypeMapping, EntityType table)
+        public static bool UsesOtherTables(this StorageEntityTypeMapping entityTypeMapping, EntityType table)
         {
-            return entityTypeMapping.TypeMappingFragments.Any(f => f.Table != table);
+            return entityTypeMapping.MappingFragments.Any(f => f.Table != table);
         }
 
-        public static Type GetClrType(this DbEntityTypeMapping entityTypeMappping)
+        public static Type GetClrType(this StorageEntityTypeMapping entityTypeMappping)
         {
             Contract.Requires(entityTypeMappping != null);
 
             return entityTypeMappping.Annotations.GetClrType();
         }
 
-        public static void SetClrType(this DbEntityTypeMapping entityTypeMapping, Type type)
+        public static void SetClrType(this StorageEntityTypeMapping entityTypeMapping, Type type)
         {
             Contract.Requires(entityTypeMapping != null);
             Contract.Requires(type != null);
@@ -67,15 +68,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             entityTypeMapping.Annotations.SetClrType(type);
         }
 
-        public static DbEntityTypeMapping Clone(this DbEntityTypeMapping entityTypeMappping)
+        public static StorageEntityTypeMapping Clone(this StorageEntityTypeMapping entityTypeMapping)
         {
-            Contract.Requires(entityTypeMappping != null);
+            Contract.Requires(entityTypeMapping != null);
 
-            var clone = new DbEntityTypeMapping
-                            {
-                                EntityType = entityTypeMappping.EntityType
-                            };
-            entityTypeMappping.Annotations.Copy(clone.Annotations);
+            var clone = new StorageEntityTypeMapping(null);
+
+            clone.AddType(entityTypeMapping.EntityType);
+
+            entityTypeMapping.Annotations.Copy(clone.Annotations);
 
             return clone;
         }

@@ -4,8 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Diagnostics.Contracts;
@@ -31,23 +33,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var table
                 = entitySetMapping.EntityTypeMappings.Any()
-                      ? entitySetMapping.EntityTypeMappings.First().TypeMappingFragments.First().Table
+                      ? entitySetMapping.EntityTypeMappings.First().MappingFragments.First().Table
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
-            var entityTypeMappingFragment = new DbEntityTypeMappingFragment
-                                                {
-                                                    Table = table
-                                                };
+            var entityTypeMapping = new StorageEntityTypeMapping(null);
 
-            var entityTypeMapping = new DbEntityTypeMapping
-                                        {
-                                            EntityType = entityType,
-                                            IsHierarchyMapping = false
-                                        };
-            entityTypeMapping.TypeMappingFragments.Add(entityTypeMappingFragment);
+            var entityTypeMappingFragment
+                = new StorageMappingFragment(databaseMapping.Database.GetEntitySet(table), entityTypeMapping, false);
+
+            entityTypeMapping.AddType(entityType);
+            entityTypeMapping.AddFragment(entityTypeMappingFragment);
             entityTypeMapping.SetClrType(entityType.GetClrType());
 
-            entitySetMapping.EntityTypeMappings.Add(entityTypeMapping);
+            entitySetMapping.AddTypeMapping(entityTypeMapping);
 
             new PropertyMappingGenerator(_providerManifest)
                 .Generate(

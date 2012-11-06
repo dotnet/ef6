@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     /// </summary>
     internal sealed class GeneratedView : InternalBase
     {
-        #region Factory
-
         /// <summary>
         ///     Creates generated view object for the combination of the <paramref name="extent" /> and the <paramref name="type" />. 
         ///     This constructor is used for regular cell-based view generation.
@@ -171,10 +169,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntitySetBase m_extent;
         private readonly EdmType m_type;
         private DbQueryCommandTree m_commandTree; //We cache CQTs for Update Views sicne that is the one update stack works of.
@@ -184,18 +178,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private readonly StorageMappingItemCollection m_mappingItemCollection;
         private readonly ConfigViewGenerator m_config;
 
-        #endregion
-
-        #region Properties
-
         internal string eSQL
         {
             get { return m_eSQL; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal DbQueryCommandTree GetCommandTree()
         {
@@ -318,10 +304,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return parserException == null;
         }
 
-        #endregion
-
-        #region String Methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             var ofTypeView = m_type != m_extent.ElementType;
@@ -346,7 +328,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 builder.Append(m_commandTree.Print());
             }
         }
-
-        #endregion
     }
 }

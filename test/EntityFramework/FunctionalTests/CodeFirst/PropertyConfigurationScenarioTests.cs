@@ -437,6 +437,7 @@ namespace FunctionalTests
             modelBuilder.ComplexType<Address>().Property(a => a.Line1).HasColumnName("FirstLine");
 
             var databaseMapping = BuildMapping(modelBuilder);
+
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<CTEmployee>("CTEmployees").HasColumns(

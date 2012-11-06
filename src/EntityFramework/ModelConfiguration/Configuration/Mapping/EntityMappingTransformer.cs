@@ -3,8 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -112,7 +114,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DbDatabaseMapping databaseMapping, EntityType toTable, EntityType entityType, bool removeFks)
         {
             foreach (var associationType in databaseMapping.Model.Namespaces.Single().AssociationTypes
-                .Where(at => at.SourceEnd.GetEntityType().Equals(entityType) || at.TargetEnd.GetEntityType().Equals(entityType)))
+                                                           .Where(
+                                                               at =>
+                                                               at.SourceEnd.GetEntityType().Equals(entityType)
+                                                               || at.TargetEnd.GetEntityType().Equals(entityType)))
             {
                 UpdatePrincipalTables(databaseMapping, toTable, removeFks, associationType, entityType);
             }
@@ -156,36 +161,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         dependentTableInfos =
                             allDependentTypes.Select(t => databaseMapping.GetEntityTypeMapping(t)).Where(
                                 dm => dm != null)
-                                .SelectMany(
-                                    dm => dm.TypeMappingFragments
-                                              .Where(
-                                                  tmf => associationType.Constraint.ToProperties
-                                                             .All(
-                                                                 p =>
-                                                                 tmf.PropertyMappings.Any(
-                                                                     pm => pm.PropertyPath.First() == p))))
-                                .Distinct((f1, f2) => f1.Table == f2.Table)
-                                .Select(
-                                    df =>
-                                    new KeyValuePair<EntityType, IEnumerable<EdmProperty>>(
-                                        df.Table,
-                                        df.PropertyMappings.Where(
-                                            pm =>
-                                            associationType.Constraint.ToProperties.Contains(
-                                                pm.PropertyPath.First())).Select(
-                                                    pm => pm.Column)));
+                                             .SelectMany(
+                                                 dm => dm.MappingFragments
+                                                         .Where(
+                                                             tmf => associationType.Constraint.ToProperties
+                                                                                   .All(
+                                                                                       p =>
+                                                                                       tmf.ColumnMappings.Any(
+                                                                                           pm => pm.PropertyPath.First() == p))))
+                                             .Distinct((f1, f2) => f1.Table == f2.Table)
+                                             .Select(
+                                                 df =>
+                                                 new KeyValuePair<EntityType, IEnumerable<EdmProperty>>(
+                                                     df.Table,
+                                                     df.ColumnMappings.Where(
+                                                         pm =>
+                                                         associationType.Constraint.ToProperties.Contains(
+                                                             pm.PropertyPath.First())).Select(
+                                                                 pm => pm.ColumnProperty)));
                     }
                     else
                     {
                         // IA
                         var associationSetMapping =
-                            databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Where(
-                                asm => asm.AssociationSet.ElementType == associationType).Single();
+                            databaseMapping.EntityContainerMappings
+                                           .Single().AssociationSetMappings
+                                           .Single(asm => asm.AssociationSet.ElementType == associationType);
+
                         var dependentTable = associationSetMapping.Table;
-                        var propertyMappings = associationSetMapping.SourceEndMapping.AssociationEnd == end
+                        var propertyMappings = associationSetMapping.SourceEndMapping.EndMember == end
                                                    ? associationSetMapping.SourceEndMapping.PropertyMappings
                                                    : associationSetMapping.TargetEndMapping.PropertyMappings;
-                        var dependentColumns = propertyMappings.Select(pm => pm.Column);
+                        var dependentColumns = propertyMappings.Select(pm => pm.ColumnProperty);
 
                         dependentTableInfos = new[]
                                                   {
@@ -281,9 +288,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntityType dependentTable, EntityType principalTable, IEnumerable<EdmProperty> columns)
         {
             return dependentTable.ForeignKeyBuilders
-                .Any(
-                    fk => fk.PrincipalTable == principalTable
-                          && fk.DependentColumns.SequenceEqual(columns));
+                                 .Any(
+                                     fk => fk.PrincipalTable == principalTable
+                                           && fk.DependentColumns.SequenceEqual(columns));
         }
 
         private static IList<EdmProperty> GetDependentColumns(
@@ -342,7 +349,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         fk =>
                             {
                                 var at = fk.GetAssociationType();
-                                if (at != null && at.Constraint.DependentEnd.GetEntityType() == entityType
+                                if (at != null
+                                    && at.Constraint.DependentEnd.GetEntityType() == entityType
                                     && !fk.GetIsTypeConstraint())
                                 {
                                     MoveForeignKeyConstraint(fromTable, toTable, fk);
@@ -393,9 +401,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             Contract.Requires(column != null);
 
             table.ForeignKeyBuilders
-                .Where(fk => fk.DependentColumns.Contains(column))
-                .ToArray()
-                .Each(table.RemoveForeignKey);
+                 .Where(fk => fk.DependentColumns.Contains(column))
+                 .ToArray()
+                 .Each(table.RemoveForeignKey);
         }
     }
 
@@ -450,18 +458,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
     internal class EntityMappingOperations
     {
-        public static DbEntityTypeMappingFragment CreateTypeMappingFragment(
-            DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment templateFragment, EntityType table)
+        public static StorageMappingFragment CreateTypeMappingFragment(
+            StorageEntityTypeMapping entityTypeMapping, StorageMappingFragment templateFragment, EntitySet tableSet)
         {
-            var fragment = new DbEntityTypeMappingFragment
-                               {
-                                   Table = table
-                               };
-            entityTypeMapping.TypeMappingFragments.Add(fragment);
+            var fragment = new StorageMappingFragment(tableSet, entityTypeMapping, false);
+
+            entityTypeMapping.AddFragment(fragment);
 
             // Move all PK mappings to the extra fragment
             foreach (
-                var pkPropertyMapping in templateFragment.PropertyMappings.Where(pm => pm.Column.IsPrimaryKeyColumn))
+                var pkPropertyMapping in templateFragment.ColumnMappings.Where(pm => pm.ColumnProperty.IsPrimaryKeyColumn))
             {
                 CopyPropertyMappingToFragment(pkPropertyMapping, fragment, true);
             }
@@ -470,67 +476,64 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static void UpdatePropertyMapping(
             EdmModel database,
-            DbEdmPropertyMapping propertyMapping,
+            ColumnMappingBuilder propertyMappingBuilder,
             EntityType fromTable,
             EntityType toTable,
             bool useExisting)
         {
-            propertyMapping.Column
+            propertyMappingBuilder.ColumnProperty
                 = TableOperations.CopyColumnAndAnyConstraints(
-                    database, fromTable, toTable, propertyMapping.Column, useExisting, false);
-            propertyMapping.SyncNullabilityCSSpace();
+                    database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, useExisting, false);
+
+            propertyMappingBuilder.SyncNullabilityCSSpace();
         }
 
         public static void UpdatePropertyMappings(
             EdmModel database,
             EntityType fromTable,
-            DbEntityTypeMappingFragment fragment,
+            StorageMappingFragment fragment,
             bool useExisting)
         {
             // move the column from the formTable to the table in fragment
             if (fromTable != fragment.Table)
             {
-                fragment.PropertyMappings.Each(
+                fragment.ColumnMappings.Each(
                     pm => UpdatePropertyMapping(database, pm, fromTable, fragment.Table, useExisting));
             }
         }
 
         public static void MovePropertyMapping(
             EdmModel database,
-            DbEntityTypeMappingFragment fromFragment,
-            DbEntityTypeMappingFragment toFragment,
-            DbEdmPropertyMapping propertyMapping,
+            StorageMappingFragment fromFragment,
+            StorageMappingFragment toFragment,
+            ColumnMappingBuilder propertyMappingBuilder,
             bool requiresUpdate,
             bool useExisting)
         {
             // move the column from the formTable to the table in fragment
             if (requiresUpdate && fromFragment.Table != toFragment.Table)
             {
-                UpdatePropertyMapping(database, propertyMapping, fromFragment.Table, toFragment.Table, useExisting);
+                UpdatePropertyMapping(database, propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
             }
 
             // move the propertyMapping
-            fromFragment.PropertyMappings.Remove(propertyMapping);
-            toFragment.PropertyMappings.Add(propertyMapping);
+            fromFragment.RemoveColumnMapping(propertyMappingBuilder);
+            toFragment.AddColumnMapping(propertyMappingBuilder);
         }
 
         public static void CopyPropertyMappingToFragment(
-            DbEdmPropertyMapping propertyMapping, DbEntityTypeMappingFragment fragment, bool useExisting)
+            ColumnMappingBuilder propertyMappingBuilder, StorageMappingFragment fragment, bool useExisting)
         {
             // Ensure column is in the fragment's table
-            var column = TablePrimitiveOperations.IncludeColumn(fragment.Table, propertyMapping.Column, useExisting);
+            var column = TablePrimitiveOperations.IncludeColumn(fragment.Table, propertyMappingBuilder.ColumnProperty, useExisting);
 
             // Add the property mapping
-            fragment.PropertyMappings.Add(
-                new DbEdmPropertyMapping
-                    {
-                        PropertyPath = propertyMapping.PropertyPath,
-                        Column = column
-                    });
+            fragment.AddColumnMapping(
+                new ColumnMappingBuilder(column, propertyMappingBuilder.PropertyPath));
         }
 
         public static void UpdateConditions(
-            EdmModel database, EntityType fromTable, DbEntityTypeMappingFragment fragment)
+            EdmModel database, EntityType fromTable, StorageMappingFragment fragment)
         {
             // move the condition's column from the formTable to the table in fragment
             if (fromTable != fragment.Table)
@@ -538,8 +541,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 fragment.ColumnConditions.Each(
                     cc =>
                         {
-                            cc.Column = TableOperations.CopyColumnAndAnyConstraints(
-                                database, fromTable, fragment.Table, cc.Column, true, false);
+                            cc.ColumnProperty
+                                = TableOperations.CopyColumnAndAnyConstraints(
+                                    database, fromTable, fragment.Table, cc.ColumnProperty, true, false);
                         });
             }
         }
@@ -548,27 +552,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class AssociationMappingOperations
     {
         private static void MoveAssociationSetMappingDependents(
-            DbAssociationSetMapping associationSetMapping,
-            DbAssociationEndMapping dependentMapping,
-            EntityType toTable,
+            StorageAssociationSetMapping associationSetMapping,
+            StorageEndPropertyMapping dependentMapping,
+            EntitySet toSet,
             bool useExistingColumns)
         {
             Contract.Requires(associationSetMapping != null);
             Contract.Requires(dependentMapping != null);
-            Contract.Requires(toTable != null);
+            Contract.Requires(toSet != null);
+
+            var toTable = toSet.ElementType;
 
             dependentMapping.PropertyMappings.Each(
                 pm =>
                     {
-                        var oldColumn = pm.Column;
-                        pm.Column = TableOperations.MoveColumnAndAnyConstraints(
-                            associationSetMapping.Table, toTable, oldColumn, useExistingColumns);
-                        associationSetMapping.ColumnConditions.Where(cc => cc.Column == oldColumn).Each(
-                            cc =>
-                            cc.Column = pm.Column);
+                        var oldColumn = pm.ColumnProperty;
+
+                        pm.ColumnProperty
+                            = TableOperations.MoveColumnAndAnyConstraints(
+                                associationSetMapping.Table, toTable, oldColumn, useExistingColumns);
+
+                        associationSetMapping.ColumnConditions
+                                             .Where(cc => cc.ColumnProperty == oldColumn)
+                                             .Each(cc => cc.ColumnProperty = pm.ColumnProperty);
                     });
 
-            associationSetMapping.Table = toTable;
+            associationSetMapping.StoreEntitySet = toSet;
         }
 
         public static void MoveAllDeclaredAssociationSetMappings(
@@ -586,11 +595,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             foreach (
                 var associationSetMapping in
                     databaseMapping.EntityContainerMappings.SelectMany(asm => asm.AssociationSetMappings)
-                        .Where(
-                            a =>
-                            a.Table == fromTable &&
-                            (a.AssociationSet.ElementType.SourceEnd.GetEntityType() == entityType ||
-                             a.AssociationSet.ElementType.TargetEnd.GetEntityType() == entityType)).ToArray())
+                                   .Where(
+                                       a =>
+                                       a.Table == fromTable &&
+                                       (a.AssociationSet.ElementType.SourceEnd.GetEntityType() == entityType ||
+                                        a.AssociationSet.ElementType.TargetEnd.GetEntityType() == entityType)).ToArray())
             {
                 AssociationEndMember _, dependentEnd;
                 if (
@@ -602,12 +611,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 if (dependentEnd.GetEntityType() == entityType)
                 {
-                    var dependentMapping = dependentEnd == associationSetMapping.TargetEndMapping.AssociationEnd
-                                               ? associationSetMapping.SourceEndMapping
-                                               : associationSetMapping.TargetEndMapping;
+                    var dependentMapping
+                        = dependentEnd == associationSetMapping.TargetEndMapping.EndMember
+                              ? associationSetMapping.SourceEndMapping
+                              : associationSetMapping.TargetEndMapping;
 
                     MoveAssociationSetMappingDependents(
-                        associationSetMapping, dependentMapping, toTable, useExistingColumns);
+                        associationSetMapping, 
+                        dependentMapping, 
+                        databaseMapping.Database.GetEntitySet(toTable), 
+                        useExistingColumns);
                 }
             }
         }

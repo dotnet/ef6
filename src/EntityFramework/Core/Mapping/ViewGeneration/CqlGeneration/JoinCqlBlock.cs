@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class JoinCqlBlock : CqlBlock
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (<paramref
         ///     name="children" />),
@@ -36,16 +34,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_onClauses = onClauses;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly CellTreeOpType m_opType;
         private readonly List<OnClause> m_onClauses;
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel)
         {
@@ -144,29 +134,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             return left.Select(row => GenerateProjectionCqt(row, false));
         }
 
-        #endregion
-
         /// <summary>
         ///     Represents a complete ON clause "slot1 == slot2 AND "slot3 == slot4" ... for two <see cref="JoinCqlBlock" />s.
         /// </summary>
         internal sealed class OnClause : InternalBase
         {
-            #region Constructor
-
             internal OnClause()
             {
                 m_singleClauses = new List<SingleClause>();
             }
 
-            #endregion
-
-            #region Fields
-
             private readonly List<SingleClause> m_singleClauses;
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Adds an <see cref="SingleClause" /> element for a join of the form <paramref name="leftSlot" /> = <paramref
@@ -216,10 +194,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 StringUtil.ToSeparatedString(builder, m_singleClauses, " AND ");
             }
 
-            #endregion
-
-            #region SingleClause
-
             /// <summary>
             ///     Represents an expression between slots of the form: LeftSlot = RightSlot
             /// </summary>
@@ -234,16 +208,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                     m_rightSlotOutputMember = rightSlotOutputMember;
                 }
 
-                #region Fields
-
                 private readonly QualifiedSlot m_leftSlot;
                 private readonly MemberPath m_leftSlotOutputMember;
                 private readonly QualifiedSlot m_rightSlot;
                 private readonly MemberPath m_rightSlotOutputMember;
-
-                #endregion
-
-                #region Methods
 
                 /// <summary>
                 ///     Generates eSQL string of the form "leftSlot = rightSlot".
@@ -270,11 +238,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                     builder.Append(" = ");
                     m_rightSlot.ToCompactString(builder);
                 }
-
-                #endregion
             }
-
-            #endregion
         }
     }
 }

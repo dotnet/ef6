@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class UnionCqlBlock : CqlBlock
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a union block with SELECT (<paramref name="slotInfos" />), FROM (<paramref name="children" />), WHERE (true), AS (<paramref
         ///     name="blockAliasNum" />).
@@ -25,10 +23,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             : base(slotInfos, children, BoolExpression.True, identifiers, blockAliasNum)
         {
         }
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel)
         {
@@ -62,7 +56,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             }
             return cqt;
         }
-
-        #endregion
     }
 }

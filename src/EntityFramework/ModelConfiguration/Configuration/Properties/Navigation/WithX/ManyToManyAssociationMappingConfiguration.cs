@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
@@ -104,7 +105,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal override void Configure(
-            DbAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
+            StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             var table = associationSetMapping.Table;
 
@@ -116,19 +117,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var sourceEndIsPrimaryConfiguration
                 = navigationProperty.IsSameAs(
-                    associationSetMapping.SourceEndMapping.AssociationEnd.GetClrPropertyInfo());
+                    associationSetMapping.SourceEndMapping.EndMember.GetClrPropertyInfo());
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _leftKeyColumnNames : _rightKeyColumnNames,
-                associationSetMapping.SourceEndMapping.PropertyMappings);
+                associationSetMapping.SourceEndMapping.PropertyMappings.ToList());
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _rightKeyColumnNames : _leftKeyColumnNames,
-                associationSetMapping.TargetEndMapping.PropertyMappings);
+                associationSetMapping.TargetEndMapping.PropertyMappings.ToList());
         }
 
         private static void ConfigureColumnNames(
-            ICollection<string> keyColumnNames, IList<DbEdmPropertyMapping> propertyMappings)
+            ICollection<string> keyColumnNames, IList<StorageScalarPropertyMapping> propertyMappings)
         {
             Contract.Requires(keyColumnNames != null);
             Contract.Requires(propertyMappings != null);
@@ -139,7 +140,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.IncorrectColumnCount(string.Join(", ", keyColumnNames));
             }
 
-            keyColumnNames.Each((n, i) => propertyMappings[i].Column.Name = n);
+            keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

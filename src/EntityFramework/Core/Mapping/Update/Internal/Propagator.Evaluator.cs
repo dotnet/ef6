@@ -48,8 +48,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </remarks>
         private class Evaluator : UpdateExpressionVisitor<PropagatorResult>
         {
-            #region Constructors
-
             /// <summary>
             ///     Constructs an evaluator for evaluating expressions for the given row.
             /// </summary>
@@ -61,25 +59,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 m_row = row;
             }
 
-            #endregion
-
-            #region Fields
-
             private readonly PropagatorResult m_row;
             private static readonly string _visitorName = typeof(Evaluator).FullName;
-
-            #endregion
-
-            #region Properties
 
             protected override string VisitorName
             {
                 get { return _visitorName; }
             }
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Utility method filtering out a set of rows given a predicate.
@@ -173,8 +159,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var flags = PropagateUnknownAndPreserveFlags(null, inputs);
                 return PropagatorResult.CreateSimpleValue(flags, result);
             }
-
-            #region DbExpressionVisitor implementation
 
             /// <summary>
             ///     Determines whether the argument being evaluated has a given type (declared in the IsOfOnly predicate).
@@ -573,8 +557,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return ConvertBoolToResult(result, argumentResult);
             }
 
-            #endregion
-
             /// <summary>
             ///     Supports propagation of preserve and unknown values when evaluating expressions. If any input 
             ///     to an expression is marked as unknown, the same is true of the result of evaluating
@@ -641,8 +623,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     return flags;
                 }
             }
-
-            #endregion
         }
     }
 }

@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     // This class is responsible for validating the incoming cells for a schema
     internal class CellGroupValidator
     {
-        #region Constructor
-
         // requires: cells are not normalized, i.e., no slot is null in the cell queries
         // effects: Constructs a validator object that is capable of
         // validating all the schema cells together
@@ -30,19 +28,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_errorLog = new ErrorLog();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly IEnumerable<Cell> m_cells;
         private readonly ConfigViewGenerator m_config;
         private readonly ErrorLog m_errorLog; // Keeps track of errors for this set of cells
         private ViewSchemaConstraints m_cViewConstraints;
         private ViewSchemaConstraints m_sViewConstraints;
-
-        #endregion
-
-        #region External Methods
 
         // effects: Performs the validation of the cells in this and returns
         // an error log of all the errors/warnings that were discovered
@@ -108,10 +98,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return m_errorLog;
         }
 
-        #endregion
-
-        #region Basic Constraint Creation
-
         // effects: Creates the base cell relation and view cell relations
         // for each cellquery/cell. Also generates the C-Side and S-side
         // basic constraints and stores them into cConstraints and
@@ -159,10 +145,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             baseRelation.PopulateKeyConstraints(constraints);
         }
 
-        #endregion
-
-        #region Constraint Propagation
-
         // effects: Propagates baseConstraints derived from the cellrelations
         // to the corresponding viewCellRelations and returns the list of
         // propagated constraints
@@ -181,10 +163,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
             return propagatedConstraints;
         }
-
-        #endregion
-
-        #region Checking for Implication
 
         // effects: Checks if all sViewConstraints are implied by the
         // constraints in cViewConstraints. If some S-level constraints are
@@ -264,10 +242,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 }
             }
         }
-
-        #endregion
-
-        #region Miscellaneous checks
 
         /// <summary>
         ///     Checks that if a DISTINCT operator exists between some C-Extent and S-Extent, there are no additional
@@ -373,8 +347,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 sConstraints.KeyConstraints.Count() == sViewConstraints.KeyConstraints.Count(),
                 "Mismatch in number of S basic and view key constraints");
         }
-
-        #endregion
 
         // Keeps track of two extent objects
         private class ExtentPair

@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class SlotInfo : InternalBase
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a <see cref="SlotInfo" /> for a <see cref="CqlBlock" /> X with information about whether this slot is needed by X's parent
         ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (<paramref
@@ -50,10 +48,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 "If slot is boolean slot, there is no member path for it and vice-versa");
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     If slot is required by the parent. Can be reset to false in <see cref="ResetIsRequiredByParent" /> method.
         /// </summary>
@@ -78,10 +72,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         ///     Whether to add AND NOT NULL to Cql.
         /// </summary>
         private readonly bool m_enforceNotNull;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns true iff this slot is required by the <see cref="CqlBlock" />'s parent.
@@ -132,10 +122,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             get { return m_enforceNotNull; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Sets the <see cref="IsRequiredByParent" /> to false.
         ///     Note we don't have a setter because we don't want people to set this field to true after the object has been created.
@@ -185,7 +171,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 builder.Append(CqlFieldAlias);
             }
         }
-
-        #endregion
     }
 }

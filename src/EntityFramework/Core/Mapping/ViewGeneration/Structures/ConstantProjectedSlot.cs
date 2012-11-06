@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class ConstantProjectedSlot : ProjectedSlot
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a slot with constant value being <paramref name="value" />.
         /// </summary>
@@ -24,18 +22,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_constant = value;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The actual value.
         /// </summary>
         private readonly Constant m_constant;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the value stored in this constant.
@@ -44,10 +34,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_constant; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {
@@ -83,7 +69,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_constant.ToCompactString(builder);
         }
-
-        #endregion
     }
 }

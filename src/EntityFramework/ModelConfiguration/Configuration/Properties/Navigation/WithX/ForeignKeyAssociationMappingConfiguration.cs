@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
@@ -98,10 +99,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Configure(
-            DbAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
+            StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             // By convention source end contains the dependent column mappings
-            var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings;
+            var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings.ToList();
 
             if (_tableName != null)
             {
@@ -126,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     var foreignKeyConstraint
                         = sourceTable.ForeignKeyBuilders
-                            .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.Column)));
+                            .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.ColumnProperty)));
 
                     sourceTable.RemoveForeignKey(foreignKeyConstraint);
                     targetTable.AddForeignKey(foreignKeyConstraint);
@@ -146,17 +147,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                     }
                                 });
 
-                    associationSetMapping.Table = targetTable;
+                    associationSetMapping.StoreEntitySet = database.GetEntitySet(targetTable);
                 }
             }
 
             if ((_keyColumnNames.Count > 0)
-                && (_keyColumnNames.Count != propertyMappings.Count))
+                && (_keyColumnNames.Count != propertyMappings.Count()))
             {
                 throw Error.IncorrectColumnCount(string.Join(", ", _keyColumnNames));
             }
 
-            _keyColumnNames.Each((n, i) => propertyMappings[i].Column.Name = n);
+            _keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

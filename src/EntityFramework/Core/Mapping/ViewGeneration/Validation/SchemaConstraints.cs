@@ -14,33 +14,19 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     internal class SchemaConstraints<TKeyConstraint> : InternalBase
         where TKeyConstraint : InternalBase
     {
-        #region Constructor
-
         // effects: Creates an empty set of constraints
         internal SchemaConstraints()
         {
             m_keyConstraints = new List<TKeyConstraint>();
         }
 
-        #endregion
-
-        #region Fields
-
         // Use different lists so we can enumerate the right kind of constraints
         private readonly List<TKeyConstraint> m_keyConstraints;
-
-        #endregion
-
-        #region Properties
 
         internal IEnumerable<TKeyConstraint> KeyConstraints
         {
             get { return m_keyConstraints; }
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Adds a key constraint to this
         internal void Add(TKeyConstraint constraint)
@@ -64,7 +50,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             ConstraintsToBuilder(m_keyConstraints, builder);
         }
-
-        #endregion
     }
 }

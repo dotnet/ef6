@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     /// </summary>
     internal class CellCreator : InternalBase
     {
-        #region Constructors
-
         // effects: Creates a cell creator object for an entity container's
         // mappings (specified in "maps")
         internal CellCreator(StorageEntityContainerMapping containerMapping)
@@ -25,10 +23,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_containerMapping = containerMapping;
             m_identifiers = new CqlIdentifiers();
         }
-
-        #endregion
-
-        #region Fields
 
         // The mappings from the metadata for different containers
         private readonly StorageEntityContainerMapping m_containerMapping;
@@ -44,19 +38,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // * Properties
         // * Roles
 
-        #endregion
-
-        #region Properties
-
         // effects: Returns the set of identifiers used in this
         internal CqlIdentifiers Identifiers
         {
             get { return m_identifiers; }
         }
-
-        #endregion
-
-        #region External methods
 
         // effects: Generates the cells for all the entity containers
         // specified in this. The generated cells are geared for query view generation
@@ -79,10 +65,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return cells;
         }
-
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         ///     Boolean members have a closed domain and are enumerated when domains are established i.e. (T, F) instead of (notNull). 
@@ -527,15 +509,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return (primitive != null && primitive.PrimitiveTypeKind == PrimitiveTypeKind.Boolean);
         }
 
-        #endregion
-
-        #region String methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append("CellCreator"); // No state to really show i.e., m_maps
         }
-
-        #endregion
     }
 }

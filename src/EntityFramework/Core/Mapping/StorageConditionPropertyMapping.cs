@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -43,8 +44,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageConditionPropertyMapping : StoragePropertyMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a new condition Property mapping object
         /// </summary>
@@ -68,14 +67,10 @@ namespace System.Data.Entity.Core.Mapping
             m_isNull = isNull;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     Column EdmMember for which the condition is specified.
         /// </summary>
-        private readonly EdmProperty m_columnMember;
+        private EdmProperty m_columnMember;
 
         /// <summary>
         ///     Value for the condition thats being mapped.
@@ -83,10 +78,6 @@ namespace System.Data.Entity.Core.Mapping
         private readonly object m_value;
 
         private readonly bool? m_isNull;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Value for the condition
@@ -110,62 +101,12 @@ namespace System.Data.Entity.Core.Mapping
         internal EdmProperty ColumnProperty
         {
             get { return m_columnMember; }
+            set
+            {
+                Contract.Requires(value != null);
+
+                m_columnMember = value;
+            }
         }
-
-        #endregion
-
-        #region Methods
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal override void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("ConditionPropertyMapping");
-            sb.Append("   ");
-            if (EdmProperty != null)
-            {
-                sb.Append("Name:");
-                sb.Append(EdmProperty.Name);
-                sb.Append("   ");
-            }
-            if (ColumnProperty != null)
-            {
-                sb.Append("Column Name:");
-                sb.Append(ColumnProperty.Name);
-                sb.Append("   ");
-            }
-            if (Value != null)
-            {
-                sb.Append("Value:");
-                sb.Append("'" + Value + "'");
-                sb.Append("   ");
-                sb.Append("Value CLR Type:");
-                sb.Append("'" + Value.GetType() + "'");
-                sb.Append("   ");
-            }
-            sb.Append("Value TypeMetadata:");
-            var memberType = (ColumnProperty != null) ? ColumnProperty.TypeUsage.EdmType : null;
-            if (memberType != null)
-            {
-                sb.Append("'" + memberType.FullName + "'");
-                sb.Append("   ");
-            }
-            if (IsNull.HasValue)
-            {
-                sb.Append("IsNull:");
-                sb.Append(IsNull);
-                sb.Append("   ");
-            }
-            Console.WriteLine(sb.ToString());
-        }
-#endif
-
-        #endregion
     }
 }

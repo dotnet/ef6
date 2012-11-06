@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class ObjectComplexPropertyMapping : ObjectPropertyMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
@@ -21,14 +19,6 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        #endregion
-
-        #region Fields
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     return the member mapping kind
         /// </summary>
@@ -36,7 +26,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return MemberMappingKind.ComplexPropertyMapping; }
         }
-
-        #endregion
     }
 }

@@ -4,7 +4,8 @@ namespace ProductivityApiUnitTests
 {
     using System;
     using System.Data.Entity;
-    using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.Core.Metadata;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Xml;
     using Moq;

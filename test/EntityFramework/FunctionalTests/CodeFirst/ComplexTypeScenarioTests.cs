@@ -225,7 +225,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
         }
 
@@ -240,7 +240,7 @@ namespace FunctionalTests
                 ProviderRegistry.Sql2008_ProviderInfo,
                 typeof(RowDetails));
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
         }
 
@@ -255,7 +255,7 @@ namespace FunctionalTests
                 ProviderRegistry.Sql2008_ProviderInfo,
                 typeof(UnitMeasure));
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
         }
 
@@ -273,7 +273,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
         [Fact]
@@ -291,7 +291,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
         [Fact]

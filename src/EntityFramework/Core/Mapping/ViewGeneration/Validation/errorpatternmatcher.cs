@@ -25,8 +25,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         private readonly int m_originalErrorCount;
         private const int NUM_PARTITION_ERR_TO_FIND = 5;
 
-        #region Constructor
-
         private ErrorPatternMatcher(ViewgenContext context, MemberDomainMap domainMap, ErrorLog errorLog)
         {
             m_viewgenContext = context;
@@ -69,10 +67,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             return false;
         }
-
-        #endregion
-
-        #region Error Matching Routines
 
         /// <summary>
         ///     Finds Types (possibly without any members) that have no mapping specified
@@ -702,14 +696,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
         private bool FoundTooManyErrors()
         {
             return (m_errorLog.Count > m_originalErrorCount + NUM_PARTITION_ERR_TO_FIND);
         }
-
-        #region Private Helpers
 
         private static string BuildCommaSeparatedErrorString<T>(IEnumerable<T> members)
         {
@@ -825,8 +815,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             return (m_viewgenContext.ViewTarget == ViewTarget.QueryView);
         }
-
-        #endregion
 
         private enum ComparisonOP
         {

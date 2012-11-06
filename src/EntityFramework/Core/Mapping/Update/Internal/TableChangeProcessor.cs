@@ -27,8 +27,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </remarks>
     internal class TableChangeProcessor
     {
-        #region Constructors
-
         /// <summary>
         ///     Constructs processor based on the contents of a change node.
         /// </summary>
@@ -50,16 +48,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntitySet m_table;
         private readonly int[] m_keyOrdinals;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets metadata for the table being modified.
@@ -77,10 +67,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             get { return m_keyOrdinals; }
         }
-
-        #endregion
-
-        #region Methods
 
         // Determines whether the given ordinal position in the property list
         // for this table is a key value.
@@ -300,7 +286,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             return keyConstants;
         }
-
-        #endregion
     }
 }

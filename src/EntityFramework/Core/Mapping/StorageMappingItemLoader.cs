@@ -82,8 +82,6 @@ namespace System.Data.Entity.Core.Mapping
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class StorageMappingItemLoader
     {
-        #region Constructors
-
         /// <summary>
         ///     Public constructor.
         ///     For Beta2 we wont support delay loading Mapping information and we would also support
@@ -134,10 +132,6 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly Dictionary<string, string> m_alias; //To support the aliasing mechanism provided by MSL.
         private readonly StorageMappingItemCollection m_storageMappingItemCollection; //StorageMappingItemCollection
         private readonly string m_sourceLocation; //location identifier for the MSL file.
@@ -153,10 +147,6 @@ namespace System.Data.Entity.Core.Mapping
 
         // cached xsd schema
         private static XmlSchemaSet s_mappingXmlSchema;
-
-        #endregion
-
-        #region Properties
 
         internal double MappingVersion
         {
@@ -187,10 +177,6 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return m_storageMappingItemCollection.StoreItemCollection; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     The LoadMappingSchema method loads the mapping file and initializes the
@@ -1633,8 +1619,6 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        #region LoadFunctionImportMapping implementation
-
         /// <summary>
         ///     The method loads a function import mapping element
         /// </summary>
@@ -2730,8 +2714,6 @@ namespace System.Data.Entity.Core.Mapping
 
             return !errorFound;
         }
-
-        #endregion
 
         /// <summary>
         ///     The method loads the child nodes for the AssociationType Mapping node
@@ -3992,10 +3974,6 @@ namespace System.Data.Entity.Core.Mapping
             return facetDisplay.ToString();
         }
 
-        #endregion
-
-        #region Nested types
-
         /// <summary>
         ///     Encapsulates state and functionality for loading a modification function mapping.
         /// </summary>
@@ -4765,8 +4743,6 @@ namespace System.Data.Entity.Core.Mapping
                 return function;
             }
         }
-
-        #endregion
 
         /// <summary>
         ///     Checks whether the <paramref name="typeUsage" /> represents a type usage for an enumeration type and if

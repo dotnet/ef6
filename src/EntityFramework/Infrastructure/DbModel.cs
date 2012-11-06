@@ -2,7 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.Core.Metadata;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     /// <summary>

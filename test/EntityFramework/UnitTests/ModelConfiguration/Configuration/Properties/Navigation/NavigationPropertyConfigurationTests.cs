@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -25,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(
                 Strings.NavigationInverseItself("P", typeof(object)),
                 Assert.Throws<InvalidOperationException>(() => navigationPropertyConfiguration.InverseNavigationProperty = mockPropertyInfo)
-                    .Message);
+                      .Message);
         }
 
         [Fact]
@@ -87,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             model.AddAssociationType(inverseAssociationType);
             var inverseNavigationProperty
                 = model.AddEntityType("T")
-                    .AddNavigationProperty("N", inverseAssociationType);
+                       .AddNavigationProperty("N", inverseAssociationType);
             inverseNavigationProperty.SetClrPropertyInfo(inverseMockPropertyInfo);
 
             navigationPropertyConfiguration.Configure(
@@ -178,15 +179,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration
                       };
 
-            var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new EdmModel());
+            var databaseMapping
+                = new DbDatabaseMapping()
+                    .Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
-                new AssociationSet("AS", new AssociationType()));
-            associationSetMapping.Table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+                new AssociationSet("AS", new AssociationType()), new EntitySet());
+
+            var dependentTable = databaseMapping.Database.AddTable("T");
+
+            associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
 
-            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());
-            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping);
 

@@ -32,8 +32,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_blockAlias = identifiers.GetBlockAlias(blockAliasNum);
         }
 
-        #region Fields
-
         /// <summary>
         ///     Essentially, SELECT. May be replaced with another collection after block construction.
         /// </summary>
@@ -58,10 +56,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         ///     See <see cref="JoinTreeContext" /> for more info.
         /// </summary>
         private JoinTreeContext m_joinTreeContext;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns all the slots for this block (SELECT).
@@ -96,10 +90,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             get { return m_blockAlias; }
         }
 
-        #endregion
-
-        #region Abstract Methods
-
         /// <summary>
         ///     Returns a string corresponding to the eSQL representation of this block (and its children below).
         /// </summary>
@@ -109,10 +99,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         ///     Returns a string corresponding to the CQT representation of this block (and its children below).
         /// </summary>
         internal abstract DbExpression AsCqt(bool isTopLevel);
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     For the given <paramref name="slotNum" /> creates a <see cref="QualifiedSlot" /> qualified with <see cref="CqlAlias" /> of the current block:
@@ -243,10 +229,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_whereClause.ToCompactString(builder);
         }
 
-        #endregion
-
-        #region JoinTreeContext
-
         /// <summary>
         ///     The class represents a position of a <see cref="CqlBlock" /> in a join tree.
         ///     It is expected that the join tree is left-recursive (not balanced) and looks like this:
@@ -298,7 +280,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 return cqt.Property(m_leafQualifier);
             }
         }
-
-        #endregion
     }
 }

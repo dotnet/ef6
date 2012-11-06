@@ -3,8 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Diagnostics.Contracts;
@@ -52,8 +53,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new DbDatabaseMapping()
                     .Initialize(model, new EdmModel().DbInitialize(model.Version));
 
-            databaseMapping.EntityContainerMappings.Single().EntityContainer = model.Containers.Single();
-
             return databaseMapping;
         }
 
@@ -78,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var entitySetMapping in databaseMapping.GetEntitySetMappings())
             {
-                if (entitySetMapping.EntityTypeMappings.Count == 1)
+                if (entitySetMapping.EntityTypeMappings.Count() == 1)
                 {
                     continue;
                 }
@@ -95,14 +94,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 entitySetMapping
                     .EntityTypeMappings
                     .First()
-                    .TypeMappingFragments
+                    .MappingFragments
                     .Single()
                     .Table
                     .AddColumn(discriminatorColumn);
 
                 foreach (var entityTypeMapping in entitySetMapping.EntityTypeMappings)
                 {
-                    var entityTypeMappingFragment = entityTypeMapping.TypeMappingFragments.Single();
+                    var entityTypeMappingFragment = entityTypeMapping.MappingFragments.Single();
 
                     entityTypeMappingFragment.SetDefaultDiscriminator(discriminatorColumn);
 

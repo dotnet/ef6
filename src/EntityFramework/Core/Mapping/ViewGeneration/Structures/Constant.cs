@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal abstract class Constant : InternalBase
     {
-        #region Fields
-
         internal static readonly IEqualityComparer<Constant> EqualityComparer = new CellConstantComparer();
         internal static readonly Constant Null = NullConstant.Instance;
         internal static readonly Constant NotNull = new NegatedConstant(new[] { NullConstant.Instance });
@@ -29,10 +27,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         ///     Currently only used as a Sentinel node to prevent expression optimization
         /// </summary>
         internal static readonly Constant AllOtherConstants = AllOtherConstantsConstant.Instance;
-
-        #endregion
-
-        #region Methods
 
         internal abstract bool IsNull();
 
@@ -96,10 +90,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Comparer class
-
         private class CellConstantComparer : IEqualityComparer<Constant>
         {
             public bool Equals(Constant left, Constant right)
@@ -127,10 +117,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Special constant classes (NullConstant, UndefinedConstant, AllOtherConstants)
-
         private sealed class NullConstant : Constant
         {
             internal static readonly Constant Instance = new NullConstant();
@@ -138,8 +124,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             private NullConstant()
             {
             }
-
-            #region Methods
 
             internal override bool IsNull()
             {
@@ -200,8 +184,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 builder.Append("NULL");
             }
-
-            #endregion
         }
 
         private sealed class UndefinedConstant : Constant
@@ -211,8 +193,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             private UndefinedConstant()
             {
             }
-
-            #region Methods
 
             internal override bool IsNull()
             {
@@ -276,8 +256,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 builder.Append("?");
             }
-
-            #endregion
         }
 
         private sealed class AllOtherConstantsConstant : Constant
@@ -287,8 +265,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             private AllOtherConstantsConstant()
             {
             }
-
-            #region Methods
 
             internal override bool IsNull()
             {
@@ -352,10 +328,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 builder.Append("AllOtherConstants");
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

@@ -4,8 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -158,14 +160,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     var baseTypeTableFragments
                         = databaseMapping.GetEntityTypeMappings((EntityType)baseType)
-                            .SelectMany(etm => etm.TypeMappingFragments)
+                            .SelectMany(etm => etm.MappingFragments)
                             .Where(tmf => tmf.Table == table)
                             .ToList();
 
                     if (baseTypeTableFragments.Any()
                         && baseTypeTableFragments
                                .SelectMany(etmf => etmf.ColumnConditions)
-                               .All(cc => cc.Column != column))
+                               .All(cc => cc.ColumnProperty != column))
                     {
                         return true;
                     }
@@ -179,7 +181,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void Configure(
             DbDatabaseMapping databaseMapping,
-            DbEntityTypeMappingFragment fragment,
+            StorageMappingFragment fragment,
             EntityType entityType,
             DbProviderManifest providerManifest)
         {

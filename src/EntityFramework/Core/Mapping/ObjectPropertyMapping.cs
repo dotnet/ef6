@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class ObjectPropertyMapping : ObjectMemberMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
@@ -21,10 +19,6 @@ namespace System.Data.Entity.Core.Mapping
                 base(edmProperty, clrProperty)
         {
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     The PropertyMetadata object that represents the Clr member for which mapping is being specified
@@ -41,7 +35,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return MemberMappingKind.ScalarPropertyMapping; }
         }
-
-        #endregion
     }
 }

@@ -3,8 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -35,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public void AddMapping(
             EntityType entityType,
             IList<EdmProperty> propertyPath,
-            IEnumerable<DbColumnCondition> conditions,
+            IEnumerable<StorageConditionPropertyMapping> conditions,
             bool isDefaultDiscriminatorCondition)
         {
             _propertyMappings.Add(

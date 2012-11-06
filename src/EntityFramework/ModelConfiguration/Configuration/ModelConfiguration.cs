@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -526,7 +527,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                             Set = esm,
                             Fragments =
                  (from etm in esm.EntityTypeMappings
-                  from etmf in etm.TypeMappingFragments
+                  from etmf in etm.MappingFragments
                   group etmf by etmf.Table
                   into g
                   where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
@@ -543,7 +544,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 = (from t in databaseMapping.Database.GetEntityTypes()
                    where databaseMapping.GetEntitySetMappings()
                              .SelectMany(esm => esm.EntityTypeMappings)
-                             .SelectMany(etm => etm.TypeMappingFragments).All(etmf => etmf.Table != t)
+                             .SelectMany(etm => etm.MappingFragments).All(etmf => etmf.Table != t)
                          && databaseMapping.GetAssociationSetMappings().All(asm => asm.Table != t)
                    select t).ToList();
 

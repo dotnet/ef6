@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
@@ -34,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         private static bool RemapsInheritedProperties(
-            DbDatabaseMapping databaseMapping, DbEntityTypeMapping entityTypeMapping)
+            DbDatabaseMapping databaseMapping, StorageEntityTypeMapping entityTypeMapping)
         {
             var inheritedProperties = entityTypeMapping.EntityType.Properties
                 .Except(entityTypeMapping.EntityType.DeclaredProperties)
@@ -65,14 +67,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             return false;
         }
 
-        private static DbEntityTypeMappingFragment GetFragmentForPropertyMapping(
-            DbEntityTypeMapping entityTypeMapping, EdmProperty property)
+        private static StorageMappingFragment GetFragmentForPropertyMapping(
+            StorageEntityTypeMapping entityTypeMapping, EdmProperty property)
         {
-            return entityTypeMapping.TypeMappingFragments
-                .SingleOrDefault(tmf => tmf.PropertyMappings.Any(pm => pm.PropertyPath.Last() == property));
+            return entityTypeMapping.MappingFragments
+                .SingleOrDefault(tmf => tmf.ColumnMappings.Any(pm => pm.PropertyPath.Last() == property));
         }
 
-        private static bool HasBaseWithIsTypeOf(DbEntitySetMapping entitySetMapping, EntityType entityType)
+        private static bool HasBaseWithIsTypeOf(StorageEntitySetMapping entitySetMapping, EntityType entityType)
         {
             var baseType = entityType.BaseType;
 

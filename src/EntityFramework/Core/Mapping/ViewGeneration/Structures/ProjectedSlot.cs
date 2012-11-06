@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     {
         internal static readonly IEqualityComparer<ProjectedSlot> EqualityComparer = new Comparer();
 
-        #region Virtual members
-
         /// <summary>
         ///     Returns true if this is semantically equivalent to <paramref name="right" />.
         /// </summary>
@@ -86,10 +84,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal abstract DbExpression AsCqt(DbExpression row, MemberPath outputMember);
 
-        #endregion
-
-        #region Other Methods
-
         /// <summary>
         ///     Given fields in <paramref name="slots1" /> and <paramref name="slots2" />, remap and merge them.
         /// </summary>
@@ -153,10 +147,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return true;
         }
 
-        #endregion
-
-        #region Comparer class
-
         /// <summary>
         ///     A class that can compare slots based on their contents.
         /// </summary>
@@ -189,7 +179,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return key.GetHash();
             }
         }
-
-        #endregion
     }
 }

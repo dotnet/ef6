@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class MemberPath : InternalBase, IEquatable<MemberPath>
     {
-        #region Fields
-
         /// <summary>
         ///     The base entity set.
         /// </summary>
@@ -32,10 +30,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private readonly List<EdmMember> m_path;
 
         internal static readonly IEqualityComparer<MemberPath> EqualityComparer = new Comparer();
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Creates a member path that corresponds to <paramref name="path" /> in the <paramref name="extent" /> (or the extent itself).
@@ -71,10 +65,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_path = new List<EdmMember>(prefix.m_path);
             m_path.Add(last);
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the first path item in a non-empty path, otherwise null.
@@ -248,10 +238,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return builder.ToString();
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns false iff the path is 
@@ -862,10 +848,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             builder.Append(instanceToken + PathToString(null));
         }
 
-        #endregion
-
-        #region Comparer
-
         private sealed class Comparer : IEqualityComparer<MemberPath>
         {
             public bool Equals(MemberPath left, MemberPath right)
@@ -910,7 +892,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return result;
             }
         }
-
-        #endregion
     }
 }

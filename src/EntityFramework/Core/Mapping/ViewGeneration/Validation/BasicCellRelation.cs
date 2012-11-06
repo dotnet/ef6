@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     // slots for the join tree in cell query (before projection)
     internal class BasicCellRelation : CellRelation
     {
-        #region Constructor
-
         // effects: Creates a basic cell relation for query
         internal BasicCellRelation(
             CellQuery cellQuery, ViewCellRelation viewCellRelation,
@@ -28,27 +26,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_viewCellRelation = viewCellRelation;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly CellQuery m_cellQuery;
         private readonly List<MemberProjectedSlot> m_slots;
         private readonly ViewCellRelation m_viewCellRelation; // The viewcellrelation
         // corresponding to this basiccellrelation
 
-        #endregion
-
-        #region Properties
-
         internal ViewCellRelation ViewCellRelation
         {
             get { return m_viewCellRelation; }
         }
-
-        #endregion
-
-        #region Key Constraints Methods
 
         // effects: Modifies constraints to contain the key constraints that
         // are present in this relation
@@ -145,10 +131,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
-        #region Comparer/String Methods
-
         protected override int GetHash()
         {
             // Note: Using CLR-Hashcode
@@ -163,7 +145,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Just print the extent name from slot 0
             StringUtil.FormatStringBuilder(builder, "{0}", m_slots[0]);
         }
-
-        #endregion
     }
 }

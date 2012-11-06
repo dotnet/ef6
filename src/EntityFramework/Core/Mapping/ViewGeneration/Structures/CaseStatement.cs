@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class CaseStatement : InternalBase
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a case statement for the <paramref name="memberPath" /> with no clauses.
         /// </summary>
@@ -32,10 +30,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_memberPath = memberPath;
             m_clauses = new List<WhenThen>();
         }
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     The field.
@@ -54,10 +48,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         private bool m_simplified;
 
-        #endregion
-
-        #region Properties
-
         internal MemberPath MemberPath
         {
             get { return m_memberPath; }
@@ -72,10 +62,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_elseValue; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Recursively qualifies all <see cref="ProjectedSlot" />s and returns a new deeply qualified <see cref="CaseStatement" />.
@@ -411,15 +397,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_memberPath.ToCompactString(builder);
         }
 
-        #endregion
-
         /// <summary>
         ///     A class that stores WHEN condition THEN value.
         /// </summary>
         internal sealed class WhenThen : InternalBase
         {
-            #region Constructor
-
             /// <summary>
             ///     Creates WHEN condition THEN value.
             /// </summary>
@@ -429,16 +411,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 m_value = value;
             }
 
-            #endregion
-
-            #region Fields
-
             private readonly BoolExpression m_condition;
             private readonly ProjectedSlot m_value;
-
-            #endregion
-
-            #region Properties
 
             /// <summary>
             ///     Returns WHEN condition.
@@ -456,10 +430,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 get { return m_value; }
             }
 
-            #endregion
-
-            #region String Methods
-
             internal WhenThen ReplaceWithQualifiedSlot(CqlBlock block)
             {
                 // Change the THEN part
@@ -474,8 +444,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append("THEN ");
                 m_value.ToCompactString(builder);
             }
-
-            #endregion
         }
     }
 }

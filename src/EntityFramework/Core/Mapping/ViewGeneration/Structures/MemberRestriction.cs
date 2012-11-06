@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal abstract class MemberRestriction : BoolLiteral
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates an incomplete member restriction with the meaning "<paramref name="slot" /> = <paramref name="value" />".
         ///     "Partial" means that the <see cref="Domain" /> in this restriction is partial - hence the operations on the restriction are limited.
@@ -61,17 +59,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(possibleValues != null);
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MemberProjectedSlot m_restrictedMemberSlot;
         private readonly Domain m_domain;
         private readonly bool m_isComplete;
-
-        #endregion
-
-        #region Properties
 
         internal bool IsComplete
         {
@@ -93,10 +83,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_domain; }
         }
-
-        #endregion
-
-        #region BoolLiteral Members
 
         /// <summary>
         ///     Returns a boolean expression that is domain-aware and ready for optimizations etc.
@@ -194,10 +180,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        #endregion
-
-        #region Other Methods
-
         internal override StringBuilder AsUserString(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
             return AsEsql(builder, blockAlias, skipIsNotNull);
@@ -210,7 +192,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             builder.Append(")");
             return builder;
         }
-
-        #endregion
     }
 }

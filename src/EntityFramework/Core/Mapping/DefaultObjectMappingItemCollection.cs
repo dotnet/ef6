@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class DefaultObjectMappingItemCollection : MappingItemCollection
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcutor to create an instance of DefaultObjectMappingItemCollection.
         ///     To start with we will create a Schema under which maps will be created.
@@ -38,10 +36,6 @@ namespace System.Data.Entity.Core.Mapping
             LoadPrimitiveMaps();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ObjectItemCollection m_objectCollection;
         private readonly EdmItemCollection m_edmCollection;
 
@@ -50,10 +44,6 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly Dictionary<string, int> cdmTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
         //Indexes into the type mappings collection based on clr type name
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
@@ -895,7 +885,5 @@ namespace System.Data.Entity.Core.Mapping
             map = null;
             return false;
         }
-
-        #endregion
     }
 }

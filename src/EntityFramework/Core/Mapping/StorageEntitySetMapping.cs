@@ -5,21 +5,21 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
-    using System.Text;
+    using System.Linq;
 
     /// <summary>
     ///     Represents the Mapping metadata for an EnitytSet in CS space.
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
     ///     --MappingFragment
     ///     --EntityTypeMapping
     ///     --MappingFragment
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     This class represents the metadata for the EntitySetMapping elements in the
@@ -27,8 +27,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageEntitySetMapping : StorageSetMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a EntitySet mapping object
         /// </summary>
@@ -41,16 +39,8 @@ namespace System.Data.Entity.Core.Mapping
             m_implicitlyMappedAssociationSetEnds = new List<AssociationSetEnd>();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly List<StorageEntityTypeModificationFunctionMapping> m_modificationFunctionMappings;
         private readonly List<AssociationSetEnd> m_implicitlyMappedAssociationSetEnds;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets all function mappings for this entity set.
@@ -68,6 +58,16 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_implicitlyMappedAssociationSetEnds.AsReadOnly(); }
         }
 
+        public IEnumerable<StorageEntityTypeMapping> EntityTypeMappings
+        {
+            get { return TypeMappings.OfType<StorageEntityTypeMapping>(); }
+        }
+
+        public EntitySet EntitySet
+        {
+            get { return (EntitySet)Set; }
+        }
+
         /// <summary>
         ///     Whether the EntitySetMapping has empty content
         ///     Returns true if there are no Function Maps and no table Mapping fragments
@@ -83,41 +83,6 @@ namespace System.Data.Entity.Core.Mapping
                 return base.HasNoContent;
             }
         }
-
-        #endregion
-
-        #region Methods
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        internal override void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("EntitySetMapping");
-            sb.Append("   ");
-            sb.Append("Name:");
-            sb.Append(Set.Name);
-            if (QueryView != null)
-            {
-                sb.Append("   ");
-                sb.Append("Query View:");
-                sb.Append(QueryView);
-            }
-            Console.WriteLine(sb.ToString());
-            foreach (var typeMapping in TypeMappings)
-            {
-                typeMapping.Print(index + 5);
-            }
-            foreach (var m in m_modificationFunctionMappings)
-            {
-                m.Print(index + 10);
-            }
-        }
-#endif
 
         /// <summary>
         ///     Requires:
@@ -166,7 +131,5 @@ namespace System.Data.Entity.Core.Mapping
                     "modification function mapping already exists for this type");
             }
         }
-
-        #endregion
     }
 }

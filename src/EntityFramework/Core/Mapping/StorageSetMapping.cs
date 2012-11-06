@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using Triple = Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
@@ -31,8 +32,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal abstract class StorageSetMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct the new StorageSetMapping object.
         /// </summary>
@@ -44,10 +43,6 @@ namespace System.Data.Entity.Core.Mapping
             m_extent = extent;
             m_typeMappings = new List<StorageTypeMapping>();
         }
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     The EntityContainer mapping that contains this extent mapping.
@@ -70,10 +65,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     Stores type-Specific user-defined QueryViews.
         /// </summary>
         private readonly Dictionary<Triple, string> m_typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     The set for which this mapping is for
@@ -138,27 +129,24 @@ namespace System.Data.Entity.Core.Mapping
 
         internal bool HasModificationFunctionMapping { get; set; }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Add type mapping as a child under this SetMapping
         /// </summary>
         /// <param name="typeMapping"> </param>
         internal void AddTypeMapping(StorageTypeMapping typeMapping)
         {
+            Contract.Requires(typeMapping != null);
+
             m_typeMappings.Add(typeMapping);
         }
 
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        internal abstract void Print(int index);
-#endif
+        internal void RemoveTypeMapping(StorageTypeMapping typeMapping)
+        {
+            Contract.Requires(typeMapping != null);
 
+            m_typeMappings.Remove(typeMapping);
+        }
+        
         internal bool ContainsTypeSpecificQueryView(Triple key)
         {
             return m_typeSpecificQueryViews.ContainsKey(key);
@@ -184,7 +172,5 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(m_typeSpecificQueryViews.ContainsKey(key));
             return m_typeSpecificQueryViews[key];
         }
-
-        #endregion
     }
 }

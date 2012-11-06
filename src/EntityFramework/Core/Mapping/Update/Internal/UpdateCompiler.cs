@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </summary>
     internal sealed class UpdateCompiler
     {
-        #region Constructors
-
         /// <summary>
         ///     Initialize an update compiler.
         /// </summary>
@@ -29,14 +27,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_translator = translator;
         }
 
-        #endregion
-
-        #region Fields
-
         internal readonly UpdateTranslator m_translator;
         private const string s_targetVarName = "target";
-
-        #endregion
 
         /// <summary>
         ///     Builds a delete command.

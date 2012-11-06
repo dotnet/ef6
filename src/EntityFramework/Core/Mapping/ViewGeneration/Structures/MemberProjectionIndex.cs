@@ -15,14 +15,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class MemberProjectionIndex : InternalBase
     {
-        #region Fields
-
         private readonly Dictionary<MemberPath, int> m_indexMap;
         private readonly List<MemberPath> m_members;
-
-        #endregion
-
-        #region Constructor/Factory
 
         /// <summary>
         ///     Recursively generates <see cref="MemberPath" />s for the members of the types stored in the <paramref name="extent" />.
@@ -43,10 +37,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_indexMap = new Dictionary<MemberPath, int>(MemberPath.EqualityComparer);
             m_members = new List<MemberPath>();
         }
-
-        #endregion
-
-        #region Properties
 
         internal int Count
         {
@@ -86,10 +76,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_members; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns a non-negative index of the <paramref name="member" /> if found, otherwise -1.
@@ -180,10 +166,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             builder.Append('>');
         }
 
-        #endregion
-
-        #region Signature construction
-
         /// <summary>
         ///     Starting at the <paramref name="member" />, recursively generates <see cref="MemberPath" />s for the fields embedded in it.
         /// </summary>
@@ -267,7 +249,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
         }
-
-        #endregion
     }
 }

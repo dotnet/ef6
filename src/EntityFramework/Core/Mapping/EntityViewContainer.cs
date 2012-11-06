@@ -10,16 +10,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     public abstract class EntityViewContainer
     {
-        #region Constructors
-
-        #endregion
-
-        #region fields
-
-        #endregion
-
-        #region properties
-
         /// <summary>
         ///     Returns the cached dictionary of (ExtentName,EsqlView)
         /// </summary>
@@ -46,7 +36,5 @@ namespace System.Data.Entity.Core.Mapping
         public string HashOverAllExtentViews { get; set; }
 
         public int ViewCount { get; protected set; }
-
-        #endregion
     }
 }

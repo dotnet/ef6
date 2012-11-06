@@ -7,31 +7,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
 
     /// <summary>
     ///     Mapping metadata for Complex Types.
     /// </summary>
-    internal class StorageComplexTypeMapping
+    internal class StorageComplexTypeMapping : IStructuralTypeMapping
     {
-        #region Constructors
-
-        /// <summary>
-        ///     Construct a new Complex Property mapping object
-        /// </summary>
-        /// <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
-        internal StorageComplexTypeMapping(bool isPartial)
-        {
-#if DEBUG
-            m_isPartial = isPartial;
-#endif
-        }
-
-        #endregion
-
-        #region Fields
-
         private readonly Dictionary<string, StoragePropertyMapping> m_properties =
             new Dictionary<string, StoragePropertyMapping>(StringComparer.Ordinal);
 
@@ -55,9 +36,17 @@ namespace System.Data.Entity.Core.Mapping
 
         // not only the type specified but the sub-types of that type as well.        
 
-        #endregion
-
-        #region Properties
+        /// <summary>
+        ///     Construct a new Complex Property mapping object
+        /// </summary>
+        /// <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
+        internal StorageComplexTypeMapping(bool isPartial)
+        {
+#if DEBUG
+            m_isPartial = isPartial;
+#endif
+        }
 
         /// <summary>
         ///     a list of TypeMetadata that this mapping holds true for.
@@ -79,7 +68,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     List of child properties that make up this complex property
         /// </summary>
-        internal ReadOnlyCollection<StoragePropertyMapping> Properties
+        public ReadOnlyCollection<StoragePropertyMapping> Properties
         {
             get { return new List<StoragePropertyMapping>(m_properties.Values).AsReadOnly(); }
         }
@@ -98,20 +87,6 @@ namespace System.Data.Entity.Core.Mapping
                 return properties.AsReadOnly();
             }
         }
-
-        ///// <summary>
-        ///// Whether the property mapping representation is 
-        ///// totally represented in this table mapping fragment or not.
-        ///// </summary>
-        //internal bool IsPartial {
-        //    get {
-        //        return m_isPartial;
-        //    }
-        //}
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Add a Type to the list of types that this mapping is valid for
@@ -133,9 +108,14 @@ namespace System.Data.Entity.Core.Mapping
         ///     Add a property mapping as a child of this complex property mapping
         /// </summary>
         /// <param name="prop"> The mapping that needs to be added </param>
-        internal void AddProperty(StoragePropertyMapping prop)
+        public void AddProperty(StoragePropertyMapping prop)
         {
             m_properties.Add(prop.EdmProperty.Name, prop);
+        }
+
+        public void RemoveProperty(StoragePropertyMapping prop)
+        {
+            m_properties.Remove(prop.EdmProperty.Name);
         }
 
         /// <summary>
@@ -190,48 +170,5 @@ namespace System.Data.Entity.Core.Mapping
             }
             return null;
         }
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("ComplexTypeMapping");
-            sb.Append("   ");
-            if (m_isPartial)
-            {
-                sb.Append("IsPartial:True");
-            }
-            sb.Append("   ");
-            foreach (var type in m_types.Values)
-            {
-                sb.Append("Types:");
-                sb.Append(type.FullName);
-                sb.Append("   ");
-            }
-            foreach (var type in m_isOfTypes.Values)
-            {
-                sb.Append("Is-Of Types:");
-                sb.Append(type.FullName);
-                sb.Append("   ");
-            }
-            Console.WriteLine(sb.ToString());
-            foreach (StorageConditionPropertyMapping conditionMap in m_conditionProperties.Values)
-            {
-                (conditionMap).Print(index + 5);
-            }
-            foreach (var propertyMapping in Properties)
-            {
-                propertyMapping.Print(index + 5);
-            }
-        }
-#endif
-
-        #endregion
     }
 }

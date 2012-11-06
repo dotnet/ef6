@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     /// </summary>
     internal sealed class ConfigViewGenerator : InternalBase
     {
-        #region Constructors
-
         internal ConfigViewGenerator()
         {
             m_watch = new Stopwatch();
@@ -24,10 +22,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_generateUpdateViews = false;
             StartWatch();
         }
-
-        #endregion
-
-        #region Fields
 
         private ViewGenTraceLevel m_traceLevel;
         private readonly TimeSpan[] m_breakdownTimes;
@@ -46,10 +40,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         private bool m_enableValidation = true;
         private bool m_generateUpdateViews = true;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     If true then view generation will produce eSQL, otherwise CQTs only.
@@ -99,10 +89,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             get { return IsTraceAllowed(ViewGenTraceLevel.Verbose); }
         }
 
-        #endregion
-
-        #region Methods
-
         private void StartWatch()
         {
             m_watch.Start();
@@ -149,7 +135,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         {
             StringUtil.FormatStringBuilder(builder, "Trace Switch: {0}", m_traceLevel);
         }
-
-        #endregion
     }
 }
