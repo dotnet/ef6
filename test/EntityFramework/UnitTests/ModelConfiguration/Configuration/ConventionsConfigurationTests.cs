@@ -3,8 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;

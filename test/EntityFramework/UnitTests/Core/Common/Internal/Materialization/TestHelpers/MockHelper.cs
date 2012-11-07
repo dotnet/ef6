@@ -93,7 +93,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             dbDataReaderMock
                 .Setup(m => m.GetValue(It.IsAny<int>()))
-                .Returns((int ordinal) =>
+                .Returns(
+                    (int ordinal) =>
                     underlyingEnumerators[currentResultSet].Current[ordinal]);
             dbDataReaderMock
                 .Setup(m => m.IsDBNull(It.IsAny<int>()))

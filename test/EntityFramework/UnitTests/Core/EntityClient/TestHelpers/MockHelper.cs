@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using Moq;
+#if !NET40
+#endif
 
     internal class MockHelper
     {

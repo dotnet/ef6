@@ -8,8 +8,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    /// Allows configuration to be performed for a lightweight convention based on
-    /// the properties of entity types in a model.
+    ///     Allows configuration to be performed for a lightweight convention based on
+    ///     the properties of entity types in a model.
     /// </summary>
     public class PropertyConventionConfiguration
     {
@@ -31,13 +31,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Filters the properties that this convention applies to based on a predicate.
+        ///     Filters the properties that this convention applies to based on a predicate.
         /// </summary>
-        /// <param name="predicate">>A function to test each property for a condition.</param>
-        /// <returns>
-        /// The same PropertyConventionConfiguration instance so that multiple calls can
-        /// be chained.
-        /// </returns>
+        /// <param name="predicate"> >A function to test each property for a condition. </param>
+        /// <returns> The same PropertyConventionConfiguration instance so that multiple calls can be chained. </returns>
         public PropertyConventionConfiguration Where(Func<PropertyInfo, bool> predicate)
         {
             Contract.Requires(predicate != null);
@@ -48,11 +45,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Allows configuration of the properties that this convention applies to.
+        ///     Allows configuration of the properties that this convention applies to.
         /// </summary>
-        /// <param name="propertyConfigurationAction">
-        /// An action that performs configuration against a <see cref="LightweightPropertyConfiguration" />.
-        /// </param>
+        /// <param name="propertyConfigurationAction"> An action that performs configuration against a <see
+        ///      cref="LightweightPropertyConfiguration" /> . </param>
         public void Configure(Action<LightweightPropertyConfiguration> propertyConfigurationAction)
         {
             Contract.Requires(propertyConfigurationAction != null);

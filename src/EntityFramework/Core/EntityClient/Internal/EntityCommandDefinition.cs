@@ -20,9 +20,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     internal class EntityCommandDefinition : DbCommandDefinition
@@ -184,7 +185,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Constructor for testing/mocking purposes.
         /// </summary>
-        protected EntityCommandDefinition(BridgeDataReaderFactory factory = null,
+        protected EntityCommandDefinition(
+            BridgeDataReaderFactory factory = null,
             ColumnMapFactory columnMapFactory = null,
             List<DbCommandDefinition> mappedCommandDefinitions = null)
         {
@@ -217,7 +219,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     //Note: Defensive check for historic reasons, we expect functionImport.EntitySets.Count > resultSetIndex 
                     var entitySet = functionImport.EntitySets.Count > resultSetIndex ? functionImport.EntitySets[resultSetIndex] : null;
 
-                    columnMapGenerator = new FunctionColumnMapGenerator(mapping, resultSetIndex, entitySet, baseStructuralType, _columnMapFactory);
+                    columnMapGenerator = new FunctionColumnMapGenerator(
+                        mapping, resultSetIndex, entitySet, baseStructuralType, _columnMapFactory);
 
                     // We don't actually know the return type for the stored procedure, but we can infer
                     // one based on the mapping (i.e.: a column for every property of the mapped types
@@ -556,8 +559,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             try
             {
                 reader = await
-                    storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                         storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken)
+                             .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception e)
             {

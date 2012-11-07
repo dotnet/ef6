@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;

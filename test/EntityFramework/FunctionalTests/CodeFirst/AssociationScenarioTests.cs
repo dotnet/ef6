@@ -10,8 +10,8 @@ namespace FunctionalTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -579,7 +579,7 @@ namespace FunctionalTests
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
-            
+
             databaseMapping.Assert<DependentNoPrincipalNavOptional>()
                 .HasForeignKey(new[] { "DependentForeignKeyPropertyNotFromConvention1" }, "PrincipalNoPrincipalNavs");
         }

@@ -765,7 +765,7 @@ namespace System.Data.Entity.Core.Common.Utils
                 && storeGeneratedFacet.Value != null)
             {
                 var pattern = (StoreGeneratedPattern)storeGeneratedFacet.Value;
-                
+
                 return pattern;
             }
 

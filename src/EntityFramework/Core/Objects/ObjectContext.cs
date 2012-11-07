@@ -36,6 +36,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
+
 #if !NET40
 
 #endif
@@ -256,7 +257,7 @@ namespace System.Data.Entity.Core.Objects
             _commandInterceptor = commandInterceptor;
             _adapter = adapter;
         }
-        
+
         #endregion //Constructors
 
         #region Properties

@@ -83,9 +83,21 @@ namespace System.Data.Entity.Migrations
         [Fact]
         public void Cannot_set_context_key_to_whitespace()
         {
-            Assert.Throws<ArgumentException>(() => new TestMigrationsConfiguration() { ContextKey = " " } );
-            Assert.Throws<ArgumentException>(() => new TestMigrationsConfiguration() { ContextKey = "" });
-            Assert.Throws<ArgumentException>(() => new TestMigrationsConfiguration() { ContextKey = null });
+            Assert.Throws<ArgumentException>(
+                () => new TestMigrationsConfiguration
+                          {
+                              ContextKey = " "
+                          });
+            Assert.Throws<ArgumentException>(
+                () => new TestMigrationsConfiguration
+                          {
+                              ContextKey = ""
+                          });
+            Assert.Throws<ArgumentException>(
+                () => new TestMigrationsConfiguration
+                          {
+                              ContextKey = null
+                          });
         }
     }
 }

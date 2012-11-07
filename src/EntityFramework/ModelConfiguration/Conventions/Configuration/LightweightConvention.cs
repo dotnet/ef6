@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     internal class LightweightConvention : IConfigurationConvention<Type, EntityTypeConfiguration>,
-        IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
+                                           IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>
     {
         private readonly EntityConventionConfiguration _configuration;
 

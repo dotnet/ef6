@@ -11,6 +11,7 @@ namespace System.Data.Entity
     using System.Resources;
     using System.Security;
     using System.Security.Permissions;
+
 #if !SILVERLIGHT
 #endif
 

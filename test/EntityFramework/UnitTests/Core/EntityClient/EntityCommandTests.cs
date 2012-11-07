@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using Moq;
     using Xunit;
+#if !NET40
+#endif
 
     public class EntityCommandTests
     {

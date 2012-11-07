@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 // (1) view generation (checks that extents are fully mapped)
                 var context = CreateViewgenContext(entity, ViewTarget.QueryView, identifiers);
-                
+
                 GenerateViewsForExtentAndType(type, context, identifiers, views, mode);
             }
             catch (InternalMappingException exception)

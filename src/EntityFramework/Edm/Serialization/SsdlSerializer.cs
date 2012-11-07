@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl;
     using System.Diagnostics.Contracts;
     using System.Xml;

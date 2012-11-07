@@ -149,32 +149,32 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             return _syndicationItemToTargetPath[(int)value];
         }
 
-        private static readonly string[] _syndicationItemToTargetPath 
+        private static readonly string[] _syndicationItemToTargetPath
             = new[]
-                                                                            {
-                                                                                String.Empty,
-                                                                                // SyndicationItemProperty.Custom
-                                                                                XmlConstants.SyndAuthorEmail,
-                                                                                XmlConstants.SyndAuthorName,
-                                                                                XmlConstants.SyndAuthorUri,
-                                                                                XmlConstants.SyndContributorEmail,
-                                                                                XmlConstants.SyndContributorName,
-                                                                                XmlConstants.SyndContributorUri,
-                                                                                XmlConstants.SyndUpdated,
-                                                                                XmlConstants.SyndPublished,
-                                                                                XmlConstants.SyndRights,
-                                                                                XmlConstants.SyndSummary,
-                                                                                XmlConstants.SyndTitle,
-                                                                                XmlConstants.SyndCategoryLabel,
-                                                                                XmlConstants.SyndCategoryScheme,
-                                                                                XmlConstants.SyndCategoryTerm,
-                                                                                XmlConstants.SyndLinkHref,
-                                                                                XmlConstants.SyndLinkHrefLang,
-                                                                                XmlConstants.SyndLinkLength,
-                                                                                XmlConstants.SyndLinkRel,
-                                                                                XmlConstants.SyndLinkTitle,
-                                                                                XmlConstants.SyndLinkType
-                                                                            };
+                  {
+                      String.Empty,
+                      // SyndicationItemProperty.Custom
+                      XmlConstants.SyndAuthorEmail,
+                      XmlConstants.SyndAuthorName,
+                      XmlConstants.SyndAuthorUri,
+                      XmlConstants.SyndContributorEmail,
+                      XmlConstants.SyndContributorName,
+                      XmlConstants.SyndContributorUri,
+                      XmlConstants.SyndUpdated,
+                      XmlConstants.SyndPublished,
+                      XmlConstants.SyndRights,
+                      XmlConstants.SyndSummary,
+                      XmlConstants.SyndTitle,
+                      XmlConstants.SyndCategoryLabel,
+                      XmlConstants.SyndCategoryScheme,
+                      XmlConstants.SyndCategoryTerm,
+                      XmlConstants.SyndLinkHref,
+                      XmlConstants.SyndLinkHrefLang,
+                      XmlConstants.SyndLinkLength,
+                      XmlConstants.SyndLinkRel,
+                      XmlConstants.SyndLinkTitle,
+                      XmlConstants.SyndLinkType
+                  };
 
         private static string SyndicationTextContentKindToString(object value)
         {
@@ -546,7 +546,8 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                     CsdlConstants.Attribute_Scale, property.Scale.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (property.StoreGeneratedPattern != StoreGeneratedPattern.None)
+            if (property.StoreGeneratedPattern
+                != StoreGeneratedPattern.None)
             {
                 _xmlWriter.WriteAttributeString(
                     SsdlConstants.Attribute_StoreGeneratedPattern,
@@ -554,7 +555,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                         ? CsdlConstants.Value_Computed
                         : CsdlConstants.Value_Identity);
             }
-            
+
             if (_serializeDefaultNullability || !property.Nullable)
             {
                 _xmlWriter.WriteAttributeString(

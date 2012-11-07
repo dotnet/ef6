@@ -203,7 +203,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets the name of the table that this entity type is mapped to.
+        ///     Gets the name of the table that this entity type is mapped to.
         /// </summary>
         public string TableName
         {
@@ -219,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets the database schema of the table that this entity type is mapped to.
+        ///     Gets the database schema of the table that this entity type is mapped to.
         /// </summary>
         public string SchemaName
         {

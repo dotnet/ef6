@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common.UnitTests
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using Xunit;
 
     public sealed class INamedDataModelItemExtensionsTests

@@ -346,7 +346,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "historyContextFactory",
                     Assert.Throws<ArgumentNullException>(
-                    () => new DbConfiguration().SetHistoryContextFactory<DbMigrationsConfiguration>(null)).ParamName);
+                        () => new DbConfiguration().SetHistoryContextFactory<DbMigrationsConfiguration>(null)).ParamName);
             }
 
             [Fact]

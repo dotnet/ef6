@@ -135,7 +135,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-        internal virtual CollectionColumnMap CreateColumnMapFromReaderAndClrType(DbDataReader reader, Type type, MetadataWorkspace workspace)
+        internal virtual CollectionColumnMap CreateColumnMapFromReaderAndClrType(
+            DbDataReader reader, Type type, MetadataWorkspace workspace)
         {
             Debug.Assert(null != reader);
             Debug.Assert(null != type);

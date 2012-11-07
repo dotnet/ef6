@@ -7,7 +7,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using Xunit;
@@ -114,7 +113,8 @@ namespace System.Data.Entity.Internal
             [Fact]
             public void TryGetSpatialProvider_returns_provider_instance()
             {
-                Assert.Same(SqlSpatialServices.Instance,
+                Assert.Same(
+                    SqlSpatialServices.Instance,
                     CreateAppConfigWithSpatial(typeof(SqlSpatialServices).AssemblyQualifiedName)
                         .Providers
                         .TryGetSpatialProvider());

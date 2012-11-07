@@ -11,9 +11,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Diagnostics.CodeAnalysis;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     /// <summary>
@@ -189,6 +190,5 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
     }
 }

@@ -7,10 +7,9 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -105,7 +104,7 @@ namespace FunctionalTests
             modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                    .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.MaxLength = 256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -131,7 +130,7 @@ namespace FunctionalTests
             modelBuilder.Entity<LightweightEntity>();
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                    .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.MaxLength = 256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -148,6 +147,7 @@ namespace FunctionalTests
 
         [StringLength(64)]
         public string PropertyConfiguredByAttribute { get; set; }
+
         public string PropertyConfiguredByFluent { get; set; }
         public string PropertyNotConfigured { get; set; }
 

@@ -11,13 +11,13 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Data.Entity.Resources;
     using System.Linq;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using Moq;
     using Moq.Protected;
     using Xunit;
+#if !NET40
+#endif
 
     public class EntityCommandDefinitionTests
     {
@@ -170,8 +170,9 @@ namespace System.Data.Entity.Core.EntityClient
                     .Returns(Task.FromResult(default(DbDataReader)));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
-                var result = entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
-                    .Result;
+                var result =
+                    entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
+                        .Result;
 
                 Assert.Equal(null, result);
             }
@@ -196,8 +197,9 @@ namespace System.Data.Entity.Core.EntityClient
                     Returns(default(ColumnMap));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
-                var result = entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
-                    .Result;
+                var result =
+                    entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
+                        .Result;
 
                 Assert.Same(dbDataReader, result);
                 dbDataReaderMock.VerifyGet(m => m.IsClosed, Times.Once());
@@ -417,8 +419,8 @@ namespace System.Data.Entity.Core.EntityClient
 
                 AssertThrowsInAsyncMethod<NotSupportedException>(
                     "MARS", () =>
-                    entityCommandDefinition.ExecuteStoreCommandsAsync(
-                        entityCommandMock.Object, CommandBehavior.Default, CancellationToken.None).Wait());
+                            entityCommandDefinition.ExecuteStoreCommandsAsync(
+                                entityCommandMock.Object, CommandBehavior.Default, CancellationToken.None).Wait());
             }
 
             [Fact]
@@ -444,7 +446,8 @@ namespace System.Data.Entity.Core.EntityClient
                                                       };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
-                var result = entityCommandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, CancellationToken.None).Result;
+                var result =
+                    entityCommandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, CancellationToken.None).Result;
 
                 dbCommandMock.Protected().Verify(
                     "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.Default, It.IsAny<CancellationToken>());

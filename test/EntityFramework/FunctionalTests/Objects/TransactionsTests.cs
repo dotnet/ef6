@@ -2,24 +2,15 @@
 
 namespace System.Data.Entity.Objects
 {
-    using Moq;
-    using System;
-    using System.Data;
-    using System.Data.Entity;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics.Contracts;
-    using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Transactions;
-    using System.Xml;
     using Xunit;
 
     public class TransactionLogEntry
@@ -30,9 +21,11 @@ namespace System.Data.Entity.Objects
 
     public class TransactionContext : ObjectContext
     {
-        public TransactionContext(string connectionString) :
-            base(connectionString)
-        { }
+        public TransactionContext(string connectionString)
+            :
+                base(connectionString)
+        {
+        }
 
         public IQueryable<TransactionLogEntry> LogEntries
         {
@@ -50,10 +43,10 @@ namespace System.Data.Entity.Objects
 
         public void SetFixture(TransactionFixture data)
         {
-            this.globalConnection = data.GlobalConnection;
+            globalConnection = data.GlobalConnection;
 
-            this.connectionString = 
-            @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+            connectionString =
+                @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
         }
 
         [Fact]
@@ -98,7 +91,8 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed
+            ()
         {
             try
             {
@@ -366,7 +360,8 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        public void
+            Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
             try
             {
@@ -481,7 +476,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed()
+        public void
+            Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed
+            ()
         {
             try
             {
@@ -610,7 +607,7 @@ namespace System.Data.Entity.Objects
             }
         }
 
-        [Fact] 
+        [Fact]
         public void Verify_no_implicit_transaction_created_when_enlisting_in_transaction_between_requests()
         {
             try
@@ -687,13 +684,15 @@ namespace System.Data.Entity.Objects
                 {
                     ctx.Connection.Open();
                     using (var committableTransaction = new CommittableTransaction())
-                    using (var newCommittableTransaction = new CommittableTransaction())
                     {
-                        ctx.Connection.EnlistTransaction(committableTransaction);
+                        using (var newCommittableTransaction = new CommittableTransaction())
+                        {
+                            ctx.Connection.EnlistTransaction(committableTransaction);
 
-                        Assert.Equal(
-                            Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
-                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction)).Message);
+                            Assert.Equal(
+                                Strings.EntityClient_ProviderSpecificError("EnlistTransaction"),
+                                Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction)).Message);
+                        }
                     }
                 }
             }
@@ -732,7 +731,7 @@ namespace System.Data.Entity.Objects
 
         private TransactionContext CreateTransactionContext()
         {
-            var ctx = new TransactionContext(this.connectionString);
+            var ctx = new TransactionContext(connectionString);
             ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
 
             return ctx;
@@ -740,7 +739,7 @@ namespace System.Data.Entity.Objects
 
         private ObjectContext CreateObjectContext()
         {
-            var ctx = new ObjectContext(this.connectionString);
+            var ctx = new ObjectContext(connectionString);
             ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
 
             return ctx;
@@ -764,8 +763,8 @@ namespace System.Data.Entity.Objects
         }
 
         /// <summary>
-        /// Removes all entries from the tables used for tests. Must be called from tests that are committing transactions
-        /// as each test expects that the db will be initially clean.
+        ///     Removes all entries from the tables used for tests. Must be called from tests that are committing transactions
+        ///     as each test expects that the db will be initially clean.
         /// </summary>
         private void ResetTables()
         {
@@ -780,19 +779,19 @@ namespace System.Data.Entity.Objects
 
         public TransactionFixture()
         {
-            if (this.GlobalConnection != null)
+            if (GlobalConnection != null)
             {
                 throw new InvalidOperationException("Database is still in use and cannot be initialized.");
             }
 
             // we are using tempdb and SQLExpress instance so we don't want this to be configurable
-            this.GlobalConnection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=tempdb;Integrated Security=SSPI;");
-            this.GlobalConnection.Open();
+            GlobalConnection = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=tempdb;Integrated Security=SSPI;");
+            GlobalConnection.Open();
 
             try
             {
                 new SqlCommand(
-@"
+                    @"
     CREATE TABLE [dbo].[##TransactionLog](
 	    [ID] [int] IDENTITY(1,1) NOT NULL,
 	    [TransactionCount] [int] NOT NULL,
@@ -800,10 +799,10 @@ namespace System.Data.Entity.Objects
     (
 	    [ID] ASC
     )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-    ) ON [PRIMARY]", this.GlobalConnection).ExecuteNonQuery();
+    ) ON [PRIMARY]", GlobalConnection).ExecuteNonQuery();
 
                 new SqlCommand(
-@"
+                    @"
     CREATE PROCEDURE [dbo].[##CreateTransactionLogEntry] 
     AS
     BEGIN
@@ -812,8 +811,7 @@ namespace System.Data.Entity.Objects
 	    SELECT ID, TransactionCount 
         FROM ##TransactionLog
         WHERE ID = SCOPE_IDENTITY()
-    END", this.GlobalConnection).ExecuteNonQuery();
-
+    END", GlobalConnection).ExecuteNonQuery();
             }
             catch
             {
@@ -825,16 +823,16 @@ namespace System.Data.Entity.Objects
 
         private void CleanupDatabase()
         {
-            Contract.Assert(this.GlobalConnection != null);
+            Contract.Assert(GlobalConnection != null);
 
-            this.GlobalConnection.Close();
-            this.GlobalConnection.Dispose();
-            this.GlobalConnection = null;
+            GlobalConnection.Close();
+            GlobalConnection.Dispose();
+            GlobalConnection = null;
         }
 
         public void Dispose()
         {
-            this.CleanupDatabase();
+            CleanupDatabase();
         }
     }
 }

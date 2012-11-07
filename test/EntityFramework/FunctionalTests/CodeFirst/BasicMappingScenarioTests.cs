@@ -10,8 +10,8 @@ namespace FunctionalTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Linq;
@@ -3277,7 +3277,7 @@ namespace FunctionalTests
             Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
             Assert.True(
                 joinTable.ForeignKeyBuilders.All(
-                fk => databaseMapping.Database.GetEntitySet(fk.PrincipalTable).Table == "Derived"));
+                    fk => databaseMapping.Database.GetEntitySet(fk.PrincipalTable).Table == "Derived"));
         }
 
         [Fact]

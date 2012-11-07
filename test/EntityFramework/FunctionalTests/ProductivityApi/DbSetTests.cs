@@ -3024,7 +3024,7 @@ namespace ProductivityApiTests
 
 #if !NET40
                 var asyncEnumerator = ((IDbAsyncEnumerable)nonGenericQuery).GetAsyncEnumerator();
-                
+
                 Assert.True(asyncEnumerator.MoveNextAsync().Result);
 
                 Assert.Same(query.First(), asyncEnumerator.Current);

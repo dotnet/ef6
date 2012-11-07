@@ -69,7 +69,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
-            Debug.Assert(Helper.IsEdmProperty(member),
+            Debug.Assert(
+                Helper.IsEdmProperty(member),
                 "Only members of type Property may be added to ComplexType.");
         }
     }

@@ -4,7 +4,6 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
@@ -81,7 +80,7 @@ namespace System.Data.Entity
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
                     .SelectMany(etm => etm.TypeMappingFragments).First(
-                    mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
+                        mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
                     .Table;
 
             return new TypeAssertions(table, databaseMapping.Database.GetEntitySet(table), databaseMapping.Database);
@@ -97,7 +96,7 @@ namespace System.Data.Entity
                         es => es.Table == tableName
                               && ((schemaName == null) || es.Schema == schemaName));
 
-            return new TypeAssertions((EntityType)entitySet.ElementType, entitySet, databaseMapping.Database);
+            return new TypeAssertions(entitySet.ElementType, entitySet, databaseMapping.Database);
         }
 
         internal static MappingFragmentAssertions AssertMapping<TStructuralType>(

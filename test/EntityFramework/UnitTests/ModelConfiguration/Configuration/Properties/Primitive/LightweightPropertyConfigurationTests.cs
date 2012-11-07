@@ -32,11 +32,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             new LightweightPropertyConfiguration(
                 new MockPropertyInfo(),
                 () =>
-                {
-                    initialized = true;
+                    {
+                        initialized = true;
 
-                    return null;
-                });
+                        return null;
+                    });
 
             Assert.False(initialized);
         }
@@ -45,14 +45,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_get_inner_values()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                {
-                    ColumnName = "Column1",
-                    ColumnOrder = 1,
-                    ColumnType = "int",
-                    ConcurrencyMode = ConcurrencyMode.None,
-                    DatabaseGeneratedOption = DatabaseGeneratedOption.None,
-                    IsNullable = false
-                };
+                                  {
+                                      ColumnName = "Column1",
+                                      ColumnOrder = 1,
+                                      ColumnType = "int",
+                                      ConcurrencyMode = ConcurrencyMode.None,
+                                      DatabaseGeneratedOption = DatabaseGeneratedOption.None,
+                                      IsNullable = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal("Column1", config.ColumnName);
@@ -74,12 +74,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_get_inner_values_when_binary()
         {
             var innerConfig = new BinaryPropertyConfiguration
-                {
-                    IsFixedLength = false,
-                    MaxLength = 256,
-                    IsMaxLength = false,
-                    IsRowVersion = false
-                };
+                                  {
+                                      IsFixedLength = false,
+                                      MaxLength = 256,
+                                      IsMaxLength = false,
+                                      IsRowVersion = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(false, config.IsFixedLength);
@@ -92,9 +92,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_get_inner_values_when_dateTime()
         {
             var innerConfig = new DateTimePropertyConfiguration
-                {
-                    Precision = 8
-                };
+                                  {
+                                      Precision = 8
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal<byte?>(8, config.Precision);
@@ -104,10 +104,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_get_inner_values_when_decimal()
         {
             var innerConfig = new DecimalPropertyConfiguration
-                {
-                    Scale = 2,
-                    Precision = 8
-                };
+                                  {
+                                      Scale = 2,
+                                      Precision = 8
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal<byte?>(2, config.Scale);
@@ -118,12 +118,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_get_inner_values_when_string()
         {
             var innerConfig = new StringPropertyConfiguration
-                {
-                    IsFixedLength = false,
-                    MaxLength = 256,
-                    IsMaxLength = false,
-                    IsUnicode = false
-                };
+                                  {
+                                      IsFixedLength = false,
+                                      MaxLength = 256,
+                                      IsMaxLength = false,
+                                      IsUnicode = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(false, config.IsFixedLength);
@@ -229,14 +229,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_do_not_set_already_set_or_nonapplicable_inner_values()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                {
-                    ColumnName = "Column1",
-                    ColumnOrder = 1,
-                    ColumnType = "int",
-                    ConcurrencyMode = ConcurrencyMode.None,
-                    DatabaseGeneratedOption = DatabaseGeneratedOption.None,
-                    IsNullable = false
-                };
+                                  {
+                                      ColumnName = "Column1",
+                                      ColumnOrder = 1,
+                                      ColumnType = "int",
+                                      ConcurrencyMode = ConcurrencyMode.None,
+                                      DatabaseGeneratedOption = DatabaseGeneratedOption.None,
+                                      IsNullable = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.ColumnName = "Column2";
@@ -272,12 +272,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_do_not_set_already_set_inner_values_when_binary()
         {
             var innerConfig = new BinaryPropertyConfiguration
-            {
-                IsFixedLength = false,
-                MaxLength = 256,
-                IsMaxLength = false,
-                IsRowVersion = false
-            };
+                                  {
+                                      IsFixedLength = false,
+                                      MaxLength = 256,
+                                      IsMaxLength = false,
+                                      IsRowVersion = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = true;
@@ -295,9 +295,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_do_not_set_already_set_inner_values_when_dateTime()
         {
             var innerConfig = new DateTimePropertyConfiguration
-            {
-                Precision = 8
-            };
+                                  {
+                                      Precision = 8
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Precision = 16;
@@ -309,10 +309,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_do_not_set_already_set_inner_values_when_decimal()
         {
             var innerConfig = new DecimalPropertyConfiguration
-            {
-                Scale = 2,
-                Precision = 8
-            };
+                                  {
+                                      Scale = 2,
+                                      Precision = 8
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.Scale = 4;
@@ -326,12 +326,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void Properties_do_not_set_already_set_inner_values_when_string()
         {
             var innerConfig = new StringPropertyConfiguration
-            {
-                IsFixedLength = false,
-                MaxLength = 256,
-                IsMaxLength = false,
-                IsUnicode = false
-            };
+                                  {
+                                      IsFixedLength = false,
+                                      MaxLength = 256,
+                                      IsMaxLength = false,
+                                      IsUnicode = false
+                                  };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             config.IsFixedLength = true;
@@ -350,9 +350,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var typeConfig = new Mock<EntityTypeConfiguration>((Type)new MockType());
             var innerConfig = new PrimitivePropertyConfiguration
-                {
-                    TypeConfiguration = typeConfig.Object
-                };
+                                  {
+                                      TypeConfiguration = typeConfig.Object
+                                  };
             var propertyInfo = new MockPropertyInfo();
             var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
 

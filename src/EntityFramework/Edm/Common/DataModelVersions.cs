@@ -36,7 +36,7 @@ namespace System.Data.Entity.Edm.Common
         }
 
         public static string GetSsdlNamespace(double edmVersion)
-{
+        {
             if (edmVersion == Version1)
             {
                 return SsdlConstants.Version1Namespace;

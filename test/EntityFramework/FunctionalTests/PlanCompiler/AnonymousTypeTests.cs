@@ -23,7 +23,11 @@ namespace PlanCompilerTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new { a });
+                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(
+                    context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new
+                                                                                               {
+                                                                                                   a
+                                                                                               });
                 var sql = query.ToString();
                 Assert.True(sql != null);
             }
@@ -34,7 +38,12 @@ namespace PlanCompilerTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new { a, b });
+                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(
+                    context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new
+                                                                                               {
+                                                                                                   a,
+                                                                                                   b
+                                                                                               });
                 var sql = query.ToString();
                 Assert.True(sql != null);
             }
@@ -45,7 +54,12 @@ namespace PlanCompilerTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new { a, c=1 });
+                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(
+                    context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new
+                                                                                               {
+                                                                                                   a,
+                                                                                                   c = 1
+                                                                                               });
                 var sql = query.ToString();
                 Assert.True(sql != null);
             }
@@ -56,7 +70,13 @@ namespace PlanCompilerTests
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
-                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new { a, b, c=1 });
+                var query = context.WorkOrders.Select(wo => wo.EmployeeId).Join(
+                    context.Employees.Select(e => e.EmployeeId), a => a, b => b, (a, b) => new
+                                                                                               {
+                                                                                                   a,
+                                                                                                   b,
+                                                                                                   c = 1
+                                                                                               });
                 var sql = query.ToString();
                 Assert.True(sql != null);
             }

@@ -116,14 +116,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 associationType1.AddMember(
                     new AssociationEndMember("S", entityType)
-                    {
-                        RelationshipMultiplicity = RelationshipMultiplicity.One
-                    });
+                        {
+                            RelationshipMultiplicity = RelationshipMultiplicity.One
+                        });
                 associationType1.AddMember(
                     new AssociationEndMember("T", entityType)
-                    {
-                        RelationshipMultiplicity = RelationshipMultiplicity.One
-                    });
+                        {
+                            RelationshipMultiplicity = RelationshipMultiplicity.One
+                        });
 
                 associationType1.SetReadOnly();
 
@@ -134,14 +134,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 associationType2.AddMember(
                     new AssociationEndMember("S", new EntityType())
-                    {
-                        RelationshipMultiplicity = RelationshipMultiplicity.One
-                    });
+                        {
+                            RelationshipMultiplicity = RelationshipMultiplicity.One
+                        });
                 associationType2.AddMember(
                     new AssociationEndMember("T", entityType)
-                    {
-                        RelationshipMultiplicity = RelationshipMultiplicity.One
-                    });
+                        {
+                            RelationshipMultiplicity = RelationshipMultiplicity.One
+                        });
 
                 associationType2.SetReadOnly();
 

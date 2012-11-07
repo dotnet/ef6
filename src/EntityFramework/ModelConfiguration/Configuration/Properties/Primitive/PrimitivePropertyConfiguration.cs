@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -242,10 +241,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                    {
-                        c.Name = renamedColumns.UniquifyName(ColumnName);
-                        renamedColumns.Add(c);
-                    });
+                        {
+                            c.Name = renamedColumns.UniquifyName(ColumnName);
+                            renamedColumns.Add(c);
+                        });
         }
 
         internal virtual void Configure(EdmProperty column, FacetDescription facetDescription)

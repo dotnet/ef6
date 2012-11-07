@@ -16,8 +16,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets a <see cref="EdmProperty" /> value representing the table column which must contain <see
-        ///      cref="Value" /> for this condition to hold.
+        ///     Gets or sets a <see cref="EdmProperty" /> value representing the table column which must contain <see cref="Value" /> for this condition to hold.
         /// </summary>
         public virtual EdmProperty Column { get; set; }
 

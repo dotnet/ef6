@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var entitySetBase
                 = new TestEntitySetBase
-                {
-                    Name = "Foo"
-                };
+                      {
+                          Name = "Foo"
+                      };
 
             Assert.Equal("Foo", entitySetBase.Name);
         }
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var entitySetBase
                 = new TestEntitySetBase
-                {
-                    Table = "Foo"
-                };
+                      {
+                          Table = "Foo"
+                      };
 
             Assert.Equal("Foo", entitySetBase.Table);
         }
@@ -39,9 +39,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var entitySetBase
                 = new TestEntitySetBase
-                {
-                    Schema = "Foo"
-                };
+                      {
+                          Schema = "Foo"
+                      };
 
             Assert.Equal("Foo", entitySetBase.Schema);
         }

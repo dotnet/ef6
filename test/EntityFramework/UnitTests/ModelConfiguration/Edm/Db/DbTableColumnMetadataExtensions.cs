@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using Xunit;
 
     public sealed class DbTableColumnMetadataExtensions

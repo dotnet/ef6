@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Linq;
-#if !NET40
     using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using Moq;
     using Xunit;
+#if !NET40
+#endif
 
     public class ObjectQueryExecutionPlanTests
     {
@@ -128,6 +128,5 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
     }
 }

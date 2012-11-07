@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using Xunit;
 
     public sealed class DbTableMetadataExtensions
@@ -13,9 +12,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         {
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
 
-            var tableColumn = new EdmProperty("Foo",
-                    ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(
-                        TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))));
+            var tableColumn = new EdmProperty(
+                "Foo",
+                ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))));
             table.AddColumn(tableColumn);
 
             Assert.NotNull(tableColumn);

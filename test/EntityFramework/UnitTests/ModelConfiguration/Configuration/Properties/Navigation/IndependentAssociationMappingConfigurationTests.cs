@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -32,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                                                PrincipalTable = principalTable
                                            };
             sourceTable.AddForeignKey(foreignKeyConstraint);
-            foreignKeyConstraint.DependentColumns = new [] {fkColumn};
+            foreignKeyConstraint.DependentColumns = new[] { fkColumn };
             var targetTable = database.AddTable("Split");
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             associationSetMapping.Table = sourceTable;
@@ -71,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 Strings.TableNotFound("Split"),
                 Assert.Throws<InvalidOperationException>(
                     () => independentAssociationMappingConfiguration
-                        .Configure(associationSetMapping, database, new MockPropertyInfo())).
+                              .Configure(associationSetMapping, database, new MockPropertyInfo())).
                     Message);
         }
 

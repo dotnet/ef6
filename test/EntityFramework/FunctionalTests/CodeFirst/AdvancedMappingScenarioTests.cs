@@ -6,8 +6,8 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Fixtures;
@@ -290,7 +290,7 @@ namespace FunctionalTests
             modelBuilder.Entity<DecimalKey>().Property(p => p.Id).HasColumnType("money");
 
             var databaseMapping = BuildMapping(modelBuilder);
-            
+
             databaseMapping.AssertValid();
         }
 
@@ -412,7 +412,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Customer>();
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
-            
+
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
         }

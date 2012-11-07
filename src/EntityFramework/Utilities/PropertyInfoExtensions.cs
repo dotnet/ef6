@@ -4,11 +4,9 @@ namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
-    
 
     internal static class PropertyInfoExtensions
     {

@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -127,19 +126,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return Property(
                 propertyPath,
                 () =>
-                {
-                    var configuration = (PrimitivePropertyConfiguration)Activator
-                                                                            .CreateInstance(
-                                                                                GetPropertyConfigurationType(
-                                                                                    propertyPath.Last().PropertyType));
-                    configuration.TypeConfiguration = this;
-
-                    if (overridableConfigurationParts.HasValue)
                     {
-                        configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
-                    }
-                    return configuration;
-                });
+                        var configuration = (PrimitivePropertyConfiguration)Activator
+                                                                                .CreateInstance(
+                                                                                    GetPropertyConfigurationType(
+                                                                                        propertyPath.Last().PropertyType));
+                        configuration.TypeConfiguration = this;
+
+                        if (overridableConfigurationParts.HasValue)
+                        {
+                            configuration.OverridableConfigurationParts = overridableConfigurationParts.Value;
+                        }
+                        return configuration;
+                    });
         }
 
         internal virtual void RemoveProperty(PropertyPath propertyPath)

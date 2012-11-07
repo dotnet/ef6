@@ -163,7 +163,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 Dump(dumper);
                 dumper.Close();
 
-
                 //
                 // Construct a string from the resulting memory stream and return it to the caller
                 //

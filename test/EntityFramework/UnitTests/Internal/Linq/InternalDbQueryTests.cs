@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Internal.Linq
             internalQueryMock.Setup(m => m.Expression).Returns(Expression.Constant(new object()));
             internalQueryMock.Setup(m => m.InternalContext).Returns(new Mock<InternalContextForMock<DbContext>>().Object);
             internalQueryMock.Setup(m => m.ObjectQueryProvider).Returns(
-                new ObjectQueryProvider(Core.Objects.MockHelper.CreateMockObjectContext<string>()));
+                new ObjectQueryProvider(MockHelper.CreateMockObjectContext<string>()));
             var dbQuery = new InternalDbQuery<string>(internalQueryMock.Object);
 
             getterFunc(dbQuery);
