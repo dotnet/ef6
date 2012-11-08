@@ -128,11 +128,11 @@ namespace System.Data.Entity.Core.EntityClient
                         Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
                 }
 
-                if (connection.State
-                    != ConnectionState.Closed)
-                {
-                    throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
-                }
+                //if (connection.State
+                //    != ConnectionState.Closed)
+                //{
+                //    throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
+                //}
 
                 // Verify that a factory can be retrieved
                 if (connection.GetProviderFactory() == null)
