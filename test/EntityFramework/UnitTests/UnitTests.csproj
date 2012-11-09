@@ -178,6 +178,7 @@
     <Compile Include="Core\Objects\ProxyDataContractResolverTests.cs" />
     <Compile Include="Core\Objects\TestHelpers\DbProviderFactoryForMock.cs" />
     <Compile Include="Core\Objects\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Query\InternalTrees\VarVecTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />

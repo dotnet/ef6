@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             /// </summary>
             public Var Current
             {
-                get { return (m_position >= 0 && m_position < m_bitArray.Count) ? m_command.GetVar(m_position) : null; }
+                get { return (m_position >= 0 && m_position < m_bitArray.Length) ? m_command.GetVar(m_position) : null; }
             }
 
             #endregion
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             public bool MoveNext()
             {
                 m_position++;
-                for (; m_position < m_bitArray.Count; m_position++)
+                for (; m_position < m_bitArray.Length; m_position++)
                 {
                     if (m_bitArray[m_position])
                     {
@@ -184,11 +184,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns> </returns>
         internal bool Subsumes(VarVec other)
         {
-            for (var i = 0; i < other.m_bitVector.Count; i++)
+            for (var i = 0; i < other.m_bitVector.Length; i++)
             {
                 if (other.m_bitVector[i]
-                    &&
-                    ((i >= m_bitVector.Count) || !m_bitVector[i]))
+                    && ((i >= m_bitVector.Length) || !m_bitVector[i]))
                 {
                     return false;
                 }
@@ -329,25 +328,23 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         private void Align(VarVec other)
         {
-            if (other.m_bitVector.Count
-                == m_bitVector.Count)
+            if (other.m_bitVector.Length == m_bitVector.Length)
             {
                 return;
             }
-            if (other.m_bitVector.Count
-                > m_bitVector.Count)
+            if (other.m_bitVector.Length > m_bitVector.Length)
             {
-                m_bitVector.Length = other.m_bitVector.Count;
+                m_bitVector.Length = other.m_bitVector.Length;
             }
             else
             {
-                other.m_bitVector.Length = m_bitVector.Count;
+                other.m_bitVector.Length = m_bitVector.Length;
             }
         }
 
         private void Align(int idx)
         {
-            if (idx >= m_bitVector.Count)
+            if (idx >= m_bitVector.Length)
             {
                 m_bitVector.Length = idx + 1;
             }
