@@ -10,7 +10,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
+    using System.Text;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -48,15 +51,55 @@ namespace System.Data.Entity.Core.Objects.Internal
             CompiledQueryParameters = compiledQueryParameters;
         }
 
-        internal string ToTraceString()
+        internal string ToTraceString(ObjectParameterCollection parameters = null)
         {
-            var traceString = string.Empty;
             var entityCommandDef = CommandDefinition as EntityCommandDefinition;
-            if (entityCommandDef != null)
+
+            if (entityCommandDef == null)
             {
-                traceString = entityCommandDef.ToTraceString();
+                return String.Empty;
             }
-            return traceString;
+
+            var traceString = entityCommandDef.ToTraceString();
+
+            if (parameters == null || parameters.Count == 0)
+            {
+                return traceString;
+            }
+
+            var command = CommandDefinition.CreateCommand();
+            var sb = new StringBuilder();
+
+            sb.Append(traceString);
+            sb.Append("\n\n/*\n");
+
+            // append parameter information
+            foreach (var objParam in parameters)
+            {
+                var index = command.Parameters.IndexOf(objParam.Name);
+
+                if (index != -1)
+                {
+                    var dbParam = command.Parameters[index];
+                    sb.Append(dbParam.DbType);
+                }
+                else
+                {
+                    Contract.Assert(
+                        false,
+                        "A parameter in the input ObjectParameterCollection does not have a match in the command definition's DbParameterCollection.");
+                }
+
+                sb.Append(" ");
+                sb.Append(objParam.Name);
+                sb.Append(" = ");
+                sb.Append(objParam.Value);
+                sb.Append("\n");
+            }
+
+            sb.Append("*/\n");
+
+            return sb.ToString();
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

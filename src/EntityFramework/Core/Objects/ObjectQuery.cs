@@ -179,13 +179,12 @@ namespace System.Data.Entity.Core.Objects
         #region Public Methods
 
         /// <summary>
-        ///     Get the provider-specific command text used to execute this query
+        ///     Get the provider-specific command text used to execute this query and parameter information.
         /// </summary>
-        /// <returns> </returns>
         [Browsable(false)]
         public string ToTraceString()
         {
-            return _state.GetExecutionPlan(null).ToTraceString();
+            return _state.GetExecutionPlan(null).ToTraceString(Parameters);
         }
 
         /// <summary>

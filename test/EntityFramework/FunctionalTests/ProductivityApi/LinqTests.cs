@@ -10,6 +10,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
@@ -229,6 +230,37 @@ namespace ProductivityApiTests
 
                 Assert.Equal(dbString, oqString);
             }
+        }
+
+        [Fact]
+        public void Non_generic_DbQuery_ToString_contains_parameter_info_in_expected_format()
+        {
+            var sponsorInfo = new SponsorInfo(5);
+            var name = "SponsorName";
+
+            string str;
+
+            using (var context = new F1Context())
+            {
+                var query = from sponsor in context.Sponsors
+                            where sponsor.Id == sponsorInfo.Id || sponsor.Name == name
+                            select sponsor;
+
+                str = query.ToString();
+            }
+
+            Assert.True(str.Contains("Int32 p__linq__0 = 5"));
+            Assert.True(str.Contains("String p__linq__1 = SponsorName"));
+        }
+
+        private class SponsorInfo
+        {
+            public SponsorInfo(int id)
+            {
+                Id = id;
+            }
+
+            public int Id { get; set; }
         }
 
         #endregion
