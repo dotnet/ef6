@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
@@ -46,6 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal("Cats1", entitySet.Name);
         }
 
+        // TODO: METADATA
 //        [Fact(Skip = "Need to figure out name duplication in core Metadata")]
 //        public void Apply_should_uniquify_names_multiple()
 //        {

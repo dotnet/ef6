@@ -217,6 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         return orderIndex.ExactIndex;
                     }
+
                     throw new ArgumentException(Strings.ItemDuplicateIdentity(identity), "item", null);
                 }
 
@@ -233,6 +234,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             {
                                 return orderIndex.InexactIndexes[i];
                             }
+
                             throw new ArgumentException(Strings.ItemDuplicateIdentity(identity), "item", null);
                         }
                     }
@@ -328,12 +330,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // This is a new item to be inserted. Grow if we must before adding to ordered list.
                     if (UseSortedListCrossover <= listCount)
                     {
-                        collectionData.IdentityDictionary = new Dictionary<string, OrderedIndex>(
-                            collectionData.OrderedList.Count + 1, StringComparer.OrdinalIgnoreCase);
+                        collectionData.IdentityDictionary
+                            = new Dictionary<string, OrderedIndex>(
+                                collectionData.OrderedList.Count + 1,
+                                StringComparer.OrdinalIgnoreCase);
+
                         for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                         {
                             AddToDictionary(collectionData, collectionData.OrderedList[i].Identity, i, false);
                         }
+
                         AddToDictionary(collectionData, item.Identity, listCount, false);
                     }
                 }

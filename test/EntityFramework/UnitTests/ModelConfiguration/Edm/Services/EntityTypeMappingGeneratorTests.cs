@@ -3,11 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;
     using Xunit;
@@ -60,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                 = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().TypeMappingFragments.Single();
 
             Assert.Equal(2, entityTypeMappingFragment.PropertyMappings.Count());
-            Assert.Equal(2, entityTypeMappingFragment.Table.Columns.Count());
+            Assert.Equal(2, entityTypeMappingFragment.Table.Properties.Count());
         }
 
         [Fact]
@@ -91,13 +88,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                 = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().TypeMappingFragments.Single();
 
             Assert.Equal(2, entityTypeMappingFragment.PropertyMappings.Count());
-            Assert.Equal(2, entityTypeMappingFragment.Table.Columns.Count());
+            Assert.Equal(2, entityTypeMappingFragment.Table.Properties.Count());
         }
 
         private static DbDatabaseMapping CreateEmptyModel()
         {
             return new DbDatabaseMapping()
-                .Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata().Initialize());
+                .Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
         }
     }
 }

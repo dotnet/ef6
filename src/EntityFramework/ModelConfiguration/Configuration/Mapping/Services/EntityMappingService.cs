@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -18,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class EntityMappingService
     {
         private readonly DbDatabaseMapping _databaseMapping;
-        private Dictionary<DbTableMetadata, TableMapping> _tableMappings;
+        private Dictionary<EntityType, TableMapping> _tableMappings;
         private SortedEntityTypeIndex _entityTypes;
 
         public EntityMappingService(DbDatabaseMapping databaseMapping)
@@ -38,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         /// </summary>
         private void Analyze()
         {
-            _tableMappings = new Dictionary<DbTableMetadata, TableMapping>();
+            _tableMappings = new Dictionary<EntityType, TableMapping>();
             _entityTypes = new SortedEntityTypeIndex();
 
             foreach (var esm in _databaseMapping.EntityContainerMappings
@@ -178,7 +177,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                         EntityMappingConfiguration.CleanupUnmappedArtifacts(_databaseMapping, tableMapping.Table);
 
-                        foreach (var fkConstraint in tableMapping.Table.ForeignKeyConstraints)
+                        foreach (var fkConstraint in tableMapping.Table.ForeignKeyBuilders)
                         {
                             var associationType = fkConstraint.GetAssociationType();
                             if (associationType != null
@@ -234,8 +233,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void MarkColumnsAsNonNullableIfNoTableSharing(
-            EntitySet entitySet, DbTableMetadata table, EntityType dependentEndEntityType,
-            IEnumerable<DbTableColumnMetadata> columns)
+            EntitySet entitySet, EntityType table, EntityType dependentEndEntityType,
+            IEnumerable<EdmProperty> columns)
         {
             // determine if base entities share this table, if not, the foreign keys can be non-nullable
             var mappedBaseTypes =
@@ -246,7 +245,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             if (mappedBaseTypes.Count() == 0
                 || mappedBaseTypes.All(et => et.Abstract))
             {
-                columns.Each(c => c.IsNullable = false);
+                columns.Each(c => c.Nullable = false);
             }
         }
 
@@ -385,7 +384,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         tm =>
                         tm != tableMapping
                         &&
-                        tm.Table.ForeignKeyConstraints.Any(
+                        tm.Table.ForeignKeyBuilders.Any(
                             fk => fk.GetIsTypeConstraint() && fk.PrincipalTable == tableMapping.Table)));
         }
 
@@ -457,7 +456,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         columnMapping.PropertyMappings.Remove(propertyMapping);
                     }
                 }
-                defaultDiscriminator.IsNullable = true;
+                defaultDiscriminator.Nullable = true;
             }
 
             entityTypeMapping.TypeMappingFragments.Remove(fragment);
@@ -517,7 +516,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return false;
         }
 
-        private TableMapping FindOrCreateTableMapping(DbTableMetadata table)
+        private TableMapping FindOrCreateTableMapping(EntityType table)
         {
             TableMapping tableMapping;
             if (!_tableMappings.TryGetValue(table, out tableMapping))

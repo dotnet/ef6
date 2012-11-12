@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Diagnostics.Contracts;
 
@@ -49,14 +48,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
+        internal override void Configure(EdmProperty column, FacetDescription facetDescription)
         {
-            base.Configure(facets, facetDescription);
+            base.Configure(column, facetDescription);
 
             switch (facetDescription.FacetName)
             {
                 case SsdlConstants.Attribute_Unicode:
-                    facets.IsUnicode = facetDescription.IsConstant ? null : IsUnicode ?? facets.IsUnicode;
+                    column.IsUnicode = facetDescription.IsConstant ? null : IsUnicode ?? column.IsUnicode;
                     break;
             }
         }

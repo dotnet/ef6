@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public OperationAction DeleteBehavior
         {
             get { return _deleteBehavior; }
-            internal set
+            set
             {
                 Util.ThrowIfReadOnly(this);
                 _deleteBehavior = value;
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipMultiplicity RelationshipMultiplicity
         {
             get { return _relationshipMultiplicity; }
-            internal set
+            set
             {
                 Util.ThrowIfReadOnly(this);
 

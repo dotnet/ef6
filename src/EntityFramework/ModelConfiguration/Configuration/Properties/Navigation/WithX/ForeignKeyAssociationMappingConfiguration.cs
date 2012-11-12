@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -95,8 +96,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Configure(
-            DbAssociationSetMapping associationSetMapping, DbDatabaseMetadata database, PropertyInfo navigationProperty)
+            DbAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             // By convention source end contains the dependent column mappings
             var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings;
@@ -104,14 +106,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if (_tableName != null)
             {
                 var targetTable
-                    = ((from t in database.Schemas.Single().Tables
+                    = ((from t in database.GetEntityTypes()
                         let n = t.GetTableName()
                         where (n != null && n.Equals(_tableName))
                         select t)
                           .SingleOrDefault())
-                      ?? database.Schemas.Single().Tables
-                             .SingleOrDefault(
-                                 t => string.Equals(t.DatabaseIdentifier, _tableName.Name, StringComparison.Ordinal));
+                      ?? (from es in database.GetEntitySets()
+                          where string.Equals(es.Table, _tableName.Name, StringComparison.Ordinal)
+                          select es.ElementType).SingleOrDefault();
 
                 if (targetTable == null)
                 {
@@ -123,18 +125,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 if (sourceTable != targetTable)
                 {
                     var foreignKeyConstraint
-                        = sourceTable.ForeignKeyConstraints
+                        = sourceTable.ForeignKeyBuilders
                             .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.Column)));
 
-                    sourceTable.ForeignKeyConstraints.Remove(foreignKeyConstraint);
-                    targetTable.ForeignKeyConstraints.Add(foreignKeyConstraint);
+                    sourceTable.RemoveForeignKey(foreignKeyConstraint);
+                    targetTable.AddForeignKey(foreignKeyConstraint);
 
                     foreignKeyConstraint.DependentColumns
                         .Each(
                             c =>
                                 {
-                                    sourceTable.Columns.Remove(c);
-                                    targetTable.Columns.Add(c);
+                                    var isKey = c.IsPrimaryKeyColumn;
+
+                                    sourceTable.RemoveMember(c);
+                                    targetTable.AddMember(c);
+
+                                    if (isKey)
+                                    {
+                                        targetTable.AddKeyMember(c);
+                                    }
                                 });
 
                     associationSetMapping.Table = targetTable;

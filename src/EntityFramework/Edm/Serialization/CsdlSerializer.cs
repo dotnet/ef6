@@ -51,7 +51,7 @@ namespace System.Data.Entity.Edm.Serialization
 
             if (_isModelValid)
             {
-                var visitor = new EdmModelCsdlSerializationVisitor(xmlWriter, model.Version);
+                var visitor = new EdmSerializationVisitor(xmlWriter, model.Version);
                 visitor.Visit(model);
             }
             return _isModelValid;

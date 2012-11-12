@@ -344,6 +344,7 @@
     <Compile Include="Core\Common\internal\materialization\CodeGenEmitter.cs" />
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
+    <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\IMetadataItem.cs" />
     <Compile Include="Core\Metadata\Edm\INamedDataModelItem.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactory.cs" />
@@ -1347,8 +1348,6 @@
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="DbFunctionAttribute.cs" />
     <Compile Include="DbFunctions.cs" />
-    <Compile Include="Edm\Common\INamedDataModelItemExtensions.cs" />
-    <Compile Include="Edm\Db\DbConstraintMetadata.cs" />
     <Compile Include="DbSetExtensions.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
@@ -1499,23 +1498,8 @@
     </Compile>
     <Compile Include="Core\Metadata\Edm\DataModelAnnotation.cs" />
     <Compile Include="Edm\Common\DataModelErrorEventArgs.cs" />
-    <Compile Include="Edm\Common\DataModelEventArgs.cs" />
     <Compile Include="Edm\Common\DataModelItem.cs" />
     <Compile Include="Edm\Common\DataModelVersions.cs" />
-    <Compile Include="Edm\Db\DbAliasedMetadataItem.cs" />
-    <Compile Include="Edm\Db\DbColumnMetadata.cs" />
-    <Compile Include="Edm\Db\DbDatabaseMetadata.cs" />
-    <Compile Include="Edm\Db\DbDataModelItem.cs" />
-    <Compile Include="Edm\Db\DbForeignKeyConstraintMetadata.cs" />
-    <Compile Include="Edm\Db\DbItemKind.cs" />
-    <Compile Include="Edm\Db\DbMetadataItem.cs" />
-    <Compile Include="Edm\Db\DbNamedMetadataItem.cs" />
-    <Compile Include="Edm\Db\DbPrimitiveTypeFacets.cs" />
-    <Compile Include="Edm\Db\DbSchemaMetadata.cs" />
-    <Compile Include="Edm\Db\DbSchemaMetadataItem.cs" />
-    <Compile Include="Edm\Db\DbTableColumnMetadata.cs" />
-    <Compile Include="Edm\Db\DbTableMetadata.cs" />
-    <Compile Include="Edm\Db\DbTypeMetadata.cs" />
     <Compile Include="Edm\Db\Mapping\DbAssociationEndMapping.cs" />
     <Compile Include="Edm\Db\Mapping\DbAssociationSetMapping.cs" />
     <Compile Include="Edm\Db\Mapping\DbColumnCondition.cs" />
@@ -1531,8 +1515,6 @@
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
     <Compile Include="Core\Metadata\Edm\EdmNamespace.cs" />
     <Compile Include="Core\Metadata\Edm\IQualifiedNameMetadataItem.cs" />
-    <Compile Include="Edm\Internal\DataModelItemVisitor.cs" />
-    <Compile Include="Edm\Internal\DbDatabaseVisitor.cs" />
     <Compile Include="Edm\Internal\EdmConstants.cs" />
     <Compile Include="Edm\Internal\EdmExtensions.cs" />
     <Compile Include="Edm\Internal\EdmModelParentMap.cs" />
@@ -1545,13 +1527,9 @@
     <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
     <Compile Include="Edm\Serialization\MslSerializer.cs" />
     <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Csdl\EdmModelCsdlSchemaWriter.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Csdl\EdmModelCsdlSerializationVisitor.cs" />
+    <Compile Include="Edm\Serialization\Xml\Internal\Csdl\EdmXmlSchemaWriter.cs" />
+    <Compile Include="Edm\Serialization\Xml\Internal\Csdl\EdmSerializationVisitor.cs" />
     <Compile Include="Edm\Serialization\Xml\Internal\Msl\DbDatabaseMappingMslSchemaWriter.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Ssdl\DbModelEntityContainerSsdlSchemaWriter.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Ssdl\DbModelSsdlHelper.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Ssdl\DbModelSsdlSchemaWriter.cs" />
-    <Compile Include="Edm\Serialization\Xml\Internal\Ssdl\DbModelSsdlSerializationVisitor.cs" />
     <Compile Include="Edm\Serialization\Xml\Internal\XmlSchemaWriter.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationContext.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationHelper.cs" />
@@ -1690,7 +1668,6 @@
     <Compile Include="ModelConfiguration\Configuration\ConfigurationBase.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationRegistrar.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsConfiguration.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Conventions\DatabaseConventionDispatcher.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EdmConventionDispatcher.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConfigurationConventionDispatcher.cs" />
     <Compile Include="ModelConfiguration\Configuration\Mapping\EdmPropertyPath.cs" />
@@ -1761,7 +1738,6 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\AssociationInverseDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\ComplexTypeDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\ColumnOrderingConvention.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Edm\Db\ColumnTypeCasingConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\IDbConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\IDbConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\Mapping\IDbMappingConvention.cs" />
@@ -1799,7 +1775,6 @@
     <Compile Include="ModelConfiguration\Edm\Db\DbAliasedMetadataItemExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\DbDatabaseMetadataExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\DbForeignKeyConstraintMetadataExtensions.cs" />
-    <Compile Include="ModelConfiguration\Edm\Db\DbPrimitiveTypeFacetsExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\DbTableColumnMetadataExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\DbTableMetadataExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\Mapping\DbAssociationSetMappingExtensions.cs" />

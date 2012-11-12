@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -19,12 +18,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
     internal class TablePrimitiveOperations
     {
-        private static DbTableColumnMetadata AddColumn(DbTableMetadata table, DbTableColumnMetadata column)
+        public static void AddColumn(EntityType table, EdmProperty column)
         {
             Contract.Requires(table != null);
             Contract.Requires(column != null);
 
-            if (!table.Columns.Contains(column))
+            if (!table.Properties.Contains(column))
             {
                 var configuration = column.GetConfiguration() as PrimitivePropertyConfiguration;
 
@@ -33,36 +32,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 {
                     var preferredName = column.GetPreferredName() ?? column.Name;
                     column.SetUnpreferredUniqueName(column.Name);
-                    column.Name = table.Columns.UniquifyName(preferredName);
+                    column.Name = table.Properties.UniquifyName(preferredName);
                 }
 
-                table.Columns.Add(column);
+                table.AddMember(column);
             }
-
-            return column;
         }
 
-        public static DbTableColumnMetadata RemoveColumn(DbTableMetadata table, DbTableColumnMetadata column)
+        public static EdmProperty RemoveColumn(EntityType table, EdmProperty column)
         {
             Contract.Requires(table != null);
             Contract.Requires(column != null);
 
             if (!column.IsPrimaryKeyColumn)
             {
-                table.Columns.Remove(column);
+                table.RemoveMember(column);
             }
 
             return column;
         }
 
-        public static DbTableColumnMetadata IncludeColumn(
-            DbTableMetadata table, DbTableColumnMetadata templateColumn, bool useExisting)
+        public static EdmProperty IncludeColumn(
+            EntityType table, EdmProperty templateColumn, bool useExisting)
         {
             Contract.Requires(table != null);
             Contract.Requires(templateColumn != null);
 
             var existingColumn =
-                table.Columns.SingleOrDefault(c => string.Equals(c.Name, templateColumn.Name, StringComparison.Ordinal));
+                table.Properties.SingleOrDefault(c => string.Equals(c.Name, templateColumn.Name, StringComparison.Ordinal));
 
             if (existingColumn == null)
             {
@@ -78,32 +75,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 templateColumn = existingColumn;
             }
 
-            return AddColumn(table, templateColumn);
-        }
+            AddColumn(table, templateColumn);
 
-        public static DbTableColumnMetadata IncludeColumn(DbTableMetadata table, string columnName, bool useExisting)
-        {
-            Contract.Requires(table != null);
-            Contract.Requires(columnName != null);
-
-            var existingColumn =
-                table.Columns.SingleOrDefault(c => string.Equals(c.Name, columnName, StringComparison.Ordinal));
-            DbTableColumnMetadata column = null;
-            if (existingColumn == null)
-            {
-                column = table.AddColumn(columnName);
-            }
-            else if (!useExisting
-                     && !existingColumn.IsPrimaryKeyColumn)
-            {
-                column = table.AddColumn(columnName);
-            }
-            else
-            {
-                column = existingColumn;
-            }
-
-            return AddColumn(table, column);
+            return templateColumn;
         }
     }
 
@@ -112,8 +86,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping,
             EntityType entityType,
-            DbTableMetadata fromTable,
-            DbTableMetadata toTable,
+            EntityType fromTable,
+            EntityType toTable,
             bool isMappingAnyInheritedProperty)
         {
             Contract.Requires(databaseMapping != null);
@@ -135,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static void UpdatePrincipalTables(
-            DbDatabaseMapping databaseMapping, DbTableMetadata toTable, EntityType entityType, bool removeFks)
+            DbDatabaseMapping databaseMapping, EntityType toTable, EntityType entityType, bool removeFks)
         {
             foreach (var associationType in databaseMapping.Model.Namespaces.Single().AssociationTypes
                 .Where(at => at.SourceEnd.GetEntityType().Equals(entityType) || at.TargetEnd.GetEntityType().Equals(entityType)))
@@ -147,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static void UpdatePrincipalTables(
-            DbDatabaseMapping databaseMapping, DbTableMetadata toTable, bool removeFks,
+            DbDatabaseMapping databaseMapping, EntityType toTable, bool removeFks,
             AssociationType associationType, EntityType et)
         {
             AssociationEndMember principalEnd, dependentEnd;
@@ -173,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             {
                 if (end.GetEntityType() == et)
                 {
-                    IEnumerable<KeyValuePair<DbTableMetadata, IEnumerable<DbTableColumnMetadata>>> dependentTableInfos;
+                    IEnumerable<KeyValuePair<EntityType, IEnumerable<EdmProperty>>> dependentTableInfos;
                     if (associationType.Constraint != null)
                     {
                         var originalDependentType = associationType.GetOtherEnd(end).GetEntityType();
@@ -193,7 +167,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                 .Distinct((f1, f2) => f1.Table == f2.Table)
                                 .Select(
                                     df =>
-                                    new KeyValuePair<DbTableMetadata, IEnumerable<DbTableColumnMetadata>>(
+                                    new KeyValuePair<EntityType, IEnumerable<EdmProperty>>(
                                         df.Table,
                                         df.PropertyMappings.Where(
                                             pm =>
@@ -216,7 +190,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         dependentTableInfos = new[]
                                                   {
                                                       new KeyValuePair
-                                                          <DbTableMetadata, IEnumerable<DbTableColumnMetadata>>(
+                                                          <EntityType, IEnumerable<EdmProperty>>(
                                                           dependentTable, dependentColumns)
                                                   };
                     }
@@ -225,14 +199,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     {
                         foreach (
                             var fk in
-                                tableInfo.Key.ForeignKeyConstraints.Where(
+                                tableInfo.Key.ForeignKeyBuilders.Where(
                                     fk => fk.DependentColumns.SequenceEqual(tableInfo.Value)).ToArray(
                                         
                                     ))
                         {
                             if (removeFks)
                             {
-                                tableInfo.Key.ForeignKeyConstraints.Remove(fk);
+                                tableInfo.Key.RemoveForeignKey(fk);
                             }
                             else
                             {
@@ -248,89 +222,102 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         ///     Moves a foreign key constraint from oldTable to newTable and updates column references
         /// </summary>
         private static void MoveForeignKeyConstraint(
-            DbTableMetadata fromTable, DbTableMetadata toTable, DbForeignKeyConstraintMetadata fk)
+            EntityType fromTable, EntityType toTable, ForeignKeyBuilder fk)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
             Contract.Requires(fk != null);
 
-            fromTable.ForeignKeyConstraints.Remove(fk);
+            fromTable.RemoveForeignKey(fk);
 
             // Only move it to the new table if the destination is not the principal table or if all dependent columns are not FKs
             // Otherwise you end up with an FK from the PKs to the PKs of the same table
             if (fk.PrincipalTable != toTable
-                ||
-                !fk.DependentColumns.All(c => c.IsPrimaryKeyColumn))
+                || !fk.DependentColumns.All(c => c.IsPrimaryKeyColumn))
             {
                 // Make sure all the dependent columns refer to columns in the newTable
                 var oldColumns = fk.DependentColumns.ToArray();
-                fk.DependentColumns.Clear();
-                SetAllDependentColumns(fk, oldColumns, toTable.Columns);
 
-                if (!toTable.ContainsEquivalentForeignKey(fk))
+                var dependentColumns
+                    = GetDependentColumns(oldColumns, toTable.Properties);
+
+                if (!ContainsEquivalentForeignKey(toTable, fk.PrincipalTable, dependentColumns))
                 {
-                    toTable.ForeignKeyConstraints.Add(fk);
+                    toTable.AddForeignKey(fk);
+
+                    fk.DependentColumns = dependentColumns;
                 }
             }
         }
 
         private static void CopyForeignKeyConstraint(
-            DbDatabaseMetadata database, DbTableMetadata toTable,
-            DbForeignKeyConstraintMetadata fk)
+            EdmModel database, EntityType toTable,
+            ForeignKeyBuilder fk)
         {
             Contract.Requires(toTable != null);
             Contract.Requires(fk != null);
 
-            var newFk = new DbForeignKeyConstraintMetadata
-                            {
-                                DeleteAction = fk.DeleteAction,
-                                Name =
-                                    database.Schemas.Single().Tables.SelectMany(t => t.ForeignKeyConstraints).
-                                    UniquifyName(fk.Name),
-                                PrincipalTable = fk.PrincipalTable
-                            };
+            var newFk
+                = new ForeignKeyBuilder(
+                    database,
+                    database.GetEntityTypes().SelectMany(t => t.ForeignKeyBuilders).UniquifyName(fk.Name))
+                      {
+                          PrincipalTable = fk.PrincipalTable,
+                          DeleteAction = fk.DeleteAction
+                      };
 
-            // Make sure all the dependent columns refer to columns in the newTable
-            SetAllDependentColumns(newFk, fk.DependentColumns, toTable.Columns);
+            var dependentColumns
+                = GetDependentColumns(fk.DependentColumns, toTable.Properties);
 
-            if (!toTable.ContainsEquivalentForeignKey(newFk))
+            if (!ContainsEquivalentForeignKey(toTable, newFk.PrincipalTable, dependentColumns))
             {
-                toTable.ForeignKeyConstraints.Add(newFk);
+                toTable.AddForeignKey(newFk);
+
+                newFk.DependentColumns = dependentColumns;
             }
         }
 
-        private static void SetAllDependentColumns(
-            DbForeignKeyConstraintMetadata fk,
-            IEnumerable<DbTableColumnMetadata> sourceColumns,
-            IEnumerable<DbTableColumnMetadata> destinationColumns)
+        private static bool ContainsEquivalentForeignKey(
+            EntityType dependentTable, EntityType principalTable, IEnumerable<EdmProperty> columns)
         {
-            foreach (var dc in sourceColumns)
-            {
-                fk.DependentColumns.Add(
-                    destinationColumns.Single(
-                        c =>
-                        string.Equals(c.Name, dc.Name, StringComparison.Ordinal)
-                        || string.Equals(c.GetUnpreferredUniqueName(), dc.Name, StringComparison.Ordinal)));
-            }
+            return dependentTable.ForeignKeyBuilders
+                .Any(
+                    fk => fk.PrincipalTable == principalTable
+                          && fk.DependentColumns.SequenceEqual(columns));
         }
 
-        private static IEnumerable<DbForeignKeyConstraintMetadata> FindAllForeignKeyConstraintsForColumn(
-            DbTableMetadata fromTable, DbTableMetadata toTable, DbTableColumnMetadata column)
+        private static IList<EdmProperty> GetDependentColumns(
+            IEnumerable<EdmProperty> sourceColumns,
+            IEnumerable<EdmProperty> destinationColumns)
+        {
+            return sourceColumns
+                .Select(
+                    sc =>
+                    destinationColumns.Single(
+                        dc =>
+                        string.Equals(dc.Name, sc.Name, StringComparison.Ordinal)
+                        || string.Equals(dc.GetUnpreferredUniqueName(), sc.Name, StringComparison.Ordinal))
+                )
+                .ToList();
+        }
+
+        private static IEnumerable<ForeignKeyBuilder> FindAllForeignKeyConstraintsForColumn(
+            EntityType fromTable, EntityType toTable, EdmProperty column)
         {
             return fromTable
-                .ForeignKeyConstraints
+                .ForeignKeyBuilders
                 .Where(
                     fk => fk.DependentColumns.Contains(column) &&
                           fk.DependentColumns.All(
-                              c => toTable.Columns.Any(
+                              c => toTable.Properties.Any(
                                   nc =>
                                   string.Equals(nc.Name, c.Name, StringComparison.Ordinal)
                                   || string.Equals(nc.GetUnpreferredUniqueName(), c.Name, StringComparison.Ordinal))));
         }
 
         public static void CopyAllForeignKeyConstraintsForColumn(
-            DbDatabaseMetadata database, DbTableMetadata fromTable, DbTableMetadata toTable,
-            DbTableColumnMetadata column)
+            EdmModel database, EntityType fromTable, EntityType toTable,
+            EdmProperty column)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
@@ -342,12 +329,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void MoveAllDeclaredForeignKeyConstraintsForPrimaryKeyColumns(
-            EntityType entityType, DbTableMetadata fromTable, DbTableMetadata toTable)
+            EntityType entityType, EntityType fromTable, EntityType toTable)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
 
-            foreach (var column in fromTable.KeyColumns)
+            foreach (var column in fromTable.DeclaredKeyProperties)
             {
                 FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                     .ToArray()
@@ -365,12 +352,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void CopyAllForeignKeyConstraintsForPrimaryKeyColumns(
-            DbDatabaseMetadata database, DbTableMetadata fromTable, DbTableMetadata toTable)
+            EdmModel database, EntityType fromTable, EntityType toTable)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
 
-            foreach (var column in fromTable.KeyColumns)
+            foreach (var column in fromTable.DeclaredKeyProperties)
             {
                 FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                     .ToArray()
@@ -389,7 +376,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         ///     Move any FK constraints that are now completely in newTable and used to refer to oldColumn
         /// </summary>
         public static void MoveAllForeignKeyConstraintsForColumn(
-            DbTableMetadata fromTable, DbTableMetadata toTable, DbTableColumnMetadata column)
+            EntityType fromTable, EntityType toTable, EdmProperty column)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
@@ -400,25 +387,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 .Each(fk => { MoveForeignKeyConstraint(fromTable, toTable, fk); });
         }
 
-        public static void RemoveAllForeignKeyConstraintsForColumn(DbTableMetadata table, DbTableColumnMetadata column)
+        public static void RemoveAllForeignKeyConstraintsForColumn(EntityType table, EdmProperty column)
         {
             Contract.Requires(table != null);
             Contract.Requires(column != null);
 
-            table.ForeignKeyConstraints
+            table.ForeignKeyBuilders
                 .Where(fk => fk.DependentColumns.Contains(column))
                 .ToArray()
-                .Each(fk => table.ForeignKeyConstraints.Remove(fk));
+                .Each(table.RemoveForeignKey);
         }
     }
 
     internal static class TableOperations
     {
-        public static DbTableColumnMetadata CopyColumnAndAnyConstraints(
-            DbDatabaseMetadata database,
-            DbTableMetadata fromTable,
-            DbTableMetadata toTable,
-            DbTableColumnMetadata column,
+        public static EdmProperty CopyColumnAndAnyConstraints(
+            EdmModel database,
+            EntityType fromTable,
+            EntityType toTable,
+            EdmProperty column,
             bool useExisting,
             bool allowPkConstraintCopy)
         {
@@ -441,8 +428,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return movedColumn;
         }
 
-        public static DbTableColumnMetadata MoveColumnAndAnyConstraints(
-            DbTableMetadata fromTable, DbTableMetadata toTable, DbTableColumnMetadata column, bool useExisting)
+        public static EdmProperty MoveColumnAndAnyConstraints(
+            EntityType fromTable, EntityType toTable, EdmProperty column, bool useExisting)
         {
             Contract.Requires(fromTable != null);
             Contract.Requires(toTable != null);
@@ -464,7 +451,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class EntityMappingOperations
     {
         public static DbEntityTypeMappingFragment CreateTypeMappingFragment(
-            DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment templateFragment, DbTableMetadata table)
+            DbEntityTypeMapping entityTypeMapping, DbEntityTypeMappingFragment templateFragment, EntityType table)
         {
             var fragment = new DbEntityTypeMappingFragment
                                {
@@ -482,10 +469,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static void UpdatePropertyMapping(
-            DbDatabaseMetadata database,
+            EdmModel database,
             DbEdmPropertyMapping propertyMapping,
-            DbTableMetadata fromTable,
-            DbTableMetadata toTable,
+            EntityType fromTable,
+            EntityType toTable,
             bool useExisting)
         {
             propertyMapping.Column
@@ -495,8 +482,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void UpdatePropertyMappings(
-            DbDatabaseMetadata database,
-            DbTableMetadata fromTable,
+            EdmModel database,
+            EntityType fromTable,
             DbEntityTypeMappingFragment fragment,
             bool useExisting)
         {
@@ -509,7 +496,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void MovePropertyMapping(
-            DbDatabaseMetadata database,
+            EdmModel database,
             DbEntityTypeMappingFragment fromFragment,
             DbEntityTypeMappingFragment toFragment,
             DbEdmPropertyMapping propertyMapping,
@@ -543,7 +530,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void UpdateConditions(
-            DbDatabaseMetadata database, DbTableMetadata fromTable, DbEntityTypeMappingFragment fragment)
+            EdmModel database, EntityType fromTable, DbEntityTypeMappingFragment fragment)
         {
             // move the condition's column from the formTable to the table in fragment
             if (fromTable != fragment.Table)
@@ -563,7 +550,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private static void MoveAssociationSetMappingDependents(
             DbAssociationSetMapping associationSetMapping,
             DbAssociationEndMapping dependentMapping,
-            DbTableMetadata toTable,
+            EntityType toTable,
             bool useExistingColumns)
         {
             Contract.Requires(associationSetMapping != null);
@@ -587,8 +574,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void MoveAllDeclaredAssociationSetMappings(
             DbDatabaseMapping databaseMapping,
             EntityType entityType,
-            DbTableMetadata fromTable,
-            DbTableMetadata toTable,
+            EntityType fromTable,
+            EntityType toTable,
             bool useExistingColumns)
         {
             Contract.Requires(databaseMapping != null);
@@ -629,23 +616,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class DatabaseOperations
     {
         public static void AddTypeConstraint(
-            EntityType entityType, DbTableMetadata principalTable, DbTableMetadata dependentTable, bool isSplitting)
+            EdmModel database,
+            EntityType entityType,
+            EntityType principalTable,
+            EntityType dependentTable,
+            bool isSplitting)
         {
             Contract.Requires(principalTable != null);
             Contract.Requires(dependentTable != null);
             Contract.Requires(entityType != null);
 
-            var foreignKeyConstraintMetadata = new DbForeignKeyConstraintMetadata
-                                                   {
-                                                       Name =
-                                                           String.Format(
-                                                               CultureInfo.InvariantCulture,
-                                                               "{0}_TypeConstraint_From_{1}_To_{2}",
-                                                               entityType.Name,
-                                                               principalTable.Name,
-                                                               dependentTable.Name),
-                                                       PrincipalTable = principalTable
-                                                   };
+            var foreignKeyConstraintMetadata
+                = new ForeignKeyBuilder(
+                    database, String.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}_TypeConstraint_From_{1}_To_{2}",
+                        entityType.Name,
+                        principalTable.Name,
+                        dependentTable.Name))
+                      {
+                          PrincipalTable = principalTable
+                      };
+
+            dependentTable.AddForeignKey(foreignKeyConstraintMetadata);
 
             if (isSplitting)
             {
@@ -655,14 +648,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             {
                 foreignKeyConstraintMetadata.SetIsTypeConstraint();
             }
-            dependentTable.Columns
-                .Where(c => c.IsPrimaryKeyColumn)
-                .Each(c => foreignKeyConstraintMetadata.DependentColumns.Add(c));
 
-            dependentTable.ForeignKeyConstraints.Add(foreignKeyConstraintMetadata);
+            foreignKeyConstraintMetadata.DependentColumns = dependentTable.Properties.Where(c => c.IsPrimaryKeyColumn);
 
             //If "DbStoreGeneratedPattern.Identity" was copied from the parent table, it should be removed
-            dependentTable.Columns.Where(c => c.IsPrimaryKeyColumn).Each(c => c.RemoveStoreGeneratedIdentityPattern());
+            dependentTable.Properties.Where(c => c.IsPrimaryKeyColumn).Each(c => c.RemoveStoreGeneratedIdentityPattern());
         }
     }
 }

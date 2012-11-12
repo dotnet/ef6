@@ -1296,6 +1296,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Select_Anonymous_Types_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -1371,6 +1372,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Select_Anonymous_Types_3_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -5278,6 +5280,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Single_Condition_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6311,6 +6314,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             LongCount_Simple_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -6469,6 +6473,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             LongCount_Nested_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7100,6 +7105,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Sum_Simple_Nullable_long_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -7261,6 +7267,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Sum_Simple_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10046,6 +10053,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery(
+            
             )
         {
             Average_Projection_float_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10284,6 +10292,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_with_non_generic_CreateQuery_async(
+            
             )
         {
             Average_Projection_Nullable_double_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(
@@ -10961,6 +10970,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_using_non_generic_DbSet_with_non_generic_CreateQuery_async(
+            
             )
         {
             EqualAll_2_from_LINQ_101_returns_same_results_as_ObjectQuery_implementation(

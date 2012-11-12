@@ -30,8 +30,8 @@ namespace System.Data.Entity.Edm.Db.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets a <see cref="DbTableColumnMetadata" /> value representing the table column to which the entity property is being mapped.
+        ///     Gets or sets a <see cref="EdmProperty" /> value representing the table column to which the entity property is being mapped.
         /// </summary>
-        public virtual DbTableColumnMetadata Column { get; set; }
+        public virtual EdmProperty Column { get; set; }
     }
 }

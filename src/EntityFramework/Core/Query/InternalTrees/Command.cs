@@ -82,6 +82,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_referencedRelProperties = new HashSet<RelProperty>();
         }
 
+        /// <summary>
+        /// For mocking.
+        /// </summary>
+        internal Command()
+        {
+        }
+
         #endregion
 
         #region public methods

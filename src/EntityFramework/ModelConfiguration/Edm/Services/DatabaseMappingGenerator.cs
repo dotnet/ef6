@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -14,7 +13,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     internal class DatabaseMappingGenerator
     {
         private const string DiscriminatorColumnName = "Discriminator";
-        internal const int DiscriminatorLength = 128;
+        public const int DiscriminatorMaxLength = 128;
+
+        public static TypeUsage DiscriminatorTypeUsage
+            = TypeUsage.CreateStringTypeUsage(
+                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                isUnicode: true,
+                isFixedLength: false,
+                maxLength: DiscriminatorMaxLength);
 
         private readonly DbProviderManifest _providerManifest;
 
@@ -42,8 +48,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             Contract.Requires(model != null);
 
-            var databaseMapping = new DbDatabaseMapping().Initialize(
-                model, new DbDatabaseMetadata().Initialize(model.Version));
+            var databaseMapping
+                = new DbDatabaseMapping()
+                    .Initialize(model, new EdmModel().DbInitialize(model.Version));
 
             databaseMapping.EntityContainerMappings.Single().EntityContainer = model.Containers.Single();
 
@@ -76,16 +83,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     continue;
                 }
 
-                var discriminatorColumn
-                    = entitySetMapping
-                        .EntityTypeMappings
-                        .First()
-                        .TypeMappingFragments
-                        .Single()
-                        .Table
-                        .AddColumn(DiscriminatorColumnName);
+                var typeUsage
+                    = _providerManifest.GetStoreType(DiscriminatorTypeUsage);
 
-                InitializeDefaultDiscriminatorColumn(discriminatorColumn);
+                var discriminatorColumn
+                    = new EdmProperty(DiscriminatorColumnName, typeUsage)
+                          {
+                              Nullable = false
+                          };
+
+                entitySetMapping
+                    .EntityTypeMappings
+                    .First()
+                    .TypeMappingFragments
+                    .Single()
+                    .Table
+                    .AddColumn(discriminatorColumn);
 
                 foreach (var entityTypeMapping in entitySetMapping.EntityTypeMappings)
                 {
@@ -97,22 +110,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         .AddDiscriminatorCondition(discriminatorColumn, entityTypeMapping.EntityType.Name);
                 }
             }
-        }
-
-        public void InitializeDefaultDiscriminatorColumn(DbTableColumnMetadata column)
-        {
-            var typeUsage =
-                _providerManifest.GetStoreType(
-                    TypeUsage.CreateStringTypeUsage(
-                        PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
-                        isUnicode: true,
-                        isFixedLength: false,
-                        maxLength: DiscriminatorLength));
-
-            column.TypeName = typeUsage.EdmType.Name;
-            column.Facets.MaxLength = DiscriminatorLength;
-
-            column.IsNullable = false;
         }
 
         private void GenerateAssociationTypes(EdmModel model, DbDatabaseMapping databaseMapping)

@@ -36,6 +36,8 @@ namespace System.Data.Entity
 
             var databaseMapping = cloned.Build(providerInfo).DatabaseMapping;
 
+            //databaseMapping.ShellEdmx();
+
             databaseMapping.AssertValid(throwOnError);
 
             return databaseMapping;

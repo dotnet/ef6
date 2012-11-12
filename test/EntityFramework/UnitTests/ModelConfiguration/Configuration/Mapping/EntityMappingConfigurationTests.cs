@@ -3,8 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -37,10 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
                                         {
                                             EntityType = new EntityType()
                                         };
-            var table = new DbTableMetadata
-                            {
-                                Name = "foo"
-                            };
+            var table = new EntityType("foo", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             entityTypeMapping.TypeMappingFragments.Add(
                 new DbEntityTypeMappingFragment
                     {
@@ -48,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
                     });
 
             var databaseMapping =
-                new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata().Initialize());
+                new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
             databaseMapping.Database.AddTable("foo");
             entityMappingConfiguration.Configure(
                 databaseMapping, ProviderRegistry.Sql2008_ProviderManifest, entityTypeMapping.EntityType, ref entityTypeMapping, false, 0, 1);

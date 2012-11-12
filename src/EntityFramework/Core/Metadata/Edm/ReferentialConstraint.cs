@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="toProperties"> properties on entity type of from role which take part in the constraint </param>
         /// <param name="fromProperties"> properties on entity type of to role which take part in the constraint </param>
         /// <exception cref="ArgumentNullException">Argument Null exception if any of the arguments is null</exception>
-        internal ReferentialConstraint(
+        public ReferentialConstraint(
             RelationshipEndMember fromRole,
             RelationshipEndMember toRole,
             IEnumerable<EdmProperty> fromProperties,

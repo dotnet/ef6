@@ -16,9 +16,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
         public virtual AssociationSet AssociationSet { get; set; }
 
         /// <summary>
-        ///     Gets a <see cref="DbTableMetadata" /> value representing the table to which the entity type's properties are being mapped.
+        ///     Gets a <see cref="EntityType" /> value representing the table to which the entity type's properties are being mapped.
         /// </summary>
-        public virtual DbTableMetadata Table { get; set; }
+        public virtual EntityType Table { get; set; }
 
         public virtual DbAssociationEndMapping SourceEndMapping { get; set; }
 

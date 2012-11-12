@@ -762,12 +762,13 @@ namespace System.Data.Entity.Core.Common.Utils
         {
             Facet storeGeneratedFacet;
             if (member.TypeUsage.Facets.TryGetValue(EdmProviderManifest.StoreGeneratedPatternFacetName, false, out storeGeneratedFacet)
-                &&
-                storeGeneratedFacet.Value != null)
+                && storeGeneratedFacet.Value != null)
             {
                 var pattern = (StoreGeneratedPattern)storeGeneratedFacet.Value;
+
                 return pattern;
             }
+
             return StoreGeneratedPattern.None;
         }
 

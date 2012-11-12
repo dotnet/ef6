@@ -67,14 +67,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
                     if (tableColumn == null || createNewColumn)
                     {
-                        tableColumn = entityTypeMappingFragment.Table.AddColumn(
-                            string.Join("_", propertyPath.Select(p => p.Name)));
+                        var columnName
+                            = string.Join("_", propertyPath.Select(p => p.Name));
 
-                        MapTableColumn(
-                            property,
-                            tableColumn,
-                            !rootDeclaredProperties.Contains(propertyPath.First()),
-                            entityType.KeyProperties().Contains(property));
+                        tableColumn
+                            = MapTableColumn(
+                                property,
+                                columnName,
+                                !rootDeclaredProperties.Contains(propertyPath.First()));
+
+                        entityTypeMappingFragment.Table.AddColumn(tableColumn);
+
+                        if (entityType.KeyProperties().Contains(property))
+                        {
+                            entityTypeMappingFragment.Table.AddKeyMember(tableColumn);
+                        }
                     }
 
                     entityTypeMappingFragment.PropertyMappings.Add(

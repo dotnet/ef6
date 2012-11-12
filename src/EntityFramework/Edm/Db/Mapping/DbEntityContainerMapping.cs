@@ -8,7 +8,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
 
     /// <summary>
     ///     Allows the construction and modification of the mapping of an EDM entity container ( <see cref="EntityContainer" /> ) to a database ( <see
-    ///      cref="DbDatabaseMetadata" /> ).
+    ///      cref="EdmModel" /> ).
     /// </summary>
     public class DbEntityContainerMapping
         : DbMappingMetadataItem

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics.Contracts;
 
@@ -13,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         private const string IsSplitConstraint = "IsSplitConstraint";
         private const string AssociationType = "AssociationType";
 
-        public static bool GetIsTypeConstraint(this DbForeignKeyConstraintMetadata fk)
+        public static bool GetIsTypeConstraint(this ForeignKeyBuilder fk)
         {
             Contract.Requires(fk != null);
 
@@ -25,21 +24,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             return false;
         }
 
-        public static void SetIsTypeConstraint(this DbForeignKeyConstraintMetadata fk)
+        public static void SetIsTypeConstraint(this ForeignKeyBuilder fk)
         {
             Contract.Requires(fk != null);
 
             fk.Annotations.SetAnnotation(IsTypeConstraint, true);
         }
 
-        public static void SetIsSplitConstraint(this DbForeignKeyConstraintMetadata fk)
+        public static void SetIsSplitConstraint(this ForeignKeyBuilder fk)
         {
             Contract.Requires(fk != null);
 
             fk.Annotations.SetAnnotation(IsSplitConstraint, true);
         }
 
-        public static AssociationType GetAssociationType(this DbForeignKeyConstraintMetadata fk)
+        public static AssociationType GetAssociationType(this ForeignKeyBuilder fk)
         {
             Contract.Requires(fk != null);
 
@@ -47,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         }
 
         public static void SetAssociationType(
-            this DbForeignKeyConstraintMetadata fk, AssociationType associationType)
+            this ForeignKeyBuilder fk, AssociationType associationType)
         {
             Contract.Requires(fk != null);
             Contract.Requires(associationType != null);

@@ -3,7 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -12,21 +13,36 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
     ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
-    public class ColumnOrderingConvention : IDbConvention<DbTableMetadata>
+    public class ColumnOrderingConvention : IDbConvention<EntityType>
     {
-        public void Apply(DbTableMetadata dbDataModelItem, DbDatabaseMetadata database)
+        public void Apply(EntityType dbDataModelItem, EdmModel model)
         {
-            ValidateColumns(dbDataModelItem);
+            ValidateColumns(dbDataModelItem, model.GetEntitySet(dbDataModelItem).Table);
 
-            dbDataModelItem.Columns = OrderColumns(dbDataModelItem.Columns);
-            dbDataModelItem.ForeignKeyConstraints.Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
+            OrderColumns(dbDataModelItem.Properties)
+                .Each(
+                    c =>
+                        {
+                            var isKey = c.IsPrimaryKeyColumn;
+
+                            dbDataModelItem.RemoveMember(c);
+                            dbDataModelItem.AddMember(c);
+
+                            if (isKey)
+                            {
+                                dbDataModelItem.AddKeyMember(c);
+                            }
+                        });
+
+            dbDataModelItem.ForeignKeyBuilders
+                .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 
-        protected virtual void ValidateColumns(DbTableMetadata table)
+        protected virtual void ValidateColumns(EntityType table, string tableName)
         {
         }
 
-        private static IList<DbTableColumnMetadata> OrderColumns(IEnumerable<DbTableColumnMetadata> columns)
+        private static IEnumerable<EdmProperty> OrderColumns(IEnumerable<EdmProperty> columns)
         {
             var columnOrders
                 = from c in columns

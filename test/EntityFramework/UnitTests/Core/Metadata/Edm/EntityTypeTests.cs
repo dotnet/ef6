@@ -2,10 +2,29 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Linq;
+    using Moq;
     using Xunit;
 
     public class EntityTypeTests
     {
+        [Fact]
+        public void Can_add_and_remove_foreign_key_builders()
+        {
+            var entityType = new EntityType();
+            var mockForeignKeyBuilder = new Mock<ForeignKeyBuilder>();
+
+            entityType.AddForeignKey(mockForeignKeyBuilder.Object);
+
+            Assert.Same(mockForeignKeyBuilder.Object, entityType.ForeignKeyBuilders.Single());
+
+            mockForeignKeyBuilder.Verify(fk => fk.SetOwner(entityType));
+
+            entityType.RemoveForeignKey(mockForeignKeyBuilder.Object);
+
+            mockForeignKeyBuilder.Verify(fk => fk.SetOwner(null));
+        }
+
         [Fact]
         public void Can_get_list_of_declared_key_properties()
         {
@@ -25,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             baseType.AddKeyMember(property);
 
             entityType.BaseType = baseType;
-            
+
             Assert.Empty(entityType.DeclaredKeyProperties);
             Assert.Equal(1, entityType.KeyMembers.Count);
         }
@@ -84,7 +103,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var entityType = new EntityType();
 
             Assert.Empty(entityType.DeclaredMembers);
-            
+
             var property1 = new NavigationProperty("N", TypeUsage.Create(new EntityType()));
             var property2 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 

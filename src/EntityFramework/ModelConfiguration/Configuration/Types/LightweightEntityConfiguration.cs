@@ -6,8 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Reflection;
 
     /// <summary>
-    /// Allows configuration to be performed for an entity type in a model.
-    /// This configuration functionality is available via lightweight conventions.
+    ///     Allows configuration to be performed for an entity type in a model.
+    ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
     public class LightweightEntityConfiguration
     {
@@ -15,10 +15,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private readonly Func<EntityTypeConfiguration> _configuration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LightweightEntityConfiguration" /> class.
+        ///     Initializes a new instance of the <see cref="LightweightEntityConfiguration" /> class.
         /// </summary>
-        /// <param name="type">The <see cref="Type" /> of this entity type.</param>
-        /// <param name="configuration">The configuration object that this instance wraps.</param>
+        /// <param name="type"> The <see cref="Type" /> of this entity type. </param>
+        /// <param name="configuration"> The configuration object that this instance wraps. </param>
         public LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
         {
             Contract.Requires(type != null);
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets the <see cref="Type" /> of this entity type.
+        ///     Gets the <see cref="Type" /> of this entity type.
         /// </summary>
         public Type ClrType
         {
@@ -37,10 +37,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets or sets the entity set name to be used for this entity type.
+        ///     Gets or sets the entity set name to be used for this entity type.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public string EntitySetName
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets the name of the table that this entity type is mapped to.
+        ///     Gets the name of the table that this entity type is mapped to.
         /// </summary>
         public string TableName
         {
@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Gets the database schema of the table that this entity type is mapped to.
+        ///     Gets the database schema of the table that this entity type is mapped to.
         /// </summary>
         public string SchemaName
         {
@@ -73,9 +73,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Excludes a property from the model so that it will not be mapped to the database.
+        ///     Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
-        /// <param name="propertyInfo">The property to be configured.</param>
+        /// <param name="propertyInfo"> The property to be configured. </param>
         public void Ignore(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
@@ -84,12 +84,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the primary key property(s) for this entity type.
+        ///     Configures the primary key property(s) for this entity type.
         /// </summary>
-        /// <param name="propertyInfo">
-        /// The property to be used as the primary key. If the primary key is made up of
-        /// multiple properties, call this method once for each of them.
-        /// </param>
+        /// <param name="propertyInfo"> The property to be used as the primary key. If the primary key is made up of multiple properties, call this method once for each of them. </param>
         public void HasKey(PropertyInfo propertyInfo)
         {
             Contract.Requires(propertyInfo != null);
@@ -98,10 +95,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the table name that this entity type is mapped to.
+        ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        /// <remarks>Calling this will have no effect once it has been configured.</remarks>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured.
+        /// </remarks>
         public void ToTable(string tableName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
@@ -113,11 +112,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        /// Configures the table name that this entity type is mapped to.
+        ///     Configures the table name that this entity type is mapped to.
         /// </summary>
-        /// <param name="tableName">The name of the table.</param>
-        /// <param name="schemaName">The database schema of the table.</param>
-        /// <remarks>Calling this will have no effect once it has been configured.</remarks>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <param name="schemaName"> The database schema of the table. </param>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured.
+        /// </remarks>
         public void ToTable(string tableName, string schemaName)
         {
             Contract.Requires(!string.IsNullOrWhiteSpace(tableName));

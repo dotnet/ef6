@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Linq;
     using Xunit;
@@ -323,6 +322,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             Assert.Equal("FooSet", entitySet.Name);
             Assert.Same(entityType, entitySet.ElementType);
             Assert.True(model.Containers.Single().EntitySets.Contains(entitySet));
+        }
+
+        [Fact]
+        public void AddAssociationSet_should_create_and_add_to_default_container_explicit_overload()
+        {
+            var model = new EdmModel().Initialize();
+            var associationSet = new AssociationSet("AS", new AssociationType());
+
+            model.AddAssociationSet(associationSet);
+
+            Assert.True(model.Containers.Single().AssociationSets.Contains(associationSet));
         }
 
         [Fact]

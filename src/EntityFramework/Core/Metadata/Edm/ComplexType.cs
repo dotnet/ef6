@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="version"> The version of this type </param>
         /// <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
         /// <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
-        internal ComplexType(string name, string namespaceName, DataSpace dataSpace)
+        public ComplexType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
         }
@@ -69,7 +69,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
-            Debug.Assert(Helper.IsEdmProperty(member),
+            Debug.Assert(
+                Helper.IsEdmProperty(member),
                 "Only members of type Property may be added to ComplexType.");
         }
     }

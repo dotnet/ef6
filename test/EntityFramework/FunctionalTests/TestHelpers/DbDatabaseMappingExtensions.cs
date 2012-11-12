@@ -6,7 +6,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Diagnostics;

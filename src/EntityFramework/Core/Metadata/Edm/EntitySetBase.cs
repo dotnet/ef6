@@ -61,8 +61,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private EntityContainer _entityContainer;
         private string _name;
         private EntityTypeBase _elementType;
-        private readonly string _table;
-        private readonly string _schema;
+        private string _table;
+        private string _schema;
 
         /// <summary>
         ///     Returns the kind of the type
@@ -127,6 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 EntityUtil.GenericCheckArgumentNull(value, "value");
                 Util.ThrowIfReadOnly(this);
+
                 _elementType = value;
             }
         }
@@ -135,12 +136,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal string Table
         {
             get { return _table; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Util.ThrowIfReadOnly(this);
+
+                _table = value;
+            }
         }
 
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         internal string Schema
         {
             get { return _schema; }
+            set
+            {
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Util.ThrowIfReadOnly(this);
+
+                _schema = value;
+            }
         }
 
         /// <summary>

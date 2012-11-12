@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -75,11 +74,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
+        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
         /// </summary>
-        /// <param name="entityConventionConfigurationAction">
-        /// An action that performs configuration against an <see cref="EntityConventionConfiguration" />.
-        /// </param>
+        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
+        ///      cref="EntityConventionConfiguration" /> . </param>
         public void Add(Action<EntityConventionConfiguration> entityConventionConfigurationAction)
         {
             Contract.Requires(entityConventionConfigurationAction != null);
@@ -110,15 +108,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
-        /// This convention will run after the one specified.
+        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
+        ///     This convention will run after the one specified.
         /// </summary>
-        /// <typeparam name="TExistingConvention">
-        /// The type of the convention after which the enabled one will run.
-        /// </typeparam>
-        /// <param name="entityConventionConfigurationAction">
-        /// An action that performs configuration against an <see cref="EntityConventionConfiguration" />.
-        /// </param>
+        /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
+        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
+        ///      cref="EntityConventionConfiguration" /> . </param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddAfter<TExistingConvention>(
             Action<EntityConventionConfiguration> entityConventionConfigurationAction)
@@ -152,15 +147,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
-        /// This convention will run before the one specified.
+        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
+        ///     This convention will run before the one specified.
         /// </summary>
-        /// <typeparam name="TExistingConvention">
-        /// The type of the convention before which the enabled one will run.
-        /// </typeparam>
-        /// <param name="entityConventionConfigurationAction">
-        /// An action that performs configuration against an <see cref="EntityConventionConfiguration" />.
-        /// </param>
+        /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
+        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
+        ///      cref="EntityConventionConfiguration" /> . </param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddBefore<TExistingConvention>(
             Action<EntityConventionConfiguration> entityConventionConfigurationAction)
@@ -240,13 +232,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyDatabase(DbDatabaseMetadata database)
+        internal void ApplyDatabase(EdmModel database)
         {
             Contract.Requires(database != null);
 
             foreach (var convention in _conventions)
             {
-                new DatabaseConventionDispatcher(convention, database).Dispatch();
+                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
             }
         }
 
@@ -369,7 +361,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyPluralizingTableNameConvention(DbDatabaseMetadata database)
+        internal void ApplyPluralizingTableNameConvention(EdmModel database)
         {
             if (database == null)
             {
@@ -378,7 +370,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var convention in _conventions.Where(c => c is PluralizingTableNameConvention))
             {
-                new DatabaseConventionDispatcher(convention, database).Dispatch();
+                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
             }
         }
 

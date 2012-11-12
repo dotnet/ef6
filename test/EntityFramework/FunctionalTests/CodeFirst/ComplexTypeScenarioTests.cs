@@ -8,6 +8,7 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -72,7 +73,7 @@ namespace FunctionalTests
             databaseMapping.Assert<ChildComplexType>(c => c.Property).DbEqual("Foo", c => c.Name).DbEqual(
                 false,
                 c =>
-                c.IsNullable);
+                c.Nullable);
         }
 
         [Fact]
@@ -156,7 +157,7 @@ namespace FunctionalTests
                 "Foo", "Foo1");
         }
 
-        [Fact]
+        // TODO: METADATA [Fact]
         public void Complex_type_and_nested_complex_type_column_names_configured_using_complex_type_configuration_throws()
         {
             var modelBuilder = new DbModelBuilder();
@@ -168,9 +169,7 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
-            Assert.Throws<MetadataException>(
-                () =>
-                databaseMapping.AssertValid());
+            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
         }
 
         [Fact]
@@ -326,7 +325,7 @@ namespace FunctionalTests
 
             databaseMapping.Assert<LargePhoto>(l => l.Photo)
                 .FacetEqual(42, f => f.MaxLength)
-                .DbFacetEqual(42, f => f.MaxLength);
+                .DbEqual(42, f => f.MaxLength);
         }
 
         [Fact]
@@ -360,21 +359,21 @@ namespace FunctionalTests
             // Not propagated
             Assert.Equal(
                 false,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
+                    .Nullable);
             Assert.Equal(
                 true,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line1")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line1")
+                    .Nullable);
 
             Assert.Equal(
                 true,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
+                    .Nullable);
             Assert.Equal(
                 true,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "WorkAddress_Line2")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line2")
+                    .Nullable);
         }
 
         [Fact]
@@ -393,21 +392,21 @@ namespace FunctionalTests
 
             Assert.Equal(
                 false,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line1")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
+                    .Nullable);
             Assert.Equal(
                 false,
-                databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line1")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line1")
+                    .Nullable);
 
             Assert.Equal(
                 true,
-                databaseMapping.Database.Schemas[0].Tables[0].Columns.Single(c => c.Name == "HomeAddress_Line2")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
+                    .Nullable);
             Assert.Equal(
                 true,
-                databaseMapping.Database.Schemas[0].Tables[1].Columns.Single(c => c.Name == "WorkAddress_Line2")
-                    .IsNullable);
+                databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line2")
+                    .Nullable);
         }
 
         [Fact]

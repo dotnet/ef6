@@ -704,7 +704,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 // add function parameters
                 var functionParams = functionMapping.Function.Parameters.Select(
-                        paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
+                    paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
 
                 // construct DbFunctionCommandTree including implict return type
                 var tree = new DbFunctionCommandTree(

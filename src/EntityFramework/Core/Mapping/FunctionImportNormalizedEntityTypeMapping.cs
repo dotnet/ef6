@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
                 columnConditions.Count == parent.DiscriminatorColumns.Count,
                 "discriminator values must be ordinally aligned with discriminator columns");
             Debug.Assert(
-                impliedEntityTypes.Count == parent.MappedEntityTypes.Count,
+                impliedEntityTypes.Length == parent.MappedEntityTypes.Count,
                 "implied entity types must be ordinally aligned with mapped entity types");
 
             ColumnConditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(columnConditions.ToList());

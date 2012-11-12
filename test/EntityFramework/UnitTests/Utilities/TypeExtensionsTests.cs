@@ -288,6 +288,12 @@ namespace System.Data.Entity.Utilities
         {
             public AbstractConfiguration()
             {
+                // prevent code cleanup removal
+                DoStuff();
+            }
+
+            private void DoStuff()
+            {
             }
         }
 

@@ -53,7 +53,7 @@ namespace FunctionalTests
             databaseMapping.Assert(PrivateMemberAnnotationClass.PersonFirstNameObjectExpr)
                 .DbEqual("dsdsd", c => c.Name)
                 .DbEqual("nvarchar", c => c.TypeName)
-                .DbFacetEqual(128, f => f.MaxLength)
+                .DbEqual(128, f => f.MaxLength)
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
         }
 
@@ -326,7 +326,7 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<Login>(x => x.UserName)
                     .DbEqual("nvarchar", c => c.TypeName)
-                    .DbFacetEqual(128, f => f.MaxLength);
+                    .DbEqual(128, f => f.MaxLength);
             }
         }
 
@@ -343,7 +343,7 @@ namespace FunctionalTests
             databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
                 .DbEqual("dsdsd", c => c.Name)
                 .DbEqual("nvarchar", c => c.TypeName)
-                .DbFacetEqual(128, f => f.MaxLength)
+                .DbEqual(128, f => f.MaxLength)
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
         }
 
@@ -362,13 +362,13 @@ namespace FunctionalTests
             databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
                 .DbEqual("dsdsd", c => c.Name)
                 .DbEqual("nvarchar", c => c.TypeName)
-                .DbFacetEqual(128, f => f.MaxLength)
+                .DbEqual(128, f => f.MaxLength)
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
 
             Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
             databaseMapping.Assert<ReferencingClass>().ForeignKeyColumn("Person_PersonFirstName")
                 .DbEqual("nvarchar", c => c.TypeName)
-                .DbFacetEqual(128, f => f.MaxLength);
+                .DbEqual(128, f => f.MaxLength);
         }
 
         [Fact]
@@ -388,7 +388,7 @@ namespace FunctionalTests
                 databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
                     .DbEqual("dsdsd", c => c.Name)
                     .DbEqual("nvarchar", c => c.TypeName)
-                    .DbFacetEqual(64, f => f.MaxLength)
+                    .DbEqual(64, f => f.MaxLength)
                     .DbEqual(true, c => c.IsPrimaryKeyColumn);
             }
         }
@@ -411,13 +411,13 @@ namespace FunctionalTests
                 databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
                     .DbEqual("dsdsd", c => c.Name)
                     .DbEqual("nvarchar", c => c.TypeName)
-                    .DbFacetEqual(64, f => f.MaxLength)
+                    .DbEqual(64, f => f.MaxLength)
                     .DbEqual(true, c => c.IsPrimaryKeyColumn);
 
                 Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
                 databaseMapping.Assert<ReferencingClass>().ForeignKeyColumn("Person_PersonFirstName")
                     .DbEqual("nvarchar", c => c.TypeName)
-                    .DbFacetEqual(64, f => f.MaxLength);
+                    .DbEqual(64, f => f.MaxLength);
             }
         }
 
@@ -449,7 +449,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.KeyColumns.Single().Name);
+            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.DeclaredKeyProperties.Single().Name);
         }
 
         [Fact]
@@ -464,18 +464,18 @@ namespace FunctionalTests
             databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
                 "rowversion",
                 t =>
-                t.Columns.Single(x => x.Name == "MaxTimestamp").
+                t.Properties.Single(x => x.Name == "MaxTimestamp").
                     TypeName);
+
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                false,
+                t =>
+                t.Properties.Single(x => x.Name == "MaxTimestamp").IsMaxLength);
+
             databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
                 null,
                 t =>
-                t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
-                    IsMaxLength);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
-                null,
-                t =>
-                t.Columns.Single(x => x.Name == "MaxTimestamp").Facets.
-                    MaxLength);
+                t.Properties.Single(x => x.Name == "MaxTimestamp").MaxLength);
         }
 
         [Fact]
@@ -490,18 +490,18 @@ namespace FunctionalTests
             databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
                 "rowversion",
                 t =>
-                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
+                t.Properties.Single(x => x.Name == "NonMaxTimestamp").
                     TypeName);
+
+            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
+                false,
+                t =>
+                t.Properties.Single(x => x.Name == "NonMaxTimestamp").IsMaxLength);
+
             databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
                 null,
                 t =>
-                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
-                    Facets.IsMaxLength);
-            databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
-                null,
-                t =>
-                t.Columns.Single(x => x.Name == "NonMaxTimestamp").
-                    Facets.MaxLength);
+                t.Properties.Single(x => x.Name == "NonMaxTimestamp").MaxLength);
         }
 
         [Fact]

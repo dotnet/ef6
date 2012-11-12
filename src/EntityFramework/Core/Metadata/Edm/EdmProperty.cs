@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Diagnostics;
@@ -96,6 +97,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal EdmProperty(string name)
+            : this(name, TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)))
+        {
+            // testing only
+        }
+
         /// <summary>
         ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
         /// </summary>
@@ -159,6 +166,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(Facet.Create(NullableFacetDescription, value));
             }
+        }
+
+        public string TypeName
+        {
+            get { return TypeUsage.EdmType.Name; }
         }
 
         /// <summary>
@@ -231,6 +243,37 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public PrimitiveType PrimitiveType
         {
             get { return TypeUsage.EdmType as PrimitiveType; }
+            internal set
+            {
+                Contract.Requires(value != null);
+                Util.ThrowIfReadOnly(this);
+
+                var existingStoreGeneratedPattern = StoreGeneratedPattern;
+                var existingConcurrencyMode = ConcurrencyMode;
+
+                var validExistingFacets = new List<Facet>();
+
+                foreach (var facetDescription in value.GetAssociatedFacetDescriptions())
+                {
+                    Facet facet;
+                    if (TypeUsage.Facets.TryGetValue(facetDescription.FacetName, false, out facet))
+                    {
+                        validExistingFacets.Add(facet);
+                    }
+                }
+
+                TypeUsage = TypeUsage.Create(value, validExistingFacets);
+
+                if (existingStoreGeneratedPattern != StoreGeneratedPattern.None)
+                {
+                    StoreGeneratedPattern = existingStoreGeneratedPattern;
+                }
+
+                if (existingConcurrencyMode != ConcurrencyMode.None)
+                {
+                    ConcurrencyMode = existingConcurrencyMode;
+                }
+            }
         }
 
         public EnumType EnumType
@@ -255,12 +298,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public ConcurrencyMode ConcurrencyMode
         {
-            get { return MetadataHelper.GetConcurrencyMode(TypeUsage); }
+            get { return MetadataHelper.GetConcurrencyMode(this); }
             set
             {
                 Util.ThrowIfReadOnly(this);
 
                 TypeUsage = TypeUsage.ShallowCopy(Facet.Create(Converter.ConcurrencyModeFacet, value));
+            }
+        }
+
+        public StoreGeneratedPattern StoreGeneratedPattern
+        {
+            get { return MetadataHelper.GetStoreGeneratedPattern(this); }
+            set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(Converter.StoreGeneratedPatternFacet, value));
             }
         }
 
@@ -287,7 +341,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
-                           ? facet.Value as int?
+                           ? (!facet.Description.IsConstant ? facet.Value as int? : null)
                            : null;
             }
             set
@@ -331,7 +385,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, false, out facet)
-                           ? facet.Value as bool?
+                           ? (!facet.Description.IsConstant ? facet.Value as bool? : null)
                            : null;
             }
             set
@@ -352,7 +406,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, false, out facet)
-                           ? facet.Value as bool?
+                           ? (!facet.Description.IsConstant ? facet.Value as bool? : null)
                            : null;
             }
             set
@@ -373,7 +427,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
-                           ? facet.Value as byte?
+                           ? (!facet.Description.IsConstant ? facet.Value as byte? : null)
                            : null;
             }
             set
@@ -394,7 +448,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
-                           ? facet.Value as byte?
+                           ? (!facet.Description.IsConstant ? facet.Value as byte? : null)
                            : null;
             }
             set

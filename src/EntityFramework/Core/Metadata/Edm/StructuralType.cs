@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Adds a member to this type
         /// </summary>
         /// <param name="member"> The member to add </param>
-        internal void AddMember(EdmMember member)
+        public void AddMember(EdmMember member)
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _members.Add(member);
         }
 
-        internal virtual void RemoveMember(EdmMember member)
+        public virtual void RemoveMember(EdmMember member)
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);

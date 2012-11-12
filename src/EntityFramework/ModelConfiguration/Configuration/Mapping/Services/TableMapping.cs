@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Diagnostics;
@@ -14,11 +13,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     [DebuggerDisplay("{Table.Name}")]
     internal class TableMapping
     {
-        private readonly DbTableMetadata _table;
+        private readonly EntityType _table;
         private readonly SortedEntityTypeIndex _entityTypes;
         private readonly List<ColumnMapping> _columns;
 
-        public TableMapping(DbTableMetadata table)
+        public TableMapping(EntityType table)
         {
             Contract.Requires(table != null);
             _table = table;
@@ -26,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             _columns = new List<ColumnMapping>();
         }
 
-        public DbTableMetadata Table
+        public EntityType Table
         {
             get { return _table; }
         }
@@ -76,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private ColumnMapping FindOrCreateColumnMapping(DbTableColumnMetadata column)
+        private ColumnMapping FindOrCreateColumnMapping(EdmProperty column)
         {
             var columnMapping = _columns.SingleOrDefault(c => c.Column == column);
             if (columnMapping == null)

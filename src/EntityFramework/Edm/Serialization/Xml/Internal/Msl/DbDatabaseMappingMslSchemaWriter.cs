@@ -5,7 +5,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Msl;
     using System.Diagnostics.Contracts;
@@ -199,7 +198,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
             }
         }
 
-        private void WriteScalarPropertyElement(EdmProperty property, DbTableColumnMetadata column)
+        private void WriteScalarPropertyElement(EdmProperty property, EdmProperty column)
         {
             _xmlWriter.WriteStartElement(MslConstants.Element_ScalarProperty);
             _xmlWriter.WriteAttributeString(MslConstants.Attribute_Name, property.Name);

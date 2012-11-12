@@ -9,8 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Reflection;
 
     /// <summary>
-    /// Used to configure a primitive property of an entity type or complex type. 
-    /// This configuration functionality is available via lightweight conventions.
+    ///     Used to configure a primitive property of an entity type or complex type. 
+    ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
     public class LightweightPropertyConfiguration
     {
@@ -23,10 +23,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private readonly Lazy<StringPropertyConfiguration> _stringConfiguration;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LightweightPropertyConfiguration" /> class.
+        ///     Initializes a new instance of the <see cref="LightweightPropertyConfiguration" /> class.
         /// </summary>
-        /// <param name="propertyInfo">The <see cref="PropertyInfo" /> for this property</param>
-        /// <param name="configuration">The configuration object that this instance wraps.</param>
+        /// <param name="propertyInfo"> The <see cref="PropertyInfo" /> for this property </param>
+        /// <param name="configuration"> The configuration object that this instance wraps. </param>
         public LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
             Contract.Requires(propertyInfo != null);
@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets the <see cref="PropertyInfo" /> for this property.
+        ///     Gets the <see cref="PropertyInfo" /> for this property.
         /// </summary>
         public PropertyInfo ClrPropertyInfo
         {
@@ -55,10 +55,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the name of the database column used to store the property.
+        ///     Gets or sets the name of the database column used to store the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public string ColumnName
         {
@@ -73,10 +73,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the order of the database column used to store the property.
+        ///     Gets or sets the order of the database column used to store the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public int? ColumnOrder
         {
@@ -91,10 +91,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the type of the database column used to store the property.
+        ///     Gets or sets the type of the database column used to store the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public string ColumnType
         {
@@ -109,10 +109,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the concurrency mode to use for the property.
+        ///     Gets or sets the concurrency mode to use for the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public ConcurrencyMode? ConcurrencyMode
         {
@@ -127,11 +127,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the pattern used to generate values in the database for the
-        /// property.
+        ///     Gets or sets the pattern used to generate values in the database for the
+        ///     property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public DatabaseGeneratedOption? DatabaseGeneratedOption
         {
@@ -146,10 +146,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property is optional.
+        ///     Gets or sets a value indicating whether the property is optional.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured.
+        ///     Setting this will have no effect once it has been configured.
         /// </remarks>
         public bool? IsNullable
         {
@@ -164,20 +164,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property supports Unicode string
-        /// content.
+        ///     Gets or sets a value indicating whether the property supports Unicode string
+        ///     content.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property is not a <see cref="String" />.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property is not a <see cref="String" />.
         /// </remarks>
         public bool? IsUnicode
         {
             get
             {
                 return _stringConfiguration.Value != null
-                    ? _stringConfiguration.Value.IsUnicode
-                    : null;
+                           ? _stringConfiguration.Value.IsUnicode
+                           : null;
             }
             set
             {
@@ -190,19 +190,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property is fixed length.
+        ///     Gets or sets a value indicating whether the property is fixed length.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property does not have length facets.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
         /// </remarks>
         public bool? IsFixedLength
         {
             get
             {
                 return _lengthConfiguration.Value != null
-                    ? _lengthConfiguration.Value.IsFixedLength
-                    : null;
+                           ? _lengthConfiguration.Value.IsFixedLength
+                           : null;
             }
             set
             {
@@ -215,19 +215,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the maximum length of the property.
+        ///     Gets or sets the maximum length of the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property does not have length facets.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
         /// </remarks>
         public int? MaxLength
         {
             get
             {
                 return _lengthConfiguration.Value != null
-                    ? _lengthConfiguration.Value.MaxLength
-                    : null;
+                           ? _lengthConfiguration.Value.MaxLength
+                           : null;
             }
             set
             {
@@ -240,20 +240,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property allows the maximum
-        /// length supported by the database provider.
+        ///     Gets or sets a value indicating whether the property allows the maximum
+        ///     length supported by the database provider.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property does not have length facets.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
         /// </remarks>
         public bool? IsMaxLength
         {
             get
             {
                 return _lengthConfiguration.Value != null
-                    ? _lengthConfiguration.Value.IsMaxLength
-                    : null;
+                           ? _lengthConfiguration.Value.IsMaxLength
+                           : null;
             }
             set
             {
@@ -266,19 +266,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the scale of the property.
+        ///     Gets or sets the scale of the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property is not a <see cref="Decimal" />.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property is not a <see cref="Decimal" />.
         /// </remarks>
         public byte? Scale
         {
             get
             {
                 return _decimalConfiguration.Value != null
-                    ? _decimalConfiguration.Value.Scale
-                    : null;
+                           ? _decimalConfiguration.Value.Scale
+                           : null;
             }
             set
             {
@@ -291,11 +291,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets the precision of the property.
+        ///     Gets or sets the precision of the property.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property is not a <see cref="DateTime" /> or <see cref="Decimal" />.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property is not a <see cref="DateTime" /> or <see cref="Decimal" />.
         /// </remarks>
         public byte? Precision
         {
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     _decimalConfiguration.Value.Precision = value;
                 }
                 else if (_dateTimeConfiguration.Value != null
-                    && _dateTimeConfiguration.Value.Precision == null)
+                         && _dateTimeConfiguration.Value.Precision == null)
                 {
                     _dateTimeConfiguration.Value.Precision = value;
                 }
@@ -329,20 +329,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the property is a row version in the
-        /// database.
+        ///     Gets or sets a value indicating whether the property is a row version in the
+        ///     database.
         /// </summary>
         /// <remarks>
-        /// Setting this will have no effect once it has been configured or if the
-        /// property is not a <see cref="T:Byte[]" />.
+        ///     Setting this will have no effect once it has been configured or if the
+        ///     property is not a <see cref="T:Byte[]" />.
         /// </remarks>
         public bool? IsRowVersion
         {
             get
             {
                 return _binaryConfiguration.Value != null
-                    ? _binaryConfiguration.Value.IsRowVersion
-                    : null;
+                           ? _binaryConfiguration.Value.IsRowVersion
+                           : null;
             }
             set
             {
@@ -355,7 +355,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Configures this property to be part of the entity type's primary key.
+        ///     Configures this property to be part of the entity type's primary key.
         /// </summary>
         public void IsKey()
         {
@@ -368,12 +368,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        /// Configures this property to be part of the entity type's primary key.
+        ///     Configures this property to be part of the entity type's primary key.
         /// </summary>
-        /// <param name="columnOrder">
-        /// The order of the database column. This is useful when specifying a composite
-        /// primary key.
-        /// </param>
+        /// <param name="columnOrder"> The order of the database column. This is useful when specifying a composite primary key. </param>
         public void IsKey(int columnOrder)
         {
             Contract.Requires(columnOrder >= 0);

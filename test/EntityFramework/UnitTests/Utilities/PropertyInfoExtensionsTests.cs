@@ -4,7 +4,6 @@ namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.Spatial;
     using System.IO;
     using System.Reflection;

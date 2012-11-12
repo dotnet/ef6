@@ -10,6 +10,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq;
     using System.Reflection;
     using Xunit;
+
 #if NET40
     using System.Data.Entity.Resources;
     using Moq;

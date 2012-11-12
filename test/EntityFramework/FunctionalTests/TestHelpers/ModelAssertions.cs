@@ -4,13 +4,11 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    
 
     internal static class ModelAssertions
     {
@@ -65,7 +63,7 @@ namespace System.Data.Entity
                     .Distinct()
                     .Single();
 
-            return new TypeAssertions(table);
+            return new TypeAssertions(table, databaseMapping.Database.GetEntitySet(table), databaseMapping.Database);
         }
 
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping, string tableName)
@@ -81,24 +79,24 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments).First(mf => mf.Table.DatabaseIdentifier == tableName)
+                    .SelectMany(etm => etm.TypeMappingFragments).First(
+                        mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
                     .Table;
 
-            return new TypeAssertions(table);
+            return new TypeAssertions(table, databaseMapping.Database.GetEntitySet(table), databaseMapping.Database);
         }
 
         internal static TypeAssertions Assert(
-            this DbDatabaseMapping databaseMapping, string tableName,
-            string schemaName = null)
+            this DbDatabaseMapping databaseMapping, string tableName, string schemaName = null)
         {
-            var schema
-                = schemaName == null
-                      ? databaseMapping.Database.Schemas.Single()
-                      : databaseMapping.Database.Schemas.Single(s => s.Name == schemaName);
+            var entitySet
+                = databaseMapping.Database
+                    .GetEntitySets()
+                    .Single(
+                        es => es.Table == tableName
+                              && ((schemaName == null) || es.Schema == schemaName));
 
-            var table = schema.Tables.Single(t => t.DatabaseIdentifier == tableName);
-
-            return new TypeAssertions(table);
+            return new TypeAssertions(entitySet.ElementType, entitySet, databaseMapping.Database);
         }
 
         internal static MappingFragmentAssertions AssertMapping<TStructuralType>(
@@ -116,7 +114,8 @@ namespace System.Data.Entity
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
                     .SelectMany(etm => etm.TypeMappingFragments)
-                    .Where(mf => mf.Table.DatabaseIdentifier == tableName);
+                    .Where(mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
+                    .ToList();
 
             var fragment = fragments.First();
 
@@ -139,7 +138,8 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType && isTypeOfMapping == etm.IsHierarchyMapping)
-                    .SelectMany(etm => etm.TypeMappingFragments).Single(mf => mf.Table.DatabaseIdentifier == tableName);
+                    .SelectMany(etm => etm.TypeMappingFragments)
+                    .Single(mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName);
 
             return new MappingFragmentAssertions(fragment);
         }
@@ -168,30 +168,23 @@ namespace System.Data.Entity
 
         internal class ColumnAssertions
         {
-            private readonly DbTableColumnMetadata _column;
+            private readonly EdmProperty _column;
 
-            public ColumnAssertions(DbTableColumnMetadata column)
+            public ColumnAssertions(EdmProperty column)
             {
                 _column = column;
             }
 
-            public ColumnAssertions DbEqual(object expected, Func<DbTableColumnMetadata, object> facet)
+            public ColumnAssertions DbEqual(object expected, Func<EdmProperty, object> facet)
             {
                 Xunit.Assert.Equal(expected, facet(_column));
 
                 return this;
             }
 
-            public ColumnAssertions DbIsFalse(Func<DbTableColumnMetadata, bool?> column)
+            public ColumnAssertions DbIsFalse(Func<EdmProperty, bool?> column)
             {
                 Xunit.Assert.Equal(false, column(_column));
-
-                return this;
-            }
-
-            public ColumnAssertions DbFacetEqual(object expected, Func<DbPrimitiveTypeFacets, object> facet)
-            {
-                Xunit.Assert.Equal(expected, facet(_column.Facets));
 
                 return this;
             }
@@ -200,9 +193,9 @@ namespace System.Data.Entity
         internal class PropertyAssertions
         {
             private readonly EdmProperty _property;
-            private readonly DbTableColumnMetadata _column;
+            private readonly EdmProperty _column;
 
-            public PropertyAssertions(EdmProperty property, DbTableColumnMetadata column)
+            public PropertyAssertions(EdmProperty property, EdmProperty column)
             {
                 _property = property;
                 _column = column;
@@ -236,14 +229,14 @@ namespace System.Data.Entity
                 return this;
             }
 
-            public PropertyAssertions DbEqual(object expected, Func<DbTableColumnMetadata, object> facet)
+            public PropertyAssertions DbEqual(object expected, Func<EdmProperty, object> facet)
             {
                 Xunit.Assert.Equal(expected, facet(_column));
 
                 return this;
             }
 
-            public PropertyAssertions DbIsFalse(Func<DbTableColumnMetadata, bool?> column)
+            public PropertyAssertions DbIsFalse(Func<EdmProperty, bool?> column)
             {
                 Xunit.Assert.Equal(false, column(_column));
 
@@ -260,13 +253,6 @@ namespace System.Data.Entity
             public PropertyAssertions FacetEqual(object expected, Func<EdmProperty, object> facet)
             {
                 Xunit.Assert.Equal(expected, facet(_property));
-
-                return this;
-            }
-
-            public PropertyAssertions DbFacetEqual(object expected, Func<DbPrimitiveTypeFacets, object> facet)
-            {
-                Xunit.Assert.Equal(expected, facet(_column.Facets));
 
                 return this;
             }
@@ -292,44 +278,55 @@ namespace System.Data.Entity
 
         internal class TypeAssertions
         {
-            private readonly DbTableMetadata _table;
+            private readonly EntityType _table;
+            private readonly EntitySet _entitySet;
+            private readonly EdmModel _database;
 
-            public TypeAssertions(DbTableMetadata table)
+            public TypeAssertions(EntityType table, EntitySet entitySet, EdmModel database)
             {
                 _table = table;
+                _entitySet = entitySet;
+                _database = database;
             }
 
-            public TypeAssertions DbEqual<T>(T expected, Func<DbTableMetadata, T> attribute)
+            public TypeAssertions DbEqual<T>(T expected, Func<EntityType, T> attribute)
             {
                 Xunit.Assert.Equal(expected, attribute(_table));
 
                 return this;
             }
 
+            public TypeAssertions DbEqual<T>(T expected, Func<EntitySet, T> attribute)
+            {
+                Xunit.Assert.Equal(expected, attribute(_entitySet));
+
+                return this;
+            }
+
             public TypeAssertions HasColumns(params string[] columns)
             {
-                Xunit.Assert.True(_table.Columns.Select(c => c.Name).SequenceEqual(columns));
+                Xunit.Assert.True(_table.Properties.Select(c => c.Name).SequenceEqual(columns));
 
                 return this;
             }
 
             public TypeAssertions HasColumn(string column)
             {
-                Xunit.Assert.True(_table.Columns.Any(c => c.Name == column));
+                Xunit.Assert.True(_table.Properties.Any(c => c.Name == column));
 
                 return this;
             }
 
             public ColumnAssertions Column(string column)
             {
-                return new ColumnAssertions(_table.Columns.Single(c => c.Name == column));
+                return new ColumnAssertions(_table.Properties.Single(c => c.Name == column));
             }
 
             public TypeAssertions HasForeignKeyColumn(string column)
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Count(f => f.DependentColumns.Any(d => d.Name == column)));
+                    _table.ForeignKeyBuilders.Count(f => f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
             }
@@ -338,8 +335,8 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Count(
-                        f => f.PrincipalTable.DatabaseIdentifier == toTable &&
+                    _table.ForeignKeyBuilders.Count(
+                        f => _database.GetEntitySet(f.PrincipalTable).Table == toTable &&
                              f.DependentColumns.Select(c => c.Name).SequenceEqual(columns)));
 
                 return this;
@@ -349,8 +346,8 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     1,
-                    _table.ForeignKeyConstraints.Count(
-                        f => f.PrincipalTable.DatabaseIdentifier == toTable &&
+                    _table.ForeignKeyBuilders.Count(
+                        f => _database.GetEntitySet(f.PrincipalTable).Table == toTable &&
                              f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
@@ -360,14 +357,14 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     0,
-                    _table.ForeignKeyConstraints.Count(f => f.DependentColumns.Any(d => d.Name == column)));
+                    _table.ForeignKeyBuilders.Count(f => f.DependentColumns.Any(d => d.Name == column)));
 
                 return this;
             }
 
             public TypeAssertions HasNoForeignKeyColumns()
             {
-                Xunit.Assert.Equal(0, _table.ForeignKeyConstraints.Count());
+                Xunit.Assert.Equal(0, _table.ForeignKeyBuilders.Count());
 
                 return this;
             }
@@ -376,7 +373,7 @@ namespace System.Data.Entity
             {
                 return
                     new ColumnAssertions(
-                        _table.ForeignKeyConstraints.SelectMany(f => f.DependentColumns).Single(c => c.Name == column));
+                        _table.ForeignKeyBuilders.SelectMany(f => f.DependentColumns).Single(c => c.Name == column));
             }
         }
 

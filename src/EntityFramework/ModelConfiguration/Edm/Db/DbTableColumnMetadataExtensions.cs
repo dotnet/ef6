@@ -3,10 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
-    using System.Linq;
 
     internal static class DbTableColumnMetadataExtensions
     {
@@ -15,74 +14,84 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         private const string UnpreferredUniqueNameAnnotation = "UnpreferredUniqueName";
         private const string AllowOverrideAnnotation = "AllowOverride";
 
-        public static DbTableColumnMetadata Initialize(this DbTableColumnMetadata tableColumn)
+        public static void CopyFrom(this EdmProperty column, EdmProperty other)
+        {
+            Contract.Requires(column != null);
+            Contract.Requires(other != null);
+
+            column.IsFixedLength = other.IsFixedLength;
+            column.IsMaxLength = other.IsMaxLength;
+            column.IsUnicode = other.IsUnicode;
+            column.MaxLength = other.MaxLength;
+            column.Precision = other.Precision;
+            column.Scale = other.Scale;
+        }
+
+        public static EdmProperty Clone(this EdmProperty tableColumn)
         {
             Contract.Requires(tableColumn != null);
 
-            tableColumn.Facets = new DbPrimitiveTypeFacets();
+            var columnMetadata
+                = new EdmProperty(tableColumn.Name, tableColumn.TypeUsage)
+                      {
+                          Nullable = tableColumn.Nullable,
+                          StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
+                          IsFixedLength = tableColumn.IsFixedLength,
+                          IsMaxLength = tableColumn.IsMaxLength,
+                          IsUnicode = tableColumn.IsUnicode,
+                          MaxLength = tableColumn.MaxLength,
+                          Precision = tableColumn.Precision,
+                          Scale = tableColumn.Scale
+                      };
 
-            return tableColumn;
+            tableColumn.Annotations.Each(a => columnMetadata.Annotations.Add(a));
+
+            return columnMetadata;
         }
 
-        public static DbTableColumnMetadata Clone(this DbTableColumnMetadata tableColumn)
-        {
-            Contract.Requires(tableColumn != null);
-
-            return new DbTableColumnMetadata
-                       {
-                           Name = tableColumn.Name,
-                           TypeName = tableColumn.TypeName,
-                           IsNullable = tableColumn.IsNullable,
-                           IsPrimaryKeyColumn = tableColumn.IsPrimaryKeyColumn,
-                           StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
-                           Facets = tableColumn.Facets.Clone(),
-                           Annotations = tableColumn.Annotations.ToList()
-                       };
-        }
-
-        public static int? GetOrder(this DbTableColumnMetadata tableColumn)
+        public static int? GetOrder(this EdmProperty tableColumn)
         {
             Contract.Requires(tableColumn != null);
 
             return (int?)tableColumn.Annotations.GetAnnotation(OrderAnnotation);
         }
 
-        public static void SetOrder(this DbTableColumnMetadata tableColumn, int order)
+        public static void SetOrder(this EdmProperty tableColumn, int order)
         {
             Contract.Requires(tableColumn != null);
 
             tableColumn.Annotations.SetAnnotation(OrderAnnotation, order);
         }
 
-        public static string GetPreferredName(this DbTableColumnMetadata tableColumn)
+        public static string GetPreferredName(this EdmProperty tableColumn)
         {
             Contract.Requires(tableColumn != null);
 
             return (string)tableColumn.Annotations.GetAnnotation(PreferredNameAnnotation);
         }
 
-        public static void SetPreferredName(this DbTableColumnMetadata tableColumn, string name)
+        public static void SetPreferredName(this EdmProperty tableColumn, string name)
         {
             Contract.Requires(tableColumn != null);
 
             tableColumn.Annotations.SetAnnotation(PreferredNameAnnotation, name);
         }
 
-        public static string GetUnpreferredUniqueName(this DbTableColumnMetadata tableColumn)
+        public static string GetUnpreferredUniqueName(this EdmProperty tableColumn)
         {
             Contract.Requires(tableColumn != null);
 
             return (string)tableColumn.Annotations.GetAnnotation(UnpreferredUniqueNameAnnotation);
         }
 
-        public static void SetUnpreferredUniqueName(this DbTableColumnMetadata tableColumn, string name)
+        public static void SetUnpreferredUniqueName(this EdmProperty tableColumn, string name)
         {
             Contract.Requires(tableColumn != null);
 
             tableColumn.Annotations.SetAnnotation(UnpreferredUniqueNameAnnotation, name);
         }
 
-        public static void RemoveStoreGeneratedIdentityPattern(this DbTableColumnMetadata tableColumn)
+        public static void RemoveStoreGeneratedIdentityPattern(this EdmProperty tableColumn)
         {
             Contract.Requires(tableColumn != null);
 
@@ -93,29 +102,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
             }
         }
 
-        public static object GetConfiguration(this DbTableColumnMetadata column)
-        {
-            Contract.Requires(column != null);
-
-            return column.Annotations.GetConfiguration();
-        }
-
-        public static void SetConfiguration(this DbTableColumnMetadata column, object configuration)
-        {
-            Contract.Requires(column != null);
-            Contract.Requires(configuration != null);
-
-            column.Annotations.SetConfiguration(configuration);
-        }
-
-        public static bool GetAllowOverride(this DbTableColumnMetadata column)
+        public static bool GetAllowOverride(this EdmProperty column)
         {
             Contract.Requires(column != null);
 
             return (bool)column.Annotations.GetAnnotation(AllowOverrideAnnotation);
         }
 
-        public static void SetAllowOverride(this DbTableColumnMetadata column, bool allowOverride)
+        public static void SetAllowOverride(this EdmProperty column, bool allowOverride)
         {
             Contract.Requires(column != null);
 

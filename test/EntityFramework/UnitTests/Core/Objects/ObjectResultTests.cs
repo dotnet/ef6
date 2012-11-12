@@ -52,9 +52,9 @@ namespace System.Data.Entity.Core.Objects
             var shaperMock = MockHelper.CreateShaperMock<object>();
             shaperMock.Setup(m => m.GetEnumerator()).Returns(new Mock<IDbEnumerator<object>>().Object);
             var objectResult = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-            {
-                CallBase = true
-            }.Object;
+                                   {
+                                       CallBase = true
+                                   }.Object;
 
             methodInvoke(objectResult);
 

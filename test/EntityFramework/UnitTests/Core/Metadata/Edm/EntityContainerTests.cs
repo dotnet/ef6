@@ -53,6 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer.RemoveEntitySetBase(associationSet);
 
             Assert.Empty(entityContainer.AssociationSets);
+            Assert.Null(associationSet.EntityContainer);
         }
     }
 }

@@ -2,11 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public sealed class IndependentAssociationMappingConfigurationTests
@@ -14,12 +15,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_split_key_constraint_when_to_table_configuration()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().DbInitialize();
             var sourceTable = database.AddTable("Source");
-            var fkColumn = sourceTable.AddColumn("Fk");
-            var foreignKeyConstraint = new DbForeignKeyConstraintMetadata();
-            foreignKeyConstraint.DependentColumns.Add(fkColumn);
-            sourceTable.ForeignKeyConstraints.Add(foreignKeyConstraint);
+            var principalTable = database.AddTable("P");
+
+            var fkColumn
+                = new EdmProperty(
+                    "Fk",
+                    ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(
+                        TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))));
+
+            sourceTable.AddColumn(fkColumn);
+            var foreignKeyConstraint = new ForeignKeyBuilder(database, "FK")
+                                           {
+                                               PrincipalTable = principalTable
+                                           };
+            sourceTable.AddForeignKey(foreignKeyConstraint);
+            foreignKeyConstraint.DependentColumns = new[] { fkColumn };
             var targetTable = database.AddTable("Split");
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
             associationSetMapping.Table = sourceTable;
@@ -36,10 +48,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo());
 
-            Assert.True(targetTable.Columns.Contains(fkColumn));
-            Assert.True(targetTable.ForeignKeyConstraints.Contains(foreignKeyConstraint));
-            Assert.False(sourceTable.Columns.Contains(fkColumn));
-            Assert.False(sourceTable.ForeignKeyConstraints.Contains(foreignKeyConstraint));
+            Assert.True(targetTable.Properties.Contains(fkColumn));
+            Assert.True(targetTable.ForeignKeyBuilders.Contains(foreignKeyConstraint));
+            Assert.False(sourceTable.Properties.Contains(fkColumn));
+            Assert.False(sourceTable.ForeignKeyBuilders.Contains(foreignKeyConstraint));
             Assert.Same(targetTable, associationSetMapping.Table);
         }
 
@@ -52,12 +64,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             independentAssociationMappingConfiguration.ToTable("Split");
 
             var associationSetMapping = new DbAssociationSetMapping().Initialize();
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().DbInitialize();
 
             Assert.Equal(
                 Strings.TableNotFound("Split"),
                 Assert.Throws<InvalidOperationException>(
-                    () => independentAssociationMappingConfiguration.Configure(associationSetMapping, database, new MockPropertyInfo())).
+                    () => independentAssociationMappingConfiguration
+                              .Configure(associationSetMapping, database, new MockPropertyInfo())).
                     Message);
         }
 

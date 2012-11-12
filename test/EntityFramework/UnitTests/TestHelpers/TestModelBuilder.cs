@@ -3,11 +3,8 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    
-    
 
     internal class TestModelBuilder
     {
@@ -38,9 +35,9 @@ namespace System.Data.Entity
         public TestModelBuilder Entity(string name, bool addSet = true)
         {
             _entityType = _model.AddEntityType(name);
-            
+
             Type type = new MockType(name);
-       
+
             _entityType.Annotations.SetClrType(type);
 
             if (addSet)

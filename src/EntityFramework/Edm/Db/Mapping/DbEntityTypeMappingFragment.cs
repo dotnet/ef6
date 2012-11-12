@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Db.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
     public class DbEntityTypeMappingFragment : DbMappingMetadataItem
@@ -11,9 +12,9 @@ namespace System.Data.Entity.Edm.Db.Mapping
         private readonly List<DbColumnCondition> columnConditions = new List<DbColumnCondition>();
 
         /// <summary>
-        ///     Gets a <see cref="DbTableMetadata" /> value representing the table to which the entity type's properties are being mapped.
+        ///     Gets a <see cref="EntityType" /> value representing the table to which the entity type's properties are being mapped.
         /// </summary>
-        public virtual DbTableMetadata Table { get; set; }
+        public virtual EntityType Table { get; set; }
 
         /// <summary>
         ///     Gets the collection of <see cref="DbEdmPropertyMapping" /> s that specifies how the type's properties are mapped to the table.

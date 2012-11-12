@@ -14,9 +14,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Text;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     /// <summary>
@@ -232,6 +233,5 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
     }
 }

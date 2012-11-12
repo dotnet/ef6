@@ -3,8 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -135,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyDatabase_should_run_database_conventions()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var mockConvention = new Mock<IDbConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
 
@@ -164,9 +162,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyDatabase_should_run_targeted_model_conventions()
         {
-            var database = new DbDatabaseMetadata().Initialize();
+            var database = new EdmModel().Initialize();
             var table = database.AddTable("T");
-            var mockConvention = new Mock<IDbConvention<DbTableMetadata>>();
+            var mockConvention = new Mock<IDbConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new IConvention[]
                     {

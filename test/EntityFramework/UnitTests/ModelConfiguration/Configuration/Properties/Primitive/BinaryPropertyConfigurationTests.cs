@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -29,14 +28,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var edmPropertyMapping = new DbEdmPropertyMapping
                                          {
-                                             Column = new DbTableColumnMetadata
-                                                          {
-                                                              Facets = new DbPrimitiveTypeFacets()
-                                                          }
+                                             Column = new EdmProperty("C")
                                          };
 
             configuration.Configure(
-                new[] { Tuple.Create(edmPropertyMapping, new DbTableMetadata()) }, ProviderRegistry.Sql2008_ProviderManifest);
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
             Assert.Equal("rowversion", edmPropertyMapping.Column.TypeName);
         }
 

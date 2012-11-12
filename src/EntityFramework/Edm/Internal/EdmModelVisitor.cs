@@ -6,8 +6,28 @@ namespace System.Data.Entity.Edm.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
 
-    internal abstract class EdmModelVisitor : DataModelItemVisitor
+    internal abstract class EdmModelVisitor
     {
+        protected static void VisitCollection<T>(IEnumerable<T> collection, Action<T> visitMethod)
+        {
+            if (collection != null)
+            {
+                foreach (var element in collection)
+                {
+                    visitMethod(element);
+                }
+            }
+        }
+
+        protected virtual void VisitAnnotations(MetadataItem item, IEnumerable<DataModelAnnotation> annotations)
+        {
+            VisitCollection(annotations, VisitAnnotation);
+        }
+
+        protected virtual void VisitAnnotation(DataModelAnnotation item)
+        {
+        }
+
         protected virtual void VisitMetadataItem(MetadataItem item)
         {
             if (item != null)
@@ -19,7 +39,7 @@ namespace System.Data.Entity.Edm.Internal
             }
         }
 
-        protected virtual void VisitEntityContainers(EdmModel model, IEnumerable<EntityContainer> entityContainers)
+        public virtual void VisitEntityContainers(IEnumerable<EntityContainer> entityContainers)
         {
             VisitCollection(entityContainers, VisitEdmEntityContainer);
         }
@@ -46,7 +66,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitCollection(entitySets, VisitEdmEntitySet);
         }
 
-        protected virtual void VisitEdmEntitySet(EntitySet item)
+        public virtual void VisitEdmEntitySet(EntitySet item)
         {
             VisitMetadataItem(item);
         }
@@ -57,7 +77,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitCollection(associationSets, VisitEdmAssociationSet);
         }
 
-        protected virtual void VisitEdmAssociationSet(AssociationSet item)
+        public virtual void VisitEdmAssociationSet(AssociationSet item)
         {
             VisitMetadataItem(item);
             if (item.SourceSet != null)
@@ -153,7 +173,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitCollection(members, VisitEdmEnumTypeMember);
         }
 
-        protected virtual void VisitEdmEntityType(EntityType item)
+        public virtual void VisitEdmEntityType(EntityType item)
         {
             VisitMetadataItem(item);
             if (item != null)
@@ -197,7 +217,7 @@ namespace System.Data.Entity.Edm.Internal
             VisitCollection(associationTypes, VisitEdmAssociationType);
         }
 
-        protected virtual void VisitEdmAssociationType(AssociationType item)
+        public virtual void VisitEdmAssociationType(AssociationType item)
         {
             VisitMetadataItem(item);
 
@@ -262,7 +282,7 @@ namespace System.Data.Entity.Edm.Internal
 
                 if (item.Containers.Any())
                 {
-                    VisitEntityContainers(item, item.Containers);
+                    VisitEntityContainers(item.Containers);
                 }
             }
         }

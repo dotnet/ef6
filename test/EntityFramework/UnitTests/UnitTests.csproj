@@ -156,6 +156,7 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeBaseTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />
     <Compile Include="Core\Metadata\Edm\ReferentialConstraintTests.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Core\Objects\ProxyDataContractResolverTests.cs" />
     <Compile Include="Core\Objects\TestHelpers\DbProviderFactoryForMock.cs" />
     <Compile Include="Core\Objects\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Query\InternalTrees\VarVecTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
@@ -289,6 +291,7 @@
     <Compile Include="Utilities\DbModelExtensionsTests.cs" />
     <Compile Include="Utilities\DbContextExtensionsTests.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensionsTests.cs" />
+    <Compile Include="Utilities\DbProviderManifestExtensionsTests.cs" />
     <Compile Include="Utilities\ExpressionExtensionsTests.cs" />
     <Compile Include="Utilities\IEnumerableExtensionsTests.cs" />
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
@@ -402,7 +405,6 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\AssociationInverseDiscoveryConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\ComplexTypeDiscoveryConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\ColumnOrderingConventionTests.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Edm\Db\ColumnTypeCasingConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\Mapping\ManyToManyCascadeDeleteConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\Db\PluralizingTableNameConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\DecimalPropertyConventionTests.cs" />

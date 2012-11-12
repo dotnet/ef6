@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
@@ -59,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal override void Configure(
-            IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> propertyMappings,
+            IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
@@ -71,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                         {
                             if (IsRowVersion != null)
                             {
-                                pm.Item1.Column.Facets.MaxLength = null;
+                                pm.Item1.Column.MaxLength = null;
                             }
                         });
         }

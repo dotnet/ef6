@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if member argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the EntityType has a base type of another EntityTypeBase. In this case KeyMembers should be added to the base type</exception>
         /// <exception cref="System.InvalidOperationException">If the EntityType instance is in ReadOnly state</exception>
-        internal void AddKeyMember(EdmMember member)
+        public void AddKeyMember(EdmMember member)
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal override void RemoveMember(EdmMember member)
+        public override void RemoveMember(EdmMember member)
         {
             EntityUtil.GenericCheckArgumentNull(member, "member");
             Util.ThrowIfReadOnly(this);

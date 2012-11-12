@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Objects
                 && _modifiedFields != null)
             {
                 Contract.Assert(null != _modifiedFields, "null fields");
-                for (var i = 0; i < _modifiedFields.Count; i++)
+                for (var i = 0; i < _modifiedFields.Length; i++)
                 {
                     if (_modifiedFields[i])
                     {
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Core.Objects
                 _modifiedFields[ordinal] = false;
 
                 // Check if any properties remain modified. If any are modified, then we leave the entity state as Modified and we are done.
-                for (var i = 0; i < _modifiedFields.Count; i++)
+                for (var i = 0; i < _modifiedFields.Length; i++)
                 {
                     if (_modifiedFields[i])
                     {

@@ -7,8 +7,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// Allows configuration to be performed for a lightweight convention based on
-    /// the entity types in a model.
+    ///     Allows configuration to be performed for a lightweight convention based on
+    ///     the entity types in a model.
     /// </summary>
     public class EntityConventionConfiguration
     {
@@ -36,14 +36,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Filters the entity types that this convention applies to based on a
-        /// predicate.
+        ///     Filters the entity types that this convention applies to based on a
+        ///     predicate.
         /// </summary>
-        /// <param name="predicate">A function to test each entity type for a condition.</param>
-        /// <returns>
-        /// The same EntityConventionConfiguration instance so that multiple calls can
-        /// be chained.
-        /// </returns>
+        /// <param name="predicate"> A function to test each entity type for a condition. </param>
+        /// <returns> The same EntityConventionConfiguration instance so that multiple calls can be chained. </returns>
         public EntityConventionConfiguration Where(Func<Type, bool> predicate)
         {
             Contract.Requires(predicate != null);
@@ -54,11 +51,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Allows configuration of the entity types that this convention applies to.
+        ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
-        /// <param name="entityConfigurationAction">
-        /// An action that performs configuration against a <see cref="LightweightEntityConfiguration" />.
-        /// </param>
+        /// <param name="entityConfigurationAction"> An action that performs configuration against a <see
+        ///      cref="LightweightEntityConfiguration" /> . </param>
         public void Configure(Action<LightweightEntityConfiguration> entityConfigurationAction)
         {
             Contract.Requires(entityConfigurationAction != null);
@@ -67,13 +63,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Allows further configuration of the convention based on the properties of
-        /// the entity types that this convention applies to.
+        ///     Allows further configuration of the convention based on the properties of
+        ///     the entity types that this convention applies to.
         /// </summary>
-        /// <returns>
-        /// A configuration object that can be used to configure this convention based
-        /// on properties.
-        /// </returns>
+        /// <returns> A configuration object that can be used to configure this convention based on properties. </returns>
         public PropertyConventionConfiguration Properties()
         {
             var propertyConfiguration = new PropertyConventionConfiguration();

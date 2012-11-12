@@ -7,9 +7,9 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -22,21 +22,21 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>();
-            modelBuilder.Conventions.Add<DbaTableNamingConvention>();
+            modelBuilder.Conventions.Add<EntitySetNamingConvention>();
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(
                 1,
-                databaseMapping.Database.Schemas.Single().Tables.Count(
-                    t => t.DatabaseIdentifier == "Customers_tbl"));
+                databaseMapping.Model.GetEntitySets().Count(
+                    t => t.Name == "CustomersFoo"));
         }
 
-        private sealed class DbaTableNamingConvention : IDbConvention<DbTableMetadata>
+        private sealed class EntitySetNamingConvention : IEdmConvention<EntitySet>
         {
-            public void Apply(DbTableMetadata table, DbDatabaseMetadata database)
+            public void Apply(EntitySet entitySet, EdmModel model)
             {
-                table.DatabaseIdentifier = table.DatabaseIdentifier + "_tbl";
+                entitySet.Name = entitySet.Name + "Foo";
             }
         }
 
@@ -93,7 +93,7 @@ namespace FunctionalTests
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.True(
-                model.DatabaseMapping.Database.Schemas.Single().Tables.All(t => t.DatabaseIdentifier == "TheTable"));
+                model.DatabaseMapping.Database.GetEntitySets().All(t => t.Table == "TheTable"));
         }
 
         [Fact]
@@ -104,22 +104,22 @@ namespace FunctionalTests
             modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                    .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.MaxLength = 256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
             var table
-                = model.DatabaseMapping.Database.Schemas.Single()
-                    .Tables.Single(t => t.Name == "LightweightEntityWithConfiguration");
+                = model.DatabaseMapping.Database.GetEntityTypes()
+                    .Single(t => t.Name == "LightweightEntityWithConfiguration");
 
-            var attributeColumn = table.Columns.Single(c => c.Name == "PropertyConfiguredByAttribute");
-            Assert.Equal(64, attributeColumn.Facets.MaxLength);
+            var attributeColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByAttribute");
+            Assert.Equal(64, attributeColumn.MaxLength);
 
-            var fluentColumn = table.Columns.Single(c => c.Name == "PropertyConfiguredByFluent");
-            Assert.Equal(128, fluentColumn.Facets.MaxLength);
+            var fluentColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByFluent");
+            Assert.Equal(128, fluentColumn.MaxLength);
 
-            var unconfiguredColumn = table.Columns.Single(c => c.Name == "PropertyNotConfigured");
-            Assert.Equal(256, unconfiguredColumn.Facets.MaxLength);
+            var unconfiguredColumn = table.Properties.Single(c => c.Name == "PropertyNotConfigured");
+            Assert.Equal(256, unconfiguredColumn.MaxLength);
         }
 
         [Fact]
@@ -130,14 +130,14 @@ namespace FunctionalTests
             modelBuilder.Entity<LightweightEntity>();
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                    .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.MaxLength = 256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var column = model.DatabaseMapping.Database.Schemas.Single()
-                .Tables.Single()
-                .Columns.Single(c => c.Name == "ComplexProperty_StringProperty");
-            Assert.Equal(256, column.Facets.MaxLength);
+            var column = model.DatabaseMapping.Database.GetEntityTypes()
+                .Single()
+                .Properties.Single(c => c.Name == "ComplexProperty_StringProperty");
+            Assert.Equal(256, column.MaxLength);
         }
     }
 
@@ -147,6 +147,7 @@ namespace FunctionalTests
 
         [StringLength(64)]
         public string PropertyConfiguredByAttribute { get; set; }
+
         public string PropertyConfiguredByFluent { get; set; }
         public string PropertyNotConfigured { get; set; }
 

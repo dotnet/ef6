@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     .SingleOrDefault();
 
             if (column == null
-                || !fragment.Table.Columns.Contains(column))
+                || !fragment.Table.Properties.Contains(column))
             {
                 throw Error.InvalidNotNullCondition(PropertyPath.ToString(), entityType.Name);
             }
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if (ValueConditionConfiguration.AnyBaseTypeToTableWithoutColumnCondition(
                 databaseMapping, entityType, fragment.Table, column))
             {
-                column.IsNullable = true;
+                column.Nullable = true;
             }
 
             // Make the property required

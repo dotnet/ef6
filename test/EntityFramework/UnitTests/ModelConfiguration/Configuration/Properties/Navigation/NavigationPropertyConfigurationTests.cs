@@ -3,8 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -180,11 +178,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration
                       };
 
-            var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new DbDatabaseMetadata());
+            var databaseMapping = new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new EdmModel());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
                 new AssociationSet("AS", new AssociationType()));
-            associationSetMapping.Table = new DbTableMetadata();
+            associationSetMapping.Table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
 
             associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType());

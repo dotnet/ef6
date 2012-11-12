@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
 
@@ -67,6 +68,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private RefType _referenceType;
 
         private RowType _keyRow;
+
+        private readonly List<ForeignKeyBuilder> _foreignKeyBuilders = new List<ForeignKeyBuilder>();
+
+        internal IEnumerable<ForeignKeyBuilder> ForeignKeyBuilders
+        {
+            get { return _foreignKeyBuilders; }
+        }
+
+        internal void RemoveForeignKey(ForeignKeyBuilder foreignKeyBuilder)
+        {
+            Contract.Requires(foreignKeyBuilder != null);
+            Util.ThrowIfReadOnly(this);
+
+            foreignKeyBuilder.SetOwner(null);
+
+            _foreignKeyBuilders.Remove(foreignKeyBuilder);
+        }
+
+        internal void AddForeignKey(ForeignKeyBuilder foreignKeyBuilder)
+        {
+            Contract.Requires(foreignKeyBuilder != null);
+            Util.ThrowIfReadOnly(this);
+
+            foreignKeyBuilder.SetOwner(this);
+
+            _foreignKeyBuilders.Add(foreignKeyBuilder);
+        }
 
         public ReadOnlyMetadataCollection<EdmProperty> DeclaredKeyProperties
         {

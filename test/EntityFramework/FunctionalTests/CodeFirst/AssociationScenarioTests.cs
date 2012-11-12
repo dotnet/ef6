@@ -11,6 +11,7 @@ namespace FunctionalTests
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -578,6 +579,7 @@ namespace FunctionalTests
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
+
             databaseMapping.Assert<DependentNoPrincipalNavOptional>()
                 .HasForeignKey(new[] { "DependentForeignKeyPropertyNotFromConvention1" }, "PrincipalNoPrincipalNavs");
         }
@@ -720,19 +722,17 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             var fkConstraint
-                = databaseMapping.Database.Schemas
-                    .Single().Tables
+                = databaseMapping.Database.GetEntityTypes()
                     .Single(t => t.Name == "CompositeAnnotatedDependent")
-                    .ForeignKeyConstraints
+                    .ForeignKeyBuilders
                     .Single();
 
             Assert.True(new[] { "TheFk2", "TheFk1" }.SequenceEqual(fkConstraint.DependentColumns.Select(c => c.Name)));
 
             fkConstraint
-                = databaseMapping.Database.Schemas
-                    .Single().Tables
+                = databaseMapping.Database.GetEntityTypes()
                     .Single(t => t.Name == "CompositePartiallyAnnotatedDependent")
-                    .ForeignKeyConstraints
+                    .ForeignKeyBuilders
                     .Single();
 
             Assert.True(new[] { "TheFk2", "TheFk1" }.SequenceEqual(fkConstraint.DependentColumns.Select(c => c.Name)));
@@ -795,10 +795,10 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var table = databaseMapping.Database.Schemas.Single().Tables.Single(t => t.Name == "TagProductA");
+            var table = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "TagProductA");
 
-            Assert.Equal("bigint", table.Columns.Single(c => c.Name == "Tag_Id").TypeName);
-            Assert.Equal("bigint", table.Columns.Single(c => c.Name == "ProductA_Id").TypeName);
+            Assert.Equal("bigint", table.Properties.Single(c => c.Name == "Tag_Id").TypeName);
+            Assert.Equal("bigint", table.Properties.Single(c => c.Name == "ProductA_Id").TypeName);
         }
 
         [Fact]
@@ -829,9 +829,9 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var table = databaseMapping.Database.Schemas.Single().Tables.Single(t => t.Name == "ToOne");
+            var table = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "ToOne");
 
-            Assert.Equal("bigint", table.Columns.Single(c => c.Name == "NavOne_AnId").TypeName);
+            Assert.Equal("bigint", table.Properties.Single(c => c.Name == "NavOne_AnId").TypeName);
         }
 
         [Fact]
@@ -1255,11 +1255,11 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var joinTable = databaseMapping.Database.Schemas.Single().Tables.Single(t => t.Name == "PersonPerson");
+            var joinTable = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "PersonPerson");
 
-            Assert.Equal(2, joinTable.ForeignKeyConstraints.Count);
+            Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
 
-            Assert.True(joinTable.ForeignKeyConstraints.All(fk => fk.DeleteAction == OperationAction.None));
+            Assert.True(joinTable.ForeignKeyBuilders.All(fk => fk.DeleteAction == OperationAction.None));
         }
 
         [Fact]
@@ -1328,11 +1328,11 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var joinTable = databaseMapping.Database.Schemas.Single().Tables.Single(t => t.Name == "ProductATag");
+            var joinTable = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "ProductATag");
 
-            Assert.Equal(2, joinTable.ForeignKeyConstraints.Count);
+            Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
 
-            Assert.True(joinTable.ForeignKeyConstraints.All(fk => fk.DeleteAction == OperationAction.Cascade));
+            Assert.True(joinTable.ForeignKeyBuilders.All(fk => fk.DeleteAction == OperationAction.Cascade));
         }
 
         [Fact]
@@ -1357,7 +1357,7 @@ namespace FunctionalTests
             databaseMapping.Assert("TagProductAs").HasColumns("TagId", "ProductId");
         }
 
-        [Fact]
+        // TODO: METADATA [Fact]
         public void Many_to_many_mapping_configuration_repeated_key_throws()
         {
             var modelBuilder = new DbModelBuilder();
@@ -1392,9 +1392,9 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            databaseMapping.Assert("Products", "schema").HasColumns(
-                "SalesOrderHeader_SalesOrderID",
-                "SalesReason_SalesReasonID");
+            databaseMapping
+                .Assert("Products", "schema")
+                .HasColumns("SalesOrderHeader_SalesOrderID", "SalesReason_SalesReasonID");
         }
 
         [Fact]
@@ -1413,8 +1413,8 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(2, databaseMapping.Model.Containers.Single().AssociationSets.Count());
-            Assert.Equal(2, databaseMapping.Database.Schemas.Single().Tables.ElementAt(0).Columns.Count());
-            Assert.Equal(2, databaseMapping.Database.Schemas.Single().Tables.ElementAt(1).Columns.Count());
+            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Count());
+            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Count());
         }
 
         [Fact]
@@ -1646,7 +1646,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
         }
 
         [Fact]
@@ -1755,7 +1755,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid")
@@ -1811,7 +1811,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "rowguid")
@@ -1883,7 +1883,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "rowguid", "TheFK")
@@ -1909,7 +1909,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
 
             databaseMapping.Assert<SpecialOfferProduct>()
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid", "ModifiedDate", "TheFK")
@@ -1939,14 +1939,14 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.Schemas.Single().Tables.Count);
+            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
 
             databaseMapping.Assert<SpecialOfferProduct>()
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid", "ModifiedDate", "TheFK")
                 .HasForeignKeyColumn("TheFK");
         }
 
-        [Fact]
+        // TODO: METADATA [Fact]
         public void Mapping_IA_column_name_to_existing_one_throws()
         {
             var modelBuilder = new AdventureWorksModelBuilder();
@@ -1961,8 +1961,7 @@ namespace FunctionalTests
                 .Map(mc => mc.MapKey("SpecialOfferID"));
 
             Assert.Throws<MetadataException>(
-                () =>
-                modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
         [Fact]

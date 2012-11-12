@@ -2,26 +2,26 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
 
     [ContractClass(typeof(IDbConventionContracts<>))]
-    public interface IDbConvention<TDbDataModelItem> : IConvention
-        where TDbDataModelItem : DbDataModelItem
+    public interface IDbConvention<TMetadataItem> : IConvention
+        where TMetadataItem : MetadataItem
     {
-        void Apply(TDbDataModelItem dbDataModelItem, DbDatabaseMetadata database);
+        void Apply(TMetadataItem dbDataModelItem, EdmModel model);
     }
 
     #region Interface Member Contracts
 
     [ContractClassFor(typeof(IDbConvention<>))]
-    internal abstract class IDbConventionContracts<TDbDataModelItem> : IDbConvention<TDbDataModelItem>
-        where TDbDataModelItem : DbDataModelItem
+    internal abstract class IDbConventionContracts<TMetadataItem> : IDbConvention<TMetadataItem>
+        where TMetadataItem : MetadataItem
     {
-        void IDbConvention<TDbDataModelItem>.Apply(TDbDataModelItem dbDataModelItem, DbDatabaseMetadata database)
+        void IDbConvention<TMetadataItem>.Apply(TMetadataItem dbDataModelItem, EdmModel model)
         {
             Contract.Requires(dbDataModelItem != null);
-            Contract.Requires(database != null);
+            Contract.Requires(model != null);
         }
     }
 

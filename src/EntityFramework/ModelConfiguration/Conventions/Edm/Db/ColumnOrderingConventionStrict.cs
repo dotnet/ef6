@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Edm.Db;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -14,10 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ColumnOrderingConventionStrict : ColumnOrderingConvention
     {
-        protected override void ValidateColumns(DbTableMetadata table)
+        protected override void ValidateColumns(EntityType table, string tableName)
         {
             var hasDuplicates
-                = table.Columns
+                = table.Properties
                     .Select(c => c.GetOrder())
                     .Where(o => o != null)
                     .GroupBy(o => o)
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             if (hasDuplicates)
             {
-                throw Error.DuplicateConfiguredColumnOrder(table.DatabaseIdentifier);
+                throw Error.DuplicateConfiguredColumnOrder(tableName);
             }
         }
     }

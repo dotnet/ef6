@@ -304,6 +304,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
+
             var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("ordering.Orders", dropColumnOperation.Table);
@@ -331,10 +332,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
+
             var column = operations.OfType<AddColumnOperation>().Single().Column;
 
             Assert.True(column.IsTimestamp);

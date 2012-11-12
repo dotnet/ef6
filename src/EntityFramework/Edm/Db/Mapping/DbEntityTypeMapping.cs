@@ -8,7 +8,7 @@ namespace System.Data.Entity.Edm.Db.Mapping
 
     /// <summary>
     ///     Allows the construction and modification of a complete or partial mapping of an EDM entity type ( <see
-    ///      cref="EntityType" /> ) or type hierarchy to a specific database table ( <see cref="DbTableMetadata" /> ).
+    ///      cref="EntityType" /> ) or type hierarchy to a specific database table ( <see cref="EntityType" /> ).
     /// </summary>
     public class DbEntityTypeMapping
         : DbMappingMetadataItem

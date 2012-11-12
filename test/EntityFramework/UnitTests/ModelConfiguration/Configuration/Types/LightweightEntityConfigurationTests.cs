@@ -32,11 +32,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             new LightweightEntityConfiguration(
                 new MockType(),
                 () =>
-                {
-                    initialized = true;
+                    {
+                        initialized = true;
 
-                    return null;
-                });
+                        return null;
+                    });
 
             Assert.False(initialized);
         }
@@ -46,9 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type)
-            {
-                EntitySetName = "EntitySet1"
-            };
+                                  {
+                                      EntitySetName = "EntitySet1"
+                                  };
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
             Assert.Equal("EntitySet1", config.EntitySetName);
@@ -71,9 +71,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type)
-            {
-                EntitySetName = "EntitySet1"
-            };
+                                  {
+                                      EntitySetName = "EntitySet1"
+                                  };
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
             config.EntitySetName = "EntitySet2";
@@ -207,7 +207,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-             Assert.Same(type.Object, config.ClrType);
+            Assert.Same(type.Object, config.ClrType);
         }
     }
 }

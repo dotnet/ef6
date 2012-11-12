@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db;
     using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -151,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal virtual void Configure(
-            IEnumerable<Tuple<DbEdmPropertyMapping, DbTableMetadata>> propertyMappings,
+            IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
@@ -162,7 +161,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal virtual void Configure(
-            DbTableColumnMetadata column, DbTableMetadata table, DbProviderManifest providerManifest,
+            EdmProperty column, EntityType table, DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
             Contract.Requires(column != null);
@@ -193,7 +192,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             if (!string.IsNullOrWhiteSpace(ColumnType))
             {
-                column.TypeName = ColumnType;
+                column.PrimitiveType = providerManifest.GetStoreTypeFromName(ColumnType);
             }
 
             if (ColumnOrder != null)
@@ -207,14 +206,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             if (storeType != null)
             {
-                storeType.FacetDescriptions.Each(f => Configure(column.Facets, f));
+                storeType.FacetDescriptions.Each(f => Configure(column, f));
             }
 
             column.SetConfiguration(this);
             column.SetAllowOverride(allowOverride);
         }
 
-        private void ConfigureColumnName(DbTableColumnMetadata column, DbTableMetadata table)
+        private void ConfigureColumnName(EdmProperty column, EntityType table)
         {
             if (string.IsNullOrWhiteSpace(ColumnName)
                 || string.Equals(ColumnName, column.Name, StringComparison.Ordinal))
@@ -226,14 +225,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             // find other unconfigured columns that have the same preferred name
             var pendingRenames
-                = from c in table.Columns
+                = from c in table.Properties
                   let configuration = c.GetConfiguration() as PrimitivePropertyConfiguration
                   where (c != column)
                         && string.Equals(ColumnName, c.GetPreferredName(), StringComparison.Ordinal)
                         && ((configuration == null) || (configuration.ColumnName == null))
                   select c;
 
-            var renamedColumns = new List<DbColumnMetadata>
+            var renamedColumns = new List<EdmProperty>
                                      {
                                          column
                                      };
@@ -242,15 +241,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                    {
-                        c.Name = renamedColumns.UniquifyName(ColumnName);
-                        renamedColumns.Add(c);
-                    });
+                        {
+                            c.Name = renamedColumns.UniquifyName(ColumnName);
+                            renamedColumns.Add(c);
+                        });
         }
 
-        internal virtual void Configure(DbPrimitiveTypeFacets facets, FacetDescription facetDescription)
+        internal virtual void Configure(EdmProperty column, FacetDescription facetDescription)
         {
-            Contract.Requires(facets != null);
+            Contract.Requires(column != null);
             Contract.Requires(facetDescription != null);
         }
 
