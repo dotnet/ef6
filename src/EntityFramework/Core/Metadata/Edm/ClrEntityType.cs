@@ -13,15 +13,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrEntityType : EntityType
     {
-        /// <summary>
-        ///     cached CLR type handle, allowing the Type reference to be GC'd
-        /// </summary>
-        private readonly RuntimeTypeHandle _type;
+        private readonly Type _type;
 
         /// <summary>
         ///     cached dynamic method to construct a CLR instance
         /// </summary>
-        private Delegate _constructor;
+        private Func<object> _constructor;
 
         private readonly string _cspaceTypeName;
 
@@ -41,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 !String.IsNullOrEmpty(cspaceNamespaceName) &&
                 !String.IsNullOrEmpty(cspaceTypeName), "Mapping information must never be null");
 
-            _type = type.TypeHandle;
+            _type = type;
             _cspaceNamespaceName = cspaceNamespaceName;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;
             Abstract = type.IsAbstract;
@@ -51,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     cached dynamic method to construct a CLR instance
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Delegate Constructor
+        internal Func<object> Constructor
         {
             get { return _constructor; }
             set
@@ -65,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override Type ClrType
         {
-            get { return Type.GetTypeFromHandle(_type); }
+            get { return _type; }
         }
 
         internal string CSpaceTypeName

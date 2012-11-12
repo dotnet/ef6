@@ -80,21 +80,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
         /// <param name="propertyInfo"> for the property </param>
         /// <param name="entityDeclaringType"> The declaring type of the entity containing the property </param>
-        internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, RuntimeTypeHandle entityDeclaringType)
+        internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, Type entityDeclaringType)
             : this(name, typeUsage)
         {
-            if (propertyInfo != null)
-            {
-                Debug.Assert(name == propertyInfo.Name, "different PropertyName");
+            Contract.Assert(propertyInfo != null);
+            Contract.Assert(entityDeclaringType != null);
+            Contract.Assert(name == propertyInfo.Name);
 
-                var method = propertyInfo.GetGetMethod(true);
-                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
-
-                method = propertyInfo.GetSetMethod(true); // return public or non-public getter
-                PropertySetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
-
-                EntityDeclaringType = entityDeclaringType;
-            }
+            _propertyInfo = propertyInfo;
+            _entityDeclaringType = entityDeclaringType;
         }
 
         internal EdmProperty(string name)
@@ -103,20 +97,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // testing only
         }
 
-        /// <summary>
-        ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
-        /// </summary>
-        internal readonly RuntimeMethodHandle PropertyGetterHandle;
+        private readonly PropertyInfo _propertyInfo;
 
-        /// <summary>
-        ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
-        /// </summary>
-        internal readonly RuntimeMethodHandle PropertySetterHandle;
+        private readonly Type _entityDeclaringType;
 
-        /// <summary>
-        ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
-        /// </summary>
-        internal readonly RuntimeTypeHandle EntityDeclaringType;
+        internal PropertyInfo PropertyInfo
+        {
+            get { return _propertyInfo; }
+        }
+
+        internal Type EntityDeclaringType
+        {
+            get { return _entityDeclaringType; }
+        }
 
         /// <summary>
         ///     cached dynamic method to get the property value from a CLR instance
