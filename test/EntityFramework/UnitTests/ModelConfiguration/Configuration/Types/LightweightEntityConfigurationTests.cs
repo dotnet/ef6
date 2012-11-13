@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Data.Entity.Resources;
-    using Moq;
+    using System.Linq;
     using Xunit;
 
     public class LightweightEntityConfigurationTests
@@ -32,42 +32,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             new LightweightEntityConfiguration(
                 new MockType(),
                 () =>
-                    {
-                        initialized = true;
+                {
+                    initialized = true;
 
-                        return null;
-                    });
+                    return null;
+                });
 
             Assert.False(initialized);
         }
 
         [Fact]
-        public void EntitySetName_gets_inner_value()
-        {
-            var type = new MockType();
-            var innerConfig = new EntityTypeConfiguration(type)
-                                  {
-                                      EntitySetName = "EntitySet1"
-                                  };
-            var config = new LightweightEntityConfiguration(type, () => innerConfig);
-
-            Assert.Equal("EntitySet1", config.EntitySetName);
-        }
-
-        [Fact]
-        public void EntitySetName_sets_unset_inner_value()
+        public void HasEntitySetName_evaluates_preconditions()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.EntitySetName = "EntitySet1";
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.HasEntitySetName(null));
 
-            Assert.Equal("EntitySet1", config.EntitySetName);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("entitySetName"), ex.Message);
         }
 
         [Fact]
-        public void EntitySetName_do_not_set_already_set_inner_value()
+        public void HasEntitySetName_configures_when_unset()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasEntitySetName("EntitySet1");
+
+            Assert.Equal("EntitySet1", innerConfig.EntitySetName);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasEntitySetName_is_noop_when_set()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type)
@@ -76,9 +77,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                   };
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.EntitySetName = "EntitySet2";
+            var result = config.HasEntitySetName("EntitySet2");
 
-            Assert.Equal("EntitySet1", config.EntitySetName);
+            Assert.Equal("EntitySet1", innerConfig.EntitySetName);
+            Assert.Same(config, result);
         }
 
         [Fact]
@@ -88,23 +90,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            var ex = Assert.Throws<ArgumentNullException>(
-                () => config.Ignore(null));
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.Ignore((string)null));
 
-            Assert.Equal("propertyInfo", ex.ParamName);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), ex.Message);
         }
 
         [Fact]
-        public void Ignore_calls_inner_method()
+        public void Ignore_configures()
+        {
+            var type = new MockType()
+                .Property<int>("Property1");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            config.Ignore("Property1");
+
+            Assert.Equal(1, innerConfig.IgnoredProperties.Count());
+            Assert.True(innerConfig.IgnoredProperties.Any(p => p.Name == "Property1"));
+        }
+
+        [Fact]
+        public void Ignore_is_noop_when_not_exists()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
-            var propertyInfo = new MockPropertyInfo();
 
-            config.Ignore(propertyInfo);
+            config.Ignore("Property1");
 
-            Assert.Contains(propertyInfo, innerConfig.IgnoredProperties);
+            Assert.Empty(innerConfig.IgnoredProperties);
         }
 
         [Fact]
@@ -121,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void ToTable_calls_inner_method_when_not_set()
+        public void ToTable_configures_when_unset()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
@@ -129,21 +144,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             config.ToTable("Table1");
 
-            Assert.Equal("Table1", innerConfig.GetTableName().Name);
+            Assert.Equal("Table1", innerConfig.TableName);
         }
 
         [Fact]
-        public void ToTable_does_not_call_inner_method_when_set()
+        public void ToTable_is_noop_when_set()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             innerConfig.ToTable("Table1");
-
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
             config.ToTable("Table2");
 
-            Assert.Equal("Table1", innerConfig.GetTableName().Name);
+            Assert.Equal("Table1", innerConfig.TableName);
+        }
+
+        [Fact]
+        public void ToTable_handles_dot()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            config.ToTable("Schema1.Table1");
+
+            Assert.Equal("Schema1", innerConfig.SchemaName);
+            Assert.Equal("Table1", innerConfig.TableName);
         }
 
         [Fact]
@@ -160,44 +187,152 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void ToTable_with_schema_calls_inner_method_when_not_set()
+        public void ToTable_with_schema_configures_when_unset()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.ToTable("Table1", "db");
+            config.ToTable("Table1", "Schema1");
 
-            Assert.Equal("Table1", innerConfig.GetTableName().Name);
-            Assert.Equal("db", innerConfig.GetTableName().Schema);
+            Assert.Equal("Table1", innerConfig.TableName);
+            Assert.Equal("Schema1", innerConfig.SchemaName);
         }
 
         [Fact]
-        public void ToTable_with_schema_does_not_call_inner_method_when_set()
+        public void ToTable_with_schema_is_noop_when_set()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            innerConfig.ToTable("Table1", "db");
-
+            innerConfig.ToTable("Table1", "Schema1");
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.ToTable("Table2", "my");
+            config.ToTable("Table2", "Schema2");
 
-            Assert.Equal("Table1", innerConfig.GetTableName().Name);
-            Assert.Equal("db", innerConfig.GetTableName().Schema);
+            Assert.Equal("Table1", innerConfig.TableName);
+            Assert.Equal("Schema1", innerConfig.SchemaName);
         }
 
         [Fact]
-        public void HasKey_calls_inner_method()
+        public void HasKey_evaluates_preconditions()
         {
-            Type type = new MockType();
-            var innerConfig = new Mock<EntityTypeConfiguration>(type);
-            var config = new LightweightEntityConfiguration(type, () => innerConfig.Object);
-            var propertyInfo = new MockPropertyInfo();
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.HasKey(propertyInfo);
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.HasKey((string)null));
 
-            innerConfig.Verify(c => c.Key(propertyInfo, null), Times.Once());
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), ex.Message);
+        }
+
+        [Fact]
+        public void HasKey_configures_when_unset()
+        {
+            var type = new MockType()
+                .Property<int>("Property1");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey("Property1");
+
+            Assert.Equal(1, innerConfig.KeyProperties.Count());
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_is_noop_when_set()
+        {
+            var type = new MockType()
+                .Property<int>("Property1")
+                .Property<int>("Property2");
+            var innerConfig = new EntityTypeConfiguration(type);
+            innerConfig.Key(new[] { type.GetProperty("Property1") });
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey("Property2");
+
+            Assert.Equal(1, innerConfig.KeyProperties.Count());
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_is_noop_when_not_exists()
+        {
+            var type = new MockType()
+                .Property<int>("Property1");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey("Property2");
+
+            Assert.Empty(innerConfig.KeyProperties);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_composite_evaluates_preconditions()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentNullException>(
+                () => config.HasKey((string[])null));
+
+            Assert.Equal("propertyNames", ex.ParamName);
+        }
+
+        [Fact]
+        public void HasKey_composite_configures_when_unset()
+        {
+            var type = new MockType()
+                .Property<int>("Property1")
+                .Property<int>("Property2");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey(new[] { "Property1", "Property2" });
+
+            Assert.Equal(2, innerConfig.KeyProperties.Count());
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_composite_is_noop_when_set()
+        {
+            var type = new MockType()
+                .Property<int>("Property1")
+                .Property<int>("Property2")
+                .Property<int>("Property3");
+            var innerConfig = new EntityTypeConfiguration(type);
+            innerConfig.Key(new[] { type.GetProperty("Property1") });
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey(new[] { "Property2", "Property3" });
+
+            Assert.Equal(1, innerConfig.KeyProperties.Count());
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property3"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_composite_is_noop_when_not_exists()
+        {
+            var type = new MockType()
+                .Property<int>("Property1");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.HasKey(new[] { "Property1", "Property2" });
+
+            Assert.Empty(innerConfig.KeyProperties);
+            Assert.Same(config, result);
         }
 
         [Fact]
