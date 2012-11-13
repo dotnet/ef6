@@ -37,6 +37,7 @@ namespace System.Data.Entity.Utilities
             return propertyInfo.CanRead
                    && (propertyInfo.CanWrite || propertyInfo.PropertyType.IsCollection())
                    && !propertyInfo.GetGetMethod(true).IsAbstract
+                   && propertyInfo.GetIndexParameters().Length == 0
                    && propertyInfo.PropertyType.IsValidStructuralPropertyType();
         }
 

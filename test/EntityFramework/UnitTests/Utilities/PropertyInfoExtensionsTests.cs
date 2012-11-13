@@ -63,6 +63,15 @@ namespace System.Data.Entity.Utilities
         }
 
         [Fact]
+        public void IsValidStructuralProperty_should_return_false_for_indexed_property()
+        {
+            var mockProperty = new MockPropertyInfo();
+            mockProperty.Setup(p => p.GetIndexParameters()).Returns(new ParameterInfo[1]);
+
+            Assert.False(mockProperty.Object.IsValidStructuralProperty());
+        }
+
+        [Fact]
         public void IsValidEdmScalarProperty_should_return_true_for_nullable_scalar()
         {
             var mockProperty = new MockPropertyInfo(typeof(int?), "P");
