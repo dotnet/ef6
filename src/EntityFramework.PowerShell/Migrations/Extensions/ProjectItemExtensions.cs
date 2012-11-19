@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Extensions
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using EnvDTE;
 
     /// <summary>
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Extensions
         /// </summary>
         public static bool IsConfig(this ProjectItem item)
         {
-            Contract.Requires(item != null);
+            DebugCheck.NotNull(item);
 
             return IsNamed(item, "app.config") || IsNamed(item, "web.config");
         }
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Extensions
         /// </summary>
         public static bool IsNamed(this ProjectItem item, string name)
         {
-            Contract.Requires(item != null);
+            DebugCheck.NotNull(item);
 
             return item.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
         }

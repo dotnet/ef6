@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             _propertiesWithBaseGetter = new HashSet<string>(baseGetters.Select(p => p.Name));
             _propertiesWithBaseSetter = new HashSet<string>(baseSetters.Select(p => p.Name));
 
-            _createObject = LightweightCodeGenerator.CreateConstructor(proxyType) as Func<object>;
+            _createObject = LightweightCodeGenerator.CreateConstructor(proxyType);
         }
 
         internal object CreateProxyObject()

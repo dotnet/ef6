@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a raw SQL query against the context for any type where the results are never
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Internal
             InternalContext internalContext, Type elementType, string sql, object[] parameters)
             : base(sql, parameters)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(elementType != null);
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(elementType);
 
             _internalContext = internalContext;
             _elementType = elementType;

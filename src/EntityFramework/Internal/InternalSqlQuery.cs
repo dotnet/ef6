@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.ComponentModel;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a raw SQL query against the context that may be for entities in an entity set
@@ -29,8 +29,8 @@ namespace System.Data.Entity.Internal
         /// <param name="parameters"> The parameters. </param>
         internal InternalSqlQuery(string sql, object[] parameters)
         {
-            Contract.Requires(sql != null);
-            Contract.Requires(parameters != null);
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
 
             _sql = sql;
             _parameters = parameters;
@@ -99,7 +99,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns <c>false</c>.
         /// </summary>
-        /// <returns> <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>false</c> .
+        /// </returns>
         public bool ContainsListCollection
         {
             get { return false; }
@@ -122,7 +124,9 @@ namespace System.Data.Entity.Internal
         ///     Returns a <see cref="System.String" /> that contains the SQL string that was set
         ///     when the query was created.  The parameters are not included.
         /// </summary>
-        /// <returns> A <see cref="System.String" /> that represents this instance. </returns>
+        /// <returns>
+        ///     A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return Sql;

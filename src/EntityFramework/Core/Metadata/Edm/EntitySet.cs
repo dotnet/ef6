@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the associations and constraints where "this" EntitySet particpates as the Principal end. 
+        ///     Returns the associations and constraints where "this" EntitySet particpates as the Principal end.
         ///     From the results of this list, you can retrieve the Dependent IRelatedEnds
         /// </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyDependents
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the associations and constraints where "this" EntitySet particpates as the Dependent end. 
+        ///     Returns the associations and constraints where "this" EntitySet particpates as the Dependent end.
         ///     From the results of this list, you can retrieve the Principal IRelatedEnds
         /// </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyPrincipals

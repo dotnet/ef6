@@ -57,7 +57,8 @@ namespace System.Data.Entity.Internal
         /// <param name="itemIndex"> Index of the item. </param>
         public override void CancelNew(int itemIndex)
         {
-            if (itemIndex >= 0 && itemIndex < Count
+            if (itemIndex >= 0
+                && itemIndex < Count
                 && Equals(base[itemIndex], _addNewInstance))
             {
                 _cancelNewInstance = _addNewInstance;
@@ -85,7 +86,8 @@ namespace System.Data.Entity.Internal
         /// <param name="itemIndex"> Index of the item. </param>
         public override void EndNew(int itemIndex)
         {
-            if (itemIndex >= 0 && itemIndex < Count
+            if (itemIndex >= 0
+                && itemIndex < Count
                 && Equals(base[itemIndex], _addNewInstance))
             {
                 AddToObservableCollection(_addNewInstance);
@@ -103,7 +105,8 @@ namespace System.Data.Entity.Internal
         protected override void InsertItem(int index, T item)
         {
             base.InsertItem(index, item);
-            if (!_addingNewInstance && index >= 0
+            if (!_addingNewInstance
+                && index >= 0
                 && index <= Count)
             {
                 AddToObservableCollection(item);
@@ -116,7 +119,8 @@ namespace System.Data.Entity.Internal
         /// <param name="index"> The index. </param>
         protected override void RemoveItem(int index)
         {
-            if (index >= 0 && index < Count
+            if (index >= 0
+                && index < Count
                 && Equals(base[index], _cancelNewInstance))
             {
                 _cancelNewInstance = default(T);

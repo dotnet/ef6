@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
     using System.Threading;
@@ -108,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> A TypeUsage instance with default facet values for the specified EdmType </returns>
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
-            Contract.Requires(edmType != null);
+            Check.NotNull(edmType, "edmType");
 
             var type = Create(edmType);
             return type;
@@ -128,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isFixedLength,
             int maxLength)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.String)
@@ -151,7 +150,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a string TypeUsage object with the specified facets and 
+        ///     Factory method for creating a string TypeUsage object with the specified facets and
         ///     unbounded MaxLength
         /// </summary>
         /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
@@ -163,7 +162,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isUnicode,
             bool isFixedLength)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.String)
@@ -194,7 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool isFixedLength,
             int maxLength)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Binary)
@@ -216,7 +215,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Binary TypeUsage object with the specified facets and 
+        ///     Factory method for creating a Binary TypeUsage object with the specified facets and
         ///     unbounded MaxLength
         /// </summary>
         /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
@@ -224,7 +223,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> A TypeUsage object describing a binary type with the given facet values </returns>
         public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType, bool isFixedLength)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Binary)
@@ -252,7 +251,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.DateTime)
@@ -279,7 +278,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.DateTimeOffset)
@@ -307,7 +306,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             PrimitiveType primitiveType,
             byte? precision)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Time)
@@ -336,7 +335,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             byte precision,
             byte scale)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Decimal)
@@ -362,7 +361,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> A TypeUsage object describing a decimal type with unbounded precision and scale </returns>
         public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType)
         {
-            Contract.Requires(primitiveType != null);
+            Check.NotNull(primitiveType, "primitiveType");
 
             if (primitiveType.PrimitiveTypeKind
                 != PrimitiveTypeKind.Decimal)

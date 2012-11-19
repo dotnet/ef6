@@ -23,8 +23,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -43,7 +43,6 @@ namespace System.Data.Entity.Internal
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [ContractClass(typeof(InternalContextContracts))]
     internal abstract class InternalContext
     {
         #region Fields and constructors
@@ -119,10 +118,12 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Initializes the <see cref="InternalContext" /> object with its <see cref="DbContext" /> owner.
         /// </summary>
-        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
+        /// <param name="owner">
+        ///     The owner <see cref="DbContext" /> .
+        /// </param>
         protected InternalContext(DbContext owner)
         {
-            Contract.Requires(owner != null);
+            DebugCheck.NotNull(owner);
 
             _owner = owner;
             AutoDetectChangesEnabled = true;
@@ -264,7 +265,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual bool ModelMatches(XDocument model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             return !new EdmModelDiffer().Diff(model, Owner.GetModel()).Any();
         }
@@ -366,7 +367,9 @@ namespace System.Data.Entity.Internal
         ///     This is a virtual method on this class so that it can be mocked.
         /// </summary>
         /// <param name="entity"> The entity. </param>
-        /// <returns> <c>true</c> if the entity is in the context and not deleted; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if the entity is in the context and not deleted; otherwise <c>false</c> .
+        /// </returns>
         public virtual bool EntityInContextAndNotDeleted(object entity)
         {
             ObjectStateEntry stateEntry;
@@ -468,7 +471,10 @@ namespace System.Data.Entity.Internal
         protected abstract void InitializeDatabase();
 
         /// <summary>
-        ///     Marks the database as having been initialized without actually running the <see cref="IDatabaseInitializer{TContext}" />.
+        ///     Marks the database as having been initialized without actually running the
+        ///     <see
+        ///         cref="IDatabaseInitializer{TContext}" />
+        ///     .
         /// </summary>
         public abstract void MarkDatabaseInitialized();
 
@@ -485,7 +491,7 @@ namespace System.Data.Entity.Internal
             }
 
             var initializer = DbConfiguration.DependencyResolver
-                                  .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
+                                             .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
                               ?? DefaultInitializer
                               ?? new NullDatabaseInitializer<DbContext>();
 
@@ -587,7 +593,9 @@ namespace System.Data.Entity.Internal
         ///     Calls DetectChanges on the underlying <see cref="ObjectContext" /> if AutoDetectChangesEnabled is
         ///     true or if force is set to true.
         /// </summary>
-        /// <param name="force"> if set to <c>true</c> then DetectChanges is called regardless of the value of AutoDetectChangesEnabled. </param>
+        /// <param name="force">
+        ///     if set to <c>true</c> then DetectChanges is called regardless of the value of AutoDetectChangesEnabled.
+        /// </param>
         public virtual void DetectChanges(bool force = false)
         {
             if (AutoDetectChangesEnabled || force)
@@ -688,10 +696,9 @@ namespace System.Data.Entity.Internal
         /// <returns> The entity set and base type pair. </returns>
         public virtual EntitySetTypePair GetEntitySetAndBaseTypeForType(Type entityType)
         {
-            Contract.Assert(entityType != null);
-            Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType),
-                "Proxy type should have been converted to real type");
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -708,10 +715,9 @@ namespace System.Data.Entity.Internal
         /// <returns> The entity set and base type pair, or null if not found. </returns>
         public virtual EntitySetTypePair TryGetEntitySetAndBaseTypeForType(Type entityType)
         {
-            Contract.Assert(entityType != null);
-            Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType),
-                "Proxy type should have been converted to real type");
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -725,10 +731,9 @@ namespace System.Data.Entity.Internal
         /// <returns> True if the type is mapped as an entity; false otherwise. </returns>
         public virtual bool IsEntityTypeMapped(Type entityType)
         {
-            Contract.Assert(entityType != null);
-            Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType),
-                "Proxy type should have been converted to real type");
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
 
             Initialize();
 
@@ -751,8 +756,8 @@ namespace System.Data.Entity.Internal
 
             return
                 ObjectContext.ObjectStateManager.GetObjectStateEntries(StatesToInclude).Where(e => e.Entity is TEntity).
-                    Select(
-                        e => (TEntity)e.Entity);
+                              Select(
+                                  e => (TEntity)e.Entity);
         }
 
         #endregion
@@ -769,9 +774,8 @@ namespace System.Data.Entity.Internal
         /// <returns> The query results. </returns>
         public virtual IEnumerator<TElement> ExecuteSqlQuery<TElement>(string sql, object[] parameters)
         {
-            Contract.Requires(sql != null);
-            Contract.Requires(parameters != null);
-            Contract.Ensures(Contract.Result<IEnumerator<TElement>>() != null);
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
 
             return new LazyEnumerator<TElement>(
                 () =>
@@ -807,9 +811,8 @@ namespace System.Data.Entity.Internal
         /// <returns> Task containing the query results. </returns>
         public virtual IDbAsyncEnumerator<TElement> ExecuteSqlQueryAsync<TElement>(string sql, object[] parameters)
         {
-            Contract.Requires(sql != null);
-            Contract.Requires(parameters != null);
-            Contract.Ensures(Contract.Result<IDbAsyncEnumerator<TElement>>() != null);
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
 
             return new LazyAsyncEnumerator<TElement>(
                 async cancellationToken =>
@@ -920,8 +923,8 @@ namespace System.Data.Entity.Internal
         /// <returns> The return value from the database. </returns>
         public virtual int ExecuteSqlCommand(string sql, object[] parameters)
         {
-            Contract.Requires(sql != null);
-            Contract.Requires(parameters != null);
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
 
             Initialize();
 
@@ -940,9 +943,8 @@ namespace System.Data.Entity.Internal
         /// <returns> A Task containing the return value from the database. </returns>
         public virtual Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, object[] parameters)
         {
-            Contract.Requires(sql != null);
-            Contract.Requires(parameters != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
 
             Initialize();
 
@@ -963,7 +965,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The state entry or null. </returns>
         public virtual IEntityStateEntry GetStateEntry(object entity)
         {
-            Contract.Requires(entity != null);
+            DebugCheck.NotNull(entity);
 
             DetectChanges();
 
@@ -1020,8 +1022,8 @@ namespace System.Data.Entity.Internal
         /// <returns> A new exception wrapping the given exception. </returns>
         public virtual Exception WrapUpdateException(UpdateException updateException)
         {
-            Contract.Requires(updateException != null);
-            Contract.Assert(updateException.StateEntries != null);
+            DebugCheck.NotNull(updateException);
+            Debug.Assert(updateException.StateEntries != null);
 
             if (updateException.StateEntries.Any(e => e.Entity == null))
             {
@@ -1230,9 +1232,8 @@ namespace System.Data.Entity.Internal
         /// </summary>
         private bool TryUpdateEntitySetMappingsForType(Type entityType)
         {
-            Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType),
-                "Proxy type should have been converted to real type");
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
 
             if (_entitySetMappings.ContainsKey(entityType))
             {
@@ -1260,9 +1261,8 @@ namespace System.Data.Entity.Internal
         /// <param name="entityType"> Type of the entity. </param>
         private void UpdateEntitySetMappingsForType(Type entityType)
         {
-            Contract.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType),
-                "Proxy type should have been converted to real type");
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
 
             if (!TryUpdateEntitySetMappingsForType(entityType))
             {
@@ -1380,78 +1380,6 @@ namespace System.Data.Entity.Internal
         public string ContextKey
         {
             get { return Owner.GetType().FullName; }
-        }
-    }
-
-    [ContractClassFor(typeof(InternalContext))]
-    internal abstract class InternalContextContracts : InternalContext
-    {
-        protected InternalContextContracts()
-            : base(null)
-        {
-        }
-
-        public override ObjectContext ObjectContext
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override ObjectContext GetObjectContextWithoutDatabaseInitialization()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override ClonedObjectContext CreateObjectContextForDdlOps()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void InitializeContext()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void InitializeDatabase()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void MarkDatabaseInitialized()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IDatabaseInitializer<DbContext> DefaultInitializer
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override bool LazyLoadingEnabled
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public override bool ProxyCreationEnabled
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public override DbConnection Connection
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override DbConnectionStringOrigin ConnectionStringOrigin
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public override void OverrideConnection(IInternalConnection connection)
-        {
-            Contract.Requires(connection != null);
-            throw new NotImplementedException();
         }
     }
 }

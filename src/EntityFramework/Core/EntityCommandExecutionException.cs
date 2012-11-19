@@ -6,8 +6,7 @@ namespace System.Data.Entity.Core
 
     /// <summary>
     ///     Represents a failure while trying to prepare or execute a CommandExecution
-    /// 
-    ///     This exception is intended to provide a common exception that people can catch to 
+    ///     This exception is intended to provide a common exception that people can catch to
     ///     hold provider exceptions (SqlException, OracleException) when using the EntityCommand
     ///     to execute statements.
     /// </summary>
@@ -19,7 +18,7 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        ///     initializes a new instance of EntityCommandExecutionException, no message, no inner exception.  Probably shouldn't 
+        ///     initializes a new instance of EntityCommandExecutionException, no message, no inner exception.  Probably shouldn't
         ///     exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandExecutionException()
@@ -28,7 +27,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     initializes a new instance of EntityCommandExecutionException, with message, no inner exception.  Probably shouldn't 
+        ///     initializes a new instance of EntityCommandExecutionException, with message, no inner exception.  Probably shouldn't
         ///     exist, but it makes FxCop happy.
         /// </summary>
         public EntityCommandExecutionException(string message)

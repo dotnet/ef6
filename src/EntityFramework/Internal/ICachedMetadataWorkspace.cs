@@ -6,14 +6,12 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
     ///     Represents an object that holds a cached copy of a MetadataWorkspace and optionally the
     ///     assemblies containing entity types to use with that workspace.
     /// </summary>
-    [ContractClass(typeof(ICachedMetadataWorkspaceContracts))]
     internal interface ICachedMetadataWorkspace
     {
         /// <summary>
@@ -40,31 +38,5 @@ namespace System.Data.Entity.Internal
         ///     The provider info used to construct the workspace.
         /// </summary>
         DbProviderInfo ProviderInfo { get; }
-    }
-
-    [ContractClassFor(typeof(ICachedMetadataWorkspace))]
-    internal abstract class ICachedMetadataWorkspaceContracts : ICachedMetadataWorkspace
-    {
-        MetadataWorkspace ICachedMetadataWorkspace.GetMetadataWorkspace(DbConnection storeConnection)
-        {
-            Contract.Requires(storeConnection != null);
-
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<Assembly> ICachedMetadataWorkspace.Assemblies
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        string ICachedMetadataWorkspace.DefaultContainerName
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DbProviderInfo ProviderInfo
-        {
-            get { throw new NotImplementedException(); }
-        }
     }
 }

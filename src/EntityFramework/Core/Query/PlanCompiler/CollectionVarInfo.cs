@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Represents information about a collection typed Var. 
+    ///     Represents information about a collection typed Var.
     ///     Each such Var is replaced by a Var with a new "mapped" type - the "mapped" type
     ///     is simply a collection type where the element type has been "mapped"
     /// </summary>

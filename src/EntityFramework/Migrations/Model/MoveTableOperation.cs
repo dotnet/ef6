@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents moving a table from one schema to another.
@@ -24,7 +23,7 @@ namespace System.Data.Entity.Migrations.Model
         public MoveTableOperation(string name, string newSchema, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             _name = name;
             _newSchema = newSchema;

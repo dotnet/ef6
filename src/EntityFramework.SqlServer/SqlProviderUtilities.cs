@@ -9,7 +9,7 @@ namespace System.Data.Entity.SqlServer
     internal class SqlProviderUtilities
     {
         /// <summary>
-        ///     Requires that the given connection is of type  T. 
+        ///     Requires that the given connection is of type  T.
         ///     Returns the connection or throws.
         /// </summary>
         internal static SqlConnection GetRequiredSqlConnection(DbConnection connection)

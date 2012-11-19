@@ -12,18 +12,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The PlanCompiler class is used by the BridgeCommand to produce an 
+    ///     The PlanCompiler class is used by the BridgeCommand to produce an
     ///     execution plan - this execution plan is the plan object. The plan compilation
-    ///     process takes as input a command tree (in C space), and then runs through a 
-    ///     set of changes before the final plan is produced. The final plan contains 
+    ///     process takes as input a command tree (in C space), and then runs through a
+    ///     set of changes before the final plan is produced. The final plan contains
     ///     one or more command trees (commands?) (in S space), with a set of assembly
     ///     instructions.
     ///     The compiler phases include
     ///     * Convert the command tree (CTree) into an internal tree (an ITree)
-    ///     * Run initializations on the ITree. 
+    ///     * Run initializations on the ITree.
     ///     * Eliminate structured types from the tree
     ///     * Eliminating named type references, refs and records from the tree
-    ///     At the end of this phase, we still may have collections (and record 
+    ///     At the end of this phase, we still may have collections (and record
     ///     arguments to collections) in the tree.
     ///     * Projection pruning (ie) eliminating unused references
     ///     * Tree transformations. Various transformations are run on the ITree to
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     ///     rules, and a rule processor is invoked.
     ///     * Nest elimination. At this point, we try to get pull up nest operations
     ///     as high up the tree as possible
-    ///     * Code Generation. This phase produces a plan object with various subpieces 
+    ///     * Code Generation. This phase produces a plan object with various subpieces
     ///     of the ITree represented as commands (in S space).
     ///     * The subtrees of the ITree are then converted into the corresponding CTrees
     ///     and converted into S space as part of the CTree creation.
@@ -43,9 +43,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     A boolean switch indicating whether we should apply transformation rules regardless of the size of the Iqt.
-        ///     By default, the Enabled property of a boolean switch is set using the value specified in the configuration file. 
-        ///     Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero 
-        ///     value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings 
+        ///     By default, the Enabled property of a boolean switch is set using the value specified in the configuration file.
+        ///     Configuring the switch with a value of 0 sets the Enabled property to false; configuring the switch with a nonzero
+        ///     value to set the Enabled property to true. If the BooleanSwitch constructor cannot find initial switch settings
         ///     in the configuration file, the Enabled property of the new switch is set to false by default.
         /// </summary>
         private static readonly BooleanSwitch _applyTransformationsRegardlessOfSize =
@@ -109,7 +109,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Retail Assertion code.
-        /// 
         ///     Provides the ability to have retail asserts.
         /// </summary>
         /// <param name="condition"> </param>
@@ -429,11 +428,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     To avoid processing huge trees, transformation rules are applied only if the number of nodes 
+        ///     To avoid processing huge trees, transformation rules are applied only if the number of nodes
         ///     is less than MaxNodeCountForTransformations
         ///     or if it is specified that they should be applied regardless of the size of the query.
-        ///     Whether to apply transformations is only computed the first time this property is requested, 
-        ///     and is cached afterwards. This is because we don't expect the tree to get larger 
+        ///     Whether to apply transformations is only computed the first time this property is requested,
+        ///     and is cached afterwards. This is because we don't expect the tree to get larger
         ///     from applying transformations.
         /// </summary>
         private bool MayApplyTransformationRules
@@ -449,9 +448,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Compute whether transformations may be applied. 
-        ///     Transformation rules may be applied only if the number of nodes is less than 
-        ///     MaxNodeCountForTransformations or if it is specified that they should be applied 
+        ///     Compute whether transformations may be applied.
+        ///     Transformation rules may be applied only if the number of nodes is less than
+        ///     MaxNodeCountForTransformations or if it is specified that they should be applied
         ///     regardless of the size of the query.
         /// </summary>
         /// <returns> </returns>

@@ -10,7 +10,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -77,7 +78,9 @@ namespace System.Data.Entity.Internal
         ///     Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
         ///     on first use.
         /// </summary>
-        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
+        /// <param name="owner">
+        ///     The owner <see cref="DbContext" /> .
+        /// </param>
         /// <param name="internalConnection"> Responsible for creating a connection lazily when the context is used for the first time. </param>
         /// <param name="model"> The model, or null if it will be created by convention </param>
         public LazyInternalContext(
@@ -87,7 +90,7 @@ namespace System.Data.Entity.Internal
             IDbModelCacheKeyFactory cacheKeyFactory = null)
             : base(owner)
         {
-            Contract.Requires(internalConnection != null);
+            DebugCheck.NotNull(internalConnection);
 
             _internalConnection = internalConnection;
             _model = model;
@@ -317,9 +320,11 @@ namespace System.Data.Entity.Internal
         /// <inheritdoc />
         public override void OverrideConnection(IInternalConnection connection)
         {
+            DebugCheck.NotNull(connection);
+
             // Connection should not be changed once context is initialized
-            Contract.Assert(_creatingModel == false);
-            Contract.Assert(_objectContext == null);
+            Debug.Assert(_creatingModel == false);
+            Debug.Assert(_objectContext == null);
 
             connection.AppConfig = AppConfig;
 
@@ -366,7 +371,7 @@ namespace System.Data.Entity.Internal
                             throw Error.DbContext_ConnectionHasModel();
                         }
 
-                        Contract.Assert(_model != null);
+                        Debug.Assert(_model != null);
                         _objectContext = _model.CreateObjectContext<ObjectContext>(_internalConnection.Connection);
                     }
                     else
@@ -443,8 +448,8 @@ namespace System.Data.Entity.Internal
         public DbModelBuilder CreateModelBuilder()
         {
             var versionAttribute = new AttributeProvider().GetAttributes(Owner.GetType())
-                .OfType<DbModelBuilderVersionAttribute>()
-                .FirstOrDefault();
+                                                          .OfType<DbModelBuilderVersionAttribute>()
+                                                          .FirstOrDefault();
             var version = versionAttribute != null ? versionAttribute.Version : DbModelBuilderVersion.Latest;
 
             var modelBuilder = new DbModelBuilder(version);
@@ -487,7 +492,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Marks the database as having been initialized without actually running the <see cref="IDatabaseInitializer{TContext}" />.
+        ///     Marks the database as having been initialized without actually running the
+        ///     <see
+        ///         cref="IDatabaseInitializer{TContext}" />
+        ///     .
         /// </summary>
         public override void MarkDatabaseInitialized()
         {

@@ -6,11 +6,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     Used to configure a primitive property of an entity type or complex type. 
+    ///     Used to configure a primitive property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class PrimitivePropertyConfiguration<TConfiguration>
@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal PrimitivePropertyConfiguration(TConfiguration configuration)
         {
-            Contract.Requires(configuration != null);
+            DebugCheck.NotNull(configuration);
 
             _configuration = configuration;
         }

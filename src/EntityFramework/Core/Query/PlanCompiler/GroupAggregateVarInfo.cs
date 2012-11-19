@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Helper class to track the aggregate nodes that are candidates to be 
+    ///     Helper class to track the aggregate nodes that are candidates to be
     ///     pushed into the definingGroupByNode.
     /// </summary>
     internal class GroupAggregateVarInfo
@@ -37,8 +37,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region 'Public' Properties
 
         /// <summary>
-        ///     Each key value pair represents a candidate aggregate. 
-        ///     The key is the function aggregate subtree and the value is a 'template' of translation of the 
+        ///     Each key value pair represents a candidate aggregate.
+        ///     The key is the function aggregate subtree and the value is a 'template' of translation of the
         ///     function aggregate's argument over the var representing the group aggregate.
         ///     A valid candidate has an argument that does not have any external references
         ///     except for the group aggregate corresponding to the DefiningGroupNode.

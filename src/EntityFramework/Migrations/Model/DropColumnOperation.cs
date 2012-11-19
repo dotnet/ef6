@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a column being dropped from a table.
@@ -38,8 +38,8 @@ namespace System.Data.Entity.Migrations.Model
             string table, string name, AddColumnOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
 
             _table = table;
             _name = name;
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         ///     Gets an operation that represents reverting dropping the column.
-        ///     The inverse cannot be automatically calculated, 
+        ///     The inverse cannot be automatically calculated,
         ///     if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse

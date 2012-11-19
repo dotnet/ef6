@@ -6,8 +6,8 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -195,8 +195,8 @@ namespace System.Data.Entity.Migrations.Model
         /// <returns> True if this column is of a narrower data type. </returns>
         public bool IsNarrowerThan(ColumnModel column, DbProviderManifest providerManifest)
         {
-            Contract.Requires(column != null);
-            Contract.Requires(providerManifest != null);
+            Check.NotNull(column, "column");
+            Check.NotNull(providerManifest, "providerManifest");
 
             var typeUsage = providerManifest.GetStoreType(TypeUsage);
             var otherTypeUsage = providerManifest.GetStoreType(column.TypeUsage);
@@ -209,8 +209,8 @@ namespace System.Data.Entity.Migrations.Model
 
         private static bool IsNarrowerThan(TypeUsage typeUsage, TypeUsage other)
         {
-            Contract.Requires(typeUsage != null);
-            Contract.Requires(other != null);
+            DebugCheck.NotNull(typeUsage);
+            DebugCheck.NotNull(other);
 
             foreach (var facetName in
                 new[]

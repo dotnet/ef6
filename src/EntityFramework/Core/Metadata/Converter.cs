@@ -320,8 +320,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Converts an entity type from SOM to metadata
-        /// 
-        ///     This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not 
+        ///     This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not
         ///     sideways parts (NavigationProperties) that go between types or we risk trying to access and EntityTypes keys, from the referential constraint,
         ///     before the base type, which has the keys, is setup yet.
         /// </summary>
@@ -1018,11 +1017,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         "functionImportEntityContainer must be specified during function import conversion");
                     var entityContainer = functionImportEntityContainer;
                     entitySets = somFunctionImport.ReturnTypeList
-                        .Select(
-                            returnType => null != returnType.EntitySet
-                                              ? GetEntitySet(returnType.EntitySet, functionImportEntityContainer)
-                                              : null)
-                        .ToArray();
+                                                  .Select(
+                                                      returnType => null != returnType.EntitySet
+                                                                        ? GetEntitySet(returnType.EntitySet, functionImportEntityContainer)
+                                                                        : null)
+                                                  .ToArray();
                 }
             }
             else
@@ -1185,7 +1184,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ConversionCache convertedItemCache,
             Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            if (null != somParameter && areConvertingForProviderManifest
+            if (null != somParameter
+                && areConvertingForProviderManifest
                 && somParameter.HasUserDefinedFacets)
             {
                 return somParameter.TypeUsage;
@@ -1193,7 +1193,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (null == type)
             {
-                if (isModelFunction && somParameter != null
+                if (isModelFunction
+                    && somParameter != null
                     && somParameter is Som.Parameter)
                 {
                     ((Som.Parameter)somParameter).ResolveNestedTypeNames(convertedItemCache, newGlobalItems);
@@ -1235,7 +1236,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         }
                         return modelFunction.TypeUsage;
                     }
-                    else if (somParameter != null && somParameter.HasUserDefinedFacets
+                    else if (somParameter != null
+                             && somParameter.HasUserDefinedFacets
                              && somFunction.Schema.DataModel == Som.SchemaDataModelOption.ProviderDataModel)
                     {
                         somParameter.ValidateAndSetTypeUsage(scalarType);

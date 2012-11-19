@@ -11,7 +11,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -438,7 +437,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var typeName = typeUsage.EdmType.Name;
 
             // integer types
-            if (typeName == "tinyint" || typeName == "smallint" ||
+            if (typeName == "tinyint"
+                || typeName == "smallint"
+                ||
                 typeName == "int"
                 || typeName == "bigint")
             {
@@ -526,16 +527,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             public override void Visit(DbAndExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 VisitBinary(expression, " and ");
             }
 
             public override void Visit(DbOrExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 VisitBinary(expression, " or ");
             }
 
             public override void Visit(DbComparisonExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 Debug.Assert(
                     expression.ExpressionKind == DbExpressionKind.Equals,
                     "only equals comparison expressions are produced in DML command trees in V1");
@@ -579,12 +586,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             public override void Visit(DbIsNullExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 expression.Argument.Accept(this);
                 _commandText.Append(" is null");
             }
 
             public override void Visit(DbNotExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 _commandText.Append("not (");
                 expression.Accept(this);
                 _commandText.Append(")");
@@ -592,12 +603,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             public override void Visit(DbConstantExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 var parameter = CreateParameter(expression.Value, expression.ResultType);
                 _commandText.Append(parameter.ParameterName);
             }
 
             public override void Visit(DbScanExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 // we know we won't hit this code unless there is no function defined for this
                 // ModificationOperation, so if this EntitySet is using a DefiningQuery, instead
                 // of a table, that is an error
@@ -614,7 +629,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     }
                     else
                     {
-                        Contract.Assert(_commandTree is DbUpdateCommandTree);
+                        Debug.Assert(_commandTree is DbUpdateCommandTree);
                         missingCudElement = "UpdateFunction";
                     }
                     throw new UpdateException(
@@ -627,6 +642,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             public override void Visit(DbPropertyExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 if (!string.IsNullOrEmpty(PropertyAlias))
                 {
                     _commandText.Append(PropertyAlias);
@@ -637,11 +654,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             public override void Visit(DbNullExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 _commandText.Append("null");
             }
 
             public override void Visit(DbNewInstanceExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 // assumes all arguments are self-describing (no need to use aliases
                 // because no renames are ever used in the projection)
                 var first = true;

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     /// <summary>
     ///     Specifies information about a proxied class member.
-    ///     The member must be a Property for the current implementation, 
+    ///     The member must be a Property for the current implementation,
     ///     but this may be generalized later to support methods as well.
     /// </summary>
     /// <remarks>

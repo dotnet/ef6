@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     The default constructor is required for some serialization scenarios. It should not be used to 
+        ///     The default constructor is required for some serialization scenarios. It should not be used to
         ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
         ///     class instead.
         /// </summary>
@@ -56,7 +56,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>
         ///     Returns the EntityKey of the target entity associated with this EntityReference.
-        /// 
         ///     Is non-null in the following scenarios:
         ///     (a) Entities are tracked by a context and an Unchanged or Added client-side relationships exists for this EntityReference's owner with the
         ///     same RelationshipName and source role. This relationship could have been created explicitly by the user (e.g. by setting
@@ -65,7 +64,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     occurs that would set it to null, as described below.
         ///     (c) Entities are detached and the EntityKey is explicitly set to non-null by the user.
         ///     (d) Entity graph was created using a NoTracking query with full span
-        /// 
         ///     Is null in the following scenarios:
         ///     (a) Entities are tracked by a context but there is no Unchanged or Added client-side relationship for this EntityReference's owner with the
         ///     same RelationshipName and source role.
@@ -155,7 +153,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal void SetEntityKey(EntityKey value, bool forceFixup)
         {
-            if (value != null && value == EntityKey
+            if (value != null
+                && value == EntityKey
                 && (ReferenceValue.Entity != null || (ReferenceValue.Entity == null && !forceFixup)))
             {
                 // "no-op" -- this is not really no-op in the attached case, because at a minimum we have to do a key lookup,
@@ -302,10 +301,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal bool AttemptToNullFKsOnRefOrKeySetToNull()
         {
-            if (ReferenceValue.Entity == null &&
-                WrappedOwner.Entity != null &&
-                WrappedOwner.Context != null &&
-                !UsingNoTracking &&
+            if (ReferenceValue.Entity == null
+                &&
+                WrappedOwner.Entity != null
+                &&
+                WrappedOwner.Context != null
+                &&
+                !UsingNoTracking
+                &&
                 IsForeignKey)
             {
                 // For identifying relationships, we throw, since we cannot set primary key values to null, unless
@@ -350,9 +353,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal void SetCachedForeignKey(EntityKey newForeignKey, EntityEntry source)
         {
-            if (ObjectContext != null && ObjectContext.ObjectStateManager != null && // are we attached?
-                source != null && // do we have an entry?
-                _cachedForeignKey != null && !ForeignKeyFactory.IsConceptualNullKey(_cachedForeignKey) // do we have an fk?
+            if (ObjectContext != null
+                && ObjectContext.ObjectStateManager != null
+                && // are we attached?
+                source != null
+                && // do we have an entry?
+                _cachedForeignKey != null
+                && !ForeignKeyFactory.IsConceptualNullKey(_cachedForeignKey) // do we have an fk?
                 && _cachedForeignKey != newForeignKey) // is the FK different from the one that we already have?
             {
                 ObjectContext.ObjectStateManager.RemoveEntryFromForeignKeyIndex(_cachedForeignKey, source);
@@ -387,7 +394,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var ownerKey = WrappedOwner.EntityKey;
 
             // Check if Referential Constraints are violated
-            if ((object)ownerKey != null &&
+            if ((object)ownerKey != null
+                &&
                 !ownerKey.IsTemporary
                 &&
                 IsDependentEndOfReferentialConstraint(checkIdentifying: true))
@@ -398,7 +406,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     targetEntityKey == null,
                     (CachedForeignKey != null && CachedForeignKey != targetEntityKey));
             }
-            else if (checkBothEnds && targetEntity != null
+            else if (checkBothEnds
+                     && targetEntity != null
                      && targetEntity.Entity != null)
             {
                 var otherEnd = GetOtherEndOfRelationship(targetEntity) as EntityReference;
@@ -415,7 +424,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             var isNoTracking = targetEntity != null && targetEntity.MergeOption == MergeOption.NoTracking;
 
-            if (settingToNull || // setting the principle to null
+            if (settingToNull
+                || // setting the principle to null
                 changingForeignKeyValue
                 || // existing key does not match incoming key
                 (targetEntity != null &&
@@ -642,8 +652,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 var cacheEntry = otherRelatedEnd.ObjectContext.ObjectStateManager.FindEntityEntry(otherRelatedEnd.WrappedOwner.Entity);
 
-                if (cacheEntry != null &&
-                    otherRelatedEnd.ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking &&
+                if (cacheEntry != null
+                    &&
+                    otherRelatedEnd.ObjectContext.ObjectStateManager.TransactionManager.IsAddTracking
+                    &&
                     otherRelatedEnd.IsForeignKey
                     &&
                     IsDependentEndOfReferentialConstraint(checkIdentifying: false))
@@ -847,7 +859,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var stateManager = ObjectContext.ObjectStateManager;
             var entry = WrappedOwner.ObjectStateEntry;
             var transManager = stateManager.TransactionManager;
-            if (!transManager.IsGraphUpdate && !transManager.IsAttachTracking
+            if (!transManager.IsGraphUpdate
+                && !transManager.IsAttachTracking
                 && !transManager.IsRelatedEndAdd)
             {
                 var constraint = ((AssociationType)RelationMetadata).ReferentialConstraints.Single();

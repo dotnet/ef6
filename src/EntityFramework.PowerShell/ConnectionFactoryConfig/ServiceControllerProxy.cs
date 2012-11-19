@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.ServiceProcess;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// </summary>
         public ServiceControllerProxy(ServiceController controller)
         {
-            Contract.Requires(controller != null);
+            DebugCheck.NotNull(controller);
 
             _controller = controller;
         }

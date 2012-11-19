@@ -1505,10 +1505,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Build up a Project Op with exactly the Vars that we want. If the input is 
-        ///     a Project already, piggyback on it, and get the Vars we want. Otherwise, 
+        ///     Build up a Project Op with exactly the Vars that we want. If the input is
+        ///     a Project already, piggyback on it, and get the Vars we want. Otherwise,
         ///     create a new ProjectOp, and define the specified Vars
-        /// 
         ///     Note that the ProjectOp's output (element) type will be a record with the fields
         ///     in exactly the order specified by the projectionVars argument
         /// </summary>
@@ -1960,13 +1959,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Massages the input to a join node.
-        /// 
         ///     If the input is a Filter(ScanTable), we throw in a dummy project over
         ///     this input. This projectOp simply looks at the "referenced" columns of
         ///     the table, and uses those as the projection Vars
         ///     Otherwise, sqlgen does not really know which columns are referenced, and
         ///     ends up adding a projection with all columns of the table.
-        /// 
         ///     NOTE: We may want to do this for Apply as well
         /// </summary>
         /// <param name="joinInputNode"> one of the inputs to the join node </param>
@@ -2470,19 +2467,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region PhysicalOps
 
-        ///<summary>
-        ///    Translates the PhysicalProjectOp. Handles two cases. If the child is a ProjectOp,
-        ///    then we simply piggyback on the ProjectOp method, but with our list of Vars.
-        ///
-        ///    Otherwise, we visit the child, and then create a DbProjectExpression above it.
-        ///
-        ///    The reason we special case the first scenario is because we do not want to add
-        ///    an extra Project over a Project-over-Sort expression tree. This causes bad
-        ///    problems later down the line
-        ///</summary>
-        ///<param name="op"> the PhysicalProjectOp </param>
-        ///<param name="n"> current subtree </param>
-        ///<returns> the CQT expression corresponding to this subtree </returns>
+        /// <summary>
+        ///     Translates the PhysicalProjectOp. Handles two cases. If the child is a ProjectOp,
+        ///     then we simply piggyback on the ProjectOp method, but with our list of Vars.
+        ///     Otherwise, we visit the child, and then create a DbProjectExpression above it.
+        ///     The reason we special case the first scenario is because we do not want to add
+        ///     an extra Project over a Project-over-Sort expression tree. This causes bad
+        ///     problems later down the line
+        /// </summary>
+        /// <param name="op"> the PhysicalProjectOp </param>
+        /// <param name="n"> current subtree </param>
+        /// <returns> the CQT expression corresponding to this subtree </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProjectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

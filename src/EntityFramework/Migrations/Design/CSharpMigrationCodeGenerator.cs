@@ -9,7 +9,6 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -33,6 +32,11 @@ namespace System.Data.Entity.Migrations.Design
             string @namespace,
             string className)
         {
+            Check.NotEmpty(migrationId, "migrationId");
+            Check.NotNull(operations, "operations");
+            Check.NotEmpty(targetModel, "targetModel");
+            Check.NotEmpty(className, "className");
+
             className = ScrubName(className);
 
             _newTableForeignKeys
@@ -78,8 +82,8 @@ namespace System.Data.Entity.Migrations.Design
         protected virtual string Generate(
             IEnumerable<MigrationOperation> operations, string @namespace, string className)
         {
-            Contract.Requires(operations != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(className));
+            Check.NotNull(operations, "operations");
+            Check.NotEmpty(className, "className");
 
             using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
@@ -137,9 +141,9 @@ namespace System.Data.Entity.Migrations.Design
         protected virtual string Generate(
             string migrationId, string sourceModel, string targetModel, string @namespace, string className)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Requires(!string.IsNullOrWhiteSpace(targetModel));
-            Contract.Requires(!string.IsNullOrWhiteSpace(className));
+            Check.NotEmpty(migrationId, "migrationId");
+            Check.NotEmpty(targetModel, "targetModel");
+            Check.NotEmpty(className, "className");
 
             using (var stringWriter = new StringWriter(CultureInfo.InvariantCulture))
             {
@@ -180,8 +184,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void WriteProperty(string name, string value, IndentedTextWriter writer)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(writer != null);
+            Check.NotEmpty(name, "name");
+            Check.NotNull(writer, "writer");
 
             writer.Write("string IMigrationMetadata.");
             writer.WriteLine(name);
@@ -219,9 +223,9 @@ namespace System.Data.Entity.Migrations.Design
             string @namespace, string className, IndentedTextWriter writer, string @base, bool designer = false,
             IEnumerable<string> namespaces = null)
         {
-            Contract.Requires(writer != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(className));
-            Contract.Requires(!string.IsNullOrWhiteSpace(@base));
+            Check.NotNull(writer, "writer");
+            Check.NotEmpty(className, "className");
+            Check.NotEmpty(@base, "@base");
 
             if (!string.IsNullOrWhiteSpace(@namespace))
             {
@@ -258,7 +262,7 @@ namespace System.Data.Entity.Migrations.Design
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
         {
-            Contract.Requires(writer != null);
+            Check.NotNull(writer, "writer");
 
             writer.Indent--;
             writer.WriteLine("}");
@@ -277,8 +281,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(AddColumnOperation addColumnOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(addColumnOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(addColumnOperation, "addColumnOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("AddColumn(");
             writer.Write(Quote(addColumnOperation.Table));
@@ -296,8 +300,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(dropColumnOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(dropColumnOperation, "dropColumnOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("DropColumn(");
             writer.Write(Quote(dropColumnOperation.Table));
@@ -313,8 +317,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(alterColumnOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(alterColumnOperation, "alterColumnOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("AlterColumn(");
             writer.Write(Quote(alterColumnOperation.Table));
@@ -332,8 +336,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(createTableOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(createTableOperation, "createTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.WriteLine("CreateTable(");
             writer.Indent++;
@@ -382,7 +386,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void GenerateInline(AddPrimaryKeyOperation addPrimaryKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(writer != null);
+            Check.NotNull(writer, "writer");
 
             if (addPrimaryKeyOperation != null)
             {
@@ -408,8 +412,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void GenerateInline(AddForeignKeyOperation addForeignKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(addForeignKeyOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(addForeignKeyOperation, "addForeignKeyOperation");
+            Check.NotNull(writer, "writer");
 
             writer.WriteLine();
             writer.Write(".ForeignKey(" + Quote(addForeignKeyOperation.PrincipalTable) + ", ");
@@ -430,8 +434,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void GenerateInline(CreateIndexOperation createIndexOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(createIndexOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(createIndexOperation, "createIndexOperation");
+            Check.NotNull(writer, "writer");
 
             writer.WriteLine();
             writer.Write(".Index(");
@@ -446,8 +450,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(IEnumerable<string> columns, IndentedTextWriter writer)
         {
-            Contract.Requires(columns != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(columns, "columns");
+            Check.NotNull(writer, "writer");
 
             writer.Write("t => ");
 
@@ -468,8 +472,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(AddPrimaryKeyOperation addPrimaryKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(addPrimaryKeyOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(addPrimaryKeyOperation, "addPrimaryKeyOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("AddPrimaryKey(");
             writer.Write(Quote(addPrimaryKeyOperation.Table));
@@ -505,8 +509,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(DropPrimaryKeyOperation dropPrimaryKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(dropPrimaryKeyOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(dropPrimaryKeyOperation, "dropPrimaryKeyOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("DropPrimaryKey(");
             writer.Write(Quote(dropPrimaryKeyOperation.Table));
@@ -533,8 +537,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(AddForeignKeyOperation addForeignKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(addForeignKeyOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(addForeignKeyOperation, "addForeignKeyOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("AddForeignKey(");
             writer.Write(Quote(addForeignKeyOperation.DependentTable));
@@ -595,8 +599,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(DropForeignKeyOperation dropForeignKeyOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(dropForeignKeyOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(dropForeignKeyOperation, "dropForeignKeyOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("DropForeignKey(");
             writer.Write(Quote(dropForeignKeyOperation.DependentTable));
@@ -636,8 +640,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(CreateIndexOperation createIndexOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(createIndexOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(createIndexOperation, "createIndexOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("CreateIndex(");
             writer.Write(Quote(createIndexOperation.Table));
@@ -678,8 +682,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(dropIndexOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(dropIndexOperation, "dropIndexOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("DropIndex(");
             writer.Write(Quote(dropIndexOperation.Table));
@@ -709,8 +713,8 @@ namespace System.Data.Entity.Migrations.Design
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected virtual void Generate(ColumnModel column, IndentedTextWriter writer, bool emitName = false)
         {
-            Contract.Requires(column != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(column, "column");
+            Check.NotNull(writer, "writer");
 
             writer.Write(" c.");
             writer.Write(TranslateColumnType(column.Type));
@@ -912,8 +916,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(DropTableOperation dropTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(dropTableOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(dropTableOperation, "dropTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("DropTable(");
             writer.Write(Quote(dropTableOperation.Name));
@@ -927,8 +931,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(MoveTableOperation moveTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(moveTableOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(moveTableOperation, "moveTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("MoveTable(name: ");
             writer.Write(Quote(moveTableOperation.Name));
@@ -945,8 +949,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(renameTableOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(renameTableOperation, "renameTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("RenameTable(name: ");
             writer.Write(Quote(renameTableOperation.Name));
@@ -962,8 +966,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(RenameColumnOperation renameColumnOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(renameColumnOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(renameColumnOperation, "renameColumnOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("RenameColumn(table: ");
             writer.Write(Quote(renameColumnOperation.Table));
@@ -981,8 +985,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="writer"> Text writer to add the generated code to. </param>
         protected virtual void Generate(SqlOperation sqlOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(sqlOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(sqlOperation, "sqlOperation");
+            Check.NotNull(writer, "writer");
 
             writer.Write("Sql(@");
             writer.Write(Quote(sqlOperation.Sql));

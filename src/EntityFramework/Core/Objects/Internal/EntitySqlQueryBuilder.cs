@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Text;
 
     /// <summary>
-    ///     Provides Entity-SQL query building services for <see cref="EntitySqlQueryState" />. 
+    ///     Provides Entity-SQL query building services for <see cref="EntitySqlQueryState" />.
     ///     Knowledge of how to compose Entity-SQL fragments using query builder operators resides entirely in this class.
     /// </summary>
     internal static class EntitySqlQueryBuilder
@@ -38,10 +38,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         /// <summary>
         ///     Merges <see cref="ObjectParameter" />s from a source ObjectQuery with ObjectParameters specified as an argument to a builder method.
-        ///     A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both <paramref
-        ///      name="sourceQueryParams" /> and <paramref name="builderMethodParams" />.
+        ///     A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
+        ///     <paramref
+        ///         name="sourceQueryParams" />
+        ///     and <paramref name="builderMethodParams" />.
         /// </summary>
-        /// <param name="context"> The <see cref="ObjectContext" /> to use when constructing the new parameter collection </param>
+        /// <param name="context">
+        ///     The <see cref="ObjectContext" /> to use when constructing the new parameter collection
+        /// </param>
         /// <param name="sourceQueryParams"> ObjectParameters from the ObjectQuery on which the query builder method was called </param>
         /// <param name="builderMethodParams"> ObjectParameters that were specified as an argument to the builder method </param>
         /// <returns> A new ObjectParameterCollection containing copies of all parameters </returns>
@@ -71,8 +75,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         /// <summary>
         ///     Merges <see cref="ObjectParameter" />s from two ObjectQuery arguments to SetOp builder methods (Except, Intersect, Union, UnionAll).
-        ///     A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both <paramref
-        ///      name="query1Params" /> and <paramref name="query2Params" />.
+        ///     A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
+        ///     <paramref
+        ///         name="query1Params" />
+        ///     and <paramref name="query2Params" />.
         /// </summary>
         /// <param name="query1Params"> ObjectParameters from the first ObjectQuery argument (on which the query builder method was called) </param>
         /// <param name="query2Params"> ObjectParameters from the second ObjectQuery argument (specified as an argument to the builder method) </param>

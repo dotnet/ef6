@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="internalQuery"> The backing query. </param>
         public InternalDbQuery(IInternalQuery<TElement> internalQuery)
         {
-            Contract.Requires(internalQuery != null);
+            DebugCheck.NotNull(internalQuery);
 
             _internalQuery = internalQuery;
         }

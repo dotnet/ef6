@@ -9,8 +9,8 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A class derived from this class can be placed in the same assembly as a class derived from
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Config
 
         internal DbConfiguration(InternalConfiguration internalConfiguration)
         {
-            Contract.Requires(internalConfiguration != null);
+            DebugCheck.NotNull(internalConfiguration);
 
             _internalConfiguration = internalConfiguration;
             _internalConfiguration.Owner = this;
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Config
         /// </summary>
         public static void SetConfiguration(DbConfiguration configuration)
         {
-            Contract.Requires(configuration != null);
+            Check.NotNull(configuration, "configuration");
 
             InternalConfiguration.Instance = configuration.InternalConfiguration;
         }
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Config
         /// <param name="resolver"> The resolver to add. </param>
         protected internal void AddDependencyResolver(IDbDependencyResolver resolver)
         {
-            Contract.Requires(resolver != null);
+            Check.NotNull(resolver, "resolver");
 
             _internalConfiguration.CheckNotLocked("AddDependencyResolver");
             _internalConfiguration.AddDependencyResolver(resolver);
@@ -120,8 +120,8 @@ namespace System.Data.Entity.Config
         [CLSCompliant(false)]
         protected internal void AddProvider(string providerInvariantName, DbProviderServices provider)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-            Contract.Requires(provider != null);
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(provider, "provider");
 
             _internalConfiguration.CheckNotLocked("AddProvider");
             _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
@@ -142,14 +142,14 @@ namespace System.Data.Entity.Config
         /// <param name="connectionFactory"> The connection factory. </param>
         protected internal void SetDefaultConnectionFactory(IDbConnectionFactory connectionFactory)
         {
-            Contract.Requires(connectionFactory != null);
+            Check.NotNull(connectionFactory, "connectionFactory");
 
             _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
             _internalConfiguration.RegisterSingleton(connectionFactory, null);
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to 
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
         ///     set the database initializer to use for the given context type.  The database initializer is called when a
         ///     the given <see cref="DbContext" /> type is used to access a database for the first time.
         ///     The default strategy for Code First contexts is an instance of <see cref="CreateDatabaseIfNotExists{TContext}" />.
@@ -178,7 +178,6 @@ namespace System.Data.Entity.Config
         ///     It is different from setting the generator in the <see cref="DbMigrationsConfiguration" /> because it allows
         ///     EF to use the Migrations pipeline to create a database even when there is no Migrations configuration in the project
         ///     and/or Migrations are not being explicitly used.
-        /// 
         ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="MigrationSqlGenerator" />. This means that, if desired, the same functionality can be achieved using
@@ -188,8 +187,8 @@ namespace System.Data.Entity.Config
         /// <param name="sqlGenerator"> A delegate that returns a new instance of the SQL generator each time it is called. </param>
         protected internal void AddMigrationSqlGenerator(string providerInvariantName, Func<MigrationSqlGenerator> sqlGenerator)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-            Contract.Requires(sqlGenerator != null);
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(sqlGenerator, "sqlGenerator");
 
             _internalConfiguration.CheckNotLocked("AddMigrationSqlGenerator");
             _internalConfiguration.AddDependencyResolver(
@@ -210,7 +209,7 @@ namespace System.Data.Entity.Config
         /// <param name="service"> The manifest token service. </param>
         protected internal void SetManifestTokenService(IManifestTokenService service)
         {
-            Contract.Requires(service != null);
+            Check.NotNull(service, "service");
 
             _internalConfiguration.CheckNotLocked("SetManifestTokenService");
             _internalConfiguration.RegisterSingleton(service, null);
@@ -231,7 +230,7 @@ namespace System.Data.Entity.Config
         /// <param name="providerFactoryService"> The provider factory service. </param>
         protected internal void SetProviderFactoryService(IDbProviderFactoryService providerFactoryService)
         {
-            Contract.Requires(providerFactoryService != null);
+            Check.NotNull(providerFactoryService, "providerFactoryService");
 
             _internalConfiguration.CheckNotLocked("SetProviderFactoryService");
             _internalConfiguration.RegisterSingleton(providerFactoryService, null);
@@ -251,7 +250,7 @@ namespace System.Data.Entity.Config
         /// <param name="keyFactory"> The key factory. </param>
         protected internal void SetModelCacheKeyFactory(IDbModelCacheKeyFactory keyFactory)
         {
-            Contract.Requires(keyFactory != null);
+            Check.NotNull(keyFactory, "keyFactory");
 
             _internalConfiguration.CheckNotLocked("SetModelCacheKeyFactory");
             _internalConfiguration.RegisterSingleton(keyFactory, null);
@@ -268,13 +267,17 @@ namespace System.Data.Entity.Config
         ///     <see cref="IHistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="historyContextFactory"> The <see cref="HistoryContext" /> factory. </param>
-        /// <typeparam name="TMigrationsConfiguration"> The <see cref="DbMigrationsConfiguration" /> that this factory will apply to. </typeparam>
+        /// <param name="historyContextFactory">
+        ///     The <see cref="HistoryContext" /> factory.
+        /// </param>
+        /// <typeparam name="TMigrationsConfiguration">
+        ///     The <see cref="DbMigrationsConfiguration" /> that this factory will apply to.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         protected internal void SetHistoryContextFactory<TMigrationsConfiguration>(IHistoryContextFactory historyContextFactory)
             where TMigrationsConfiguration : DbMigrationsConfiguration
         {
-            Contract.Requires(historyContextFactory != null);
+            Check.NotNull(historyContextFactory, "historyContextFactory");
 
             _internalConfiguration.CheckNotLocked("SetHistoryContextFactory");
             _internalConfiguration.RegisterSingleton(historyContextFactory, typeof(TMigrationsConfiguration));
@@ -284,7 +287,7 @@ namespace System.Data.Entity.Config
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         ///     an implementation of <see cref="DbSpatialServices" /> which will be used whenever a spatial provider is
         ///     required. Normally the spatial provider is obtained from the EF provider's <see cref="DbProviderServices" />
-        ///     implementation, but this can be overridden using this method. This also allows stand-alone instances of 
+        ///     implementation, but this can be overridden using this method. This also allows stand-alone instances of
         ///     <see cref="DbGeometry" /> and <see cref="DbGeography" /> to be created using the correct provider.
         ///     Note that only one spatial provider can be set in this way; it is not possible to set different spatial providers
         ///     for different EF/ADO.NET providers.
@@ -298,7 +301,7 @@ namespace System.Data.Entity.Config
         /// <param name="keyFactory"> The key factory. </param>
         protected internal void SetSpatialProvider(DbSpatialServices spatialProvider)
         {
-            Contract.Requires(spatialProvider != null);
+            Check.NotNull(spatialProvider, "spatialProvider");
 
             _internalConfiguration.CheckNotLocked("SetSpatialProvider");
             _internalConfiguration.RegisterSingleton(spatialProvider, null);

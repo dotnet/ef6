@@ -8,22 +8,28 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         /// <summary>
         ///     Inside of an aggregate function (Max, Min, etc).
-        ///     All range variables originating on the defining scope of this aggregate should yield <see
-        ///      cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" />.
+        ///     All range variables originating on the defining scope of this aggregate should yield
+        ///     <see
+        ///         cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" />
+        ///     .
         /// </summary>
         Function,
 
         /// <summary>
         ///     Inside of GROUPPARTITION expression.
-        ///     All range variables originating on the defining scope of this aggregate should yield <see
-        ///      cref="IGroupExpressionExtendedInfo.GroupAggBasedExpression" />.
+        ///     All range variables originating on the defining scope of this aggregate should yield
+        ///     <see
+        ///         cref="IGroupExpressionExtendedInfo.GroupAggBasedExpression" />
+        ///     .
         /// </summary>
         Partition,
 
         /// <summary>
         ///     Inside of a group key definition
-        ///     All range variables originating on the defining scope of this aggregate should yield <see
-        ///      cref="ScopeEntry.GetExpression" />.
+        ///     All range variables originating on the defining scope of this aggregate should yield
+        ///     <see
+        ///         cref="ScopeEntry.GetExpression" />
+        ///     .
         /// </summary>
         GroupKey
     }

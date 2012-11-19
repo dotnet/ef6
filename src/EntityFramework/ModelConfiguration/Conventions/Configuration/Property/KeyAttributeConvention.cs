@@ -16,6 +16,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public override void Apply(
             PropertyInfo memberInfo, EntityTypeConfiguration configuration, KeyAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if (memberInfo.IsValidEdmScalarProperty())
             {
                 configuration.Key(memberInfo);

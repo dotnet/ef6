@@ -6,15 +6,14 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
 
     internal static class DbProviderServicesExtensions
     {
         public static string GetProviderManifestTokenChecked(
             this DbProviderServices providerServices, DbConnection connection)
         {
-            Contract.Assert(providerServices != null);
-            Contract.Assert(connection != null);
+            DebugCheck.NotNull(providerServices);
+            DebugCheck.NotNull(connection);
 
             try
             {

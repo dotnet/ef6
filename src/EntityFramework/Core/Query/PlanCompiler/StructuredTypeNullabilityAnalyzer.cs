@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Marks the given typeUsage as needing a null sentinel. 
+        ///     Marks the given typeUsage as needing a null sentinel.
         ///     Call this method instead of calling Add over the HashSet directly, to ensure consistency.
         /// </summary>
         /// <param name="typesNeedingNullSentinel"> </param>

@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add an entry that the given property of the given var is a computation represented 
+        ///     Add an entry that the given property of the given var is a computation represented
         ///     by the computationTemplate over the var represented by the given groupAggregateVarInfo
         /// </summary>
         /// <param name="var"> </param>
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the groupAggregateVarRefInfo representing the definition of the given var over 
+        ///     Gets the groupAggregateVarRefInfo representing the definition of the given var over
         ///     a group aggregate var if any.
         /// </summary>
         /// <param name="var"> </param>

@@ -2,9 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -16,13 +14,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(DbDatabaseMapping databaseMapping)
         {
+            Check.NotNull(databaseMapping, "databaseMapping");
+
             databaseMapping.EntityContainerMappings
-                .SelectMany(ecm => ecm.AssociationSetMappings)
-                .Where(
-                    asm => asm.AssociationSet.ElementType.IsManyToMany()
-                           && !asm.AssociationSet.ElementType.IsSelfReferencing())
-                .SelectMany(asm => asm.Table.ForeignKeyBuilders)
-                .Each(fk => fk.DeleteAction = OperationAction.Cascade);
+                           .SelectMany(ecm => ecm.AssociationSetMappings)
+                           .Where(
+                               asm => asm.AssociationSet.ElementType.IsManyToMany()
+                                      && !asm.AssociationSet.ElementType.IsSelfReferencing())
+                           .SelectMany(asm => asm.Table.ForeignKeyBuilders)
+                           .Each(fk => fk.DeleteAction = OperationAction.Cascade);
         }
     }
 }

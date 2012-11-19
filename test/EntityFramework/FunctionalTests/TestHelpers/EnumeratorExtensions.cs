@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace System.Data.Entity
     {
         public static List<T> ToList<T>(this IEnumerator<T> enumerator)
         {
-            Contract.Requires(enumerator != null);
+            Debug.Assert(enumerator != null);
 
             var resultList = new List<T>();
 
@@ -33,7 +34,7 @@ namespace System.Data.Entity
 
         public static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerator<T> enumerator, CancellationToken cancellationToken)
         {
-            Contract.Requires(enumerator != null);
+            Debug.Assert(enumerator != null);
 
             var resultList = new List<T>();
 

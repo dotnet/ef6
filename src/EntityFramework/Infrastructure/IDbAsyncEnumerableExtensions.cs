@@ -7,8 +7,8 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -24,9 +24,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task ForEachAsync(
             this IDbAsyncEnumerable source, Action<object> action, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(action);
 
             using (var enumerator = source.GetAsyncEnumerator())
             {
@@ -53,9 +52,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task ForEachAsync<T>(
             this IDbAsyncEnumerable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(action);
 
             using (var enumerator = source.GetAsyncEnumerator())
             {
@@ -78,11 +76,12 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.ToListAsync<T>(CancellationToken.None);
         }
@@ -92,11 +91,12 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+            DebugCheck.NotNull(source);
 
             var list = new List<T>();
             await source.ForEachAsync(e => list.Add((T)e), cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -107,12 +107,13 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.ToListAsync(CancellationToken.None);
         }
@@ -121,12 +122,13 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            DebugCheck.NotNull(source);
 
             var list = new List<T>();
             await source.ForEachAsync(list.Add, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -137,13 +139,16 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <returns> A <see cref="Task" /> containing a T[] that contains elements from the input sequence. </returns>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a T[] that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.ToArrayAsync(CancellationToken.None);
         }
@@ -152,14 +157,17 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a T[] that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a T[] that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            DebugCheck.NotNull(source);
 
             var list = await source.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return list.ToArray();
@@ -169,17 +177,22 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
 
             return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, CancellationToken.None);
         }
@@ -188,18 +201,23 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
 
             return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, null, cancellationToken);
         }
@@ -208,18 +226,25 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
 
             return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, CancellationToken.None);
         }
@@ -228,20 +253,27 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TSource}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
             CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
 
             return ToDictionaryAsync(source, keySelector, IdentityFunction<TSource>.Instance, comparer, cancellationToken);
         }
@@ -250,22 +282,33 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
+            DebugCheck.NotNull(elementSelector);
 
             return ToDictionaryAsync(source, keySelector, elementSelector, null, CancellationToken.None);
         }
@@ -274,23 +317,32 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
+            DebugCheck.NotNull(elementSelector);
 
             return ToDictionaryAsync(source, keySelector, elementSelector, null, cancellationToken);
         }
@@ -299,23 +351,34 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
+            DebugCheck.NotNull(elementSelector);
 
             return ToDictionaryAsync(source, keySelector, elementSelector, comparer, CancellationToken.None);
         }
@@ -324,24 +387,35 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously creates a <see cref="Dictionary{TKey, TElement}" /> from an <see cref="IDbAsyncEnumerable{TSource}" />
         ///     by enumerating it asynchronously according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(keySelector);
+            DebugCheck.NotNull(elementSelector);
 
             var d = new Dictionary<TKey, TElement>(comparer);
             await
@@ -352,25 +426,22 @@ namespace System.Data.Entity.Infrastructure
 
         internal static IDbAsyncEnumerable<TResult> Cast<TResult>(this IDbAsyncEnumerable source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<IDbAsyncEnumerable<TResult>>() != null);
+            DebugCheck.NotNull(source);
 
             return new CastDbAsyncEnumerable<TResult>(source);
         }
 
         internal static Task<TSource> FirstAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.FirstAsync(CancellationToken.None);
         }
 
         internal static Task<TSource> FirstAsync<TSource>(this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.FirstAsync(predicate, CancellationToken.None);
         }
@@ -378,8 +449,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -395,9 +465,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -415,14 +484,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<TSource> FirstOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             return source.FirstOrDefaultAsync(CancellationToken.None);
         }
 
         internal static Task<TSource> FirstOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             return source.FirstOrDefaultAsync(predicate, CancellationToken.None);
         }
@@ -430,7 +499,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -446,7 +515,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> FirstOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -464,7 +533,7 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<TSource> SingleAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             return source.SingleAsync(CancellationToken.None);
         }
@@ -472,7 +541,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -494,9 +563,8 @@ namespace System.Data.Entity.Infrastructure
             this IDbAsyncEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.SingleAsync(predicate, CancellationToken.None);
         }
@@ -504,9 +572,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             var result = default(TSource);
             long count = 0;
@@ -538,8 +605,7 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<TSource> SingleOrDefaultAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SingleOrDefaultAsync(CancellationToken.None);
         }
@@ -547,8 +613,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -570,9 +635,8 @@ namespace System.Data.Entity.Infrastructure
             this IDbAsyncEnumerable<TSource> source,
             Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.SingleOrDefaultAsync(predicate, CancellationToken.None);
         }
@@ -580,9 +644,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<TSource> SingleOrDefaultAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             var result = default(TSource);
             long count = 0;
@@ -611,8 +674,7 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<bool> ContainsAsync<TSource>(this IDbAsyncEnumerable<TSource> source, TSource value)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.ContainsAsync(value, CancellationToken.None);
         }
@@ -620,8 +682,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> ContainsAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, TSource value, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -639,16 +700,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<bool> AnyAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AnyAsync(CancellationToken.None);
         }
 
         internal static async Task<bool> AnyAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -664,9 +723,8 @@ namespace System.Data.Entity.Infrastructure
         internal static Task<bool> AnyAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.AnyAsync(predicate, CancellationToken.None);
         }
@@ -674,9 +732,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> AnyAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -695,9 +752,8 @@ namespace System.Data.Entity.Infrastructure
         internal static Task<bool> AllAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.AllAsync(predicate, CancellationToken.None);
         }
@@ -705,9 +761,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<bool> AllAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             using (var e = source.GetAsyncEnumerator())
             {
@@ -725,16 +780,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<int> CountAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.CountAsync(CancellationToken.None);
         }
 
         internal static async Task<int> CountAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
 
             var count = 0;
 
@@ -755,9 +808,8 @@ namespace System.Data.Entity.Infrastructure
         internal static Task<int> CountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.CountAsync(predicate, CancellationToken.None);
         }
@@ -765,9 +817,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<int> CountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             var count = 0;
 
@@ -790,8 +841,7 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<long> LongCountAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.LongCountAsync(CancellationToken.None);
         }
@@ -799,8 +849,7 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<long> LongCountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
 
             long count = 0;
 
@@ -821,9 +870,8 @@ namespace System.Data.Entity.Infrastructure
         internal static Task<long> LongCountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             return source.LongCountAsync(predicate, CancellationToken.None);
         }
@@ -831,9 +879,8 @@ namespace System.Data.Entity.Infrastructure
         internal static async Task<long> LongCountAsync<TSource>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, bool> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(predicate);
 
             long count = 0;
 
@@ -856,16 +903,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<TSource> MinAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.MinAsync(CancellationToken.None);
         }
 
         internal static async Task<TSource> MinAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             var comparer = Comparer<TSource>.Default;
             var value = default(TSource);
@@ -918,16 +963,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<TSource> MaxAsync<TSource>(this IDbAsyncEnumerable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.MaxAsync(CancellationToken.None);
         }
 
         internal static async Task<TSource> MaxAsync<TSource>(this IDbAsyncEnumerable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            DebugCheck.NotNull(source);
 
             var comparer = Comparer<TSource>.Default;
             var value = default(TSource);
@@ -980,16 +1023,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<int> SumAsync(this IDbAsyncEnumerable<int> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<int> SumAsync(this IDbAsyncEnumerable<int> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1008,16 +1049,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<int?> SumAsync(this IDbAsyncEnumerable<int?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<int?> SumAsync(this IDbAsyncEnumerable<int?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1039,16 +1078,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<long> SumAsync(this IDbAsyncEnumerable<long> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<long> SumAsync(this IDbAsyncEnumerable<long> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1067,16 +1104,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<long?> SumAsync(this IDbAsyncEnumerable<long?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<long?> SumAsync(this IDbAsyncEnumerable<long?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1098,16 +1133,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<float> SumAsync(this IDbAsyncEnumerable<float> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<float> SumAsync(this IDbAsyncEnumerable<float> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1126,16 +1159,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<float?> SumAsync(this IDbAsyncEnumerable<float?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<float?> SumAsync(this IDbAsyncEnumerable<float?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1157,16 +1188,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double> SumAsync(this IDbAsyncEnumerable<double> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<double> SumAsync(this IDbAsyncEnumerable<double> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1185,16 +1214,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double?> SumAsync(this IDbAsyncEnumerable<double?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<double?> SumAsync(this IDbAsyncEnumerable<double?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1216,16 +1243,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<decimal> SumAsync(this IDbAsyncEnumerable<decimal> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<decimal> SumAsync(this IDbAsyncEnumerable<decimal> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            DebugCheck.NotNull(source);
 
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1244,16 +1269,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<decimal?> SumAsync(this IDbAsyncEnumerable<decimal?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.SumAsync(CancellationToken.None);
         }
 
         internal static async Task<decimal?> SumAsync(this IDbAsyncEnumerable<decimal?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            DebugCheck.NotNull(source);
 
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
@@ -1275,16 +1298,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double> AverageAsync(this IDbAsyncEnumerable<int> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<int> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             long count = 0;
@@ -1309,16 +1330,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double?> AverageAsync(this IDbAsyncEnumerable<int?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<int?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             long count = 0;
@@ -1346,16 +1365,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double> AverageAsync(this IDbAsyncEnumerable<long> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<long> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             long count = 0;
@@ -1380,16 +1397,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double?> AverageAsync(this IDbAsyncEnumerable<long?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<long?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             long sum = 0;
             long count = 0;
@@ -1417,16 +1432,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<float> AverageAsync(this IDbAsyncEnumerable<float> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<float> AverageAsync(this IDbAsyncEnumerable<float> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             long count = 0;
@@ -1451,16 +1464,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<float?> AverageAsync(this IDbAsyncEnumerable<float?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<float?> AverageAsync(this IDbAsyncEnumerable<float?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             long count = 0;
@@ -1488,16 +1499,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double> AverageAsync(this IDbAsyncEnumerable<double> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double> AverageAsync(this IDbAsyncEnumerable<double> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             long count = 0;
@@ -1522,16 +1531,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<double?> AverageAsync(this IDbAsyncEnumerable<double?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<double?> AverageAsync(this IDbAsyncEnumerable<double?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            DebugCheck.NotNull(source);
 
             double sum = 0;
             long count = 0;
@@ -1559,16 +1566,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<decimal> AverageAsync(this IDbAsyncEnumerable<decimal> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<decimal> AverageAsync(this IDbAsyncEnumerable<decimal> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            DebugCheck.NotNull(source);
 
             decimal sum = 0;
             long count = 0;
@@ -1593,16 +1598,14 @@ namespace System.Data.Entity.Infrastructure
 
         internal static Task<decimal?> AverageAsync(this IDbAsyncEnumerable<decimal?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            DebugCheck.NotNull(source);
 
             return source.AverageAsync(CancellationToken.None);
         }
 
         internal static async Task<decimal?> AverageAsync(this IDbAsyncEnumerable<decimal?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            DebugCheck.NotNull(source);
 
             decimal sum = 0;
             long count = 0;
@@ -1636,7 +1639,7 @@ namespace System.Data.Entity.Infrastructure
 
             public CastDbAsyncEnumerable(IDbAsyncEnumerable sourceEnumerable)
             {
-                Contract.Requires(sourceEnumerable != null);
+                DebugCheck.NotNull(sourceEnumerable);
 
                 _underlyingEnumerable = sourceEnumerable;
             }

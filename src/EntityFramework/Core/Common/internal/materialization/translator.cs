@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Security.Permissions;
 
     /// <summary>
-    ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the 
+    ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the
     ///     ColumnMap and compile delegates used to materialize results.
     /// </summary>
     internal class Translator
@@ -33,20 +33,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             "TranslateColumnMap", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
-        ///     The main entry point for the translation process. Given a ColumnMap, returns 
+        ///     The main entry point for the translation process. Given a ColumnMap, returns
         ///     a ShaperFactory which can be used to materialize results for a query.
         /// </summary>
         internal virtual ShaperFactory<T> TranslateColumnMap<T>(
             QueryCacheManager queryCacheManager, ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex,
             MergeOption mergeOption, bool valueLayer)
         {
-            Contract.Requires(queryCacheManager != null);
-            Contract.Requires(columnMap != null);
-            Contract.Requires(workspace != null);
+            DebugCheck.NotNull(queryCacheManager);
+            DebugCheck.NotNull(columnMap);
+            DebugCheck.NotNull(workspace);
 
-            Contract.Ensures(Contract.Result<ShaperFactory>() != null);
-
-            Contract.Assert(columnMap is CollectionColumnMap, "root column map must be a collection for a query");
+            Debug.Assert(columnMap is CollectionColumnMap, "root column map must be a collection for a query");
 
             // If the query cache already contains a plan, then we're done
             ShaperFactory<T> result;
@@ -65,7 +63,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var translatorVisitor = new TranslatorVisitor(workspace, spanIndex, mergeOption, valueLayer);
             columnMap.Accept(translatorVisitor, new TranslatorArg(typeof(IEnumerable<>).MakeGenericType(typeof(T))));
 
-            Contract.Assert(
+            Debug.Assert(
                 null != translatorVisitor.RootCoordinatorScratchpad,
                 "translating the root of the query must populate RootCoordinatorScratchpad");
 
@@ -103,12 +101,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             MergeOption mergeOption,
             bool valueLayer)
         {
-            Contract.Requires(elementType != null);
-            Contract.Requires(queryCacheManager != null);
-            Contract.Requires(columnMap != null);
-            Contract.Requires(workspace != null);
-
-            Contract.Ensures(Contract.Result<ShaperFactory>() != null);
+            DebugCheck.NotNull(elementType);
+            DebugCheck.NotNull(queryCacheManager);
+            DebugCheck.NotNull(columnMap);
+            DebugCheck.NotNull(workspace);
 
             var typedCreateMethod = GenericTranslateColumnMap.MakeGenericMethod(elementType);
 
@@ -133,7 +129,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             private readonly SpanIndex _spanIndex;
 
             /// <summary>
-            ///     Gets the MergeOption for the current query (influences our handling of 
+            ///     Gets the MergeOption for the current query (influences our handling of
             ///     entities when they are materialized).
             /// </summary>
             private readonly MergeOption _mergeOption;
@@ -152,7 +148,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Set to true if any Entity/Complex type/property for which we're emitting a
-            ///     handler is non-public. Used to determine which security checks are necessary 
+            ///     handler is non-public. Used to determine which security checks are necessary
             ///     when invoking the delegate.
             /// </summary>
             private bool _hasNonPublicMembers;
@@ -173,7 +169,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public TranslatorVisitor(MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
             {
-                Contract.Requires(workspace != null);
+                DebugCheck.NotNull(workspace);
 
                 _workspace = workspace;
                 _spanIndex = spanIndex;
@@ -196,8 +192,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Returns a delegate performing necessary permission checks identified
-            ///     by this translator.  This delegate must be called every time a row is 
-            ///     read from the ObjectResult enumerator, since the enumerator can be 
+            ///     by this translator.  This delegate must be called every time a row is
+            ///     read from the ObjectResult enumerator, since the enumerator can be
             ///     passed across security contexts.
             /// </summary>
             public Action GetCheckPermissionsDelegate()
@@ -430,10 +426,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Prepare a list of PropertyBindings for each item in the specified property 
+            ///     Prepare a list of PropertyBindings for each item in the specified property
             ///     collection such that the mapped property of the specified clrType has its
-            ///     value set from the source data reader.  
-            /// 
+            ///     value set from the source data reader.
             ///     Along the way we'll keep track of non-public properties and properties that
             ///     have link demands, so we can ensure enforce them.
             /// </summary>
@@ -509,7 +504,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         return propertyInfo;
                     }
                 }
-                Contract.Assert(
+                Debug.Assert(
                     false,
                     "Should always find a property for the setterMethod since we got the setter method from a property in the first place.");
                 return null;
@@ -772,7 +767,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Build expression to materialize LINQ initialization types (anonymous 
+            ///     Build expression to materialize LINQ initialization types (anonymous
             ///     types, IGrouping, EntityCollection)
             /// </summary>
             private Expression HandleLinqRecord(RecordColumnMap columnMap, InitializerMetadata initializerMetadata)
@@ -1104,7 +1099,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Return an expression to read the coordinator from a state slot at 
+            ///     Return an expression to read the coordinator from a state slot at
             ///     runtime.  This is the method where we store the expressions we've
             ///     been building into the CoordinatorScratchpad, which we'll compile
             ///     later, once we've left the visitor.
@@ -1171,8 +1166,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Visit(RefColumnMap)
-            /// 
-            ///     If the entityKey has a value, then return it otherwise return a null 
+            ///     If the entityKey has a value, then return it otherwise return a null
             ///     valued EntityKey.  The EntityKey construction is the tricky part.
             /// </summary>
             internal override TranslatorResult Visit(RefColumnMap columnMap, TranslatorArg arg)
@@ -1191,7 +1185,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Visit(ScalarColumnMap)
-            /// 
             ///     Pretty basic stuff here; we just call the method that matches the
             ///     type of the column.  Of course we have to handle nullable/non-nullable
             ///     types, and non-value types.
@@ -1281,7 +1274,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Visit(VarRefColumnMap)
-            /// 
             ///     This should throw; VarRefColumnMaps should be removed by the PlanCompiler.
             /// </summary>
             internal override TranslatorResult Visit(VarRefColumnMap columnMap, TranslatorArg arg)
@@ -1295,7 +1287,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Helper methods
 
             /// <summary>
-            ///     Allocates a slot in 'Shaper.State' which can be used as storage for 
+            ///     Allocates a slot in 'Shaper.State' which can be used as storage for
             ///     materialization tasks (e.g. remembering key values for a nested collection)
             /// </summary>
             private int AllocateStateSlot()
@@ -1437,17 +1429,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Retrieves object mapping metadata for the given type. The first time a type 
-            ///     is encountered, we cache the metadata to avoid repeating the work for every 
-            ///     row in result. 
-            /// 
+            ///     Retrieves object mapping metadata for the given type. The first time a type
+            ///     is encountered, we cache the metadata to avoid repeating the work for every
+            ///     row in result.
             ///     Caching at the materializer rather than workspace/metadata cache level optimizes
-            ///     for transient types (including row types produced for span, LINQ initializations, 
+            ///     for transient types (including row types produced for span, LINQ initializations,
             ///     collections and projections).
             /// </summary>
             private ObjectTypeMapping LookupObjectMapping(EdmType edmType)
             {
-                Contract.Requires(null != edmType);
+                DebugCheck.NotNull(edmType);
 
                 ObjectTypeMapping result;
 
@@ -1525,8 +1516,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Creates expression to construct an EntityKey. Assumes that both the key has 
-            ///     a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value 
+            ///     Creates expression to construct an EntityKey. Assumes that both the key has
+            ///     a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value
             ///     (EntitySet != null).
             /// </summary>
             private static Expression Emit_EntityKey_ctor(

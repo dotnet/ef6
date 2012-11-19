@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a single row delete operation expressed as a canonical command tree.
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbDeleteCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate)
             : base(metadata, dataSpace, target)
         {
-            Contract.Requires(predicate != null);
+            DebugCheck.NotNull(predicate);
 
             _predicate = predicate;
         }

@@ -69,9 +69,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return m_inner.GetHashCode() ^ m_outer.GetHashCode();
         }
 
-        ///<summary>
-        ///</summary>
-        ///<returns> </returns>
+        /// <summary>
+        /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             return m_inner + "." + m_outer;

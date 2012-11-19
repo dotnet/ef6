@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Removes all sort nodes from the given command except for the top most one 
+    ///     Removes all sort nodes from the given command except for the top most one
     ///     (the child of the root PhysicalProjectOp node) if any
     /// </summary>
     internal class SortRemover : BasicOpVisitorOfNode
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Iterates over all children.
         ///     If any of the children changes, update the node info.
-        ///     This is safe to do because the only way a child can change is 
+        ///     This is safe to do because the only way a child can change is
         ///     if it is a sort node that needs to be removed. The nodes whose children have
         ///     chagnged also get tracked.
         /// </summary>

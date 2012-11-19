@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Specifies the type of the Collection. 
+        ///     Specifies the type of the Collection.
         ///     By Default this is Single( i.e. not a Collection.
         ///     And in case of Collections, will be either Bag or List
         /// </summary>
@@ -140,7 +140,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return null;
             }
 
-            if (!(element is SchemaComplexType) && !(element is ScalarType)
+            if (!(element is SchemaComplexType)
+                && !(element is ScalarType)
                 && !(element is SchemaEnumType))
             {
                 AddError(
@@ -185,7 +186,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             {
                 _typeUsageBuilder.ValidateEnumFacets(schemaEnumType);
             }
-            else if (Nullable && (Schema.SchemaVersion != XmlConstants.EdmVersionForV1_1)
+            else if (Nullable
+                     && (Schema.SchemaVersion != XmlConstants.EdmVersionForV1_1)
                      && (_type is SchemaComplexType))
             {
                 //Nullable Complex Types are not supported in V1.0, V2 and V3

@@ -4,12 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Edm.Serialization;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -20,9 +18,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static DbDatabaseMapping Initialize(
             this DbDatabaseMapping databaseMapping, EdmModel model, EdmModel database)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(database != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(database);
 
             databaseMapping.Model = model;
             databaseMapping.Database = database;
@@ -36,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Justification = "Used by test code.")]
         public static MetadataWorkspace ToMetadataWorkspace(this DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             var metadataWorkspace = new MetadataWorkspace();
 
@@ -59,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageMappingItemCollection ToStorageMappingItemCollection(
             this DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             return databaseMapping.ToStorageMappingItemCollection(
                 databaseMapping.Model.ToEdmItemCollection(),
@@ -71,9 +69,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             this DbDatabaseMapping databaseMapping, EdmItemCollection itemCollection,
             StoreItemCollection storeItemCollection)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(itemCollection != null);
-            Contract.Requires(storeItemCollection != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(itemCollection);
+            DebugCheck.NotNull(storeItemCollection);
 
             var stringBuilder = new StringBuilder();
 
@@ -95,8 +93,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
 
             var mappings = databaseMapping.GetEntityTypeMappings(entityType);
 
@@ -112,8 +110,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static IEnumerable<StorageEntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
 
             return (from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     from etm in esm.EntityTypeMappings
@@ -124,8 +122,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, Type entityType)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
 
             var mappings = (from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                             from etm in esm.EntityTypeMappings
@@ -144,8 +142,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> GetComplexPropertyMappings(
             this DbDatabaseMapping databaseMapping, Type complexType)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(complexType != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(complexType);
 
             return from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                    from etm in esm.EntityTypeMappings
@@ -161,8 +159,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageEntitySetMapping GetEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entitySet);
 
             return databaseMapping
                 .EntityContainerMappings
@@ -173,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
         public static IEnumerable<StorageEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             return databaseMapping
                 .EntityContainerMappings
@@ -184,7 +182,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static IEnumerable<StorageAssociationSetMapping> GetAssociationSetMappings(
             this DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             return databaseMapping
                 .EntityContainerMappings
@@ -195,8 +193,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageEntitySetMapping AddEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entitySet);
 
             var entitySetMapping = new StorageEntitySetMapping(entitySet, null);
 
@@ -211,12 +209,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public static StorageAssociationSetMapping AddAssociationSetMapping(
             this DbDatabaseMapping databaseMapping, AssociationSet associationSet, EntitySet entitySet)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(associationSet != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(associationSet);
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(associationSet, entitySet).Initialize();
-                      
+
             databaseMapping
                 .EntityContainerMappings
                 .Single()

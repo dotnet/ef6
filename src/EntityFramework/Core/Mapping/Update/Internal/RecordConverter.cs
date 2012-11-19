@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Converts records to new instance expressions. Assumes that all inputs come from a single data reader (because
@@ -20,7 +19,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Initializes a new converter given a command tree context. Initializes a new record layout cache.
         /// </summary>
-        /// <param name="updateTranslator"> Sets <see cref="m_updateTranslator" /> </param>
+        /// <param name="updateTranslator">
+        ///     Sets <see cref="m_updateTranslator" />
+        /// </param>
         internal RecordConverter(UpdateTranslator updateTranslator)
         {
             m_updateTranslator = updateTranslator;
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly UpdateTranslator m_updateTranslator;
 
         /// <summary>
-        ///     Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
+        ///     Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or
         ///     a relationship set instance.
         /// </summary>
         /// <remarks>
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Converts current values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
+        ///     Converts current values in a state entry to a DbNewInstanceExpression. The record must be either an entity or
         ///     a relationship set instance.
         /// </summary>
         /// <remarks>
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private PropagatorResult ConvertStateEntryToPropagatorResult(
             IEntityStateEntry stateEntry, bool useCurrentValues, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
         {
-            Contract.Requires(stateEntry != null);
+            DebugCheck.NotNull(stateEntry);
 
             try
             {

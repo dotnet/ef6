@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Security;
     using System.Security.Permissions;
@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal readonly Func<Shaper, ICollection<TElement>> InitializeCollection;
 
         /// <summary>
-        ///     Description of this CoordinatorFactory, used for debugging only; while this is not  
-        ///     needed in retail code, it is pretty important because it's the only description we'll 
-        ///     have once we compile the Expressions; debugging a problem with retail bits would be 
+        ///     Description of this CoordinatorFactory, used for debugging only; while this is not
+        ///     needed in retail code, it is pretty important because it's the only description we'll
+        ///     have once we compile the Expressions; debugging a problem with retail bits would be
         ///     pretty hard without this.
         /// </summary>
         private readonly string Description;
@@ -62,8 +62,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <param name="setKeys"> Can be null. </param>
         /// <param name="checkKeys"> Can be null. </param>
         /// <param name="nestedCoordinators"> </param>
-        /// <param name="element"> Supply null if <paramref name="wrappedElement" /> isn't null. </param>
-        /// <param name="wrappedElement"> Supply null if <paramref name="element" /> isn't null. </param>
+        /// <param name="element">
+        ///     Supply null if <paramref name="wrappedElement" /> isn't null.
+        /// </param>
+        /// <param name="wrappedElement">
+        ///     Supply null if <paramref name="element" /> isn't null.
+        /// </param>
         /// <param name="elementWithErrorHandling"> Should return the unwrapped entity. </param>
         /// <param name="initializeCollection"> Can be null. </param>
         /// <param name="recordStateFactories"> </param>
@@ -88,13 +92,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 nestedCoordinators,
                 recordStateFactories)
         {
-            Contract.Requires(depth >= 0);
-            Contract.Requires(stateSlot >= 0);
-            Contract.Requires(nestedCoordinators != null);
-            Contract.Requires(recordStateFactories != null);
-            Contract.Requires(elementWithErrorHandling != null);
+            Debug.Assert(depth >= 0);
+            Debug.Assert(stateSlot >= 0);
+            DebugCheck.NotNull(nestedCoordinators);
+            DebugCheck.NotNull(recordStateFactories);
+            DebugCheck.NotNull(elementWithErrorHandling);
 
-            Contract.Assert((element == null) != (wrappedElement == null));
+            Debug.Assert((element == null) != (wrappedElement == null));
 
             // If we are in a case where a wrapped entity is available, then use it; otherwise use the raw element.
             // However, in both cases, use the raw element for the error handling case where what we care about is

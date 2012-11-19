@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     // Miscellaneous helper routines
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Builds a balanced binary tree with the specified nodes as leaves. 
+        ///     Builds a balanced binary tree with the specified nodes as leaves.
         ///     Note that the current elements of <paramref name="nodes" /> MAY be overwritten
         ///     as the leaves are combined to produce the tree.
         /// </summary>
@@ -89,8 +89,8 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns> The single node that is the root of the balanced binary tree </returns>
         internal static TNode BuildBalancedTreeInPlace<TNode>(IList<TNode> nodes, Func<TNode, TNode, TNode> combinator)
         {
-            Contract.Requires(nodes != null);
-            Contract.Requires(combinator != null);
+            DebugCheck.NotNull(nodes);
+            DebugCheck.NotNull(combinator);
 
             Debug.Assert(nodes.Count > 0, "At least one node is required");
 
@@ -152,14 +152,20 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <typeparam name="TNode"> The type of each node in the tree structure </typeparam>
         /// <param name="root"> The node that represents the root of the tree </param>
         /// <param name="isLeaf"> A function that determines whether or not a given node should be considered a leaf node </param>
-        /// <param name="getImmediateSubNodes"> A function that traverses the tree by retrieving the <b>immediate</b> descendants of a (non-leaf) node. </param>
-        /// <returns> An enumerable containing the leaf nodes (as determined by <paramref name="isLeaf" /> ) retrieved by traversing the tree from <paramref
-        ///      name="root" /> using <paramref name="getImmediateSubNodes" /> . </returns>
+        /// <param name="getImmediateSubNodes">
+        ///     A function that traverses the tree by retrieving the <b>immediate</b> descendants of a (non-leaf) node.
+        /// </param>
+        /// <returns>
+        ///     An enumerable containing the leaf nodes (as determined by <paramref name="isLeaf" /> ) retrieved by traversing the tree from
+        ///     <paramref
+        ///         name="root" />
+        ///     using <paramref name="getImmediateSubNodes" /> .
+        /// </returns>
         internal static IEnumerable<TNode> GetLeafNodes<TNode>(
             TNode root, Func<TNode, bool> isLeaf, Func<TNode, IEnumerable<TNode>> getImmediateSubNodes)
         {
-            Contract.Requires(isLeaf != null);
-            Contract.Requires(getImmediateSubNodes != null);
+            DebugCheck.NotNull(isLeaf);
+            DebugCheck.NotNull(getImmediateSubNodes);
 
             var nodes = new Stack<TNode>();
             nodes.Push(root);

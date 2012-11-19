@@ -10,8 +10,9 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -30,28 +31,28 @@ namespace System.Data.Entity.Internal
         private bool? _hasModel;
 
         /// <summary>
-        ///     Creates a new LazyInternalConnection using convention to calculate the connection.  
+        ///     Creates a new LazyInternalConnection using convention to calculate the connection.
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(string nameOrConnectionString)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
+            DebugCheck.NotEmpty(nameOrConnectionString);
 
             _nameOrConnectionString = nameOrConnectionString;
             AppConfig = AppConfig.DefaultInstance;
         }
 
         /// <summary>
-        ///     Creates a new LazyInternalConnection targeting a specific database.  
+        ///     Creates a new LazyInternalConnection targeting a specific database.
         ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name="connectionInfo"> The connection to target. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(DbConnectionInfo connectionInfo)
         {
-            Contract.Requires(connectionInfo != null);
+            DebugCheck.NotNull(connectionInfo);
 
             _connectionInfo = connectionInfo;
             AppConfig = AppConfig.DefaultInstance;
@@ -131,7 +132,9 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value> <c>true</c> if connection contain model info; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if connection contain model info; otherwise, <c>false</c> .
+        /// </value>
         public override bool ConnectionHasModel
         {
             get
@@ -227,7 +230,7 @@ namespace System.Data.Entity.Internal
         {
             if (UnderlyingConnection == null)
             {
-                Contract.Assert(AppConfig != null);
+                Debug.Assert(AppConfig != null);
 
                 string name;
                 if (_connectionInfo != null)
@@ -296,7 +299,7 @@ namespace System.Data.Entity.Internal
                 OnConnectionInitialized();
             }
 
-            Contract.Assert(UnderlyingConnection != null, "Connection should have been initialized by some mechanism.");
+            Debug.Assert(UnderlyingConnection != null, "Connection should have been initialized by some mechanism.");
         }
 
         /// <summary>
@@ -308,7 +311,7 @@ namespace System.Data.Entity.Internal
         /// <returns> True if a connection from the app.config file was found and used. </returns>
         private bool TryInitializeFromAppConfig(string name, AppConfig config)
         {
-            Contract.Requires(config != null);
+            DebugCheck.NotNull(config);
 
             var appConfigConnection = FindConnectionInConfig(name, config);
             if (appConfigConnection != null)
@@ -380,7 +383,7 @@ namespace System.Data.Entity.Internal
         private void CreateConnectionFromProviderName(string providerInvariantName)
         {
             var factory = DbProviderFactories.GetFactory(providerInvariantName);
-            Contract.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
+            Debug.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
 
             UnderlyingConnection = factory.CreateConnection();
 

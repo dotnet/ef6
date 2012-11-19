@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -15,17 +16,17 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
     ///     --MappingFragment
     ///     --EntityTypeMapping
     ///     --MappingFragment
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
-    ///     This class represents the metadata for all the extent map elements in the 
+    ///     This class represents the metadata for all the extent map elements in the
     ///     above example namely EntitySetMapping, AssociationSetMapping and CompositionSetMapping.
     ///     The SetMapping elements that are children of the EntityContainerMapping element
     ///     can be accessed through the properties on this type.
@@ -135,18 +136,18 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="typeMapping"> </param>
         internal void AddTypeMapping(StorageTypeMapping typeMapping)
         {
-            Contract.Requires(typeMapping != null);
+            DebugCheck.NotNull(typeMapping);
 
             m_typeMappings.Add(typeMapping);
         }
 
         internal void RemoveTypeMapping(StorageTypeMapping typeMapping)
         {
-            Contract.Requires(typeMapping != null);
+            DebugCheck.NotNull(typeMapping);
 
             m_typeMappings.Remove(typeMapping);
         }
-        
+
         internal bool ContainsTypeSpecificQueryView(Triple key)
         {
             return m_typeSpecificQueryViews.ContainsKey(key);

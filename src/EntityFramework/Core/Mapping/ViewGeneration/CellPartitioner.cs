@@ -65,7 +65,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     var linkViaForeignKey = OverlapViaForeignKeys(cell, existingCell);
                     var linkViaRelationship = AreCellsConnectedViaRelationship(cell, existingCell);
 
-                    if (sameExtent || linkViaForeignKey || linkViaRelationship)
+                    if (sameExtent
+                        || linkViaForeignKey
+                        || linkViaRelationship)
                     {
                         graph.AddEdge(existingCell, cell);
                     }

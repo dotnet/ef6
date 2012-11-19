@@ -4,8 +4,8 @@ namespace System.Data.Entity.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Validation
             : base(message)
         {
             // Users should be able to set the errors to null but we should not
-            Contract.Requires(entityValidationResults != null);
+            Check.NotNull(entityValidationResults, "entityValidationResults");
 
             _state.InititializeValidationResults(entityValidationResults);
             SubscribeToSerializeObjectState();
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Validation
             : base(message, innerException)
         {
             // Users should be able to set the errors to null but we should not. 
-            Contract.Requires(entityValidationResults != null);
+            Check.NotNull(entityValidationResults, "entityValidationResults");
 
             _state.InititializeValidationResults(entityValidationResults);
             SubscribeToSerializeObjectState();

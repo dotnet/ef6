@@ -6,13 +6,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal static class EdmPropertyExtensions
     {
         public static StoreGeneratedPattern? GetStoreGeneratedPattern(this EdmProperty property)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             return
                 (StoreGeneratedPattern?)
@@ -22,21 +22,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static void SetStoreGeneratedPattern(
             this EdmProperty property, StoreGeneratedPattern storeGeneratedPattern)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             property.Annotations.SetAnnotation(XmlConstants.StoreGeneratedPattern, storeGeneratedPattern);
         }
 
         public static object GetConfiguration(this EdmProperty property)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             return property.Annotations.GetConfiguration();
         }
 
         public static void SetConfiguration(this EdmProperty property, object configuration)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             property.Annotations.SetConfiguration(configuration);
         }

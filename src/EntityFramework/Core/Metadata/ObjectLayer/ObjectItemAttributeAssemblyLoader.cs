@@ -786,8 +786,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private void TrackClosure(Type type)
         {
-            if (SourceAssembly != type.Assembly &&
-                !CacheEntry.ClosureAssemblies.Contains(type.Assembly) &&
+            if (SourceAssembly != type.Assembly
+                &&
+                !CacheEntry.ClosureAssemblies.Contains(type.Assembly)
+                &&
                 IsSchemaAttributePresent(type.Assembly)
                 &&
                 !(type.IsGenericType &&

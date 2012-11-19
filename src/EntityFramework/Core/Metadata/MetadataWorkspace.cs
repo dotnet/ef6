@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -61,8 +61,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public MetadataWorkspace(IEnumerable<string> paths, IEnumerable<Assembly> assembliesToConsider)
         {
             // we are intentionally not checking to see if the paths enumerable is empty
-            Contract.Requires(paths != null);
-            Contract.Requires(assembliesToConsider != null);
+            Check.NotNull(paths, "paths");
+            Check.NotNull(assembliesToConsider, "assembliesToConsider");
 
             EntityUtil.CheckArgumentContainsNull(ref paths, "paths");
             EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
@@ -116,7 +116,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             dataSpace = DataSpace.CSSpace;
             using (var csSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
             {
-                if (csSpaceReaders.Any() && null != _itemsCSpace
+                if (csSpaceReaders.Any()
+                    && null != _itemsCSpace
                     && null != _itemsSSpace)
                 {
                     _itemsCSSpace = new StorageMappingItemCollection(
@@ -171,18 +172,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Creates a new <see cref="DbQueryCommandTree" /> bound to this metadata workspace based on the specified query expression.
         /// </summary>
-        /// <param name="query"> A <see cref="DbExpression" /> that defines the query </param>
-        /// <returns> A new <see cref="DbQueryCommandTree" /> with the specified expression as it's <see
-        ///      cref="DbQueryCommandTree.Query" /> property </returns>
-        /// <exception cref="ArgumentNullException">If
+        /// <param name="query">
+        ///     A <see cref="DbExpression" /> that defines the query
+        /// </param>
+        /// <returns>
+        ///     A new <see cref="DbQueryCommandTree" /> with the specified expression as it's
+        ///     <see
+        ///         cref="DbQueryCommandTree.Query" />
+        ///     property
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     If
         ///     <paramref name="query" />
-        ///     is null</exception>
-        /// <exception cref="ArgumentException">If
+        ///     is null
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If
         ///     <paramref name="query" />
-        ///     contains metadata that cannot be resolved in this metadata workspace</exception>
-        /// <exception cref="ArgumentException">If
+        ///     contains metadata that cannot be resolved in this metadata workspace
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If
         ///     <paramref name="query" />
-        ///     is not structurally valid because it contains unresolvable variable references</exception>
+        ///     is not structurally valid because it contains unresolvable variable references
+        /// </exception>
         public virtual DbQueryCommandTree CreateQueryCommandTree(DbExpression query)
         {
             return new DbQueryCommandTree(this, DataSpace.CSpace, query);
@@ -216,7 +229,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [CLSCompliant(false)]
         public virtual void RegisterItemCollection(ItemCollection collection)
         {
-            Contract.Requires(collection != null);
+            Check.NotNull(collection, "collection");
 
             ItemCollection existing;
 
@@ -347,7 +360,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     break;
             }
 
-            if (versionToRegister != _schemaVersion &&
+            if (versionToRegister != _schemaVersion
+                &&
                 versionToRegister != XmlConstants.UndefinedVersion
                 &&
                 _schemaVersion != XmlConstants.UndefinedVersion)
@@ -395,7 +409,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public virtual void LoadFromAssembly(Assembly assembly, Action<string> logLoadMessage)
         {
-            Contract.Requires(assembly != null);
+            Check.NotNull(assembly, "assembly");
             var collection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
             ExplicitLoadFromAssembly(assembly, collection, logLoadMessage);
         }
@@ -420,10 +434,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right 
+        ///     Implicit loading means that we are trying to help the user find the right
         ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
         ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        /// 
         ///     Load metadata from the type's assembly into the OSpace ItemCollection.
         ///     If type comes from known source, has Ecma or Microsoft PublicKeyToken then the type's assembly is not
         ///     loaded, but the callingAssembly and its referenced assemblies are loaded.
@@ -926,7 +939,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="dataSpace"> The dataspace for the item collection that should be returned </param>
         /// <param name="collection"> The collection registered for the specified dataspace, if any </param>
-        /// <returns> <c>true</c> if an item collection is currently registered for the specified space; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if an item collection is currently registered for the specified space; otherwise <c>false</c> .
+        /// </returns>
         /// <exception cref="System.ArgumentNullException">if space argument is null</exception>
         [CLSCompliant(false)]
         public virtual bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
@@ -980,7 +995,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     The method returns the OSpace structural type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type
         ///     cannot be determined, an ArgumentException is thrown.
         /// </summary>
         /// <param name="edmSpaceType"> The CSpace type to look up </param>
@@ -992,7 +1007,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     This method returns the OSpace structural type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type
         ///     cannot be determined, the method returns false and sets the out parameter
         ///     to null.
         /// </summary>
@@ -1007,7 +1022,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     The method returns the OSpace enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type
         ///     cannot be determined, an ArgumentException is thrown.
         /// </summary>
         /// <param name="edmSpaceType"> The CSpace type to look up </param>
@@ -1019,7 +1034,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     This method returns the OSpace enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type
         ///     cannot be determined, the method returns false and sets the out parameter
         ///     to null.
         /// </summary>
@@ -1034,7 +1049,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Helper method returning the OSpace enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type
         ///     cannot be determined, an ArgumentException is thrown.
         /// </summary>
         /// <param name="edmSpaceType"> The CSpace type to look up </param>
@@ -1058,7 +1073,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Helper method returning the OSpace structural or enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type 
+        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type
         ///     cannot be determined, the method returns false and sets the out parameter
         ///     to null.
         /// </summary>
@@ -1069,7 +1084,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryGetObjectSpaceType<T>(T edmSpaceType, out T objectSpaceType)
             where T : EdmType
         {
-            Contract.Requires(edmSpaceType != null);
+            DebugCheck.NotNull(edmSpaceType);
 
             Debug.Assert(
                 edmSpaceType == null || edmSpaceType is StructuralType || edmSpaceType is EnumType,
@@ -1182,7 +1197,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryGetEdmSpaceType<T>(T objectSpaceType, out T edmSpaceType)
             where T : EdmType
         {
-            Contract.Requires(objectSpaceType != null);
+            DebugCheck.NotNull(objectSpaceType);
 
             Debug.Assert(
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
@@ -1300,7 +1315,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal virtual TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
-            Contract.Requires(edmSpaceTypeUsage != null);
+            DebugCheck.NotNull(edmSpaceTypeUsage);
             Debug.Assert(edmSpaceTypeUsage.EdmType != null, "The TypeUsage object does not have an EDMType.");
 
             EdmType clrType = null;
@@ -1434,8 +1449,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="entityType"> An EntityType that participates in the given EntitySet </param>
         /// <returns> Edm Members for which original Value is required </returns>
         /// <remarks>
-        ///     This method returns the following groups of members: 0, 1, 2, 3, 3.1, 4, 4.1. (see group descriptions above). 
-        ///     This method is marked as obsolete since it does not support partial update scenarios as it does not return 
+        ///     This method returns the following groups of members: 0, 1, 2, 3, 3.1, 4, 4.1. (see group descriptions above).
+        ///     This method is marked as obsolete since it does not support partial update scenarios as it does not return
         ///     members from group 5 and changing it to return these members would be a breaking change.
         /// </remarks>
         [Obsolete("Use MetadataWorkspace.GetRelevantMembersForUpdate(EntitySetBase, EntityTypeBase, bool) instead")]
@@ -1475,13 +1490,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="entitySet"> An EntitySet belonging to the C-Space </param>
         /// <param name="entityType"> An EntityType that participates in the given EntitySet </param>
         /// <param name="interestingMembersKind"> Scenario the members should be returned for. </param>
-        /// <returns> ReadOnlyCollection of interesting members for the requested scenario ( <paramref
-        ///      name="interestingMembersKind" /> ). </returns>
+        /// <returns>
+        ///     ReadOnlyCollection of interesting members for the requested scenario (
+        ///     <paramref
+        ///         name="interestingMembersKind" />
+        ///     ).
+        /// </returns>
         private ReadOnlyCollection<EdmMember> GetInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, StorageMappingItemCollection.InterestingMembersKind interestingMembersKind)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             Debug.Assert(entitySet.EntityContainer != null);
 

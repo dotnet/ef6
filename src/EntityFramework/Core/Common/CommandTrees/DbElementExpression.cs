@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents the conversion of the specified set operand to a singleton.
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Is the result type of the element equal to the result type of the single property 
+        ///     Is the result type of the element equal to the result type of the single property
         ///     of the element of its operand?
         /// </summary>
         internal bool IsSinglePropertyUnwrapped
@@ -42,38 +43,34 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
-            if (visitor != null)
-            {
-                visitor.Visit(this);
-            }
-            else
-            {
-                throw new ArgumentNullException("visitor");
-            }
+            Check.NotNull(visitor, "visitor");
+
+            visitor.Visit(this);
         }
 
         /// <summary>
         ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
         /// </summary>
         /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType"> The type of the result produced by <paramref name="visitor" /> </typeparam>
+        /// <typeparam name="TResultType">
+        ///     The type of the result produced by <paramref name="visitor" />
+        /// </typeparam>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
-        /// <returns> An instance of <typeparamref name="TResultType" /> . </returns>
+        ///     is null
+        /// </exception>
+        /// <returns>
+        ///     An instance of <typeparamref name="TResultType" /> .
+        /// </returns>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
-            if (visitor != null)
-            {
-                return visitor.Visit(this);
-            }
-            else
-            {
-                throw new ArgumentNullException("visitor");
-            }
+            Check.NotNull(visitor, "visitor");
+
+            return visitor.Visit(this);
         }
     }
 }

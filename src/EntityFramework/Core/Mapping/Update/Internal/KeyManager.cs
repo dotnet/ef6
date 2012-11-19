@@ -340,7 +340,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         /// <summary>
         ///     There are three states:
-        /// 
         ///     - No temp keys with the given value exists (return false, out null)
         ///     - A single temp key exists with the given value (return true, out non null)
         ///     - Multiple temp keys exist with the given value (return true, out null)

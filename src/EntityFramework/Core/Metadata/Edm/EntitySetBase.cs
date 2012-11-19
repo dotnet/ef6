@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Class for representing a entity set
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _name; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _name = value;
@@ -138,7 +138,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _table; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
 
                 _table = value;
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _schema; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
 
                 _schema = value;
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()

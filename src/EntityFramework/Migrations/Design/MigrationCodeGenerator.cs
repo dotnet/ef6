@@ -6,13 +6,11 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
     ///     Base class for providers that generate code for code-based migrations.
     /// </summary>
-    [ContractClass(typeof(MigrationCodeGeneratorContracts))]
     public abstract class MigrationCodeGenerator
     {
         /// <summary>
@@ -80,29 +78,5 @@ namespace System.Data.Entity.Migrations.Design
 
             return namespaces;
         }
-
-        #region Contracts
-
-        [ContractClassFor(typeof(MigrationCodeGenerator))]
-        internal abstract class MigrationCodeGeneratorContracts : MigrationCodeGenerator
-        {
-            public override ScaffoldedMigration Generate(
-                string migrationId,
-                IEnumerable<MigrationOperation> operations,
-                string sourceModel,
-                string targetModel,
-                string @namespace,
-                string className)
-            {
-                Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-                Contract.Requires(operations != null);
-                Contract.Requires(!string.IsNullOrWhiteSpace(targetModel));
-                Contract.Requires(!string.IsNullOrWhiteSpace(className));
-
-                return default(ScaffoldedMigration);
-            }
-        }
-
-        #endregion
     }
 }

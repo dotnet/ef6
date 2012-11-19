@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -59,15 +59,20 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     for an OSpace property, set the property value on a clr instance
         /// </summary>
-        /// <exception cref="System.Data.ConstraintException">If
+        /// <exception cref="System.Data.ConstraintException">
+        ///     If
         ///     <paramref name="value" />
-        ///     is null for a non nullable property.</exception>
-        /// <exception cref="System.InvalidOperationException">Invalid cast of
+        ///     is null for a non nullable property.
+        /// </exception>
+        /// <exception cref="System.InvalidOperationException">
+        ///     Invalid cast of
         ///     <paramref name="value" />
-        ///     to property type.</exception>
+        ///     to property type.
+        /// </exception>
         /// <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
         /// <permission cref="System.Security.Permissions.ReflectionPermission">If the property setter is not public or declaring class is not public.</permission>
-        /// <permission cref="System.Security.NamedPermissionSet">Demand for FullTrust if the property setter or declaring class has a
+        /// <permission cref="System.Security.NamedPermissionSet">
+        ///     Demand for FullTrust if the property setter or declaring class has a
         ///     <see cref="System.Security.Permissions.SecurityAction.LinkDemand" />
         /// </permission>
         internal static void SetValue(EdmProperty property, object target, object value)
@@ -94,7 +99,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to 
+        ///     Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to
         ///     call GetRelatedCollection or GetRelatedReference
         /// </summary>
         internal static RelatedEnd GetRelatedEnd(
@@ -114,8 +119,8 @@ namespace System.Data.Entity.Core.Objects
 
         internal static Action<object, object> CreateNavigationPropertySetter(Type declaringType, PropertyInfo navigationProperty)
         {
-            Contract.Requires(declaringType != null);
-            Contract.Requires(navigationProperty != null);
+            DebugCheck.NotNull(declaringType);
+            DebugCheck.NotNull(navigationProperty);
 
             var setMethod = navigationProperty.GetSetMethod(true);
 
@@ -167,7 +172,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal static Func<object> CreateConstructor(Type type)
         {
-            Contract.Assert(type != null);
+            Debug.Assert(type != null);
 
             GetConstructorForType(type);
 
@@ -182,8 +187,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal static Func<object, object> CreatePropertyGetter(Type entityDeclaringType, PropertyInfo propertyInfo)
         {
-            Contract.Assert(entityDeclaringType != null);
-            Contract.Assert(propertyInfo != null);
+            Debug.Assert(entityDeclaringType != null);
+            Debug.Assert(propertyInfo != null);
 
             var getter = propertyInfo.GetGetMethod(nonPublic: true);
 
@@ -226,7 +231,6 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     generate a delegate equivalent to
-        /// 
         ///     // if Property is Nullable value type
         ///     private void MemberSetter(object target, object value) {
         ///     if (AllowNull &amp;&amp; (null == value)) {
@@ -240,7 +244,6 @@ namespace System.Data.Entity.Core.Objects
         ///     ThrowInvalidValue(value, TargetType.Name, PropertyName);
         ///     return
         ///     }
-        /// 
         ///     // when PropertyType is a value type
         ///     private void MemberSetter(object target, object value) {
         ///     if (value is PropertyType) {
@@ -249,8 +252,7 @@ namespace System.Data.Entity.Core.Objects
         ///     }
         ///     ThrowInvalidValue(value, TargetType.Name, PropertyName);
         ///     return
-        ///     } 
-        /// 
+        ///     }
         ///     // when PropertyType is a reference type
         ///     private void MemberSetter(object target, object value) {
         ///     if ((AllowNull &amp;&amp; (null == value)) || (value is PropertyType)) {
@@ -261,12 +263,14 @@ namespace System.Data.Entity.Core.Objects
         ///     return
         ///     }
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">If the method is missing or static or has indexed parameters.
+        /// <exception cref="System.InvalidOperationException">
+        ///     If the method is missing or static or has indexed parameters.
         ///     Or if the declaring type is a value type.
         ///     Or if the parameter type is a pointer.
         ///     Or if the method or declaring class has a
         ///     <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         internal static Action<object, object> CreatePropertySetter(Type entityDeclaringType, PropertyInfo propertyInfo, bool allowNull)
         {
             ValidateSetterProperty(propertyInfo);
@@ -307,7 +311,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal static void ValidateSetterProperty(PropertyInfo propertyInfo)
         {
-            Contract.Assert(propertyInfo != null);
+            Debug.Assert(propertyInfo != null);
 
             var setterMethodInfo = propertyInfo.GetSetMethod(nonPublic: true);
 

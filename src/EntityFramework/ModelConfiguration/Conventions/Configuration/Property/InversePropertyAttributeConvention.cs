@@ -20,6 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, ModelConfiguration configuration,
             InversePropertyAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             var navigationPropertyConfiguration
                 = configuration
                     .Entity(memberInfo.ReflectedType)

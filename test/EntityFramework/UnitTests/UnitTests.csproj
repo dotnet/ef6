@@ -470,7 +470,6 @@
     <Compile Include="Utilities\DbProviderInfoExtensionsTests.cs" />
     <Compile Include="Utilities\PropertyInfoExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPathTests.cs" />
-    <Compile Include="Utilities\RuntimeFailureMethodsTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="InternalsVisibleTo.cs" />
     <Compile Include="AppConfigTests.cs" />

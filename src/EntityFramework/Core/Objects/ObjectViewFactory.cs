@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Objects
     /// <remarks>
     ///     The factory methods construct an ObjectView whose generic type parameter (and typed of elements in the binding list)
     ///     is of the same type or a more specific derived type of the generic type of the ObjectQuery or EntityCollection.
-    ///     The EDM type of the query results or EntityType or the EntityCollection is examined to determine 
+    ///     The EDM type of the query results or EntityType or the EntityCollection is examined to determine
     ///     the appropriate type to be used.
     ///     For example, if you have an ObjectQuery whose generic type is "object", but the EDM result type of the Query maps
     ///     to the CLR type "Customer", then the ObjectView returned will specify a generic type of "Customer", and not "object".
@@ -40,18 +40,28 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> CLR type of query result elements declared by the caller. </typeparam>
         /// <param name="elementEdmTypeUsage"> The EDM type of the query results, used as the primary means of determining the CLR type of list returned by this method. </param>
         /// <param name="queryResults"> IEnumerable used to enumerate query results used to populate binding list. Must not be null. </param>
-        /// <param name="objectContext"> <see cref="ObjectContext" /> associated with the query from which results were obtained. Must not be null. </param>
-        /// <param name="forceReadOnly"> <b>True</b> to prevent modifications to the binding list built from the query result; otherwise <b>false</b> . Note that other conditions may prevent the binding list from being modified, so a value of <b>false</b> supplied for this parameter doesn't necessarily mean that the list will be writable. </param>
-        /// <param name="singleEntitySet"> If the query results are composed of entities that only exist in a single <see
-        ///      cref="EntitySet" /> , the value of this parameter is the single EntitySet. Otherwise the value of this parameter should be null. </param>
-        /// <returns> <see cref="IBindingList" /> that is suitable for data binding. </returns>
+        /// <param name="objectContext">
+        ///     <see cref="ObjectContext" /> associated with the query from which results were obtained. Must not be null.
+        /// </param>
+        /// <param name="forceReadOnly">
+        ///     <b>True</b> to prevent modifications to the binding list built from the query result; otherwise <b>false</b> . Note that other conditions may prevent the binding list from being modified, so a value of <b>false</b> supplied for this parameter doesn't necessarily mean that the list will be writable.
+        /// </param>
+        /// <param name="singleEntitySet">
+        ///     If the query results are composed of entities that only exist in a single
+        ///     <see
+        ///         cref="EntitySet" />
+        ///     , the value of this parameter is the single EntitySet. Otherwise the value of this parameter should be null.
+        /// </param>
+        /// <returns>
+        ///     <see cref="IBindingList" /> that is suitable for data binding.
+        /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static IBindingList CreateViewForQuery<TElement>(
             TypeUsage elementEdmTypeUsage, IEnumerable<TElement> queryResults, ObjectContext objectContext, bool forceReadOnly,
             EntitySet singleEntitySet)
         {
-            Contract.Requires(queryResults != null);
-            Contract.Requires(objectContext != null);
+            DebugCheck.NotNull(queryResults);
+            DebugCheck.NotNull(objectContext);
 
             Type clrElementType = null;
             var ospaceElementTypeUsage = GetOSpaceTypeUsage(elementEdmTypeUsage, objectContext);
@@ -120,7 +130,9 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> CLR type of the elements of the EntityCollection. </typeparam>
         /// <param name="entityType"> The EntityType of the elements in the collection. This should either be the same as the EntityType that corresponds to the CLR TElement type, or a EntityType derived from the declared EntityCollection element type. </param>
         /// <param name="entityCollection"> The EntityCollection from which a binding list is created. </param>
-        /// <returns> <see cref="IBindingList" /> that is suitable for data binding. </returns>
+        /// <returns>
+        ///     <see cref="IBindingList" /> that is suitable for data binding.
+        /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static IBindingList CreateViewForEntityCollection<TElement>(
             EntityType entityType, EntityCollection<TElement> entityCollection)
@@ -273,8 +285,12 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <typeparam name="TElement"> CLR element type declared by the caller. There is no requirement that this method return the same type, or a type compatible with the declared type; it is merely a suggestion as to which type might be used. </typeparam>
         /// <param name="ospaceEdmType"> The EDM O-Space type of the items in a particular query result. </param>
-        /// <returns> <see cref="Type" /> instance that represents the CLR type that corresponds to the supplied EDM item type; or null if the EDM type does not map to a CLR type. Null is returned in the case where <paramref
-        ///      name="ospaceEdmType" /> is a <see cref="RowType" /> , and no CLR type mapping is specified in the RowType metadata. </returns>
+        /// <returns>
+        ///     <see cref="Type" /> instance that represents the CLR type that corresponds to the supplied EDM item type; or null if the EDM type does not map to a CLR type. Null is returned in the case where
+        ///     <paramref
+        ///         name="ospaceEdmType" />
+        ///     is a <see cref="RowType" /> , and no CLR type mapping is specified in the RowType metadata.
+        /// </returns>
         private static Type GetClrType<TElement>(EdmType ospaceEdmType)
         {
             Type clrType;

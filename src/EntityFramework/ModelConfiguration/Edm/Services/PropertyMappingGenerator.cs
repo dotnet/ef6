@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class PropertyMappingGenerator : StructuralTypeMappingGenerator
@@ -26,10 +26,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             IList<EdmProperty> propertyPath,
             bool createNewColumn)
         {
-            Contract.Requires(entityType != null);
-            Contract.Requires(properties != null);
-            Contract.Requires(entityTypeMappingFragment != null);
-            Contract.Requires(propertyPath != null);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(properties);
+            DebugCheck.NotNull(entityTypeMappingFragment);
+            DebugCheck.NotNull(propertyPath);
 
             var rootDeclaredProperties = entityType.GetRootType().DeclaredProperties;
 

@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     Requires: a public type with a public, default constructor. Returns a column map initializing the type
-        ///     and all properties of the type with a public setter taking a primitive type and having a corresponding 
+        ///     and all properties of the type with a public setter taking a primitive type and having a corresponding
         ///     column in the reader.
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -163,10 +163,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 EdmType modelType;
                 int ordinal;
 
-                if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal) &&
-                    workspace.TryDetermineCSpaceModelType(propType, out modelType) &&
-                    (Helper.IsScalarType(modelType)) &&
-                    prop.CanWrite && prop.GetIndexParameters().Length == 0
+                if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal)
+                    &&
+                    workspace.TryDetermineCSpaceModelType(propType, out modelType)
+                    &&
+                    (Helper.IsScalarType(modelType))
+                    &&
+                    prop.CanWrite
+                    && prop.GetIndexParameters().Length == 0
                     && null != prop.GetSetMethod(nonPublic: true))
                 {
                     memberInfo.Add(
@@ -221,7 +225,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Build the entityColumnMap from a store datareader, a type and an entitySet and 
+        ///     Build the entityColumnMap from a store datareader, a type and an entitySet and
         ///     a list ofproperties.
         /// </summary>
         /// <param name="storeDataReader"> </param>
@@ -371,8 +375,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Given a store datareader, a column name, find the column ordinal
         ///     in the datareader with the name of the column.
-        /// 
-        ///     We only have the functionImport provided to include it in the exception 
+        ///     We only have the functionImport provided to include it in the exception
         ///     message.
         /// </summary>
         /// <param name="storeDataReader"> </param>

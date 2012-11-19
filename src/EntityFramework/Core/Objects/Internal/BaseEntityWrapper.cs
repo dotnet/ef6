@@ -161,7 +161,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         // See IEntityWrapper documentation
         public void DetachContext()
         {
-            if (Context != null &&
+            if (Context != null
+                &&
                 Context.ObjectStateManager.TransactionManager.IsAttachTracking
                 &&
                 Context.ObjectStateManager.TransactionManager.OriginalMergeOption == MergeOption.NoTracking)

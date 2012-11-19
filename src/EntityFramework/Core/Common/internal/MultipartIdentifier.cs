@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.Internal
         ///     Core function  for parsing the multipart identifer string.
         ///     Note:  Left quote strings need to correspond 1 to 1 with the right quote strings
         ///     example: "ab" "cd",  passed in for the left and the right quote
-        ///     would set a or b as a starting quote character.  
+        ///     would set a or b as a starting quote character.
         ///     If a is the starting quote char then c would be the ending quote char
         ///     otherwise if b is the starting quote char then d would be the ending quote character.
         /// </summary>

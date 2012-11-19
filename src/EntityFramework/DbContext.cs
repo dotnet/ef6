@@ -9,9 +9,9 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -27,35 +27,28 @@ namespace System.Data.Entity
     ///     instance of the derived class is created.  This behavior can be modified by applying the
     ///     <see cref="SuppressDbSetInitializationAttribute" />  attribute to either the entire derived context
     ///     class, or to individual properties on the class.
-    /// 
     ///     The Entity Data Model backing the context can be specified in several ways.  When using the Code First
     ///     approach, the <see cref="DbSet{TEntity}" /> properties on the derived context are used to build a model
     ///     by convention.  The protected OnModelCreating method can be overridden to tweak this model.  More
     ///     control over the model used for the Model First approach can be obtained by creating a <see cref="DbCompiledModel" />
     ///     explicitly from a <see cref="DbModelBuilder" /> and passing this model to one of the DbContext constructors.
-    /// 
     ///     When using the Database First or Model First approach the Entity Data Model can be created using the
     ///     Entity Designer (or manually through creation of an EDMX file) and then this model can be specified using
     ///     entity connection string or an <see cref="System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
-    /// 
     ///     The connection to the database (including the name of the database) can be specified in several ways.
     ///     If the parameterless DbContext constructor is called from a derived context, then the name of the derived context
     ///     is used to find a connection string in the app.config or web.config file.  If no connection string is found, then
     ///     the name is passed to the DefaultConnectionFactory registered on the <see cref="Entity.Database" /> class.  The connection
     ///     factory then uses the context name as the database name in a default connection string.  (This default connection
     ///     string points to .\SQLEXPRESS on the local machine unless a different DefaultConnectionFactory is registered.)
-    /// 
     ///     Instead of using the derived context name, the connection/database name can also be specified explicitly by
     ///     passing the name to one of the DbContext constructors that takes a string.  The name can also be passed in
     ///     the form "name=myname", in which case the name must be found in the config file or an exception will be thrown.
-    /// 
     ///     Note that the connection found in the app.config or web.config file can be a normal database connection
     ///     string (not a special Entity Framework connection string) in which case the DbContext will use Code First.
     ///     However, if the connection found in the config file is a special Entity Framework connection string, then the
     ///     DbContext will use Database/Model First and the model specified in the connection string will be used.
-    /// 
     ///     An existing or explicitly created DbConnection can also be used instead of the database/connection name.
-    /// 
     ///     A <see cref="DbModelBuilderVersionAttribute" /> can be applied to a class derived from DbContext to set the
     ///     version of conventions used by the context when it creates a model. If no attribute is applied then the
     ///     latest version of conventions will be used.
@@ -89,7 +82,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected DbContext(DbCompiledModel model)
         {
-            Contract.Requires(model != null);
+            Check.NotNull(model, "model");
 
             InitializeLazyInternalContext(new LazyInternalConnection(GetType().DatabaseName()), model);
         }
@@ -103,7 +96,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
             InitializeLazyInternalContext(new LazyInternalConnection(nameOrConnectionString));
         }
@@ -118,8 +111,8 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(string nameOrConnectionString, DbCompiledModel model)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
-            Contract.Requires(model != null);
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
+            Check.NotNull(model, "model");
 
             InitializeLazyInternalContext(new LazyInternalConnection(nameOrConnectionString), model);
         }
@@ -130,11 +123,13 @@ namespace System.Data.Entity
         ///     is <c>false</c>.
         /// </summary>
         /// <param name="existingConnection"> An existing connection to use for the new context. </param>
-        /// <param name="contextOwnsConnection"> If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
+        /// <param name="contextOwnsConnection">
+        ///     If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
+        /// </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, bool contextOwnsConnection)
         {
-            Contract.Requires(existingConnection != null);
+            Check.NotNull(existingConnection, "existingConnection");
 
             InitializeLazyInternalContext(new EagerInternalConnection(existingConnection, contextOwnsConnection));
         }
@@ -146,13 +141,15 @@ namespace System.Data.Entity
         ///     is <c>false</c>.
         ///     <param name="existingConnection"> An existing connection to use for the new context. </param>
         ///     <param name="model"> The model that will back this context. </param>
-        ///     <param name="contextOwnsConnection"> If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
+        ///     <param name="contextOwnsConnection">
+        ///         If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
+        ///     </param>
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
         {
-            Contract.Requires(existingConnection != null);
-            Contract.Requires(model != null);
+            Check.NotNull(existingConnection, "existingConnection");
+            Check.NotNull(model, "model");
 
             InitializeLazyInternalContext(new EagerInternalConnection(existingConnection, contextOwnsConnection), model);
         }
@@ -160,11 +157,13 @@ namespace System.Data.Entity
         /// <summary>
         ///     Constructs a new context instance around an existing ObjectContext.
         ///     <param name="objectContext"> An existing ObjectContext to wrap with the new context. </param>
-        ///     <param name="dbContextOwnsObjectContext"> If set to <c>true</c> the ObjectContext is disposed when the DbContext is disposed, otherwise the caller must dispose the connection. </param>
+        ///     <param name="dbContextOwnsObjectContext">
+        ///         If set to <c>true</c> the ObjectContext is disposed when the DbContext is disposed, otherwise the caller must dispose the connection.
+        ///     </param>
         /// </summary>
         public DbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
         {
-            Contract.Requires(objectContext != null);
+            Check.NotNull(objectContext, "objectContext");
 
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
 
@@ -266,7 +265,7 @@ namespace System.Data.Entity
         /// </remarks>
         public DbSet Set(Type entityType)
         {
-            Contract.Requires(entityType != null);
+            Check.NotNull(entityType, "entityType");
 
             return (DbSet)InternalContext.Set(entityType);
         }
@@ -331,9 +330,9 @@ namespace System.Data.Entity
         /// </summary>
         /// <returns> Collection of validation results for invalid entities. The collection is never null and must not contain null values or results for valid entities. </returns>
         /// <remarks>
-        ///     1. This method calls DetectChanges() to determine states of the tracked entities unless 
+        ///     1. This method calls DetectChanges() to determine states of the tracked entities unless
         ///     DbContextConfiguration.AutoDetectChangesEnabled is set to false.
-        ///     2. By default only Added on Modified entities are validated. The user is able to change this behavior 
+        ///     2. By default only Added on Modified entities are validated. The user is able to change this behavior
         ///     by overriding ShouldValidateEntity method.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -371,7 +370,7 @@ namespace System.Data.Entity
         /// <returns> true to proceed with validation; false otherwise. </returns>
         protected virtual bool ShouldValidateEntity(DbEntityEntry entityEntry)
         {
-            Contract.Requires(entityEntry != null);
+            Check.NotNull(entityEntry, "entityEntry");
 
             return (entityEntry.State & (EntityState.Added | EntityState.Modified)) != 0;
         }
@@ -381,14 +380,20 @@ namespace System.Data.Entity
         ///     Called by <see cref="GetValidationErrors" />.
         /// </summary>
         /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
-        /// <param name="items"> User-defined dictionary containing additional info for custom validation. It will be passed to <see
-        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext" /> and will be exposed as <see
-        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" /> . This parameter is optional and can be null. </param>
+        /// <param name="items">
+        ///     User-defined dictionary containing additional info for custom validation. It will be passed to
+        ///     <see
+        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext" />
+        ///     and will be exposed as
+        ///     <see
+        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" />
+        ///     . This parameter is optional and can be null.
+        /// </param>
         /// <returns> Entity validation result. Possibly null when overridden. </returns>
         protected virtual DbEntityValidationResult ValidateEntity(
             DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            Contract.Requires(entityEntry != null);
+            Check.NotNull(entityEntry, "entityEntry");
 
             return entityEntry.InternalEntry.GetValidationResult(items);
         }
@@ -397,9 +402,15 @@ namespace System.Data.Entity
         ///     Internal method that calls the protected ValidateEntity method.
         /// </summary>
         /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
-        /// <param name="items"> User-defined dictionary containing additional info for custom validation. It will be passed to <see
-        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext" /> and will be exposed as <see
-        ///      cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" /> . This parameter is optional and can be null. </param>
+        /// <param name="items">
+        ///     User-defined dictionary containing additional info for custom validation. It will be passed to
+        ///     <see
+        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext" />
+        ///     and will be exposed as
+        ///     <see
+        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" />
+        ///     . This parameter is optional and can be null.
+        /// </param>
         /// <returns> Entity validation result. Possibly null when ValidateEntity is overridden. </returns>
         internal virtual DbEntityValidationResult CallValidateEntity(DbEntityEntry entityEntry)
         {
@@ -419,7 +430,7 @@ namespace System.Data.Entity
         /// <returns> An entry for the entity. </returns>
         public DbEntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             return new DbEntityEntry<TEntity>(new InternalEntityEntry(InternalContext, entity));
         }
@@ -432,7 +443,7 @@ namespace System.Data.Entity
         /// <returns> An entry for the entity. </returns>
         public DbEntityEntry Entry(object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             return new DbEntityEntry(new InternalEntityEntry(InternalContext, entity));
         }
@@ -480,7 +491,9 @@ namespace System.Data.Entity
         ///     The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created
         ///     is by this context or ownership was passed to this context when this context was created.
         /// </summary>
-        /// <param name="disposing"> <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources. </param>
+        /// <param name="disposing">
+        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
         protected virtual void Dispose(bool disposing)
         {
             InternalContext.Dispose();

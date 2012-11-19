@@ -8,7 +8,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
+    ///     Convention to apply column ordering specified via
+    ///     <see
+    ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
     ///     or the <see cref="DbModelBuilder" /> API. This convention throws if a duplicate configured column order
     ///     is detected.
     /// </summary>
@@ -18,10 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var hasDuplicates
                 = table.Properties
-                    .Select(c => c.GetOrder())
-                    .Where(o => o != null)
-                    .GroupBy(o => o)
-                    .Any(g => g.Count() > 1);
+                       .Select(c => c.GetOrder())
+                       .Where(o => o != null)
+                       .GroupBy(o => o)
+                       .Any(g => g.Count() > 1);
 
             if (hasDuplicates)
             {

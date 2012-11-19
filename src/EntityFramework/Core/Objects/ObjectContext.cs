@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -25,7 +26,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -124,8 +124,8 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     Creates an ObjectContext with the given connection string and
-        ///     default entity container name.  This protected constructor creates and initializes an EntityConnection so that the context 
-        ///     is ready to use; no other initialization is necessary.  The given connection string must be valid for an EntityConnection; 
+        ///     default entity container name.  This protected constructor creates and initializes an EntityConnection so that the context
+        ///     is ready to use; no other initialization is necessary.  The given connection string must be valid for an EntityConnection;
         ///     connection strings for other connection types are not supported.
         /// </summary>
         /// <param name="connectionString"> the connection string to use in the underlying EntityConnection to the store </param>
@@ -260,9 +260,11 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Gets the connection to the store.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">If the
+        /// <exception cref="ObjectDisposedException">
+        ///     If the
         ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.</exception>
+        ///     instance has been disposed.
+        /// </exception>
         public virtual DbConnection Connection
         {
             get
@@ -382,10 +384,12 @@ namespace System.Data.Entity.Core.Objects
         internal bool InMaterialization { get; set; }
 
         /// <summary>
-        ///     Get <see cref="ObjectContextOptions" /> instance that contains options 
+        ///     Get <see cref="ObjectContextOptions" /> instance that contains options
         ///     that affect the behavior of the ObjectContext.
         /// </summary>
-        /// <value> Instance of <see cref="ObjectContextOptions" /> for the current ObjectContext. This value will never be null. </value>
+        /// <value>
+        ///     Instance of <see cref="ObjectContextOptions" /> for the current ObjectContext. This value will never be null.
+        /// </value>
         public virtual ObjectContextOptions ContextOptions
         {
             get { return _options; }
@@ -442,7 +446,6 @@ namespace System.Data.Entity.Core.Objects
         ///     before included (spanned) collections are loaded.  Also, for independent associations,
         ///     any stub entities for related objects that have not been loaded will also be created before
         ///     the event is raised.
-        /// 
         ///     It is possible for an entity object to be created and then thrown away if it is determined
         ///     that an entity with the same ID already exists in the Context.  This event is not raised
         ///     in those cases.
@@ -608,7 +611,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity"> Object to be added. </param>
         public virtual void AddObject(string entitySetName, object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -700,9 +703,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
         internal void AddSingleObject(EntitySet entitySet, IEntityWrapper wrappedEntity, string argumentName)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(wrappedEntity != null);
-            Contract.Requires(wrappedEntity.Entity != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
 
             var key = wrappedEntity.GetEntityKeyFromEntity();
             if (null != (object)key)
@@ -726,12 +729,9 @@ namespace System.Data.Entity.Core.Objects
             // NOTE: AttachContext must be called after adding the object to
             // the cache--otherwise the object might not have a key
             // when the EntityCollections expect it to.            
-            Contract.Assert(
-                ObjectStateManager.TransactionManager.TrackProcessedEntities,
-                "Expected tracking processed entities to be true when adding.");
-            Contract.Assert(
-                ObjectStateManager.TransactionManager.ProcessedEntities != null,
-                "Expected non-null collection when flag set.");
+            Debug.Assert(
+                ObjectStateManager.TransactionManager.TrackProcessedEntities, "Expected tracking processed entities to be true when adding.");
+            Debug.Assert(ObjectStateManager.TransactionManager.ProcessedEntities != null, "Expected non-null collection when flag set.");
 
             ObjectStateManager.TransactionManager.ProcessedEntities.Add(wrappedEntity);
 
@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Objects
         // RelationshipManager while loading the RelatedEnd.
         internal static string ParsePropertySelectorExpression<TEntity>(Expression<Func<TEntity, object>> selector, out bool removedConvert)
         {
-            Contract.Requires(selector != null);
+            DebugCheck.NotNull(selector);
 
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
             // but if we still need to throw, then we should still throw an ArgumentException to avoid a breaking change.
@@ -865,7 +865,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             var bodyAsMember = body as MemberExpression;
-            if (bodyAsMember == null ||
+            if (bodyAsMember == null
+                ||
                 !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
                 ||
                 bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
@@ -887,7 +888,7 @@ namespace System.Data.Entity.Core.Objects
         [Obsolete("Use ApplyCurrentValues instead")]
         public virtual void ApplyPropertyChanges(string entitySetName, object changed)
         {
-            Contract.Requires(changed != null);
+            Check.NotNull(changed, "changed");
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
             ApplyCurrentValues(entitySetName, changed);
@@ -900,7 +901,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="currentEntity"> object with modified properties </param>
         public virtual TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
         {
-            Contract.Requires(currentEntity != null);
+            Check.NotNull(currentEntity, "currentEntity");
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this);
@@ -939,15 +940,17 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     Apply original values to the entity.
-        ///     The entity to update is found based on key values of the <paramref name="originalEntity" /> entity and the given <paramref
-        ///      name="entitySetName" />.
+        ///     The entity to update is found based on key values of the <paramref name="originalEntity" /> entity and the given
+        ///     <paramref
+        ///         name="entitySetName" />
+        ///     .
         /// </summary>
         /// <param name="entitySetName"> Name of EntitySet of entity to be updated. </param>
         /// <param name="originalEntity"> Object with original values. </param>
         /// <returns> Updated entity. </returns>
         public virtual TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
         {
-            Contract.Requires(originalEntity != null);
+            Check.NotNull(originalEntity, "originalEntity");
 
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
             var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this);
@@ -979,7 +982,8 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_EntityNotTrackedOrHasTempKey);
             }
 
-            if (entityEntry.State != EntityState.Modified &&
+            if (entityEntry.State != EntityState.Modified
+                &&
                 entityEntry.State != EntityState.Unchanged
                 &&
                 entityEntry.State != EntityState.Deleted)
@@ -1014,9 +1018,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity"> The entity to be attached. </param>
         public virtual void AttachTo(string entitySetName, object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
-            Contract.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
 
             EntityEntry existingEntry;
@@ -1035,9 +1039,8 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                Contract.Assert(
-                    existingEntry.Entity == entity,
-                    "FindEntityEntry should return null if existing entry contains a different object.");
+                Debug.Assert(
+                    existingEntry.Entity == entity, "FindEntityEntry should return null if existing entry contains a different object.");
             }
 
             EntitySet entitySet;
@@ -1104,7 +1107,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity"> The entity to be attached. </param>
         public virtual void Attach(IEntityWithKey entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             if (null == (object)entity.EntityKey)
             {
@@ -1121,9 +1124,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entitySet"> "Computed" entity set. </param>
         internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
-            Contract.Requires(wrappedEntity != null);
-            Contract.Requires(wrappedEntity.Entity != null);
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
+            DebugCheck.NotNull(entitySet);
 
             // Try to detect if the entity is invalid as soon as possible
             // (before adding the entity to the ObjectStateManager)
@@ -1226,8 +1229,10 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private void VerifyContextForAddOrAttach(IEntityWrapper wrappedEntity)
         {
-            if (wrappedEntity.Context != null &&
-                wrappedEntity.Context != this &&
+            if (wrappedEntity.Context != null
+                &&
+                wrappedEntity.Context != this
+                &&
                 !wrappedEntity.Context.ObjectStateManager.IsDisposed
                 &&
                 wrappedEntity.MergeOption != MergeOption.NoTracking)
@@ -1241,10 +1246,12 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="entitySetName"> Entity set for the entity. </param>
         /// <param name="entity"> The entity. </param>
-        /// <returns> New instance of <see cref="EntityKey" /> for the provided <paramref name="entity" /> . </returns>
+        /// <returns>
+        ///     New instance of <see cref="EntityKey" /> for the provided <paramref name="entity" /> .
+        /// </returns>
         public virtual EntityKey CreateEntityKey(string entitySetName, object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
 
@@ -1431,9 +1438,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Ensures that the connection is opened for an operation that requires an open connection to the store.
         ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">If the
+        /// <exception cref="ObjectDisposedException">
+        ///     If the
         ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.</exception>
+        ///     instance has been disposed.
+        /// </exception>
         internal virtual void EnsureConnection()
         {
             if (ConnectionState.Closed
@@ -1580,9 +1589,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Ensures that the connection is opened for an operation that requires an open connection to the store.
         ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">If the
+        /// <exception cref="ObjectDisposedException">
+        ///     If the
         ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.</exception>
+        ///     instance has been disposed.
+        /// </exception>
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
             if (ConnectionState.Closed
@@ -1744,9 +1755,11 @@ namespace System.Data.Entity.Core.Objects
         ///     require the connection to be open. There should be a single ReleaseConnection call
         ///     for each EnsureConnection call.
         /// </summary>
-        /// <exception cref="ObjectDisposedException">If the
+        /// <exception cref="ObjectDisposedException">
+        ///     If the
         ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.</exception>
+        ///     instance has been disposed.
+        /// </exception>
         internal virtual void ReleaseConnection()
         {
             if (_disposed)
@@ -1819,8 +1832,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> an ObjectQuery instance, ready to be executed </returns>
         public virtual ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
         {
-            Contract.Requires(queryString != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(queryString, "queryString");
+            Check.NotNull(parameters, "parameters");
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -1862,9 +1875,11 @@ namespace System.Data.Entity.Core.Objects
         ///     all of the metadata item collections by priming the entity connection.
         /// </summary>
         /// <returns> </returns>
-        /// <exception cref="ObjectDisposedException">If the
+        /// <exception cref="ObjectDisposedException">
+        ///     If the
         ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.</exception>
+        ///     instance has been disposed.
+        /// </exception>
         private MetadataWorkspace RetrieveMetadataWorkspaceFromConnection()
         {
             if (_disposed)
@@ -1903,7 +1918,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
         internal void DeleteObject(object entity, EntitySet expectedEntitySet)
         {
-            Contract.Requires(entity != null);
+            DebugCheck.NotNull(entity);
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
@@ -1954,13 +1969,14 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
         internal void Detach(object entity, EntitySet expectedEntitySet)
         {
-            Contract.Requires(entity != null);
+            DebugCheck.NotNull(entity);
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             var cacheEntry = ObjectStateManager.FindEntityEntry(entity);
 
             // this condition includes key entries and relationship entries
-            if (cacheEntry == null || !ReferenceEquals(cacheEntry.Entity, entity)
+            if (cacheEntry == null
+                || !ReferenceEquals(cacheEntry.Entity, entity)
                 || cacheEntry.Entity == null)
             {
                 throw new InvalidOperationException(Strings.ObjectContext_CannotDetachEntityNotInObjectStateManager);
@@ -2039,7 +2055,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="InvalidOperationException">The entity container could not be found for the given name.</exception>
         internal EntitySet GetEntitySet(string entitySetName, string entityContainerName)
         {
-            Contract.Requires(entitySetName != null);
+            DebugCheck.NotNull(entitySetName);
 
             EntityContainer container = null;
 
@@ -2099,7 +2115,8 @@ namespace System.Data.Entity.Core.Objects
                 throw new ArgumentException(Strings.ObjectContext_QualfiedEntitySetName, parameterName);
             }
 
-            if (context != null &&
+            if (context != null
+                &&
                 String.IsNullOrEmpty(container)
                 &&
                 context.Perspective.GetDefaultContainer() == null)
@@ -2150,7 +2167,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> Entity object. </returns>
         public virtual object GetObjectByKey(EntityKey key)
         {
-            Contract.Requires(key != null);
+            Check.NotNull(key, "key");
 
             var entitySet = key.GetEntitySet(MetadataWorkspace);
             Debug.Assert(entitySet != null, "Key's EntitySet should not be null in the MetadataWorkspace");
@@ -2183,7 +2200,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
         public virtual void Refresh(RefreshMode refreshMode, IEnumerable collection)
         {
-            Contract.Requires(collection != null);
+            Check.NotNull(collection, "collection");
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
@@ -2208,8 +2225,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">entity is not attached to this context</exception>
         public virtual void Refresh(RefreshMode refreshMode, object entity)
         {
-            Contract.Requires(entity != null);
-            Contract.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
+            Check.NotNull(entity, "entity");
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             try
@@ -2226,7 +2243,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Validates that the given entity/key pair has an ObjectStateEntry
         ///     and that entry is not in the added state.
-        /// 
         ///     The entity is added to the entities dictionary, and checked for duplicates.
         /// </summary>
         /// <param name="entities"> on exit, entity is added to this dictionary. </param>
@@ -2859,8 +2875,7 @@ namespace System.Data.Entity.Core.Objects
         ///     For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
         ///     and marks appropriate ObjectStateEntry as Modified.
         ///     For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
-        /// 
-        ///     The method is used interanally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes 
+        ///     The method is used interanally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
         ///     and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
         /// </summary>
         public virtual void DetectChanges()
@@ -2965,11 +2980,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="functionName"> Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known. </param>
         /// <param name="parameters"> </param>
         /// <exception cref="ArgumentException">If function is null or empty</exception>
-        /// <exception cref="InvalidOperationException">If function is invalid (syntax,
-        ///     does not exist, refers to a function with return type incompatible with T)</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If function is invalid (syntax,
+        ///     does not exist, refers to a function with return type incompatible with T)
+        /// </exception>
         public ObjectResult<TElement> ExecuteFunction<TElement>(string functionName, params ObjectParameter[] parameters)
         {
-            Contract.Requires(parameters != null);
+            Check.NotNull(parameters, "parameters");
 
             return ExecuteFunction<TElement>(functionName, MergeOption.AppendOnly, parameters);
         }
@@ -2982,12 +2999,14 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption"> </param>
         /// <param name="parameters"> </param>
         /// <exception cref="ArgumentException">If function is null or empty</exception>
-        /// <exception cref="InvalidOperationException">If function is invalid (syntax,
-        ///     does not exist, refers to a function with return type incompatible with T)</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If function is invalid (syntax,
+        ///     does not exist, refers to a function with return type incompatible with T)
+        /// </exception>
         public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
         {
-            Contract.Requires(parameters != null);
+            Check.NotNull(parameters, "parameters");
             EntityUtil.CheckStringArgument(functionName, "function");
 
             EdmFunction functionImport;
@@ -3013,11 +3032,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters"> </param>
         /// <returns> Number of rows affected </returns>
         /// <exception cref="ArgumentException">If function is null or empty</exception>
-        /// <exception cref="InvalidOperationException">If function is invalid (syntax,
-        ///     does not exist, refers to a function with return type incompatible with T)</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If function is invalid (syntax,
+        ///     does not exist, refers to a function with return type incompatible with T)
+        /// </exception>
         public virtual int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
         {
-            Contract.Requires(parameters != null);
+            Check.NotNull(parameters, "parameters");
             EntityUtil.CheckStringArgument(functionName, "function");
 
             EdmFunction functionImport;
@@ -3297,7 +3318,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Types in the enumeration that do not map to an O-Space type are ignored.
         ///     Also, there is no guarantee that a proxy type will be created for a given type,
         ///     only that if a proxy can be generated, then it will be generated.
-        /// 
         ///     See <see cref="EntityProxyFactory" /> class for more information about proxy type generation.
         /// </remarks>
         public virtual void CreateProxyTypes(IEnumerable<Type> types)
@@ -3331,7 +3351,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Given a type that may represent a known proxy type, 
+        ///     Given a type that may represent a known proxy type,
         ///     return the corresponding type being proxied.
         /// </summary>
         /// <param name="type"> Type that may represent a proxy type. </param>
@@ -3339,7 +3359,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the value of the type parameter is null.</exception
         public static Type GetObjectType(Type type)
         {
-            Contract.Requires(type != null);
+            Check.NotNull(type, "type");
 
             return EntityProxyFactory.IsProxyType(type) ? type.BaseType : type;
         }
@@ -3348,8 +3368,12 @@ namespace System.Data.Entity.Core.Objects
         ///     Create an appropriate instance of the type <typeparamref name="T" />.
         /// </summary>
         /// <typeparam name="T"> Type of object to be returned. </typeparam>
-        /// <returns> An instance of an object of type <typeparamref name="T" /> . The object will either be an instance of the exact type <typeparamref
-        ///      name="T" /> , or possibly an instance of the proxy type that corresponds to <typeparamref name="T" /> . </returns>
+        /// <returns>
+        ///     An instance of an object of type <typeparamref name="T" /> . The object will either be an instance of the exact type
+        ///     <typeparamref
+        ///         name="T" />
+        ///     , or possibly an instance of the proxy type that corresponds to <typeparamref name="T" /> .
+        /// </returns>
         /// <remarks>
         ///     The type <typeparamref name="T" /> must have an OSpace EntityType representation.
         /// </remarks>
@@ -3479,7 +3503,9 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> An enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
             return ExecuteStoreQueryInternal<TElement>(
@@ -3487,7 +3513,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Execute the sequence returning query against the database server. 
+        ///     Execute the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
@@ -3495,7 +3521,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> An enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
@@ -3554,7 +3582,9 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A Task containing an enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, params object[] parameters)
         {
@@ -3570,7 +3600,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A Task containing an enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText,
@@ -3582,7 +3614,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     An asynchronous version of ExecuteStoreQuery, which
-        ///     execute the sequence returning query against the database server. 
+        ///     execute the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
@@ -3590,7 +3622,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A Task containing an enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText,
@@ -3601,7 +3635,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     An asynchronous version of ExecuteStoreQuery, which
-        ///     execute the sequence returning query against the database server. 
+        ///     execute the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
@@ -3610,7 +3644,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A Task containing an enumeration of objects of type <typeparamref name="TElement" /> . </returns>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText,
@@ -3718,7 +3754,7 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<TElement> InternalTranslate<TElement>(
             DbDataReader reader, string entitySetName, MergeOption mergeOption, bool readerOwned)
         {
-            Contract.Requires(reader != null);
+            DebugCheck.NotNull(reader);
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             EntitySet entitySet = null;
             if (!string.IsNullOrEmpty(entitySetName))

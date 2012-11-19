@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Reflection;
 
     /// <summary>
-    ///     Shapes store reader values into EntityClient/ObjectQuery results. Also maintains 
+    ///     Shapes store reader values into EntityClient/ObjectQuery results. Also maintains
     ///     state used by materializer delegates.
     /// </summary>
     internal abstract class Shaper
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         /// <summary>
         ///     Utility method used to evaluate a multi-discriminator column map. Takes
-        ///     discriminator values and determines the appropriate entity type, then looks up 
+        ///     discriminator values and determines the appropriate entity type, then looks up
         ///     the appropriate handler and invokes it.
         /// </summary>
         public TElement Discriminate<TElement>(
@@ -167,8 +167,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         /// <summary>
         ///     REQUIRES:: entity exists; MergeOption is AppendOnly
-        ///     Handles state management for an entity with the given key. When the entity already exists  
-        ///     in the state manager, it is returned directly. Otherwise, the entityDelegate is invoked and  
+        ///     Handles state management for an entity with the given key. When the entity already exists
+        ///     in the state manager, it is returned directly. Otherwise, the entityDelegate is invoked and
         ///     the resulting entity is returned.
         /// </summary>
         public IEntityWrapper HandleEntityAppendOnly<TEntity>(
@@ -236,7 +236,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         ///     Call to ensure a collection of full-spanned elements are added
         ///     into the state manager properly.  We registers an action to be called
-        ///     when the collection is closed that pulls the collection of full spanned 
+        ///     when the collection is closed that pulls the collection of full spanned
         ///     objects into the state manager.
         /// </summary>
         public IEntityWrapper HandleFullSpanCollection<T_SourceEntity, T_TargetEntity>(
@@ -251,7 +251,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Call to ensure a single full-spanned element is added into 
+        ///     Call to ensure a single full-spanned element is added into
         ///     the state manager properly.
         /// </summary>
         public IEntityWrapper HandleFullSpanElement<T_SourceEntity, T_TargetEntity>(
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Call to ensure a target entities key is added into the state manager 
+        ///     Call to ensure a target entities key is added into the state manager
         ///     properly
         /// </summary>
         public IEntityWrapper HandleRelationshipSpan<T_SourceEntity>(
@@ -586,7 +586,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         ///     REQUIRES:: should be called only by delegate allocating this state.
         ///     Utility method assigning a value to a state slot and return the value, allowing
-        ///     the value to be accessed/set in a ShapeEmitter Expression delegate and later 
+        ///     the value to be accessed/set in a ShapeEmitter Expression delegate and later
         ///     retrieved.
         /// </summary>
         public T SetStatePassthrough<T>(int ordinal, T value)
@@ -694,7 +694,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             // If a relationship does not exist on the server but does exist on the client,
             // we may need to remove it, depending on the current state and the MergeOption
-            if ((null != (object)sourceKey) && (null == targetValue)
+            if ((null != (object)sourceKey)
+                && (null == targetValue)
                 &&
                 (MergeOption == MergeOption.PreserveChanges ||
                  MergeOption == MergeOption.OverwriteChanges))
@@ -704,7 +705,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var sourceEnd = MetadataHelper.GetOtherAssociationEnd(targetMember);
                 EdmType expectedSourceType = ((RefType)sourceEnd.TypeUsage.EdmType).ElementType;
                 TypeUsage entityTypeUsage;
-                if (!Context.Perspective.TryGetType(wrappedSource.IdentityType, out entityTypeUsage) ||
+                if (!Context.Perspective.TryGetType(wrappedSource.IdentityType, out entityTypeUsage)
+                    ||
                     entityTypeUsage.EdmType.EdmEquals(expectedSourceType)
                     ||
                     TypeSemantics.IsSubTypeOf(entityTypeUsage.EdmType, expectedSourceType))

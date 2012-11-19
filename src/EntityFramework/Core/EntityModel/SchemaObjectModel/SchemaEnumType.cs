@@ -82,7 +82,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         ///     Generic handler for the EnumType element child elements.
         /// </summary>
         /// <param name="reader"> Xml reader positioned on a child element. </param>
-        /// <returns> <c>true</c> if the child element is a known element and was handled. Otherwise <c>false</c> </returns>
+        /// <returns>
+        ///     <c>true</c> if the child element is a known element and was handled. Otherwise <c>false</c>
+        /// </returns>
         protected override bool HandleElement(XmlReader reader)
         {
             Debug.Assert(reader != null, "reader != null");
@@ -196,7 +198,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             if (_unresolvedUnderlyingTypeName == null)
             {
                 _underlyingType = Schema.SchemaManager.SchemaTypes
-                    .Single(t => t is ScalarType && ((ScalarType)t).TypeKind == PrimitiveTypeKind.Int32);
+                                        .Single(t => t is ScalarType && ((ScalarType)t).TypeKind == PrimitiveTypeKind.Int32);
             }
             else
             {

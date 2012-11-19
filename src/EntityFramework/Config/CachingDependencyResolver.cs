@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     This class wraps another <see cref="IDbDependencyResolver" /> such that the resolutions
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Config
 
         public CachingDependencyResolver(IDbDependencyResolver underlyingResolver)
         {
-            Contract.Requires(underlyingResolver != null);
+            DebugCheck.NotNull(underlyingResolver);
 
             _underlyingResolver = underlyingResolver;
         }

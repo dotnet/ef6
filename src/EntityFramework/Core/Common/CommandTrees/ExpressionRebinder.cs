@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -38,7 +39,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             if (_metadata.TryGetEntityContainer(entitySet.EntityContainer.Name, entitySet.EntityContainer.DataSpace, out container))
             {
                 EntitySetBase extent = null;
-                if (container.BaseEntitySets.TryGetValue(entitySet.Name, false, out extent) &&
+                if (container.BaseEntitySets.TryGetValue(entitySet.Name, false, out extent)
+                    &&
                     extent != null
                     &&
                     entitySet.BuiltInTypeKind == extent.BuiltInTypeKind) // EntitySet -> EntitySet, AssociationSet -> AssociationSet, etc
@@ -216,6 +218,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         public override DbExpression Visit(DbPropertyExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             DbExpression result = expression;
             var newInstance = VisitExpression(expression.Instance);
             if (!ReferenceEquals(expression.Instance, newInstance))

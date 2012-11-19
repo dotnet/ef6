@@ -152,7 +152,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             foreach (var property in result.GetMemberValues())
             {
-                if (property.IsSimple && property.Identifier != PropagatorResult.NullIdentifier
+                if (property.IsSimple
+                    && property.Identifier != PropagatorResult.NullIdentifier
                     &&
                     (PropagatorFlags.ForeignKey == (property.PropagatorFlags & PropagatorFlags.ForeignKey)))
                 {
@@ -210,16 +211,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         /// <summary>
         ///     Provides a suggested ordering between two commands. Ensuring a consistent ordering is important to avoid deadlocks
-        ///     between two clients because it means locks are acquired in the same order where possible. The ordering criteria are as 
+        ///     between two clients because it means locks are acquired in the same order where possible. The ordering criteria are as
         ///     follows (and are partly implemented in the CompareToType method). In some cases there are specific secondary
         ///     reasons for the order (e.g. operator kind), but for the most case we just care that a consistent ordering
         ///     is applied:
-        /// 
         ///     - The kind of command (dynamic or function). This is an arbitrary criteria.
         ///     - The kind of operator (insert, update, delete). See <see cref="ModificationOperator" /> for details of the ordering.
         ///     - The target of the modification (table for dynamic, set for function).
         ///     - Primary key for the modification (table key for dynamic, entity keys for function).
-        /// 
         ///     If it is not possible to differentiate between two commands (e.g., where the user is inserting entities with server-generated
         ///     primary keys and has not given explicit values), arbitrary ordering identifiers are assigned to the commands to
         ///     ensure CompareTo is well-behaved (doesn't return 0 for different commands and suggests consistent ordering).

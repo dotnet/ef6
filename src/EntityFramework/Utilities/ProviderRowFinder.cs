@@ -6,7 +6,6 @@ namespace System.Data.Entity.Utilities
     using System.Data.Common;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Utilities
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual DataRow FindRow(Type hintType, Func<DataRow, bool> selector)
         {
-            Contract.Requires(selector != null);
+            DebugCheck.NotNull(selector);
 
             const int assemblyQualifiedNameIndex = 3;
 

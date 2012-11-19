@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Requires: this translator must be registered to handle the entity set
         ///     for the given state entry.
-        /// 
         ///     Translates the given state entry to a command.
         /// </summary>
         /// <param name="translator"> Parent update translator (global state for the workload) </param>

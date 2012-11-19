@@ -130,7 +130,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Is this relationship a binary relationship (ie) does it have exactly 2 end points?
-        /// 
         ///     This should ideally be a method supported by RelationType itself
         /// </summary>
         /// <param name="relationshipType"> </param>

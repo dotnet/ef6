@@ -7,7 +7,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     internal sealed class PropertyMapper
@@ -16,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public PropertyMapper(TypeMapper typeMapper)
         {
-            Contract.Requires(typeMapper != null);
+            DebugCheck.NotNull(typeMapper);
 
             _typeMapper = typeMapper;
         }
@@ -25,8 +24,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             PropertyInfo propertyInfo, ComplexType complexType,
             Func<ComplexTypeConfiguration> complexTypeConfiguration)
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(complexType != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(complexType);
 
             var property = MapPrimitiveOrComplexOrEnumProperty(
                 propertyInfo, complexTypeConfiguration, discoverComplexTypes: true);
@@ -40,8 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         public void Map(
             PropertyInfo propertyInfo, EntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(entityType);
 
             var property = MapPrimitiveOrComplexOrEnumProperty(propertyInfo, entityTypeConfiguration);
 
@@ -59,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             PropertyInfo propertyInfo, Func<StructuralTypeConfiguration> structuralTypeConfiguration,
             bool discoverComplexTypes = false)
         {
-            Contract.Requires(propertyInfo != null);
+            DebugCheck.NotNull(propertyInfo);
 
             var property = propertyInfo.AsEdmPrimitiveProperty();
 

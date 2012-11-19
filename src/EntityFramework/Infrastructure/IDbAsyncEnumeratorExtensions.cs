@@ -5,7 +5,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -17,15 +17,14 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> A Task containing the result of the operation: true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the sequence. </returns>
         public static Task<bool> MoveNextAsync(this IDbAsyncEnumerator enumerator)
         {
-            Contract.Requires(enumerator != null);
+            Check.NotNull(enumerator, "enumerator");
 
             return enumerator.MoveNextAsync(CancellationToken.None);
         }
 
         internal static IDbAsyncEnumerator<TResult> Cast<TResult>(this IDbAsyncEnumerator source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<IDbAsyncEnumerator<TResult>>() != null);
+            DebugCheck.NotNull(source);
 
             return new CastDbAsyncEnumerator<TResult>(source);
         }
@@ -36,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
 
             public CastDbAsyncEnumerator(IDbAsyncEnumerator sourceEnumerator)
             {
-                Contract.Requires(sourceEnumerator != null);
+                DebugCheck.NotNull(sourceEnumerator);
 
                 _underlyingEnumerator = sourceEnumerator;
             }

@@ -3,8 +3,9 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A concrete implementation of <see cref="InternalPropertyEntry" /> used for properties of complex objects.
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Internal
             InternalPropertyEntry parentPropertyEntry, PropertyEntryMetadata propertyMetadata)
             : base(parentPropertyEntry.InternalEntityEntry, propertyMetadata)
         {
-            Contract.Requires(parentPropertyEntry != null);
+            DebugCheck.NotNull(parentPropertyEntry);
 
             _parentPropertyEntry = parentPropertyEntry;
         }
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Internal
                 var parentCurrentValues = _parentPropertyEntry.ParentCurrentValues;
                 var nestedValues = parentCurrentValues == null ? null : parentCurrentValues[_parentPropertyEntry.Name];
 
-                Contract.Assert(
+                Debug.Assert(
                     nestedValues == null || nestedValues is InternalPropertyValues,
                     "Nested values for nested property should be an InternalPropertyValues object.");
 
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Internal
                 var parentOriginalValues = _parentPropertyEntry.ParentOriginalValues;
                 var nestedValues = parentOriginalValues == null ? null : parentOriginalValues[_parentPropertyEntry.Name];
 
-                Contract.Assert(
+                Debug.Assert(
                     nestedValues == null || nestedValues is InternalPropertyValues,
                     "Nested values for nested property should be an InternalPropertyValues object.");
 

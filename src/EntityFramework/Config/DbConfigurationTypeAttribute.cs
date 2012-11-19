@@ -3,11 +3,11 @@
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     This attribute can be placed on a subclass of <see cref="DbContext" /> to indicate that the subclass of 
+    ///     This attribute can be placed on a subclass of <see cref="DbContext" /> to indicate that the subclass of
     ///     <see cref="DbConfiguration" /> representing the code-based configuration for the application is in a different
     ///     assembly than the context type.
     /// </summary>
@@ -30,10 +30,12 @@ namespace System.Data.Entity.Config
         ///     Indicates that the given subclass of <see cref="DbConfiguration" /> should be used for code-based configuration
         ///     for this application.
         /// </summary>
-        /// <param name="configurationType"> The <see cref="DbConfiguration" /> type to use. </param>
+        /// <param name="configurationType">
+        ///     The <see cref="DbConfiguration" /> type to use.
+        /// </param>
         public DbConfigurationTypeAttribute(Type configurationType)
         {
-            Contract.Requires(configurationType != null);
+            Check.NotNull(configurationType, "configurationType");
 
             _configurationType = configurationType;
         }
@@ -42,10 +44,12 @@ namespace System.Data.Entity.Config
         ///     Indicates that the subclass of <see cref="DbConfiguration" /> represented by the given assembly-qualified
         ///     name should be used for code-based configuration for this application.
         /// </summary>
-        /// <param name="configurationTypeName"> The <see cref="DbConfiguration" /> type to use. </param>
+        /// <param name="configurationTypeName">
+        ///     The <see cref="DbConfiguration" /> type to use.
+        /// </param>
         public DbConfigurationTypeAttribute(string configurationTypeName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(configurationTypeName));
+            Check.NotEmpty(configurationTypeName, "configurationTypeName");
 
             try
             {

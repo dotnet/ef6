@@ -7,13 +7,11 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Xml;
 
     /// <summary>
     ///     Metadata Interface for all CLR types types
     /// </summary>
-    [ContractClass(typeof(DbProviderManifestContracts))]
     public abstract class DbProviderManifest
     {
         /// <summary>
@@ -141,8 +139,7 @@ namespace System.Data.Entity.Core.Common
         public abstract TypeUsage GetStoreType(TypeUsage edmType);
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.  
-        /// 
+        ///     Providers should override this to return information specific to their provider.
         ///     This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
@@ -151,7 +148,6 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>
         ///     Gets framework and provider specific information
-        /// 
         ///     This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
@@ -191,7 +187,7 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>
         ///     Does the provider support escaping strings to be used as patterns in a Like expression.
-        ///     If the provider overrides this method to return true, <cref = "EscapeLikeArgument" /> should 
+        ///     If the provider overrides this method to return true, <cref = "EscapeLikeArgument" /> should
         ///     also be overridden.
         /// </summary>
         /// <param name="escapeCharacter"> If the provider supports escaping, the character that would be used as the escape character </param>
@@ -204,38 +200,16 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Provider writers should override this method to returns the argument with the wildcards and the escape 
+        ///     Provider writers should override this method to returns the argument with the wildcards and the escape
         ///     character escaped.  This method is only used if <cref = "SupportsEscapingLikeArgument" /> returns true.
         /// </summary>
         /// <param name="argument"> The argument to be escaped </param>
         /// <returns> The argument with the wildcards and the escape character escaped </returns>
         public virtual string EscapeLikeArgument(string argument)
         {
-            Contract.Requires(argument != null);
+            Check.NotNull(argument, "argument");
 
             throw new ProviderIncompatibleException(Strings.ProviderShouldOverrideEscapeLikeArgument);
         }
     }
-
-    #region Base Member Contracts
-
-    [ContractClassFor(typeof(DbProviderManifest))]
-    internal abstract class DbProviderManifestContracts : DbProviderManifest
-    {
-        public override TypeUsage GetEdmType(TypeUsage storeType)
-        {
-            Contract.Requires(storeType != null);
-
-            throw new NotImplementedException();
-        }
-
-        public override TypeUsage GetStoreType(TypeUsage edmType)
-        {
-            Contract.Requires(edmType != null);
-
-            throw new NotImplementedException();
-        }
-    }
-
-    #endregion
 }

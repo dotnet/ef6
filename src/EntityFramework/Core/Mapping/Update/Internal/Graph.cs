@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </summary>
     /// <remarks>
     ///     Notes on language (in case you're familiar with one or the other convention):
-    /// 
     ///     node == vertex
     ///     arc == edge
     ///     predecessor == incoming
@@ -28,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="comparer"> Comparer used to determine if two node references are equivalent </param>
         internal Graph(IEqualityComparer<TVertex> comparer)
         {
-            Contract.Requires(comparer != null);
+            DebugCheck.NotNull(comparer);
 
             m_comparer = comparer;
             m_successorMap = new Dictionary<TVertex, HashSet<TVertex>>(comparer);

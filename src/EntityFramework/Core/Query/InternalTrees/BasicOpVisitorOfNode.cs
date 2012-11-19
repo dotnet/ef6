@@ -51,7 +51,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     A default processor for all AncillaryOps.
-        /// 
         ///     Allows new visitors to just override this to handle all AncillaryOps
         /// </summary>
         /// <param name="op"> the AncillaryOp </param>
@@ -68,7 +67,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     A default processor for all PhysicalOps.
-        /// 
         ///     Allows new visitors to just override this to handle all PhysicalOps
         /// </summary>
         /// <param name="op"> the PhysicalOp </param>
@@ -85,7 +83,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     A default processor for all RelOps.
-        /// 
         ///     Allows new visitors to just override this to handle all RelOps
         /// </summary>
         /// <param name="op"> the RelOp </param>
@@ -102,7 +99,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     A default processor for all ScalarOps.
-        /// 
         ///     Allows new visitors to just override this to handle all ScalarOps
         /// </summary>
         /// <param name="op"> the ScalarOp </param>

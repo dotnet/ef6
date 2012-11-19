@@ -146,7 +146,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 }
             }
 
-            if (_isComposable && _isSideEffecting.HasValue
+            if (_isComposable
+                && _isSideEffecting.HasValue
                 && _isSideEffecting.Value)
             {
                 AddError(

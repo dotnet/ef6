@@ -67,13 +67,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        ///     Boolean members have a closed domain and are enumerated when domains are established i.e. (T, F) instead of (notNull). 
-        ///     Query Rewriting is exercised over every domain of the condition member. If the member contains not_null condition 
-        ///     for example, it cannot generate a view for partitions (member=T), (Member=F). For this reason we need to expand the cells 
-        ///     in a predefined situation (below) to include sub-fragments mapping individual elements of the closed domain.  
+        ///     Boolean members have a closed domain and are enumerated when domains are established i.e. (T, F) instead of (notNull).
+        ///     Query Rewriting is exercised over every domain of the condition member. If the member contains not_null condition
+        ///     for example, it cannot generate a view for partitions (member=T), (Member=F). For this reason we need to expand the cells
+        ///     in a predefined situation (below) to include sub-fragments mapping individual elements of the closed domain.
         ///     Enums (a planned feature) need to be handled in a similar fashion.
-        /// 
-        ///     Find booleans that are projected with a not_null condition 
+        ///     Find booleans that are projected with a not_null condition
         ///     Expand ALL cells where they are projected. Why? See Unit Test case NullabilityConditionOnBoolean5.es
         ///     Validation will fail because it will not be able to validate rewritings for partitions on the 'other' cells.
         /// </summary>
@@ -86,11 +85,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 //Find Projected members that are Boolean AND are mentioned in the Where clause with not_null condition
                 foreach (var memberToExpand in cell.SQuery.GetProjectedMembers()
-                    .Where(member => IsBooleanMember(member))
-                    .Where(
-                        boolMember => cell.SQuery.GetConjunctsFromWhereClause()
-                                          .Where(restriction => restriction.Domain.Values.Contains(Constant.NotNull))
-                                          .Select(restriction => restriction.RestrictedMemberSlot.MemberPath).Contains(boolMember)))
+                                                   .Where(member => IsBooleanMember(member))
+                                                   .Where(
+                                                       boolMember => cell.SQuery.GetConjunctsFromWhereClause()
+                                                                         .Where(
+                                                                             restriction =>
+                                                                             restriction.Domain.Values.Contains(Constant.NotNull))
+                                                                         .Select(restriction => restriction.RestrictedMemberSlot.MemberPath)
+                                                                         .Contains(boolMember)))
                 {
                     sSideMembersToBeExpanded.Add(memberToExpand);
                 }
@@ -177,9 +179,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         ///     Given a cell, a member and a boolean condition on that member, creates additional cell
         ///     which with the specified restriction on the member in addition to original condition.
         ///     e.i conjunction of original condition AND member in newCondition
-        /// 
         ///     Creation fails when the original condition contradicts new boolean condition
-        /// 
         ///     ViewTarget tells whether MemberPath is in Cquery or SQuery
         /// </summary>
         private bool TryCreateAdditionalCellWithCondition(
@@ -207,11 +207,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var negatedCondition = new ScalarConstant(!conditionValue);
 
             if (originalCell.GetLeftQuery(viewTarget).Conditions
-                    .Where(restriction => restriction.RestrictedMemberSlot.MemberPath.Equals(memberToExpand))
-                    .Where(restriction => restriction.Domain.Values.Contains(negatedCondition)).Any()
+                            .Where(restriction => restriction.RestrictedMemberSlot.MemberPath.Equals(memberToExpand))
+                            .Where(restriction => restriction.Domain.Values.Contains(negatedCondition)).Any()
                 || originalCell.GetRightQuery(viewTarget).Conditions
-                       .Where(restriction => restriction.RestrictedMemberSlot.MemberPath.Equals(rightSidePath))
-                       .Where(restriction => restriction.Domain.Values.Contains(negatedCondition)).Any())
+                               .Where(restriction => restriction.RestrictedMemberSlot.MemberPath.Equals(rightSidePath))
+                               .Where(restriction => restriction.Domain.Values.Contains(negatedCondition)).Any())
             {
                 return false;
             }

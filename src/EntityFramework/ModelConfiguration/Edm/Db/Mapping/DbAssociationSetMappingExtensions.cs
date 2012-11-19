@@ -3,17 +3,16 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Data.Entity.Core.Mapping;
-    
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     internal static class DbAssociationSetMappingExtensions
     {
         public static StorageAssociationSetMapping Initialize(this StorageAssociationSetMapping associationSetMapping)
         {
-            Contract.Requires(associationSetMapping != null);
-            
+            DebugCheck.NotNull(associationSetMapping);
+
             associationSetMapping.SourceEndMapping = new StorageEndPropertyMapping(null);
             associationSetMapping.TargetEndMapping = new StorageEndPropertyMapping(null);
 
@@ -23,14 +22,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static object GetConfiguration(this StorageAssociationSetMapping associationSetMapping)
         {
-            Contract.Requires(associationSetMapping != null);
+            DebugCheck.NotNull(associationSetMapping);
 
             return associationSetMapping.Annotations.GetConfiguration();
         }
 
         public static void SetConfiguration(this StorageAssociationSetMapping associationSetMapping, object configuration)
         {
-            Contract.Requires(associationSetMapping != null);
+            DebugCheck.NotNull(associationSetMapping);
 
             associationSetMapping.Annotations.SetConfiguration(configuration);
         }

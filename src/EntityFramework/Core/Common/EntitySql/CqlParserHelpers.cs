@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // The common practice is to make the null check at the public surface, 
             // however this method is a convergence zone from multiple public entry points and it makes sense to
             // check for null once, here.
-            Contract.Requires(parserOptions != null);
+            DebugCheck.NotNull(parserOptions);
 
             _parserOptions = parserOptions;
             yydebug = debug;
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // The common practice is to make the null check at the public surface, 
             // however this method is a convergence zone from multiple public entry points and it makes sense to
             // check for null once, here.
-            Contract.Requires(query != null);
+            DebugCheck.NotNull(query);
             if (String.IsNullOrEmpty(query)
                 || query.Trim().Length == 0)
             {
@@ -168,14 +168,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     syntaxContextInfo = Strings.LocalizedTerm;
                     ErrorContext errCtx = null;
                     var astNode = yylval as Node;
-                    if (null != astNode && (null != astNode.ErrCtx)
+                    if (null != astNode
+                        && (null != astNode.ErrCtx)
                         && (!String.IsNullOrEmpty(astNode.ErrCtx.ErrorContextInfo)))
                     {
                         errCtx = astNode.ErrCtx;
                         errorPosition = Math.Min(errorPosition, errorPosition - term.Length);
                     }
 
-                    if ((yylval is CqlLexer.TerminalToken) && CqlLexer.IsReservedKeyword(term)
+                    if ((yylval is CqlLexer.TerminalToken)
+                        && CqlLexer.IsReservedKeyword(term)
                         && !(astNode is Identifier))
                     {
                         syntaxContextInfo = Strings.LocalizedKeyword;

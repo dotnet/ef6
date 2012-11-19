@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Abstract Methods
 
         /// <summary>
-        ///     Determines whether two instances of QueryCacheContext are equal. 
+        ///     Determines whether two instances of QueryCacheContext are equal.
         ///     Equality is value based.
         /// </summary>
         /// <param name="obj"> </param>

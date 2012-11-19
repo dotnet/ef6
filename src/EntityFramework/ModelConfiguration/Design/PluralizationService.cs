@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         /// <returns> PluralizationService </returns>
         public static PluralizationService CreateService(CultureInfo culture)
         {
-            Contract.Requires(culture != null);
+            DebugCheck.NotNull(culture);
 
             if (culture.TwoLetterISOLanguageName == "en")
             {

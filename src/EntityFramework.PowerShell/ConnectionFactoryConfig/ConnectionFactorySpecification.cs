@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
         public ConnectionFactorySpecification(string connectionFactoryName, params string[] constructorArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(connectionFactoryName));
+            DebugCheck.NotEmpty(connectionFactoryName);
 
             _connectionFactoryName = connectionFactoryName;
             _constructorArguments = constructorArguments ?? Enumerable.Empty<string>();

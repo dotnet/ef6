@@ -187,7 +187,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     return c;
                 }
 
-                if (Char.IsLetter(c) || Char.IsSymbol(c)
+                if (Char.IsLetter(c)
+                    || Char.IsSymbol(c)
                     || Char.IsNumber(c))
                 {
                     return 'a';
@@ -355,7 +356,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             var lookAheadChar = GetLookAheadChar();
 
-            if (!IsInSymbolAsIdentifierState(lookAheadChar) &&
+            if (!IsInSymbolAsIdentifierState(lookAheadChar)
+                &&
                 !IsCanonicalFunctionCall(symbol, lookAheadChar)
                 &&
                 InternalKeywordDictionary.ContainsKey(symbol))
@@ -391,7 +393,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         /// <summary>
         ///     Returns true when current symbol looks like a caninical function name in a function call.
-        ///     Method only treats canonical functions with names ovelapping eSQL keywords. 
+        ///     Method only treats canonical functions with names ovelapping eSQL keywords.
         ///     This check allows calling these canonical functions without escaping their names.
         ///     Check lookAheadChar for a left paren to see if looks like a function call, check symbol against the list of
         ///     canonical functions with names overlapping keywords.
@@ -637,7 +639,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             for (var i = 0; i < symbol.Length; i++)
             {
                 isIdentifierASCII = isIdentifierASCII && symbol[i] < 0x80;
-                if (!isIdentifierASCII && !IsLetter(symbol[i]) && !IsDigit(symbol[i])
+                if (!isIdentifierASCII
+                    && !IsLetter(symbol[i])
+                    && !IsDigit(symbol[i])
                     && (symbol[i] != '_'))
                 {
                     return false;
@@ -664,7 +668,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Returns true if given char is a new line character defined by
         ///     UNICODE 5.0, section 5.8 Newline Guidelines.
-        ///     These are 'mandatory' line breaks. NOTE that CRLF is treated as a 
+        ///     These are 'mandatory' line breaks. NOTE that CRLF is treated as a
         ///     composite 'character' and was intentionaly omitted in the character set bellow.
         /// </summary>
         /// <param name="c"> </param>
@@ -696,7 +700,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // NOTE: this is not a precondition validation. This validation is for security purposes based on the 
             // paranoid assumption that all input is evil. we should not see this exception under normal 
             // conditions.
-            if ((literal.Split(new[] { '\'' }).Length != 3) || (-1 == literal.IndexOf('\''))
+            if ((literal.Split(new[] { '\'' }).Length != 3)
+                || (-1 == literal.IndexOf('\''))
                 || (-1 == literal.LastIndexOf('\'')))
             {
                 var message = Strings.MalformedSingleQuotePayload;
@@ -740,7 +745,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var bValid = true;
             while (bValid && i < 36)
             {
-                if ((i == 8) || (i == 13) || (i == 18)
+                if ((i == 8)
+                    || (i == 13)
+                    || (i == 18)
                     || (i == 23))
                 {
                     bValid = (guidValue[startIndex + i] == '-');

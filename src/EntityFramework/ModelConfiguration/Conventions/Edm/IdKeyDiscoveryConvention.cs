@@ -5,10 +5,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
-    ///     Convention to detect primary key properties. 
+    ///     Convention to detect primary key properties.
     ///     Recognized naming patterns in order of precedence are:
     ///     1. 'Id'
     ///     2. [type name]Id
@@ -21,6 +22,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         protected override EdmProperty MatchKeyProperty(
             EntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
         {
+            Check.NotNull(entityType, "entityType");
+            Check.NotNull(primitiveProperties, "primitiveProperties");
+
             var matches = primitiveProperties
                 .Where(p => Id.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
 

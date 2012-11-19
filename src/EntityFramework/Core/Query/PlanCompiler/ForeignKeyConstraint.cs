@@ -71,7 +71,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var toEnd = constraint.ToRole as AssociationEndMember;
 
             // Currently only Associations are supported
-            if (null == assocSet || null == fromEnd
+            if (null == assocSet
+                || null == fromEnd
                 || null == toEnd)
             {
                 throw new NotSupportedException();

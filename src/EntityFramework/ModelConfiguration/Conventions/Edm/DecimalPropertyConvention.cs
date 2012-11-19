@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to set precision to 18 and scale to 2 for decimal properties.
@@ -11,8 +12,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(EdmProperty edmDataModelItem, EdmModel model)
         {
-            if (edmDataModelItem.PrimitiveType
-                == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal))
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
+            if (edmDataModelItem.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal))
             {
                 if (edmDataModelItem.Precision == null)
                 {

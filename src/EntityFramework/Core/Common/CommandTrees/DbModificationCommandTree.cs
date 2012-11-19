@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbModificationCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target)
             : base(metadata, dataSpace)
         {
-            Contract.Requires(target != null);
+            DebugCheck.NotNull(target);
 
             _target = target;
         }

@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal TypeResolver(Perspective perspective, ParserOptions parserOptions)
         {
-            Contract.Requires(perspective != null);
+            DebugCheck.NotNull(perspective);
 
             _perspective = perspective;
             _parserOptions = parserOptions;
@@ -285,7 +285,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             // Try resolving as an inline function.
             //
             InlineFunctionGroup inlineFunctionGroup;
-            if (!resolveAsNamespaceOnly &&
+            if (!resolveAsNamespaceOnly
+                &&
                 includeFunctions
                 && TryGetInlineFunction(name, out inlineFunctionGroup))
             {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an entity used to store metadata about an EDM in the database.
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The hash string. </returns>
         public static string TryGetModelHash(DbContext context)
         {
-            Contract.Requires(context != null);
+            Check.NotNull(context, "context");
 
             var compiledModel = context.InternalContext.CodeFirstModel;
             return compiledModel == null ? null : new ModelHashCalculator().Calculate(compiledModel);

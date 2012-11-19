@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -11,7 +10,7 @@ namespace System.Data.Entity.Utilities
     {
         public static string GetInformationalVersion(this Assembly assembly)
         {
-            Contract.Requires(assembly != null);
+            DebugCheck.NotNull(assembly);
 
             return assembly
                 .GetCustomAttributes(false)

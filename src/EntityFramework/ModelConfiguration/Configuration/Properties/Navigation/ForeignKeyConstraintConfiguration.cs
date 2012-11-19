@@ -9,8 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -31,8 +31,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         internal ForeignKeyConstraintConfiguration(IEnumerable<PropertyInfo> dependentProperties)
         {
-            Contract.Requires(dependentProperties != null);
-            Contract.Assert(dependentProperties.Any());
+            DebugCheck.NotNull(dependentProperties);
+            Debug.Assert(dependentProperties.Any());
 
             _dependentProperties.AddRange(dependentProperties);
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         private ForeignKeyConstraintConfiguration(ForeignKeyConstraintConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _dependentProperties.AddRange(source._dependentProperties);
             _isFullySpecified = source._isFullySpecified;
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <param name="propertyInfo"> The property to be used as the foreign key. If the foreign key is made up of multiple properties, call this method once for each of them. </param>
         public void AddColumn(PropertyInfo propertyInfo)
         {
-            Contract.Requires(propertyInfo != null);
+            Check.NotNull(propertyInfo, "propertyInfo");
 
             // DevDiv #324763 (DbModelBuilder.Build is not idempotent):  If build is called twice when foreign keys are 
             // configured via attributes, we need to check whether the key has already been included.
@@ -85,6 +85,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration)
         {
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(dependentEnd);
+            DebugCheck.NotNull(entityTypeConfiguration);
+
             if (!_dependentProperties.Any())
             {
                 return;
@@ -130,7 +134,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             {
                 var property
                     = dependentEnd.GetEntityType()
-                        .GetDeclaredPrimitiveProperty(dependentProperty);
+                                  .GetDeclaredPrimitiveProperty(dependentProperty);
 
                 if (property == null)
                 {
@@ -171,9 +175,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
 
             return other.ToProperties
-                .SequenceEqual(
-                    ToProperties,
-                    new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
+                        .SequenceEqual(
+                            ToProperties,
+                            new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
         }
 
         public override bool Equals(object obj)

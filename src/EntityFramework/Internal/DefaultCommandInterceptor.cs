@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class DefaultCommandInterceptor : IDbCommandInterceptor
@@ -37,6 +38,8 @@ namespace System.Data.Entity.Internal
 
         public bool Intercept(DbCommand command)
         {
+            DebugCheck.NotNull(command);
+
             if (!IsEnabled)
             {
                 return true;

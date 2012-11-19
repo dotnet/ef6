@@ -17,14 +17,14 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
 
     /// <summary>
-    ///     DbMigrator is used to apply existing migrations to a database. 
+    ///     DbMigrator is used to apply existing migrations to a database.
     ///     DbMigrator can be used to upgrade and downgrade to any given migration.
     ///     To scaffold migrations based on changes to your model use <see cref="Design.MigrationScaffolder" />
     /// </summary>
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Migrations
         public DbMigrator(DbMigrationsConfiguration configuration)
             : this(configuration, null)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(configuration.ContextType != null);
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(configuration.ContextType, "configuration.ContextType");
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Migrations
         internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
             : base(null)
         {
-            Contract.Requires(configuration != null);
-            Contract.Requires(configuration.ContextType != null);
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(configuration.ContextType, "configuration.ContextType");
 
             _configuration = configuration;
             _calledByCreateDatabase = usersContext != null;
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Migrations
 
         internal virtual void DisableInitializer(Type contextType)
         {
-            Contract.Requires(contextType != null);
+            Check.NotNull(contextType, "contextType");
 
             _setInitializerMethod
                 .MakeGenericMethod(contextType)
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Migrations
 
             var migrationOperations
                 = _modelDiffer.Diff(_emptyModel.Value, databaseModel, false)
-                    .ToList();
+                              .ToList();
 
             var generatedMigration
                 = _configuration.CodeGenerator.Generate(
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Migrations
                 = ignoreChanges
                       ? Enumerable.Empty<MigrationOperation>()
                       : _modelDiffer.Diff(sourceModel, _currentModel, false)
-                            .ToList();
+                                    .ToList();
 
             string migrationId;
 
@@ -377,7 +377,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void CheckLegacyCompatibility(Action onCompatible)
         {
-            Contract.Requires(onCompatible != null);
+            DebugCheck.NotNull(onCompatible);
 
             if (!_calledByCreateDatabase
                 && !_historyRepository.Exists())
@@ -479,7 +479,7 @@ namespace System.Data.Entity.Migrations
         private void DetectInvalidHistoryChange()
         {
             if (_modelDiffer.Diff(_initialHistoryModel, _currentHistoryModel)
-                .Any(o => o.IsSystem & !(o is MoveTableOperation)))
+                            .Any(o => o.IsSystem & !(o is MoveTableOperation)))
             {
                 throw Error.HistoryMigrationNotSupported();
             }
@@ -580,7 +580,7 @@ namespace System.Data.Entity.Migrations
 
         private bool IsModelOutOfDate(XDocument model, DbMigration lastMigration)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             var sourceModel = GetLastModel(lastMigration);
 
@@ -619,7 +619,7 @@ namespace System.Data.Entity.Migrations
                                       ? _historyRepository.GetModel(nextMigrationId)
                                       : _emptyModel.Value;
 
-                Contract.Assert(targetModel != null);
+                Debug.Assert(targetModel != null);
 
                 var sourceModel = _historyRepository.GetModel(migrationId);
 
@@ -652,7 +652,7 @@ namespace System.Data.Entity.Migrations
 
             var systemOperations
                 = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
-                    .Where(o => o.IsSystem);
+                              .Where(o => o.IsSystem);
 
             migration.Down();
 
@@ -700,7 +700,7 @@ namespace System.Data.Entity.Migrations
 
             var systemOperations
                 = _modelDiffer.Diff(lastModel, targetModel, includeSystemOps)
-                    .Where(o => o.IsSystem);
+                              .Where(o => o.IsSystem);
 
             migration.Up();
 
@@ -728,7 +728,7 @@ namespace System.Data.Entity.Migrations
 
             var operations
                 = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
-                    .ToList();
+                              .ToList();
 
             if (!_calledByCreateDatabase
                 && !downgrading)
@@ -772,9 +772,9 @@ namespace System.Data.Entity.Migrations
         private void ExecuteOperations(
             string migrationId, XDocument targetModel, IEnumerable<MigrationOperation> operations, bool downgrading, bool auto = false)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Requires(targetModel != null);
-            Contract.Requires(operations != null);
+            DebugCheck.NotEmpty(migrationId);
+            DebugCheck.NotNull(targetModel);
+            DebugCheck.NotNull(operations);
 
             FillInForeignKeyOperations(operations, targetModel);
 
@@ -907,25 +907,25 @@ namespace System.Data.Entity.Migrations
 
         private void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
-            Contract.Requires(operations != null);
-            Contract.Requires(targetModel != null);
+            DebugCheck.NotNull(operations);
+            DebugCheck.NotNull(targetModel);
 
             foreach (var foreignKeyOperation
                 in operations.OfType<AddForeignKeyOperation>()
-                    .Where(fk => fk.PrincipalTable != null && !fk.PrincipalColumns.Any()))
+                             .Where(fk => fk.PrincipalTable != null && !fk.PrincipalColumns.Any()))
             {
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
                        where _modelDiffer.GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute())
-                           .EqualsIgnoreCase(principalTable)
+                                         .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 
                 if (entitySetName != null)
                 {
                     var entityTypeElement
                         = targetModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
-                            .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
+                                     .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
 
                     entityTypeElement
                         .Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
@@ -990,7 +990,7 @@ namespace System.Data.Entity.Migrations
 
         private void AttachHistoryModel(XDocument targetModel)
         {
-            Contract.Requires(targetModel != null);
+            DebugCheck.NotNull(targetModel);
 
             var historyModel = new XDocument(_currentHistoryModel); // clone
 

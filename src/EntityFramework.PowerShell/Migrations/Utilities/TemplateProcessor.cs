@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -21,8 +21,8 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <returns> Template with tokens replaced </returns>
         public string Process(string input, IDictionary<string, string> tokens)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(input));
-            Contract.Requires(tokens != null);
+            DebugCheck.NotEmpty(input);
+            DebugCheck.NotNull(tokens);
 
             return _tokenRegex.Replace(
                 input,

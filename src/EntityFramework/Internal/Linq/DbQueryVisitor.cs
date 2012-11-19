@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Collections.Concurrent;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> A new node, which may have had the replacement made. </returns>
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            Contract.Assert(node != null);
+            Check.NotNull(node, "node");
 
             // We are looking for either the generic or non-generic Set method on DbContext.
             // However, we don't constrain to this so if you write your own parameterless method on
@@ -48,7 +48,8 @@ namespace System.Data.Entity.Internal.Linq
                     // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
                     // as a function.
                     var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
-                    if (context != null &&
+                    if (context != null
+                        &&
                         !node.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false).Any()
                         &&
                         node.Method.GetParameters().Length == 0)
@@ -75,12 +76,14 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> A new node, which may have had the replacement made. </returns>
         protected override Expression VisitMember(MemberExpression node)
         {
-            Contract.Assert(node != null);
+            Check.NotNull(node, "node");
 
             var propInfo = node.Member as PropertyInfo;
             var memberExpression = node.Expression as MemberExpression;
 
-            if (propInfo != null && memberExpression != null &&
+            if (propInfo != null
+                && memberExpression != null
+                &&
                 typeof(IQueryable).IsAssignableFrom(propInfo.PropertyType)
                 &&
                 typeof(DbContext).IsAssignableFrom(node.Member.DeclaringType))
@@ -107,7 +110,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            Contract.Assert(node != null);
+            Check.NotNull(node, "node");
 
             var value = node.Value;
             if (value != null)
@@ -139,7 +142,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The context or null. </returns>
         private static DbContext GetContextFromConstantExpression(Expression expression, MemberInfo member)
         {
-            Contract.Requires(member != null);
+            DebugCheck.NotNull(member);
 
             if (expression == null)
             {
@@ -168,7 +171,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The context instance or null. </returns>
         private static DbContext GetContextFromMember(MemberInfo member, object value)
         {
-            Contract.Requires(member != null);
+            DebugCheck.NotNull(member);
 
             var asField = member as FieldInfo;
             if (asField != null)

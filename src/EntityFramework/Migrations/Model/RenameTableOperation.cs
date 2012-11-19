@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents renaming an existing table.
@@ -24,8 +23,8 @@ namespace System.Data.Entity.Migrations.Model
         public RenameTableOperation(string name, string newName, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(!string.IsNullOrWhiteSpace(newName));
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
 
             _name = name;
             _newName = newName;

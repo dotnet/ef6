@@ -3,7 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.SqlServer.Utilities;
 
     internal static class IDbSpatialValueExtensionMethods
     {
@@ -12,10 +12,12 @@ namespace System.Data.Entity.SqlServer
         ///     IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
         /// </summary>
         /// <param name="geographyValue"> The geography instance to wrap </param>
-        /// <returns> An instance of <see cref="IDbSpatialValue" /> that wraps the specified geography value </returns>
+        /// <returns>
+        ///     An instance of <see cref="IDbSpatialValue" /> that wraps the specified geography value
+        /// </returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeography geographyValue)
         {
-            Contract.Requires(geographyValue != null);
+            DebugCheck.NotNull(geographyValue);
 
             return new DbGeographyAdapter(geographyValue);
         }
@@ -25,10 +27,12 @@ namespace System.Data.Entity.SqlServer
         ///     IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
         /// </summary>
         /// <param name="geometryValue"> The geometry instance to wrap </param>
-        /// <returns> An instance of <see cref="IDbSpatialValue" /> that wraps the specified geometry value </returns>
+        /// <returns>
+        ///     An instance of <see cref="IDbSpatialValue" /> that wraps the specified geometry value
+        /// </returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeometry geometryValue)
         {
-            Contract.Requires(geometryValue != null);
+            DebugCheck.NotNull(geometryValue);
 
             return new DbGeometryAdapter(geometryValue);
         }

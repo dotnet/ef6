@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal void AddEntry(Record record)
         {
-            Contract.Requires(record != null);
+            DebugCheck.NotNull(record);
             m_log.Add(record);
         }
 
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             // referenced (indirectly) by System.Data.Entity.Design.dll
-                internal EdmSchemaError Error
+            internal EdmSchemaError Error
             {
                 get { return m_mappingError; }
             }

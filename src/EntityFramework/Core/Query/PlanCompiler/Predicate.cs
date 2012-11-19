@@ -7,17 +7,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The Predicate class represents a condition (predicate) in CNF. 
-    ///     A predicate consists of a number of "simple" parts, and the parts are considered to be 
+    ///     The Predicate class represents a condition (predicate) in CNF.
+    ///     A predicate consists of a number of "simple" parts, and the parts are considered to be
     ///     ANDed together
-    /// 
     ///     This class provides a number of useful functions related to
     ///     - Single Table predicates
     ///     - Join predicates
     ///     - Key preservation
     ///     - Null preservation
     ///     etc.
-    /// 
     ///     Note: This class doesn't really convert node trees into CNF form. It looks for
     ///     basic CNF patterns, and reasons about them. For example,
     ///     (a AND b) OR c
@@ -80,10 +78,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Reconstruction (of node tree)
 
         /// <summary>
-        ///     Build up an AND tree based on the current parts. 
+        ///     Build up an AND tree based on the current parts.
         ///     Specifically, if I have parts (p1, p2, ..., pn), we build up a tree that looks like
         ///     p1 AND p2 AND ... AND pn
-        /// 
         ///     If we have no parts, we return a null reference
         ///     If we have only one part, then we return just that part
         /// </summary>
@@ -112,7 +109,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region SingleTable (Filter) Predicates
 
         /// <summary>
-        ///     Partition the current predicate into predicates that only apply 
+        ///     Partition the current predicate into predicates that only apply
         ///     to the specified table (single-table-predicates), and others
         /// </summary>
         /// <param name="tableDefinitions"> current columns defined by the table </param>
@@ -233,8 +230,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Nulls
 
         /// <summary>
-        ///     Does this predicate preserve nulls for the table columns? 
-        /// 
+        ///     Does this predicate preserve nulls for the table columns?
         ///     If the ansiNullSemantics parameter is set, then we simply return true
         ///     always - this shuts off most optimizations
         /// </summary>
@@ -330,8 +326,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region EquiJoins
 
         /// <summary>
-        ///     Is this "simple" predicate an equi-join predicate? 
-        ///     (ie) is it of the form "var1 = var2" 
+        ///     Is this "simple" predicate an equi-join predicate?
+        ///     (ie) is it of the form "var1 = var2"
         ///     Return "var1" and "var2"
         /// </summary>
         /// <param name="simplePredicateNode"> the simple predicate </param>
@@ -366,7 +362,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Is this an equi-join predicate involving columns from the specified tables?
-        ///     On output, if this was indeed an equijoin predicate, "leftVar" is the 
+        ///     On output, if this was indeed an equijoin predicate, "leftVar" is the
         ///     column of the left table, while "rightVar" is the column of the right table
         ///     and the predicate itself is of the form "leftVar = rightVar"
         /// </summary>
@@ -419,7 +415,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Does this predicate preserve nulls on the specified columns of the table?
-        ///     If any of the columns participates in a comparison predicate, or in a 
+        ///     If any of the columns participates in a comparison predicate, or in a
         ///     not-null predicate, then, nulls are not preserved
         /// </summary>
         /// <param name="simplePredNode"> the "simple" predicate node </param>

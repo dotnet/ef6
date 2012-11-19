@@ -3,15 +3,15 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class ModelCompatibilityChecker
     {
         public virtual bool CompatibleWithModel(
             InternalContext internalContext, ModelHashCalculator modelHashCalculator, bool throwIfNoMetadata)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(modelHashCalculator != null);
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(modelHashCalculator);
 
             if (internalContext.CodeFirstModel == null)
             {

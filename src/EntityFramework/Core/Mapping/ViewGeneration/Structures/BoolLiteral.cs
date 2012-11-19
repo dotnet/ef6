@@ -16,8 +16,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// <summary>
     ///     A class that ties up all the literals in boolean expressions.
     ///     Conditions represented by <see cref="BoolLiteral" />s need to be synchronized with <see cref="DomainConstraint" />s,
-    ///     which may be modified upon calling <see cref="BoolExpression.ExpensiveSimplify" />. This is what the method <see
-    ///      cref="BoolLiteral.FixRange" /> is used for.
+    ///     which may be modified upon calling <see cref="BoolExpression.ExpensiveSimplify" />. This is what the method
+    ///     <see
+    ///         cref="BoolLiteral.FixRange" />
+    ///     is used for.
     /// </summary>
     internal abstract class BoolLiteral : InternalBase
     {
@@ -25,8 +27,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly IEqualityComparer<BoolLiteral> EqualityIdentifierComparer = new IdentifierComparer();
 
         /// <summary>
-        ///     Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being <paramref
-        ///      name="domain" />".
+        ///     Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
+        ///     <paramref
+        ///         name="domain" />
+        ///     ".
         /// </summary>
         internal static DomainTermExpr MakeTermExpression(BoolLiteral literal, IEnumerable<Constant> domain, IEnumerable<Constant> range)
         {
@@ -36,8 +40,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being <paramref
-        ///      name="domain" />".
+        ///     Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
+        ///     <paramref
+        ///         name="domain" />
+        ///     ".
         /// </summary>
         internal static DomainTermExpr MakeTermExpression(BoolLiteral literal, Set<Constant> domain, Set<Constant> range)
         {

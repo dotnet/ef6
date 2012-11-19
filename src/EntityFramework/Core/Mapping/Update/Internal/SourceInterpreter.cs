@@ -66,7 +66,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // if this is an identifier, it may also be registered with an "owner".
                             // Return the owner as well if the owner is also mapped to this table.
                             PropagatorResult owner;
-                            if (m_translator.KeyManager.TryGetIdentifierOwner(source.Identifier, out owner) &&
+                            if (m_translator.KeyManager.TryGetIdentifierOwner(source.Identifier, out owner)
+                                &&
                                 null != owner.StateEntry
                                 &&
                                 ExtentInScope(owner.StateEntry.EntitySet))

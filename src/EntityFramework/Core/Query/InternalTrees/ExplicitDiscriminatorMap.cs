@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     Describes user-defined discriminator metadata (e.g. for a basic TPH mapping). Encapsulates
     ///     relevant data from System.Data.Entity.Core.Mapping.ViewGenerabetion.DiscriminatorMap (that is to say,
     ///     data relevant to the PlanCompiler). This separate class accomplishes two things:
-    /// 
     ///     1. Maintain separation of ViewGen and PlanCompiler
     ///     2. Avoid holding references to CQT expressions in ITree ops (which the ViewGen.DiscriminatorMap
     ///     holds a few CQT references)
@@ -28,7 +27,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_typeMap = template.TypeMap;
             m_discriminatorProperty = template.Discriminator.Property;
             m_properties = template.PropertyMap.Select(propertyValuePair => propertyValuePair.Key)
-                .ToList().AsReadOnly();
+                                   .ToList().AsReadOnly();
         }
 
         /// <summary>

@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Adapted from <see cref="System.Lazy{T}" /> to allow the initializer to take an input object and
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
         /// <param name="valueFactory"> The value factory. </param>
         public RetryLazy(Func<TInput, TResult> valueFactory)
         {
-            Contract.Requires(valueFactory != null);
+            DebugCheck.NotNull(valueFactory);
 
             _valueFactory = valueFactory;
         }
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Internal
             {
                 if (_value == null)
                 {
-                    Contract.Assert(_valueFactory != null, "Same thread called Value while already calculating Value.");
+                    Debug.Assert(_valueFactory != null, "Same thread called Value while already calculating Value.");
 
                     var valueFactory = _valueFactory;
                     try
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Internal
                     }
                     catch (Exception)
                     {
-                        Contract.Assert(_value == null, "_value should only be set if no exception is thrown.");
+                        Debug.Assert(_value == null, "_value should only be set if no exception is thrown.");
 
                         // Reset the value factory so that the value creation will be retried.
                         _valueFactory = valueFactory;
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Internal
                     }
                 }
 
-                Contract.Assert(_value != null, "This class needs modification if it should ever return null.");
+                Debug.Assert(_value != null, "This class needs modification if it should ever return null.");
                 return _value;
             }
         }

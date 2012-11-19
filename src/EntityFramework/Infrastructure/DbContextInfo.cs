@@ -8,7 +8,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -32,27 +31,29 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Creates a new instance representing a given <see cref="DbContext" /> type.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         public DbContextInfo(Type contextType)
-            : this(contextType, null, AppConfig.DefaultInstance, null)
+            : this(Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, null)
         {
-            Contract.Requires(contextType != null);
         }
 
         /// <summary>
         ///     Creates a new instance representing a given <see cref="DbContext" /> targeting a specific database.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
         public DbContextInfo(Type contextType, DbConnectionInfo connectionInfo)
-            : this(contextType, null, AppConfig.DefaultInstance, connectionInfo)
+            : this(
+                Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, Check.NotNull(connectionInfo, "connectionInfo"))
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(connectionInfo != null);
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external list of 
+        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external list of
         ///     connection strings can be supplied and will be used during connection string resolution in place
         ///     of any connection strings specified in external configuration files.
         /// </summary>
@@ -61,30 +62,32 @@ namespace System.Data.Entity.Infrastructure
         ///     constructor. Providing the entire config document allows DefaultConnectionFactroy entries in the config
         ///     to be found in addition to explicitly specified connection strings.
         /// </remarks>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         /// <param name="connectionStringSettings"> A collection of connection strings. </param>
         [Obsolete(
             @"The application configuration can contain multiple settings that affect the connection used by a DbContext. To ensure all configuration is taken into account, use a DbContextInfo constructor that accepts System.Configuration.Configuration"
             )]
         public DbContextInfo(Type contextType, ConnectionStringSettingsCollection connectionStringSettings)
-            : this(contextType, null, new AppConfig(connectionStringSettings), null)
+            : this(
+                Check.NotNull(contextType, "contextType"), null,
+                new AppConfig(Check.NotNull(connectionStringSettings, "connectionStringSettings")), null)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(connectionStringSettings != null);
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config 
+        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config
         ///     object (e.g. app.config or web.config) can be supplied and will be used during connection string
         ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         /// <param name="config"> An object representing the config file. </param>
         public DbContextInfo(Type contextType, Configuration config)
-            : this(contextType, null, new AppConfig(config), null)
+            : this(Check.NotNull(contextType, "contextType"), null, new AppConfig(Check.NotNull(config, "config")), null)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(config != null);
         }
 
         /// <summary>
@@ -92,15 +95,16 @@ namespace System.Data.Entity.Infrastructure
         ///     An external config object (e.g. app.config or web.config) can be supplied and will be used during connection string
         ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         /// <param name="config"> An object representing the config file. </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
         public DbContextInfo(Type contextType, Configuration config, DbConnectionInfo connectionInfo)
-            : this(contextType, null, new AppConfig(config), connectionInfo)
+            : this(
+                Check.NotNull(contextType, "contextType"), null, new AppConfig(Check.NotNull(config, "config")),
+                Check.NotNull(connectionInfo, "connectionInfo"))
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(config != null);
-            Contract.Requires(connectionInfo != null);
         }
 
         /// <summary>
@@ -108,32 +112,39 @@ namespace System.Data.Entity.Infrastructure
         ///     can be supplied in order to override the default determined provider used when constructing
         ///     the underlying EDM model.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
-        /// <param name="modelProviderInfo"> A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target. </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
+        /// <param name="modelProviderInfo">
+        ///     A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
+        /// </param>
         public DbContextInfo(Type contextType, DbProviderInfo modelProviderInfo)
-            : this(contextType, modelProviderInfo, AppConfig.DefaultInstance, null)
+            : this(
+                Check.NotNull(contextType, "contextType"), Check.NotNull(modelProviderInfo, "modelProviderInfo"), AppConfig.DefaultInstance,
+                null)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(modelProviderInfo != null);
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config 
+        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config
         ///     object (e.g. app.config or web.config) can be supplied and will be used during connection string
-        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries. 
+        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         ///     A <see cref="DbProviderInfo" /> can be supplied in order to override the default determined
         ///     provider used when constructing the underlying EDM model. This can be useful to prevent EF from
         ///     connecting to discover a manifest token.
         /// </summary>
-        /// <param name="contextType"> The type deriving from <see cref="DbContext" /> . </param>
+        /// <param name="contextType">
+        ///     The type deriving from <see cref="DbContext" /> .
+        /// </param>
         /// <param name="config"> An object representing the config file. </param>
-        /// <param name="modelProviderInfo"> A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target. </param>
+        /// <param name="modelProviderInfo">
+        ///     A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
+        /// </param>
         public DbContextInfo(Type contextType, Configuration config, DbProviderInfo modelProviderInfo)
-            : this(contextType, modelProviderInfo, new AppConfig(config), null)
+            : this(
+                Check.NotNull(contextType, "contextType"), Check.NotNull(modelProviderInfo, "modelProviderInfo"),
+                new AppConfig(Check.NotNull(config, "config")), null)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(config != null);
-            Contract.Requires(modelProviderInfo != null);
         }
 
         /// <summary>
@@ -142,7 +153,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="context"> The context instance to get info from. </param>
         internal DbContextInfo(DbContext context)
         {
-            Contract.Requires(context != null);
+            Check.NotNull(context, "context");
 
             _contextType = context.GetType();
             _appConfig = AppConfig.DefaultInstance;
@@ -267,7 +278,9 @@ namespace System.Data.Entity.Infrastructure
         ///     If instances of the underlying <see cref="DbContext" /> type can be created, returns
         ///     a new instance; otherwise returns null.
         /// </summary>
-        /// <returns> A <see cref="DbContext" /> instance. </returns>
+        /// <returns>
+        ///     A <see cref="DbContext" /> instance.
+        /// </returns>
         public virtual DbContext CreateInstance()
         {
             if (!IsConstructible)
@@ -286,7 +299,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void ConfigureContext(DbContext context)
         {
-            Contract.Requires(context != null);
+            DebugCheck.NotNull(context);
 
             if (_modelProviderInfo != null)
             {

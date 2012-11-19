@@ -26,9 +26,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return p;
         }
 
-        ///<summary>
-        ///</summary>
-        ///<returns> </returns>
+        /// <summary>
+        /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             return "ALL";

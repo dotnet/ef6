@@ -8,9 +8,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
     /// <summary>
     ///     A node in a Reduced Ordered Boolean Decision Diagram. Reads as:
-    /// 
     ///     if 'Variable' then 'Then' else 'Else'
-    /// 
     ///     Invariant: the Then and Else children must refer to 'deeper' variables,
     ///     or variables with a higher value. Otherwise, the graph is not 'Ordered'.
     ///     All creation of vertices is mediated by the Solver class which ensures
@@ -67,7 +65,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <summary>
         ///     Gets the variable tested by this vertex. If this is a sink node, returns
         ///     int.MaxValue since there is no variable to test (and since this is a leaf,
-        ///     this non-existent variable is 'deeper' than any existing variable; the 
+        ///     this non-existent variable is 'deeper' than any existing variable; the
         ///     variable value is larger than any real variable)
         /// </summary>
         internal readonly int Variable;

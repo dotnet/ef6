@@ -3,15 +3,12 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -29,14 +26,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         internal NavigationPropertyConfiguration(PropertyInfo navigationProperty)
         {
-            Contract.Requires(navigationProperty != null);
+            DebugCheck.NotNull(navigationProperty);
 
             _navigationProperty = navigationProperty;
         }
 
         private NavigationPropertyConfiguration(NavigationPropertyConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _navigationProperty = source._navigationProperty;
             _endKind = source._endKind;
@@ -76,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _endKind; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 _endKind = value;
             }
@@ -87,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _inverseNavigationProperty; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 if (value == _navigationProperty)
                 {
@@ -103,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _inverseEndKind; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 _inverseEndKind = value;
             }
@@ -122,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _constraint; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 _constraint = value;
             }
@@ -138,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             get { return _associationMappingConfiguration; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 _associationMappingConfiguration = value;
             }
@@ -147,9 +144,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         internal void Configure(
             NavigationProperty navigationProperty, EdmModel model, EntityTypeConfiguration entityTypeConfiguration)
         {
-            Contract.Requires(navigationProperty != null);
-            Contract.Requires(model != null);
-            Contract.Requires(entityTypeConfiguration != null);
+            DebugCheck.NotNull(navigationProperty);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityTypeConfiguration);
 
             navigationProperty.SetConfiguration(this);
 
@@ -172,8 +169,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         internal void Configure(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(associationSetMapping != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(associationSetMapping);
+            DebugCheck.NotNull(databaseMapping);
 
             // We may apply configuration twice from two different NavigationPropertyConfiguration objects,
             // but that should be okay since they were validated as consistent above.
@@ -190,8 +187,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         private void ConfigureInverse(AssociationType associationType, EdmModel model)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(model);
 
             if (_inverseNavigationProperty == null)
             {
@@ -228,7 +225,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private void ConfigureEndKinds(
             AssociationType associationType, NavigationPropertyConfiguration configuration)
         {
-            Contract.Requires(associationType != null);
+            DebugCheck.NotNull(associationType);
 
             var sourceEnd = associationType.SourceEnd;
             var targetEnd = associationType.TargetEnd;
@@ -253,7 +250,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         private void ValidateConsistency(NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
-            Contract.Requires(navigationPropertyConfiguration != null);
+            DebugCheck.NotNull(navigationPropertyConfiguration);
 
             if ((navigationPropertyConfiguration.InverseEndKind != null)
                 && (RelationshipMultiplicity != null)
@@ -320,9 +317,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private void ConfigureDependentBehavior(
             AssociationType associationType, EdmModel model, EntityTypeConfiguration entityTypeConfiguration)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(model != null);
-            Contract.Requires(entityTypeConfiguration != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityTypeConfiguration);
 
             AssociationEndMember principalEnd;
             AssociationEndMember dependentEnd;
@@ -334,9 +331,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     associationType.MarkPrincipalConfigured();
 
                     var navProp = model.Namespaces
-                        .SelectMany(ns => ns.EntityTypes)
-                        .SelectMany(et => et.DeclaredNavigationProperties)
-                        .Single(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
+                                       .SelectMany(ns => ns.EntityTypes)
+                                       .SelectMany(et => et.DeclaredNavigationProperties)
+                                       .Single(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
 
                     principalEnd = IsNavigationPropertyDeclaringTypePrincipal.Value
                                        ? associationType.GetOtherEnd(navProp.ResultEnd)
@@ -354,8 +351,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                         var associationSet
                             = model.Containers
-                                .SelectMany(ct => ct.AssociationSets)
-                                .Single(aset => aset.ElementType == associationType);
+                                   .SelectMany(ct => ct.AssociationSets)
+                                   .Single(aset => aset.ElementType == associationType);
 
                         var sourceSet = associationSet.SourceSet;
 
@@ -379,9 +376,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(dependentEnd != null);
-            Contract.Requires(entityTypeConfiguration != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(dependentEnd);
+            DebugCheck.NotNull(entityTypeConfiguration);
 
             if (_constraint != null)
             {
@@ -391,7 +388,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                 if ((associationConstraint != null)
                     && associationConstraint.ToProperties
-                           .SequenceEqual(associationConstraint.DependentEnd.GetEntityType().DeclaredKeyProperties))
+                                            .SequenceEqual(associationConstraint.DependentEnd.GetEntityType().DeclaredKeyProperties))
                 {
                     // The dependent FK is also the PK. We need to adjust the multiplicity
                     // when it has not been explicity configured because the default is *:0..1
@@ -408,7 +405,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
         private void ConfigureDeleteAction(AssociationEndMember principalEnd)
         {
-            Contract.Requires(principalEnd != null);
+            DebugCheck.NotNull(principalEnd);
 
             if (DeleteAction != null)
             {

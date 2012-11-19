@@ -3,16 +3,18 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///     An instance of a class derived from ObjectQueryState is used to model every instance of <see
-    ///      cref="ObjectQuery{TResultType}" />.
-    ///     A different ObjectQueryState-derived class is used depending on whether the ObjectQuery is an Entity SQL, 
+    ///     An instance of a class derived from ObjectQueryState is used to model every instance of
+    ///     <see
+    ///         cref="ObjectQuery{TResultType}" />
+    ///     .
+    ///     A different ObjectQueryState-derived class is used depending on whether the ObjectQuery is an Entity SQL,
     ///     Linq to Entities, or compiled Linq to Entities query.
     /// </summary>
     internal abstract class ObjectQueryState
@@ -71,10 +73,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         protected ObjectQueryState(Type elementType, ObjectContext context, ObjectParameterCollection parameters, Span span)
         {
             // Validate the element type
-            Contract.Requires(elementType != null);
+            DebugCheck.NotNull(elementType);
 
             // Validate the context
-            Contract.Requires(context != null);
+            DebugCheck.NotNull(context);
 
             // Parameters and Span are specifically allowed to be null
 
@@ -225,7 +227,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Implementations of this method must not throw exceptions.
         /// </summary>
         /// <param name="commandText"> The command text of this query, if available. </param>
-        /// <returns> <c>true</c> if command text is available for this query and was successfully retrieved; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if command text is available for this query and was successfully retrieved; otherwise <c>false</c> .
+        /// </returns>
         internal abstract bool TryGetCommandText(out string commandText);
 
         /// <summary>
@@ -234,7 +238,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Implementations of this method must not throw exceptions.
         /// </summary>
         /// <param name="expression"> The LINQ Expression that defines this query, if available. </param>
-        /// <returns> <c>true</c> if an Expression is available for this query and was successfully retrieved; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if an Expression is available for this query and was successfully retrieved; otherwise <c>false</c> .
+        /// </returns>
         internal abstract bool TryGetExpression(out Expression expression);
 
         /// <summary>
@@ -246,8 +252,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal abstract ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption);
 
         /// <summary>
-        ///     Must returns a new ObjectQueryState instance that is a duplicate of this instance and additionally contains the specified Include path in its <see
-        ///      cref="Span" />.
+        ///     Must returns a new ObjectQueryState instance that is a duplicate of this instance and additionally contains the specified Include path in its
+        ///     <see
+        ///         cref="Span" />
+        ///     .
         /// </summary>
         /// <typeparam name="TElementType"> The element type of the source query on which Include was called </typeparam>
         /// <param name="sourceQuery"> The source query on which Include was called </param>
@@ -259,7 +267,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Retrieves the result type of the query in terms of C-Space metadata. This method is called once, on-demand, if a call
         ///     to <see cref="ObjectQuery.GetResultType" /> cannot be satisfied using cached type metadata or a currently cached execution plan.
         /// </summary>
-        /// <returns> Must return a <see cref="TypeUsage" /> that describes the result typeof this query in terms of C-Space metadata </returns>
+        /// <returns>
+        ///     Must return a <see cref="TypeUsage" /> that describes the result typeof this query in terms of C-Space metadata
+        /// </returns>
         protected abstract TypeUsage GetResultType();
 
         /// <summary>
@@ -267,8 +277,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     or the <see cref="DefaultMergeOption" /> if the value of all specified nullable merge options is <c>null</c>.
         /// </summary>
         /// <param name="preferredMergeOptions"> The available nullable merge option values, in order of decreasing preference </param>
-        /// <returns> the first non-null merge option; or the default merge option if the value of all <paramref
-        ///      name="preferredMergeOptions" /> is null </returns>
+        /// <returns>
+        ///     the first non-null merge option; or the default merge option if the value of all
+        ///     <paramref
+        ///         name="preferredMergeOptions" />
+        ///     is null
+        /// </returns>
         protected static MergeOption EnsureMergeOption(params MergeOption?[] preferredMergeOptions)
         {
             foreach (var preferred in preferredMergeOptions)
@@ -286,7 +300,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Helper method to return the first non-null merge option from the specified nullable merge options.
         /// </summary>
         /// <param name="preferredMergeOptions"> The available nullable merge option values, in order of decreasing preference </param>
-        /// <returns> the first non-null merge option; or <c>null</c> if the value of all <paramref name="preferredMergeOptions" /> is null </returns>
+        /// <returns>
+        ///     the first non-null merge option; or <c>null</c> if the value of all <paramref name="preferredMergeOptions" /> is null
+        /// </returns>
         protected static MergeOption? GetMergeOption(params MergeOption?[] preferredMergeOptions)
         {
             foreach (var preferred in preferredMergeOptions)
@@ -303,7 +319,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Helper method to create a new ObjectQuery based on this query state instance.
         /// </summary>
-        /// <returns> A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" /> </returns>
+        /// <returns>
+        ///     A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" />
+        /// </returns>
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public ObjectQuery CreateQuery()
         {

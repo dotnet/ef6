@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     {
         internal ExtractorMetadata(EntitySetBase entitySetBase, StructuralType type, UpdateTranslator translator)
         {
-            Contract.Requires(entitySetBase != null);
-            Contract.Requires(type != null);
-            Contract.Requires(translator != null);
+            DebugCheck.NotNull(entitySetBase);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(translator);
 
             m_type = type;
             m_translator = translator;
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     keyMembers = new Set<EdmMember>(entityType.KeyMembers).MakeReadOnly();
                     foreignKeyMembers = new Set<EdmMember>(
                         ((EntitySet)entitySetBase).ForeignKeyDependents
-                            .SelectMany(fk => fk.Item2.ToProperties)).MakeReadOnly();
+                                                  .SelectMany(fk => fk.Item2.ToProperties)).MakeReadOnly();
                     break;
                 default:
                     keyMembers = Set<EdmMember>.Empty;
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         /// <summary>
         ///     Requires: record must have correct type for this metadata instance.
-        ///     Populates a new <see cref="PropagatorResult" /> object representing a member of a record matching the 
+        ///     Populates a new <see cref="PropagatorResult" /> object representing a member of a record matching the
         ///     type of this extractor. Given a record and a member, this method wraps the value of the member
         ///     in a PropagatorResult. This operation can be performed efficiently by this class, which knows
         ///     important stuff about the type being extracted.

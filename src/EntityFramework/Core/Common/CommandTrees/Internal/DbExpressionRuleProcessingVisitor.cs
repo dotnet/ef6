@@ -7,8 +7,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
     /// <summary>
     ///     Abstract base class for a DbExpression visitor that can apply a collection of <see cref="DbExpressionRule" />s during the visitor pass, returning the final result expression.
-    ///     This class encapsulates the rule application logic that applies regardless of how the ruleset - modelled as the abstract <see
-    ///      cref="GetRules" /> method - is provided.
+    ///     This class encapsulates the rule application logic that applies regardless of how the ruleset - modelled as the abstract
+    ///     <see
+    ///         cref="GetRules" />
+    ///     method - is provided.
     /// </summary>
     internal abstract class DbExpressionRuleProcessingVisitor : DefaultExpressionVisitor
     {

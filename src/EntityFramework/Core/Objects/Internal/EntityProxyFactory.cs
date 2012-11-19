@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         /// <summary>
         ///     Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
-        ///     A null value for a particular EntityType name key records the fact that 
+        ///     A null value for a particular EntityType name key records the fact that
         ///     no proxy Type could be created for the specified type.
         /// </summary>
         private static readonly Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> _proxyNameMap =
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Enumerate list of supplied O-Space EntityTypes, 
+        ///     Enumerate list of supplied O-Space EntityTypes,
         ///     and generate a proxy type for each EntityType (if possible for the particular type).
         /// </summary>
         /// <param name="ospaceEntityType"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
@@ -456,8 +456,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var interceptorDelegate =
                 typeof(LazyLoadBehavior).GetMethod("GetInterceptorDelegate", BindingFlags.NonPublic | BindingFlags.Static).
-                    MakeGenericMethod(proxyType, property.PropertyType).
-                    Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
+                                         MakeGenericMethod(proxyType, property.PropertyType).
+                                         Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
 
             AssignInterceptionDelegate(interceptorDelegate, interceptorField);
         }
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns> True if the class is not abstract or sealed, does not implement IEntityWithRelationships, and has a public or protected default constructor; otherwise false. </returns>
         /// <remarks>
         ///     While it is technically possible to derive from an abstract type
-        ///     in order to create a proxy, we avoid this so that the proxy type 
+        ///     in order to create a proxy, we avoid this so that the proxy type
         ///     has the same "concreteness" of the type being proxied.
         ///     The check for IEntityWithRelationships ensures that codegen'ed
         ///     entities that derive from EntityObject as well as properly

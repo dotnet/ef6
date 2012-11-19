@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a single-row update operation expressed as a canonical command tree.
@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             ReadOnlyModificationClauses setClauses, DbExpression returning)
             : base(metadata, dataSpace, target)
         {
-            Contract.Requires(predicate != null);
-            Contract.Requires(setClauses != null);
+            DebugCheck.NotNull(predicate);
+            DebugCheck.NotNull(setClauses);
             // returning is allowed to be null
 
             _predicate = predicate;

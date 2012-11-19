@@ -201,8 +201,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Given a list of <paramref name="types" /> (which can contain nulls), returns a corresponding list of <see
-        ///      cref="TypeConstant" />s for those types.
+        ///     Given a list of <paramref name="types" /> (which can contain nulls), returns a corresponding list of
+        ///     <see
+        ///         cref="TypeConstant" />
+        ///     s for those types.
         /// </summary>
         private static IEnumerable<Constant> CreateTypeConstants(IEnumerable<EdmType> types)
         {

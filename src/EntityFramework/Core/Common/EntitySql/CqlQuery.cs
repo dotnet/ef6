@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Provides eSQL text Parsing and Compilation services.
@@ -19,19 +19,25 @@ namespace System.Data.Entity.Core.Common.EntitySql
     ///     perform (list not exhaustive): type resolution and validation, ensure semantic and scoping rules, etc.
     ///     The services exposed by this class are:
     ///     <list>
-    ///         <item>Translation from eSQL text commands to valid
+    ///         <item>
+    ///             Translation from eSQL text commands to valid
     ///             <see cref="DbCommandTree" />
-    ///             s</item>
-    ///         <item>Translation from eSQL text commands to valid
+    ///             s
+    ///         </item>
+    ///         <item>
+    ///             Translation from eSQL text commands to valid
     ///             <see cref="DbExpression" />
-    ///             s</item>
+    ///             s
+    ///         </item>
     ///     </list>
     ///     Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the especific typespace or
-    ///     metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and 
-    ///     metadata was properly initialized. 
-    ///     Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid <see
-    ///      cref="DbCommandTree" /> or
-    ///     <see cref="DbExpression" /> otherwise EntityException will be thrown indicating the reason(s) why the given command cannot be accepted. 
+    ///     metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and
+    ///     metadata was properly initialized.
+    ///     Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid
+    ///     <see
+    ///         cref="DbCommandTree" />
+    ///     or
+    ///     <see cref="DbExpression" /> otherwise EntityException will be thrown indicating the reason(s) why the given command cannot be accepted.
     ///     It is also possible that MetadataException and MappingException be thrown if mapping or metadata related problems are encountered during compilation.
     /// </remarks>
     /// <list>
@@ -52,7 +58,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="commandText"> eSQL command text </param>
         /// <param name="perspective"> perspective </param>
-        /// <param name="parserOptions"> parser options <seealso cref="ParserOptions" /> </param>
+        /// <param name="parserOptions">
+        ///     parser options <seealso cref="ParserOptions" />
+        /// </param>
         /// <param name="parameters"> ordinary parameters </param>
         /// <param name="parseResult"> </param>
         /// <returns> A parse result with the command tree produced by parsing the given command. </returns>
@@ -93,7 +101,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="queryCommandText"> eSQL query command text </param>
         /// <param name="perspective"> perspective </param>
-        /// <param name="parserOptions"> parser options <seealso cref="ParserOptions" /> </param>
+        /// <param name="parserOptions">
+        ///     parser options <seealso cref="ParserOptions" />
+        /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <param name="variables"> command free variables </param>
         /// <returns> The query expression tree produced by parsing the given query command. </returns>
@@ -136,7 +146,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     Parse eSQL command string into an AST
         /// </summary>
         /// <param name="commandText"> eSQL command </param>
-        /// <param name="parserOptions"> parser options <seealso cref="ParserOptions" /> </param>
+        /// <param name="parserOptions">
+        ///     parser options <seealso cref="ParserOptions" />
+        /// </param>
         /// <returns> Ast </returns>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
         /// <remarks>
@@ -176,7 +188,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Func<Node, ParserOptions, TResult> compilationFunction)
             where TResult : class
         {
-            Contract.Requires(commandText != null);
+            DebugCheck.NotNull(commandText);
 
             //
             // Validate parser options - if null, give default options
@@ -194,7 +206,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astExpr"> Abstract Syntax Tree of the command </param>
         /// <param name="perspective"> perspective </param>
-        /// <param name="parserOptions"> parser options <seealso cref="ParserOptions" /> </param>
+        /// <param name="parserOptions">
+        ///     parser options <seealso cref="ParserOptions" />
+        /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <returns> a parse result with a valid command tree </returns>
         /// <remarks>
@@ -235,7 +249,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astQueryCommand"> Abstract Syntax Tree of the query command </param>
         /// <param name="perspective"> perspective </param>
-        /// <param name="parserOptions"> parser options <seealso cref="ParserOptions" /> </param>
+        /// <param name="parserOptions">
+        ///     parser options <seealso cref="ParserOptions" />
+        /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <param name="variables"> command free variables </param>
         /// <remarks>
@@ -279,8 +295,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Func<SemanticAnalyzer, Node, TResult> analysisFunction)
             where TResult : class
         {
-            Contract.Requires(astExpr != null);
-            Contract.Requires(perspective != null);
+            DebugCheck.NotNull(astExpr);
+            DebugCheck.NotNull(perspective);
 
             TResult result = null;
 

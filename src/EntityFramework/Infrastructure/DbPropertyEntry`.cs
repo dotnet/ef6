@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Instances of this class are returned from the Property method of
@@ -21,8 +21,10 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalPropertyEntry _internalPropertyEntry;
 
         /// <summary>
-        ///     Creates a <see cref="DbPropertyEntry{TEntity,TProperty}" /> from information in the given <see
-        ///      cref="InternalPropertyEntry" />.
+        ///     Creates a <see cref="DbPropertyEntry{TEntity,TProperty}" /> from information in the given
+        ///     <see
+        ///         cref="InternalPropertyEntry" />
+        ///     .
         ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
         ///     the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbPropertyEntry<TEntity, TProperty> Create(InternalPropertyEntry internalPropertyEntry)
         {
-            Contract.Requires(internalPropertyEntry != null);
+            DebugCheck.NotNull(internalPropertyEntry);
 
             return (DbPropertyEntry<TEntity, TProperty>)internalPropertyEntry.CreateDbMemberEntry<TEntity, TProperty>();
         }
@@ -41,7 +43,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbPropertyEntry(InternalPropertyEntry internalPropertyEntry)
         {
-            Contract.Requires(internalPropertyEntry != null);
+            DebugCheck.NotNull(internalPropertyEntry);
 
             _internalPropertyEntry = internalPropertyEntry;
         }
@@ -87,7 +89,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets or sets a value indicating whether the value of this property has been modified since
         ///     it was loaded from the database.
         /// </summary>
-        /// <value> <c>true</c> if this instance is modified; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is modified; otherwise, <c>false</c> .
+        /// </value>
         public bool IsModified
         {
             get { return _internalPropertyEntry.IsModified; }
@@ -99,7 +103,7 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbPropertyEntry" /> class for 
+        ///     Returns a new instance of the non-generic <see cref="DbPropertyEntry" /> class for
         ///     the property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>

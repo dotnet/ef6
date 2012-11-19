@@ -5,9 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -17,7 +15,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -36,8 +33,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal ValueConditionConfiguration(EntityMappingConfiguration entityMapConfiguration, string discriminator)
         {
-            Contract.Requires(entityMapConfiguration != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(discriminator));
+            DebugCheck.NotNull(entityMapConfiguration);
+            DebugCheck.NotEmpty(discriminator);
 
             _entityMappingConfiguration = entityMapConfiguration;
 
@@ -46,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private ValueConditionConfiguration(EntityMappingConfiguration owner, ValueConditionConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _entityMappingConfiguration = owner;
 
@@ -85,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being 
+        ///     Configures the discriminator value used to identify the entity type being
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <typeparam name="T"> Type of the discriminator value. </typeparam>
@@ -103,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being 
+        ///     Configures the discriminator value used to identify the entity type being
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <typeparam name="T"> Type of the discriminator value. </typeparam>
@@ -121,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being 
+        ///     Configures the discriminator value used to identify the entity type being
         ///     configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <param name="value"> The value to be used to identify the entity type. </param>
@@ -160,9 +157,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     var baseTypeTableFragments
                         = databaseMapping.GetEntityTypeMappings((EntityType)baseType)
-                            .SelectMany(etm => etm.MappingFragments)
-                            .Where(tmf => tmf.Table == table)
-                            .ToList();
+                                         .SelectMany(etm => etm.MappingFragments)
+                                         .Where(tmf => tmf.Table == table)
+                                         .ToList();
 
                     if (baseTypeTableFragments.Any()
                         && baseTypeTableFragments
@@ -185,12 +182,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             EntityType entityType,
             DbProviderManifest providerManifest)
         {
-            Contract.Requires(fragment != null);
-            Contract.Requires(providerManifest != null);
+            DebugCheck.NotNull(fragment);
+            DebugCheck.NotNull(providerManifest);
 
             var discriminatorColumn
                 = fragment.Table.Properties
-                    .SingleOrDefault(c => string.Equals(c.Name, Discriminator, StringComparison.Ordinal));
+                          .SingleOrDefault(c => string.Equals(c.Name, Discriminator, StringComparison.Ordinal));
 
             if (discriminatorColumn == null)
             {

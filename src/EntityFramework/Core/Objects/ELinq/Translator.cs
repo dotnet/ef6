@@ -235,8 +235,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Tries to get a translator for the given property info.  
-            ///     If the given property info corresponds to a Visual Basic property, 
+            ///     Tries to get a translator for the given property info.
+            ///     If the given property info corresponds to a Visual Basic property,
             ///     it also initializes the Visual Basic translators if they have not been initialized
             /// </summary>
             /// <param name="propertyInfo"> </param>
@@ -364,7 +364,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                         // if we're dealing with the "Group" property of a GroupBy projection, we know how to unwrap
                         // it
-                        if (property.Property.Name == GroupColumnName && // only know how to unwrap the group
+                        if (property.Property.Name == GroupColumnName
+                            && // only know how to unwrap the group
                             InitializerMetadata.TryGetInitializerMetadata(property.Instance.ResultType, out initializerMetadata)
                             &&
                             initializerMetadata.Kind == InitializerMetadataKind.Grouping)
@@ -453,7 +454,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     This method is used to determine whether client side evaluation should be done, 
+            ///     This method is used to determine whether client side evaluation should be done,
             ///     if the property can be evaluated in the store, it is not being evaluated on the client
             /// </summary>
             internal static bool CanFuncletizePropertyInfo(PropertyInfo propertyInfo)

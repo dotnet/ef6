@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="type"> Resolved type (from declaration on the element). Possibly null. </param>
         /// <param name="typeSubElement"> Child schema element. Possibly null. </param>
         /// <remarks>
-        ///     For some elements (e.g. ReturnType) we allow the type to be defined inline in an attribute on the element itself or 
+        ///     For some elements (e.g. ReturnType) we allow the type to be defined inline in an attribute on the element itself or
         ///     by using nested elements. These definitions are mutually exclusive.
         /// </remarks>
         internal static void ValidateTypeDeclaration(SchemaElement element, SchemaType type, SchemaElement typeSubElement)

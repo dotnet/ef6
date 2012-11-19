@@ -9,8 +9,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity
         /// </summary>
         internal Database(InternalContext internalContext)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
         }
@@ -81,18 +81,18 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Runs the the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
-        /// 
         ///     If "force" is set to true, then the initializer is run regardless of whether or not it
         ///     has been run before.  This can be useful if a database is deleted while an app is running
         ///     and needs to be reinitialized.
-        /// 
         ///     If "force" is set to false, then the initializer is only run if it has not already been
         ///     run for this context, model, and connection in this app domain. This method is typically
         ///     used when it is necessary to ensure that the database has been created and seeded
         ///     before starting some operation where doing so lazily will cause issues, such as when the
         ///     operation is part of a transaction.
         /// </summary>
-        /// <param name="force"> If set to <c>true</c> the initializer is run even if it has already been run. </param>
+        /// <param name="force">
+        ///     If set to <c>true</c> the initializer is run even if it has already been run.
+        /// </param>
         public void Initialize(bool force)
         {
             if (force)
@@ -111,18 +111,17 @@ namespace System.Data.Entity
         /// </summary>
         /// <remarks>
         ///     Model compatibility currently uses the following rules.
-        /// 
         ///     If the context was created using either the Model First or Database First approach then the
         ///     model is assumed to be compatible with the database and this method returns true.
-        /// 
         ///     For Code First the model is considered compatible if the model is stored in the database
         ///     in the Migrations history table and that model has no differences from the current model as
         ///     determined by Migrations model differ.
-        /// 
         ///     If the model is not stored in the database but an EF 4.1/4.2 model hash is found instead,
         ///     then this is used to check for compatibility.
         /// </remarks>
-        /// <param name="throwIfNoMetadata"> If set to <c>true</c> then an exception will be thrown if no model metadata is found in the database. If set to <c>false</c> then this method will return <c>true</c> if metadata is not found. </param>
+        /// <param name="throwIfNoMetadata">
+        ///     If set to <c>true</c> then an exception will be thrown if no model metadata is found in the database. If set to <c>false</c> then this method will return <c>true</c> if metadata is not found.
+        /// </param>
         /// <returns> True if the model hash in the context and the database match; false otherwise. </returns>
         public bool CompatibleWithModel(bool throwIfNoMetadata)
         {
@@ -223,7 +222,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Exists(string nameOrConnectionString)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
             return PerformDatabaseOp(
                 new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().Exists);
@@ -239,7 +238,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static bool Delete(string nameOrConnectionString)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(nameOrConnectionString));
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
             return PerformDatabaseOp(
                 new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().DeleteIfExists);
@@ -252,7 +251,7 @@ namespace System.Data.Entity
         /// <returns> True if the database exists; false otherwise. </returns>
         public static bool Exists(DbConnection existingConnection)
         {
-            Contract.Requires(existingConnection != null);
+            Check.NotNull(existingConnection, "existingConnection");
 
             return PerformDatabaseOp(existingConnection, new DatabaseOperations().Exists);
         }
@@ -264,7 +263,7 @@ namespace System.Data.Entity
         /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         public static bool Delete(DbConnection existingConnection)
         {
-            Contract.Requires(existingConnection != null);
+            Check.NotNull(existingConnection, "existingConnection");
 
             return PerformDatabaseOp(existingConnection, new DatabaseOperations().DeleteIfExists);
         }
@@ -294,7 +293,7 @@ namespace System.Data.Entity
             get { return _defaultConnectionFactory.Value; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 _defaultConnectionFactory = new Lazy<IDbConnectionFactory>(() => value, isThreadSafe: true);
             }
@@ -382,11 +381,13 @@ namespace System.Data.Entity
         /// <typeparam name="TElement"> The type of object returned by the query. </typeparam>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
-        /// <returns> A <see cref="DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated. </returns>
+        /// <returns>
+        ///     A <see cref="DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated.
+        /// </returns>
         public DbRawSqlQuery<TElement> SqlQuery<TElement>(string sql, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return new DbRawSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
         }
@@ -402,12 +403,14 @@ namespace System.Data.Entity
         /// <param name="elementType"> The type of object returned by the query. </param>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
-        /// <returns> A <see cref="DbRawSqlQuery" /> object that will execute the query when it is enumerated. </returns>
+        /// <returns>
+        ///     A <see cref="DbRawSqlQuery" /> object that will execute the query when it is enumerated.
+        /// </returns>
         public DbRawSqlQuery SqlQuery(Type elementType, string sql, params object[] parameters)
         {
-            Contract.Requires(elementType != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotNull(elementType, "elementType");
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return new DbRawSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
         }
@@ -420,8 +423,8 @@ namespace System.Data.Entity
         /// <returns> The result returned by the database after executing the command. </returns>
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return _internalContext.ExecuteSqlCommand(sql, parameters);
         }
@@ -437,8 +440,8 @@ namespace System.Data.Entity
         /// <returns> A Task containing the result returned by the database after executing the command. </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return ExecuteSqlCommandAsync(sql, CancellationToken.None, parameters);
         }
@@ -454,8 +457,8 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return _internalContext.ExecuteSqlCommandAsync(sql, cancellationToken, parameters);
         }

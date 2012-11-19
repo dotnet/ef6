@@ -8,7 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Handles creating databases either using the core provider or the Migrations pipeline.
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Internal
 
         public DatabaseCreator(IDbDependencyResolver resolver)
         {
-            Contract.Requires(resolver != null);
+            DebugCheck.NotNull(resolver);
 
             _resolver = resolver;
         }
@@ -42,8 +42,8 @@ namespace System.Data.Entity.Internal
             Func<DbMigrationsConfiguration, DbContext, MigratorBase> createMigrator,
             ObjectContext objectContext)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(createMigrator != null);
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(createMigrator);
             // objectContext may be null when testing.
 
             if (internalContext.CodeFirstModel != null

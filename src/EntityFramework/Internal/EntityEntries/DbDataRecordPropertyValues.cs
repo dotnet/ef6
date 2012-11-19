@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     An implementation of <see cref="InternalPropertyValues" /> that is based on an existing
@@ -23,12 +23,14 @@ namespace System.Data.Entity.Internal
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="type"> The type. </param>
         /// <param name="dataRecord"> The data record. </param>
-        /// <param name="isEntityValues"> If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object. </param>
+        /// <param name="isEntityValues">
+        ///     If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.
+        /// </param>
         internal DbDataRecordPropertyValues(
             InternalContext internalContext, Type type, DbUpdatableDataRecord dataRecord, bool isEntity)
             : base(internalContext, type, isEntity)
         {
-            Contract.Requires(dataRecord != null);
+            DebugCheck.NotNull(dataRecord);
 
             _dataRecord = dataRecord;
         }

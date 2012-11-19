@@ -18,11 +18,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     ///     ColumnMapTranslator visits the ColumnMap hiearchy and runs the translation delegate
     ///     you specify;  There are some static methods to perform common translations, but you
     ///     can bring your own translation if you desire.
-    /// 
-    ///     This visitor only creates new ColumnMap objects when necessary; it attempts to 
+    ///     This visitor only creates new ColumnMap objects when necessary; it attempts to
     ///     replace-in-place, except when that is not possible because the field is not
     ///     writable.
-    /// 
     ///     NOTE: over time, we should be able to modify the ColumnMaps to have more writable
     ///     fields;
     /// </summary>

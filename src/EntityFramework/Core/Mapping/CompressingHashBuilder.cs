@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Security.Cryptography;
 
     /// <summary>
-    ///     This class keeps recomputing the hash and adding it to the front of the 
+    ///     This class keeps recomputing the hash and adding it to the front of the
     ///     builder when the length of the string gets too long
     /// </summary>
     internal class CompressingHashBuilder : StringHashBuilder

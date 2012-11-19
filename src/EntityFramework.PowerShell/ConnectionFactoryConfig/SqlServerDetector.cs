@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.ServiceProcess;
 
@@ -24,8 +24,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// </summary>
         public SqlServerDetector(RegistryKeyProxy localMachine, ServiceControllerProxy controller)
         {
-            Contract.Requires(localMachine != null);
-            Contract.Requires(controller != null);
+            DebugCheck.NotNull(localMachine);
+            DebugCheck.NotNull(controller);
 
             _localMachine = localMachine;
             _controller = controller;

@@ -71,7 +71,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(entityType);
             var isProxy = EntityProxyFactory.IsProxyType(entityType);
             MethodInfo createDelegate;
-            if (isIEntityWithRelationships && isIEntityWithChangeTracker && isIEntityWithKey
+            if (isIEntityWithRelationships
+                && isIEntityWithChangeTracker
+                && isIEntityWithKey
                 && !isProxy)
             {
                 createDelegate = typeof(EntityWrapperFactory).GetMethod(

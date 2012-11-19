@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -14,7 +14,6 @@ namespace System.Data.Entity.Internal.Validation
     /// <remarks>
     ///     This is a composite validator for an EDM Type.
     /// </remarks>
-    [ContractClass(typeof(TypeValidatorContracts))]
     internal abstract class TypeValidator
     {
         private readonly IEnumerable<IValidator> _typeLevelValidators;
@@ -28,8 +27,8 @@ namespace System.Data.Entity.Internal.Validation
         public TypeValidator(
             IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
         {
-            Contract.Requires(typeLevelValidators != null);
-            Contract.Requires(propertyValidators != null);
+            DebugCheck.NotNull(typeLevelValidators);
+            DebugCheck.NotNull(propertyValidators);
 
             _typeLevelValidators = typeLevelValidators;
             _propertyValidators = propertyValidators;
@@ -52,7 +51,9 @@ namespace System.Data.Entity.Internal.Validation
         /// </summary>
         /// <param name="entityValidationContext"> Entity validation context. Must not be null. </param>
         /// <param name="property"> The entry for the complex property. Null if validating an entity. </param>
-        /// <returns> <see cref="DbEntityValidationResult" /> instance. Never null. </returns>
+        /// <returns>
+        ///     <see cref="DbEntityValidationResult" /> instance. Never null.
+        /// </returns>
         /// <remarks>
         ///     Protected so it doesn't appear on EntityValidator.
         /// </remarks>
@@ -99,24 +100,6 @@ namespace System.Data.Entity.Internal.Validation
         public PropertyValidator GetPropertyValidator(string name)
         {
             return _propertyValidators.SingleOrDefault(v => v.PropertyName == name);
-        }
-
-        [ContractClassFor(typeof(TypeValidator))]
-        private abstract class TypeValidatorContracts : TypeValidator
-        {
-            protected TypeValidatorContracts(
-                IEnumerable<PropertyValidator> propertyValidators, IEnumerable<IValidator> typeLevelValidators)
-                : base(propertyValidators, typeLevelValidators)
-            {
-            }
-
-            protected override void ValidateProperties(
-                EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
-                List<DbValidationError> validationErrors)
-            {
-                Contract.Requires(entityValidationContext != null);
-                Contract.Requires(validationErrors != null);
-            }
         }
     }
 }

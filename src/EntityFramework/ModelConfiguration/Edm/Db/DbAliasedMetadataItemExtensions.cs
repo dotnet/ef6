@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal static class DbAliasedMetadataItemExtensions
@@ -12,8 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         public static string UniquifyIdentifier(
             this IEnumerable<EntitySet> aliasedMetadataItems, string identifier)
         {
-            Contract.Requires(aliasedMetadataItems != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(identifier));
+            DebugCheck.NotNull(aliasedMetadataItems);
+            DebugCheck.NotEmpty(identifier);
 
             return Uniquify(aliasedMetadataItems.Select(n => n.Table), identifier);
         }

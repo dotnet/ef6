@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied to the subtree rooted at the given 
+        ///     Callback function to be applied to the subtree rooted at the given
         ///     node before any rules are applied
         /// </summary>
         /// <param name="node"> the node that is the root of the subtree </param>
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied to the subtree rooted at the given 
+        ///     Callback function to be applied to the subtree rooted at the given
         ///     node after any rules are applied
         /// </summary>
         /// <param name="node"> the node that is the root of the subtree </param>

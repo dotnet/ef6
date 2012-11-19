@@ -13,13 +13,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Text;
 
     /// <summary>
-    ///     requires: for structural types, member values are ordinally aligned with the members of the 
+    ///     requires: for structural types, member values are ordinally aligned with the members of the
     ///     structural type.
-    /// 
     ///     Stores a 'row' (or element within a row) being propagated through the update pipeline, including
     ///     markup information and metadata. Internally, we maintain several different classes so that we only
     ///     store the necessary state.
-    /// 
     ///     - StructuralValue (complex types, entities, and association end keys): type and member values,
     ///     one version for modified structural values and one version for unmodified structural values
     ///     (a structural type is modified if its _type_ is changed, not its values

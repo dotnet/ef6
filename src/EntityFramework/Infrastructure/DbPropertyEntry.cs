@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     A non-generic version of the <see cref="DbPropertyEntry{TEntity, TProperty}" /> class.
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
         {
-            Contract.Requires(internalPropertyEntry != null);
+            DebugCheck.NotNull(internalPropertyEntry);
 
             return (DbPropertyEntry)internalPropertyEntry.CreateDbMemberEntry();
         }
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbPropertyEntry(InternalPropertyEntry internalPropertyEntry)
         {
-            Contract.Requires(internalPropertyEntry != null);
+            DebugCheck.NotNull(internalPropertyEntry);
 
             _internalPropertyEntry = internalPropertyEntry;
         }
@@ -88,7 +88,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Setting this value to false for properties of Added, Unchanged, or Deleted entities
         ///     is a no-op.
         /// </remarks>
-        /// <value> <c>true</c> if this instance is modified; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is modified; otherwise, <c>false</c> .
+        /// </value>
         public bool IsModified
         {
             get { return _internalPropertyEntry.IsModified; }

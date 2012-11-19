@@ -2,13 +2,13 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
     ///     Class for representing a Facet object
-    ///     This object is Immutable (not just set to readonly) and 
+    ///     This object is Immutable (not just set to readonly) and
     ///     some parts of the system are depending on that behavior
     /// </summary>
     [DebuggerDisplay("{Name,nq}={Value}")]
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a Facet instance with the specified value for the given 
+        ///     Creates a Facet instance with the specified value for the given
         ///     facet description.
         /// </summary>
         /// <param name="facetDescription"> The object describing this facet </param>
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a Facet instance with the specified value for the given 
+        ///     Creates a Facet instance with the specified value for the given
         ///     facet description.
         /// </summary>
         /// <param name="facetDescription"> The object describing this facet </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value, bool bypassKnownValues)
         {
-            Contract.Requires(facetDescription != null);
+            DebugCheck.NotNull(facetDescription);
 
             if (!bypassKnownValues)
             {
@@ -82,7 +82,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var result = new Facet(facetDescription, value);
 
             // Check the type of the value only if we know what the correct CLR type is
-            if (value != null && !Helper.IsUnboundedFacetValue(result) && !Helper.IsVariableFacetValue(result)
+            if (value != null
+                && !Helper.IsUnboundedFacetValue(result)
+                && !Helper.IsVariableFacetValue(result)
                 && result.FacetType.ClrType != null)
             {
                 var valueType = value.GetType();
@@ -169,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()

@@ -158,7 +158,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     var facet = Facet.Create(Converter.ConcurrencyModeFacet, value.Value);
                     calculatedFacets.Add(facet.Name, facet);
                 }
-                else if (edmType is PrimitiveType && ((PrimitiveType)edmType).PrimitiveTypeKind == PrimitiveTypeKind.String
+                else if (edmType is PrimitiveType
+                         && ((PrimitiveType)edmType).PrimitiveTypeKind == PrimitiveTypeKind.String
                          &&
                          value.Key == DbProviderManifest.CollationFacetName)
                 {
@@ -271,7 +272,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             foreach (var value in _facetValues)
             {
-                if (value.Key != DbProviderManifest.NullableFacetName &&
+                if (value.Key != DbProviderManifest.NullableFacetName
+                    &&
                     value.Key != EdmProviderManifest.StoreGeneratedPatternFacetName
                     &&
                     value.Key != EdmProviderManifest.ConcurrencyModeFacetName)

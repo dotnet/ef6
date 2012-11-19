@@ -28,7 +28,9 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value> <c>true</c> if the connection contains model info; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the connection contains model info; otherwise, <c>false</c> .
+        /// </value>
         bool ConnectionHasModel { get; }
 
         /// <summary>

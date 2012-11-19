@@ -3,8 +3,9 @@
 namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Validator used to validate a property of a given EDM ComplexType.
@@ -31,7 +32,9 @@ namespace System.Data.Entity.Internal.Validation
         /// </summary>
         /// <param name="entityValidationContext"> Entity validation context. Must not be null. </param>
         /// <param name="property"> The entry for the complex property. Null if validating an entity. </param>
-        /// <returns> <see cref="DbEntityValidationResult" /> instance. Never null. </returns>
+        /// <returns>
+        ///     <see cref="DbEntityValidationResult" /> instance. Never null.
+        /// </returns>
         public new IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalPropertyEntry property)
         {
@@ -54,8 +57,12 @@ namespace System.Data.Entity.Internal.Validation
             EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
             List<DbValidationError> validationErrors)
         {
-            Contract.Assert(parentProperty.EntryMetadata.IsComplex, "A complex type expected.");
-            Contract.Assert(parentProperty.CurrentValue != null);
+            DebugCheck.NotNull(entityValidationContext);
+            DebugCheck.NotNull(parentProperty);
+            DebugCheck.NotNull(validationErrors);
+
+            Debug.Assert(parentProperty.EntryMetadata.IsComplex, "A complex type expected.");
+            Debug.Assert(parentProperty.CurrentValue != null);
 
             foreach (var validator in PropertyValidators)
             {

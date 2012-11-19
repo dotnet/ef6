@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Configures a relationship that can only support foreign key properties that are not exposed in the object model.
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public CascadableNavigationPropertyConfiguration Map(
             Action<ForeignKeyAssociationMappingConfiguration> configurationAction)
         {
-            Contract.Requires(configurationAction != null);
+            Check.NotNull(configurationAction, "configurationAction");
 
             NavigationPropertyConfiguration.Constraint = IndependentConstraintConfiguration.Instance;
 

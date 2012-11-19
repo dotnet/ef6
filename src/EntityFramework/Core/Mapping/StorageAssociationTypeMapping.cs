@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap
     ///     --ScalarProperyMap
     ///     --ScalarPropertyMap
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -36,8 +36,8 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap
-    ///     This class represents the metadata for all association Type map elements in the 
-    ///     above example. Users can access the table mapping fragments under the 
+    ///     This class represents the metadata for all association Type map elements in the
+    ///     above example. Users can access the table mapping fragments under the
     ///     association type mapping through this class.
     /// </example>
     internal class StorageAssociationTypeMapping : StorageTypeMapping
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     a list of TypeMetadatas for which the mapping holds true for
         ///     not only the type specified but the sub-types of that type as well.
-        ///     Since Association types dont participate in Inheritance, an Empty list 
+        ///     Since Association types dont participate in Inheritance, an Empty list
         ///     is returned here.
         /// </summary>
         internal override ReadOnlyCollection<EdmType> IsOfTypes

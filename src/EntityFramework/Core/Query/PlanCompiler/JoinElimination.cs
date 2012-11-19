@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     The JoinElimination module is intended to do just that - eliminate unnecessary joins. 
+    ///     The JoinElimination module is intended to do just that - eliminate unnecessary joins.
     ///     This module deals with the following kinds of joins
-    ///     * Self-joins: The join can be eliminated, and either of the table instances can be 
+    ///     * Self-joins: The join can be eliminated, and either of the table instances can be
     ///     used instead
     ///     * Implied self-joins: Same as above
-    ///     * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no 
+    ///     * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no
     ///     column of the PK table is used (other than the join condition)
     ///     * PK-PK joins: Eliminate the right side table, if we have a left-outer join
     /// </summary>

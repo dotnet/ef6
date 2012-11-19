@@ -20,11 +20,11 @@ namespace System.Data.Entity
     public static class DbFunctions
     {
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -36,11 +36,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -53,11 +53,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -69,11 +69,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -86,11 +86,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -102,11 +102,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -119,11 +119,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -135,11 +135,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDev EDM function to calculate
         ///     the standard deviation of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -152,11 +152,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -168,11 +168,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -185,11 +185,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -201,11 +201,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -218,11 +218,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -234,11 +234,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -251,11 +251,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -267,11 +267,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical StDevP EDM function to calculate
         ///     the standard deviation for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -284,11 +284,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -300,11 +300,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -317,11 +317,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -333,11 +333,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -350,11 +350,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -366,11 +366,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -383,11 +383,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -399,11 +399,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Var EDM function to calculate
         ///     the variance of the collection.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -416,11 +416,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -432,11 +432,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -449,11 +449,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -465,11 +465,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -482,11 +482,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -498,11 +498,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -515,11 +515,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -531,11 +531,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical VarP EDM function to calculate
         ///     the variance for the population.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="collection"> The collection over which to perform the calculation. </param>
@@ -548,11 +548,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Left EDM function to return a given 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Left EDM function to return a given
         ///     number of the leftmost characters in a string.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="stringArgument"> The input string. </param>
@@ -568,11 +568,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Right EDM function to return a given 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Right EDM function to return a given
         ///     number of the rightmost characters in a string.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="stringArgument"> The input string. </param>
@@ -588,11 +588,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Reverse EDM function to return a given 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Reverse EDM function to return a given
         ///     string with the order of the characters reversed.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="stringArgument"> The input string. </param>
@@ -606,12 +606,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical GetTotalOffsetMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical GetTotalOffsetMinutes EDM function to
         ///     return the number of minutes that the given date/time is offset from UTC. This is generally between +780
         ///     and -780 (+ or - 13 hrs).
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateTimeOffsetArgument"> The date/time value to use. </param>
@@ -628,7 +628,7 @@ namespace System.Data.Entity
         ///     the given date with the time portion cleared.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The date/time value to use. </param>
@@ -645,7 +645,7 @@ namespace System.Data.Entity
         ///     the given date with the time portion cleared.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The date/time value to use. </param>
@@ -658,11 +658,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateDateTime EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateDateTime EDM function to
         ///     create a new <see cref="DateTime" /> object.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="year"> The year. </param>
@@ -685,11 +685,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateDateTimeOffset EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateDateTimeOffset EDM function to
         ///     create a new <see cref="DateTimeOffset" /> object.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="year"> The year. </param>
@@ -715,11 +715,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateTime EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical CreateTime EDM function to
         ///     create a new <see cref="TimeSpan" /> object.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="hour"> The hours. </param>
@@ -736,11 +736,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddYears EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddYears EDM function to
         ///     add the given number of years to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -755,11 +755,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddYears EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddYears EDM function to
         ///     add the given number of years to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -774,11 +774,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMonths EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMonths EDM function to
         ///     add the given number of months to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -793,11 +793,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMonths EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMonths EDM function to
         ///     add the given number of months to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -812,11 +812,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddDays EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddDays EDM function to
         ///     add the given number of days to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -831,11 +831,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddDays EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddDays EDM function to
         ///     add the given number of days to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -850,11 +850,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to
         ///     add the given number of hours to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -869,11 +869,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to
         ///     add the given number of hours to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -888,11 +888,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddHours EDM function to
         ///     add the given number of hours to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -907,11 +907,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to
         ///     add the given number of minutes to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -926,11 +926,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to
         ///     add the given number of minutes to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -945,11 +945,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMinutes EDM function to
         ///     add the given number of minutes to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -964,11 +964,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to
         ///     add the given number of seconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -983,11 +983,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to
         ///     add the given number of seconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1002,11 +1002,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddSeconds EDM function to
         ///     add the given number of seconds to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1021,11 +1021,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to
         ///     add the given number of milliseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1040,11 +1040,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to
         ///     add the given number of milliseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1059,11 +1059,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMilliseconds EDM function to
         ///     add the given number of milliseconds to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1078,11 +1078,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to
         ///     add the given number of microseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1097,11 +1097,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to
         ///     add the given number of microseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1116,11 +1116,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddMicroseconds EDM function to
         ///     add the given number of microseconds to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1135,11 +1135,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to
         ///     add the given number of nanoseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1154,11 +1154,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to
         ///     add the given number of nanoseconds to a date/time.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1173,11 +1173,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical AddNanoseconds EDM function to
         ///     add the given number of nanoseconds to a time span.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue"> The input date/time. </param>
@@ -1192,11 +1192,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffYears EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffYears EDM function to
         ///     calculate the number of years between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1211,11 +1211,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffYears EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffYears EDM function to
         ///     calculate the number of years between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1230,11 +1230,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMonths EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMonths EDM function to
         ///     calculate the number of months between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1249,11 +1249,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMonths EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMonths EDM function to
         ///     calculate the number of months between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1268,11 +1268,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffDays EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffDays EDM function to
         ///     calculate the number of days between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1287,11 +1287,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffDays EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffDays EDM function to
         ///     calculate the number of days between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1306,11 +1306,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to
         ///     calculate the number of hours between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1325,11 +1325,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to
         ///     calculate the number of hours between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1344,11 +1344,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffHours EDM function to
         ///     calculate the number of hours between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1363,11 +1363,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to
         ///     calculate the number of minutes between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1382,11 +1382,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to
         ///     calculate the number of minutes between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1401,11 +1401,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMinutes EDM function to
         ///     calculate the number of minutes between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1420,11 +1420,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to
         ///     calculate the number of seconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1439,11 +1439,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to
         ///     calculate the number of seconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1458,11 +1458,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffSeconds EDM function to
         ///     calculate the number of seconds between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1477,11 +1477,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to
         ///     calculate the number of milliseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1496,11 +1496,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to
         ///     calculate the number of milliseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1515,11 +1515,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMilliseconds EDM function to
         ///     calculate the number of milliseconds between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1534,11 +1534,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to
         ///     calculate the number of microseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1553,11 +1553,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to
         ///     calculate the number of microseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1572,11 +1572,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffMicroseconds EDM function to
         ///     calculate the number of microseconds between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1591,11 +1591,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to
         ///     calculate the number of nanoseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1610,11 +1610,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to
         ///     calculate the number of nanoseconds between two date/times.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first date/time. </param>
@@ -1629,11 +1629,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical DiffNanoseconds EDM function to
         ///     calculate the number of nanoseconds between two time spans.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="dateValue1"> The first time span. </param>
@@ -1648,11 +1648,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Truncate EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Truncate EDM function to
         ///     truncate the given value to the number of specified digits.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="value"> The value to truncate. </param>
@@ -1667,11 +1667,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Truncate EDM function to 
+        ///     When used as part of a LINQ to Entities query, this method invokes the canonical Truncate EDM function to
         ///     truncate the given value to the number of specified digits.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
         /// <param name="value"> The value to truncate. </param>
@@ -1690,7 +1690,7 @@ namespace System.Data.Entity
         ///     is treated as a Unicode string.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function impacts the way the LINQ query is translated to a query that can be run in the database.
         /// </remarks>
         /// <param name="value"> The input string. </param>
@@ -1705,7 +1705,7 @@ namespace System.Data.Entity
         ///     is treated as a non-Unicode string.
         /// </summary>
         /// <remarks>
-        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query. 
+        ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function impacts the way the LINQ query is translated to a query that can be run in the database.
         /// </remarks>
         /// <param name="value"> The input string. </param>

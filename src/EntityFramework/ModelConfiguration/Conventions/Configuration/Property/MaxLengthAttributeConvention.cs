@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     /// <summary>
@@ -19,6 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, LengthPropertyConfiguration configuration,
             MaxLengthAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if ((attribute.Length == 0)
                 || (attribute.Length < MaxLengthIndicator))
             {

@@ -6,7 +6,6 @@
 namespace System.ComponentModel.DataAnnotations.Schema
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Specifies how the database generates values for a property.
@@ -21,8 +20,10 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="databaseGeneratedOption"> The pattern used to generate values for the property in the database. </param>
         public DatabaseGeneratedAttribute(DatabaseGeneratedOption databaseGeneratedOption)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(
-                Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption));
+            if (!Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption))
+            {
+                throw new ArgumentOutOfRangeException("databaseGeneratedOption");
+            }
 
             DatabaseGeneratedOption = databaseGeneratedOption;
         }

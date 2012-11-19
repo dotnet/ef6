@@ -7,16 +7,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    ///<summary>
-    ///    A VarVec is a compressed representation of a set of variables - with no duplicates
-    ///    and no ordering
-    ///
-    ///    A VarVec should be used in many places where we expect a number of vars to be
-    ///    passed around; and we don't care particularly about the ordering of the vars
-    ///
-    ///    This is obviously not suitable for representing sort keys, but is still
-    ///    reasonable for representing group by keys, and a variety of others.
-    ///</summary>
+    /// <summary>
+    ///     A VarVec is a compressed representation of a set of variables - with no duplicates
+    ///     and no ordering
+    ///     A VarVec should be used in many places where we expect a number of vars to be
+    ///     passed around; and we don't care particularly about the ordering of the vars
+    ///     This is obviously not suitable for representing sort keys, but is still
+    ///     reasonable for representing group by keys, and a variety of others.
+    /// </summary>
     internal class VarVec : IEnumerable<Var>
     {
         #region Nested Classes

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
     /// <summary>
     ///     The KeyPullup class subclasses the default visitor and pulls up keys
-    ///     for the different node classes below. 
+    ///     for the different node classes below.
     ///     The only Op that really deserves special treatment is the ProjectOp.
     /// </summary>
     internal class KeyPullup : BasicOpVisitor
@@ -54,8 +54,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region general helpers
 
         /// <summary>
-        ///     Default visitor for children. Simply visit all children, and 
-        ///     try to get keys for those nodes (relops, physicalOps) that 
+        ///     Default visitor for children. Simply visit all children, and
+        ///     try to get keys for those nodes (relops, physicalOps) that
         ///     don't have keys as yet.
         /// </summary>
         /// <param name="n"> Current node </param>
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOp Visitors
 
         /// <summary>
-        ///     Default visitor for RelOps. Simply visits the children, and 
+        ///     Default visitor for RelOps. Simply visits the children, and
         ///     then tries to recompute the NodeInfo (with the fond hope that
         ///     some keys have now shown up)
         /// </summary>
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Visitor for a ScanTableOp. Simply ensures that the keys get 
+        ///     Visitor for a ScanTableOp. Simply ensures that the keys get
         ///     added to the list of referenced columns
         /// </summary>
         /// <param name="op"> current ScanTableOp </param>
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Pulls up keys for a ProjectOp. First visits its children to pull
-        ///     up its keys; then identifies any keys from the input that it may have 
+        ///     up its keys; then identifies any keys from the input that it may have
         ///     projected out - and adds them to the output list of vars
         /// </summary>
         /// <param name="op"> Current ProjectOp </param>
@@ -128,71 +128,56 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_command.RecomputeNodeInfo(n);
         }
 
-        ///<summary>
-        ///    Comments from Murali:
-        /// 
-        ///    There are several cases to consider here. 
-        ///     
-        ///    Case 0:
-        ///    Let’s assume that K1 is the set of keys ({k1, k2, ..., kn}) for the 
-        ///    first input, and K2 ({l1, l2, …}) is the set of keys for the second
-        ///    input.
-        /// 
-        ///    The best case is when both K1 and K2 have the same cardinality (hopefully
-        ///    greater than 0), and the keys are in the same locations (ie) the corresponding
-        ///    positions in the select-list.  Even in this case, its not enough to take
-        ///    the keys, and treat them as the keys of the union-all. What we’ll need to 
-        ///    do is to add a “branch” discriminator constant for each branch of the 
-        ///    union-all, and use this as the prefix for the keys. 
-        /// 
-        ///    For example, if I had:
-        /// 
-        ///    Select c1, c2, c3... from ...
-        ///    Union all
-        ///    Select d1, d2, d3... from ...
-        /// 
-        ///    And for the sake of argument, lets say that {c2} and {d2} are the keys of 
-        ///    each of the branches. What you’ll need to do is to translate this into
-        ///     
-        ///    Select 0 as bd, c1, c2, c3... from ...
-        ///    Union all
-        ///    Select 1 as bd, d1, d2, d3... from ...
-        ///
-        ///    And then treat {bd, c2/d2} as the key of the union-all 
-        ///
-        ///    Case 1:  (actually, a subcase of Case 0):
-        ///    Now, if the keys don’t align, then we can simply take the union of the 
-        ///    corresponding positions, and make them all the keys (we would still need 
-        ///    the branch discriminator)
-        ///
-        ///    Case 2:
-        ///    Finally, if you need to “pull” up keys from either of the branches, it is 
-        ///    possible that the branches get out of whack.  We will then need to push up 
-        ///    the keys (with nulls if the other branch doesn’t have the corresponding key) 
-        ///    into the union-all. (We still need the branch discriminator).
-        ///     
-        ///    Now, unfortunately, whenever we've got polymorphic entity types, we'll end up
-        ///    in case 2 way more often than we really want to, because when we're pulling up
-        ///    keys, we don't want to reason about a caseop (which is how polymorphic types
-        ///    wrap their key value).
-        /// 
-        ///    To simplify all of this, we:
-        /// 
-        ///    (1) Pulling up the keys for both branches of the UnionAll, and computing which
-        ///    keys are in the outputs and which are missing from the outputs.
-        /// 
-        ///    (2) Accumulate all the missing keys.
-        ///
-        ///    (3) Slap a projectOp around each branch, adding a branch discriminator
-        ///    var and all the missing keys.  When keys are missing from a different
-        ///    branch, we'll construct null ops for them on the other branches.  If 
-        ///    a branch already has a branch descriminator, we'll re-use it instead
-        ///    of constructing a new one.  (Of course, if there aren't any keys to
-        ///    add and it's already including the branch discriminator we won't 
-        ///    need the projectOp)
-        ///</summary>
-        ///<param name="op"> the UnionAllOp </param>
-        ///<param name="n"> current subtree </param>
+        /// <summary>
+        ///     Comments from Murali:
+        ///     There are several cases to consider here.
+        ///     Case 0:
+        ///     Let’s assume that K1 is the set of keys ({k1, k2, ..., kn}) for the
+        ///     first input, and K2 ({l1, l2, …}) is the set of keys for the second
+        ///     input.
+        ///     The best case is when both K1 and K2 have the same cardinality (hopefully
+        ///     greater than 0), and the keys are in the same locations (ie) the corresponding
+        ///     positions in the select-list.  Even in this case, its not enough to take
+        ///     the keys, and treat them as the keys of the union-all. What we’ll need to
+        ///     do is to add a “branch” discriminator constant for each branch of the
+        ///     union-all, and use this as the prefix for the keys.
+        ///     For example, if I had:
+        ///     Select c1, c2, c3... from ...
+        ///     Union all
+        ///     Select d1, d2, d3... from ...
+        ///     And for the sake of argument, lets say that {c2} and {d2} are the keys of
+        ///     each of the branches. What you’ll need to do is to translate this into
+        ///     Select 0 as bd, c1, c2, c3... from ...
+        ///     Union all
+        ///     Select 1 as bd, d1, d2, d3... from ...
+        ///     And then treat {bd, c2/d2} as the key of the union-all
+        ///     Case 1:  (actually, a subcase of Case 0):
+        ///     Now, if the keys don’t align, then we can simply take the union of the
+        ///     corresponding positions, and make them all the keys (we would still need
+        ///     the branch discriminator)
+        ///     Case 2:
+        ///     Finally, if you need to “pull” up keys from either of the branches, it is
+        ///     possible that the branches get out of whack.  We will then need to push up
+        ///     the keys (with nulls if the other branch doesn’t have the corresponding key)
+        ///     into the union-all. (We still need the branch discriminator).
+        ///     Now, unfortunately, whenever we've got polymorphic entity types, we'll end up
+        ///     in case 2 way more often than we really want to, because when we're pulling up
+        ///     keys, we don't want to reason about a caseop (which is how polymorphic types
+        ///     wrap their key value).
+        ///     To simplify all of this, we:
+        ///     (1) Pulling up the keys for both branches of the UnionAll, and computing which
+        ///     keys are in the outputs and which are missing from the outputs.
+        ///     (2) Accumulate all the missing keys.
+        ///     (3) Slap a projectOp around each branch, adding a branch discriminator
+        ///     var and all the missing keys.  When keys are missing from a different
+        ///     branch, we'll construct null ops for them on the other branches.  If
+        ///     a branch already has a branch descriminator, we'll re-use it instead
+        ///     of constructing a new one.  (Of course, if there aren't any keys to
+        ///     add and it's already including the branch discriminator we won't
+        ///     need the projectOp)
+        /// </summary>
+        /// <param name="op"> the UnionAllOp </param>
+        /// <param name="n"> current subtree </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnionAllOp op, Node n)

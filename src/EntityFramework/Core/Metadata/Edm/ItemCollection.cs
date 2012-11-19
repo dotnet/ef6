@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns ReadOnlyCollection of the Items of the given type 
+        ///     Returns ReadOnlyCollection of the Items of the given type
         ///     in the item collection.
         /// </summary>
         /// <typeparam name="T"> </typeparam>
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Look for the functions in the given collection and 
+        ///     Look for the functions in the given collection and
         ///     returns all the functions with the given name
         /// </summary>
         /// <param name="functionCollection"> </param>
@@ -472,7 +472,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Determines whether this item collection is equivalent to another. At present, we look only
         ///     at object reference equivalence. This is a somewhat reasonable approximation when caching
-        ///     is enabled, because collections are identical when their source resources (including 
+        ///     is enabled, because collections are identical when their source resources (including
         ///     provider) are known to be identical.
         /// </summary>
         /// <param name="other"> Collection to compare. </param>

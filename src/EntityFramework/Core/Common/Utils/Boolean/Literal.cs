@@ -6,11 +6,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
     /// <summary>
     ///     Represents a literal in a normal form expression of the form:
-    /// 
     ///     Term
-    /// 
     ///     or
-    /// 
     ///     !Term
     /// </summary>
     /// <typeparam name="T_Identifier"> </typeparam>

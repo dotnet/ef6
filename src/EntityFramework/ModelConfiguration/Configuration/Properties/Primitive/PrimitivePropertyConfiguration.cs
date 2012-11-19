@@ -7,7 +7,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -15,8 +14,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -36,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         protected PrimitivePropertyConfiguration(PrimitivePropertyConfiguration source)
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
 
             TypeConfiguration = source.TypeConfiguration;
             IsNullable = source.IsNullable;
@@ -89,8 +88,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal virtual void Configure(EdmProperty property)
         {
-            Contract.Requires(property != null);
-            Contract.Assert(property.TypeUsage != null);
+            DebugCheck.NotNull(property);
+            Debug.Assert(property.TypeUsage != null);
 
             var existingConfiguration = property.GetConfiguration() as PrimitivePropertyConfiguration;
             if (existingConfiguration != null)
@@ -105,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     var declaringTypeName = propertyInfo == null
                                                 ? string.Empty
                                                 : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
-                                                      FullName;
+                                                                         FullName;
                     throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
                 }
 
@@ -155,8 +154,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
-            Contract.Requires(propertyMappings != null);
-            Contract.Requires(providerManifest != null);
+            DebugCheck.NotNull(propertyMappings);
+            DebugCheck.NotNull(providerManifest);
 
             propertyMappings.Each(pm => Configure(pm.Item1.ColumnProperty, pm.Item2, providerManifest, allowOverride));
         }
@@ -165,9 +164,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             EdmProperty column, EntityType table, DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
-            Contract.Requires(column != null);
-            Contract.Requires(table != null);
-            Contract.Requires(providerManifest != null);
+            DebugCheck.NotNull(column);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(providerManifest);
 
             var existingConfiguration = column.GetConfiguration() as PrimitivePropertyConfiguration;
 
@@ -203,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             var storeType
                 = providerManifest.GetStoreTypes()
-                    .SingleOrDefault(t => t.Name.Equals(column.TypeName, StringComparison.OrdinalIgnoreCase));
+                                  .SingleOrDefault(t => t.Name.Equals(column.TypeName, StringComparison.OrdinalIgnoreCase));
 
             if (storeType != null)
             {
@@ -250,8 +249,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal virtual void Configure(EdmProperty column, FacetDescription facetDescription)
         {
-            Contract.Requires(column != null);
-            Contract.Requires(facetDescription != null);
+            DebugCheck.NotNull(column);
+            DebugCheck.NotNull(facetDescription);
         }
 
         internal virtual void CopyFrom(PrimitivePropertyConfiguration other)
@@ -333,8 +332,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             where TProperty : struct
             where TConfiguration : PrimitivePropertyConfiguration
         {
-            Contract.Requires(propertyExpression != null);
-            Contract.Requires(other != null);
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotNull(other, "other");
 
             var propertyInfo = propertyExpression.GetSimplePropertyAccess().Single();
             var thisValue = (TProperty?)propertyInfo.GetValue(this, null);
@@ -358,8 +357,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             Expression<Func<TConfiguration, string>> propertyExpression, TConfiguration other, ref string errorMessage)
             where TConfiguration : PrimitivePropertyConfiguration
         {
-            Contract.Requires(propertyExpression != null);
-            Contract.Requires(other != null);
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotNull(other, "other");
 
             var propertyInfo = propertyExpression.GetSimplePropertyAccess().Single();
             var thisValue = (string)propertyInfo.GetValue(this, null);

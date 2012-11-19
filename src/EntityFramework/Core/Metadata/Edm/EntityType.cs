@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
 
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal void RemoveForeignKey(ForeignKeyBuilder foreignKeyBuilder)
         {
-            Contract.Requires(foreignKeyBuilder != null);
+            DebugCheck.NotNull(foreignKeyBuilder);
             Util.ThrowIfReadOnly(this);
 
             foreignKeyBuilder.SetOwner(null);
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal void AddForeignKey(ForeignKeyBuilder foreignKeyBuilder)
         {
-            Contract.Requires(foreignKeyBuilder != null);
+            DebugCheck.NotNull(foreignKeyBuilder);
             Util.ThrowIfReadOnly(this);
 
             foreignKeyBuilder.SetOwner(this);
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Validates a EdmMember object to determine if it can be added to this type's
         ///     Members collection. If this method returns without throwing, it is assumed
         ///     the member is valid.
         /// </summary>
@@ -210,7 +210,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // code gen.
             foreach (var navProperty in NavigationProperties)
             {
-                if (navProperty.RelationshipType.FullName == relationshipType &&
+                if (navProperty.RelationshipType.FullName == relationshipType
+                    &&
                     navProperty.FromEndMember.Name == fromName
                     &&
                     navProperty.ToEndMember.Name == toName)

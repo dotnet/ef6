@@ -837,7 +837,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Common implementation method called by both VisitBoundExpressionPushBindingScope and VisitJoin
         /// </summary>
         /// <param name="boundExpression"> The DbExpression that defines the binding </param>
-        /// <param name="boundVar"> Var representing the RelOp produced for the <paramref name="boundExpression" /> </param>
+        /// <param name="boundVar">
+        ///     Var representing the RelOp produced for the <paramref name="boundExpression" />
+        /// </param>
         /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionBinding")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1032,11 +1034,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbExpression e)
         {
+            Check.NotNull(e, "e");
+
             throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
         }
 
         public override Node Visit(DbConstantExpression e)
         {
+            Check.NotNull(e, "e");
+
             // Don't use CreateInternalConstantOp - respect user-intent
             //
             // Note that it is only safe to call GetValue and access the 
@@ -1049,12 +1055,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             var op = _iqtCommand.CreateNullOp(e.ResultType);
             return _iqtCommand.CreateNode(op);
         }
 
         public override Node Visit(DbVariableReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             var varNode = ResolveScope(e)[e.VariableName];
             return varNode;
         }
@@ -1087,12 +1097,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbParameterReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateVarRefOp(_iqtCommand.GetParameter(e.ParameterName));
             return _iqtCommand.CreateNode(op);
         }
 
         public override Node Visit(DbFunctionExpression e)
         {
+            Check.NotNull(e, "e");
+
             Node retNode = null;
 
             if (e.Function.IsModelDefinedFunction)
@@ -1140,6 +1154,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbLambdaExpression e)
         {
+            Check.NotNull(e, "e");
+
             return VisitLambdaExpression(e.Lambda, e.Arguments, e, null);
         }
 
@@ -1171,12 +1187,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     This method builds a "soft"Cast operator over the input node (if necessary) to (soft)
         ///     cast it to the desired type (targetType)
-        /// 
-        ///     If the input is a scalarOp, then we simply add on the SoftCastOp 
-        ///     directly (if it is needed, of course). If the input is a RelOp, we create a 
+        ///     If the input is a scalarOp, then we simply add on the SoftCastOp
+        ///     directly (if it is needed, of course). If the input is a RelOp, we create a
         ///     new ProjectOp above the input, add a SoftCast above the Var of the
         ///     input, and then return the new ProjectOp
-        /// 
         ///     The "need to cast" is determined by the Command.EqualTypes function. All type
         ///     equivalence in the plan compiler is determined by this function
         /// </summary>
@@ -1252,18 +1266,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        ///<summary>
-        ///    We simplify the property instance where the user is accessing a key member of 
-        ///    a reference navigation. The instance becomes simply the reference key in such
-        ///    cases.
-        ///
-        ///    For instance, product.Category.CategoryID becomes Ref(product.Category).CategoryID,
-        ///    which gives us a chance of optimizing the query (using foreign keys rather than joins)
-        ///</summary>
-        ///<param name="propertyExpression"> The original property expression that specifies the member and instance </param>
-        ///<param name="rewritten"> 'Simplified' instance. If the member is a key and the instance is a navigation the rewritten expression's instance is a reference navigation rather than the full entity. </param>
-        ///<returns> <c>true</c> if the property expression was rewritten, in which case <paramref name="rewritten" /> will be non-null, otherwise <c>false</c> , in which case <paramref
-        ///     name="rewritten" /> will be null. </returns>
+        /// <summary>
+        ///     We simplify the property instance where the user is accessing a key member of
+        ///     a reference navigation. The instance becomes simply the reference key in such
+        ///     cases.
+        ///     For instance, product.Category.CategoryID becomes Ref(product.Category).CategoryID,
+        ///     which gives us a chance of optimizing the query (using foreign keys rather than joins)
+        /// </summary>
+        /// <param name="propertyExpression"> The original property expression that specifies the member and instance </param>
+        /// <param name="rewritten"> 'Simplified' instance. If the member is a key and the instance is a navigation the rewritten expression's instance is a reference navigation rather than the full entity. </param>
+        /// <returns>
+        ///     <c>true</c> if the property expression was rewritten, in which case <paramref name="rewritten" /> will be non-null, otherwise <c>false</c> , in which case
+        ///     <paramref
+        ///         name="rewritten" />
+        ///     will be null.
+        /// </returns>
         private static bool TryRewriteKeyPropertyAccess(DbPropertyExpression propertyExpression, out DbExpression rewritten)
         {
             // if we're accessing a key member of a navigation, collapse the structured instance
@@ -1300,8 +1317,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbPropertyExpression e)
         {
+            Check.NotNull(e, "e");
+
             // Only Properties, Relationship End and NavigationProperty members are supported.
-            if (BuiltInTypeKind.EdmProperty != e.Property.BuiltInTypeKind &&
+            if (BuiltInTypeKind.EdmProperty != e.Property.BuiltInTypeKind
+                &&
                 BuiltInTypeKind.AssociationEndMember != e.Property.BuiltInTypeKind
                 &&
                 BuiltInTypeKind.NavigationProperty != e.Property.BuiltInTypeKind)
@@ -1373,6 +1393,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbComparisonExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateComparisonOp(_opMap[e.ExpressionKind]);
 
             var leftArg = VisitExprAsScalar(e.Left);
@@ -1401,6 +1423,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbLikeExpression e)
         {
+            Check.NotNull(e, "e");
+
             return _iqtCommand.CreateNode(
                 _iqtCommand.CreateLikeOp(),
                 VisitExpr(e.Argument),
@@ -1483,6 +1507,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbLimitExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             //
             // Visit the Argument and retrieve its Var
             //
@@ -1532,6 +1558,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbIsNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             // SQLBUDT #484294: We need to recognize and simplify IsNull - IsNull and IsNull - Not - IsNull
             // This is the latest point where such patterns can be easily recognized. 
             // After this the input predicate would get translated into a case statement.
@@ -1574,6 +1602,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbArithmeticExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateArithmeticOp(_opMap[e.ExpressionKind], e.ResultType);
             // Make sure that the inputs have been "cast" to the result type
             // Assumption: The input type must be the same as the result type. Is this always true?
@@ -1588,24 +1618,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbAndExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateConditionalOp(OpType.And);
             return VisitBinary(e, op, VisitExprAsPredicate);
         }
 
         public override Node Visit(DbOrExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateConditionalOp(OpType.Or);
             return VisitBinary(e, op, VisitExprAsPredicate);
         }
 
         public override Node Visit(DbNotExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateConditionalOp(OpType.Not);
             return VisitUnary(e, op, VisitExprAsPredicate);
         }
 
         public override Node Visit(DbDistinctExpression e)
         {
+            Check.NotNull(e, "e");
+
             var inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
             var inputVar = _varMap[inputSetNode];
             Op distinctOp = _iqtCommand.CreateDistinctOp(inputVar);
@@ -1616,6 +1654,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbElementExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op elementOp = _iqtCommand.CreateElementOp(e.ResultType);
             var inputSetNode = EnsureRelOp(VisitExpr(e.Argument));
 
@@ -1638,6 +1678,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbIsEmptyExpression e)
         {
+            Check.NotNull(e, "e");
+
             //
             // IsEmpty(input set) --> Not(Exists(input set))
             //
@@ -1723,21 +1765,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbUnionAllExpression e)
         {
+            Check.NotNull(e, "e");
+
             return VisitSetOpExpression(e);
         }
 
         public override Node Visit(DbIntersectExpression e)
         {
+            Check.NotNull(e, "e");
+
             return VisitSetOpExpression(e);
         }
 
         public override Node Visit(DbExceptExpression e)
         {
+            Check.NotNull(e, "e");
+
             return VisitSetOpExpression(e);
         }
 
         public override Node Visit(DbTreatExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op;
             if (_fakeTreats.Contains(e))
             {
@@ -1752,6 +1802,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbIsOfExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = null;
             if (DbExpressionKind.IsOfOnly
                 == e.ExpressionKind)
@@ -1767,12 +1819,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbCastExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateCastOp(e.ResultType);
             return VisitUnary(e, op, VisitExprAsScalar);
         }
 
         public override Node Visit(DbCaseExpression e)
         {
+            Check.NotNull(e, "e");
+
             var childNodes = new List<Node>();
             for (var idx = 0; idx < e.When.Count; idx++)
             {
@@ -2065,10 +2121,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Build the equivalent of an OfTypeExpression over the input (ie) produce the set of values from the
         ///     input that are of the desired type (exactly of the desired type, if the "includeSubtypes" parameter is false).
-        /// 
         ///     Further more, "update" the result element type to be the desired type.
-        /// 
-        ///     We accomplish this by first building a FilterOp with an IsOf (or an IsOfOnly) predicate for the desired 
+        ///     We accomplish this by first building a FilterOp with an IsOf (or an IsOfOnly) predicate for the desired
         ///     type. We then build out a ProjectOp over the FilterOp, where we introduce a "Fake" TreatOp over the input
         ///     element to cast it to the right type. The "Fake" TreatOp is only there for "compile-time" typing reasons,
         ///     and will be ignored in the rest of the plan compiler
@@ -2084,6 +2138,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbOfTypeExpression e)
         {
+            Check.NotNull(e, "e");
+
             //
             // The argument to OfType must be a collection
             //
@@ -2118,6 +2174,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbNewInstanceExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op newInstOp = null;
             List<Node> relPropertyExprs = null;
             if (TypeSemantics.IsCollectionType(e.ResultType))
@@ -2188,6 +2246,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             // SQLBUDT #502617: Creating a collection of refs throws an Assert
             // A SoftCastOp may be required if the argument to the RefExpression is only promotable
             // to the row type produced from the key properties of the referenced Entity type. Since
@@ -2201,6 +2261,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbRelationshipNavigationExpression e)
         {
+            Check.NotNull(e, "e");
+
             var relProperty = new RelProperty(e.Relationship, e.NavigateFrom, e.NavigateTo);
             Op op = _iqtCommand.CreateNavigateOp(e.ResultType, relProperty);
             var arg = VisitExprAsScalar(e.NavigationSource);
@@ -2209,24 +2271,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbDerefExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateDerefOp(e.ResultType);
             return VisitUnary(e, op, VisitExprAsScalar);
         }
 
         public override Node Visit(DbRefKeyExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateGetRefKeyOp(e.ResultType);
             return VisitUnary(e, op, VisitExprAsScalar);
         }
 
         public override Node Visit(DbEntityRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             Op op = _iqtCommand.CreateGetEntityRefOp(e.ResultType);
             return VisitUnary(e, op, VisitExprAsScalar);
         }
 
         public override Node Visit(DbScanExpression e)
         {
+            Check.NotNull(e, "e");
+
             // Create a new table definition
             var tableMetadata = Command.CreateTableDefinition(e.Target);
 
@@ -2243,6 +2313,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbFilterExpression e)
         {
+            Check.NotNull(e, "e");
+
             if (!IsIsOfFilter(e)
                 || _processedIsOfFilters.Contains(e))
             {
@@ -2271,6 +2343,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbProjectExpression e)
         {
+            Check.NotNull(e, "e");
+
             // check if this is the discriminated projection for a query mapping view
             if (e == _discriminatedViewTopProject)
             {
@@ -2354,11 +2428,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbCrossJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             return VisitJoin(e, e.Inputs, null);
         }
 
         public override Node Visit(DbJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             var inputs = new List<DbExpressionBinding>();
             inputs.Add(e.Left);
             inputs.Add(e.Right);
@@ -2488,6 +2566,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbApplyExpression e)
         {
+            Check.NotNull(e, "e");
+
 #if DEBUG
             //
             // Assert that the DbJoinExpression is producing a collection result with a record element type.
@@ -2553,6 +2633,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbGroupByExpression e)
         {
+            Check.NotNull(e, "e");
+
 #if DEBUG
             // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "DbGroupByExpression has invalid result Type (not record collection)");
@@ -2759,34 +2841,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return _iqtCommand.CreateVarDefNode(aggNode, out aggVar);
         }
 
-        ///<summary>
-        ///    Translation for GroupAggregate
-        ///
-        ///    Create the translation as :  
-        /// 
-        ///    Collect
-        ///    |
-        ///    PhysicalProject
-        ///    |
-        ///    GroupNodeDefinition
-        /// 
-        ///    Here, GroupNodeDefinition is:  
-        ///    1. If there are no keys:  copyOfInput;
-        ///    2. If there are keys: 
-        ///  
-        ///    Filter (keyDef1 = copyOfKeyDef1 or keyDef1 is null and copyOfKeyDef1 is null) and ... and (keyDefn = copyOfKeyDefn or keyDefn is null and copyOfKeyDefn is null)
-        ///    |
-        ///    Project (copyOfInput, copyOfKeyDef1, copyOfKeyDef1, ... copyOfKeyDefn) 
-        ///    |
-        ///    copyOfInput
-        ///</summary>
-        ///<param name="keyVarDefNodes"> </param>
-        ///<param name="copyOfInput"> </param>
-        ///<param name="copyOfkeyVarDefNodes"> </param>
-        ///<param name="copyKeyVarSet"> </param>
-        ///<param name="inputResultType"> </param>
-        ///<param name="groupAggVar"> </param>
-        ///<returns> </returns>
+        /// <summary>
+        ///     Translation for GroupAggregate
+        ///     Create the translation as :
+        ///     Collect
+        ///     |
+        ///     PhysicalProject
+        ///     |
+        ///     GroupNodeDefinition
+        ///     Here, GroupNodeDefinition is:
+        ///     1. If there are no keys:  copyOfInput;
+        ///     2. If there are keys:
+        ///     Filter (keyDef1 = copyOfKeyDef1 or keyDef1 is null and copyOfKeyDef1 is null) and ... and (keyDefn = copyOfKeyDefn or keyDefn is null and copyOfKeyDefn is null)
+        ///     |
+        ///     Project (copyOfInput, copyOfKeyDef1, copyOfKeyDef1, ... copyOfKeyDefn)
+        ///     |
+        ///     copyOfInput
+        /// </summary>
+        /// <param name="keyVarDefNodes"> </param>
+        /// <param name="copyOfInput"> </param>
+        /// <param name="copyOfkeyVarDefNodes"> </param>
+        /// <param name="copyKeyVarSet"> </param>
+        /// <param name="inputResultType"> </param>
+        /// <param name="groupAggVar"> </param>
+        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProcessGroupAggregate(
@@ -3023,6 +3101,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbSkipExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             //
             // Invoke common processing of Skip/DbSortExpression arguments.
             //
@@ -3059,6 +3139,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         public override Node Visit(DbSortExpression e)
         {
+            Check.NotNull(e, "e");
+
             //
             // Invoke common processing of Skip/DbSortExpression arguments.
             //
@@ -3089,6 +3171,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override Node Visit(DbQuantifierExpression e)
         {
+            Check.NotNull(e, "e");
+
             Node retNode = null;
 
             //

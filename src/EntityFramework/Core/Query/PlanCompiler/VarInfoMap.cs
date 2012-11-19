@@ -70,8 +70,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Creates a var info for var variables of primitive or enum type.
         /// </summary>
         /// <param name="v"> Current variable of primitive or enum type. </param>
-        /// <param name="newVar"> The new variable replacing <paramref name="v" /> . </param>
-        /// <returns> <see cref="PrimitiveTypeVarInfo" /> for <paramref name="v" /> . </returns>
+        /// <param name="newVar">
+        ///     The new variable replacing <paramref name="v" /> .
+        /// </param>
+        /// <returns>
+        ///     <see cref="PrimitiveTypeVarInfo" /> for <paramref name="v" /> .
+        /// </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal VarInfo CreatePrimitiveTypeVarInfo(Var v, Var newVar)

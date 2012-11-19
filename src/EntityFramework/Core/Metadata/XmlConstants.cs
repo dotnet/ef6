@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Class that contains all the constants for various schemas
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return ModelNamespace_2;
             }
 
-            Contract.Assert(Equals(edmVersion, EdmVersionForV3), "Added a new version?");
+            Debug.Assert(Equals(edmVersion, EdmVersionForV3), "Added a new version?");
 
             return ModelNamespace_3;
         }
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return TargetNamespace_2;
             }
 
-            Contract.Assert(Equals(edmVersion, StoreVersionForV3), "Added a new version?");
+            Debug.Assert(Equals(edmVersion, StoreVersionForV3), "Added a new version?");
 
             return TargetNamespace_3;
         }

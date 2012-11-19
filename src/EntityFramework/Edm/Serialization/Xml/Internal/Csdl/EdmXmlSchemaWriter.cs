@@ -4,11 +4,9 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Xml;
@@ -565,7 +563,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
                 return GetQualifiedTypeName(XmlConstants.Self, property.ComplexType.Name);
             }
 
-            Contract.Assert(property.IsEnumType);
+            Debug.Assert(property.IsEnumType);
 
             return GetQualifiedTypeName(XmlConstants.Self, property.EnumType.Name);
         }

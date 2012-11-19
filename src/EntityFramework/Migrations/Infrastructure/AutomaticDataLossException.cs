@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public AutomaticDataLossException(string message)
             : base(message)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(message));
+            Check.NotEmpty(message, "message");
         }
 
         /// <summary>

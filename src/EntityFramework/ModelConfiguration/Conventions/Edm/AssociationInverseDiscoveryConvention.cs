@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to detect navigation properties to be inverses of each other when only one pair 
+    ///     Convention to detect navigation properties to be inverses of each other when only one pair
     ///     of navigation properties exists between the related types.
     /// </summary>
     public class AssociationInverseDiscoveryConvention : IEdmConvention
@@ -18,6 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void Apply(EdmModel model)
         {
+            Check.NotNull(model, "model");
+
             var associationPairs
                 = (from a1 in model.GetAssociationTypes()
                    from a2 in model.GetAssociationTypes()
@@ -72,8 +74,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             foreach (var navigationProperty
                 in model.GetEntityTypes()
-                    .SelectMany(e => e.NavigationProperties)
-                    .Where(np => np.Association == redundantAssociation))
+                        .SelectMany(e => e.NavigationProperties)
+                        .Where(np => np.Association == redundantAssociation))
             {
                 navigationProperty.RelationshipType = unifiedAssociation;
                 navigationProperty.ToEndMember = unifiedAssociation.SourceEnd;

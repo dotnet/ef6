@@ -5,14 +5,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
     ///     What we return from our materialization of a collection column must be
     ///     exactly the type that the compilers expected when they generated the
-    ///     code that asked for it.  This class wraps our enumerators and derives 
+    ///     code that asked for it.  This class wraps our enumerators and derives
     ///     from all the possible options, covering all the bases.
     /// </summary>
     internal class CompensatingCollection<TElement> : IOrderedQueryable<TElement>, IOrderedEnumerable<TElement>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public CompensatingCollection(IEnumerable<TElement> source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _source = source;
             _expression = Expression.Constant(source);

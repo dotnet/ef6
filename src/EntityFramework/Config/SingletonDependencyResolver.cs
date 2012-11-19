@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Config
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         public SingletonDependencyResolver(T singletonInstance, object key)
         {
-            Contract.Requires(singletonInstance != null);
+            Check.NotNull(singletonInstance, "singletonInstance");
 
             _singletonInstance = singletonInstance;
             _key = key;

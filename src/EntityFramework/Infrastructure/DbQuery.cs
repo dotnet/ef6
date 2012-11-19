@@ -38,7 +38,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Returns <c>false</c>.
         /// </summary>
-        /// <returns> <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>false</c> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
@@ -135,14 +137,20 @@ namespace System.Data.Entity.Infrastructure
         /// <remarks>
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the DbQuery<T>. Other instances of DbQuery
-        ///                                             <T>and the object context itself are not affected.
-        ///                                                 Because the Include method returns the query object, you can call this method multiple times on an DbQuery
-        ///                                                 <T>to
-        ///                                                     specify multiple paths for the query.
+        ///     the returned instance of the DbQuery
+        ///     <T>
+        ///         . Other instances of DbQuery
+        ///         <T>
+        ///             and the object context itself are not affected.
+        ///             Because the Include method returns the query object, you can call this method multiple times on an DbQuery
+        ///             <T>
+        ///                 to
+        ///                 specify multiple paths for the query.
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
-        /// <returns> A new DbQuery <T>with the defined query path. </returns>
+        /// <returns>
+        ///     A new DbQuery <T>with the defined query path.
+        /// </returns>
         public abstract DbQuery Include(string path);
 
         #endregion

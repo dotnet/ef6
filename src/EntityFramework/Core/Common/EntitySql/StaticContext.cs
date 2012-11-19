@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     }
 
     /// <summary>
-    ///     Represents a free variable scope entry. 
+    ///     Represents a free variable scope entry.
     ///     Example: parameters of an inline function definition are free variables in the scope of the function definition.
     /// </summary>
     internal sealed class FreeVariableScopeEntry : ScopeEntry
@@ -124,7 +124,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Debug.Assert(scopeIndex <= CurrentScopeIndex, "[PRE] savePoint.ScopeIndex <= CurrentScopeIndex");
             Debug.Assert(CurrentScopeIndex >= 0, "[PRE] CurrentScopeIndex >= 0");
 
-            if (scopeIndex > CurrentScopeIndex || scopeIndex < 0
+            if (scopeIndex > CurrentScopeIndex
+                || scopeIndex < 0
                 || CurrentScopeIndex < 0)
             {
                 var message = Strings.InvalidSavePoint;

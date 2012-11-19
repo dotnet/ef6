@@ -53,7 +53,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 // This condition must be hit only when someone is trying to materialize a legacy data reader and we
                 // don't have the CSpace metadata.
-                if (!Helper.IsPrimitiveType(ospaceType) && !Helper.IsEntityType(ospaceType)
+                if (!Helper.IsPrimitiveType(ospaceType)
+                    && !Helper.IsEntityType(ospaceType)
                     && !Helper.IsComplexType(ospaceType))
                 {
                     throw new NotSupportedException(Strings.Materializer_UnsupportedType);

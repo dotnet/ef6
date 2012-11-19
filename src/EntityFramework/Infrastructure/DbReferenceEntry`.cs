@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,8 +24,10 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalReferenceEntry _internalReferenceEntry;
 
         /// <summary>
-        ///     Creates a <see cref="DbReferenceEntry{TEntity,TProperty}" /> from information in the given <see
-        ///      cref="InternalReferenceEntry" />.
+        ///     Creates a <see cref="DbReferenceEntry{TEntity,TProperty}" /> from information in the given
+        ///     <see
+        ///         cref="InternalReferenceEntry" />
+        ///     .
         ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
         ///     the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
@@ -33,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbReferenceEntry<TEntity, TProperty> Create(InternalReferenceEntry internalReferenceEntry)
         {
-            Contract.Requires(internalReferenceEntry != null);
+            DebugCheck.NotNull(internalReferenceEntry);
 
             return
                 (DbReferenceEntry<TEntity, TProperty>)internalReferenceEntry.CreateDbMemberEntry<TEntity, TProperty>();
@@ -45,7 +47,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalReferenceEntry"> The internal entry. </param>
         internal DbReferenceEntry(InternalReferenceEntry internalReferenceEntry)
         {
-            Contract.Requires(internalReferenceEntry != null);
+            DebugCheck.NotNull(internalReferenceEntry);
 
             _internalReferenceEntry = internalReferenceEntry;
         }
@@ -119,7 +121,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a value indicating whether the entity has been loaded from the database.
         /// </summary>
-        /// <value> <c>true</c> if the entity is loaded; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the entity is loaded; otherwise, <c>false</c> .
+        /// </value>
         public bool IsLoaded
         {
             get { return _internalReferenceEntry.IsLoaded; }
@@ -144,7 +148,7 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbReferenceEntry" /> class for 
+        ///     Returns a new instance of the non-generic <see cref="DbReferenceEntry" /> class for
         ///     the navigation property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>

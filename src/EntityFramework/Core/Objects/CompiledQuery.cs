@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameterDelegateType"> The type of the delegate producing parameter values from CompiledQuery delegate arguments. For details, see CompiledQuery.Parameter.CreateObjectParameter. </param>
         private CompiledQuery(LambdaExpression query)
         {
-            Contract.Requires(query != null);
+            DebugCheck.NotNull(query);
 
             // lockdown the query (all closures become constants)
             var funcletizer = Funcletizer.CreateCompiledQueryLockdownFuncletizer();
@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Objects
 
         private TResult Invoke<TArg0, TResult>(TArg0 arg0) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -439,7 +439,7 @@ namespace System.Data.Entity.Core.Objects
 
         private TResult Invoke<TArg0, TArg1, TResult>(TArg0 arg0, TArg1 arg1) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -451,7 +451,7 @@ namespace System.Data.Entity.Core.Objects
 
         private TResult Invoke<TArg0, TArg1, TArg2, TResult>(TArg0 arg0, TArg1 arg1, TArg2 arg2) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -464,7 +464,7 @@ namespace System.Data.Entity.Core.Objects
         private TResult Invoke<TArg0, TArg1, TArg2, TArg3, TResult>(TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3)
             where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -477,7 +477,7 @@ namespace System.Data.Entity.Core.Objects
         private TResult Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TResult>(TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4)
             where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -490,7 +490,7 @@ namespace System.Data.Entity.Core.Objects
         private TResult Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Objects
         private TResult Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -516,7 +516,7 @@ namespace System.Data.Entity.Core.Objects
         private TResult Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8)
             where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -544,7 +544,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9)
             where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -558,7 +558,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -572,7 +572,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10, TArg11 arg11) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -586,7 +586,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10, TArg11 arg11, TArg12 arg12) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -601,7 +601,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -616,7 +616,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.Objects
             TArg0 arg0, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9,
             TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15) where TArg0 : ObjectContext
         {
-            Contract.Requires(arg0 != null);
+            DebugCheck.NotNull(arg0);
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent

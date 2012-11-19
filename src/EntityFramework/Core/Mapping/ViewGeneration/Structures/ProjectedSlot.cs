@@ -72,8 +72,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         /// <summary>
         ///     Given the slot and the <paramref name="blockAlias" />, generates eSQL corresponding to the slot.
-        ///     If slot is a qualified slot, <paramref name="blockAlias" /> is ignored. Returns the modified <paramref
-        ///      name="builder" />.
+        ///     If slot is a qualified slot, <paramref name="blockAlias" /> is ignored. Returns the modified
+        ///     <paramref
+        ///         name="builder" />
+        ///     .
         /// </summary>
         /// <param name="outputMember"> outputMember is non-null if this slot is not a constant slot </param>
         /// <param name="indentLevel"> indicates the appropriate indentation level (method can ignore it) </param>
@@ -102,7 +104,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Given two lists <paramref name="slots1" /> and <paramref name="slots2" />, merge them and returnthe resulting slots, 
+        ///     Given two lists <paramref name="slots1" /> and <paramref name="slots2" />, merge them and returnthe resulting slots,
         ///     i.e., empty slots from one are overridden by the slots from the other.
         /// </summary>
         private static bool TryMergeSlots(ProjectedSlot[] slots1, ProjectedSlot[] slots2, out ProjectedSlot[] slots)
@@ -131,7 +133,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     var memberSlot1 = slot1 as MemberProjectedSlot;
                     var memberSlot2 = slot2 as MemberProjectedSlot;
 
-                    if (memberSlot1 != null && memberSlot2 != null
+                    if (memberSlot1 != null
+                        && memberSlot2 != null
                         &&
                         false == EqualityComparer.Equals(memberSlot1, memberSlot2))
                     {

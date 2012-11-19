@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -18,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public NavigationPropertyMapper(TypeMapper typeMapper)
         {
-            Contract.Requires(typeMapper != null);
+            DebugCheck.NotNull(typeMapper);
 
             _typeMapper = typeMapper;
         }
@@ -26,9 +25,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         public void Map(
             PropertyInfo propertyInfo, EntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(entityType != null);
-            Contract.Requires(entityTypeConfiguration != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(entityTypeConfiguration);
 
             var targetType = propertyInfo.PropertyType;
             var targetAssociationEndKind = RelationshipMultiplicity.ZeroOrOne;

@@ -5,7 +5,8 @@ namespace System.Data.Entity.Internal
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Xml.Linq;
 
     /// <summary>
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Internal
         public SortableBindingList(List<T> list)
             : base(list)
         {
-            Contract.Requires(list != null);
+            DebugCheck.NotNull(list);
         }
 
         #endregion
@@ -66,7 +67,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this list is sorted.
         /// </summary>
-        /// <value> <c>true</c> if this instance is sorted; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is sorted; otherwise, <c>false</c> .
+        /// </value>
         protected override bool IsSortedCore
         {
             get { return _isSorted; }
@@ -93,7 +96,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Returns <c>true</c> indicating that this list supports sorting.
         /// </summary>
-        /// <value> <c>true</c> . </value>
+        /// <value>
+        ///     <c>true</c> .
+        /// </value>
         protected override bool SupportsSortingCore
         {
             get { return true; }
@@ -126,9 +131,7 @@ namespace System.Data.Entity.Internal
                     throw new MissingMemberException(typeof(T).Name, prop.Name);
                 }
 
-                Contract.Assert(
-                    CanSort(prop.PropertyType),
-                    "Cannot use PropertyComparer unless it can be compared by IComparable or ToString");
+                Debug.Assert(CanSort(prop.PropertyType), "Cannot use PropertyComparer unless it can be compared by IComparable or ToString");
 
                 _prop = prop;
                 _direction = direction;
@@ -142,7 +145,7 @@ namespace System.Data.Entity.Internal
                 }
                 else
                 {
-                    Contract.Assert(
+                    Debug.Assert(
                         CanSortWithToString(prop.PropertyType),
                         "Cannot use PropertyComparer unless it can be compared by IComparable or ToString");
 
@@ -177,7 +180,9 @@ namespace System.Data.Entity.Internal
             ///     Determines whether this instance can sort for the specified type.
             /// </summary>
             /// <param name="type"> The type. </param>
-            /// <returns> <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> . </returns>
+            /// <returns>
+            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// </returns>
             public static bool CanSort(Type type)
             {
                 return CanSortWithToString(type) || CanSortWithIComparable(type);
@@ -187,7 +192,9 @@ namespace System.Data.Entity.Internal
             ///     Determines whether this instance can sort for the specified type using IComparable.
             /// </summary>
             /// <param name="type"> The type. </param>
-            /// <returns> <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> . </returns>
+            /// <returns>
+            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// </returns>
             private static bool CanSortWithIComparable(Type type)
             {
                 return type.GetInterface("IComparable") != null ||
@@ -198,7 +205,9 @@ namespace System.Data.Entity.Internal
             ///     Determines whether this instance can sort for the specified type using ToString.
             /// </summary>
             /// <param name="type"> The type. </param>
-            /// <returns> <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> . </returns>
+            /// <returns>
+            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// </returns>
             private static bool CanSortWithToString(Type type)
             {
                 return type.Equals(typeof(XNode)) || type.IsSubclassOf(typeof(XNode));

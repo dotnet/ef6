@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a key composed of multiple parts.
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal CompositeKeyComparer(KeyManager manager)
             {
-                Contract.Requires(manager != null);
+                DebugCheck.NotNull(manager);
 
                 _manager = manager;
             }

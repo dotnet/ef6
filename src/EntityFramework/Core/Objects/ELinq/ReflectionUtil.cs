@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -492,7 +492,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <param name="method"> Method info to identify </param>
         /// <param name="sequenceMethod"> Identified sequence operator </param>
-        /// <returns> <c>true</c> if method is known; <c>false</c> otherwise </returns>
+        /// <returns>
+        ///     <c>true</c> if method is known; <c>false</c> otherwise
+        /// </returns>
         internal static bool TryIdentifySequenceMethod(MethodInfo method, out SequenceMethod sequenceMethod)
         {
             method = method.IsGenericMethod
@@ -505,9 +507,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     Identifies method call expressions as calls to known sequence operators.
         /// </summary>
         /// <param name="expression"> Expression that may represent a call to a known sequence method </param>
-        /// <param name="unwrapLambda"> If <c>true</c> , and the <paramref name="expression" /> argument is a LambdaExpression, the Body of the LambdaExpression argument will be retrieved, and that expression will then be examined for a sequence method call instead of the Lambda itself. </param>
+        /// <param name="unwrapLambda">
+        ///     If <c>true</c> , and the <paramref name="expression" /> argument is a LambdaExpression, the Body of the LambdaExpression argument will be retrieved, and that expression will then be examined for a sequence method call instead of the Lambda itself.
+        /// </param>
         /// <param name="sequenceMethod"> Identified sequence operator </param>
-        /// <returns> <c>true</c> if <paramref name="expression" /> is a <see cref="MethodCallExpression" /> and its target method is known; <c>false</c> otherwise </returns>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="expression" /> is a <see cref="MethodCallExpression" /> and its target method is known; <c>false</c> otherwise
+        /// </returns>
         internal static bool TryIdentifySequenceMethod(Expression expression, bool unwrapLambda, out SequenceMethod sequenceMethod)
         {
             if (expression.NodeType == ExpressionType.Lambda && unwrapLambda)
@@ -550,16 +556,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> Canonical description of method (suitable for lookup) </returns>
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
-            Contract.Requires(method != null);
+            DebugCheck.NotNull(method);
 
             // retrieve all generic type arguments and assign them numbers based on order
             Dictionary<Type, int> genericArgumentOrdinals = null;
             if (method.IsGenericMethodDefinition)
             {
                 genericArgumentOrdinals = method.GetGenericArguments()
-                    .Where(t => t.IsGenericParameter)
-                    .Select((t, i) => new KeyValuePair<Type, int>(t, i))
-                    .ToDictionary(r => r.Key, r => r.Value);
+                                                .Where(t => t.IsGenericParameter)
+                                                .Select((t, i) => new KeyValuePair<Type, int>(t, i))
+                                                .ToDictionary(r => r.Key, r => r.Value);
             }
 
             var description = new StringBuilder();

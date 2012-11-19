@@ -4,7 +4,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Xml.Linq;
     using EnvDTE;
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// </remarks>
         public virtual void ProcessConfigFile(ProjectItem configItem, IEnumerable<Func<XDocument, bool>> manipulators)
         {
-            Contract.Requires(configItem != null);
+            DebugCheck.NotNull(configItem);
 
             var fileName = configItem.FileNames[0];
             var config = XDocument.Load(fileName);

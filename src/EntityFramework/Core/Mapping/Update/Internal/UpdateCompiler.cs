@@ -291,7 +291,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
 
                 // make the user is not updating an identity value
-                if (!omitFromSetList && !insertMode
+                if (!omitFromSetList
+                    && !insertMode
                     && genPattern == StoreGeneratedPattern.Identity)
                 {
                     //throw the error only if the value actually changed

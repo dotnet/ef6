@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Load all the collections at once so we have a "fairly" matched in time set of files
-        ///     otherwise we may end up loading the csdl files, and then not loading the ssdl, and msl 
+        ///     otherwise we may end up loading the csdl files, and then not loading the ssdl, and msl
         ///     files for sometime later.
         /// </summary>
         [ResourceExposure(ResourceScope.None)]
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded 
+        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded
         ///     form.
         /// </summary>
         /// <remarks>

@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     public class PrimitiveColumnConfiguration
     {
@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal PrimitiveColumnConfiguration(PrimitivePropertyConfiguration configuration)
         {
-            Contract.Requires(configuration != null);
+            DebugCheck.NotNull(configuration);
 
             _configuration = configuration;
         }

@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Public Methods
 
         /// <summary>
-        ///     Creates a ProviderCommandInfo for the given node. 
+        ///     Creates a ProviderCommandInfo for the given node.
         ///     This method should be called when the keys, foreign keys and sort keys are known ahead of time.
         ///     Typically it is used when the original command is factored into multiple commands.
         /// </summary>

@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     ///     An And expression with no children is equivalent to True (this is an
     ///     operational convenience because we assume an implicit True is along
     ///     for the ride in every And expression)
-    /// 
     ///     A . True iff. A
     /// </remarks>
     /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>

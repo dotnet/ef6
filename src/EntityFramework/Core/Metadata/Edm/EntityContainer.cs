@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Class for representing an entity container
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _name; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _name = value;
@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntitySetByName(string name, bool ignoreCase, out EntitySet entitySet)
         {
-            Contract.Requires(name != null);
+            Check.NotNull(name, "name");
             EntitySetBase baseEntitySet = null;
             entitySet = null;
             if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetRelationshipSetByName(string name, bool ignoreCase, out RelationshipSet relationshipSet)
         {
-            Contract.Requires(name != null);
+            Check.NotNull(name, "name");
             EntitySetBase baseEntitySet = null;
             relationshipSet = null;
             if (BaseEntitySets.TryGetValue(name, ignoreCase, out baseEntitySet))
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public void RemoveEntitySetBase(EntitySetBase entitySetBase)
         {
-            Contract.Requires(entitySetBase != null);
+            Check.NotNull(entitySetBase, "entitySetBase");
             Util.ThrowIfReadOnly(this);
 
             _baseEntitySets.Source.Remove(entitySetBase);

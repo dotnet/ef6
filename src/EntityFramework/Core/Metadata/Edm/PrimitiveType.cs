@@ -211,7 +211,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     return the model equivalent type for this type,
         ///     for example if this instance is nvarchar and it's
         ///     base type is Edm String then the return type is Edm String.
-        ///     If the type is actually already a model type then the 
+        ///     If the type is actually already a model type then the
         ///     return type is "this".
         /// </summary>
         /// <returns> </returns>

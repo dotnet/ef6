@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     ///     An Or expression with no children is equivalent to False (this is an
     ///     operational convenience because we assume an implicit False is along
     ///     for the ride in every Or expression)
-    /// 
     ///     A + False iff. A
     /// </remarks>
     /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>

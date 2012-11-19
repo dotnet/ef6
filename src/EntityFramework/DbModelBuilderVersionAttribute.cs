@@ -18,7 +18,9 @@ namespace System.Data.Entity
         /// <summary>
         ///     Initializes a new instance of the <see cref="DbModelBuilderVersionAttribute" /> class.
         /// </summary>
-        /// <param name="version"> The <see cref="DbModelBuilder" /> conventions version to use. </param>
+        /// <param name="version">
+        ///     The <see cref="DbModelBuilder" /> conventions version to use.
+        /// </param>
         public DbModelBuilderVersionAttribute(DbModelBuilderVersion version)
         {
             if (!Enum.IsDefined(typeof(DbModelBuilderVersion), version))
@@ -32,7 +34,9 @@ namespace System.Data.Entity
         /// <summary>
         ///     Gets the <see cref="DbModelBuilder" /> conventions version.
         /// </summary>
-        /// <value> The <see cref="DbModelBuilder" /> conventions version. </value>
+        /// <value>
+        ///     The <see cref="DbModelBuilder" /> conventions version.
+        /// </value>
         public DbModelBuilderVersion Version { get; private set; }
     }
 }

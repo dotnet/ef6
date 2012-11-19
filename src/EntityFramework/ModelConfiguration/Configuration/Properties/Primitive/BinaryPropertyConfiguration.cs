@@ -6,9 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Used to configure a <see cref="T:Byte[]" /> property of an entity type or
@@ -32,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private BinaryPropertyConfiguration(BinaryPropertyConfiguration source)
             : base(source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             IsRowVersion = source.IsRowVersion;
         }

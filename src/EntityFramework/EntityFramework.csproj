@@ -11,7 +11,6 @@
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\EcmaPublicKey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
@@ -24,46 +23,12 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <DocumentationFile>bin\Debug\EntityFramework.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -71,46 +36,12 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Preconditions</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <DocumentationFile>bin\Release\EntityFramework.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -120,46 +51,12 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL;NET40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <DocumentationFile>bin\DebugNet40\EntityFramework.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU' ">
@@ -167,46 +64,12 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS;CONTRACTS_FULL;NET40</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly>EntityFramework</CodeContractsCustomRewriterAssembly>
-    <CodeContractsCustomRewriterClass>System.Data.Entity.Utilities.RuntimeFailureMethods</CodeContractsCustomRewriterClass>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Preconditions</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <DocumentationFile>bin\ReleaseNet40\EntityFramework.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -499,8 +362,10 @@
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
+    <Compile Include="Utilities\Check.cs" />
     <Compile Include="Utilities\DbModelExtensions.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />
+    <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Core\Common\FieldMetadata.cs" />
     <Compile Include="Core\Common\FieldNameLookup.cs" />
@@ -1796,7 +1661,6 @@
     <Compile Include="Utilities\HashSetExtensions.cs" />
     <Compile Include="Utilities\PropertyInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPath.cs" />
-    <Compile Include="Utilities\RuntimeFailureMethods.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\ValidationContextExtensions.cs" />
     <Compile Include="Validation\DbEntityValidationException.cs" />

@@ -5,42 +5,41 @@ namespace System.Data.Entity.SqlServer.Utilities
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal static class TypeUsageExtensions
     {
         internal static byte GetPrecision(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return type.GetFacetValue<byte>(DbProviderManifest.PrecisionFacetName);
         }
 
         internal static byte GetScale(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return type.GetFacetValue<byte>(DbProviderManifest.ScaleFacetName);
         }
 
         internal static int GetMaxLength(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return type.GetFacetValue<int>(DbProviderManifest.MaxLengthFacetName);
         }
 
         internal static T GetFacetValue<T>(this TypeUsage type, string facetName)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return (T)type.Facets[facetName].Value;
         }
 
         internal static bool IsFixedLength(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             var facet = type.Facets.SingleOrDefault(f => f.Name == DbProviderManifest.FixedLengthFacetName);
             return facet != null && facet.Value != null && (bool)facet.Value;
@@ -74,7 +73,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static bool TryGetFacetValue<T>(this TypeUsage type, string facetName, out T value)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             value = default(T);
             Facet facet;
@@ -104,7 +103,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static bool IsNullable(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             var facet = type.Facets.SingleOrDefault(f => f.Name == DbProviderManifest.NullableFacetName);
             return facet != null && facet.Value != null && (bool)facet.Value;
@@ -112,7 +111,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static PrimitiveTypeKind GetPrimitiveTypeKind(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
         }
@@ -147,7 +146,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static IEnumerable<EdmProperty> GetProperties(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             var edmType = type.EdmType;
             switch (edmType.BuiltInTypeKind)
@@ -165,7 +164,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static TypeUsage GetElementTypeUsage(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             var edmType = type.EdmType;
 
@@ -186,21 +185,21 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         internal static bool MustFacetBeConstant(this TypeUsage type, string facetName)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return ((PrimitiveType)type.EdmType).FacetDescriptions.Single(f => f.FacetName == facetName).IsConstant;
         }
 
         internal static bool IsSpatialType(this TypeUsage type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType && ((PrimitiveType)type.EdmType).IsSpatialType());
         }
 
         internal static bool IsSpatialType(this TypeUsage type, out PrimitiveTypeKind spatialType)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             if (IsSpatialType(type))
             {
@@ -224,9 +223,9 @@ namespace System.Data.Entity.SqlServer.Utilities
             return TypeUsage.Create(
                 typeUsage.EdmType,
                 typeUsage.Facets
-                    .Where(f => f.Name != DbProviderManifest.UnicodeFacetName)
-                    .Union(
-                        nonUnicodeString.Facets.Where(f => f.Name == DbProviderManifest.UnicodeFacetName)));
+                         .Where(f => f.Name != DbProviderManifest.UnicodeFacetName)
+                         .Union(
+                             nonUnicodeString.Facets.Where(f => f.Name == DbProviderManifest.UnicodeFacetName)));
         }
     }
 }

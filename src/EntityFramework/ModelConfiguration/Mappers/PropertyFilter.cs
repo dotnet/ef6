@@ -4,11 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -31,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             IEnumerable<Type> knownTypes = null,
             bool includePrivate = false)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             explicitlyMappedProperties = explicitlyMappedProperties ?? Enumerable.Empty<PropertyInfo>();
             knownTypes = knownTypes ?? Enumerable.Empty<Type>();

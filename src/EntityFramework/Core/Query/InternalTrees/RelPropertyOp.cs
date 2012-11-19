@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Almost identical to a PropertyOp - the only difference being that we're dealing with an 
+    ///     Almost identical to a PropertyOp - the only difference being that we're dealing with an
     ///     "extended" property (a rel property) this time
     /// </summary>
     internal sealed class RelPropertyOp : ScalarOp

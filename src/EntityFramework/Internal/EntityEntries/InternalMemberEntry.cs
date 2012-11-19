@@ -4,8 +4,9 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -25,8 +26,8 @@ namespace System.Data.Entity.Internal
         /// <param name="memberMetadata"> The member metadata. </param>
         protected InternalMemberEntry(InternalEntityEntry internalEntityEntry, MemberEntryMetadata memberMetadata)
         {
-            Contract.Requires(internalEntityEntry != null);
-            Contract.Requires(memberMetadata != null);
+            DebugCheck.NotNull(internalEntityEntry);
+            DebugCheck.NotNull(memberMetadata);
 
             _internalEntityEntry = internalEntityEntry;
             _memberMetadata = memberMetadata;
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Internal
         /// <returns> A sequence of validation errors for this property. Empty if no errors. Never null. </returns>
         public virtual IEnumerable<DbValidationError> GetValidationErrors()
         {
-            Contract.Assert(
+            Debug.Assert(
                 InternalEntityEntry.InternalContext.ValidationProvider != null,
                 "_internalEntityEntry.InternalContext.ValidatorProvider != null");
 

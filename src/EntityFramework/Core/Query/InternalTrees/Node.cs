@@ -25,8 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        ///     Basic constructor. 
-        /// 
+        ///     Basic constructor.
         ///     NEVER call this routine directly - you should always use the Command.CreateNode
         ///     factory methods.
         /// </summary>
@@ -41,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     This routine is only used for building up rule patterns. 
+        ///     This routine is only used for building up rule patterns.
         ///     NEVER use this routine for building up nodes in a user command tree.
         /// </summary>
         /// <param name="op"> </param>

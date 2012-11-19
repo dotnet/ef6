@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an internally generated constant that is used to serve as a null sentinel, 
+    ///     Represents an internally generated constant that is used to serve as a null sentinel,
     ///     i.e. to be checked whether it is null.
     /// </summary>
     internal sealed class NullSentinelOp : ConstantBaseOp

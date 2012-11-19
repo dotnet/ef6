@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         /// <summary>
         ///     Returns store tables affected by modifications to a particular C-layer extent. Although this
-        ///     information can be inferred from the update view, we want to avoid compiling or loading 
+        ///     information can be inferred from the update view, we want to avoid compiling or loading
         ///     views when not required. This information can be directly determined from mapping metadata.
         /// </summary>
         /// <param name="extent"> C-layer extent. </param>

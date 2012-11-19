@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     internal abstract class Rule
     {
         /// <summary>
-        ///     The "callback" function for each rule. 
+        ///     The "callback" function for each rule.
         ///     Every callback function must return true if the subtree has
         ///     been modified (or a new subtree has been returned); and must return false
         ///     otherwise. If the root of the subtree has not changed, but some internal details

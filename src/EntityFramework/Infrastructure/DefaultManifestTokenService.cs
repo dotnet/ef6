@@ -15,6 +15,8 @@ namespace System.Data.Entity.Infrastructure
         /// <inheritdoc />
         public string GetProviderManifestToken(DbConnection connection)
         {
+            Check.NotNull(connection, "connection");
+
             return DbProviderServices.GetProviderServices(connection).GetProviderManifestTokenChecked(connection);
         }
     }

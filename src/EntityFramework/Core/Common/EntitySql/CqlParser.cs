@@ -1936,7 +1936,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
             }
             yyn = yysindex[yystate];
-            if ((yyn != 0) && (yyn += yychar) >= 0 &&
+            if ((yyn != 0)
+                && (yyn += yychar) >= 0
+                &&
                 yyn <= YYTABLESIZE
                 && yycheck[yyn] == yychar)
             {
@@ -1954,7 +1956,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 goto yyloop;
             }
             yyn = yyrindex[yystate];
-            if ((yyn != 0) && (yyn += yychar) >= 0 &&
+            if ((yyn != 0)
+                && (yyn += yychar) >= 0
+                &&
                 yyn <= YYTABLESIZE
                 && yycheck[yyn] == yychar)
             {
@@ -1982,7 +1986,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         goto yyoverflow;
                     }
                     yyn = yysindex[state_peek(0)];
-                    if ((yyn != 0) && (yyn += YYERRCODE) >= 0 &&
+                    if ((yyn != 0)
+                        && (yyn += YYERRCODE) >= 0
+                        &&
                         yyn <= YYTABLESIZE
                         && yycheck[yyn] == YYERRCODE)
                     {
@@ -2751,7 +2757,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 //#line 707 "CqlGrammar.y"
                     {
                         var literal = val_peek(0) as Literal;
-                        if (literal != null && literal.IsNumber
+                        if (literal != null
+                            && literal.IsNumber
                             && !literal.IsSignedNumber)
                         {
                             literal.PrefixSign(Terminal(val_peek(1)).Token);
@@ -2768,7 +2775,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 //#line 722 "CqlGrammar.y"
                     {
                         var literal = val_peek(0) as Literal;
-                        if (null != literal && literal.IsNumber
+                        if (null != literal
+                            && literal.IsNumber
                             && !literal.IsSignedNumber)
                         {
                             literal.PrefixSign(Terminal(val_peek(1)).Token);
@@ -3607,7 +3615,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 goto yyloop;
             }
             yyn = yygindex[yym];
-            if ((yyn != 0) && (yyn += yystate) >= 0 &&
+            if ((yyn != 0)
+                && (yyn += yystate) >= 0
+                &&
                 yyn <= YYTABLESIZE
                 && yycheck[yyn] == yystate)
             {

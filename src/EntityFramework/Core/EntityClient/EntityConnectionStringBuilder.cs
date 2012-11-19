@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -279,6 +280,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> True if the value is retrieved </returns>
         public override bool TryGetValue(string keyword, out object value)
         {
+            Check.NotNull(keyword, "keyword");
+
             if (ContainsKey(keyword))
             {
                 value = this[keyword];

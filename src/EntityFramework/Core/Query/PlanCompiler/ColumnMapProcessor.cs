@@ -170,8 +170,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a column map for an entitytype column. 
-        ///     Currently, the key columns are not duplicated (ie) they point into the 
+        ///     Create a column map for an entitytype column.
+        ///     Currently, the key columns are not duplicated (ie) they point into the
         ///     same locations as in the properties list.
         ///     Note: we also don't handle keys that are properties of nested fields
         /// </summary>
@@ -287,7 +287,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Build up the list of columnmaps for the relproperties. 
+        ///     Build up the list of columnmaps for the relproperties.
         ///     Assumption: rel-properties follow after ALL the regular properties of the
         ///     types in the type hierarchy.
         ///     For now, we're simply going to ignore the rel-property columnmaps - we're

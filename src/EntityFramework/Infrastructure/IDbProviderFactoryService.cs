@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Config;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A service for obtaining the correct <see cref="DbProviderFactory" /> from a given
@@ -16,7 +15,6 @@ namespace System.Data.Entity.Infrastructure
     ///     provider. If these fail then a new implementation of this service can be registered
     ///     on <see cref="DbConfiguration" /> to provide an appropriate resolution.
     /// </remarks>
-    [ContractClass(typeof(DbProviderFactoryService))]
     public interface IDbProviderFactoryService
     {
         /// <summary>
@@ -25,16 +23,5 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="connection"> The connection. </param>
         /// <returns> The provider factory for the connection. </returns>
         DbProviderFactory GetProviderFactory(DbConnection connection);
-    }
-
-    [ContractClassFor(typeof(IDbProviderFactoryService))]
-    internal abstract class DbProviderFactoryService : IDbProviderFactoryService
-    {
-        public DbProviderFactory GetProviderFactory(DbConnection connection)
-        {
-            Contract.Requires(connection != null);
-
-            throw new NotImplementedException();
-        }
     }
 }

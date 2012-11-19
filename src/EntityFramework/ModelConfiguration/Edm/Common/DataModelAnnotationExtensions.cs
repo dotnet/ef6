@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 
         public static IList<Attribute> GetClrAttributes(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
         {
-            Contract.Requires(dataModelAnnotations != null);
+            DebugCheck.NotNull(dataModelAnnotations);
 
             return (IList<Attribute>)dataModelAnnotations.GetAnnotation(ClrAttributesAnnotation);
         }
@@ -25,15 +25,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         public static void SetClrAttributes(
             this ICollection<DataModelAnnotation> dataModelAnnotations, IList<Attribute> attributes)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(attributes != null);
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotNull(attributes);
 
             dataModelAnnotations.SetAnnotation(ClrAttributesAnnotation, attributes);
         }
 
         public static PropertyInfo GetClrPropertyInfo(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
         {
-            Contract.Requires(dataModelAnnotations != null);
+            DebugCheck.NotNull(dataModelAnnotations);
 
             return (PropertyInfo)dataModelAnnotations.GetAnnotation(ClrPropertyInfoAnnotation);
         }
@@ -41,30 +41,30 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         public static void SetClrPropertyInfo(
             this ICollection<DataModelAnnotation> dataModelAnnotations, PropertyInfo propertyInfo)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(propertyInfo != null);
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotNull(propertyInfo);
 
             dataModelAnnotations.SetAnnotation(ClrPropertyInfoAnnotation, propertyInfo);
         }
 
         public static Type GetClrType(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
         {
-            Contract.Requires(dataModelAnnotations != null);
+            DebugCheck.NotNull(dataModelAnnotations);
 
             return (Type)dataModelAnnotations.GetAnnotation(ClrTypeAnnotation);
         }
 
         public static void SetClrType(this ICollection<DataModelAnnotation> dataModelAnnotations, Type type)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotNull(type);
 
             dataModelAnnotations.SetAnnotation(ClrTypeAnnotation, type);
         }
 
         public static object GetConfiguration(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
         {
-            Contract.Requires(dataModelAnnotations != null);
+            DebugCheck.NotNull(dataModelAnnotations);
 
             return dataModelAnnotations.GetAnnotation(ConfiguationAnnotation);
         }
@@ -72,15 +72,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         public static void SetConfiguration(
             this ICollection<DataModelAnnotation> dataModelAnnotations, object configuration)
         {
-            Contract.Requires(dataModelAnnotations != null);
+            DebugCheck.NotNull(dataModelAnnotations);
 
             dataModelAnnotations.SetAnnotation(ConfiguationAnnotation, configuration);
         }
 
         public static object GetAnnotation(this IEnumerable<DataModelAnnotation> dataModelAnnotations, string name)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotEmpty(name);
 
             var annotation = dataModelAnnotations.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
 
@@ -90,9 +90,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         public static void SetAnnotation(
             this ICollection<DataModelAnnotation> dataModelAnnotations, string name, object value)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(value != null);
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(value);
 
             var annotation = dataModelAnnotations.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
 
@@ -110,8 +110,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 
         public static void RemoveAnnotation(this ICollection<DataModelAnnotation> dataModelAnnotations, string name)
         {
-            Contract.Requires(dataModelAnnotations != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotNull(dataModelAnnotations);
+            DebugCheck.NotEmpty(name);
 
             var annotationToRemove =
                 dataModelAnnotations.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
@@ -125,8 +125,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         public static void Copy(
             this ICollection<DataModelAnnotation> sourceAnnotations, ICollection<DataModelAnnotation> targetAnnotations)
         {
-            Contract.Requires(sourceAnnotations != null);
-            Contract.Requires(targetAnnotations != null);
+            DebugCheck.NotNull(sourceAnnotations);
+            DebugCheck.NotNull(targetAnnotations);
 
             foreach (var annotation in sourceAnnotations)
             {

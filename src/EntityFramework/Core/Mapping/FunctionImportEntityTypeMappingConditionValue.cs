@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml.XPath;
 
     internal sealed class FunctionImportEntityTypeMappingConditionValue : FunctionImportEntityTypeMappingCondition
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Mapping
         internal FunctionImportEntityTypeMappingConditionValue(string columnName, XPathNavigator columnValue, LineInfo lineInfo)
             : base(columnName, lineInfo)
         {
-            Contract.Requires(columnValue != null);
+            DebugCheck.NotNull(columnValue);
 
             _xPathValue = columnValue;
             _convertedValues = new Memoizer<Type, object>(GetConditionValue, null);

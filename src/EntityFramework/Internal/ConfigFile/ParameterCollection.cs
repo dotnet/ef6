@@ -40,8 +40,8 @@ namespace System.Data.Entity.Internal.ConfigFile
         public virtual object[] GetTypedParameterValues()
         {
             return this.Cast<ParameterElement>()
-                .Select(e => e.GetTypedParameterValue())
-                .ToArray();
+                       .Select(e => e.GetTypedParameterValue())
+                       .ToArray();
         }
 
         /// <summary>

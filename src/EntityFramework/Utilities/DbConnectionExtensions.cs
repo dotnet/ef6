@@ -7,14 +7,13 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     internal static class DbConnectionExtensions
     {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string GetProviderInvariantName(this DbConnection connection)
         {
-            Contract.Requires(connection != null);
+            DebugCheck.NotNull(connection);
 
             return DbProviderServices.GetProviderFactory(connection).GetProviderInvariantName();
         }
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Utilities
         public static DbProviderInfo GetProviderInfo(
             this DbConnection connection, out DbProviderManifest providerManifest)
         {
-            Contract.Requires(connection != null);
+            DebugCheck.NotNull(connection);
 
             var providerManifestToken = DbConfiguration
                 .GetService<IManifestTokenService>()
@@ -38,7 +37,7 @@ namespace System.Data.Entity.Utilities
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static DbProviderFactory GetProviderFactory(this DbConnection connection)
         {
-            Contract.Requires(connection != null);
+            DebugCheck.NotNull(connection);
 
             return DbConfiguration.GetService<IDbProviderFactoryService>().GetProviderFactory(connection);
         }

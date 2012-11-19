@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to process instances of <see cref="ComplexTypeAttribute" /> found on types in the model.
@@ -13,6 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public override void Apply(Type memberInfo, ModelConfiguration configuration, ComplexTypeAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             configuration.ComplexType(memberInfo);
         }
     }

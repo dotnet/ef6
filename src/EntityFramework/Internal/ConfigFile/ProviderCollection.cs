@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class ProviderCollection : ConfigurationElementCollection
     {
@@ -54,8 +54,8 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         public ProviderElement AddProvider(string invariantName, string providerTypeName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(invariantName));
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerTypeName));
+            DebugCheck.NotEmpty(invariantName);
+            DebugCheck.NotEmpty(providerTypeName);
 
             var element = (ProviderElement)CreateNewElement();
             base.BaseAdd(element);

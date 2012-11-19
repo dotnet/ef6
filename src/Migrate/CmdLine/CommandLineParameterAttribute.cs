@@ -142,7 +142,7 @@ namespace CmdLine
         {
             return
                 GetCustomAttributes(member, typeof(CommandLineParameterAttribute)).Cast<CommandLineParameterAttribute>()
-                    .FirstOrDefault();
+                                                                                  .FirstOrDefault();
         }
 
         public static IEnumerable<CommandLineParameterAttribute> GetAll(MemberInfo member)

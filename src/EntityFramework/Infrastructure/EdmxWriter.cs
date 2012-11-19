@@ -7,7 +7,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -30,8 +30,8 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="writer"> The writer. </param>
         public static void WriteEdmx(DbContext context, XmlWriter writer)
         {
-            Contract.Requires(context != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(context, "context");
+            Check.NotNull(writer, "writer");
 
             var internalContext = context.InternalContext;
             if (internalContext is EagerInternalContext)
@@ -61,8 +61,8 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="writer"> The writer. </param>
         public static void WriteEdmx(DbModel model, XmlWriter writer)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(model, "model");
+            Check.NotNull(writer, "writer");
 
             new EdmxSerializer().Serialize(
                 model.DatabaseMapping, model.DatabaseMapping.Database.GetProviderInfo(), writer);

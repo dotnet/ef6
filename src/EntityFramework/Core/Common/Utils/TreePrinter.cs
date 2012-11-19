@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Text;
 
     /// <summary>
-    ///     Represents a node in a hierarchical collection of information strings. 
+    ///     Represents a node in a hierarchical collection of information strings.
     ///     Intended as a common way mechanism to represent tree structures for debugging (using the TreePrinter class).
     ///     A node consists of a string (represented as a StringBuilder), its collection of child nodes, and an optional Tag value.
     /// </summary>

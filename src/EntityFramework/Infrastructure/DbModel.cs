@@ -2,9 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an Entity Data Model (EDM) created by the <see cref="DbModelBuilder" />.
@@ -24,8 +23,8 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         internal DbModel(DbDatabaseMapping databaseMapping, DbModelBuilder modelBuilder)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(modelBuilder != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(modelBuilder);
 
             _databaseMapping = databaseMapping;
             _cachedModelBuilder = modelBuilder;

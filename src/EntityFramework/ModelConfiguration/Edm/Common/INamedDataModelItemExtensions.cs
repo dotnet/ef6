@@ -4,15 +4,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal static class INamedDataModelItemExtensions
     {
         public static string UniquifyName(this IEnumerable<INamedDataModelItem> namedDataModelItems, string name)
         {
-            Contract.Requires(namedDataModelItems != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotNull(namedDataModelItems);
+            DebugCheck.NotEmpty(name);
 
             var uniqueName = name;
             var i = 0;

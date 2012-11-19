@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
@@ -21,22 +21,26 @@ namespace System.Data.Entity.Config
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type.
         /// </summary>
-        /// <param name="activator"> The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service. </param>
+        /// <param name="activator">
+        ///     The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service.
+        /// </param>
         public TransientDependencyResolver(Func<T> activator)
             : this(activator, null)
         {
-            Contract.Requires(activator != null);
+            Check.NotNull(activator, "activator");
         }
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
         ///     if the given key matches exactly the key passed to the Get method.
         /// </summary>
-        /// <param name="activator"> The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service. </param>
+        /// <param name="activator">
+        ///     The <see cref="T:System.Func{T}" /> invoked to produce a new transient instance of the target service.
+        /// </param>
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         public TransientDependencyResolver(Func<T> activator, object key)
         {
-            Contract.Requires(activator != null);
+            Check.NotNull(activator, "activator");
 
             _activator = activator;
             _key = key;

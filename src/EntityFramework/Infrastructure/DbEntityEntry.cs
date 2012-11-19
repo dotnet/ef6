@@ -6,9 +6,9 @@ namespace System.Data.Entity.Infrastructure
     using System.ComponentModel;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalEntityEntry"> The internal entry. </param>
         internal DbEntityEntry(InternalEntityEntry internalEntityEntry)
         {
-            Contract.Requires(internalEntityEntry != null);
+            DebugCheck.NotNull(internalEntityEntry);
 
             _internalEntityEntry = internalEntityEntry;
         }
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the navigation property. </returns>
         public DbReferenceEntry Reference(string navigationProperty)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
+            Check.NotEmpty(navigationProperty, "navigationProperty");
 
             return DbReferenceEntry.Create(_internalEntityEntry.Reference(navigationProperty));
         }
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the navigation property. </returns>
         public DbCollectionEntry Collection(string navigationProperty)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(navigationProperty));
+            Check.NotEmpty(navigationProperty, "navigationProperty");
 
             return DbCollectionEntry.Create(_internalEntityEntry.Collection(navigationProperty));
         }
@@ -173,7 +173,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the property. </returns>
         public DbPropertyEntry Property(string propertyName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DbPropertyEntry.Create(_internalEntityEntry.Property(propertyName));
         }
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the complex property. </returns>
         public DbComplexPropertyEntry ComplexProperty(string propertyName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DbComplexPropertyEntry.Create(
                 _internalEntityEntry.Property(propertyName, null, requireComplex: true));
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the member. </returns>
         public DbMemberEntry Member(string propertyName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DbMemberEntry.Create(_internalEntityEntry.Member(propertyName));
         }
@@ -239,8 +239,12 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Validates this <see cref="DbEntityEntry" /> instance and returns validation result.
         /// </summary>
-        /// <returns> Entity validation result. Possibly null if <see
-        ///      cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" /> method is overridden. </returns>
+        /// <returns>
+        ///     Entity validation result. Possibly null if
+        ///     <see
+        ///         cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" />
+        ///     method is overridden.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbEntityValidationResult GetValidationResult()
         {
@@ -270,8 +274,12 @@ namespace System.Data.Entity.Infrastructure
         ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
         ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name="obj"> The <see cref="System.Object" /> to compare with this instance. </param>
-        /// <returns> <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> . </returns>
+        /// <param name="obj">
+        ///     The <see cref="System.Object" /> to compare with this instance.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> .
+        /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
         public override bool Equals(object obj)
@@ -290,8 +298,12 @@ namespace System.Data.Entity.Infrastructure
         ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
         ///     the same entity on the same <see cref="DbContext" />.
         /// </summary>
-        /// <param name="other"> The <see cref="DbEntityEntry" /> to compare with this instance. </param>
-        /// <returns> <c>true</c> if the specified <see cref="DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c> . </returns>
+        /// <param name="other">
+        ///     The <see cref="DbEntityEntry" /> to compare with this instance.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the specified <see cref="DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c> .
+        /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
         public bool Equals(DbEntityEntry other)

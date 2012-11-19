@@ -11,7 +11,6 @@
     <RootNamespace>System.Data.Entity.Migrations.Utilities</RootNamespace>
     <AssemblyName>EntityFramework.PowerShell.Utility</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\EcmaPublicKey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
@@ -24,32 +23,9 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
   </PropertyGroup>
@@ -58,44 +34,11 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Preconditions</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -103,32 +46,9 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;CONTRACTS_FULL;NET40</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
   </PropertyGroup>
@@ -137,44 +57,11 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;CONTRACTS_FULL;NET40</DefineConstants>
+    <DefineConstants>TRACE;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsCacheAnalysisResults>False</CodeContractsCacheAnalysisResults>
-    <CodeContractsRuntimeCheckingLevel>Preconditions</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
-    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
-    <CodeContractsPointerObligations>False</CodeContractsPointerObligations>
-    <CodeContractsInferRequires>False</CodeContractsInferRequires>
-    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
-    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
-    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
-    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
-    <CodeContractsSuggestEnsures>False</CodeContractsSuggestEnsures>
-    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
   </PropertyGroup>
   <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
     <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>

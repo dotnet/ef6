@@ -4,8 +4,9 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -25,8 +26,11 @@ namespace System.Data.Entity.Migrations.Model
         public HistoryOperation(IEnumerable<InterceptedCommand> commands, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(commands != null);
-            Contract.Requires(commands.Any());
+            Check.NotNull(commands, "commands");
+            if (!commands.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("commands", "HistoryOperation"));
+            }
 
             _commands = commands;
         }

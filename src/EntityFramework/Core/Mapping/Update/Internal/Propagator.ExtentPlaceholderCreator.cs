@@ -8,13 +8,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     internal partial class Propagator
     {
         /// <summary>
-        ///     Class generating default records for extents. Has a single external entry point, the 
+        ///     Class generating default records for extents. Has a single external entry point, the
         ///     <see cref="CreatePlaceholder" /> static method.
         /// </summary>
         private class ExtentPlaceholderCreator
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns> A default record for the </returns>
             internal static PropagatorResult CreatePlaceholder(EntitySetBase extent)
             {
-                Contract.Requires(extent != null);
+                DebugCheck.NotNull(extent);
 
                 var creator = new ExtentPlaceholderCreator();
 
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns> </returns>
             private PropagatorResult CreateEntitySetPlaceholder(EntitySet entitySet)
             {
-                Contract.Requires(entitySet != null);
+                DebugCheck.NotNull(entitySet);
                 var members = entitySet.ElementType.Properties;
                 var memberValues = new PropagatorResult[members.Count];
 
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns> Placeholder element for the given member. </returns>
             private PropagatorResult CreateMemberPlaceholder(EdmMember member)
             {
-                Contract.Requires(member != null);
+                DebugCheck.NotNull(member);
 
                 return Visit(member);
             }

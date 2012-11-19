@@ -5,7 +5,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Globalization;
 
     /// <summary>
-    ///     SkipClause represents the a SKIP expression in a SqlSelectStatement. 
+    ///     SkipClause represents the a SKIP expression in a SqlSelectStatement.
     ///     It has a count property, which indicates how many rows should be discarded.
     /// </summary>
     internal class SkipClause : ISqlFragment
@@ -45,7 +45,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         #region ISqlFragment Members
 
         /// <summary>
-        ///     Write out the OFFSET part of sql select statement 
+        ///     Write out the OFFSET part of sql select statement
         ///     It basically writes OFFSET X ROWS.
         /// </summary>
         /// <param name="writer"> </param>

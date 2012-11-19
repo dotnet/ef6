@@ -262,7 +262,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                     //There should be no other fragments mapping cExtent to sExtent
                     var mapepdFragments = m_cells.Where(otherCell => otherCell != cell)
-                        .Where(otherCell => otherCell.CQuery.Extent == cExtent && otherCell.SQuery.Extent == sExtent);
+                                                 .Where(
+                                                     otherCell => otherCell.CQuery.Extent == cExtent && otherCell.SQuery.Extent == sExtent);
 
                     if (mapepdFragments.Any())
                     {

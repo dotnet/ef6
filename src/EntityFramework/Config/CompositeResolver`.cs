@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Implements a Composite pattern for <see cref="IDbDependencyResolver" /> such that if the first
@@ -18,8 +18,8 @@ namespace System.Data.Entity.Config
 
         public CompositeResolver(TFirst firstResolver, TSecond secondResolver)
         {
-            Contract.Requires(firstResolver != null);
-            Contract.Requires(secondResolver != null);
+            DebugCheck.NotNull(firstResolver);
+            DebugCheck.NotNull(secondResolver);
 
             _firstResolver = firstResolver;
             _secondResolver = secondResolver;

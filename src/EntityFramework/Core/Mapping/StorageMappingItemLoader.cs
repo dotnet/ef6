@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --TableMappingFragment
     ///     --EndPropertyMap
@@ -556,7 +556,7 @@ namespace System.Data.Entity.Core.Mapping
                             entityTypeMapping.EntityType.FullName,
                             actualEnd.ParentAssociationSet.Name,
                             MetadataHelper.GetEntityTypeForEnd(MetadataHelper.GetOppositeEnd(actualEnd).CorrespondingAssociationEndMember).
-                                FullName),
+                                           FullName),
                         StorageMappingErrorCode.InvalidModificationFunctionMappingAssociationEndMappingInvalidForEntityType,
                         m_sourceLocation,
                         xmlLineInfoNav,
@@ -696,7 +696,7 @@ namespace System.Data.Entity.Core.Mapping
                         Strings.Mapping_ModificationFunction_MissingSetClosure,
                         StringUtil.ToCommaSeparatedString(
                             setMappingPerTable.ListForKey(table)
-                                .Where(s => !s.HasModificationFunctionMapping).Select(s => s.Set.Name)),
+                                              .Where(s => !s.HasModificationFunctionMapping).Select(s => s.Set.Name)),
                         StorageMappingErrorCode.MissingSetClosureInModificationFunctionMapping, m_sourceLocation, (IXmlLineInfo)nav
                         , m_parsingErrors);
                 }
@@ -1778,7 +1778,8 @@ namespace System.Data.Entity.Core.Mapping
                 for (var i = 0; i < mapping.ResultMappings.Count; i++)
                 {
                     EntityType returnEntityType;
-                    if (MetadataHelper.TryGetFunctionImportReturnType(functionImport, i, out returnEntityType) &&
+                    if (MetadataHelper.TryGetFunctionImportReturnType(functionImport, i, out returnEntityType)
+                        &&
                         returnEntityType.Abstract
                         &&
                         mapping.GetResultMapping(i).NormalizedEntityTypeMappings.Count == 0)
@@ -2709,7 +2710,7 @@ namespace System.Data.Entity.Core.Mapping
                 errorFound ||
                 TypeHelpers.GetAllStructuralMembers(structuralType).Count == propertyMappings.Count &&
                 TypeHelpers.GetAllStructuralMembers(structuralType).Cast<EdmMember>().Zip(propertyMappings)
-                    .All(ppm => ppm.Key.EdmEquals(ppm.Value.EdmProperty)),
+                           .All(ppm => ppm.Key.EdmEquals(ppm.Value.EdmProperty)),
                 "propertyMappings order does not correspond to the order of properties in the structuredType.");
 
             return !errorFound;
@@ -3626,7 +3627,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Throws a new MappingException giving out the line number and 
+        ///     Throws a new MappingException giving out the line number and
         ///     File Name where the error in Mapping specification is present.
         /// </summary>
         /// <param name="message"> </param>
@@ -3702,7 +3703,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method simply calls the helper method on Helper class with the 
+        ///     The method simply calls the helper method on Helper class with the
         ///     namespaceURI that is default for CSMapping.
         /// </summary>
         /// <param name="nav"> </param>
@@ -3714,7 +3715,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method simply calls the helper method on Helper class with the 
+        ///     The method simply calls the helper method on Helper class with the
         ///     namespaceURI that is default for CSMapping.
         /// </summary>
         /// <param name="nav"> </param>
@@ -4022,8 +4023,8 @@ namespace System.Data.Entity.Core.Mapping
                 StorageMappingItemLoader parentLoader,
                 EntitySetBase extent)
             {
-                Contract.Requires(parentLoader != null);
-                Contract.Requires(extent != null);
+                DebugCheck.NotNull(parentLoader);
+                DebugCheck.NotNull(extent);
 
                 m_parentLoader = parentLoader;
                 // initialize member fields
@@ -4292,7 +4293,8 @@ namespace System.Data.Entity.Core.Mapping
                 AssociationSet associationSet;
 
                 // validate the association set exists
-                if (null == associationSetName ||
+                if (null == associationSetName
+                    ||
                     !m_modelContainer.TryGetRelationshipSetByName(associationSetName, false, out relationshipSet)
                     ||
                     BuiltInTypeKind.AssociationSet != relationshipSet.BuiltInTypeKind)
@@ -4749,8 +4751,12 @@ namespace System.Data.Entity.Core.Mapping
         ///     this is the case creates a new type usage built using the underlying type of the enumeration type.
         /// </summary>
         /// <param name="typeUsage"> TypeUsage to resolve. </param>
-        /// <returns> If <paramref name="typeUsage" /> represents a TypeUsage for enumeration type the method returns a new TypeUsage instance created using the underlying type of the enumeration type. Otherwise the method returns <paramref
-        ///      name="typeUsage" /> . </returns>
+        /// <returns>
+        ///     If <paramref name="typeUsage" /> represents a TypeUsage for enumeration type the method returns a new TypeUsage instance created using the underlying type of the enumeration type. Otherwise the method returns
+        ///     <paramref
+        ///         name="typeUsage" />
+        ///     .
+        /// </returns>
         private static TypeUsage ResolveTypeUsageForEnums(TypeUsage typeUsage)
         {
             Debug.Assert(typeUsage != null, "typeUsage != null");

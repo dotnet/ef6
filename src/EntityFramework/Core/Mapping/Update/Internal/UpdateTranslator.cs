@@ -17,7 +17,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -31,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     ///         <item>Group changes by C-Space extent</item>
     ///         <item>For each affected S-Space table, perform propagation (get changes in S-Space terms)</item>
     ///         <item>Merge S-Space inserts and deletes into updates where appropriate</item>
-    ///         <item>Produce S-Space commands implementating the modifications (insert, delete and update SQL statements)</item>
+    ///         <item>Produce S-Space commands implementing the modifications (insert, delete and update SQL statements)</item>
     ///     </list>
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -49,8 +48,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         public UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter, IDbCommandInterceptor commandInterceptor = null)
             : this()
         {
-            Contract.Requires(stateManager != null);
-            Contract.Requires(adapter != null);
+            DebugCheck.NotNull(stateManager);
+            DebugCheck.NotNull(adapter);
 
             _stateManager = stateManager;
             _adapter = adapter;
@@ -132,7 +131,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets key manager that handles interpretation of keys (including resolution of 
+        ///     Gets key manager that handles interpretation of keys (including resolution of
         ///     referential-integrity/foreign key constraints)
         /// </summary>
         internal virtual KeyManager KeyManager { get; private set; }
@@ -355,7 +354,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             }
 
                             // don't allow the user to insert or update an entity that refers to a deleted principal
-                            if (currentValues && null != existingPrincipal &&
+                            if (currentValues
+                                && null != existingPrincipal
+                                &&
                                 existingPrincipal.State == EntityState.Deleted
                                 &&
                                 (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified))
@@ -378,16 +379,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // requires: role must not be null and property must be a key member for the role end
         private static int GetKeyMemberOffset(RelationshipEndMember role, EdmProperty property, out int keyMemberCount)
         {
-            Contract.Requires(null != role);
-            Contract.Requires(null != property);
+            DebugCheck.NotNull(role);
+            DebugCheck.NotNull(property);
 
-            Contract.Assert(
-                BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind,
-                "relationship ends must be of RefType");
+            Debug.Assert(BuiltInTypeKind.RefType == role.TypeUsage.EdmType.BuiltInTypeKind, "relationship ends must be of RefType");
             var endType = (RefType)role.TypeUsage.EdmType;
-            Contract.Assert(
-                BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind,
-                "relationship ends must reference EntityType");
+            Debug.Assert(BuiltInTypeKind.EntityType == endType.ElementType.BuiltInTypeKind, "relationship ends must reference EntityType");
             var entityType = (EntityType)endType.ElementType;
             keyMemberCount = entityType.KeyMembers.Count;
             return entityType.KeyMembers.IndexOf(property);
@@ -450,7 +447,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Update, which 
+        ///     An asynchronous version of Update, which
         ///     persists state manager changes to the store.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
@@ -920,7 +917,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntry"> </param>
         private void ValidateAndRegisterStateEntry(IEntityStateEntry stateEntry)
         {
-            Contract.Requires(stateEntry != null);
+            DebugCheck.NotNull(stateEntry);
 
             var extent = stateEntry.EntitySet;
             if (null == extent)
@@ -1003,7 +1000,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     effects: given an entity key and a set, adds key to the set iff. the corresponding entity
         ///     is:
-        /// 
         ///     not a stub (or 'key') entry, and;
         ///     not a core element in the update pipeline (it's not being directly modified)
         /// </summary>
@@ -1011,7 +1007,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             // Note: an entity is ancillary iff. it is unchanged (otherwise it is tracked as a "standard" changed entity)
             IEntityStateEntry endEntry;
-            if (_stateManager.TryGetEntityStateEntry(key, out endEntry) && // make sure the entity is tracked
+            if (_stateManager.TryGetEntityStateEntry(key, out endEntry)
+                && // make sure the entity is tracked
                 !endEntry.IsKeyEntry
                 && // make sure the entity is not a stub
                 endEntry.State == EntityState.Unchanged) // if the entity is being modified, it's already included anyways
@@ -1025,7 +1022,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(null != extent, "must be verified by caller");
 
             DataRecordInfo recordInfo;
-            if ((null == record) ||
+            if ((null == record)
+                ||
                 (null == (recordInfo = record.DataRecordInfo))
                 ||
                 (null == recordInfo.RecordType))
@@ -1055,7 +1053,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // determine if the given extent lives in a container from the given workspace
             // (the item collections for each container are reference equivalent when they are declared in the
             // same item collection)
-            if (null == actualContainer || null == referenceContainer
+            if (null == actualContainer
+                || null == referenceContainer
                 ||
                 !ReferenceEquals(actualContainer, referenceContainer))
             {
@@ -1111,7 +1110,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Change node for requested extent. </returns>
         internal ChangeNode GetExtentModifications(EntitySetBase extent)
         {
-            Contract.Requires(extent != null);
+            DebugCheck.NotNull(extent);
             Debug.Assert(null != _changes, "(UpdateTranslator/GetChangeNodeForExtent) method called before translator initialized");
 
             ChangeNode changeNode;
@@ -1132,7 +1131,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> List storing the entries. </returns>
         internal List<ExtractedStateEntry> GetExtentFunctionModifications(EntitySetBase extent)
         {
-            Contract.Requires(extent != null);
+            DebugCheck.NotNull(extent);
             Debug.Assert(null != _functionChanges, "method called before translator initialized");
 
             List<ExtractedStateEntry> entries;
@@ -1188,7 +1187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="stateEntry"> State entry for the entity being tracked. </param>
             internal void RegisterEntity(IEntityStateEntry stateEntry)
             {
-                Contract.Requires(stateEntry != null);
+                DebugCheck.NotNull(stateEntry);
 
                 if (EntityState.Added == stateEntry.State
                     || EntityState.Deleted == stateEntry.State)
@@ -1235,7 +1234,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                                 // skip ends that don't target the current entity type
                                 if (!MetadataHelper.GetEntityTypeForEnd(toEnd.CorrespondingAssociationEndMember)
-                                         .IsAssignableFrom(entityType))
+                                                   .IsAssignableFrom(entityType))
                                 {
                                     continue;
                                 }
@@ -1270,9 +1269,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="stateEntry"> State entry for the relationship being tracked </param>
             internal void RegisterAssociation(AssociationSet associationSet, IExtendedDataRecord record, IEntityStateEntry stateEntry)
             {
-                Contract.Requires(associationSet != null);
-                Contract.Requires(record != null);
-                Contract.Requires(stateEntry != null);
+                DebugCheck.NotNull(associationSet);
+                DebugCheck.NotNull(record);
+                DebugCheck.NotNull(stateEntry);
 
                 Debug.Assert(associationSet.ElementType.Equals(record.DataRecordInfo.RecordType.EdmType));
 
@@ -1391,7 +1390,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     // the relationship and entity map to the same table. If there is a relationship
                     // with 1..1 cardinality to the entity and the relationship is being added or deleted,
                     // it is required that the entity is also added or deleted.
-                    if (1 == absoluteCount && 1 == minimumCount
+                    if (1 == absoluteCount
+                        && 1 == minimumCount
                         && 1 == maximumCount) // 1..1 relationship being added/deleted
                     {
                         var isAdd = addedCount > deletedCount;
@@ -1402,7 +1402,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         // Identify the following error conditions:
                         // - the entity is not being modified at all
                         // - the entity is being modified, but not in the way we expect (it's not being added or deleted)
-                        if (!m_impliedRelationships.TryGetValue(actualRelationship, out entityEntry) ||
+                        if (!m_impliedRelationships.TryGetValue(actualRelationship, out entityEntry)
+                            ||
                             (isAdd && EntityState.Added != entityEntry.State)
                             ||
                             (!isAdd && EntityState.Deleted != entityEntry.State))
@@ -1533,11 +1534,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     EntityKey toEntityKey, AssociationEndMember fromEnd, AssociationEndMember toEnd, AssociationSet associationSet,
                     IEntityStateEntry stateEntry)
                 {
-                    Contract.Requires(toEntityKey != null);
-                    Contract.Requires(fromEnd != null);
-                    Contract.Requires(toEnd != null);
-                    Contract.Requires(associationSet != null);
-                    Contract.Requires(stateEntry != null);
+                    DebugCheck.NotNull(toEntityKey);
+                    DebugCheck.NotNull(fromEnd);
+                    DebugCheck.NotNull(toEnd);
+                    DebugCheck.NotNull(associationSet);
+                    DebugCheck.NotNull(stateEntry);
 
                     ToEntityKey = toEntityKey;
                     FromEnd = fromEnd;

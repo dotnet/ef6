@@ -7,8 +7,9 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -429,19 +430,25 @@ namespace System.Data.Entity
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable
-        ///                                                <T>and the object context itself are not affected.
-        ///                                                    Because the Include method returns the query object, you can call this method multiple times on an IQueryable
-        ///                                                    <T>to
-        ///                                                        specify multiple paths for the query.
+        ///     the returned instance of the IQueryable
+        ///     <T>
+        ///         . Other instances of IQueryable
+        ///         <T>
+        ///             and the object context itself are not affected.
+        ///             Because the Include method returns the query object, you can call this method multiple times on an IQueryable
+        ///             <T>
+        ///                 to
+        ///                 specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <param name="source"> The source IQueryable on which to call Include. </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
-        /// <returns> A new IQueryable <T>with the defined query path. </returns>
+        /// <returns>
+        ///     A new IQueryable <T>with the defined query path.
+        /// </returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string path) where T : class
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
             // Explicitly not checking the value of path since we don't care for the extension method.
 
             // We could use dynamic here, but the problem is that we want to do nothing if the method
@@ -476,18 +483,22 @@ namespace System.Data.Entity
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable<T>. Other instances of IQueryable
-        ///                                                <T>and the object context itself are not affected.
-        ///                                                    Because the Include method returns the query object, you can call this method multiple times on an IQueryable
-        ///                                                    <T>to
-        ///                                                        specify multiple paths for the query.
+        ///     the returned instance of the IQueryable
+        ///     <T>
+        ///         . Other instances of IQueryable
+        ///         <T>
+        ///             and the object context itself are not affected.
+        ///             Because the Include method returns the query object, you can call this method multiple times on an IQueryable
+        ///             <T>
+        ///                 to
+        ///                 specify multiple paths for the query.
         /// </remarks>
         /// <param name="source"> The source IQueryable on which to call Include. </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns> A new IQueryable with the defined query path. </returns>
         public static IQueryable Include(this IQueryable source, string path)
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
             // Explicitly not checking the value of path since we don't care for the extension method.
 
             // We could use dynamic here, but the problem is that we want to do nothing if the method
@@ -507,7 +518,7 @@ namespace System.Data.Entity
         /// </summary>
         private static T CommonInclude<T>(T source, string path)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull((object)source);
 
             var includeMethod = source.GetType().GetMethod("Include", _stringIncludeTypes);
             if (includeMethod != null
@@ -534,28 +545,32 @@ namespace System.Data.Entity
         ///     To include a collection and then a collection one level down: query.Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection))
         ///     To include a collection, a reference, and a reference two levels down: query.Include(e => e.Level1Collection.Select(l1 => l1.Level2Reference.Level3Reference))
         ///     To include a collection, a collection, and a reference two levels down: query.Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection.Select(l2 => l2.Level3Reference)))
-        /// 
         ///     This extension method calls the Include(String) method of the source IQueryable object, if such a method exists.
         ///     If the source IQueryable does not have a matching method, then this method does nothing.
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
-        ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable<T>. Other
-        ///                                                                                                                  instances of IQueryable
-        ///                                                                                                                  <T>and the object context itself are not affected.  Because the Include method returns the
-        ///                                                                                                                      query object, you can call this method multiple times on an IQueryable
-        ///                                                                                                                      <T>to specify multiple paths for the query.
+        ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable
+        ///     <T>
+        ///         . Other
+        ///         instances of IQueryable
+        ///         <T>
+        ///             and the object context itself are not affected.  Because the Include method returns the
+        ///             query object, you can call this method multiple times on an IQueryable
+        ///             <T>to specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <typeparam name="TProperty"> The type of navigation property being included. </typeparam>
         /// <param name="source"> The source IQueryable on which to call Include. </param>
         /// <param name="path"> A lambda expression representing the path to include. </param>
-        /// <returns> A new IQueryable <T>with the defined query path. </returns>
+        /// <returns>
+        ///     A new IQueryable <T>with the defined query path.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static IQueryable<T> Include<T, TProperty>(
             this IQueryable<T> source, Expression<Func<T, TProperty>> path) where T : class
         {
-            Contract.Requires(source != null);
-            Contract.Requires(path != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(path, "path");
 
             string include;
             if (!DbHelpers.TryParsePath(path.Body, out include)
@@ -582,7 +597,7 @@ namespace System.Data.Entity
         /// <returns> A new query with NoTracking applied, or the source query if NoTracking is not supported. </returns>
         public static IQueryable<T> AsNoTracking<T>(this IQueryable<T> source) where T : class
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
 
             var asDbQuery = source as DbQuery<T>;
             return asDbQuery != null ? asDbQuery.AsNoTracking() : CommonAsNoTracking(source);
@@ -598,7 +613,7 @@ namespace System.Data.Entity
         /// <returns> A new query with NoTracking applied, or the source query if NoTracking is not supported. </returns>
         public static IQueryable AsNoTracking(this IQueryable source)
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
 
             var asDbQuery = source as DbQuery;
             return asDbQuery != null ? asDbQuery.AsNoTracking() : CommonAsNoTracking(source);
@@ -609,7 +624,7 @@ namespace System.Data.Entity
         /// </summary>
         private static T CommonAsNoTracking<T>(T source) where T : class
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             var asObjectQuery = source as ObjectQuery;
             if (asObjectQuery != null)
@@ -632,16 +647,21 @@ namespace System.Data.Entity
         #region Load
 
         /// <summary>
-        ///     Enumerates the query such that for server queries such as those of <see cref="DbSet{T}" />, <see cref="ObjectSet{T}" />,
-        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
-        ///      cref="DbContext" />,
+        ///     Enumerates the query such that for server queries such as those of <see cref="DbSet{T}" />,
+        ///     <see
+        ///         cref="ObjectSet{T}" />
+        ///     ,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated
+        ///     <see
+        ///         cref="DbContext" />
+        ///     ,
         ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
         /// <param name="source"> The source query. </param>
         public static void Load(this IQueryable source)
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
 
             var enumerator = source.GetEnumerator();
             try
@@ -663,38 +683,48 @@ namespace System.Data.Entity
 #if !NET40
 
         /// <summary>
-        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />, <see
-        ///      cref="ObjectSet{T}" />,
-        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
-        ///      cref="DbContext" />,
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />,
+        ///     <see
+        ///         cref="ObjectSet{T}" />
+        ///     ,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated
+        ///     <see
+        ///         cref="DbContext" />
+        ///     ,
         ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
         /// <param name="source"> The source query. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task LoadAsync(this IQueryable source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
 
             return source.LoadAsync(CancellationToken.None);
         }
 
         /// <summary>
-        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />, <see
-        ///      cref="ObjectSet{T}" />,
-        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated <see
-        ///      cref="DbContext" />,
+        ///     Enumerates the query asynchronously such that for server queries such as those of <see cref="DbSet{T}" />,
+        ///     <see
+        ///         cref="ObjectSet{T}" />
+        ///     ,
+        ///     <see cref="ObjectQuery{T}" />, and others the results of the query will be loaded into the associated
+        ///     <see
+        ///         cref="DbContext" />
+        ///     ,
         ///     <see cref="ObjectContext" /> or other cache on the client.
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task LoadAsync(this IQueryable source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
 
             return source.ForEachAsync(e => { }, cancellationToken);
         }
@@ -713,12 +743,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(action, "action");
 
             return source.AsDbAsyncEnumerable().ForEachAsync(action, CancellationToken.None);
         }
@@ -730,12 +761,13 @@ namespace System.Data.Entity
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(action, "action");
 
             return source.AsDbAsyncEnumerable().ForEachAsync(action, cancellationToken);
         }
@@ -747,12 +779,13 @@ namespace System.Data.Entity
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(action, "action");
 
             return source.AsDbAsyncEnumerable().ForEachAsync(action, CancellationToken.None);
         }
@@ -765,12 +798,13 @@ namespace System.Data.Entity
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> representing the asynchronous operation. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(action != null);
-            Contract.Ensures(Contract.Result<Task>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(action, "action");
 
             return source.AsDbAsyncEnumerable().ForEachAsync(action, cancellationToken);
         }
@@ -789,12 +823,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="source"> The source query. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToListAsync<T>();
         }
@@ -806,12 +841,13 @@ namespace System.Data.Entity
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<object>>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToListAsync<T>(cancellationToken);
         }
@@ -820,14 +856,17 @@ namespace System.Data.Entity
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> The source query. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToListAsync();
         }
@@ -836,15 +875,18 @@ namespace System.Data.Entity
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<List<T>> ToListAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<List<T>>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToListAsync(cancellationToken);
         }
@@ -853,14 +895,17 @@ namespace System.Data.Entity
         ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> The source query. </param>
-        /// <returns> A <see cref="Task" /> containing a T[] that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a T[] that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<T[]> ToArrayAsync<T>(this IQueryable<T> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToArrayAsync();
         }
@@ -869,15 +914,18 @@ namespace System.Data.Entity
         ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a T[] that contains elements from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a T[] that contains elements from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<T[]> ToArrayAsync<T>(this IQueryable<T> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<T[]>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AsDbAsyncEnumerable().ToArrayAsync(cancellationToken);
         }
@@ -886,18 +934,25 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector);
         }
@@ -906,19 +961,26 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, cancellationToken);
         }
@@ -927,19 +989,28 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, comparer);
         }
@@ -948,21 +1019,30 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
             CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TSource>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, comparer, cancellationToken);
         }
@@ -971,23 +1051,36 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
+            Check.NotNull(elementSelector, "elementSelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector);
         }
@@ -996,24 +1089,35 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
+            Check.NotNull(elementSelector, "elementSelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, cancellationToken);
         }
@@ -1022,24 +1126,37 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
+            Check.NotNull(elementSelector, "elementSelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, comparer);
         }
@@ -1048,25 +1165,38 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{TSource}" /> by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{TSource}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type <typeparamref
-        ///      name="TElement" /> selected from the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
+        ///     <typeparamref
+        ///         name="TElement" />
+        ///     selected from the input sequence.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IQueryable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
             IEqualityComparer<TKey> comparer, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(keySelector != null);
-            Contract.Requires(elementSelector != null);
-            Contract.Ensures(Contract.Result<Task<Dictionary<TKey, TElement>>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(keySelector, "keySelector");
+            Check.NotNull(elementSelector, "elementSelector");
 
             return source.AsDbAsyncEnumerable().ToDictionaryAsync(keySelector, elementSelector, comparer, cancellationToken);
         }
@@ -1082,24 +1212,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the first element in <paramref name="source" /> . </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the first element in <paramref name="source" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">The source sequence is empty.</exception>
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.FirstAsync(CancellationToken.None);
         }
@@ -1107,25 +1244,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the first element in <paramref name="source" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the first element in <paramref name="source" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">The source sequence is empty.</exception>
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1147,33 +1291,44 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing the first element in <paramref name="source" /> that passes the test in <paramref
-        ///      name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the first element in <paramref name="source" /> that passes the test in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">No element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     No element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> FirstAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.FirstAsync(predicate, CancellationToken.None);
         }
@@ -1181,35 +1336,46 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the first element in <paramref name="source" /> that passes the test in <paramref
-        ///      name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the first element in <paramref name="source" /> that passes the test in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">No element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     No element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> FirstAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1231,24 +1397,33 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref
-        ///      name="source" /> is empty; otherwise, the first element in source. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if
+        ///     <paramref
+        ///         name="source" />
+        ///     is empty; otherwise, the first element in source.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.FirstOrDefaultAsync(CancellationToken.None);
         }
@@ -1256,25 +1431,34 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref
-        ///      name="source" /> is empty; otherwise, the first element in source. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if
+        ///     <paramref
+        ///         name="source" />
+        ///     is empty; otherwise, the first element in source.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> FirstOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1297,31 +1481,42 @@ namespace System.Data.Entity
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref
-        ///      name="source" /> is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first element in <paramref
-        ///      name="source" /> that passes the test specified by <paramref name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if
+        ///     <paramref
+        ///         name="source" />
+        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first element in
+        ///     <paramref
+        ///         name="source" />
+        ///     that passes the test specified by <paramref name="predicate" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> FirstOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.FirstOrDefaultAsync(predicate, CancellationToken.None);
         }
@@ -1330,36 +1525,48 @@ namespace System.Data.Entity
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref
-        ///      name="source" /> is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first element in <paramref
-        ///      name="source" /> that passes the test specified by <paramref name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TSource" /> ) if
+        ///     <paramref
+        ///         name="source" />
+        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first element in
+        ///     <paramref
+        ///         name="source" />
+        ///     that passes the test specified by <paramref name="predicate" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     has more than one element.</exception>
+        ///     has more than one element.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> FirstOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1382,24 +1589,31 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, and throws an exception
         ///     if there is not exactly one element in the sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">The source sequence is empty.</exception>
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SingleAsync(CancellationToken.None);
         }
@@ -1408,28 +1622,36 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, and throws an exception
         ///     if there is not exactly one element in the sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     has more than one element.</exception>
+        ///     has more than one element.
+        /// </exception>
         /// <exception cref="InvalidOperationException">The source sequence is empty.</exception>
         public static Task<TSource> SingleAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1452,36 +1674,49 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition,
         ///     and throws an exception if more than one such element exists.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in <paramref
-        ///      name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">No element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     No element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">More than one element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     More than one element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> SingleAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.SingleAsync(predicate, CancellationToken.None);
         }
@@ -1490,38 +1725,51 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition,
         ///     and throws an exception if more than one such element exists.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in <paramref
-        ///      name="predicate" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">No element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     No element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
-        /// <exception cref="InvalidOperationException">More than one element satisfies the condition in
+        ///     .
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     More than one element satisfies the condition in
         ///     <paramref name="predicate" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> SingleAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1544,27 +1792,37 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
         ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing The single element of the input sequence, or <c>default</c> ( <typeparamref
-        ///      name="TSource" /> ) if the sequence contains no elements. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The single element of the input sequence, or <c>default</c> (
+        ///     <typeparamref
+        ///         name="TSource" />
+        ///     ) if the sequence contains no elements.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     has more than one element.</exception>
+        ///     has more than one element.
+        /// </exception>
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SingleOrDefaultAsync(CancellationToken.None);
         }
@@ -1573,28 +1831,38 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
         ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The single element of the input sequence, or <c>default</c> ( <typeparamref
-        ///      name="TSource" /> ) if the sequence contains no elements. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The single element of the input sequence, or <c>default</c> (
+        ///     <typeparamref
+        ///         name="TSource" />
+        ///     ) if the sequence contains no elements.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     has more than one element.</exception>
+        ///     has more than one element.
+        /// </exception>
         public static Task<TSource> SingleOrDefaultAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1618,30 +1886,39 @@ namespace System.Data.Entity
         ///     a default value if no such element exists; this method throws an exception if more than one element
         ///     satisfies the condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in <paramref
-        ///      name="predicate" /> , or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     , or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> SingleOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.SingleOrDefaultAsync(predicate, CancellationToken.None);
         }
@@ -1651,32 +1928,41 @@ namespace System.Data.Entity
         ///     a default value if no such element exists; this method throws an exception if more than one element
         ///     satisfies the condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in <paramref
-        ///      name="predicate" /> , or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the single element of the input sequence that satisfies the condition in
+        ///     <paramref
+        ///         name="predicate" />
+        ///     , or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TSource> SingleOrDefaultAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1698,24 +1984,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains a specified element by using the default equality comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="item"> The object to locate in the sequence. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
 
             return source.ContainsAsync(item, CancellationToken.None);
         }
@@ -1723,25 +2016,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains a specified element by using the default equality comparer.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="item"> The object to locate in the sequence. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<bool> ContainsAsync<TSource>(this IQueryable<TSource> source, TSource item, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1763,23 +2063,30 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains any elements.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c> . </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AnyAsync(CancellationToken.None);
         }
@@ -1787,24 +2094,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains any elements.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<bool> AnyAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1826,29 +2140,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<bool> AnyAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.AnyAsync(predicate, CancellationToken.None);
         }
@@ -1856,31 +2177,38 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<bool> AnyAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1902,29 +2230,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<bool> AllAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.AllAsync(predicate, CancellationToken.None);
         }
@@ -1932,31 +2267,38 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<bool> AllAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -1978,28 +2320,37 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in the input sequence. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in the input sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
 
             return source.CountAsync(CancellationToken.None);
         }
@@ -2007,29 +2358,38 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in the input sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in the input sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<int> CountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2051,35 +2411,44 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in the sequence that satisfies the condition in the predicate function. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in the sequence that satisfies the condition in the predicate function.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     that satisfy the condition in the predicate function
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int> CountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.CountAsync(predicate, CancellationToken.None);
         }
@@ -2087,37 +2456,46 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in the sequence that satisfies the condition in the predicate function. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in the sequence that satisfies the condition in the predicate function.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     that satisfy the condition in the predicate function
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int> CountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2139,28 +2517,37 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in <paramref name="source" /> . </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in <paramref name="source" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
 
             return source.LongCountAsync(CancellationToken.None);
         }
@@ -2168,29 +2555,38 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in <paramref name="source" /> . </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in <paramref name="source" /> .
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<long> LongCountAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2212,35 +2608,44 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in <paramref name="source" /> that satisfy the condition in the predicate function. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in <paramref name="source" /> that satisfy the condition in the predicate function.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     that satisfy the condition in the predicate function
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long> LongCountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             return source.LongCountAsync(predicate, CancellationToken.None);
         }
@@ -2248,37 +2653,46 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the number of elements in <paramref name="source" /> that satisfy the condition in the predicate function. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the number of elements in <paramref name="source" /> that satisfy the condition in the predicate function.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="predicate" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     that satisfy the condition in the predicate function
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long> LongCountAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(predicate != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2300,23 +2714,30 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the minimum value of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the minimum value in the sequence. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the minimum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.MinAsync(CancellationToken.None);
         }
@@ -2324,24 +2745,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the minimum value of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the minimum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the minimum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> MinAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2363,30 +2791,39 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the minimum resulting value.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TResult"> The type of the value returned by the function represented by <paramref name="selector" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TResult">
+        ///     The type of the value returned by the function represented by <paramref name="selector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the minimum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the minimum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TResult> MinAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TResult>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.MinAsync(selector, CancellationToken.None);
         }
@@ -2394,32 +2831,41 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the minimum resulting value.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TResult"> The type of the value returned by the function represented by <paramref name="selector" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TResult">
+        ///     The type of the value returned by the function represented by <paramref name="selector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the minimum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the minimum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TResult> MinAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TResult>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2441,23 +2887,30 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the maximum value of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
-        /// <returns> A <see cref="Task" /> containing the maximum value in the sequence. </returns>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the maximum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             return source.MaxAsync(CancellationToken.None);
         }
@@ -2465,24 +2918,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the maximum value of a sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the maximum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the maximum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<TSource> MaxAsync<TSource>(this IQueryable<TSource> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2504,30 +2964,39 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the maximum resulting value.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TResult"> The type of the value returned by the function represented by <paramref name="selector" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TResult">
+        ///     The type of the value returned by the function represented by <paramref name="selector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the maximum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the maximum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TResult> MaxAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.MaxAsync(selector, CancellationToken.None);
         }
@@ -2535,32 +3004,41 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the maximum resulting value.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <typeparam name="TResult"> The type of the value returned by the function represented by <paramref name="selector" /> . </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{TSource}" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <typeparam name="TResult">
+        ///     The type of the value returned by the function represented by <paramref name="selector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{TSource}" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the maximum value in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the maximum value in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<TResult> MaxAsync<TSource, TResult>(
             this IQueryable<TSource> source, Expression<Func<TSource, TResult>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<TSource>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2582,27 +3060,34 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int32" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int32" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<int> SumAsync(this IQueryable<int> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2610,28 +3095,35 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int32" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int32" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<int> SumAsync(this IQueryable<int> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2653,29 +3145,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int32" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int32" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync(this IQueryable<int?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2683,29 +3182,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int32" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int32" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2727,27 +3233,34 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int64" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int64" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<long> SumAsync(this IQueryable<long> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2755,28 +3268,35 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int64" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int64" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<long> SumAsync(this IQueryable<long> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2798,28 +3318,35 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int64" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int64" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync(this IQueryable<long?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2827,29 +3354,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int64" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int64" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2871,22 +3405,27 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Single" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Single" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<float> SumAsync(this IQueryable<float> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2894,23 +3433,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Single" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Single" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<float> SumAsync(this IQueryable<float> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2932,23 +3476,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Single" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Single" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync(this IQueryable<float?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -2956,24 +3505,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Single" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Single" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -2995,22 +3549,27 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Double" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Double" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<double> SumAsync(this IQueryable<double> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -3018,23 +3577,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Double" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Double" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<double> SumAsync(this IQueryable<double> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3056,23 +3620,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Double" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Double" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync(this IQueryable<double?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -3080,24 +3649,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Double" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Double" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3119,22 +3693,27 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Decimal" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Decimal" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<decimal> SumAsync(this IQueryable<decimal> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -3142,23 +3721,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Decimal" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Decimal" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         public static Task<decimal> SumAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3180,23 +3764,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Decimal" /> values to calculate the sum of. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Decimal" /> values to calculate the sum of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync(this IQueryable<decimal?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.SumAsync(CancellationToken.None);
         }
@@ -3204,29 +3793,36 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Decimal" /> values to calculate the sum of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Decimal" /> values to calculate the sum of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the values in the sequence. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the values in the sequence.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Decimal.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3249,34 +3845,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3285,36 +3890,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<int>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3337,34 +3951,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3373,36 +3996,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int32.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<int?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<int?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3425,34 +4057,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3461,36 +4102,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<long>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3513,34 +4163,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3549,36 +4208,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Int64.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<long?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<long?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3601,29 +4269,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3632,31 +4307,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3679,29 +4361,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3710,31 +4399,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3757,29 +4453,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3788,31 +4491,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3835,29 +4545,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3866,31 +4583,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -3913,34 +4637,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Decimal.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -3949,36 +4682,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Decimal.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4001,34 +4743,43 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Decimal.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.SumAsync(selector, CancellationToken.None);
         }
@@ -4037,36 +4788,45 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
-        /// <param name="source"> A sequence of values of type <typeparamref name="TSource" /> . </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     A sequence of values of type <typeparamref name="TSource" /> .
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the sum of the projected values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the sum of the projected values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
-        /// <exception cref="OverflowException">The number of elements in
+        ///     .
+        /// </exception>
+        /// <exception cref="OverflowException">
+        ///     The number of elements in
         ///     <paramref name="source" />
         ///     is larger than
         ///     <see cref="Decimal.MaxValue" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> SumAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4088,25 +4848,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int32" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int32" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<int> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4114,26 +4880,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int32" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int32" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<int> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4155,23 +4927,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int32" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int32" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<int?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4179,24 +4956,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int32" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int32" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<int?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4218,25 +5000,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int64" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int64" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<long> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4244,26 +5032,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Int64" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Int64" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<long> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4285,23 +5079,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int64" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int64" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<long?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4309,24 +5108,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Int64" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Int64" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<long?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4348,25 +5152,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Single" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Single" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<float> AverageAsync(this IQueryable<float> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4374,26 +5184,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Single" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Single" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<float> AverageAsync(this IQueryable<float> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4415,23 +5231,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Single" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Single" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync(this IQueryable<float?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4439,24 +5260,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Single" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Single" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync(this IQueryable<float?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4478,25 +5304,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Double" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Double" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<double> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4504,26 +5336,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Double" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Double" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<double> AverageAsync(this IQueryable<double> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4545,23 +5383,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Double" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Double" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<double?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4569,24 +5412,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Double" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Double" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync(this IQueryable<double?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4608,25 +5456,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Decimal" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of <see cref="Decimal" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<decimal> AverageAsync(this IQueryable<decimal> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4634,26 +5488,32 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of <see cref="Decimal" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of <see cref="Decimal" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         public static Task<decimal> AverageAsync(this IQueryable<decimal> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4675,23 +5535,28 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Decimal" /> values to calculate the average of. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Decimal" /> values to calculate the average of.
+        /// </param>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
 
             return source.AverageAsync(CancellationToken.None);
         }
@@ -4699,24 +5564,29 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <param name="source"> A sequence of nullable <see cref="Decimal" /> values to calculate the average of. </param>
+        /// <param name="source">
+        ///     A sequence of nullable <see cref="Decimal" /> values to calculate the average of.
+        /// </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing The average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing The average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync(this IQueryable<decimal?> source, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4736,35 +5606,41 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values that is obtained 
+        ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -4773,34 +5649,40 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4823,29 +5705,34 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -4854,31 +5741,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, int?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4901,32 +5793,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -4935,34 +5833,40 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -4985,29 +5889,34 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5016,31 +5925,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, long?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5063,32 +5977,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5097,34 +6017,40 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5147,29 +6073,34 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5178,31 +6109,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<float?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, float?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<float?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5225,32 +6161,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5259,34 +6201,40 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5309,29 +6257,34 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5340,31 +6293,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<double?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, double?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<double?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5387,32 +6345,38 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5421,34 +6385,40 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
-        ///     contains no elements.</exception>
+        ///     contains no elements.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5471,29 +6441,34 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             return source.AverageAsync(selector, CancellationToken.None);
         }
@@ -5502,31 +6477,36 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" /> . </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" /> .
+        /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task" /> containing the average of the sequence of values. </returns>
+        /// <returns>
+        ///     A <see cref="Task" /> containing the average of the sequence of values.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
         ///     or
         ///     <paramref name="selector" />
         ///     is
         ///     <c>null</c>
-        ///     .</exception>
+        ///     .
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         ///     <paramref name="source" />
         ///     doesn't implement
         ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .</exception>
+        ///     .
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<decimal?> AverageAsync<TSource>(
             this IQueryable<TSource> source, Expression<Func<TSource, decimal?>> selector, CancellationToken cancellationToken)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(selector != null);
-            Contract.Ensures(Contract.Result<Task<decimal?>>() != null);
+            Check.NotNull(source, "source");
+            Check.NotNull(selector, "selector");
 
             var provider = source.Provider as IDbAsyncQueryProvider;
             if (provider != null)
@@ -5555,8 +6535,7 @@ namespace System.Data.Entity
 
         private static IDbAsyncEnumerable AsDbAsyncEnumerable(this IQueryable source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<IDbAsyncEnumerable>() != null);
+            DebugCheck.NotNull(source);
 
             var enumerable = source as IDbAsyncEnumerable;
             if (enumerable != null)
@@ -5571,8 +6550,7 @@ namespace System.Data.Entity
 
         private static IDbAsyncEnumerable<T> AsDbAsyncEnumerable<T>(this IQueryable<T> source)
         {
-            Contract.Requires(source != null);
-            Contract.Ensures(Contract.Result<IDbAsyncEnumerable<T>>() != null);
+            DebugCheck.NotNull(source);
 
             var enumerable = source as IDbAsyncEnumerable<T>;
             if (enumerable != null)
@@ -5614,9 +6592,8 @@ namespace System.Data.Entity
                 }
             }
 
-            Contract.Assert(
-                false,
-                String.Format(
+            Debug.Assert(
+                false, String.Format(
                     "Method '{0}' with parameters '{1}' not found", methodName, PrettyPrint(getParameterTypesMethod, genericArgumentsCount)));
 
             return null;

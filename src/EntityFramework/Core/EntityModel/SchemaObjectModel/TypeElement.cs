@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Responsible for parsing Type ProviderManifest 
+    ///     Responsible for parsing Type ProviderManifest
     ///     xml elements
     /// </summary>
     internal class TypeElement : SchemaType

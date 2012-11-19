@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal StorageModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSetNavigation)
         {
-            Contract.Requires(members != null);
+            DebugCheck.NotNull(members);
 
             Members = new ReadOnlyCollection<EdmMember>(new List<EdmMember>(members));
 

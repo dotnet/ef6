@@ -7,7 +7,10 @@ namespace System.Data.Entity.Migrations.Design
     using System.Security;
 
     /// <summary>
-    ///     Represents an exception that occurred while running an operation in another AppDomain in the <see cref="ToolingFacade" />.
+    ///     Represents an exception that occurred while running an operation in another AppDomain in the
+    ///     <see
+    ///         cref="ToolingFacade" />
+    ///     .
     /// </summary>
     [Serializable]
     public class ToolingException : Exception

@@ -146,7 +146,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="type"> type to reference </param>
         private void AddTypeReference(TypeUsage type)
         {
-            if (TypeUtils.IsStructuredType(type) || TypeUtils.IsCollectionType(type)
+            if (TypeUtils.IsStructuredType(type)
+                || TypeUtils.IsCollectionType(type)
                 || TypeUtils.IsEnumerationType(type))
             {
                 m_referencedTypes.Add(type);
@@ -155,8 +156,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Get the list of relationshipsets that can hold instances of the given relationshiptype
-        /// 
-        ///     We identify the list of relationshipsets in the current list of entitycontainers that are 
+        ///     We identify the list of relationshipsets in the current list of entitycontainers that are
         ///     of the given type. Since we don't yet support relationshiptype subtyping, this is a little
         ///     easier than the entity version
         /// </summary>
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Find all entitysets (that are reachable in the current query) that can hold instances that 
+        ///     Find all entitysets (that are reachable in the current query) that can hold instances that
         ///     are *at least* of type "entityType".
         ///     An entityset ES of type T1 can hold instances that are at least of type T2, if one of the following
         ///     is true
@@ -222,7 +222,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Gets the "expanded" query mapping view for the specified C-Space entity set
         /// </summary>
         /// <param name="scanTableOp"> The scanTableOp that references the entity set </param>
-        /// <param name="typeFilter"> An optional type filter to apply to the generated view. Set to <c>null</c> on return if the generated view renders the type filter superfluous. </param>
+        /// <param name="typeFilter">
+        ///     An optional type filter to apply to the generated view. Set to <c>null</c> on return if the generated view renders the type filter superfluous.
+        /// </param>
         /// <returns> A node that is the root of the new expanded view </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -240,7 +242,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 entitySet.EntityContainer.DataSpace == DataSpace.CSpace,
                 "Store entity sets cannot have Query Mapping Views and should not be used with ExpandView");
 
-            if (typeFilter != null &&
+            if (typeFilter != null
+                &&
                 !typeFilter.IsOfOnly
                 &&
                 TypeSemantics.IsSubTypeOf(entitySet.ElementType, typeFilter.IsOfType.EdmType))
@@ -327,7 +330,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     If the discrminator map we're already tracking for this type (in this entityset)
-        ///     isn't already rooted at our required type, then we have to suppress the use of 
+        ///     isn't already rooted at our required type, then we have to suppress the use of
         ///     the descriminator maps when we constrct the structuredtypes; see SQLBUDT #615744
         /// </summary>
         private void DetermineDiscriminatorMapUsage(
@@ -368,32 +371,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region NavigateOp rewrites
 
-        ///<summary>
-        ///    Rewrites a NavigateOp tree in the following fashion
-        ///    SELECT VALUE r.ToEnd
-        ///    FROM (SELECT VALUE r1 FROM RS1 as r1
-        ///    UNION ALL
-        ///    SELECT VALUE r2 FROM RS2 as r2
-        ///    ...
-        ///    SELECT VALUE rN FROM RSN as rN) as r
-        ///    WHERE r.FromEnd = sourceRef
-        ///   
-        ///    RS1, RS2 etc. are the set of all relationshipsets that can hold instances of the specified
-        ///    relationship type. "sourceRef" is the single (ref-type) argument to the NavigateOp that 
-        ///    represents the from-end of the navigation traversal
-        ///    If the toEnd is multi-valued, then we stick a Collect(PhysicalProject( over the subquery above
-        /// 
-        ///    A couple of special cases. 
-        ///    If no relationship sets can be found, we return a NULL (if the 
-        ///    toEnd is single-valued), or an empty multiset (if the toEnd is multi-valued)
-        ///
-        ///    If the toEnd is single-valued, *AND* the input Op is a GetEntityRefOp, then 
-        ///    we convert the NavigateOp into a RelPropertyOp over the entity.
-        ///</summary>
-        ///<param name="navigateOpNode"> the navigateOp tree </param>
-        ///<param name="navigateOp"> the navigateOp </param>
-        ///<param name="outputVar"> the output var produced by the subquery (ONLY if the to-End is single-valued) </param>
-        ///<returns> the resulting node </returns>
+        /// <summary>
+        ///     Rewrites a NavigateOp tree in the following fashion
+        ///     SELECT VALUE r.ToEnd
+        ///     FROM (SELECT VALUE r1 FROM RS1 as r1
+        ///     UNION ALL
+        ///     SELECT VALUE r2 FROM RS2 as r2
+        ///     ...
+        ///     SELECT VALUE rN FROM RSN as rN) as r
+        ///     WHERE r.FromEnd = sourceRef
+        ///     RS1, RS2 etc. are the set of all relationshipsets that can hold instances of the specified
+        ///     relationship type. "sourceRef" is the single (ref-type) argument to the NavigateOp that
+        ///     represents the from-end of the navigation traversal
+        ///     If the toEnd is multi-valued, then we stick a Collect(PhysicalProject( over the subquery above
+        ///     A couple of special cases.
+        ///     If no relationship sets can be found, we return a NULL (if the
+        ///     toEnd is single-valued), or an empty multiset (if the toEnd is multi-valued)
+        ///     If the toEnd is single-valued, *AND* the input Op is a GetEntityRefOp, then
+        ///     we convert the NavigateOp into a RelPropertyOp over the entity.
+        /// </summary>
+        /// <param name="navigateOpNode"> the navigateOp tree </param>
+        /// <param name="navigateOp"> the navigateOp </param>
+        /// <param name="outputVar"> the output var produced by the subquery (ONLY if the to-End is single-valued) </param>
+        /// <returns> the resulting node </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rel")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -511,7 +511,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Build up a node tree that represents the set of instances from the given table that are at least
         ///     of the specified type ("ofType"). If "ofType" is NULL, then all rows are returned
-        /// 
         ///     Return the outputVar from the nodetree
         /// </summary>
         /// <param name="entitySet"> the entityset or relationshipset to scan over </param>
@@ -545,7 +544,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Produces a relop tree that "logically" produces the target of the derefop. In essence, this gets rewritten
-        ///     into 
+        ///     into
         ///     SELECT VALUE e
         ///     FROM (SELECT VALUE e0 FROM OFTYPE(ES0, T) as e0
         ///     UNION ALL
@@ -553,14 +552,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     ...
         ///     SELECT VALUE eN from OFTYPE(ESN, T) as eN)) as e
         ///     WHERE REF(e) = myRef
-        ///      
         ///     "T" is the target type of the Deref, and myRef is the (single) argument to the DerefOp
-        /// 
-        ///     ES0, ES1 etc. are all the EntitySets that could hold instances that are at least of type "T". We identify this list of sets 
+        ///     ES0, ES1 etc. are all the EntitySets that could hold instances that are at least of type "T". We identify this list of sets
         ///     by looking at all entitycontainers referenced in the query, and looking at all entitysets in those
         ///     containers that are of the right type
         ///     An EntitySet ES (of entity type X) can hold instances of T, if one of the following is true
-        ///     - T is a subtype of X 
+        ///     - T is a subtype of X
         ///     - X is equal to T
         ///     Our situation is a little trickier, since we also need to look for cases where X is a subtype of T.
         /// </summary>
@@ -615,7 +612,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Find the entityset that corresponds to the specified end of the relationship.
-        /// 
         ///     We must find one - else we assert.
         /// </summary>
         /// <param name="relationshipSet"> the relationshipset </param>
@@ -649,7 +645,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     SELECT r, e
         ///     FROM RS as r, OFTYPE(ES, T) as e
         ///     WHERE r.ToEnd = Ref(e)
-        ///    
         ///     "T" is the entity type of the toEnd of the relationship.
         /// </summary>
         /// <param name="relSet"> the relationshipset </param>
@@ -688,12 +683,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Rewrite a navigation property when the target end has multiplicity
         ///     of one (or zero..one) and the source end has multiplicity of many.
-        /// 
-        ///     Note that this translation is also valid for a navigation property when the target 
+        ///     Note that this translation is also valid for a navigation property when the target
         ///     end has multiplicity of one (or zero..one) and the source end has multiplicity of one
         ///     (or zero..one), but a different translation is used because it yields a simpler query in some cases.
-        /// 
-        ///     We simply pick up the corresponding rel property from the input entity, and 
+        ///     We simply pick up the corresponding rel property from the input entity, and
         ///     apply a deref operation
         ///     NavProperty(e, n) => deref(relproperty(e, r))
         ///     where e is the entity expression, n is the nav-property, and r is the corresponding
@@ -718,7 +711,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Rewrite a navigation property when the source end has multiplicity
         ///     of one (or zero..one) and the target end has multiplicity of many.
-        /// 
         ///     <see cref="RewriteFromOneNavigationProperty" />
         ///     We also build out a CollectOp over the subquery above, and return that
         /// </summary>
@@ -743,7 +735,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Rewrite a navigation property when the target end has multiplicity
         ///     of one (or zero..one) and the source end has multiplicity of one (or zero..one).
-        /// 
         ///     <see cref="RewriteFromOneNavigationProperty" />
         ///     We add the translation as a subquery to the parent rel op and return a reference to
         ///     the corresponding var
@@ -770,19 +761,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Translation for Navigation Properties with a 0 or 0..1 source end
         ///     In essence, we find all the relevant target entitysets, and then compare the
         ///     rel-property on the target end with the source ref
-        /// 
         ///     Converts
         ///     NavigationProperty(e, r)
-        ///     into 
+        ///     into
         ///     SELECT VALUE t
         ///     FROM (SELECT VALUE e1 FROM ES1 as e1
-        ///     UNION ALL 
+        ///     UNION ALL
         ///     SELECT VALUE e2 FROM ES2 as e2
-        ///     UNION ALL 
+        ///     UNION ALL
         ///     ...
         ///     ) as t
         ///     WHERE RelProperty(t, r') = GetEntityRef(e)
-        ///   
         ///     r' is the inverse-relproperty for r
         /// </summary>
         /// <param name="relProperty"> the rel-property describing the relationship traversal </param>
@@ -842,23 +831,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Rewrite a navigation property when the target end has multiplicity
         ///     many and the source end has multiplicity of many.
-        /// 
         ///     Consider this a rewrite of DEREF(NAVIGATE(r)) where "r" is a many-to-many relationship
-        /// 
         ///     We essentially produce the following subquery
         ///     SELECT VALUE x.e
         ///     FROM (SELECT r1 as r, e1 as e FROM RS1 as r1 INNER JOIN OFTYPE(ES1, T) as e1 on r1.ToEnd = Ref(e1)
         ///     UNION ALL
         ///     SELECT r1 as r, e1 as e FROM RS1 as r1 INNER JOIN OFTYPE(ES1, T) as e1 on r1.ToEnd = Ref(e1)
         ///     ...
-        ///     ) as x 
+        ///     ) as x
         ///     WHERE x.r.FromEnd = sourceRef
-        ///   
         ///     RS1, RS2 etc. are the relevant relationshipsets
         ///     ES1, ES2 etc. are the corresponding entitysets for the toEnd of the relationship
         ///     sourceRef is the ref argument
         ///     T is the type of the target-end of the relationship
-        /// 
         ///     We then build a CollectOp over the subquery above
         /// </summary>
         /// <param name="relProperty"> the rel property to traverse </param>
@@ -928,7 +913,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Rewrite a NavProperty; more generally, consider this a rewrite of DEREF(NAVIGATE(r))
-        /// 
         ///     We handle four cases here, depending on the kind of relationship we're
         ///     dealing with.
         ///     - 1:1 relationships
@@ -1024,13 +1008,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rewrite a DerefOp subtree. We have two cases to consider here. 
-        ///     We call RewriteDerefOp to return a subtree (and an optional outputVar). 
-        ///     If the outputVar is null, then we simply return the subtree produced by those calls. 
+        ///     Rewrite a DerefOp subtree. We have two cases to consider here.
+        ///     We call RewriteDerefOp to return a subtree (and an optional outputVar).
+        ///     If the outputVar is null, then we simply return the subtree produced by those calls.
         ///     Otherwise, we add the subtree to the "parent" relop (to be outer-applied), and then use the outputVar
-        ///     in its place. 
-        /// 
-        ///     As an example, 
+        ///     in its place.
+        ///     As an example,
         ///     select deref(e) from T
         ///     gets rewritten into
         ///     select v from T OuterApply X
@@ -1173,8 +1156,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default processing. 
-        ///     In addition, if the case statement is of the shape 
+        ///     Default processing.
+        ///     In addition, if the case statement is of the shape
         ///     case when X then NULL else Y, or
         ///     case when X then Y else NULL,
         ///     where Y is of row type and the types of the input CaseOp, the NULL and Y are the same,
@@ -1313,8 +1296,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rewrite a PropertyOp subtree.  
-        /// 
+        ///     Rewrite a PropertyOp subtree.
         ///     If the PropertyOp represents a simple property (ie) not a navigation property, we simply call
         ///     VisitScalarOpDefault() and return. Otherwise, we call VisitNavPropertyOp and return the result from
         ///     that function
@@ -1339,7 +1321,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         /// <summary>
-        ///     Handler for a RefOp. 
+        ///     Handler for a RefOp.
         ///     Keeps track of the entityset
         /// </summary>
         /// <param name="op"> the RefOp </param>
@@ -1493,13 +1475,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rewrite a NavigateOp subtree.  
-        ///     We call RewriteNavigateOp to return a subtree (and an optional outputVar). 
-        ///     If the outputVar is null, then we simply return the subtree produced by those calls. 
+        ///     Rewrite a NavigateOp subtree.
+        ///     We call RewriteNavigateOp to return a subtree (and an optional outputVar).
+        ///     If the outputVar is null, then we simply return the subtree produced by those calls.
         ///     Otherwise, we add the subtree to the "parent" relop (to be outer-applied), and then use the outputVar
-        ///     in its place. 
-        /// 
-        ///     As an example, 
+        ///     in its place.
+        ///     As an example,
         ///     select navigate(e) from T
         ///     gets rewritten into
         ///     select v from T OuterApply X
@@ -1547,7 +1528,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             foreach (var es in entitySet.EntityContainer.BaseEntitySets)
             {
                 var rs = es as AssociationSet;
-                if (rs != null &&
+                if (rs != null
+                    &&
                     rs.ElementType.EdmEquals(relProperty.Relationship)
                     &&
                     rs.AssociationSetEnds[relProperty.FromEnd.Identity].EntitySet.EdmEquals(entitySet))
@@ -1559,7 +1541,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Find the position of a property in a type. 
+        ///     Find the position of a property in a type.
         ///     Positions start at zero, and a supertype's properties precede the current
         ///     type's properties
         /// </summary>
@@ -1586,11 +1568,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Build out an expression (NewRecord) that corresponds to the key properties
         ///     of the passed-in entity constructor
-        /// 
         ///     This function simply looks up the key properties of the entity type, and then
-        ///     identifies the arguments to the constructor corresponding to those 
+        ///     identifies the arguments to the constructor corresponding to those
         ///     properties, and then slaps on a record wrapper over those expressions.
-        /// 
         ///     No copies/clones are performed. That's the responsibility of the caller
         /// </summary>
         /// <param name="op"> the entity constructor op </param>
@@ -1623,22 +1603,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Build out an expression corresponding to the rel-property. 
-        /// 
+        ///     Build out an expression corresponding to the rel-property.
         ///     We create a subquery that looks like
         ///     (select r
         ///     from RS r
         ///     where GetRefKey(r.FromEnd) = myKey)
-        ///  
         ///     RS is the single relationship set that corresponds to the given entityset/rel-property pair
         ///     FromEnd - is the source end of the relationship
         ///     myKey - is the key expression of the entity being constructed
-        /// 
         ///     NOTE: We always clone "myKey" before use.
-        /// 
         ///     We then convert it into a scalar subquery, and extract out the ToEnd property from
         ///     the output var of the subquery. (Should we do this inside the subquery itself?)
-        /// 
         ///     If no single relationship-set is found, we return a NULL instead.
         /// </summary>
         /// <param name="entitySet"> entity set that logically holds instances of the entity we're building </param>
@@ -1702,8 +1677,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Given an entity constructor (NewEntityOp, DiscriminatedNewEntityOp), build up
-        ///     the list of rel-property expressions. 
-        /// 
+        ///     the list of rel-property expressions.
         ///     Walks through the list of relevant rel-properties, and builds up expressions
         ///     (using BuildRelPropertyExpression) for each rel-property that does not have
         ///     an expression already built (preBuiltExpressions)
@@ -1902,32 +1876,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Handles a newMultiset constructor. Converts this into 
+        ///     Handles a newMultiset constructor. Converts this into
         ///     select a from dual union all select b from dual union all ...
         ///     Handles a NewMultiset constructor, i.e. {x, y, z}
         ///     1. Empty multiset constructors are simply converted into:
-        ///    
         ///     select x from singlerowtable as x where false
-        ///   
-        ///     2. Mulltset constructors with only one element or with multiple elements all of 
-        ///     which are constants or nulls are converted into: 
-        ///   
+        ///     2. Mulltset constructors with only one element or with multiple elements all of
+        ///     which are constants or nulls are converted into:
         ///     select x from dual union all select y from dual union all select z
-        ///     
         ///     3. All others are converted into:
-        ///   
         ///     select case when d = 0 then x when d = 1 then y else z end
         ///     from (  select 0 as d from single_row_table
-        ///     union all 
+        ///     union all
         ///     select 1 as d from single_row_table
         ///     union all
         ///     select 2 as d  from single_row_table )
-        ///              
-        ///     NOTE: The  translation for 2 is valid for 3 too. We choose different translation 
+        ///     NOTE: The  translation for 2 is valid for 3 too. We choose different translation
         ///     in order to avoid correlation inside the union all,
         ///     which would prevent us from removing apply operators
-        /// 
-        ///     Do this before processing the children, and then 
+        ///     Do this before processing the children, and then
         ///     call Visit on the result to handle the elements
         /// </summary>
         /// <param name="op"> the new instance op </param>
@@ -2068,7 +2035,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default processing for a CollectOp. But make sure that we 
+        ///     Default processing for a CollectOp. But make sure that we
         ///     go through the NestPullUp phase
         /// </summary>
         /// <param name="op"> </param>
@@ -2100,24 +2067,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Visits a "table" expression - performs view expansion on the table (if appropriate), 
-        ///     and then some additional book-keeping. 
-        /// 
+        ///     Visits a "table" expression - performs view expansion on the table (if appropriate),
+        ///     and then some additional book-keeping.
         ///     The "ofType" and "includeSubtypes" parameters are optional hints for view expansion, allowing
         ///     for more customized (and hopefully, more optimal) views. The wasOfTypeSatisfied out parameter
         ///     tells whether the ofType filter was already handled by the view expansion, or if the caller still
         ///     needs to deal with it.
-        /// 
-        ///     If the "table" is a C-space entityset, then we produce a ScanViewOp 
+        ///     If the "table" is a C-space entityset, then we produce a ScanViewOp
         ///     tree with the defining query as the only child of the ScanViewOp
-        /// 
         ///     If the table is an S-space entityset, then we still produce a ScanViewOp, but this
-        ///     time, we produce a simple "select * from BaseTable" as the defining 
+        ///     time, we produce a simple "select * from BaseTable" as the defining
         ///     query
         /// </summary>
         /// <param name="scanTableNode"> the scanTable node tree </param>
         /// <param name="scanTableOp"> the scanTableOp </param>
-        /// <param name="typeFilter"> An optional IsOfOp representing a type filter to apply to the scan table; will be set to <c>null</c> if the scan target is expanded to a view that renders the type filter superfluous. </param>
+        /// <param name="typeFilter">
+        ///     An optional IsOfOp representing a type filter to apply to the scan table; will be set to <c>null</c> if the scan target is expanded to a view that renders the type filter superfluous.
+        /// </param>
         /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -2233,11 +2199,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Can I eliminate this sort? I can, if the current path is *not* one of the 
+        ///     Can I eliminate this sort? I can, if the current path is *not* one of the
         ///     following
         ///     TopN(Sort)
         ///     PhysicalProject(Sort)
-        /// 
         ///     We don't yet handle the TopN variant
         /// </summary>
         /// <returns> </returns>
@@ -2259,10 +2224,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Visit a SortOp. Eliminate it if the path to this node is not one of 
+        ///     Visit a SortOp. Eliminate it if the path to this node is not one of
         ///     PhysicalProject(Sort) or
         ///     TopN(Sort)
-        /// 
         ///     Otherwise, simply visit the child RelOp
         /// </summary>
         /// <param name="op"> Current sortOp </param>
@@ -2326,9 +2290,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Handler for a FilterOp. Usually delegates to VisitRelOpDefault. 
-        /// 
-        ///     There's one special case - where we have an ISOF predicate over a ScanTable. In that case, we attempt 
+        ///     Handler for a FilterOp. Usually delegates to VisitRelOpDefault.
+        ///     There's one special case - where we have an ISOF predicate over a ScanTable. In that case, we attempt
         ///     to get a more "optimal" view; and return that optimal view
         /// </summary>
         /// <param name="op"> the filterOp </param>
@@ -2355,9 +2318,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Visit a ProjectOp; if the input is a SortOp, we pullup the sort over 
+        ///     Visit a ProjectOp; if the input is a SortOp, we pullup the sort over
         ///     the ProjectOp to ensure that we don't have nested sorts;
-        ///     Note: This transformation cannot be moved in the normalizer, 
+        ///     Note: This transformation cannot be moved in the normalizer,
         ///     because it needs to happen before any subquery augmentation happens.
         /// </summary>
         /// <param name="op"> </param>

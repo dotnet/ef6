@@ -6,7 +6,8 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.IO;
     using System.Resources;
 
@@ -16,14 +17,14 @@ namespace System.Data.Entity.Migrations.Utilities
 
         public MigrationWriter(MigrationsDomainCommand command)
         {
-            Contract.Requires(command != null);
+            DebugCheck.NotNull(command);
 
             _command = command;
         }
 
         public string Write(ScaffoldedMigration scaffoldedMigration, bool rescaffolding = false, bool force = false, string name = null)
         {
-            Contract.Requires(scaffoldedMigration != null);
+            DebugCheck.NotNull(scaffoldedMigration);
 
             var userCodeFileName = scaffoldedMigration.MigrationId + "." + scaffoldedMigration.Language;
             var userCodePath = Path.Combine(scaffoldedMigration.Directory, userCodeFileName);
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
                 if (!string.Equals(scaffoldedMigration.UserCode, File.ReadAllText(absoluteUserCodePath)))
                 {
-                    Contract.Assert(!string.IsNullOrWhiteSpace(name));
+                    Debug.Assert(!string.IsNullOrWhiteSpace(name));
 
                     _command.WriteWarning(Strings.RescaffoldNoForce(name));
                 }
@@ -57,9 +58,9 @@ namespace System.Data.Entity.Migrations.Utilities
 
         private void WriteResources(string userCodePath, string resourcesPath, IDictionary<string, object> resources)
         {
-            Contract.Requires(!string.IsNullOrEmpty(userCodePath));
-            Contract.Requires(!string.IsNullOrEmpty(resourcesPath));
-            Contract.Requires(resources != null);
+            DebugCheck.NotEmpty(userCodePath);
+            DebugCheck.NotEmpty(resourcesPath);
+            DebugCheck.NotNull(resources);
 
             var absoluteResourcesPath = Path.Combine(_command.Project.GetProjectDir(), resourcesPath);
 

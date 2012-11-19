@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping
             StorageMappingItemCollection mappingItemCollection)
             : base(functionImport, targetFunction)
         {
-            Contract.Requires(mappingItemCollection != null);
+            DebugCheck.NotNull(mappingItemCollection);
             Debug.Assert(functionImport.IsComposableAttribute, "functionImport.IsComposableAttribute");
             Debug.Assert(targetFunction.IsComposableAttribute, "targetFunction.IsComposableAttribute");
             Debug.Assert(

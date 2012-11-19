@@ -60,7 +60,8 @@ namespace System.Data.Entity.Core.Objects
                 // Verify non-nullable EDM members are not being set to null
                 // Need to continue allowing CLR reference types to be set to null for backwards compatibility
                 var memberClrType = member.ClrType;
-                if (DBNull.Value == fieldValue &&
+                if (DBNull.Value == fieldValue
+                    &&
                     memberClrType.IsValueType
                     &&
                     !member.CdmMetadata.Nullable)

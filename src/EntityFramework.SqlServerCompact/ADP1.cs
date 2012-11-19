@@ -81,7 +81,7 @@ namespace System.Data.Entity.SqlServerCompact
         internal enum InternalErrorCode
         {
             /// <summary>
-            ///     Thrown when SQL gen produces parameters for anything other than a 
+            ///     Thrown when SQL gen produces parameters for anything other than a
             ///     modification command tree.
             /// </summary>
             SqlGenParametersNotPermitted = 1017,

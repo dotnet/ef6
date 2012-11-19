@@ -33,7 +33,9 @@ namespace System.Data.Entity.Core.Objects
         ///     on items of the supplied type.
         /// </summary>
         /// <param name="itemType"> Type of object whose property is described by this FieldDescriptor. </param>
-        /// <param name="isReadOnly"> <b>True</b> if property value on item can be modified; otherwise <b>false</b> . </param>
+        /// <param name="isReadOnly">
+        ///     <b>True</b> if property value on item can be modified; otherwise <b>false</b> .
+        /// </param>
         /// <param name="property"> EdmProperty that describes the property on the item. </param>
         internal FieldDescriptor(Type itemType, bool isReadOnly, EdmProperty property)
             : base(property.Name, null)
@@ -76,7 +78,8 @@ namespace System.Data.Entity.Core.Objects
                 case BuiltInTypeKind.EnumType:
                     result = edmType.ClrType;
                     Facet nullable;
-                    if (result.IsValueType &&
+                    if (result.IsValueType
+                        &&
                         typeUsage.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullable)
                         && ((bool)nullable.Value))
                     {
@@ -103,7 +106,9 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Get <see cref="EdmProperty" /> instance associated with this field descriptor.
         /// </summary>
-        /// <value> The <see cref="EdmProperty" /> instance associated with this field descriptor, or null if there is no EDM property association. </value>
+        /// <value>
+        ///     The <see cref="EdmProperty" /> instance associated with this field descriptor, or null if there is no EDM property association.
+        /// </value>
         internal EdmProperty EdmProperty
         {
             get { return _property; }

@@ -9,13 +9,11 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
     ///     Allows configuration to be performed for an entity type in a model.
-    /// 
     ///     An EntityTypeConfiguration can be obtained via the Entity method on
     ///     <see cref="DbModelBuilder" /> or a custom type derived from EntityTypeConfiguration
     ///     can be registered via the Configurations property on <see cref="DbModelBuilder" />.
@@ -35,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration
 
         internal EntityTypeConfiguration(EntityTypeConfiguration entityTypeConfiguration)
         {
-            Contract.Requires(entityTypeConfiguration != null);
+            DebugCheck.NotNull(entityTypeConfiguration);
 
             _entityTypeConfiguration = entityTypeConfiguration;
         }
@@ -66,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public EntityTypeConfiguration<TEntityType> HasKey<TKey>(Expression<Func<TEntityType, TKey>> keyExpression)
         {
-            Contract.Requires(keyExpression != null);
+            Check.NotNull(keyExpression, "keyExpression");
 
             _entityTypeConfiguration.Key(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single()));
 
@@ -81,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         public EntityTypeConfiguration<TEntityType> HasEntitySetName(string entitySetName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(entitySetName));
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             _entityTypeConfiguration.EntitySetName = entitySetName;
 
@@ -96,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <param name="tableName"> The name of the table. </param>
         public void ToTable(string tableName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             var databaseName = DatabaseName.Parse(tableName);
 
@@ -110,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <param name="schemaName"> The database schema of the table. </param>
         public void ToTable(string tableName, string schemaName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             _entityTypeConfiguration.ToTable(tableName, schemaName);
         }
@@ -118,22 +116,23 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Allows advanced configuration related to how this entity type is mapped to the database schema.
         ///     By default, any configuration will also apply to any type derived from this entity type.
-        /// 
         ///     Derived types can be configured via the overload of Map that configures a derived type or
         ///     by using an EntityTypeConfiguration for the derived type.
-        /// 
         ///     The properties of an entity can be split between multiple tables using multiple Map calls.
-        /// 
         ///     Calls to Map are additive, subsequent calls will not override configuration already preformed via Map.
         /// </summary>
-        /// <param name="entityMappingConfigurationAction"> An action that performs configuration against an <see
-        ///      cref="EntityMappingConfiguration{TEntityType}" /> . </param>
+        /// <param name="entityMappingConfigurationAction">
+        ///     An action that performs configuration against an
+        ///     <see
+        ///         cref="EntityMappingConfiguration{TEntityType}" />
+        ///     .
+        /// </param>
         /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map(
             Action<EntityMappingConfiguration<TEntityType>> entityMappingConfigurationAction)
         {
-            Contract.Requires(entityMappingConfigurationAction != null);
+            Check.NotNull(entityMappingConfigurationAction, "entityMappingConfigurationAction");
 
             var entityMappingConfiguration = new EntityMappingConfiguration<TEntityType>();
 
@@ -150,15 +149,19 @@ namespace System.Data.Entity.ModelConfiguration
         ///     Calls to Map are additive, subsequent calls will not override configuration already preformed via Map.
         /// </summary>
         /// <typeparam name="TDerived"> The derived entity type to be configured. </typeparam>
-        /// <param name="derivedTypeMapConfigurationAction"> An action that performs configuration against an <see
-        ///      cref="EntityMappingConfiguration{TEntityType}" /> . </param>
+        /// <param name="derivedTypeMapConfigurationAction">
+        ///     An action that performs configuration against an
+        ///     <see
+        ///         cref="EntityMappingConfiguration{TEntityType}" />
+        ///     .
+        /// </param>
         /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> Map<TDerived>(
             Action<EntityMappingConfiguration<TDerived>> derivedTypeMapConfigurationAction)
             where TDerived : class, TEntityType
         {
-            Contract.Requires(derivedTypeMapConfigurationAction != null);
+            Check.NotNull(derivedTypeMapConfigurationAction, "derivedTypeMapConfigurationAction");
 
             var entityMappingConfiguration = new EntityMappingConfiguration<TDerived>();
             derivedTypeMapConfigurationAction(entityMappingConfiguration);
@@ -195,7 +198,7 @@ namespace System.Data.Entity.ModelConfiguration
             Expression<Func<TEntityType, TTargetEntity>> navigationPropertyExpression)
             where TTargetEntity : class
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             return new OptionalNavigationPropertyConfiguration<TEntityType, TTargetEntity>(
                 _entityTypeConfiguration.Navigation(navigationPropertyExpression.GetSimplePropertyAccess().Single()));
@@ -215,7 +218,7 @@ namespace System.Data.Entity.ModelConfiguration
             Expression<Func<TEntityType, TTargetEntity>> navigationPropertyExpression)
             where TTargetEntity : class
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             return new RequiredNavigationPropertyConfiguration<TEntityType, TTargetEntity>(
                 _entityTypeConfiguration.Navigation(navigationPropertyExpression.GetSimplePropertyAccess().Single()));
@@ -233,7 +236,7 @@ namespace System.Data.Entity.ModelConfiguration
             Expression<Func<TEntityType, ICollection<TTargetEntity>>> navigationPropertyExpression)
             where TTargetEntity : class
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             return new ManyNavigationPropertyConfiguration<TEntityType, TTargetEntity>(
                 _entityTypeConfiguration.Navigation(navigationPropertyExpression.GetSimplePropertyAccess().Single()));

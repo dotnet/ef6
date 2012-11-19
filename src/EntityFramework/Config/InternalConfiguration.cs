@@ -5,7 +5,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -33,8 +33,8 @@ namespace System.Data.Entity.Config
 
         public InternalConfiguration(ResolverChain appConfigChain, ResolverChain normalResolverChain, RootDependencyResolver rootResolver)
         {
-            Contract.Requires(appConfigChain != null);
-            Contract.Requires(normalResolverChain != null);
+            DebugCheck.NotNull(appConfigChain);
+            DebugCheck.NotNull(normalResolverChain);
 
             _rootResolver = rootResolver;
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain, normalResolverChain);
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Config
             get { return DbConfigurationManager.Instance.GetConfiguration(); }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 DbConfigurationManager.Instance.SetConfiguration(value);
             }
@@ -65,15 +65,15 @@ namespace System.Data.Entity.Config
 
         public virtual void AddAppConfigResolver(IDbDependencyResolver resolver)
         {
-            Contract.Requires(resolver != null);
+            DebugCheck.NotNull(resolver);
 
             _resolvers.First.Add(resolver);
         }
 
         public virtual void AddDependencyResolver(IDbDependencyResolver resolver)
         {
-            Contract.Requires(resolver != null);
-            Contract.Assert(!_isLocked);
+            DebugCheck.NotNull(resolver);
+            Debug.Assert(!_isLocked);
 
             // New resolvers always run after the config resolvers so that config always wins over code
             _resolvers.Second.Add(resolver);
@@ -82,8 +82,8 @@ namespace System.Data.Entity.Config
         public virtual void RegisterSingleton<TService>(TService instance, object key)
             where TService : class
         {
-            Contract.Requires(instance != null);
-            Contract.Assert(!_isLocked);
+            DebugCheck.NotNull(instance);
+            Debug.Assert(!_isLocked);
 
             AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, key));
         }
@@ -111,9 +111,9 @@ namespace System.Data.Entity.Config
         /// </summary>
         public virtual void SwitchInRootResolver(RootDependencyResolver value)
         {
-            Contract.Requires(value != null);
+            DebugCheck.NotNull(value);
 
-            Contract.Assert(!_isLocked);
+            Debug.Assert(!_isLocked);
 
             // The following is not thread-safe but this code is only called when pushing a configuration
             // and happens to a new DbConfiguration before it has been set and locked.

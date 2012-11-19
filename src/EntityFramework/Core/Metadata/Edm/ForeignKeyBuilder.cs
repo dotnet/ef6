@@ -3,9 +3,8 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class ForeignKeyBuilder : MetadataItem, INamedDataModelItem
@@ -23,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public ForeignKeyBuilder(EdmModel database, string name)
         {
-            Contract.Requires(database != null);
+            Check.NotNull(database, "database");
 
             _database = database;
 
@@ -48,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _assocationType.SourceEnd.GetEntityType(); }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _assocationType.SourceEnd
@@ -95,7 +94,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _assocationType.Constraint

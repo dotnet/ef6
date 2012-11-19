@@ -151,9 +151,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the full name of this type, which is namespace + "." + name. 
+        ///     Returns the full name of this type, which is namespace + "." + name.
         ///     Since the identity of all EdmTypes, except EdmFunction, is same as of that
-        ///     of the full name, FullName just returns the identity. This property is 
+        ///     of the full name, FullName just returns the identity. This property is
         ///     over-ridden in EdmFunctin, just to return NamespaceName + "." + Name
         /// </summary>
         public virtual string FullName
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initialize the type. This method must be called since for bootstraping we only call the constructor. 
+        ///     Initialize the type. This method must be called since for bootstraping we only call the constructor.
         ///     This method will help us initialize the type
         /// </summary>
         /// <param name="type"> The edm type to initialize with item attributes </param>
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()

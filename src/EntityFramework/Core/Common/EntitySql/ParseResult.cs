@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Entity SQL Parser result information.
@@ -17,8 +17,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal ParseResult(DbCommandTree commandTree, List<FunctionDefinition> functionDefs)
         {
-            Contract.Requires(commandTree != null);
-            Contract.Requires(functionDefs != null);
+            DebugCheck.NotNull(commandTree);
+            DebugCheck.NotNull(functionDefs);
 
             _commandTree = commandTree;
             _functionDefs = functionDefs.AsReadOnly();

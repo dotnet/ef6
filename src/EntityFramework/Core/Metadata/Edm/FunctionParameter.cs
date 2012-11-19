@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()

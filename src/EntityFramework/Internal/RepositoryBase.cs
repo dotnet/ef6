@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal abstract class RepositoryBase
     {
@@ -12,8 +12,8 @@ namespace System.Data.Entity.Internal
 
         protected RepositoryBase(string connectionString, DbProviderFactory providerFactory)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(connectionString));
-            Contract.Requires(providerFactory != null);
+            DebugCheck.NotEmpty(connectionString);
+            DebugCheck.NotNull(providerFactory);
 
             _connectionString = connectionString;
             _providerFactory = providerFactory;

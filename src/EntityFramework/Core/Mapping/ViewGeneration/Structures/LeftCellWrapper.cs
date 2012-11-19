@@ -217,8 +217,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             string header)
         {
             builder.AppendLine()
-                .Append(header)
-                .AppendLine();
+                   .Append(header)
+                   .AppendLine();
             // Sort them according to the original cell number
             var cellWrappers = wrappers.ToArray();
             Array.Sort(cellWrappers, OriginalCellIdComparer);

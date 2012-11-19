@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
 
@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.Mapping
             FunctionParameter rowsAffectedParameter,
             IEnumerable<StorageModificationFunctionResultBinding> resultBindings)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(function != null);
-            Contract.Requires(parameterBindings != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(function);
+            DebugCheck.NotNull(parameterBindings);
 
             Function = function;
             RowsAffectedParameter = rowsAffectedParameter;

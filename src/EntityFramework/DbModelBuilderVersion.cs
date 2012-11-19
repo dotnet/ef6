@@ -21,13 +21,13 @@ namespace System.Data.Entity
     public enum DbModelBuilderVersion
     {
         /// <summary>
-        ///     Indicates that the latest version of the <see cref="DbModelBuilder" /> and 
+        ///     Indicates that the latest version of the <see cref="DbModelBuilder" /> and
         ///     <see cref="DbContext" /> conventions should be used.
         /// </summary>
         Latest,
 
         /// <summary>
-        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and 
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
         ///     <see cref="DbContext" /> conventions shipped with Entity Framework v4.1
         ///     should be used.
         /// </summary>
@@ -35,7 +35,7 @@ namespace System.Data.Entity
         V4_1,
 
         /// <summary>
-        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and 
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
         ///     <see cref="DbContext" /> conventions shipped with Entity Framework v5.0
         ///     should be used.
         /// </summary>

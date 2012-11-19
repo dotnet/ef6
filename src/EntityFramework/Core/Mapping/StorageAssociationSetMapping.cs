@@ -4,7 +4,8 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Core.Mapping
         internal StorageAssociationSetMapping(AssociationSet extent, EntitySet entitySet)
             : base(extent, null)
         {
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(entitySet);
 
             var associationTypeMapping
                 = new StorageAssociationTypeMapping(extent.ElementType, this);
@@ -71,8 +72,8 @@ namespace System.Data.Entity.Core.Mapping
             get { return (SingleFragment != null) ? SingleFragment.TableSet : null; }
             set
             {
-                Contract.Requires(value != null);
-                Contract.Assert(SingleFragment != null);
+                DebugCheck.NotNull(value);
+                Debug.Assert(SingleFragment != null);
 
                 SingleFragment.TableSet = value;
             }
@@ -93,9 +94,9 @@ namespace System.Data.Entity.Core.Mapping
             }
             set
             {
-                Contract.Requires(value != null);
-                Contract.Assert(SingleFragment != null);
-                Contract.Assert(SingleFragment.Properties.Count == 0);
+                DebugCheck.NotNull(value);
+                Debug.Assert(SingleFragment != null);
+                Debug.Assert(SingleFragment.Properties.Count == 0);
 
                 SingleFragment.AddProperty(value);
             }
@@ -111,9 +112,9 @@ namespace System.Data.Entity.Core.Mapping
             }
             set
             {
-                Contract.Requires(value != null);
-                Contract.Assert(SingleFragment != null);
-                Contract.Assert(SingleFragment.Properties.Count == 1);
+                DebugCheck.NotNull(value);
+                Debug.Assert(SingleFragment != null);
+                Debug.Assert(SingleFragment.Properties.Count == 1);
 
                 SingleFragment.AddProperty(value);
             }

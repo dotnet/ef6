@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
     using System.Text;
     using BasicExpressionVisitor = System.Data.Entity.SqlServerCompact.BasicExpressionVisitor;
@@ -22,7 +23,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         /// <summary>
         ///     This method is added as a part of the fix for bug 13533
-        ///     In this method we try to see from the command tree whether there is any 
+        ///     In this method we try to see from the command tree whether there is any
         ///     updatable column(Property) available on the table(EntityType)
         private static bool GetUpdatableColumn(DbUpdateCommandTree tree, out string updatableColumnName)
         {
@@ -406,16 +407,22 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             public override void Visit(DbAndExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 VisitBinary(expression, " and ");
             }
 
             public override void Visit(DbOrExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 VisitBinary(expression, " or ");
             }
 
             public override void Visit(DbComparisonExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 Debug.Assert(
                     expression.ExpressionKind == DbExpressionKind.Equals,
                     "only equals comparison expressions are produced in DML command trees in V1");
@@ -459,12 +466,16 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             public override void Visit(DbIsNullExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 expression.Argument.Accept(this);
                 _commandText.Append(" is null");
             }
 
             public override void Visit(DbNotExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 _commandText.Append("not (");
                 expression.Accept(this);
                 _commandText.Append(")");
@@ -472,12 +483,16 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             public override void Visit(DbConstantExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 var parameter = CreateParameter(expression.Value, expression.ResultType);
                 _commandText.Append(parameter.ParameterName);
             }
 
             public override void Visit(DbScanExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 // we know we won't hit this code unless there is no function defined for this
                 // ModificationOperation, so if this EntitySet is using a DefiningQuery, instead
                 // of a table, that is an error
@@ -524,16 +539,22 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             public override void Visit(DbPropertyExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 _commandText.Append(GenerateMemberTSql(expression.Property));
             }
 
             public override void Visit(DbNullExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 _commandText.Append("null");
             }
 
             public override void Visit(DbNewInstanceExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 // assumes all arguments are self-describing (no need to use aliases
                 // because no renames are ever used in the projection)
                 var first = true;

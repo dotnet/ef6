@@ -20,7 +20,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     internal abstract class CqlBlock : InternalBase
     {
         /// <summary>
-        ///     Initializes a <see cref="CqlBlock" /> with the SELECT (<paramref name="slotInfos" />), FROM (<paramref name="children" />), 
+        ///     Initializes a <see cref="CqlBlock" /> with the SELECT (<paramref name="slotInfos" />), FROM (
+        ///     <paramref
+        ///         name="children" />
+        ///     ),
         ///     WHERE (<paramref name="whereClause" />), AS (<paramref name="blockAliasNum" />).
         /// </summary>
         protected CqlBlock(
@@ -101,7 +104,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         internal abstract DbExpression AsCqt(bool isTopLevel);
 
         /// <summary>
-        ///     For the given <paramref name="slotNum" /> creates a <see cref="QualifiedSlot" /> qualified with <see cref="CqlAlias" /> of the current block:
+        ///     For the given <paramref name="slotNum" /> creates a <see cref="QualifiedSlot" /> qualified with
+        ///     <see
+        ///         cref="CqlAlias" />
+        ///     of the current block:
         ///     "<see cref="CqlAlias" />.slot_alias"
         /// </summary>
         internal QualifiedSlot QualifySlotWithBlockAlias(int slotNum)
@@ -167,7 +173,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                     && (!(slotInfo.SlotValue is QualifiedSlot) || slotInfo.IsEnforcedNotNull))
                 {
                     builder.Append(" AS ")
-                        .Append(slotInfo.CqlFieldAlias);
+                           .Append(slotInfo.CqlFieldAlias);
                 }
                 isFirst = false;
             }
@@ -179,8 +185,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
         /// <summary>
         ///     Generates "NewRow(A, B, C, ...)" for all the slots in the block.
-        ///     If <paramref name="isTopLevel" />=true then generates "A" for the only slot that is marked as <see
-        ///      cref="SlotInfo.IsRequiredByParent" />.
+        ///     If <paramref name="isTopLevel" />=true then generates "A" for the only slot that is marked as
+        ///     <see
+        ///         cref="SlotInfo.IsRequiredByParent" />
+        ///     .
         /// </summary>
         protected DbExpression GenerateProjectionCqt(DbExpression row, bool isTopLevel)
         {
@@ -232,7 +240,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// <summary>
         ///     The class represents a position of a <see cref="CqlBlock" /> in a join tree.
         ///     It is expected that the join tree is left-recursive (not balanced) and looks like this:
-        /// 
         ///     ___J___
         ///     /       \
         ///     L3/         \R3
@@ -246,7 +253,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         ///     L1/     \R1        \           \
         ///     /       \          \           \
         ///     CqlBlock1   CqlBlock2   CqlBlock3   CqlBlock4
-        /// 
         ///     Example of <see cref="JoinTreeContext" />s for the <see cref="CqlBlock" />s:
         ///     block#   m_parentQualifiers   m_indexInParentQualifiers   m_leafQualifier    FindInput(row) = ...
         ///     1          (L2, L3)                    0                      L1             row.(L3.L2).L1

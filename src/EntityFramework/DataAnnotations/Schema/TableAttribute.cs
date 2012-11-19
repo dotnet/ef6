@@ -5,8 +5,8 @@
 
 namespace System.ComponentModel.DataAnnotations.Schema
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Specifies the database table that a class is mapped to.
@@ -24,7 +24,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="name"> The name of the table the class is mapped to. </param>
         public TableAttribute(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             _name = name;
         }
@@ -45,7 +45,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             get { return _schema; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
 
                 _schema = value;
             }

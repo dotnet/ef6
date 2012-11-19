@@ -68,8 +68,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         public override bool Equals(object otherObject)
         {
             Debug.Assert(null != otherObject, "otherObject must not be null");
-            if (typeof(EntityClientCacheKey)
-                != otherObject.GetType())
+            if (typeof(EntityClientCacheKey) != otherObject.GetType())
             {
                 return false;
             }

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Mapping
             List<FunctionImportEntityTypeMappingCondition> columnConditions, BitArray impliedEntityTypes)
         {
             // validate arguments
-            Contract.Requires(parent != null);
-            Contract.Requires(columnConditions != null);
-            Contract.Requires(impliedEntityTypes != null);
+            DebugCheck.NotNull(parent);
+            DebugCheck.NotNull(columnConditions);
+            DebugCheck.NotNull(impliedEntityTypes);
 
             Debug.Assert(
                 columnConditions.Count == parent.DiscriminatorColumns.Count,

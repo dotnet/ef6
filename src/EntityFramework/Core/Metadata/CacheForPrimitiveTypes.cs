@@ -85,8 +85,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 foreach (var facet in facets)
                 {
                     if ((primitiveTypeKind == PrimitiveTypeKind.String ||
-                         primitiveTypeKind == PrimitiveTypeKind.Binary) &&
-                        facet.Value != null &&
+                         primitiveTypeKind == PrimitiveTypeKind.Binary)
+                        &&
+                        facet.Value != null
+                        &&
                         facet.Name == DbProviderManifest.MaxLengthFacetName
                         &&
                         Helper.IsUnboundedFacetValue(facet))

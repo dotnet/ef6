@@ -4,21 +4,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal static class EdmEnumTypeExtensions
     {
         public static Type GetClrType(this EnumType enumType)
         {
-            Contract.Requires(enumType != null);
+            DebugCheck.NotNull(enumType);
 
             return enumType.Annotations.GetClrType();
         }
 
         public static void SetClrType(this EnumType enumType, Type type)
         {
-            Contract.Requires(enumType != null);
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(enumType);
+            DebugCheck.NotNull(type);
 
             enumType.Annotations.SetClrType(type);
         }

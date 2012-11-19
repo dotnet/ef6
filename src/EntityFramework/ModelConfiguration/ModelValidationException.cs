@@ -5,7 +5,8 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Collections.Generic;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -44,8 +45,8 @@ namespace System.Data.Entity.ModelConfiguration
         internal ModelValidationException(IEnumerable<DataModelErrorEventArgs> validationErrors)
             : base(validationErrors.ToErrorMessage())
         {
-            Contract.Requires(validationErrors != null);
-            Contract.Assert(validationErrors.Any());
+            DebugCheck.NotNull(validationErrors);
+            Debug.Assert(validationErrors.Any());
         }
 
         protected ModelValidationException(SerializationInfo info, StreamingContext context)

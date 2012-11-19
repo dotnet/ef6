@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Text;
 
@@ -11,7 +10,7 @@ namespace System.Data.Entity.Utilities
     {
         public static string ToHexString(this IEnumerable<byte> bytes)
         {
-            Contract.Requires(bytes != null);
+            DebugCheck.NotNull(bytes);
 
             var stringBuilder = new StringBuilder();
 

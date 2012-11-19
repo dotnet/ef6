@@ -12,17 +12,18 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
 #if !NET40
 
 #endif
 
     /// <summary>
-    ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific <see
-    ///      cref="ObjectQuery" />
+    ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific
+    ///     <see
+    ///         cref="ObjectQuery" />
     /// </summary>
     internal class ObjectQueryExecutionPlan
     {
@@ -63,7 +64,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var traceString = entityCommandDef.ToTraceString();
 
-            if (parameters == null || parameters.Count == 0)
+            if (parameters == null
+                || parameters.Count == 0)
             {
                 return traceString;
             }
@@ -86,7 +88,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
                 else
                 {
-                    Contract.Assert(
+                    Debug.Assert(
                         false,
                         "A parameter in the input ObjectParameterCollection does not have a match in the command definition's DbParameterCollection.");
                 }
@@ -96,7 +98,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 sb.Append(" = ");
 
                 var value = objParam.Value;
-                Type type = (value != null) ? value.GetType() : null;
+                var type = (value != null) ? value.GetType() : null;
 
                 switch (Type.GetTypeCode(type))
                 {
@@ -227,7 +229,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // acquire store reader
                 storeReader = await
                               commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).
-                                  ConfigureAwait(continueOnCapturedContext: false);
+                                                ConfigureAwait(continueOnCapturedContext: false);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);

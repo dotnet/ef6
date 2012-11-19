@@ -4,8 +4,8 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.ComponentModel;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Returned by the Configuration method of <see cref="DbContext" /> to provide access to configuration
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalContext"> The internal context. </param>
         internal DbContextConfiguration(InternalContext internalContext)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
         }
@@ -65,7 +65,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets or sets a value indicating whether lazy loading of relationships exposed as
         ///     navigation properties is enabled.  Lazy loading is enabled by default.
         /// </summary>
-        /// <value> <c>true</c> if lazy loading is enabled; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if lazy loading is enabled; otherwise, <c>false</c> .
+        /// </value>
         public bool LazyLoadingEnabled
         {
             get { return _internalContext.LazyLoadingEnabled; }
@@ -79,7 +81,9 @@ namespace System.Data.Entity.Infrastructure
         ///     be created for entity types that meet the requirements for being proxied.
         ///     Proxy creation is enabled by default.
         /// </summary>
-        /// <value> <c>true</c> if proxy creation is enabled; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if proxy creation is enabled; otherwise, <c>false</c> .
+        /// </value>
         public bool ProxyCreationEnabled
         {
             get { return _internalContext.ProxyCreationEnabled; }
@@ -91,7 +95,12 @@ namespace System.Data.Entity.Infrastructure
         ///     method is called automatically by methods of <see cref="DbContext" /> and related classes.
         ///     The default value is true.
         /// </summary>
-        /// <value <c>true</c> if should be called automatically; otherwise, <c>false</c> . </value>
+        /// <value
+        /// <c>true</c>
+        /// if should be called automatically; otherwise,
+        /// <c>false</c>
+        /// .
+        /// </value>
         public bool AutoDetectChangesEnabled
         {
             get { return _internalContext.AutoDetectChangesEnabled; }

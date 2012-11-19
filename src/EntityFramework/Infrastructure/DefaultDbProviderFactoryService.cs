@@ -11,7 +11,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
 #endif
 
     internal class DefaultDbProviderFactoryService : IDbProviderFactoryService
@@ -37,6 +36,8 @@ namespace System.Data.Entity.Infrastructure
 
         public DbProviderFactory GetProviderFactory(DbConnection connection)
         {
+            Check.NotNull(connection, "connection");
+
 #if NET40
             var connectionType = connection.GetType();
 
@@ -64,16 +65,16 @@ namespace System.Data.Entity.Infrastructure
 #if NET40
         private static bool ExactMatch(DataRow row, Type connectionType)
         {
-            Contract.Requires(row != null);
-            Contract.Requires(connectionType != null);
+            DebugCheck.NotNull(row);
+            DebugCheck.NotNull(connectionType);
 
             return DbProviderFactories.GetFactory(row).CreateConnection().GetType() == connectionType;
         }
 
         private static bool AssignableMatch(DataRow row, Type connectionType)
         {
-            Contract.Requires(row != null);
-            Contract.Requires(connectionType != null);
+            DebugCheck.NotNull(row);
+            DebugCheck.NotNull(connectionType);
 
             return connectionType.IsInstanceOfType(DbProviderFactories.GetFactory(row).CreateConnection());
         }

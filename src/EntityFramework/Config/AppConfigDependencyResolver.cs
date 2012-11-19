@@ -9,7 +9,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Resolves dependencies from a config file.
@@ -23,7 +22,7 @@ namespace System.Data.Entity.Config
 
         public AppConfigDependencyResolver(AppConfig appConfig)
         {
-            Contract.Requires(appConfig != null);
+            DebugCheck.NotNull(appConfig);
 
             _appConfig = appConfig;
         }

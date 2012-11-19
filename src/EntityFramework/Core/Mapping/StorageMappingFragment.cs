@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -78,10 +78,10 @@ namespace System.Data.Entity.Core.Mapping
 
         public void AddColumnMapping(ColumnMappingBuilder columnMappingBuilder)
         {
-            Contract.Requires(columnMappingBuilder != null);
-            Contract.Requires(columnMappingBuilder.ColumnProperty != null);
-            Contract.Requires(columnMappingBuilder.PropertyPath.Any());
-            Contract.Assert(!_columnMappings.Contains(columnMappingBuilder));
+            DebugCheck.NotNull(columnMappingBuilder);
+            DebugCheck.NotNull(columnMappingBuilder.ColumnProperty);
+            Debug.Assert(columnMappingBuilder.PropertyPath.Any());
+            Debug.Assert(!_columnMappings.Contains(columnMappingBuilder));
 
             _columnMappings.Add(columnMappingBuilder);
 
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
             EdmProperty property;
 
             // Turn the property path into a mapping fragment nested tree structure.
-            
+
             var i = 0;
             for (; i < columnMappingBuilder.PropertyPath.Count - 1; i++)
             {
@@ -151,10 +151,10 @@ namespace System.Data.Entity.Core.Mapping
 
         public void RemoveColumnMapping(ColumnMappingBuilder columnMappingBuilder)
         {
-            Contract.Requires(columnMappingBuilder != null);
-            Contract.Requires(columnMappingBuilder.ColumnProperty != null);
-            Contract.Requires(columnMappingBuilder.PropertyPath.Any());
-            Contract.Assert(_columnMappings.Contains(columnMappingBuilder));
+            DebugCheck.NotNull(columnMappingBuilder);
+            DebugCheck.NotNull(columnMappingBuilder.ColumnProperty);
+            Debug.Assert(columnMappingBuilder.PropertyPath.Any());
+            Debug.Assert(_columnMappings.Contains(columnMappingBuilder));
 
             _columnMappings.Remove(columnMappingBuilder);
 
@@ -163,8 +163,8 @@ namespace System.Data.Entity.Core.Mapping
 
         private void RemoveColumnMapping(IStructuralTypeMapping structuralTypeMapping, IEnumerable<EdmProperty> propertyPath)
         {
-            Contract.Requires(structuralTypeMapping != null);
-            Contract.Requires(propertyPath != null);
+            DebugCheck.NotNull(structuralTypeMapping);
+            DebugCheck.NotNull(propertyPath);
 
             // Remove the target column mapping by walking down the mapping fragment
             // tree corresponding to the passed-in property path until we reach the scalar
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_tableExtent; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 m_tableExtent = value;
             }
@@ -315,7 +315,7 @@ namespace System.Data.Entity.Core.Mapping
 
         public void RemoveConditionProperty(StorageConditionPropertyMapping condition)
         {
-            Contract.Requires(condition != null);
+            DebugCheck.NotNull(condition);
 
             var conditionMember = condition.EdmProperty ?? condition.ColumnProperty;
 
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Mapping
 
         internal void AddConditionProperty(StorageConditionPropertyMapping conditionPropertyMap)
         {
-            Contract.Requires(conditionPropertyMap != null);
+            DebugCheck.NotNull(conditionPropertyMap);
 
             AddConditionProperty(conditionPropertyMap, _ => { });
         }

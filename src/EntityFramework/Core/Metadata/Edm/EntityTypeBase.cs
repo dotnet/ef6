@@ -136,12 +136,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Checks for each key member to be non-null 
+        ///     Checks for each key member to be non-null
         ///     also check for it to be present in the members collection
         ///     and then adds it to the KeyMembers collection.
-        /// 
-        ///     Throw if the key member is not already in the members 
-        ///     collection. Cannot do much other than that as the 
+        ///     Throw if the key member is not already in the members
+        ///     collection. Cannot do much other than that as the
         ///     Key members is just an Ienumerable of the names
         ///     of the members.
         /// </summary>

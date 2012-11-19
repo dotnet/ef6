@@ -245,7 +245,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             if (_type != null)
             {
-                if (_type is ScalarType == false || _isRefType
+                if (_type is ScalarType == false
+                    || _isRefType
                     || _collectionKind != CollectionKind.None)
                 {
                     return false;

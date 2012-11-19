@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     public sealed class InterceptedCommand
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Internal
 
         public InterceptedCommand(DbCommand command)
         {
-            Contract.Requires(command != null);
+            DebugCheck.NotNull(command);
 
             _commandText = command.CommandText;
             _parameters = command.Parameters.Cast<DbParameter>().ToArray();

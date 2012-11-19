@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Here's what this does for each entry in the cache:
         ///     1> First checks if the entry is marked for cleanup.
         ///     2> If the entry is marked for cleanup, that means its in one of the following 3 states
-        ///     a) If the strong reference to item collection is not null, it means that this item was marked for cleanup in 
+        ///     a) If the strong reference to item collection is not null, it means that this item was marked for cleanup in
         ///     the last cleanup cycle and we must make the strong reference set to null so that it can be garbage collected.
         ///     b) Otherwise, we are waiting for GC to collect the item collection so that we can remove this entry from the cache
         ///     If the weak reference to item collection is still alive, we don't do anything
@@ -605,7 +605,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     This returns true if the entry is still in use - the entry can be use if the entry token is 
+            ///     This returns true if the entry is still in use - the entry can be use if the entry token is
             ///     still alive.If the entry token is still not alive, it means that no one is using this entry
             ///     and its okay to remove it. Today there is no
             /// </summary>

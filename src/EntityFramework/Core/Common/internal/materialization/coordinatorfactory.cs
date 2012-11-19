@@ -3,7 +3,8 @@
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
     using System.Collections.ObjectModel;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     ///     An immutable class used to generate new coordinators. These coordinators are used
@@ -85,10 +86,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             int depth, int stateSlot, Func<Shaper, bool> hasData, Func<Shaper, bool> setKeys, Func<Shaper, bool> checkKeys,
             CoordinatorFactory[] nestedCoordinators, RecordStateFactory[] recordStateFactories)
         {
-            Contract.Requires(depth >= 0);
-            Contract.Requires(stateSlot >= 0);
-            Contract.Requires(nestedCoordinators != null);
-            Contract.Requires(recordStateFactories != null);
+            DebugCheck.NotNull(nestedCoordinators);
+            DebugCheck.NotNull(recordStateFactories);
+            Debug.Assert(depth >= 0);
+            Debug.Assert(stateSlot >= 0);
 
             Depth = depth;
             StateSlot = stateSlot;

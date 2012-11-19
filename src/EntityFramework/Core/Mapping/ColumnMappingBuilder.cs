@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class ColumnMappingBuilder
     {
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Mapping
 
         public ColumnMappingBuilder(EdmProperty columnProperty, IList<EdmProperty> propertyPath)
         {
-            Contract.Requires(columnProperty != null);
-            Contract.Requires(propertyPath != null);
+            DebugCheck.NotNull(columnProperty);
+            DebugCheck.NotNull(propertyPath);
 
             _columnProperty = columnProperty;
             _propertyPath = propertyPath;
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
             get { return _columnProperty; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 _columnProperty = value;
 

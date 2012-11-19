@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     internal class NavigationEntryMetadata : MemberEntryMetadata
     {
@@ -16,7 +16,9 @@ namespace System.Data.Entity.Internal
         /// <param name="declaringType"> The type that the property is declared on. </param>
         /// <param name="propertyType"> Type of the property. </param>
         /// <param name="propertyName"> The property name. </param>
-        /// <param name="isCollection"> if set to <c>true</c> this is a collection nav prop. </param>
+        /// <param name="isCollection">
+        ///     if set to <c>true</c> this is a collection nav prop.
+        /// </param>
         public NavigationEntryMetadata(Type declaringType, Type propertyType, string propertyName, bool isCollection)
             : base(declaringType, propertyType, propertyName)
         {
@@ -65,8 +67,7 @@ namespace System.Data.Entity.Internal
         public override InternalMemberEntry CreateMemberEntry(
             InternalEntityEntry internalEntityEntry, InternalPropertyEntry parentPropertyEntry)
         {
-            Contract.Assert(
-                parentPropertyEntry == null, "Navigation entries cannot be nested; parentPropertyEntry must be null.");
+            Debug.Assert(parentPropertyEntry == null, "Navigation entries cannot be nested; parentPropertyEntry must be null.");
 
             return _isCollection
                        ? (InternalMemberEntry)new InternalCollectionEntry(internalEntityEntry, this)

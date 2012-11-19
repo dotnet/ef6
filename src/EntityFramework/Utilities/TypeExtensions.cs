@@ -7,8 +7,8 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal static class TypeExtensions
@@ -30,15 +30,15 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsCollection(this Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return type.IsCollection(out type);
         }
 
         public static bool IsCollection(this Type type, out Type elementType)
         {
-            Contract.Requires(type != null);
-            Contract.Assert(!type.IsGenericTypeDefinition);
+            DebugCheck.NotNull(type);
+            Debug.Assert(!type.IsGenericTypeDefinition);
 
             elementType = TryGetElementType(type, typeof(ICollection<>));
 
@@ -54,16 +54,16 @@ namespace System.Data.Entity.Utilities
 
         public static Type TryGetElementType(this Type type, Type interfaceType)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(interfaceType != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(interfaceType);
 
             if (!type.IsGenericTypeDefinition)
             {
                 var interfaceImpl = type.GetInterfaces()
-                    .Union(new[] { type })
-                    .FirstOrDefault(
-                        t => t.IsGenericType
-                             && t.GetGenericTypeDefinition() == interfaceType);
+                                        .Union(new[] { type })
+                                        .FirstOrDefault(
+                                            t => t.IsGenericType
+                                                 && t.GetGenericTypeDefinition() == interfaceType);
 
                 if (interfaceImpl != null)
                 {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Utilities
 
         public static Type GetTargetType(this Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             Type elementType;
             if (!type.IsCollection(out elementType))
@@ -89,8 +89,8 @@ namespace System.Data.Entity.Utilities
 
         public static bool TryUnwrapNullableType(this Type type, out Type underlyingType)
         {
-            Contract.Requires(type != null);
-            Contract.Assert(!type.IsGenericTypeDefinition);
+            DebugCheck.NotNull(type);
+            Debug.Assert(!type.IsGenericTypeDefinition);
 
             underlyingType = Nullable.GetUnderlyingType(type) ?? type;
 
@@ -104,14 +104,14 @@ namespace System.Data.Entity.Utilities
         /// <returns> True if a reference type or a nullable value type, false otherwise </returns>
         public static bool IsNullable(this Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
         public static bool IsValidStructuralType(this Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return !(type.IsGenericType
                      || type.IsValueType
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsValidStructuralPropertyType(this Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             return !(type.IsGenericTypeDefinition
                      || type.IsNested
@@ -147,8 +147,8 @@ namespace System.Data.Entity.Utilities
             Func<string, string, string> typeMessageFactory,
             Func<string, Exception> exceptionFactory = null)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(typeMessageFactory != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(typeMessageFactory);
 
             exceptionFactory = exceptionFactory ?? (s => new InvalidOperationException(s));
 
@@ -162,8 +162,8 @@ namespace System.Data.Entity.Utilities
 
         public static T CreateInstance<T>(this Type type, Func<string, Exception> exceptionFactory = null)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(typeof(T).IsAssignableFrom(type));
+            DebugCheck.NotNull(type);
+            Debug.Assert(typeof(T).IsAssignableFrom(type));
 
             exceptionFactory = exceptionFactory ?? (s => new InvalidOperationException(s));
 

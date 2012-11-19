@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     A PhysicalProjectOp is a physical Op capping the entire command tree (and the 
+    ///     A PhysicalProjectOp is a physical Op capping the entire command tree (and the
     ///     subtrees of CollectOps).
     /// </summary>
     internal class PhysicalProjectOp : PhysicalOp

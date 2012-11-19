@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -19,11 +19,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.DeclaredKeyProperties);
         }
 
         public void Apply(ComplexType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             SetLength(edmDataModelItem.Properties, new List<EdmProperty>());
         }
 
@@ -52,6 +58,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             if (edmDataModelItem.Constraint == null)
             {
                 return;
@@ -86,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private static void SetStringDefaults(EdmProperty property, bool isKey)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             if (property.IsUnicode == null)
             {
@@ -98,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private static void SetBinaryDefaults(EdmProperty property, bool isKey)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             if (property.IsFixedLength == null)
             {

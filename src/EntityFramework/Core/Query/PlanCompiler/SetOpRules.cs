@@ -21,11 +21,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             new SimpleRule(OpType.Except, ProcessSetOpOverEmptySet);
 
         /// <summary>
-        ///     Process a SetOp when one of the inputs is an emptyset. 
-        /// 
+        ///     Process a SetOp when one of the inputs is an emptyset.
         ///     An emptyset is represented by a Filter(X, ConstantPredicate)
         ///     where the ConstantPredicate has a value of "false"
-        /// 
         ///     The general rules are
         ///     UnionAll(X, EmptySet) => X
         ///     UnionAll(EmptySet, X) => X
@@ -33,8 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Intersect(X, EmptySet) => EmptySet
         ///     Except(EmptySet, X) => EmptySet
         ///     Except(X, EmptySet) => X
-        /// 
-        ///     These rules then translate into 
+        ///     These rules then translate into
         ///     UnionAll: return the non-empty input
         ///     Intersect: return the empty input
         ///     Except: return the "left" input

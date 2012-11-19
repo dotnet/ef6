@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Objects;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Instances of this class are used internally to create constant expressions for <see cref="ObjectQuery{T}" />
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> A new instance. </returns>
         internal static ReplacementDbQueryWrapper<TElement> Create(ObjectQuery query)
         {
-            Contract.Assert(query is ObjectQuery<TElement>);
+            Debug.Assert(query is ObjectQuery<TElement>);
 
             return new ReplacementDbQueryWrapper<TElement>((ObjectQuery<TElement>)query);
         }

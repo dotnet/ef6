@@ -9,8 +9,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     /// <summary>
     ///     Helper Class for EDM Metadata - this class contains all the helper methods
-    ///     which needs access to internal methods. The other partial class contains all 
-    ///     helper methods which just uses public methods/properties. The reason why we 
+    ///     which needs access to internal methods. The other partial class contains all
+    ///     helper methods which just uses public methods/properties. The reason why we
     ///     did this for allowing view gen to happen at compile time - all the helper
     ///     methods that view gen or mapping uses are in the other helper class. Rest of the
     ///     methods are in this class
@@ -174,11 +174,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="cspaceType"> Type in C-Space. Must be a primitive or enumeration type. </param>
         /// <param name="storeType"> C-Space equivalent of S-space Type. Must be a primitive type. </param>
-        /// <returns> <c>true</c> if the types are compatible. <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if the types are compatible. <c>false</c> otherwise.
+        /// </returns>
         /// <remarks>
         ///     This methods validate whether cspace and sspace types are compatible. The types are
         ///     compatible if:
-        ///     both are primitive and the cspace type is a subtype of sspace type 
+        ///     both are primitive and the cspace type is a subtype of sspace type
         ///     or
         ///     cspace type is an enumeration type whose underlying type is a subtype of sspace type.
         /// </remarks>

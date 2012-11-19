@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     The operator types. Includes both scalar and relational operators, 
+    ///     The operator types. Includes both scalar and relational operators,
     ///     and physical and logical operators, and rule operators
     /// </summary>
     internal enum OpType

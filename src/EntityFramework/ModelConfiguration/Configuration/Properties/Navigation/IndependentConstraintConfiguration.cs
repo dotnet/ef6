@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Used to configure an independent constraint on a navigation property.
@@ -34,6 +35,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             AssociationType associationType, AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration)
         {
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(dependentEnd);
+            DebugCheck.NotNull(entityTypeConfiguration);
+
             associationType.MarkIndependent();
         }
     }

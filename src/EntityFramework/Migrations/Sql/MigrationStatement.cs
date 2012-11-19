@@ -12,11 +12,11 @@ namespace System.Data.Entity.Migrations.Sql
         /// </summary>
         public string Sql { get; set; }
 
-        ///<summary>
-        ///    Gets or sets a value indicating whether this statement should be performed outside of
-        ///    the transaction scope that is used to make the migration process transactional.
-        ///    If set to true, this operation will not be rolled back if the migration process fails.
-        ///</summary>
+        /// <summary>
+        ///     Gets or sets a value indicating whether this statement should be performed outside of
+        ///     the transaction scope that is used to make the migration process transactional.
+        ///     If set to true, this operation will not be rolled back if the migration process fails.
+        /// </summary>
         public bool SuppressTransaction { get; set; }
     }
 }

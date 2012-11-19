@@ -8,7 +8,7 @@ namespace System.Data.Entity.SqlServer
     using System.Globalization;
 
     /// <summary>
-    ///     This class is a simple utility class that determines the SQL Server version from the 
+    ///     This class is a simple utility class that determines the SQL Server version from the
     ///     connection.
     /// </summary>
     internal static class SqlVersionUtils

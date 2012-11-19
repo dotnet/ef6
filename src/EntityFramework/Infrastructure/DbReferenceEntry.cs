@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbReferenceEntry Create(InternalReferenceEntry internalReferenceEntry)
         {
-            Contract.Requires(internalReferenceEntry != null);
+            DebugCheck.NotNull(internalReferenceEntry);
 
             return (DbReferenceEntry)internalReferenceEntry.CreateDbMemberEntry();
         }
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalReferenceEntry"> The internal entry. </param>
         internal DbReferenceEntry(InternalReferenceEntry internalReferenceEntry)
         {
-            Contract.Requires(internalReferenceEntry != null);
+            DebugCheck.NotNull(internalReferenceEntry);
 
             _internalReferenceEntry = internalReferenceEntry;
         }
@@ -112,7 +112,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a value indicating whether the entity has been loaded from the database.
         /// </summary>
-        /// <value> <c>true</c> if the entity is loaded; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the entity is loaded; otherwise, <c>false</c> .
+        /// </value>
         public bool IsLoaded
         {
             get { return _internalReferenceEntry.IsLoaded; }

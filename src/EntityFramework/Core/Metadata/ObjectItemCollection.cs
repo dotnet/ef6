@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The method loads the O-space metadata for all the referenced assemblies starting from the given assembly 
+        ///     The method loads the O-space metadata for all the referenced assemblies starting from the given assembly
         ///     in a recursive way.
         ///     The assembly should be from Assembly.GetCallingAssembly via one of our public API's.
         /// </summary>
@@ -114,17 +114,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
-            Contract.Requires(assembly != null);
-            Contract.Requires(edmItemCollection != null);
-            Contract.Requires(logLoadMessage != null);
+            Check.NotNull(assembly, "assembly");
+            Check.NotNull(edmItemCollection, "edmItemCollection");
+            Check.NotNull(logLoadMessage, "logLoadMessage");
 
             ExplicitLoadFromAssembly(assembly, edmItemCollection, logLoadMessage);
         }
 
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection)
         {
-            Contract.Requires(assembly != null);
-            Contract.Requires(edmItemCollection != null);
+            Check.NotNull(assembly, "assembly");
+            Check.NotNull(edmItemCollection, "edmItemCollection");
 
             ExplicitLoadFromAssembly(assembly, edmItemCollection, null);
         }
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right 
+        ///     Implicit loading means that we are trying to help the user find the right
         ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
         ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
         /// </summary>
@@ -160,10 +160,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right 
+        ///     Implicit loading means that we are trying to help the user find the right
         ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
         ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        /// 
         ///     Load metadata from the type's assembly.
         /// </summary>
         /// <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
@@ -510,7 +509,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true on success, false on failure </returns>
         private static bool TryGetClrType(EdmType objectSpaceType, out Type clrType)
         {
-            Contract.Requires(objectSpaceType != null);
+            DebugCheck.NotNull(objectSpaceType);
 
             Debug.Assert(
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
@@ -524,7 +523,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             clrType = null;
 
-            if (Helper.IsEntityType(objectSpaceType) || Helper.IsComplexType(objectSpaceType)
+            if (Helper.IsEntityType(objectSpaceType)
+                || Helper.IsComplexType(objectSpaceType)
                 || Helper.IsEnumType(objectSpaceType))
             {
                 Debug.Assert(
@@ -572,7 +572,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(DataSpace.CSpace == cspaceType.DataSpace, "DataSpace should be CSpace");
 
             // check if there is an entity, complex type or enum type mapping with this name
-            if (Helper.IsEntityType(cspaceType) || Helper.IsComplexType(cspaceType)
+            if (Helper.IsEntityType(cspaceType)
+                || Helper.IsComplexType(cspaceType)
                 || Helper.IsEnumType(cspaceType))
             {
                 return _ocMapping.TryGetValue(cspaceType.Identity, out edmType);

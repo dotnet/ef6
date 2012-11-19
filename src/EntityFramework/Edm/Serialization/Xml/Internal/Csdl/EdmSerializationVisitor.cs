@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
     using System.Xml;
 
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         internal void Visit(EdmModel edmModel)
         {
-            Contract.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
+            Debug.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
 
             var namespaceName = edmModel.Namespaces.First().Name;
 
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
 
         internal void Visit(EdmModel edmModel, string provider, string providerManifestToken)
         {
-            Contract.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
+            Debug.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
 
             var namespaceName = edmModel.Name;
 

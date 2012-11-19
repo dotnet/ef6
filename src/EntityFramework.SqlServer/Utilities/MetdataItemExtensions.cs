@@ -3,14 +3,13 @@
 namespace System.Data.Entity.SqlServer.Utilities
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal static class MetdataItemExtensions
     {
         public static T GetMetadataPropertyValue<T>(this MetadataItem item, string propertyName)
         {
-            Contract.Requires(item != null);
+            DebugCheck.NotNull(item);
 
             var property = item.MetadataProperties.FirstOrDefault(p => p.Name == propertyName);
             return property == null ? default(T) : (T)property.Value;

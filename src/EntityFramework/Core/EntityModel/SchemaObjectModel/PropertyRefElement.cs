@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         /// <summary>
         ///     Since this method can be used in different context, this method does not add any errors
-        ///     Please make sure that the caller of this methods handles the error case and add errors 
+        ///     Please make sure that the caller of this methods handles the error case and add errors
         ///     appropriately
         /// </summary>
         /// <param name="entityType"> </param>

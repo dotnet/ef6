@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
     /// <summary>
     ///     An abstract class that denotes the boolean expression: "var in values".
-    ///     An object of this type can be complete or incomplete. 
+    ///     An object of this type can be complete or incomplete.
     ///     An incomplete object is one whose domain was not created with all possible values.
     ///     Incomplete objects have a limited set of methods that can be called.
     /// </summary>
@@ -52,7 +52,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
         /// </summary>
-        /// <param name="possibleValues"> all the values that the <paramref name="slot" /> can take </param>
+        /// <param name="possibleValues">
+        ///     all the values that the <paramref name="slot" /> can take
+        /// </param>
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : this(slot, new Domain(values, possibleValues))
         {
@@ -106,8 +108,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Creates a complete member restriction based on the existing restriction with possible values for the domain being given by <paramref
-        ///      name="possibleValues" />.
+        ///     Creates a complete member restriction based on the existing restriction with possible values for the domain being given by
+        ///     <paramref
+        ///         name="possibleValues" />
+        ///     .
         /// </summary>
         internal abstract MemberRestriction CreateCompleteMemberRestriction(IEnumerable<Constant> possibleValues);
 

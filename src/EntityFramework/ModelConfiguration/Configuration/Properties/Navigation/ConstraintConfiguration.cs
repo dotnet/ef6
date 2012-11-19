@@ -4,12 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Used to configure a constraint on a navigation property.
     /// </summary>
-    [ContractClass(typeof(ConstraintConfigurationContracts))]
     public abstract class ConstraintConfiguration
     {
         internal abstract ConstraintConfiguration Clone();
@@ -26,22 +24,5 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             get { return true; }
         }
-
-        #region Base Member Contracts
-
-        [ContractClassFor(typeof(ConstraintConfiguration))]
-        private abstract class ConstraintConfigurationContracts : ConstraintConfiguration
-        {
-            internal override void Configure(
-                AssociationType associationType, AssociationEndMember dependentEnd,
-                EntityTypeConfiguration entityTypeConfiguration)
-            {
-                Contract.Requires(associationType != null);
-                Contract.Requires(dependentEnd != null);
-                Contract.Requires(entityTypeConfiguration != null);
-            }
-        }
-
-        #endregion
     }
 }

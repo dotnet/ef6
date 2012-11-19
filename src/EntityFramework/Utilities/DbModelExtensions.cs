@@ -3,14 +3,13 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
     using System.Xml.Linq;
 
     internal static class DbModelExtensions
     {
         public static XDocument GetModel(this DbModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             return DbContextExtensions.GetModel(w => EdmxWriter.WriteEdmx(model, w));
         }

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -36,20 +36,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="context"> The ObjectContext of the provider. </param>
         internal ObjectQueryProvider(ObjectContext context)
         {
-            Contract.Requires(null != context);
+            DebugCheck.NotNull(context);
             _context = context;
         }
 
         /// <summary>
         ///     Constructs a new provider with the given ObjectQuery. This ObjectQuery instance
-        ///     is used to transfer state information to the new ObjectQuery instance created using 
+        ///     is used to transfer state information to the new ObjectQuery instance created using
         ///     the private CreateQuery method overloads.
         /// </summary>
         /// <param name="query"> </param>
         internal ObjectQueryProvider(ObjectQuery query)
             : this(query.Context)
         {
-            Contract.Requires(null != query);
+            DebugCheck.NotNull(query);
             _query = query;
         }
 
@@ -58,7 +58,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <typeparam name="TElement"> The element type of the query. </typeparam>
         /// <param name="expression"> Expression forming the query. </param>
-        /// <returns> A new <see cref="ObjectQuery{S}" /> instance. </returns>
+        /// <returns>
+        ///     A new <see cref="ObjectQuery{S}" /> instance.
+        /// </returns>
         internal virtual ObjectQuery<TElement> CreateQuery<TElement>(Expression expression)
         {
             return GetObjectQueryState(_query, expression, typeof(TElement)).CreateObjectQuery<TElement>();
@@ -71,7 +73,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <param name="expression"> The LINQ expression that defines the new query </param>
         /// <param name="ofType"> The result type of the new ObjectQuery </param>
-        /// <returns> A new <see cref="ObjectQuery{ofType}" /> , as an instance of ObjectQuery </returns>
+        /// <returns>
+        ///     A new <see cref="ObjectQuery{ofType}" /> , as an instance of ObjectQuery
+        /// </returns>
         internal virtual ObjectQuery CreateQuery(Expression expression, Type ofType)
         {
             return GetObjectQueryState(_query, expression, ofType).CreateQuery();
@@ -172,6 +176,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
+            Check.NotNull(expression, "expression");
+
             var query = CreateQuery<TResult>(expression);
 
             return ExecuteSingleAsync(query, expression, cancellationToken);
@@ -179,6 +185,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
+            Check.NotNull(expression, "expression");
+
             var query = CreateQuery(expression, expression.Type);
             var objQuery = ((IDbAsyncEnumerable)query).Cast<object>();
             return ExecuteSingleAsync(objQuery, expression, cancellationToken);
@@ -195,7 +203,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     a singleton result from an IEnumerable query result. The function
         ///     used depends on the semantics required by the expression that is
         ///     the root of the query. First, FirstOrDefault and SingleOrDefault are
-        ///     currently handled as special cases, and the default behavior is to 
+        ///     currently handled as special cases, and the default behavior is to
         ///     use the Enumerable.Single materialization pattern.
         /// </summary>
         /// <typeparam name="TResult"> The expected result type and the required element type of the IEnumerable collection </typeparam>

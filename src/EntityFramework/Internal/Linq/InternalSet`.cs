@@ -11,7 +11,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -152,7 +153,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private object FindInStateManager(WrappedEntityKey key)
         {
-            Contract.Requires(key != null);
+            DebugCheck.NotNull(key);
 
             // If the key has null values, then it cannot be in the state manager in anything other
             // than the Added state and we cannot create an EntityKey for it, so skip the first check.
@@ -213,7 +214,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private object FindInStore(WrappedEntityKey key, string keyValuesParamName)
         {
-            Contract.Requires(key != null);
+            DebugCheck.NotNull(key);
 
             // If the key has null values, then we cannot query it from the store, so it cannot
             // be found, so just return null.
@@ -242,7 +243,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         private async Task<object> FindInStoreAsync(WrappedEntityKey key, string keyValuesParamName, CancellationToken cancellationToken)
         {
-            Contract.Requires(key != null);
+            DebugCheck.NotNull(key);
 
             // If the key has null values, then we cannot query it from the store, so it cannot
             // be found, so just return null.
@@ -322,6 +323,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="entity"> The entity to attach. </param>
         public virtual void Attach(object entity)
         {
+            DebugCheck.NotNull(entity);
+
             ActOnSet(
                 () => InternalContext.ObjectContext.AttachTo(EntitySetName, entity), EntityState.Unchanged, entity,
                 "Attach");
@@ -339,6 +342,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="entity"> The entity to add. </param>
         public virtual void Add(object entity)
         {
+            DebugCheck.NotNull(entity);
+
             ActOnSet(
                 () => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entity, "Add");
         }
@@ -357,6 +362,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="entity"> The entity to remove. </param>
         public virtual void Remove(object entity)
         {
+            DebugCheck.NotNull(entity);
+
             if (!(entity is TEntity))
             {
                 throw Error.DbSet_BadTypeForAddAttachRemove("Remove", entity.GetType().Name, typeof(TEntity).Name);
@@ -378,7 +385,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="methodName"> Name of the method. </param>
         private void ActOnSet(Action action, EntityState newState, object entity, string methodName)
         {
-            Contract.Requires(entity != null);
+            DebugCheck.NotNull(entity);
 
             if (!(entity is TEntity))
             {
@@ -426,6 +433,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The entity instance, which may be a proxy. </returns>
         public TEntity Create(Type derivedEntityType)
         {
+            DebugCheck.NotNull(derivedEntityType);
+
             if (!typeof(TEntity).IsAssignableFrom(derivedEntityType))
             {
                 throw Error.DbSet_BadTypeForCreate(derivedEntityType.Name, typeof(TEntity).Name);
@@ -539,7 +548,7 @@ namespace System.Data.Entity.Internal.Linq
 
         private void InitializeUnderlyingTypes(EntitySetTypePair pair)
         {
-            Contract.Assert(pair != null);
+            Debug.Assert(pair != null);
 
             _entitySet = pair.EntitySet;
             _baseType = pair.BaseType;
@@ -558,7 +567,9 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Creates an underlying <see cref="System.Data.Entity.Core.Objects.ObjectQuery{T}" /> for this set.
         /// </summary>
-        /// <param name="asNoTracking"> if set to <c>true</c> then the query is set to be no-tracking. </param>
+        /// <param name="asNoTracking">
+        ///     if set to <c>true</c> then the query is set to be no-tracking.
+        /// </param>
         /// <returns> The query. </returns>
         private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking)
         {
@@ -619,6 +630,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> A new query containing the defined include path. </returns>
         public override IInternalQuery<TEntity> Include(string path)
         {
+            DebugCheck.NotEmpty(path);
+
             Initialize();
             return base.Include(path);
         }
@@ -650,11 +663,16 @@ namespace System.Data.Entity.Internal.Linq
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name="sql"> The SQL quey. </param>
-        /// <param name="asNoTracking"> if <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="asNoTracking">
+        ///     if <c>true</c> then the entities are not tracked, otherwise they are.
+        /// </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
         public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
         {
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
+
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
@@ -686,11 +704,16 @@ namespace System.Data.Entity.Internal.Linq
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name="sql"> The SQL quey. </param>
-        /// <param name="asNoTracking"> if <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="asNoTracking">
+        ///     if <c>true</c> then the entities are not tracked, otherwise they are.
+        /// </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
         public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
         {
+            DebugCheck.NotNull(sql);
+            DebugCheck.NotNull(parameters);
+
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 

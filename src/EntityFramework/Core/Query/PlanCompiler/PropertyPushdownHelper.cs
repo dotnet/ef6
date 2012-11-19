@@ -9,33 +9,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    ///<summary>
-    ///    The PropertyPushdownHelper module is a submodule of the StructuredTypeEliminator 
-    ///    module. It serves as a useful optimization sidekick for NominalTypeEliminator which 
-    ///    is the real guts of eliminating structured types.
-    /// 
-    ///    The goal of this module is to identify a list of desired properties for each node
-    ///    (and Var) in the tree that is of a structured type. This list of desired properties
-    ///    is identified in a top-down push fashion. 
-    ///
-    ///    While it is desirable to get as accurate information as possible, it is unnecessary
-    ///    for this module to be super-efficient (i.e.) it is ok for it to get a superset
-    ///    of the appropriate information for each node, but it is absolutely not ok for it
-    ///    to get a subset. Later phases (projection pruning) can help eliminate unnecessary
-    ///    information, but the query cannot be made incorrect.
-    ///
-    ///    This module is implemented as a visitor - it leverages information about
-    ///    types in the query - made possible by the TypeFlattener module - and walks
-    ///    down the tree pushing properties to each child of a node. It builds two maps:
-    /// 
-    ///    (*) a node-property map 
-    ///    (*) a var-property map
-    /// 
-    ///    Each of these keeps trackof the properties needed from each node/var. 
-    /// 
-    ///    These maps are returned to the caller and will be used by the NominalTypeEliminator 
-    ///    module to eliminate all structured types.
-    ///</summary>
+    /// <summary>
+    ///     The PropertyPushdownHelper module is a submodule of the StructuredTypeEliminator
+    ///     module. It serves as a useful optimization sidekick for NominalTypeEliminator which
+    ///     is the real guts of eliminating structured types.
+    ///     The goal of this module is to identify a list of desired properties for each node
+    ///     (and Var) in the tree that is of a structured type. This list of desired properties
+    ///     is identified in a top-down push fashion.
+    ///     While it is desirable to get as accurate information as possible, it is unnecessary
+    ///     for this module to be super-efficient (i.e.) it is ok for it to get a superset
+    ///     of the appropriate information for each node, but it is absolutely not ok for it
+    ///     to get a subset. Later phases (projection pruning) can help eliminate unnecessary
+    ///     information, but the query cannot be made incorrect.
+    ///     This module is implemented as a visitor - it leverages information about
+    ///     types in the query - made possible by the TypeFlattener module - and walks
+    ///     down the tree pushing properties to each child of a node. It builds two maps:
+    ///     (*) a node-property map
+    ///     (*) a var-property map
+    ///     Each of these keeps trackof the properties needed from each node/var.
+    ///     These maps are returned to the caller and will be used by the NominalTypeEliminator
+    ///     module to eliminate all structured types.
+    /// </summary>
     internal class PropertyPushdownHelper : BasicOpVisitor
     {
         #region private state
@@ -93,7 +87,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region state maintenance
 
         /// <summary>
-        ///     Get the list of propertyrefs for a node. If none exists, create an 
+        ///     Get the list of propertyrefs for a node. If none exists, create an
         ///     empty structure and store it in the map
         /// </summary>
         /// <param name="node"> Specific node </param>
@@ -190,14 +184,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Default visitor for an Op.
-        /// 
-        ///     Simply walks through all children looking for Ops of structured 
+        ///     Simply walks through all children looking for Ops of structured
         ///     types, and asks for all their properties.
         /// </summary>
         /// <remarks>
         ///     Several of the ScalarOps take the default handling, to simply ask
         ///     for all the children's properties:
-        /// 
         ///     AggegateOp
         ///     ArithmeticOp
         ///     CastOp
@@ -213,11 +205,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     NewMultisetOp
         ///     NewRecordOp
         ///     RefOp
-        /// 
-        ///     They do not exist here to eliminate noise.  
-        /// 
-        ///     Note that the NewRecordOp and the NewInstanceOp could be optimized to only 
-        ///     push down the appropriate references, but it isn't clear to Murali that the 
+        ///     They do not exist here to eliminate noise.
+        ///     Note that the NewRecordOp and the NewInstanceOp could be optimized to only
+        ///     push down the appropriate references, but it isn't clear to Murali that the
         ///     complexity is worth it.
         /// </remarks>
         /// <param name="n"> </param>
@@ -240,7 +230,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     SoftCastOp:
-        ///     If the input is 
+        ///     If the input is
         ///     Ref - ask for all properties
         ///     Entity, ComplexType - ask for the same properties I've been asked for
         ///     Record - ask for all properties (Note: This should be more optimized in the future
@@ -279,7 +269,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     CaseOp handling
-        /// 
         ///     Pushes its desired properties to each of the WHEN/ELSE clauses
         /// </summary>
         /// <param name="op"> </param>
@@ -366,8 +355,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     GetEntityRefOp handling 
-        /// 
+        ///     GetEntityRefOp handling
         ///     Ask for the "identity" properties from the input entity, and push that
         ///     down to my child
         /// </summary>
@@ -393,7 +381,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     IsOfOp handling
-        /// 
         ///     Simply requests the "typeid" property from
         ///     the input. No other property is required
         /// </summary>
@@ -410,7 +397,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Common handler for RelPropertyOp and PropertyOp. 
+        ///     Common handler for RelPropertyOp and PropertyOp.
         ///     Simply pushes down the desired set of properties to the child
         /// </summary>
         /// <param name="op"> the *propertyOp </param>
@@ -470,8 +457,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     PropertyOp handling
-        /// 
-        ///     Pushes down the requested properties along with the current 
+        ///     Pushes down the requested properties along with the current
         ///     property to the child
         /// </summary>
         /// <param name="op"> </param>
@@ -483,7 +469,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     TreatOp handling
-        /// 
         ///     Simply passes down "my" desired properties, and additionally
         ///     asks for the TypeID property
         /// </summary>
@@ -504,7 +489,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     VarRefOp handling
-        /// 
         ///     Simply passes along the current "desired" properties
         ///     to the corresponding Var
         /// </summary>
@@ -527,8 +511,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     VarDefOp handling
-        /// 
-        ///     Pushes the "desired" properties to the 
+        ///     Pushes the "desired" properties to the
         ///     defining expression
         /// </summary>
         /// <param name="op"> </param>
@@ -563,9 +546,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     ApplyOp handling
         ///     CrossApplyOp handling
         ///     OuterApplyOp handling
-        /// 
         ///     Handling for all ApplyOps: Process the right child, and then
-        ///     the left child - since the right child may have references to the 
+        ///     the left child - since the right child may have references to the
         ///     left
         /// </summary>
         /// <param name="op"> apply op </param>
@@ -578,7 +560,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     DistinctOp handling
-        /// 
         ///     Require all properties out of all structured vars
         /// </summary>
         /// <param name="op"> </param>
@@ -597,8 +578,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     FilterOp handling
-        /// 
-        ///     Process the predicate child, and then the input child - since the 
+        ///     Process the predicate child, and then the input child - since the
         ///     predicate child will probably have references to the input.
         /// </summary>
         /// <param name="op"> </param>
@@ -630,21 +610,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             VisitChildrenReverse(n);
         }
 
-        ///<summary>
-        ///    JoinOp handling
-        ///    CrossJoinOp handling
-        ///    InnerJoinOp handling
-        ///    LeftOuterJoinOp handling
-        ///    FullOuterJoinOp handling
-        ///
-        ///    Handler for all JoinOps. For all joins except cross joins, process 
-        ///    the predicate first, and then the inputs - the inputs can be processed
-        ///    in any order.
-        /// 
-        ///    For cross joins, simply process all the (relop) inputs
-        ///</summary>
-        ///<param name="op"> join op </param>
-        ///<param name="n"> </param>
+        /// <summary>
+        ///     JoinOp handling
+        ///     CrossJoinOp handling
+        ///     InnerJoinOp handling
+        ///     LeftOuterJoinOp handling
+        ///     FullOuterJoinOp handling
+        ///     Handler for all JoinOps. For all joins except cross joins, process
+        ///     the predicate first, and then the inputs - the inputs can be processed
+        ///     in any order.
+        ///     For cross joins, simply process all the (relop) inputs
+        /// </summary>
+        /// <param name="op"> join op </param>
+        /// <param name="n"> </param>
         protected override void VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (n.Op.OpType
@@ -685,8 +663,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ScanViewOp 
-        /// 
+        ///     ScanViewOp
         ///     ask for all properties from the view definition
         ///     that have currently been requested from the view itself
         /// </summary>
@@ -715,8 +692,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     UnionAllOp handling
         ///     IntersectOp handling
         ///     ExceptOp handling
-        /// 
-        ///     Visitor for a SetOp. Pushes desired properties to the corresponding 
+        ///     Visitor for a SetOp. Pushes desired properties to the corresponding
         ///     Vars of the input
         /// </summary>
         /// <param name="op"> the setop </param>
@@ -756,10 +732,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SortOp handling 
-        /// 
-        ///     First, "request" that for any sort key that is a structured type, we 
-        ///     need all its properties. Then process any local definitions, and 
+        ///     SortOp handling
+        ///     First, "request" that for any sort key that is a structured type, we
+        ///     need all its properties. Then process any local definitions, and
         ///     finally the relop input
         /// </summary>
         /// <param name="op"> </param>

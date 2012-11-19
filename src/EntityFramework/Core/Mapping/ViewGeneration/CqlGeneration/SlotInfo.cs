@@ -16,8 +16,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     {
         /// <summary>
         ///     Creates a <see cref="SlotInfo" /> for a <see cref="CqlBlock" /> X with information about whether this slot is needed by X's parent
-        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (<paramref
-        ///     name="slotValue" />) and 
+        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (
+        ///     <paramref
+        ///         name="slotValue" />
+        ///     ) and
         ///     the output member path (<paramref name="outputMember" /> (for regular/non-boolean slots) for the slot.
         /// </summary>
         internal SlotInfo(bool isRequiredByParent, bool isProjected, ProjectedSlot slotValue, MemberPath outputMember)
@@ -27,12 +29,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
         /// <summary>
         ///     Creates a <see cref="SlotInfo" /> for a <see cref="CqlBlock" /> X with information about whether this slot is needed by X's parent
-        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (<paramref
-        ///     name="slotValue" />) and 
+        ///     (<paramref name="isRequiredByParent" />), whether X projects it (<paramref name="isProjected" />) along with the slot value (
+        ///     <paramref
+        ///         name="slotValue" />
+        ///     ) and
         ///     the output member path (<paramref name="outputMember" /> (for regular/non-boolean slots) for the slot.
         /// </summary>
-        /// <param name="enforceNotNull"> We need to ensure that _from variables are never null since view generation uses 2-valued boolean logic. If <paramref
-        ///      name="enforceNotNull" /> =true, the generated Cql adds a condition (AND <paramref name="slotValue" /> NOT NULL). This flag is used only for boolean slots. </param>
+        /// <param name="enforceNotNull">
+        ///     We need to ensure that _from variables are never null since view generation uses 2-valued boolean logic. If
+        ///     <paramref
+        ///         name="enforceNotNull" />
+        ///     =true, the generated Cql adds a condition (AND <paramref name="slotValue" /> NOT NULL). This flag is used only for boolean slots.
+        /// </param>
         internal SlotInfo(bool isRequiredByParent, bool isProjected, ProjectedSlot slotValue, MemberPath outputMember, bool enforceNotNull)
         {
             m_isRequiredByParent = isRequiredByParent;

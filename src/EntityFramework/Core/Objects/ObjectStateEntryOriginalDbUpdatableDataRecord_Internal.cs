@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     // Internal version of writeable original values record is used by all internal operations that need to set original values, such as PreserveChanges queries
     // This version should never be returned to the user, because it doesn't enforce any necessary restrictions.
@@ -14,10 +14,11 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
             : base(cacheEntry, metadata, userObject)
         {
-            Contract.Requires(cacheEntry != null);
-            Contract.Requires(userObject != null);
-            Contract.Requires(metadata != null);
+            DebugCheck.NotNull(cacheEntry);
+            DebugCheck.NotNull(userObject);
+            DebugCheck.NotNull(metadata);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryOriginalDbUpdatableDataRecord_Internal for a key entry");
+
             switch (cacheEntry.State)
             {
                 case EntityState.Unchanged:

@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                     schemaManager.SchemaVersion < XmlConstants.EdmVersionForV3)
                 {
                     primitiveTypes = primitiveTypes.Where(t => !Helper.IsSpatialType(t))
-                        .ToList();
+                                                   .ToList();
                 }
 
                 foreach (var entry in primitiveTypes)
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns the alias that can be used for type in this 
+        ///     Returns the alias that can be used for type in this
         ///     Namespace instead of the entire namespace name
         /// </summary>
         internal override string Alias

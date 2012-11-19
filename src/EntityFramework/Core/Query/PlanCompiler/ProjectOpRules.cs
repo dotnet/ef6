@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessProjectOverProject);
 
         /// <summary>
-        ///     Converts a Project(Project(X, c1,...), d1,...) => 
+        ///     Converts a Project(Project(X, c1,...), d1,...) =>
         ///     Project(X, d1', d2'...)
         ///     where d1', d2' etc. are the "mapped" versions of d1, d2 etc.
         /// </summary>
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessProjectWithNoLocalDefinitions);
 
         /// <summary>
-        ///     Eliminate a ProjectOp that has no local definitions at all and 
+        ///     Eliminate a ProjectOp that has no local definitions at all and
         ///     no external references, (ie) if Child1
         ///     of the ProjectOp (the VarDefListOp child) has no children, then the ProjectOp
         ///     is serving no useful purpose. Get rid of the ProjectOp, and replace it with its
@@ -139,9 +139,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.Project, ProcessProjectWithSimpleVarRedefinitions);
 
         /// <summary>
-        ///     If the ProjectOp defines some computedVars, but those computedVars are simply 
-        ///     redefinitions of other Vars, then eliminate the computedVars. 
-        /// 
+        ///     If the ProjectOp defines some computedVars, but those computedVars are simply
+        ///     redefinitions of other Vars, then eliminate the computedVars.
         ///     Project(X, VarDefList(VarDef(cv1, VarRef(v1)), ...))
         ///     can be transformed into
         ///     Project(X, VarDefList(...))
@@ -236,24 +235,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.Project, ProcessProjectOpWithNullSentinel);
 
         /// <summary>
-        ///     Tries to remove null sentinel definitions by replacing them to vars that are guaranteed 
-        ///     to be non-nullable and of integer type, or with reference to other constants defined in the 
-        ///     same project. In particular, 
-        /// 
-        ///     - If based on the ancestors, the value of the null sentinel can be changed and the 
-        ///     input of the project has a var that is guaranteed to be non-nullable and 
-        ///     is of integer type, then the definitions of the vars defined as NullSentinels in the ProjectOp 
+        ///     Tries to remove null sentinel definitions by replacing them to vars that are guaranteed
+        ///     to be non-nullable and of integer type, or with reference to other constants defined in the
+        ///     same project. In particular,
+        ///     - If based on the ancestors, the value of the null sentinel can be changed and the
+        ///     input of the project has a var that is guaranteed to be non-nullable and
+        ///     is of integer type, then the definitions of the vars defined as NullSentinels in the ProjectOp
         ///     are replaced with a reference to that var. I.eg:
-        /// 
         ///     Project(X, VarDefList(VarDef(ns_var, NullSentinel), ...))
         ///     can be transformed into
         ///     Project(X, VarDefList(VarDef(ns_var, VarRef(v))...))
         ///     where v is known to be non-nullable
-        /// 
-        ///     - Else, if based on the ancestors, the value of the null sentinel can be changed and 
+        ///     - Else, if based on the ancestors, the value of the null sentinel can be changed and
         ///     the project already has definitions of other int constants, the definitions of the null sentinels
         ///     are removed and the respective vars are remapped to the var representing the constant.
-        /// 
         ///     - Else, the definitions of the all null sentinels except for one are removed, and the
         ///     the respective vars are remapped to the remaining null sentinel.
         /// </summary>

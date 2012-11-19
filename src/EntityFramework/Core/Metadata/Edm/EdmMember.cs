@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents the edm member class
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _name; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _name = value;
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _typeUsage; }
             protected set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _typeUsage = value;
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation 
+        ///     Overriding System.Object.ToString to provide better String representation
         ///     for this type.
         /// </summary>
         public override string ToString()

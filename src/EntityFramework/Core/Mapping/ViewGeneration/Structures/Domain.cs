@@ -442,8 +442,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             IEnumerable<Constant> domain, MemberProjectedSlot slot, CellQuery cellQuery, out CellConstantSet result)
         {
             var conditionsForSlot = cellQuery.GetConjunctsFromWhereClause()
-                .Where(restriction => MemberPath.EqualityComparer.Equals(restriction.RestrictedMemberSlot.MemberPath, slot.MemberPath))
-                .Select(restriction => new CellConstantSet(restriction.Domain.Values, Constant.EqualityComparer));
+                                             .Where(
+                                                 restriction =>
+                                                 MemberPath.EqualityComparer.Equals(
+                                                     restriction.RestrictedMemberSlot.MemberPath, slot.MemberPath))
+                                             .Select(
+                                                 restriction => new CellConstantSet(restriction.Domain.Values, Constant.EqualityComparer));
 
             //Debug.Assert(!conditionsForSlot.Skip(1).Any(), "More than one Clause with the same path");
 

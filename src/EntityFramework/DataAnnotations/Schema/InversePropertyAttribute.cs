@@ -5,8 +5,8 @@
 
 namespace System.ComponentModel.DataAnnotations.Schema
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Specifies the inverse of a navigation property that represents the other end of the same relationship.
@@ -25,7 +25,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="property"> The navigation property representing the other end of the same relationship. </param>
         public InversePropertyAttribute(string property)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(property));
+            Check.NotEmpty(property, "property");
 
             _property = property;
         }

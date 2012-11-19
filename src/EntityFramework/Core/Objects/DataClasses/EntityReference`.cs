@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Threading;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     The default constructor is required for some serialization scenarios. It should not be used to 
+        ///     The default constructor is required for some serialization scenarios. It should not be used to
         ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
         ///     class instead.
         /// </summary>
@@ -305,19 +305,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Attaches an entity to the EntityReference. The given
         ///     entity is not assumed to be the complete set of related entities.
-        /// 
-        ///     Owner and all entities passed in must be in Unchanged or Modified state. 
+        ///     Owner and all entities passed in must be in Unchanged or Modified state.
         ///     Deleted elements are allowed only when the state manager is already tracking the relationship
         ///     instance.
         /// </summary>
         /// <param name="entity"> The entity to attach to the EntityCollection </param>
-        /// <exception cref="ArgumentNullException">Thrown when
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when
         ///     <paramref name="entity" />
-        ///     is null.</exception>
+        ///     is null.
+        /// </exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             CheckOwnerNull();
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
@@ -563,7 +564,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 // this entity reference could be replacing a relationship that points to a key entry
                 // we need to search relationships on the Owner entity to see if this is true, and if so remove the relationship entry
-                if (WrappedOwner.Entity != null && WrappedOwner.Context != null
+                if (WrappedOwner.Entity != null
+                    && WrappedOwner.Context != null
                     && !UsingNoTracking)
                 {
                     var ownerEntry = WrappedOwner.Context.ObjectStateManager.GetEntityEntry(WrappedOwner.Entity);
@@ -595,6 +597,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (!relationshipAlreadyExists
                 && ContainsEntity(wrappedEntity))
             {
@@ -608,11 +612,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override bool CanSetEntityType(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             return wrappedEntity.Entity is TEntity;
         }
 
         internal override void VerifyType(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (!CanSetEntityType(wrappedEntity))
             {
                 throw new InvalidOperationException(
@@ -626,6 +634,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity"> The entity to add to the related end in a disconnected state. </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             CheckOwnerNull();
         }
 
@@ -635,6 +645,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity"> The entity to remove from the related end in a disconnected state. </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             CheckOwnerNull();
             return false;
         }
@@ -647,7 +659,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
-            Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
+            DebugCheck.NotNull(wrappedEntity);
             Debug.Assert(
                 null == _wrappedCachedValue.Entity || wrappedEntity.Entity == _wrappedCachedValue.Entity,
                 "The specified object is not a part of this relationship.");
@@ -661,7 +673,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             // This code sets nullable FK properties on a dependent end to null when a relationship has been nulled.
-            if (ObjectContext != null && IsForeignKey
+            if (ObjectContext != null
+                && IsForeignKey
                 && !preserveForeignKey)
             {
                 NullAllForeignKeys();
@@ -676,7 +689,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
-            Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
+            DebugCheck.NotNull(wrappedEntity);
 
             // For POCO entities - clear the CLR reference
             if (TargetAccessor.HasProperty)
@@ -766,6 +779,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override bool ContainsEntity(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // Using operator 'as' instead of () allows calling ContainsEntity
             // with entity of different type than TEntity.
             return null != _wrappedCachedValue.Entity && _wrappedCachedValue.Entity == wrappedEntity.Entity;
@@ -788,7 +803,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //End identical code
 
         /// <summary>
-        ///     Take any values in the incoming RelatedEnd and sets them onto the values 
+        ///     Take any values in the incoming RelatedEnd and sets them onto the values
         ///     that currently exist in this RelatedEnd
         /// </summary>
         /// <param name="rhs"> </param>
@@ -869,6 +884,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal override void AddToLocalCache(IEntityWrapper wrappedEntity, bool applyConstraints)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (wrappedEntity != _wrappedCachedValue)
             {
                 var tm = ObjectContext != null ? ObjectContext.ObjectStateManager.TransactionManager : null;
@@ -877,7 +894,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // The idea here is that we want to throw for constraint violations in things that we are bringing in,
                     // but not when replacing references of things already in the context.  Therefore, if the the thing that
                     // we're replacing is in ProcessedEntities it means we're bringing it in and we should throw.
-                    if (tm == null || tm.ProcessedEntities == null
+                    if (tm == null
+                        || tm.ProcessedEntities == null
                         || tm.ProcessedEntities.Contains(_wrappedCachedValue))
                     {
                         throw new InvalidOperationException(
@@ -911,6 +929,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override void AddToObjectCache(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // For POCO entities - set the CLR reference
             if (TargetAccessor.HasProperty)
             {

@@ -31,7 +31,8 @@ namespace System.Data.Entity.Core.Common
             {
                 AssertEdmType(GetElementTypeUsage(typeUsage));
             }
-            else if (TypeSemantics.IsStructuralType(typeUsage) && !Helper.IsComplexType(typeUsage.EdmType)
+            else if (TypeSemantics.IsStructuralType(typeUsage)
+                     && !Helper.IsComplexType(typeUsage.EdmType)
                      && !Helper.IsEntityType(typeUsage.EdmType))
             {
                 foreach (EdmMember m in GetDeclaredStructuralMembers(typeUsage))
@@ -124,8 +125,10 @@ namespace System.Data.Entity.Core.Common
         /// <returns> </returns>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
-            if (Helper.IsEntityType(typeUsage.EdmType) ||
-                Helper.IsPrimitiveType(typeUsage.EdmType) ||
+            if (Helper.IsEntityType(typeUsage.EdmType)
+                ||
+                Helper.IsPrimitiveType(typeUsage.EdmType)
+                ||
                 Helper.IsEnumType(typeUsage.EdmType)
                 ||
                 Helper.IsRefType(typeUsage.EdmType))
@@ -240,7 +243,8 @@ namespace System.Data.Entity.Core.Common
         {
             byteValue = 0;
             Facet byteFacet;
-            if (type.Facets.TryGetValue(facetName, false, out byteFacet) && byteFacet.Value != null
+            if (type.Facets.TryGetValue(facetName, false, out byteFacet)
+                && byteFacet.Value != null
                 && !Helper.IsUnboundedFacetValue(byteFacet))
             {
                 byteValue = (byte)byteFacet.Value;
@@ -254,7 +258,9 @@ namespace System.Data.Entity.Core.Common
         {
             intValue = 0;
             Facet intFacet;
-            if (type.Facets.TryGetValue(facetName, false, out intFacet) && intFacet.Value != null && !Helper.IsUnboundedFacetValue(intFacet)
+            if (type.Facets.TryGetValue(facetName, false, out intFacet)
+                && intFacet.Value != null
+                && !Helper.IsUnboundedFacetValue(intFacet)
                 && !Helper.IsVariableFacetValue(intFacet))
             {
                 intValue = (int)intFacet.Value;
@@ -333,7 +339,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static bool TryGetPrimitiveTypeKind(TypeUsage type, out PrimitiveTypeKind typeKind)
         {
-            if (type != null && type.EdmType != null
+            if (type != null
+                && type.EdmType != null
                 && type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
             {
                 typeKind = ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
@@ -421,7 +428,9 @@ namespace System.Data.Entity.Core.Common
         ///     Gets primitive type usage for <paramref name="scalarType" />.
         /// </summary>
         /// <param name="scalarType"> Primitive or enum type usage. </param>
-        /// <returns> Primitive type usage for <paramref name="scalarType" /> . </returns>
+        /// <returns>
+        ///     Primitive type usage for <paramref name="scalarType" /> .
+        /// </returns>
         /// <remarks>
         ///     For enum types a new type usage based on the underlying type will be created. For primitive types
         ///     the value passed to the function will be returned.

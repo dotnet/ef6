@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public abstract void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet);
 
         /// <summary>
-        ///     This enum is used to indicate the level of extension check to be perfoemed 
+        ///     This enum is used to indicate the level of extension check to be perfoemed
         ///     on a metadata URI.
         /// </summary>
         public enum ExtensionCheck

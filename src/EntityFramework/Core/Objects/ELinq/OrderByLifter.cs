@@ -14,12 +14,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     A context-sensitive DbExpression builder class that simulates order preservation
         ///     for operators (project, filter, oftype, skip and limit) that are not natively order
-        ///     preserving. The builder simulates order preservation by 'lifting' order keys in 
+        ///     preserving. The builder simulates order preservation by 'lifting' order keys in
         ///     the expression tree. For instance, source.Sort(o).Where(f) is rewritten as
         ///     source.Where(f).Sort(o) since otherwise the sort keys would be ignored.
-        /// 
         ///     In general, the lifter works as follows:
-        /// 
         ///     - The input to the operator is matched against a series of patterns for intrinsically
         ///     ordered expressions.
         ///     - For each pattern, the lifter encodes the compensation required for each of the
@@ -427,7 +425,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// </summary>
             /// <remarks>
             ///     This class is also used to represent expressions of the form: source.Skip(k, o).Project(p).Limit(k).
-            ///     As a result, the rewrites must be spelled out entirely (the implementation cannot assume that 
+            ///     As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
             ///     _limit exists in a particular position in the tree)
             /// </remarks>
             private class ProjectLimitSkipLifter : OrderByLifterBase
@@ -499,7 +497,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // source.Skip(k, o).Limit(k2).Project(p).Skip(k3) ->
                     // source.Skip(k + k3, o).Limit(k2 – k3).Project(p) when k, k2 and k3 are constants
                     // otherwise -> source.Skip(k, o).Limit(k2).Skip(k3, o).Project(p)
-                    if (_skip.Count.ExpressionKind == DbExpressionKind.Constant &&
+                    if (_skip.Count.ExpressionKind == DbExpressionKind.Constant
+                        &&
                         _limit.Limit.ExpressionKind == DbExpressionKind.Constant
                         &&
                         k.ExpressionKind == DbExpressionKind.Constant)
@@ -528,7 +527,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// </summary>
             /// <remarks>
             ///     This class is also used to represent expressions of the form: source.Sort(o).Project(p).Limit(k).
-            ///     As a result, the rewrites must be spelled out entirely (the implementation cannot assume that 
+            ///     As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
             ///     _limit exists in a particular position in the tree)
             /// </remarks>
             private class ProjectLimitSortLifter : OrderByLifterBase

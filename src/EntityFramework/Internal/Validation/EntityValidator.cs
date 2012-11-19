@@ -3,8 +3,9 @@
 namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Validator used to validate an entity of a given EDM EntityType.
@@ -31,11 +32,13 @@ namespace System.Data.Entity.Internal.Validation
         ///     Validates an entity.
         /// </summary>
         /// <param name="entityValidationContext"> Entity validation context. Must not be null. </param>
-        /// <returns> <see cref="DbEntityValidationResult" /> instance. Never null. </returns>
+        /// <returns>
+        ///     <see cref="DbEntityValidationResult" /> instance. Never null.
+        /// </returns>
         public DbEntityValidationResult Validate(EntityValidationContext entityValidationContext)
         {
-            Contract.Requires(entityValidationContext != null);
-            Contract.Assert(entityValidationContext.InternalEntity != null);
+            DebugCheck.NotNull(entityValidationContext);
+            Debug.Assert(entityValidationContext.InternalEntity != null);
 
             var validationErrors = Validate(entityValidationContext, null);
 
@@ -58,6 +61,9 @@ namespace System.Data.Entity.Internal.Validation
             EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,
             List<DbValidationError> validationErrors)
         {
+            DebugCheck.NotNull(entityValidationContext);
+            DebugCheck.NotNull(validationErrors);
+
             var entityEntry = entityValidationContext.InternalEntity;
 
             foreach (var validator in PropertyValidators)

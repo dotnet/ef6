@@ -184,8 +184,10 @@ namespace System.Data.Entity.Internal
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that the owning entity entry is associated with an underlying <see
-        ///      cref="System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
+        ///     Validates that the owning entity entry is associated with an underlying
+        ///     <see
+        ///         cref="System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     and
         ///     is not just wrapping a non-attached entity.
         ///     If the entity is not detached, then the RelatedEnd for this navigation property is obtained.
         /// </summary>

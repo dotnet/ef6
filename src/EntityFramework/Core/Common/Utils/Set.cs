@@ -279,7 +279,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Returns typed enumerator over elements of the set. 
+        ///     Returns typed enumerator over elements of the set.
         ///     Uses HashSet&lt;TElement&gt;.Enumerator to avoid boxing struct.
         /// </summary>
         public HashSet<TElement>.Enumerator GetEnumerator()

@@ -4,15 +4,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     /// <summary>
     ///     A CNF clause is of the form:
-    /// 
     ///     Literal1 + Literal2 . ...
-    /// 
     ///     Each literal is of the form:
-    /// 
     ///     Term
-    /// 
     ///     or
-    /// 
     ///     !Term
     /// </summary>
     /// <typeparam name="T_Identifier"> Type of normal form literal. </typeparam>

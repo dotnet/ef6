@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Security.Cryptography;
     using System.Text;
@@ -24,9 +24,9 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual string Calculate(DbCompiledModel compiledModel)
         {
-            Contract.Requires(compiledModel != null);
-            Contract.Requires(compiledModel.ProviderInfo != null);
-            Contract.Requires(compiledModel.CachedModelBuilder != null);
+            DebugCheck.NotNull(compiledModel);
+            DebugCheck.NotNull(compiledModel.ProviderInfo);
+            DebugCheck.NotNull(compiledModel.CachedModelBuilder);
 
             var providerInfo = compiledModel.ProviderInfo;
             var modelBuilder = compiledModel.CachedModelBuilder.Clone();

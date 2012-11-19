@@ -10,25 +10,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    ///<summary>
-    ///    The ProjectionPruner module is responsible for eliminating unnecessary column
-    ///    references (and other expressions) from the query.
-    ///
-    ///    Projection pruning logically operates in two passes - the first pass is a top-down
-    ///    pass where information about all referenced columns and expressions is collected
-    ///    (pushed down from a node to its children).
-    /// 
-    ///    The second phase is a bottom-up phase, where each node (in response to the 
-    ///    information collected above) attempts to rid itself of unwanted columns and 
-    ///    expressions.
-    /// 
-    ///    The two phases can be combined into a single tree walk, where for each node, the 
-    ///    processing is on the lines of:
-    /// 
-    ///    - compute and push information to children (top-down)
-    ///    - process children
-    ///    - eliminate unnecessary references from myself (bottom-up)
-    ///</summary>
+    /// <summary>
+    ///     The ProjectionPruner module is responsible for eliminating unnecessary column
+    ///     references (and other expressions) from the query.
+    ///     Projection pruning logically operates in two passes - the first pass is a top-down
+    ///     pass where information about all referenced columns and expressions is collected
+    ///     (pushed down from a node to its children).
+    ///     The second phase is a bottom-up phase, where each node (in response to the
+    ///     information collected above) attempts to rid itself of unwanted columns and
+    ///     expressions.
+    ///     The two phases can be combined into a single tree walk, where for each node, the
+    ///     processing is on the lines of:
+    ///     - compute and push information to children (top-down)
+    ///     - process children
+    ///     - eliminate unnecessary references from myself (bottom-up)
+    /// </summary>
     internal class ProjectionPruner : BasicOpVisitorOfNode
     {
         #region Nested Classes
@@ -43,7 +39,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Find all vars that were referenced in the column map. Looks for VarRefColumnMap
             ///     in the ColumnMap tree, and tracks those vars
-            /// 
             ///     NOTE: The "vec" parameter must be supplied by the caller. The caller is responsible for
             ///     clearing out this parameter (if necessary) before calling into this function
             /// </summary>
@@ -262,12 +257,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     VarDefListOp
-        /// 
-        ///     Walks the children (VarDefOp), and looks for those whose Vars 
-        ///     have been referenced. Only those VarDefOps are visited - the 
+        ///     Walks the children (VarDefOp), and looks for those whose Vars
+        ///     have been referenced. Only those VarDefOps are visited - the
         ///     others are ignored.
-        /// 
-        ///     At the end, a new list of children is created - with only those 
+        ///     At the end, a new list of children is created - with only those
         ///     VarDefOps that have been referenced
         /// </summary>
         /// <param name="op"> the varDefListOp </param>
@@ -302,7 +295,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     PhysicalProjectOp
-        /// 
         ///     Insist that all Vars in this are required
         /// </summary>
         /// <param name="op"> </param>
@@ -330,7 +322,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     NestOps
-        /// 
         ///     Common handling for all NestOps.
         /// </summary>
         /// <param name="op"> </param>
@@ -348,8 +339,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SingleStreamNestOp 
-        /// 
+        ///     SingleStreamNestOp
         ///     Insist (for now) that all Vars are required
         /// </summary>
         /// <param name="op"> </param>
@@ -363,7 +353,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     MultiStreamNestOp
-        /// 
         ///     Insist (for now) that all Vars are required
         /// </summary>
         /// <param name="op"> </param>
@@ -380,7 +369,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     ApplyOps
-        /// 
         ///     Common handling for all ApplyOps. Visit the right child first to capture
         ///     any references to the left, and then visit the left child.
         /// </summary>
@@ -396,8 +384,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     DistinctOp
-        /// 
-        ///     We remove all null and constant keys that are not referenced as long as 
+        ///     We remove all null and constant keys that are not referenced as long as
         ///     there is one key left. We add all remaining keys to the referenced list
         ///     and proceed to the inputs
         /// </summary>
@@ -418,10 +405,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     ElementOp
-        /// 
-        ///     An ElementOp that is still present when Projection Prunning is invoked can only get introduced 
-        ///     in the TransformationRules phase by transforming an apply operation into a scalar subquery. 
-        ///     Such ElementOp serves as root of a defining expression of a VarDefinitionOp node and 
+        ///     An ElementOp that is still present when Projection Prunning is invoked can only get introduced
+        ///     in the TransformationRules phase by transforming an apply operation into a scalar subquery.
+        ///     Such ElementOp serves as root of a defining expression of a VarDefinitionOp node and
         ///     thus what it produces is useful.
         /// </summary>
         /// <param name="op"> the ElementOp </param>
@@ -439,9 +425,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     FilterOp
-        /// 
-        ///     First visit the predicate (because that may contain references to 
-        ///     the relop input), and then visit the relop input. No additional 
+        ///     First visit the predicate (because that may contain references to
+        ///     the relop input), and then visit the relop input. No additional
         ///     processing is required
         /// </summary>
         /// <param name="op"> the filterOp </param>
@@ -456,13 +441,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     GroupByBase
-        /// 
         ///     First, we visit the vardeflist for aggregates and potentially group aggregates
-        ///     as they may reference keys (including constant keys). 
-        ///     Then we remove all null and constant keys that are not referenced as long as 
+        ///     as they may reference keys (including constant keys).
+        ///     Then we remove all null and constant keys that are not referenced as long as
         ///     there is one key left. We add all remaining key columns to the referenced list.
         ///     Then we walk through the vardeflist for the keys; and finally process the relop input
-        ///     Once we're done, we update the "Outputs" varset - to account for any 
+        ///     Once we're done, we update the "Outputs" varset - to account for any
         ///     pruned vars. The "Keys" varset will not change
         /// </summary>
         /// <param name="op"> the groupbyOp </param>
@@ -510,8 +494,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Helper method for removing redundant constant keys from GroupByOp and DistictOp.
         ///     It only examines the keys defined in the given varDefListNode.
-        ///     It removes all constant and null keys that are not referenced elsewhere, 
-        ///     but ensuring that at least one key is left. 
+        ///     It removes all constant and null keys that are not referenced elsewhere,
+        ///     but ensuring that at least one key is left.
         ///     It should not be called with empty keyVec.
         /// </summary>
         /// <param name="keyVec"> The keys </param>
@@ -572,7 +556,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     JoinOps
-        /// 
         ///     Common handling for all join ops. For all joins (other than crossjoin),
         ///     we must first visit the predicate (to capture any references from it), and
         ///     then visit the relop inputs. The relop inputs can be visited in any order
@@ -607,12 +590,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     ProjectOp
-        /// 
-        ///     We visit the projections first (the VarDefListOp child), and then 
+        ///     We visit the projections first (the VarDefListOp child), and then
         ///     the input (the RelOp child) - this reverse order is necessary, since
         ///     the projections need to be visited to determine if anything from
         ///     the input is really needed.
-        /// 
         ///     The VarDefListOp child will handle the removal of unnecessary VarDefOps.
         ///     On the way out, we then update our "Vars" property to reflect the Vars
         ///     that have been eliminated
@@ -636,8 +617,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ScanTableOp 
-        /// 
+        ///     ScanTableOp
         ///     Update the list of referenced columns
         /// </summary>
         /// <param name="op"> </param>
@@ -657,8 +637,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     SetOps
-        /// 
-        ///     Common handling for all SetOps. We first identify the "output" vars 
+        ///     Common handling for all SetOps. We first identify the "output" vars
         ///     that are referenced, and mark the corresponding "input" vars as referenced
         ///     We then remove all unreferenced output Vars from the "Outputs" varset
         ///     as well as from the Varmaps.
@@ -693,11 +672,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SortOp 
-        /// 
-        ///     First visit the sort keys - no sort key can be eliminated. 
+        ///     SortOp
+        ///     First visit the sort keys - no sort key can be eliminated.
         ///     Then process the vardeflist child (if there is one) that contains computed
-        ///     vars, and finally process the relop input. As before, the computedvars 
+        ///     vars, and finally process the relop input. As before, the computedvars
         ///     and sortkeys need to be processed before the relop input
         /// </summary>
         /// <param name="op"> the sortop </param>
@@ -724,7 +702,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     UnnestOp
-        /// 
         ///     Marks the unnestVar as referenced, and if there
         ///     is a child, visits the child.
         /// </summary>
@@ -752,7 +729,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     VarRefOp
-        /// 
         ///     Mark the corresponding Var as "referenced"
         /// </summary>
         /// <param name="op"> the VarRefOp </param>
@@ -766,7 +742,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     ExistsOp
-        /// 
         ///     The child must be a ProjectOp - with exactly 1 var. Mark it as referenced
         /// </summary>
         /// <param name="op"> the ExistsOp </param>

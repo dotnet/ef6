@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     This class represents a query parameter at the object layer, which consists
@@ -49,20 +49,22 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This constructor creates an unbound (i.e., value-less) parameter from the
-        ///     specified name and type. The value can be set at any time through the 
+        ///     specified name and type. The value can be set at any time through the
         ///     public 'Value' property.
         /// </summary>
         /// <param name="name"> The parameter name. </param>
         /// <param name="type"> The CLR type of the parameter. </param>
         /// <returns> A new unbound ObjectParameter instance. </returns>
         /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the value of the name argument is invalid. Parameter names must start
-        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
-        ///     underscores (_).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     If the value of the name argument is invalid. Parameter names must start
+        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and
+        ///     underscores (_).
+        /// </exception>
         public ObjectParameter(string name, Type type)
         {
-            Contract.Requires(name != null);
-            Contract.Requires(type != null);
+            Check.NotNull(name, "name");
+            Check.NotNull(type, "type");
 
             if (!ValidateParameterName(name))
             {
@@ -90,13 +92,15 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="value"> The initial value (and inherently, type) of the parameter. </param>
         /// <returns> A new fully-bound ObjectParameter instance. </returns>
         /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the value of the name argument is invalid. Parameter names must start
-        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and 
-        ///     underscores (_).</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     If the value of the name argument is invalid. Parameter names must start
+        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and
+        ///     underscores (_).
+        /// </exception>
         public ObjectParameter(string name, object value)
         {
-            Contract.Requires(name != null);
-            Contract.Requires(value != null);
+            Check.NotNull(name, "name");
+            Check.NotNull(value, "value");
 
             if (!ValidateParameterName(name))
             {
@@ -202,10 +206,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     The parameter value, which can be set at any time (and subsequently 
-        ///     changed) before query execution. Note that type-checking is not 
-        ///     enforced between the declared parameter type and the type of the 
-        ///     specified value; such validation is left up to the underlying 
+        ///     The parameter value, which can be set at any time (and subsequently
+        ///     changed) before query execution. Note that type-checking is not
+        ///     enforced between the declared parameter type and the type of the
+        ///     specified value; such validation is left up to the underlying
         ///     provider(s) at execution time.
         /// </summary>
         public object Value
@@ -239,8 +243,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     The mappable parameter type; this is primarily used to handle the case of 
-        ///     Nullable parameter types. For example, metadata knows nothing about 'int?', 
+        ///     The mappable parameter type; this is primarily used to handle the case of
+        ///     Nullable parameter types. For example, metadata knows nothing about 'int?',
         ///     only 'Int32'. For internal use only.
         /// </summary>
         internal Type MappableType
@@ -267,7 +271,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This internal method ensures that the specified type is a scalar
-        ///     type supported by the underlying provider by ensuring that scalar 
+        ///     type supported by the underlying provider by ensuring that scalar
         ///     metadata for this type is retrievable.
         /// </summary>
         internal bool ValidateParameterType(ClrPerspective perspective)

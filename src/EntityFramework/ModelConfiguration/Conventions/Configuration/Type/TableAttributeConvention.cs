@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to process instances of <see cref="TableAttribute" /> found on types in the model.
@@ -14,6 +15,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public override void Apply(
             Type memberInfo, EntityTypeConfiguration configuration, TableAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if (!configuration.IsTableNameConfigured)
             {
                 if (string.IsNullOrWhiteSpace(attribute.Schema))

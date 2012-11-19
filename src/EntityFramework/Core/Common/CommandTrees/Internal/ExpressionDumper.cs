@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal abstract void Begin(string name, Dictionary<string, object> attrs);
 
         /// <summary>
-        ///     Ends the Dump block with the specified name. 
+        ///     Ends the Dump block with the specified name.
         ///     The caller should not assumer that this name will be verified
         ///     against the last name used in a Begin call.
         /// </summary>
@@ -415,12 +416,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             End(e);
         }
 
         public override void Visit(DbConstantExpression e)
         {
+            Check.NotNull(e, "e");
+
             var attrs = new Dictionary<string, object>();
             attrs.Add("Value", e.Value);
             Begin(e, attrs);
@@ -429,12 +434,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             End(e);
         }
 
         public override void Visit(DbVariableReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             var attrs = new Dictionary<string, object>();
             attrs.Add("VariableName", e.VariableName);
             Begin(e, attrs);
@@ -443,6 +452,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbParameterReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             var attrs = new Dictionary<string, object>();
             attrs.Add("ParameterName", e.ParameterName);
             Begin(e, attrs);
@@ -451,6 +462,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbFunctionExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Function);
             Dump(e.Arguments, "Arguments", "Argument");
@@ -459,6 +472,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbLambdaExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             Begin(expression);
             Dump(expression.Lambda);
             Dump(expression.Arguments, "Arguments", "Argument");
@@ -467,6 +482,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbPropertyExpression e)
         {
+            Check.NotNull(e, "e");
+
             //
             // Currently the DbPropertyExpression.EdmProperty member property may only be either:
             // - EdmProperty 
@@ -497,12 +514,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbComparisonExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbLikeExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Argument, "Argument");
             Dump(e.Pattern, "Pattern");
@@ -512,6 +533,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbLimitExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e, "WithTies", e.WithTies);
             Dump(e.Argument, "Argument");
             Dump(e.Limit, "Limit");
@@ -520,12 +543,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbIsNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbArithmeticExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Arguments, "Arguments", "Argument");
             End(e);
@@ -533,66 +560,88 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbAndExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbOrExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbNotExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbDistinctExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbElementExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbIsEmptyExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbUnionAllExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbIntersectExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbExceptExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginBinary(e);
             End(e);
         }
 
         public override void Visit(DbTreatExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbIsOfExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             Dump(e.OfType, "OfType");
             End(e);
@@ -600,12 +649,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbCastExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbCaseExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.When, "Whens", "When");
             Dump(e.Then, "Thens", "Then");
@@ -614,6 +667,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbOfTypeExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             Dump(e.OfType, "OfType");
             End(e);
@@ -621,6 +676,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbNewInstanceExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Arguments, "Arguments", "Argument");
             if (e.HasRelatedEntityReferences)
@@ -641,6 +698,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbRelationshipNavigationExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.NavigateFrom, "NavigateFrom");
             Dump(e.NavigateTo, "NavigateTo");
@@ -651,30 +710,40 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbDerefExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbRefKeyExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbEntityRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             BeginUnary(e);
             End(e);
         }
 
         public override void Visit(DbScanExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Begin("Target", "Name", e.Target.Name, "Container", e.Target.EntityContainer.Name);
             Dump(e.Target.ElementType, "TargetElementType");
@@ -684,6 +753,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbFilterExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.Predicate, "Predicate");
@@ -692,6 +763,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbProjectExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.Projection, "Projection");
@@ -700,6 +773,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbCrossJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Begin("Inputs");
             foreach (var binding in e.Inputs)
@@ -712,6 +787,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Left, "Left");
             Dump(e.Right, "Right");
@@ -721,6 +798,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbApplyExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.Apply, "Apply");
@@ -729,6 +808,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbGroupByExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.Keys, "Keys", "Key");
@@ -777,6 +858,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbSkipExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.SortOrder);
@@ -786,6 +869,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbSortExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.SortOrder);
@@ -794,6 +879,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbQuantifierExpression e)
         {
+            Check.NotNull(e, "e");
+
             Begin(e);
             Dump(e.Input, "Input");
             Dump(e.Predicate, "Predicate");

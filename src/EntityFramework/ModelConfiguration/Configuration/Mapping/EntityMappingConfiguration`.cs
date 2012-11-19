@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -27,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal EntityMappingConfiguration(EntityMappingConfiguration entityMappingConfiguration)
         {
-            Contract.Requires(entityMappingConfiguration != null);
+            DebugCheck.NotNull(entityMappingConfiguration);
 
             _entityMappingConfiguration = entityMappingConfiguration;
         }
@@ -39,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the properties that will be included in this mapping fragment.
-        ///     If this method is not called then all properties that have not yet been 
+        ///     If this method is not called then all properties that have not yet been
         ///     included in a mapping fragment will be configured.
         /// </summary>
         /// <typeparam name="TObject"> An anonymous type including the properties to be mapped. </typeparam>
@@ -48,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void Properties<TObject>(Expression<Func<TEntityType, TObject>> propertiesExpression)
         {
-            Contract.Requires(propertiesExpression != null);
+            Check.NotNull(propertiesExpression, "propertiesExpression");
 
             _entityMappingConfiguration.Properties
                 = propertiesExpression.GetComplexPropertyAccessList().ToList();
@@ -56,8 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Re-maps all properties inherited from base types.
-        /// 
-        ///     When configuring a derived type to be mapped to a separate table this will cause all properties to 
+        ///     When configuring a derived type to be mapped to a separate table this will cause all properties to
         ///     be included in the table rather than just the non-inherited properties. This is known as
         ///     Table per Concrete Type (TPC) mapping.
         /// </summary>
@@ -72,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="tableName"> Name of the table. </param>
         public void ToTable(string tableName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             var databaseName = DatabaseName.Parse(tableName);
 
@@ -86,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="schemaName"> Schema of the table. </param>
         public void ToTable(string tableName, string schemaName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             _entityMappingConfiguration.TableName = new DatabaseName(tableName, schemaName);
         }
@@ -98,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object to further configure the discriminator column and values. </returns>
         public ValueConditionConfiguration Requires(string discriminator)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(discriminator));
+            Check.NotEmpty(discriminator, "discriminator");
 
             return new ValueConditionConfiguration(_entityMappingConfiguration, discriminator);
         }
@@ -113,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public NotNullConditionConfiguration Requires<TProperty>(Expression<Func<TEntityType, TProperty>> property)
         {
-            Contract.Requires(property != null);
+            Check.NotNull(property, "property");
 
             return new NotNullConditionConfiguration(_entityMappingConfiguration, property.GetComplexPropertyAccess());
         }

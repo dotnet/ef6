@@ -162,7 +162,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
                     // Need to constrain the dependent role in CSDL to Key properties if this is not a IsForeignKey
                     // relationship.
-                    if ((!isDependentRolePropertiesSubsetofKeyProperties) &&
+                    if ((!isDependentRolePropertiesSubsetofKeyProperties)
+                        &&
                         (!ParentElement.IsForeignKey)
                         &&
                         (Schema.DataModel == SchemaDataModelOption.EntityDataModel))

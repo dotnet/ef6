@@ -12,7 +12,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -730,7 +729,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Default handling for functions. 
+        ///     Default handling for functions.
         ///     Translates them to FunctionName(arg1, arg2, ..., argn)
         /// </summary>
         /// <param name="e"> </param>
@@ -821,7 +820,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Default handling on function arguments.
         ///     Appends the list of arguments to the given result
-        ///     If the function is niladic it does not append anything, 
+        ///     If the function is niladic it does not append anything,
         ///     otherwise it appends (arg1, arg2, .., argn)
         /// </summary>
         /// <param name="e"> </param>
@@ -1015,8 +1014,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         /// <summary>
         ///     Handles functions that are translated into TSQL operators.
-        ///     The given function should have one or two arguments. 
-        ///     Functions with one arguemnt are translated into 
+        ///     The given function should have one or two arguments.
+        ///     Functions with one arguemnt are translated into
         ///     op arg
         ///     Functions with two arguments are translated into
         ///     arg0 op arg1
@@ -1091,7 +1090,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns> </returns>
         internal static ISqlFragment HandleDatepartDateFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            Contract.Assert(e.Arguments.Count > 0, "e.Arguments.Count > 0");
+            Debug.Assert(e.Arguments.Count > 0, "e.Arguments.Count > 0");
 
             var constExpr = e.Arguments[0] as DbConstantExpression;
             if (null == constExpr)
@@ -1140,7 +1139,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Handler for canonical functions for extracting date parts. 
+        ///     Handler for canonical functions for extracting date parts.
         ///     For example:
         ///     Year(date) -> DATEPART( year, date)
         /// </summary>
@@ -1270,23 +1269,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Helper for all date and time types creating functions. 
-        /// 
+        ///     Helper for all date and time types creating functions.
         ///     The given expression is in general trainslated into:
-        /// 
         ///     CONVERT(@typename, [datePart] + [timePart] + [timeZonePart], 121), where the datePart and the timeZonePart are optional
-        /// 
         ///     Only on Katmai, if a date part is present it is wrapped with a call for adding years as shown below.
         ///     The individual parts are translated as:
-        /// 
-        ///     Date part:  
+        ///     Date part:
         ///     PRE KATMAI: convert(varchar(255), @year) + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)
-        ///     KATMAI: DateAdd(year, @year-1, covert(@typename, '0001' + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)  + [possibly time ], 121)     
-        /// 
-        ///     Time part: 
+        ///     KATMAI: DateAdd(year, @year-1, covert(@typename, '0001' + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)  + [possibly time ], 121)
+        ///     Time part:
         ///     PRE KATMAI:  convert(varchar(255), @hour)+ ':' + convert(varchar(255), @minute)+ ':' + str(@second, 6, 3)
         ///     KATMAI:  convert(varchar(255), @hour)+ ':' + convert(varchar(255), @minute)+ ':' + str(@second, 10, 7)
-        /// 
         ///     Time zone part:
         ///     (case when @tzoffset >= 0 then '+' else '-' end) + convert(varchar(255), ABS(@tzoffset)/60) + ':' + convert(varchar(255), ABS(@tzoffset)%60)
         /// </summary>
@@ -1394,12 +1387,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     TruncateTime(DateTime X) 
+        ///     TruncateTime(DateTime X)
         ///     PreKatmai:    TRUNCATETIME(X) => CONVERT(DATETIME, CONVERT(VARCHAR(255), expression, 102),  102)
         ///     Katmai:    TRUNCATETIME(X) => CONVERT(DATETIME2, CONVERT(VARCHAR(255), expression, 102),  102)
-        ///      
-        ///     TruncateTime(DateTimeOffset X) 
-        ///     TRUNCATETIME(X) => CONVERT(datetimeoffset, CONVERT(VARCHAR(255), expression,  102) 
+        ///     TruncateTime(DateTimeOffset X)
+        ///     TRUNCATETIME(X) => CONVERT(datetimeoffset, CONVERT(VARCHAR(255), expression,  102)
         ///     + ' 00:00:00 ' +  Right(convert(varchar(255), @arg, 121), 6),  102)
         /// </summary>
         /// <param name="sqlgen"> </param>
@@ -1847,7 +1839,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // Check if args[1] is a DbConstantExpression and if args [0] is a DbPropertyExpression
             var constSearchParamExpression = args[1] as DbConstantExpression;
             var targetParamExpression = args[0] as DbPropertyExpression;
-            if ((constSearchParamExpression != null) && (targetParamExpression != null)
+            if ((constSearchParamExpression != null)
+                && (targetParamExpression != null)
                 && (string.IsNullOrEmpty(constSearchParamExpression.Value as string) == false))
             {
                 // The LIKE optimization for EndsWith can only be used when the target is a column in table and
@@ -1970,7 +1963,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             return e.Arguments.Select(t => sqlgen.StoreItemCollection.StoreProviderManifest.GetStoreType(t.ResultType))
-                .Any(storeType => _maxTypeNames.Contains(storeType.EdmType.Name));
+                    .Any(storeType => _maxTypeNames.Contains(storeType.EdmType.Name));
         }
 
         /// <summary>

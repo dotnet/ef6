@@ -5,12 +5,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class EntityTypeMappingGenerator : StructuralTypeMappingGenerator
@@ -22,8 +20,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         public void Generate(EntityType entityType, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(entityType != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(databaseMapping);
 
             var entitySet = databaseMapping.Model.GetEntitySet(entityType);
 

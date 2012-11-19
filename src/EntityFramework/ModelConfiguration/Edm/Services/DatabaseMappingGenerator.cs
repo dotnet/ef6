@@ -3,12 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class DatabaseMappingGenerator
@@ -27,14 +25,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         public DatabaseMappingGenerator(DbProviderManifest providerManifest)
         {
-            Contract.Requires(providerManifest != null);
+            DebugCheck.NotNull(providerManifest);
 
             _providerManifest = providerManifest;
         }
 
         public DbDatabaseMapping Generate(EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             var databaseMapping = InitializeDatabaseMapping(model);
 
@@ -47,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private static DbDatabaseMapping InitializeDatabaseMapping(EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             var databaseMapping
                 = new DbDatabaseMapping()
@@ -58,8 +56,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private void GenerateEntityTypes(EdmModel model, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(databaseMapping);
 
             foreach (var entityType in model.GetEntityTypes())
             {
@@ -73,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private void GenerateDiscriminators(DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             foreach (var entitySetMapping in databaseMapping.GetEntitySetMappings())
             {
@@ -113,8 +111,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private void GenerateAssociationTypes(EdmModel model, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(databaseMapping);
 
             foreach (var associationType in model.GetAssociationTypes())
             {

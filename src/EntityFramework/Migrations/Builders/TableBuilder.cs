@@ -6,12 +6,14 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Helper class that is used to further configure a table being created from a CreateTable call on <see cref="DbMigration" />.
+    ///     Helper class that is used to further configure a table being created from a CreateTable call on
+    ///     <see
+    ///         cref="DbMigration" />
+    ///     .
     /// </summary>
     public class TableBuilder<TColumns>
     {
@@ -25,7 +27,7 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name="migration"> The migration the table is created in. </param>
         public TableBuilder(CreateTableOperation createTableOperation, DbMigration migration)
         {
-            Contract.Requires(createTableOperation != null);
+            Check.NotNull(createTableOperation, "createTableOperation");
 
             _createTableOperation = createTableOperation;
             _migration = migration;
@@ -46,7 +48,7 @@ namespace System.Data.Entity.Migrations.Builders
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(keyExpression != null);
+            Check.NotNull(keyExpression, "keyExpression");
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation(anonymousArguments)
                                              {
@@ -76,7 +78,7 @@ namespace System.Data.Entity.Migrations.Builders
         public TableBuilder<TColumns> Index(
             Expression<Func<TColumns, object>> indexExpression, bool unique = false, object anonymousArguments = null)
         {
-            Contract.Requires(indexExpression != null);
+            Check.NotNull(indexExpression, "indexExpression");
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
@@ -114,8 +116,8 @@ namespace System.Data.Entity.Migrations.Builders
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(principalTable));
-            Contract.Requires(dependentKeyExpression != null);
+            Check.NotEmpty(principalTable, "principalTable");
+            Check.NotNull(dependentKeyExpression, "dependentKeyExpression");
 
             var addForeignKeyOperation = new AddForeignKeyOperation(anonymousArguments)
                                              {

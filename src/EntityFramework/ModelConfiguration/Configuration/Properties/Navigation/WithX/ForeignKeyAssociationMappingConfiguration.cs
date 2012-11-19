@@ -6,13 +6,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -32,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private ForeignKeyAssociationMappingConfiguration(ForeignKeyAssociationMappingConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _keyColumnNames.AddRange(source._keyColumnNames);
             _tableName = source._tableName;
@@ -50,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ForeignKeyAssociationMappingConfiguration MapKey(params string[] keyColumnNames)
         {
-            Contract.Requires(keyColumnNames != null);
+            Check.NotNull(keyColumnNames, "keyColumnNames");
 
             _keyColumnNames.Clear();
             _keyColumnNames.AddRange(keyColumnNames);
@@ -61,17 +59,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the table name that the foreign key column(s) reside in.
         ///     The table that is specified must already be mapped for the entity type.
-        /// 
         ///     If you want the foreign key(s) to reside in their own table then use the Map method
-        ///     on <see cref="T:System.Data.Entity.ModelConfiguration.EntityTypeConfiguration" /> to perform 
-        ///     entity splitting to create the table with just the primary key property. Foreign keys can 
+        ///     on <see cref="T:System.Data.Entity.ModelConfiguration.EntityTypeConfiguration" /> to perform
+        ///     entity splitting to create the table with just the primary key property. Foreign keys can
         ///     then be added to the table via this method.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         /// <returns> The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ForeignKeyAssociationMappingConfiguration ToTable(string tableName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             return ToTable(tableName, null);
         }
@@ -79,10 +76,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Configures the table name and schema that the foreign key column(s) reside in.
         ///     The table that is specified must already be mapped for the entity type.
-        /// 
         ///     If you want the foreign key(s) to reside in their own table then use the Map method
-        ///     on <see cref="T:System.Data.Entity.ModelConfiguration.EntityTypeConfiguration" /> to perform 
-        ///     entity splitting to create the table with just the primary key property. Foreign keys can 
+        ///     on <see cref="T:System.Data.Entity.ModelConfiguration.EntityTypeConfiguration" /> to perform
+        ///     entity splitting to create the table with just the primary key property. Foreign keys can
         ///     then be added to the table via this method.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
@@ -90,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ForeignKeyAssociationMappingConfiguration ToTable(string tableName, string schemaName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             _tableName = new DatabaseName(tableName, schemaName);
 
@@ -101,6 +97,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal override void Configure(
             StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
+            DebugCheck.NotNull(associationSetMapping);
+            DebugCheck.NotNull(database);
+            DebugCheck.NotNull(navigationProperty);
+
             // By convention source end contains the dependent column mappings
             var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings.ToList();
 
@@ -127,25 +127,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     var foreignKeyConstraint
                         = sourceTable.ForeignKeyBuilders
-                            .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.ColumnProperty)));
+                                     .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.ColumnProperty)));
 
                     sourceTable.RemoveForeignKey(foreignKeyConstraint);
                     targetTable.AddForeignKey(foreignKeyConstraint);
 
                     foreignKeyConstraint.DependentColumns
-                        .Each(
-                            c =>
-                                {
-                                    var isKey = c.IsPrimaryKeyColumn;
+                                        .Each(
+                                            c =>
+                                                {
+                                                    var isKey = c.IsPrimaryKeyColumn;
 
-                                    sourceTable.RemoveMember(c);
-                                    targetTable.AddMember(c);
+                                                    sourceTable.RemoveMember(c);
+                                                    targetTable.AddMember(c);
 
-                                    if (isKey)
-                                    {
-                                        targetTable.AddKeyMember(c);
-                                    }
-                                });
+                                                    if (isKey)
+                                                    {
+                                                        targetTable.AddKeyMember(c);
+                                                    }
+                                                });
 
                     associationSetMapping.StoreEntitySet = database.GetEntitySet(targetTable);
                 }

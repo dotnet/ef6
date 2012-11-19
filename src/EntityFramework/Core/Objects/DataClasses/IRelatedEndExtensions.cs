@@ -5,7 +5,7 @@
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> A task representing the asynchronous operation. </returns>
         public static Task LoadAsync(this IRelatedEnd relatedEnd)
         {
-            Contract.Requires(relatedEnd != null);
+            Check.NotNull(relatedEnd, "relatedEnd");
 
             return relatedEnd.LoadAsync(CancellationToken.None);
         }
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> A task representing the asynchronous operation. </returns>
         public static Task LoadAsync(this IRelatedEnd relatedEnd, MergeOption mergeOption)
         {
-            Contract.Requires(relatedEnd != null);
+            Check.NotNull(relatedEnd, "relatedEnd");
 
             return relatedEnd.LoadAsync(mergeOption, CancellationToken.None);
         }

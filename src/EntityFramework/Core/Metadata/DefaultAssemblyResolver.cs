@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ///     if two assemblies have the same full name, we will consider them as the same.
             ///     for example,
             ///     both of x and y have the full name as "{RES, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null}",
-            ///     although they are different instances since the ReflectionOnly field in them are different, we sitll 
+            ///     although they are different instances since the ReflectionOnly field in them are different, we sitll
             ///     consider them as the same.
             /// </summary>
             /// <param name="x"> </param>

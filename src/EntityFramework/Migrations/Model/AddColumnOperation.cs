@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a column being added to a table.
@@ -23,8 +23,8 @@ namespace System.Data.Entity.Migrations.Model
         public AddColumnOperation(string table, ColumnModel column, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(column != null);
+            Check.NotEmpty(table, "table");
+            Check.NotNull(column, "column");
 
             _table = table;
             _column = column;

@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents dropping an existing index.
@@ -31,14 +31,14 @@ namespace System.Data.Entity.Migrations.Model
         public DropIndexOperation(CreateIndexOperation inverse, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(inverse != null);
+            Check.NotNull(inverse, "inverse");
 
             _inverse = inverse;
         }
 
         /// <summary>
         ///     Gets an operation that represents reverting dropping the index.
-        ///     The inverse cannot be automatically calculated, 
+        ///     The inverse cannot be automatically calculated,
         ///     if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse

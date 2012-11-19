@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///     Used in the Translator to aggregate information about a (nested) reader 
+    ///     Used in the Translator to aggregate information about a (nested) reader
     ///     coordinator. After the translator visits the columnMaps, it will compile
-    ///     the coordinator(s) which produces an immutable CoordinatorFactory that 
+    ///     the coordinator(s) which produces an immutable CoordinatorFactory that
     ///     can be shared amongst many query instances.
     /// </summary>
     internal class CoordinatorScratchpad
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private readonly Dictionary<Expression, Expression> _expressionWithErrorHandlingMap;
 
         /// <summary>
-        ///     Expressions that should be precompiled (i.e. reduced to constants in 
+        ///     Expressions that should be precompiled (i.e. reduced to constants in
         ///     compiled delegates.
         /// </summary>
         private readonly HashSet<LambdaExpression> _inlineDelegates;
@@ -67,14 +67,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal Expression SetKeys { get; set; }
 
         /// <summary>
-        ///     Gets or sets an Expression returning 'true' when the key values for 
-        ///     the current nested result (see SetKeys) are equal to the current key  
+        ///     Gets or sets an Expression returning 'true' when the key values for
+        ///     the current nested result (see SetKeys) are equal to the current key
         ///     values on the underlying data reader.
         /// </summary>
         internal Expression CheckKeys { get; set; }
 
         /// <summary>
-        ///     Gets or sets an expression returning 'true' if the current row in 
+        ///     Gets or sets an expression returning 'true' if the current row in
         ///     the underlying data reader contains an element of the collection.
         /// </summary>
         internal Expression HasData { get; set; }
@@ -292,13 +292,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     (Dev11 311339), we need to separate this delegate into two pieces: trusted code,
         ///     run under a security assert, and untrusted code, run under the current AppDomain's
         ///     permission set.
-        /// 
         ///     This visitor does that separation by compiling the untrusted code into delegates
         ///     and re-inserting them back into the expression tree. When the untrusted code is
         ///     run, it will run in another stack frame that does not have a security assert
         ///     associated with it; therefore, any attempt to take advantage of MemberAccess
         ///     reflection permissions will be blocked by the CLR.
-        /// 
         ///     The compiled user delegates accept two parameters, one of type DbDataReader
         ///     to speed up access to the current reader, and the other of type object[],
         ///     which contains all other values that they might require to correctly materialize an object. Most of these
@@ -335,7 +333,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // We are creating an internal type like CompensatingCollection<T> or Grouping<K, V>
                     // and at this particular point we are sure that the user isn't creating these
                     // since this.userArgumentType is not null.
-                    if (_userArgumentType != null && !nex.Type.IsPublic
+                    if (_userArgumentType != null
+                        && !nex.Type.IsPublic
                         && nex.Type.Assembly == typeof(SecurityBoundaryExpressionVisitor).Assembly)
                     {
                         return CreateInitializationArgumentReplacement(nex, _userArgumentType);
@@ -401,7 +400,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     // We can optimize the path that checks for DbNull and then
                     // reads a value directly off the reader or invokes another user expression.
-                    if (test != null && test.Object != null
+                    if (test != null
+                        && test.Object != null
                         && typeof(DbDataReader).IsAssignableFrom(test.Object.Type)
                         && test.Method.Name == "IsDBNull")
                     {

@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     internal partial class Propagator
     {
@@ -19,8 +19,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ///     Assumptions:
             ///     <list>
             ///         <item>Only conjunctions of equality predicates are supported</item>
-            ///         <item>Each equality predicate is of the form (left property == right property). The order
-            ///             is important.</item>
+            ///         <item>
+            ///             Each equality predicate is of the form (left property == right property). The order
+            ///             is important.
+            ///         </item>
             ///     </list>
             /// </remarks>
             private class JoinConditionVisitor : UpdateExpressionVisitor<object>
@@ -61,7 +63,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     DbExpression joinCondition, out ReadOnlyCollection<DbExpression> leftKeySelectors,
                     out ReadOnlyCollection<DbExpression> rightKeySelectors)
                 {
-                    Contract.Requires(joinCondition != null);
+                    DebugCheck.NotNull(joinCondition);
 
                     // Constructs a new predicate visitor, which implements a visitor for expression nodes
                     // and returns no values. This visitor instead builds up a list of properties as leaves
@@ -88,6 +90,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns> Results ignored by this visitor implementation. </returns>
                 public override object Visit(DbAndExpression node)
                 {
+                    Check.NotNull(node, "node");
+
                     Visit(node.Left);
                     Visit(node.Right);
 
@@ -101,6 +105,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// <returns> Results ignored by this visitor implementation. </returns>
                 public override object Visit(DbComparisonExpression node)
                 {
+                    Check.NotNull(node, "node");
+
                     if (DbExpressionKind.Equals
                         == node.ExpressionKind)
                     {

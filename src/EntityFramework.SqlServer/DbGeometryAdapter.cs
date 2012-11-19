@@ -6,7 +6,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
-    using System.Diagnostics.Contracts;
 
     internal class DbGeometryAdapter : IDbSpatialValue
     {
@@ -14,7 +13,7 @@ namespace System.Data.Entity.SqlServer
 
         internal DbGeometryAdapter(DbGeometry value)
         {
-            Contract.Requires(value != null);
+            DebugCheck.NotNull(value);
 
             _value = value;
         }

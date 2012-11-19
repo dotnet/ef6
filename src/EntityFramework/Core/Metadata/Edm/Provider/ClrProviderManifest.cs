@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Xml;
 
@@ -239,17 +240,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
+            Check.NotNull(storeType, "storeType");
+
             throw new NotImplementedException();
         }
 
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
+            Check.NotNull(edmType, "edmType");
+
             throw new NotImplementedException();
         }
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.  
-        /// 
+        ///     Providers should override this to return information specific to their provider.
         ///     This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>

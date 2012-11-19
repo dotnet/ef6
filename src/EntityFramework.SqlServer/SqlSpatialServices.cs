@@ -8,7 +8,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
     using System.Runtime.Serialization;
 
@@ -32,8 +31,8 @@ namespace System.Data.Entity.SqlServer
 
         public SqlSpatialServices(SqlTypesAssemblyLoader sqlTypesAssemblyLoader, Func<SqlTypesAssemblyLoader, SqlTypesAssembly> getSqlTypes)
         {
-            Contract.Requires(getSqlTypes != null);
-            Contract.Requires(sqlTypesAssemblyLoader != null);
+            DebugCheck.NotNull(getSqlTypes);
+            DebugCheck.NotNull(sqlTypesAssemblyLoader);
 
             _sqlTypesAssemblyLoader = sqlTypesAssemblyLoader;
             _sqlTypesAssemblySingleton = new Lazy<SqlTypesAssembly>(() => getSqlTypes(sqlTypesAssemblyLoader), isThreadSafe: true);
@@ -100,8 +99,6 @@ namespace System.Data.Entity.SqlServer
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
@@ -123,8 +120,6 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(providerValue, "providerValue");
 
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeographyType);
@@ -173,8 +168,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
 
             var spatialValue = geographyValue.AsSpatialValue();
@@ -198,8 +191,6 @@ namespace System.Data.Entity.SqlServer
 
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
@@ -221,8 +212,6 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(providerValue, "providerValue");
 
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeometryType);
@@ -232,8 +221,6 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
 
             var spatialValue = geometryValue.AsSpatialValue();
@@ -290,11 +277,15 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsTextIncludingElevationAndMeasure(DbGeography geographyValue)
         {
+            Check.NotNull(geographyValue, "geographyValue");
+
             return SqlTypes.GeographyAsTextZM(geographyValue);
         }
 
         public override string AsTextIncludingElevationAndMeasure(DbGeometry geometryValue)
         {
+            Check.NotNull(geometryValue, "geometryValue");
+
             return SqlTypes.GeometryAsTextZM(geometryValue);
         }
 
@@ -602,8 +593,6 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
@@ -613,9 +602,8 @@ namespace System.Data.Entity.SqlServer
 
         public override string GetSpatialTypeName(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STGeometryType.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlStringToString(result);
@@ -623,9 +611,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetDimension(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STDimension.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToInt(result);
@@ -633,9 +620,8 @@ namespace System.Data.Entity.SqlServer
 
         public override byte[] AsBinary(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STAsBinary.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBytesToBinary(result);
@@ -643,9 +629,8 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsGml(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_AsGml.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlXmlToString(result);
@@ -653,9 +638,8 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsText(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STAsText.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlCharsToString(result);
@@ -663,9 +647,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsEmpty(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STIsEmpty.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
@@ -673,9 +656,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool SpatialEquals(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STEquals.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -684,9 +666,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Disjoint(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STDisjoint.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -695,9 +676,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Intersects(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STIntersects.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -706,9 +686,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Buffer(DbGeography geographyValue, double distance)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STBuffer.Value.Invoke(sqlGeographyValue, new object[] { distance });
             return GeographyFromProviderValue(result);
@@ -716,9 +695,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double Distance(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STDistance.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -727,9 +705,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Intersection(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STIntersection.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -738,9 +715,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Union(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STUnion.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -749,9 +725,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Difference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STDifference.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -760,9 +735,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography SymmetricDifference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
             var result = imi_SqlGeography_STSymDifference.Value.Invoke(sqlgeographyValue, new[] { sqlotherGeography });
@@ -771,9 +745,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetElementCount(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STNumGeometries.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
@@ -782,6 +755,7 @@ namespace System.Data.Entity.SqlServer
         public override DbGeography ElementAt(DbGeography geographyValue, int nValue)
         {
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STGeometryN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
             return GeographyFromProviderValue(result);
@@ -789,9 +763,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLatitude(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Lat.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -799,9 +772,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLongitude(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Long.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -809,9 +781,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetElevation(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Z.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -819,9 +790,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetMeasure(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_M.Value.GetValue(sqlGeographyValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -829,9 +799,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLength(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STLength.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
@@ -839,9 +808,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GetStartPoint(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STStartPoint.Value.Invoke(sqlGeographyValue, new object[] { });
             return GeographyFromProviderValue(result);
@@ -849,9 +817,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GetEndPoint(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STEndPoint.Value.Invoke(sqlGeographyValue, new object[] { });
             return GeographyFromProviderValue(result);
@@ -859,9 +826,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsClosed(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STIsClosed.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
@@ -869,9 +835,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetPointCount(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STNumPoints.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
@@ -879,9 +844,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography PointAt(DbGeography geographyValue, int nValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STPointN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
             return GeographyFromProviderValue(result);
@@ -889,9 +853,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetArea(DbGeography geographyValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geographyValue, "geographyValue");
+
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STArea.Value.Invoke(sqlGeographyValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1039,9 +1002,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STSrid.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlInt32ToInt(result);
@@ -1049,9 +1011,8 @@ namespace System.Data.Entity.SqlServer
 
         public override string GetSpatialTypeName(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STGeometryType.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlStringToString(result);
@@ -1059,9 +1020,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetDimension(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STDimension.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToInt(result);
@@ -1069,9 +1029,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetEnvelope(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STEnvelope.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1079,9 +1038,8 @@ namespace System.Data.Entity.SqlServer
 
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STAsBinary.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBytesToBinary(result);
@@ -1089,9 +1047,8 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsGml(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_AsGml.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlXmlToString(result);
@@ -1099,8 +1056,6 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsText(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STAsText.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1109,9 +1064,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsEmpty(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsEmpty.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
@@ -1119,9 +1073,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsSimple(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsSimple.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
@@ -1129,8 +1082,6 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetBoundary(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STBoundary.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1139,9 +1090,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsValid(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsValid.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToBoolean(result);
@@ -1149,9 +1099,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool SpatialEquals(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STEquals.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1160,9 +1109,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Disjoint(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STDisjoint.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1171,9 +1119,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Intersects(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STIntersects.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1182,9 +1129,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Touches(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STTouches.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1193,9 +1139,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Crosses(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STCrosses.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1204,9 +1149,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Within(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STWithin.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1215,9 +1159,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Contains(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STContains.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1226,8 +1169,6 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Overlaps(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1237,9 +1178,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Relate(DbGeometry geometryValue, DbGeometry otherGeometry, string matrix)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STRelate.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry, matrix });
@@ -1248,9 +1188,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Buffer(DbGeometry geometryValue, double distance)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STBuffer.Value.Invoke(sqlGeometryValue, new object[] { distance });
             return GeometryFromProviderValue(result);
@@ -1258,9 +1197,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double Distance(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STDistance.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1269,9 +1207,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetConvexHull(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STConvexHull.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1279,9 +1216,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Intersection(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STIntersection.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1290,9 +1226,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Union(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STUnion.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1301,9 +1236,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Difference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STDifference.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1312,9 +1246,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry SymmetricDifference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STSymDifference.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1323,9 +1256,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetElementCount(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumGeometries.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
@@ -1333,9 +1265,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry ElementAt(DbGeometry geometryValue, int nValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STGeometryN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return GeometryFromProviderValue(result);
@@ -1343,9 +1274,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetXCoordinate(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STX.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1353,9 +1283,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetYCoordinate(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STY.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1363,9 +1292,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetElevation(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_Z.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1373,9 +1301,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetMeasure(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_M.Value.GetValue(sqlGeometryValue, null);
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1383,9 +1310,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLength(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STLength.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1393,9 +1319,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetStartPoint(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STStartPoint.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1403,9 +1328,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetEndPoint(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STEndPoint.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1413,9 +1337,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsClosed(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsClosed.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
@@ -1423,9 +1346,8 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsRing(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlBooleanToNullableBoolean(result);
@@ -1433,9 +1355,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetPointCount(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumPoints.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
@@ -1443,9 +1364,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry PointAt(DbGeometry geometryValue, int nValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STPointN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return GeometryFromProviderValue(result);
@@ -1453,9 +1373,8 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetArea(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STArea.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlDoubleToNullableDouble(result);
@@ -1463,9 +1382,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetCentroid(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STCentroid.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1473,9 +1391,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetPointOnSurface(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STPointOnSurface.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1483,9 +1400,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetExteriorRing(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STExteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1493,9 +1409,8 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetInteriorRingCount(DbGeometry geometryValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumInteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlInt32ToNullableInt(result);
@@ -1503,9 +1418,8 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry InteriorRingAt(DbGeometry geometryValue, int nValue)
         {
-            // Cannot use Contract.Requires here because this is an override and the contract always
-            // gets compiled out in release builds.
             Throw.IfNull(geometryValue, "geometryValue");
+
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STInteriorRingN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
             return GeometryFromProviderValue(result);

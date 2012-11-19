@@ -8,7 +8,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -26,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal RequiredNavigationPropertyConfiguration(
             NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
-            Contract.Requires(navigationPropertyConfiguration != null);
+            DebugCheck.NotNull(navigationPropertyConfiguration);
 
             navigationPropertyConfiguration.Reset();
             _navigationPropertyConfiguration = navigationPropertyConfiguration;
@@ -43,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public DependentNavigationPropertyConfiguration<TEntityType> WithMany(
             Expression<Func<TTargetEntityType, ICollection<TEntityType>>> navigationPropertyExpression)
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             _navigationPropertyConfiguration.InverseNavigationProperty
                 = navigationPropertyExpression.GetSimplePropertyAccess().Single();
@@ -72,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public ForeignKeyNavigationPropertyConfiguration WithOptional(
             Expression<Func<TTargetEntityType, TEntityType>> navigationPropertyExpression)
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             _navigationPropertyConfiguration.InverseNavigationProperty
                 = navigationPropertyExpression.GetSimplePropertyAccess().Single();
@@ -93,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the relationship to be required:required with a navigation property on the other side of the relationship.
-        ///     The entity type being configured will be the dependent and contain a foreign key to the principal. 
+        ///     The entity type being configured will be the dependent and contain a foreign key to the principal.
         ///     The entity type that the relationship targets will be the principal in the relationship.
         /// </summary>
         /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -103,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public ForeignKeyNavigationPropertyConfiguration WithRequiredDependent(
             Expression<Func<TTargetEntityType, TEntityType>> navigationPropertyExpression)
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             _navigationPropertyConfiguration.InverseNavigationProperty
                 = navigationPropertyExpression.GetSimplePropertyAccess().Single();
@@ -113,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the relationship to be required:required without a navigation property on the other side of the relationship.
-        ///     The entity type being configured will be the dependent and contain a foreign key to the principal. 
+        ///     The entity type being configured will be the dependent and contain a foreign key to the principal.
         ///     The entity type that the relationship targets will be the principal in the relationship.
         /// </summary>
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
@@ -128,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the relationship to be required:required with a navigation property on the other side of the relationship.
-        ///     The entity type being configured will be the principal in the relationship. 
+        ///     The entity type being configured will be the principal in the relationship.
         ///     The entity type that the relationship targets will be the dependent and contain a foreign key to the principal.
         /// </summary>
         /// <param name="navigationPropertyExpression"> An lambda expression representing the navigation property on the other end of the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -138,7 +137,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public ForeignKeyNavigationPropertyConfiguration WithRequiredPrincipal(
             Expression<Func<TTargetEntityType, TEntityType>> navigationPropertyExpression)
         {
-            Contract.Requires(navigationPropertyExpression != null);
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
 
             _navigationPropertyConfiguration.InverseNavigationProperty
                 = navigationPropertyExpression.GetSimplePropertyAccess().Single();
@@ -148,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the relationship to be required:required without a navigation property on the other side of the relationship.
-        ///     The entity type being configured will be the principal in the relationship. 
+        ///     The entity type being configured will be the principal in the relationship.
         ///     The entity type that the relationship targets will be the dependent and contain a foreign key to the principal.
         /// </summary>
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>

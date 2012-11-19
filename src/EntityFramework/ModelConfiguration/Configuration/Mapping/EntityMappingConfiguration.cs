@@ -5,9 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
@@ -16,8 +14,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     // Equivalent to a mapping fragment in the MSL
@@ -39,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private EntityMappingConfiguration(EntityMappingConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _tableName = source._tableName;
 
@@ -70,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _tableName; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 _tableName = value;
             }
@@ -81,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _properties; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
                 if (_properties == null)
                 {
                     _properties = new List<PropertyPath>();
@@ -92,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private void Property(PropertyPath property)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             if (!_properties.Where(pp => pp.SequenceEqual(property)).Any())
             {
@@ -111,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public void AddValueCondition(ValueConditionConfiguration valueCondition)
         {
-            Contract.Requires(valueCondition != null);
+            DebugCheck.NotNull(valueCondition);
 
             var existingValueCondition =
                 ValueConditions
@@ -135,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _notNullConditions; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 value.Each(AddNullabilityCondition);
             }
@@ -143,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public void AddNullabilityCondition(NotNullConditionConfiguration notNullConditionConfiguration)
         {
-            Contract.Requires(notNullConditionConfiguration != null);
+            DebugCheck.NotNull(notNullConditionConfiguration);
 
             if (!NullabilityConditions.Contains(notNullConditionConfiguration))
             {
@@ -178,9 +176,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             int configurationIndex,
             int configurationCount)
         {
-            Contract.Requires(entityType != null);
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(providerManifest != null);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(providerManifest);
 
             var isIdentityTable = entityType.BaseType == null && configurationIndex == 0;
 
@@ -509,7 +507,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 }
             }
 
-            if (parentTable == null && fromTable != toTable
+            if (parentTable == null
+                && fromTable != toTable
                 && !isMappingInheritedProperties)
             {
                 // TPT case
@@ -541,7 +540,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             if (entityTypeMapping == null)
             {
-                Contract.Assert(entityType.Abstract);
+                Debug.Assert(entityType.Abstract);
                 new EntityTypeMappingGenerator(providerManifest).
                     Generate(entityType, databaseMapping);
                 entityTypeMapping = databaseMapping.GetEntityTypeMapping(entityType);
@@ -739,12 +738,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         internal static void CleanupUnmappedArtifacts(DbDatabaseMapping databaseMapping, EntityType table)
         {
             var associationMappings = databaseMapping.EntityContainerMappings
-                .SelectMany(ecm => ecm.AssociationSetMappings).Where(asm => asm.Table == table).ToArray();
+                                                     .SelectMany(ecm => ecm.AssociationSetMappings)
+                                                     .Where(asm => asm.Table == table)
+                                                     .ToArray();
 
             var entityFragments = databaseMapping.EntityContainerMappings
-                .SelectMany(ecm => ecm.EntitySetMappings)
-                .SelectMany(esm => esm.EntityTypeMappings)
-                .SelectMany(etm => etm.MappingFragments).Where(f => f.Table == table).ToArray();
+                                                 .SelectMany(ecm => ecm.EntitySetMappings)
+                                                 .SelectMany(esm => esm.EntityTypeMappings)
+                                                 .SelectMany(etm => etm.MappingFragments).Where(f => f.Table == table).ToArray();
 
             if (!associationMappings.Any()
                 && !entityFragments.Any())
@@ -756,8 +757,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 // check the columns of table to see if they are actually used in any fragment
                 foreach (var column in table.Properties.ToArray())
                 {
-                    if (entityFragments.SelectMany(f => f.ColumnMappings).All(pm => pm.ColumnProperty != column) &&
-                        entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.ColumnProperty != column) &&
+                    if (entityFragments.SelectMany(f => f.ColumnMappings).All(pm => pm.ColumnProperty != column)
+                        &&
+                        entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.ColumnProperty != column)
+                        &&
                         associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column)
                         && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column))
                     {
@@ -769,9 +772,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 // Remove FKs where Principal Table == Dependent Table and the PK == FK (redundant)
                 table.ForeignKeyBuilders
-                    .Where(fk => fk.PrincipalTable == table && fk.DependentColumns.SequenceEqual(table.DeclaredKeyProperties))
-                    .ToArray()
-                    .Each(table.RemoveForeignKey);
+                     .Where(fk => fk.PrincipalTable == table && fk.DependentColumns.SequenceEqual(table.DeclaredKeyProperties))
+                     .ToArray()
+                     .Each(table.RemoveForeignKey);
             }
         }
 
@@ -814,25 +817,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DbDatabaseMapping databaseMapping, EntityType toTable)
         {
             return databaseMapping.EntityContainerMappings
-                .SelectMany(ecm => ecm.EntitySetMappings)
-                .SelectMany(esm => esm.EntityTypeMappings)
-                .Where(etm => etm.MappingFragments.Any(tmf => tmf.Table == toTable))
-                .Select(etm => etm.EntityType);
+                                  .SelectMany(ecm => ecm.EntitySetMappings)
+                                  .SelectMany(esm => esm.EntityTypeMappings)
+                                  .Where(etm => etm.MappingFragments.Any(tmf => tmf.Table == toTable))
+                                  .Select(etm => etm.EntityType);
         }
 
         private static IEnumerable<AssociationType> FindAllOneToOneFKAssociationTypes(
             EdmModel model, EntityType entityType, EntityType candidateType)
         {
             return model.Containers.SelectMany(ec => ec.AssociationSets)
-                .Where(
-                    aset => (aset.ElementType.Constraint != null &&
-                             aset.ElementType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.One &&
-                             aset.ElementType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
-                            ((aset.ElementType.SourceEnd.GetEntityType() == entityType
-                              && aset.ElementType.TargetEnd.GetEntityType() == candidateType) ||
-                             (aset.ElementType.TargetEnd.GetEntityType() == entityType
-                              && aset.ElementType.SourceEnd.GetEntityType() == candidateType)))
-                .Select(aset => aset.ElementType);
+                        .Where(
+                            aset => (aset.ElementType.Constraint != null &&
+                                     aset.ElementType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.One &&
+                                     aset.ElementType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
+                                    ((aset.ElementType.SourceEnd.GetEntityType() == entityType
+                                      && aset.ElementType.TargetEnd.GetEntityType() == candidateType) ||
+                                     (aset.ElementType.TargetEnd.GetEntityType() == entityType
+                                      && aset.ElementType.SourceEnd.GetEntityType() == candidateType)))
+                        .Select(aset => aset.ElementType);
         }
 
         private static bool UpdateColumnNamesForTableSharing(

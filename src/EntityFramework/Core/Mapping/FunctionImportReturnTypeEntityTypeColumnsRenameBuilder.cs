@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Mapping
             Dictionary<EntityType, Collection<FunctionImportReturnTypePropertyMapping>> isOfTypeEntityTypeColumnsRenameMapping,
             Dictionary<EntityType, Collection<FunctionImportReturnTypePropertyMapping>> entityTypeColumnsRenameMapping)
         {
-            Contract.Requires(isOfTypeEntityTypeColumnsRenameMapping != null);
-            Contract.Requires(entityTypeColumnsRenameMapping != null);
+            DebugCheck.NotNull(isOfTypeEntityTypeColumnsRenameMapping);
+            DebugCheck.NotNull(entityTypeColumnsRenameMapping);
 
             ColumnRenameMapping = new Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>();
 
@@ -49,8 +49,8 @@ namespace System.Data.Entity.Core.Mapping
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameMapping,
             bool isTypeOf)
         {
-            Contract.Requires(entityType != null);
-            Contract.Requires(columnsRenameMapping != null);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(columnsRenameMapping);
 
             foreach (var mapping in columnsRenameMapping)
             {

@@ -8,7 +8,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -220,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void Ignore<TProperty>(Expression<Func<TStructuralType, TProperty>> propertyExpression)
         {
-            Contract.Requires(propertyExpression != null);
+            Check.NotNull(propertyExpression, "propertyExpression");
 
             Configuration.Ignore(propertyExpression.GetSimplePropertyAccess().Single());
         }

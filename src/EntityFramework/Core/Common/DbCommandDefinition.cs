@@ -5,10 +5,10 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     A prepared command definition, can be cached and reused to avoid 
+    ///     A prepared command definition, can be cached and reused to avoid
     ///     repreparing a command.
     /// </summary>
     public class DbCommandDefinition
@@ -17,14 +17,14 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>
         ///     Internal factory method to create the default Command Definition object
-        ///     based on a prototype command. The prototype command is cloned 
+        ///     based on a prototype command. The prototype command is cloned
         ///     before the protected constructor is invoked
         /// </summary>
         /// <param name="prototype"> prototype DbCommand </param>
         /// <returns> the DbCommandDefinition </returns>
         internal static DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
-            Contract.Requires(prototype != null);
+            Check.NotNull(prototype, "prototype");
             var cloneablePrototype = prototype as ICloneable;
             if (null == cloneablePrototype)
             {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         protected DbCommandDefinition(DbCommand prototype)
         {
-            Contract.Requires(prototype != null);
+            Check.NotNull(prototype, "prototype");
             _prototype = prototype as ICloneable;
             if (null == _prototype)
             {
@@ -66,8 +66,8 @@ namespace System.Data.Entity.Core.Common
 
         internal static void PopulateParameterFromTypeUsage(DbParameter parameter, TypeUsage type, bool isOutParam)
         {
-            Contract.Requires(parameter != null);
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(parameter);
+            DebugCheck.NotNull(type);
 
             // parameter.IsNullable - from the NullableConstraintAttribute value
             parameter.IsNullable = TypeSemantics.IsNullable(type);

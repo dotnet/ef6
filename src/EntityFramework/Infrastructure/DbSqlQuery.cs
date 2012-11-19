@@ -6,9 +6,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a SQL query for entities that is created from a <see cref="DbContext" /> 
+    ///     Represents a SQL query for entities that is created from a <see cref="DbContext" />
     ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref="DbSet" /> instance for the 
+    ///     Instances of this class are obtained from the <see cref="DbSet" /> instance for the
     ///     entity type. The query is not executed when this object is created; it is executed
     ///     each time it is enumerated, for example by using foreach.
     ///     SQL queries for non-entities are created using <see cref="Database.SqlQuery(Type,string, object[])" />.

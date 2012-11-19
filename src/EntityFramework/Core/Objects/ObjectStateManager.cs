@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Objects
         [CLSCompliant(false)]
         public ObjectStateManager(MetadataWorkspace metadataWorkspace)
         {
-            Contract.Requires(metadataWorkspace != null);
+            Check.NotNull(metadataWorkspace, "metadataWorkspace");
             _metadataWorkspace = metadataWorkspace;
 
             _metadataStore = new Dictionary<EdmType, StateManagerTypeMetadata>();
@@ -305,7 +305,8 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            if ((object)entityKey != null && !entityKey.IsTemporary
+            if ((object)entityKey != null
+                && !entityKey.IsTemporary
                 && !isAdded)
             {
                 // If the entity already has a permanent key, and we were invoked
@@ -555,7 +556,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal virtual void ForgetEntryWithConceptualNull(EntityEntry entry, bool resetAllKeys)
         {
-            if (!entry.IsKeyEntry && _entriesWithConceptualNulls != null
+            if (!entry.IsKeyEntry
+                && _entriesWithConceptualNulls != null
                 && _entriesWithConceptualNulls.Remove(entry))
             {
                 if (entry.RelationshipManager.HasRelationships)
@@ -785,7 +787,8 @@ namespace System.Data.Entity.Core.Objects
                         // so it cannot be related to another entity being attached (relation 1-1).
                         // Without this check we would throw exception from RelatedEnd.Add() but the exception message couldn't
                         // properly describe what has happened.
-                        if (inKeyEntryPromotion &&
+                        if (inKeyEntryPromotion
+                            &&
                             !relatedReference.IsEmpty()
                             &&
                             !ReferenceEquals(relatedReference.ReferenceValue.Entity, wrappedTarget.Entity))
@@ -801,7 +804,8 @@ namespace System.Data.Entity.Core.Objects
 
                         // currentWrappedTarget may already be correct because we may already have done FK fixup as part of
                         // accepting changes in the overwrite code.
-                        if (currentWrappedTarget != null && currentWrappedTarget.Entity != null
+                        if (currentWrappedTarget != null
+                            && currentWrappedTarget.Entity != null
                             && currentWrappedTarget != wrappedTarget)
                         {
                             // The source entity is already related to a different target, so before we hook it up to the new target,
@@ -1622,7 +1626,8 @@ namespace System.Data.Entity.Core.Objects
         internal virtual RelationshipEntry FindRelationship(RelationshipWrapper relationshipWrapper)
         {
             RelationshipEntry entry = null;
-            var result = (((null != _unchangedRelationshipStore) && _unchangedRelationshipStore.TryGetValue(relationshipWrapper, out entry)) ||
+            var result = (((null != _unchangedRelationshipStore) && _unchangedRelationshipStore.TryGetValue(relationshipWrapper, out entry))
+                          ||
                           ((null != _deletedRelationshipStore) && _deletedRelationshipStore.TryGetValue(relationshipWrapper, out entry)) ||
                           ((null != _addedRelationshipStore) && _addedRelationshipStore.TryGetValue(relationshipWrapper, out entry)));
             Debug.Assert(result == (null != entry), "found null entry");
@@ -2177,7 +2182,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> entry associated with entity </returns>
         public virtual ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
             EntityUtil.CheckValidStateForChangeEntityState(entityState);
 
             EntityEntry entry = null;
@@ -2347,8 +2352,8 @@ namespace System.Data.Entity.Core.Objects
         private void VerifyParametersForChangeRelationshipState(
             object sourceEntity, object targetEntity, out EntityEntry sourceEntry, out EntityEntry targetEntry)
         {
-            Contract.Requires(sourceEntity != null);
-            Contract.Requires(targetEntity != null);
+            DebugCheck.NotNull(sourceEntity);
+            DebugCheck.NotNull(targetEntity);
 
             sourceEntry = GetEntityEntryByObjectOrEntityKey(sourceEntity);
             targetEntry = GetEntityEntryByObjectOrEntityKey(targetEntity);
@@ -2518,7 +2523,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> true if the corresponding ObjectStateEntry was found </returns>
         public virtual bool TryGetObjectStateEntry(object entity, out ObjectStateEntry entry)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             entry = null;
 
@@ -2590,7 +2595,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal virtual bool TryGetEntityEntry(EntityKey key, out EntityEntry entry)
         {
-            Contract.Requires(key != null);
+            DebugCheck.NotNull(key);
 
             entry = null; // must set before checking for null key
             bool result;
@@ -2690,7 +2695,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> True if a RelationshipManager was found; false if The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager </returns>
         public virtual bool TryGetRelationshipManager(object entity, out RelationshipManager relationshipManager)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
             var withRelationships = entity as IEntityWithRelationships;
             if (withRelationships != null)
             {
@@ -2762,7 +2767,8 @@ namespace System.Data.Entity.Core.Objects
                 var wrappedEntity = entry.WrappedEntity; // we have to cache the entity before detaching it totally so we can fire event
                 entry.Reset();
                 // Prevent firing two events for removal from the context during rollback.
-                if (fireEvent && wrappedEntity.Entity != null
+                if (fireEvent
+                    && wrappedEntity.Entity != null
                     && !TransactionManager.IsAttachTracking)
                 {
                     // first notify the view
@@ -3001,7 +3007,8 @@ namespace System.Data.Entity.Core.Objects
         internal virtual void RemoveEntryFromKeylessStore(IEntityWrapper wrappedEntity)
         {
             // Remove and entry from the store containing entities not implementing IEntityWithKey
-            if (null != wrappedEntity && null != wrappedEntity.Entity
+            if (null != wrappedEntity
+                && null != wrappedEntity.Entity
                 && !(wrappedEntity.Entity is IEntityWithKey))
             {
                 _keylessEntityStore.Remove(wrappedEntity.Entity);
@@ -3116,8 +3123,7 @@ namespace System.Data.Entity.Core.Objects
         ///     For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
         ///     and marks appropriate ObjectStateEntry as Modified.
         ///     For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
-        /// 
-        ///     The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes 
+        ///     The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
         ///     and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
         /// </summary>
         internal virtual void DetectChanges()
@@ -3533,7 +3539,8 @@ namespace System.Data.Entity.Core.Objects
 
             foreach (var entry in entries)
             {
-                if (entry.State != EntityState.Detached &&
+                if (entry.State != EntityState.Detached
+                    &&
                     entry.State != EntityState.Deleted
                     &&
                     !entry.IsKeyEntry) // Still need to check this here because entries may have been demoted
@@ -3580,9 +3587,12 @@ namespace System.Data.Entity.Core.Objects
                                 {
                                     // The relatedEntity may be added, and we only have a permanent key 
                                     //  so look at the permanent key of the reference to decide
-                                    if (reference != null &&
-                                        reference.ReferenceValue != NullEntityWrapper.NullWrapper &&
-                                        reference.ReferenceValue.EntityKey.IsTemporary &&
+                                    if (reference != null
+                                        &&
+                                        reference.ReferenceValue != NullEntityWrapper.NullWrapper
+                                        &&
+                                        reference.ReferenceValue.EntityKey.IsTemporary
+                                        &&
                                         TryGetEntityEntry(reference.ReferenceValue.EntityKey, out relatedEntry)
                                         &&
                                         relatedEntry.WrappedEntity.Entity != null)
@@ -3623,13 +3633,15 @@ namespace System.Data.Entity.Core.Objects
                                         TransactionManager.EntityBeingReparented = null;
                                     }
                                     // stop trying to remove something, if the owner was detached or deleted because of RIC/cascade delete
-                                    if (entry.State == EntityState.Detached || entry.State == EntityState.Deleted
+                                    if (entry.State == EntityState.Detached
+                                        || entry.State == EntityState.Deleted
                                         || entry.IsKeyEntry)
                                     {
                                         break;
                                     }
                                 }
-                                if (reference != null &&
+                                if (reference != null
+                                    &&
                                     reference.IsForeignKey
                                     &&
                                     reference.IsDependentEndOfReferentialConstraint(checkIdentifying: false))
@@ -3664,7 +3676,8 @@ namespace System.Data.Entity.Core.Objects
                                 }
 
                                 // stop trying to remove something, if the owner was detached or deleted because of RIC/cascade delete
-                                if (entry.State == EntityState.Detached || entry.State == EntityState.Deleted
+                                if (entry.State == EntityState.Detached
+                                    || entry.State == EntityState.Deleted
                                     || entry.IsKeyEntry)
                                 {
                                     break;
@@ -3673,7 +3686,8 @@ namespace System.Data.Entity.Core.Objects
                         }
 
                         // skip the remaining relatedEnds if the owner was detached or deleted because of RIC/cascade delete
-                        if (entry.State == EntityState.Detached || entry.State == EntityState.Deleted
+                        if (entry.State == EntityState.Detached
+                            || entry.State == EntityState.Deleted
                             || entry.IsKeyEntry)
                         {
                             break;
@@ -3698,9 +3712,12 @@ namespace System.Data.Entity.Core.Objects
                     Dictionary<RelatedEnd, HashSet<EntityKey>> deletedRelationshipsByForeignKey;
                     Dictionary<RelatedEnd, HashSet<IEntityWrapper>> deletedRelationshipsByGraph;
                     // There must be a foreign key and graph change on the dependent side to know if we need to preserve the FK
-                    if (TransactionManager.DeletedRelationshipsByForeignKey.TryGetValue(relatedEntity, out deletedRelationshipsByForeignKey) &&
-                        deletedRelationshipsByForeignKey.TryGetValue(otherEnd, out entityKeysOfDeletedObjects) &&
-                        entityKeysOfDeletedObjects.Count > 0 &&
+                    if (TransactionManager.DeletedRelationshipsByForeignKey.TryGetValue(relatedEntity, out deletedRelationshipsByForeignKey)
+                        &&
+                        deletedRelationshipsByForeignKey.TryGetValue(otherEnd, out entityKeysOfDeletedObjects)
+                        &&
+                        entityKeysOfDeletedObjects.Count > 0
+                        &&
                         TransactionManager.DeletedRelationshipsByGraph.TryGetValue(relatedEntity, out deletedRelationshipsByGraph)
                         &&
                         deletedRelationshipsByGraph.TryGetValue(otherEnd, out entitiesToDelete))
@@ -3725,8 +3742,10 @@ namespace System.Data.Entity.Core.Objects
         {
             Dictionary<RelatedEnd, HashSet<IEntityWrapper>> addedRelationshipsByGraph;
             HashSet<IEntityWrapper> entitiesToAdd = null;
-            if (reference != null &&
-                TransactionManager.AddedRelationshipsByGraph.TryGetValue(wrappedOwner, out addedRelationshipsByGraph) &&
+            if (reference != null
+                &&
+                TransactionManager.AddedRelationshipsByGraph.TryGetValue(wrappedOwner, out addedRelationshipsByGraph)
+                &&
                 addedRelationshipsByGraph.TryGetValue(reference, out entitiesToAdd)
                 &&
                 entitiesToAdd.Count > 0)
@@ -3753,7 +3772,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 HashSet<EntityKey> entityKeysOfAddedObjects = null;
                 Dictionary<RelatedEnd, HashSet<EntityKey>> addedRelationshipsByForeignKey;
-                if (tm.AddedRelationshipsByForeignKey.TryGetValue(wrappedEntity, out addedRelationshipsByForeignKey) &&
+                if (tm.AddedRelationshipsByForeignKey.TryGetValue(wrappedEntity, out addedRelationshipsByForeignKey)
+                    &&
                     addedRelationshipsByForeignKey.TryGetValue(reference, out entityKeysOfAddedObjects)
                     &&
                     entityKeysOfAddedObjects.Count > 0)
@@ -3763,7 +3783,8 @@ namespace System.Data.Entity.Core.Objects
 
                 Dictionary<RelatedEnd, HashSet<IEntityWrapper>> addedRelationshipsByGraph;
                 HashSet<IEntityWrapper> entitiesToAdd = null;
-                if (tm.AddedRelationshipsByGraph.TryGetValue(wrappedEntity, out addedRelationshipsByGraph) &&
+                if (tm.AddedRelationshipsByGraph.TryGetValue(wrappedEntity, out addedRelationshipsByGraph)
+                    &&
                     addedRelationshipsByGraph.TryGetValue(reference, out entitiesToAdd)
                     &&
                     entitiesToAdd.Count > 0)

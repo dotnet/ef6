@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
 
     /// <summary>
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Mapping
         internal StorageModificationFunctionParameterBinding(
             FunctionParameter parameter, StorageModificationFunctionMemberPath memberPath, bool isCurrent)
         {
-            Contract.Requires(parameter != null);
-            Contract.Requires(memberPath != null);
+            DebugCheck.NotNull(parameter);
+            DebugCheck.NotNull(memberPath);
 
             Parameter = parameter;
             MemberPath = memberPath;

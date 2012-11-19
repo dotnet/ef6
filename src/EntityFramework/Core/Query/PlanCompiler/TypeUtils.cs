@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal static class TypeUtils
     {
         /// <summary>
-        ///     Is this a structured type? 
-        ///     Note: Structured, in this context means structured outside the server. 
+        ///     Is this a structured type?
+        ///     Note: Structured, in this context means structured outside the server.
         ///     UDTs for instance, are considered to be scalar types - all WinFS types,
         ///     would by this argument, be scalar types.
         /// </summary>

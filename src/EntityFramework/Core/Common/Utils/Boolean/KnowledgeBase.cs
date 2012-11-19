@@ -8,16 +8,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// <summary>
     ///     Data structure supporting storage of facts and proof (resolution) of queries given
     ///     those facts.
-    /// 
     ///     For instance, we may know the following facts:
-    /// 
     ///     A --> B
     ///     A
-    /// 
     ///     Given these facts, the knowledge base can prove the query:
-    /// 
     ///     B
-    /// 
     ///     through resolution.
     /// </summary>
     /// <typeparam name="T_Identifier"> Type of leaf term identifiers in fact expressions. </typeparam>
@@ -63,7 +58,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         /// <summary>
         ///     Adds the given implication to this KB, where implication is of the form:
-        /// 
         ///     condition --> implies
         /// </summary>
         /// <param name="condition"> Condition </param>
@@ -75,7 +69,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         /// <summary>
         ///     Adds an equivalence to this KB, of the form:
-        /// 
         ///     left iff. right
         /// </summary>
         /// <param name="left"> Left operand </param>

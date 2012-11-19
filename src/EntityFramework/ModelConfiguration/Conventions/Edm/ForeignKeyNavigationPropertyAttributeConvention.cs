@@ -17,6 +17,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(NavigationProperty edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             var associationType = edmDataModelItem.Association;
 
             if (associationType.Constraint != null)
@@ -41,12 +44,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 var dependentPropertyNames
                     = foreignKeyAttribute.Name
-                        .Split(',')
-                        .Select(p => p.Trim());
+                                         .Split(',')
+                                         .Select(p => p.Trim());
 
                 var declaringEntityType
                     = model.GetEntityTypes()
-                        .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
+                           .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
 
                 var dependentProperties
                     = GetDependentProperties(
@@ -100,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 var dependentProperty
                     = dependentType.Properties
-                        .SingleOrDefault(p => p.Name.Equals(dependentPropertyName, StringComparison.Ordinal));
+                                   .SingleOrDefault(p => p.Name.Equals(dependentPropertyName, StringComparison.Ordinal));
 
                 if (dependentProperty == null)
                 {

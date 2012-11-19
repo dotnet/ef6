@@ -7,8 +7,8 @@ namespace System.Data.Entity.Infrastructure
     using System.ComponentModel;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalQuery"> The backing query. </param>
         internal DbQuery(IInternalQuery<TResult> internalQuery)
         {
-            Contract.Requires(internalQuery != null);
+            DebugCheck.NotNull(internalQuery);
 
             _internalQuery = internalQuery;
         }
@@ -50,17 +50,23 @@ namespace System.Data.Entity.Infrastructure
         /// <remarks>
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the DbQuery<T>. Other instances of DbQuery
-        ///                                             <T>and the object context itself are not affected.
-        ///                                                 Because the Include method returns the query object, you can call this method multiple times on an DbQuery
-        ///                                                 <T>to
-        ///                                                     specify multiple paths for the query.
+        ///     the returned instance of the DbQuery
+        ///     <T>
+        ///         . Other instances of DbQuery
+        ///         <T>
+        ///             and the object context itself are not affected.
+        ///             Because the Include method returns the query object, you can call this method multiple times on an DbQuery
+        ///             <T>
+        ///                 to
+        ///                 specify multiple paths for the query.
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
-        /// <returns> A new DbQuery <T>with the defined query path. </returns>
+        /// <returns>
+        ///     A new DbQuery <T>with the defined query path.
+        /// </returns>
         public DbQuery<TResult> Include(string path)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            Check.NotEmpty(path, "path");
 
             return new DbQuery<TResult>(_internalQuery.Include(path));
         }
@@ -85,7 +91,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Returns <c>false</c>.
         /// </summary>
-        /// <returns> <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>false</c> .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {

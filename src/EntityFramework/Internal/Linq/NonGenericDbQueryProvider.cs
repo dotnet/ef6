@@ -5,6 +5,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -39,6 +40,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public override IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             var objectQuery = CreateObjectQuery(expression);
 
             // If the ElementType is different than the generic type then we need to use the ElementType
@@ -58,6 +61,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public override IQueryable CreateQuery(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             return CreateQuery(CreateObjectQuery(expression));
         }
 

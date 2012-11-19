@@ -99,7 +99,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 var mergedOk = false;
                 // try to merge lastChild and child
-                if (false == skipRest && lastChild.OpType == CellTreeOpType.Leaf
+                if (false == skipRest
+                    && lastChild.OpType == CellTreeOpType.Leaf
                     &&
                     child.OpType == CellTreeOpType.Leaf)
                 {

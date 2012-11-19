@@ -7,10 +7,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
     /// <summary>
     ///     An internal cast operation. (Softly) Convert a type instance into an instance of another type
-    /// 
     ///     This Op is intended to capture "promotion" semantics. (ie) int16 promotes to an int32; Customer promotes to Person
-    ///     etc. This Op is intended to shield the PlanCompiler from having to reason about 
-    ///     the promotion semantics; and is intended to make the query tree very 
+    ///     etc. This Op is intended to shield the PlanCompiler from having to reason about
+    ///     the promotion semantics; and is intended to make the query tree very
     ///     explicit
     /// </summary>
     internal sealed class SoftCastOp : ScalarOp

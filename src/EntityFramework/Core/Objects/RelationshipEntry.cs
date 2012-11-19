@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class RelationshipEntry : ObjectStateEntry
@@ -138,11 +139,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        ///<summary>
-        ///    Marks specified property as modified.
-        ///</summary>
-        ///<param name="propertyName"> This API recognizes the names in terms of OSpace </param>
-        ///<exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
+        /// <summary>
+        ///     Marks specified property as modified.
+        /// </summary>
+        /// <param name="propertyName"> This API recognizes the names in terms of OSpace </param>
+        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public override void SetModifiedProperty(string propertyName)
         {
             ValidateState();
@@ -253,11 +254,15 @@ namespace System.Data.Entity.Core.Objects
 
         public override void ApplyCurrentValues(object currentEntity)
         {
+            Check.NotNull(currentEntity, "currentEntity");
+
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
         public override void ApplyOriginalValues(object originalEntity)
         {
+            Check.NotNull(originalEntity, "originalEntity");
+
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
@@ -350,6 +355,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="complexObjectMemberName"> The name of the property that is changing on complexObject </param>
         internal override void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
+            DebugCheck.NotEmpty(entityMemberName);
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexObjectMemberName);
+
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
@@ -362,6 +371,10 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="complexObjectMemberName"> The name of the property that changed on complexObject </param>
         internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
         {
+            DebugCheck.NotEmpty(entityMemberName);
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexObjectMemberName);
+
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 

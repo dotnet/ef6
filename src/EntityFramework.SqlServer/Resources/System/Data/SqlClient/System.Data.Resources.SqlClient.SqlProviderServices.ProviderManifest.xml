@@ -452,7 +452,7 @@ PROCESS
         <Function Name="STDEVP" Aggregate="true" BuiltIn="true">
             <ReturnType Type="Double" />
             <Parameter Name="arg" Type="Collection(Decimal)" Mode="In" />
-        </Function>      
+        </Function>
 
         <!-- VAR -->
         <Function Name="VAR" Aggregate="true" BuiltIn="true">
@@ -971,7 +971,7 @@ PROCESS
             <ReturnType Type="Double" />
             <Parameter Name="arg" Type="Double" Mode="In" />
         </Function>
- 
+
         <!-- LOG( arg )
             arg: float
             returns: float   
@@ -1430,7 +1430,7 @@ PROCESS
         <Function Name="SYSUTCDATETIME" BuiltIn="true">
             <ReturnType Type="DateTime" />
         </Function>
-      
+
         <!-- SYSDATETIMEOFFSET()
             returns: datetime   
     -->
@@ -1708,7 +1708,7 @@ PROCESS
             <Parameter Name="longitude" Type="Double" Mode="In" />
             <Parameter Name="spatialReferenceId" Type="Int32" Mode="In" />
         </Function>
-    
+
         <!-- Geography ‘Instance’ Functions -->
         <Function Name="ASTEXTZM" BuiltIn="true">
             <ReturnType Type="String" />
@@ -1753,7 +1753,7 @@ PROCESS
             <Parameter Name="geographyValue" Type="Geography" Mode="In" />
             <Parameter Name="index" Type="Int32" Mode="In" />
         </Function>
-    
+
         <!-- Geometry ‘Static’ Functions -->
         <Function Name="POINTGEOMETRY" BuiltIn="true">
             <ReturnType Type="Geometry" />
@@ -1793,7 +1793,7 @@ PROCESS
             <Parameter Name="geometryValue" Type="Geometry" Mode="In" />
             <Parameter Name="tolerance" Type="Double" Mode="In" />
         </Function>
-    
+
         <!-- END SYSTEM FUNCTIONS ####################################### -->
     </Functions>
 </ProviderManifest>

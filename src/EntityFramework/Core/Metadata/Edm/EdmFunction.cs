@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     For function imports, indicates the entity sets to which the return parameters are bound.
-        ///     The number of elements in the collection matches the number of return parameters. 
+        ///     The number of elements in the collection matches the number of return parameters.
         ///     A null element in the collection indicates that the corresponding are not bound to an entity set.
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, true)]
@@ -317,8 +317,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Builds identity based on the functionName and parameter types. All parameters are assumed to be <see
-        ///      cref="ParameterMode.In" />.
+        ///     Builds identity based on the functionName and parameter types. All parameters are assumed to be
+        ///     <see
+        ///         cref="ParameterMode.In" />
+        ///     .
         ///     Returns string in the form of "functionName (param1, param2, ... paramN)".
         /// </summary>
         internal static string BuildIdentity(string functionName, IEnumerable<TypeUsage> functionParameters)

@@ -4,10 +4,11 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
-    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and 
+    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and
     ///     <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry{TEntity, TProperty}" />.
     ///     This internal class contains all the common implementation between the generic and non-generic
     ///     entry classes and also allows for a clean internal factoring without compromising the public API.
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Internal
         protected InternalPropertyEntry(InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
             : base(internalEntityEntry, propertyMetadata)
         {
-            Contract.Requires(propertyMetadata != null);
+            DebugCheck.NotNull(propertyMetadata);
         }
 
         #endregion
@@ -170,9 +171,7 @@ namespace System.Data.Entity.Internal
                 var parentOriginalValues = ParentOriginalValues;
                 if (parentOriginalValues == null)
                 {
-                    Contract.Assert(
-                        ParentPropertyEntry != null,
-                        "Should only have null parent original values for nested properties.");
+                    Debug.Assert(ParentPropertyEntry != null, "Should only have null parent original values for nested properties.");
 
                     throw Error.DbPropertyValues_CannotSetPropertyOnNullOriginalValue(Name, ParentPropertyEntry.Name);
                 }
@@ -222,7 +221,8 @@ namespace System.Data.Entity.Internal
                 CheckNotSettingComplexPropertyToNull(value);
 
                 // If the entity is not tracked, or is Deleted, then just set the property value directly onto the CLR type.
-                if (!EntryMetadata.IsMapped || InternalEntityEntry.IsDetached
+                if (!EntryMetadata.IsMapped
+                    || InternalEntityEntry.IsDetached
                     || InternalEntityEntry.State == EntityState.Deleted)
                 {
                     if (!SetCurrentValueOnClrObject(value))
@@ -237,9 +237,7 @@ namespace System.Data.Entity.Internal
                     var parentCurrentValues = ParentCurrentValues;
                     if (parentCurrentValues == null)
                     {
-                        Contract.Assert(
-                            ParentPropertyEntry != null,
-                            "Should only have null parent original values for nested properties.");
+                        Debug.Assert(ParentPropertyEntry != null, "Should only have null parent original values for nested properties.");
 
                         throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(Name, ParentPropertyEntry.Name);
                     }
@@ -303,12 +301,12 @@ namespace System.Data.Entity.Internal
         /// <param name="value"> The value. </param>
         private void SetPropertyValueUsingValues(InternalPropertyValues internalValues, object value)
         {
-            Contract.Assert(internalValues != null, "Expected to throw before calling this method.");
+            Debug.Assert(internalValues != null, "Expected to throw before calling this method.");
 
             var nestedValues = internalValues[Name] as InternalPropertyValues;
             if (nestedValues != null)
             {
-                Contract.Assert(value != null, "Should already have thrown if complex object is null.");
+                Debug.Assert(value != null, "Should already have thrown if complex object is null.");
 
                 // Setting values from a derived type is allowed, but setting values from a base type is not.
                 if (!nestedValues.ObjectType.IsAssignableFrom(value.GetType()))
@@ -336,16 +334,17 @@ namespace System.Data.Entity.Internal
         /// </summary>
         /// <param name="property"> The property. </param>
         /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
-        /// <param name="requireComplex"> if set to <c>true</c> then the found property must be a complex property. </param>
+        /// <param name="requireComplex">
+        ///     if set to <c>true</c> then the found property must be a complex property.
+        /// </param>
         /// <returns> The entry. </returns>
         public virtual InternalPropertyEntry Property(
             string property, Type requestedType = null, bool requireComplex = false)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(property));
+            DebugCheck.NotEmpty(property);
 
-            Contract.Assert(
-                EntryMetadata.IsMapped && EntryMetadata.IsComplex,
-                "Should only be calling this from a DbComplexProperty instance.");
+            Debug.Assert(
+                EntryMetadata.IsMapped && EntryMetadata.IsComplex, "Should only be calling this from a DbComplexProperty instance.");
 
             return InternalEntityEntry.Property(this, property, requestedType ?? typeof(object), requireComplex);
         }
@@ -393,8 +392,10 @@ namespace System.Data.Entity.Internal
         #region Handling entries for detached entities
 
         /// <summary>
-        ///     Validates that the owning entity entry is associated with an underlying <see
-        ///      cref="System.Data.Entity.Core.Objects.ObjectStateEntry" /> and
+        ///     Validates that the owning entity entry is associated with an underlying
+        ///     <see
+        ///         cref="System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     and
         ///     is not just wrapping a non-attached entity.
         /// </summary>
         private void ValidateNotDetachedAndInModel(string method)

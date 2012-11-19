@@ -153,7 +153,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="resultType"> The TypeUsage that provides the EdmType to examine </param>
         /// <param name="entityType"> The referenced Entity (element) type, if present. </param>
-        /// <returns> <c>true</c> if the specified <paramref name="resultType" /> is an Entity type or a collection type with an Entity element type; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if the specified <paramref name="resultType" /> is an Entity type or a collection type with an Entity element type; otherwise <c>false</c> .
+        /// </returns>
         private static bool TryGetEntityType(TypeUsage resultType, out EntityType entityType)
         {
             // If the result type is an Entity, then simply use that type.

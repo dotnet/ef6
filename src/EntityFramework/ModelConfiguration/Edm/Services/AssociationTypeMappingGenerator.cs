@@ -5,13 +5,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     internal class AssociationTypeMappingGenerator : StructuralTypeMappingGenerator
@@ -23,8 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         public void Generate(AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(databaseMapping);
 
             if (associationType.Constraint != null)
             {
@@ -43,9 +42,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         private static void GenerateForeignKeyAssociationType(
             AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(databaseMapping != null);
-            Contract.Assert(associationType.Constraint != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(databaseMapping);
+            Debug.Assert(associationType.Constraint != null);
 
             var dependentEnd = associationType.Constraint.DependentEnd;
             var principalEnd = associationType.GetOtherEnd(dependentEnd);
@@ -77,8 +76,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         private void GenerateManyToManyAssociation(
             AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(databaseMapping);
 
             var sourceEntityType = associationType.SourceEnd.GetEntityType();
             var targetEntityType = associationType.TargetEnd.GetEntityType();
@@ -116,8 +115,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         private void GenerateIndependentAssociationType(
             AssociationType associationType, DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(databaseMapping);
 
             AssociationEndMember principalEnd, dependentEnd;
             if (!associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
@@ -171,11 +170,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             AssociationEndMember dependentEnd,
             EntityType dependentTable)
         {
-            Contract.Requires(associationType != null);
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(principalEnd != null);
-            Contract.Requires(dependentEnd != null);
-            Contract.Requires(dependentTable != null);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(principalEnd);
+            DebugCheck.NotNull(dependentEnd);
+            DebugCheck.NotNull(dependentTable);
 
             var associationSetMapping
                 = databaseMapping.AddAssociationSetMapping(
@@ -200,11 +199,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             AssociationEndMember principalEnd,
             bool isPrimaryKeyColumn = false)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(principalEntityType != null);
-            Contract.Requires(dependentTable != null);
-            Contract.Requires(associationEndMapping != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(principalEntityType);
+            DebugCheck.NotNull(dependentTable);
+            DebugCheck.NotNull(associationEndMapping);
+            DebugCheck.NotEmpty(name);
 
             var principalTable
                 = GetEntityTypeMappingInHierarchy(databaseMapping, principalEntityType)
@@ -234,7 +233,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 associationSetMapping,
                 associationEndMapping,
                 dependentTable,
-                foreignKeyConstraint,
                 isPrimaryKeyColumn,
                 principalNavigationProperty);
         }
@@ -245,14 +243,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             StorageAssociationSetMapping associationSetMapping,
             StorageEndPropertyMapping associationEndMapping,
             EntityType dependentTable,
-            ForeignKeyBuilder foreignKeyConstraint,
             bool isPrimaryKeyColumn,
             NavigationProperty principalNavigationProperty)
         {
-            Contract.Requires(principalEntityType != null);
-            Contract.Requires(associationEndMapping != null);
-            Contract.Requires(dependentTable != null);
-            Contract.Requires(foreignKeyConstraint != null);
+            DebugCheck.NotNull(principalEntityType);
+            DebugCheck.NotNull(associationEndMapping);
+            DebugCheck.NotNull(dependentTable);
 
             foreach (var property in principalEntityType.KeyProperties())
             {
