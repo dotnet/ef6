@@ -299,7 +299,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        public CreateTableOperation GetCreateHistoryTableOperation()
+        public CreateTableOperation GetCreateHistoryTableOperation(string defaultSchema = null)
         {
             using (var connection = ProviderFactory.CreateConnection())
             {
@@ -308,7 +308,7 @@ namespace System.Data.Entity.Migrations
                 return (CreateTableOperation)
                        new EdmModelDiffer().Diff(
                            new DbModelBuilder().Build(ProviderInfo).GetModel(),
-                           new HistoryContext(connection, contextOwnsConnection: true, defaultSchema: null).GetModel(),
+                           new HistoryContext(connection, contextOwnsConnection: true, defaultSchema: defaultSchema).GetModel(),
                            includeSystemOperations: true)
                            .Single();
             }
