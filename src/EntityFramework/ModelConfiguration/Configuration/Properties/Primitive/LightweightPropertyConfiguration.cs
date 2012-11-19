@@ -55,309 +55,353 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        ///     Gets or sets the name of the database column used to store the property.
+        ///     Configures the name of the database column used to store the property.
         /// </summary>
+        /// <param name="columnName"> The name of the column. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public string ColumnName
+        public LightweightPropertyConfiguration HasColumnName(string columnName)
         {
-            get { return _configuration().ColumnName; }
-            set
+            if (_configuration().ColumnName == null)
             {
-                if (_configuration().ColumnName == null)
-                {
-                    _configuration().ColumnName = value;
-                }
+                _configuration().ColumnName = columnName;
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets the order of the database column used to store the property.
+        ///     Configures the order of the database column used to store the property.
+        ///     This method is also used to specify key ordering when an entity type has a composite key.
         /// </summary>
+        /// <param name="columnOrder"> The order that this column should appear in the database table. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public int? ColumnOrder
+        public LightweightPropertyConfiguration HasColumnOrder(int columnOrder)
         {
-            get { return _configuration().ColumnOrder; }
-            set
+            Contract.Requires(columnOrder >= 0);
+
+            if (_configuration().ColumnOrder == null)
             {
-                if (_configuration().ColumnOrder == null)
-                {
-                    _configuration().ColumnOrder = value;
-                }
+                _configuration().ColumnOrder = columnOrder;
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets the type of the database column used to store the property.
+        ///     Configures the data type of the database column used to store the property.
         /// </summary>
+        /// <param name="columnType"> Name of the database provider specific data type. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public string ColumnType
+        public LightweightPropertyConfiguration HasColumnType(string columnType)
         {
-            get { return _configuration().ColumnType; }
-            set
+            if (_configuration().ColumnType == null)
             {
-                if (_configuration().ColumnType == null)
-                {
-                    _configuration().ColumnType = value;
-                }
+                _configuration().ColumnType = columnType;
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets the concurrency mode to use for the property.
+        ///     Configures the property to be used as an optimistic concurrency token.
         /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
-        public ConcurrencyMode? ConcurrencyMode
+        public LightweightPropertyConfiguration IsConcurrencyToken()
         {
-            get { return _configuration().ConcurrencyMode; }
-            set
-            {
-                if (_configuration().ConcurrencyMode == null)
-                {
-                    _configuration().ConcurrencyMode = value;
-                }
-            }
+            return IsConcurrencyToken(true);
         }
 
         /// <summary>
-        ///     Gets or sets the pattern used to generate values in the database for the
-        ///     property.
+        ///     Configures whether or not the property is to be used as an optimistic concurrency token.
         /// </summary>
+        /// <param name="concurrencyToken"> Value indicating if the property is a concurrency token or not. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public DatabaseGeneratedOption? DatabaseGeneratedOption
+        public LightweightPropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
         {
-            get { return _configuration().DatabaseGeneratedOption; }
-            set
+            if (_configuration().ConcurrencyMode == null)
             {
-                if (_configuration().DatabaseGeneratedOption == null)
-                {
-                    _configuration().DatabaseGeneratedOption = value;
-                }
+                _configuration().ConcurrencyMode = concurrencyToken
+                    ? ConcurrencyMode.Fixed
+                    : ConcurrencyMode.None;
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the property is optional.
+        ///     Configures how values for the property are generated by the database.
         /// </summary>
+        /// <param name="databaseGeneratedOption"> The pattern used to generate values for the property in the database. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public bool? IsNullable
+        public LightweightPropertyConfiguration HasDatabaseGeneratedOption(
+            DatabaseGeneratedOption databaseGeneratedOption)
         {
-            get { return _configuration().IsNullable; }
-            set
+            if (!Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption))
             {
-                if (_configuration().IsNullable == null)
-                {
-                    _configuration().IsNullable = value;
-                }
+                throw new ArgumentOutOfRangeException("databaseGeneratedOption");
             }
+
+            if (_configuration().DatabaseGeneratedOption == null)
+            {
+                _configuration().DatabaseGeneratedOption = databaseGeneratedOption;
+            }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the property supports Unicode string
-        ///     content.
+        ///     Configures the property to be optional.
+        ///     The database column used to store this property will be nullable.
         /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="String" />.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public bool? IsUnicode
+        public LightweightPropertyConfiguration IsOptional()
         {
-            get
+            if (_configuration().IsNullable == null)
             {
-                return _stringConfiguration.Value != null
-                           ? _stringConfiguration.Value.IsUnicode
-                           : null;
+                _configuration().IsNullable = true;
             }
-            set
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the property to be required.
+        ///     The database column used to store this property will be non-nullable.
+        /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured.
+        /// </remarks>
+        public LightweightPropertyConfiguration IsRequired()
+        {
+            if (_configuration().IsNullable == null)
             {
+                _configuration().IsNullable = false;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the property to support Unicode string content.
+        /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        /// Calling this will have no effect once it has been configured or if the
+        /// property is not a <see cref="String" />.
+        /// </remarks>
+        public LightweightPropertyConfiguration IsUnicode()
+        {
+            return IsUnicode(true);
+        }
+
+        /// <summary>
+        ///     Configures whether or not the property supports Unicode string content.
+        /// </summary>
+        /// <param name="unicode"> Value indicating if the property supports Unicode string content or not. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        /// Calling this will have no effect once it has been configured or if the
+        /// property is not a <see cref="String" />.
+        /// </remarks>
+        public LightweightPropertyConfiguration IsUnicode(bool unicode)
+        {
+            if (_stringConfiguration.Value != null
+                && _stringConfiguration.Value.IsUnicode == null)
+            {
+                _stringConfiguration.Value.IsUnicode = unicode;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the property to be fixed length.
+        ///     Use HasMaxLength to set the length that the property is fixed to.
+        /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
+        /// </remarks>
+        public LightweightPropertyConfiguration IsFixedLength()
+        {
+            if (_lengthConfiguration.Value != null
+                && _lengthConfiguration.Value.IsFixedLength == null)
+            {
+                _lengthConfiguration.Value.IsFixedLength = true;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the property to be variable length.
+        ///     Properties are variable length by default.
+        /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
+        /// </remarks>
+        public LightweightPropertyConfiguration IsVariableLength()
+        {
+            if (_lengthConfiguration.Value != null
+                && _lengthConfiguration.Value.IsFixedLength == null)
+            {
+                _lengthConfiguration.Value.IsFixedLength = false;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the property to have the specified maximum length.
+        /// </summary>
+        /// <param name="value"> The maximum length for the property. Setting 'null' will remove any maximum length restriction from the property and a default length will be used for the database column. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured or if the
+        ///     property does not have length facets.
+        /// </remarks>
+        public LightweightPropertyConfiguration HasMaxLength(int value)
+        {
+            if (_lengthConfiguration.Value != null
+                && _lengthConfiguration.Value.MaxLength == null
+                && _lengthConfiguration.Value.IsMaxLength == null)
+            {
+                _lengthConfiguration.Value.MaxLength = value;
+
+                if (_lengthConfiguration.Value.IsFixedLength == null)
+                {
+                    _lengthConfiguration.Value.IsFixedLength = false;
+                }
+
                 if (_stringConfiguration.Value != null
                     && _stringConfiguration.Value.IsUnicode == null)
                 {
-                    _stringConfiguration.Value.IsUnicode = value;
+                    _stringConfiguration.Value.IsUnicode = true;
                 }
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the property is fixed length.
+        ///     Configures the property to allow the maximum length supported by the database provider.
         /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
+        ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public bool? IsFixedLength
+        public LightweightPropertyConfiguration IsMaxLength()
         {
-            get
+            if (_lengthConfiguration.Value != null
+                && _lengthConfiguration.Value.IsMaxLength == null
+                && _lengthConfiguration.Value.MaxLength == null)
             {
-                return _lengthConfiguration.Value != null
-                           ? _lengthConfiguration.Value.IsFixedLength
-                           : null;
+                _lengthConfiguration.Value.IsMaxLength = true;
             }
-            set
-            {
-                if (_lengthConfiguration.Value != null
-                    && _lengthConfiguration.Value.IsFixedLength == null)
-                {
-                    _lengthConfiguration.Value.IsFixedLength = value;
-                }
-            }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets the maximum length of the property.
+        ///     Configures the precision of the <see cref="DateTime" /> property.
+        ///     If the database provider does not support precision for the data type of the column then the value is ignored.
         /// </summary>
+        /// <param name="value"> Precision of the property. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        ///     Calling this will have no effect once it has been configured or if the
+        ///     property is not a <see cref="DateTime" />.
         /// </remarks>
-        public int? MaxLength
+        public LightweightPropertyConfiguration HasPrecision(byte value)
         {
-            get
+            if (_dateTimeConfiguration.Value != null
+                && _dateTimeConfiguration.Value.Precision == null)
             {
-                return _lengthConfiguration.Value != null
-                           ? _lengthConfiguration.Value.MaxLength
-                           : null;
+                _dateTimeConfiguration.Value.Precision = value;
             }
-            set
-            {
-                if (_lengthConfiguration.Value != null
-                    && _lengthConfiguration.Value.MaxLength == null)
-                {
-                    _lengthConfiguration.Value.MaxLength = value;
-                }
-            }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the property allows the maximum
-        ///     length supported by the database provider.
+        ///     Configures the precision and scale of the <see cref="Decimal" /> property.
         /// </summary>
+        /// <param name="precision"> The precision of the property. </param>
+        /// <param name="scale"> The scale of the property. </param>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        /// Calling this will have no effect once it has been configured or if the
+        /// property is not a <see cref="Decimal" />.
         /// </remarks>
-        public bool? IsMaxLength
+        public LightweightPropertyConfiguration HasPrecision(byte precision, byte scale)
         {
-            get
+            if (_decimalConfiguration.Value != null
+                && _decimalConfiguration.Value.Precision == null
+                && _decimalConfiguration.Value.Scale == null)
             {
-                return _lengthConfiguration.Value != null
-                           ? _lengthConfiguration.Value.IsMaxLength
-                           : null;
+                _decimalConfiguration.Value.Precision = precision;
+                _decimalConfiguration.Value.Scale = scale;
             }
-            set
-            {
-                if (_lengthConfiguration.Value != null
-                    && _lengthConfiguration.Value.IsMaxLength == null)
-                {
-                    _lengthConfiguration.Value.IsMaxLength = value;
-                }
-            }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets or sets the scale of the property.
+        ///     Configures the property to be a row version in the database.
+        ///     The actual data type will vary depending on the database provider being used.
+        ///     Setting the property to be a row version will automatically configure it to be an
+        ///     optimistic concurrency token.
         /// </summary>
+        /// <returns> The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="Decimal" />.
-        /// </remarks>
-        public byte? Scale
-        {
-            get
-            {
-                return _decimalConfiguration.Value != null
-                           ? _decimalConfiguration.Value.Scale
-                           : null;
-            }
-            set
-            {
-                if (_decimalConfiguration.Value != null
-                    && _decimalConfiguration.Value.Scale == null)
-                {
-                    _decimalConfiguration.Value.Scale = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the precision of the property.
-        /// </summary>
-        /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="DateTime" /> or <see cref="Decimal" />.
-        /// </remarks>
-        public byte? Precision
-        {
-            get
-            {
-                if (_decimalConfiguration.Value != null)
-                {
-                    return _decimalConfiguration.Value.Precision;
-                }
-
-                if (_dateTimeConfiguration.Value != null)
-                {
-                    return _dateTimeConfiguration.Value.Precision;
-                }
-
-                return null;
-            }
-            set
-            {
-                if (_decimalConfiguration.Value != null
-                    && _decimalConfiguration.Value.Precision == null)
-                {
-                    _decimalConfiguration.Value.Precision = value;
-                }
-                else if (_dateTimeConfiguration.Value != null
-                         && _dateTimeConfiguration.Value.Precision == null)
-                {
-                    _dateTimeConfiguration.Value.Precision = value;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets a value indicating whether the property is a row version in the
-        ///     database.
-        /// </summary>
-        /// <remarks>
-        ///     Setting this will have no effect once it has been configured or if the
+        ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="T:Byte[]" />.
         /// </remarks>
-        public bool? IsRowVersion
+        public LightweightPropertyConfiguration IsRowVersion()
         {
-            get
+            if (_binaryConfiguration.Value != null
+                && _binaryConfiguration.Value.IsRowVersion == null)
             {
-                return _binaryConfiguration.Value != null
-                           ? _binaryConfiguration.Value.IsRowVersion
-                           : null;
+                _binaryConfiguration.Value.IsRowVersion = true;
             }
-            set
-            {
-                if (_binaryConfiguration.Value != null
-                    && _binaryConfiguration.Value.IsRowVersion == null)
-                {
-                    _binaryConfiguration.Value.IsRowVersion = value;
-                }
-            }
+
+            return this;
         }
 
         /// <summary>
         ///     Configures this property to be part of the entity type's primary key.
         /// </summary>
-        public void IsKey()
+        /// <returns>
+        /// The same <see cref="LightweightPropertyConfiguration" /> instance so that
+        /// multiple calls can be chained.
+        /// </returns>
+        public LightweightPropertyConfiguration IsKey()
         {
             var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
 
@@ -365,18 +409,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 entityTypeConfig.Key(ClrPropertyInfo);
             }
-        }
 
-        /// <summary>
-        ///     Configures this property to be part of the entity type's primary key.
-        /// </summary>
-        /// <param name="columnOrder"> The order of the database column. This is useful when specifying a composite primary key. </param>
-        public void IsKey(int columnOrder)
-        {
-            Contract.Requires(columnOrder >= 0);
-
-            IsKey();
-            ColumnOrder = columnOrder;
+            return this;
         }
     }
 }

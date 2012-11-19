@@ -7,23 +7,26 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
-    using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
-    using System.Security;
-    using System.Security.Permissions;
 
     /// <summary>
-    ///     CodeGenerator class: use lightweight code gen to dynamically generate code to get/set properties.
+    ///     CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
     /// </summary>
     internal static class LightweightCodeGenerator
     {
+        private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetMethod(
+            "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
+            new[] { typeof(object), typeof(Type), typeof(string), typeof(string) }, null);
+
         /// <summary>
         ///     For an OSpace ComplexType returns the delegate to construct the clr instance.
         /// </summary>
-        internal static Delegate GetConstructorDelegateForType(ClrComplexType clrType)
+        internal static Func<object> GetConstructorDelegateForType(ClrComplexType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
@@ -31,7 +34,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     For an OSpace EntityType returns the delegate to construct the clr instance.
         /// </summary>
-        internal static Delegate GetConstructorDelegateForType(ClrEntityType clrType)
+        internal static Func<object> GetConstructorDelegateForType(ClrEntityType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
@@ -50,7 +53,7 @@ namespace System.Data.Entity.Core.Objects
         internal static Func<object, object> GetGetterDelegateForProperty(EdmProperty property)
         {
             return property.ValueGetter
-                   ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyGetterHandle));
+                   ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyInfo));
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace System.Data.Entity.Core.Objects
             if (null == setter)
             {
                 setter = CreatePropertySetter(
-                    property.EntityDeclaringType, property.PropertySetterHandle,
+                    property.EntityDeclaringType, property.PropertyInfo,
                     property.Nullable);
                 property.ValueSetter = setter;
             }
@@ -111,36 +114,33 @@ namespace System.Data.Entity.Core.Objects
 
         internal static Action<object, object> CreateNavigationPropertySetter(Type declaringType, PropertyInfo navigationProperty)
         {
-            var mi = navigationProperty.GetSetMethod(true);
-            var realType = navigationProperty.PropertyType;
+            Contract.Requires(declaringType != null);
+            Contract.Requires(navigationProperty != null);
 
-            if (null == mi)
+            var setMethod = navigationProperty.GetSetMethod(true);
+
+            if (setMethod == null)
             {
-                ThrowPropertyNoSetter();
-            }
-            if (mi.IsStatic)
-            {
-                ThrowPropertyIsStatic();
-            }
-            if (mi.DeclaringType.IsValueType)
-            {
-                ThrowPropertyDeclaringTypeIsValueType();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyNoSetter);
             }
 
-            // the setter always skips visibility so that we can call our internal method to handle errors
-            // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            var method = CreateDynamicMethod(mi.Name, typeof(void), new[] { typeof(object), typeof(object) });
-            var gen = method.GetILGenerator();
-            GenerateNecessaryPermissionDemands(gen, mi);
+            if (setMethod.IsStatic)
+            {
+                throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
+            }
 
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Castclass, declaringType);
-            gen.Emit(OpCodes.Ldarg_1);
-            gen.Emit(OpCodes.Castclass, navigationProperty.PropertyType);
-            gen.Emit(OpCodes.Callvirt, mi); // .Property =
-            gen.Emit(OpCodes.Ret);
+            if (setMethod.DeclaringType.IsValueType)
+            {
+                throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
+            }
 
-            return (Action<object, object>)method.CreateDelegate(typeof(Action<object, object>));
+            var entityParameter = Expression.Parameter(typeof(object), "entity");
+            var targetParameter = Expression.Parameter(typeof(object), "target");
+
+            return Expression.Lambda<Action<object, object>>(
+                Expression.Assign(
+                    Expression.Property(Expression.Convert(entityParameter, declaringType), navigationProperty),
+                    Expression.Convert(targetParameter, navigationProperty.PropertyType)), entityParameter, targetParameter).Compile();
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Objects
                 null);
             if (null == ci)
             {
-                ThrowConstructorNoParameterless(type);
+                throw new InvalidOperationException(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
             }
             return ci;
         }
@@ -165,18 +165,13 @@ namespace System.Data.Entity.Core.Objects
         ///     generate a delegate equivalent to
         ///     private object Constructor() { return new XClass(); }
         /// </summary>
-        internal static Delegate CreateConstructor(Type type)
+        internal static Func<object> CreateConstructor(Type type)
         {
-            var ci = GetConstructorForType(type);
+            Contract.Assert(type != null);
 
-            // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            var method = CreateDynamicMethod(ci.DeclaringType.Name, typeof(object), Type.EmptyTypes);
-            var gen = method.GetILGenerator();
-            GenerateNecessaryPermissionDemands(gen, ci);
+            GetConstructorForType(type);
 
-            gen.Emit(OpCodes.Newobj, ci);
-            gen.Emit(OpCodes.Ret);
-            return method.CreateDelegate(typeof(Func<object>));
+            return Expression.Lambda<Func<object>>(Expression.New(type)).Compile();
         }
 
         /// <summary>
@@ -185,84 +180,48 @@ namespace System.Data.Entity.Core.Objects
         ///     or if the property is Nullable<> generate a delegate equivalent to
         ///     private object MemberGetter(object target) { Nullable<X>y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
         /// </summary>
-        private static Func<object, object> CreatePropertyGetter(RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh)
+        internal static Func<object, object> CreatePropertyGetter(Type entityDeclaringType, PropertyInfo propertyInfo)
         {
-            if (default(RuntimeMethodHandle).Equals(rmh))
+            Contract.Assert(entityDeclaringType != null);
+            Contract.Assert(propertyInfo != null);
+
+            var getter = propertyInfo.GetGetMethod(nonPublic: true);
+
+            if (getter == null)
             {
-                ThrowPropertyNoGetter();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyNoGetter);
             }
 
-            Debug.Assert(!default(RuntimeTypeHandle).Equals(entityDeclaringType), "Type handle of entity should always be known.");
-            var mi = (MethodInfo)MethodBase.GetMethodFromHandle(rmh, entityDeclaringType);
-
-            if (mi.IsStatic)
+            if (getter.IsStatic)
             {
-                ThrowPropertyIsStatic();
-            }
-            if (mi.DeclaringType.IsValueType)
-            {
-                ThrowPropertyDeclaringTypeIsValueType();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
 
-            if (0 != mi.GetParameters().Length)
+            if (propertyInfo.DeclaringType.IsValueType)
             {
-                ThrowPropertyIsIndexed();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
 
-            var realType = mi.ReturnType;
-            if ((null == realType)
-                || (typeof(void) == realType))
+            if (propertyInfo.GetIndexParameters().Any())
             {
-                ThrowPropertyUnsupportedForm();
-            }
-            if (realType.IsPointer)
-            {
-                ThrowPropertyUnsupportedType();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyIsIndexed);
             }
 
-            // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            var method = CreateDynamicMethod(mi.Name, typeof(object), new[] { typeof(object) });
-            var gen = method.GetILGenerator();
-            GenerateNecessaryPermissionDemands(gen, mi);
-
-            // the 'this' target pointer
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Castclass, mi.DeclaringType);
-            gen.Emit(mi.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, mi);
-
-            if (realType.IsValueType)
+            var propertyType = propertyInfo.PropertyType;
+            if (propertyType.IsPointer)
             {
-                Type elementType;
-                if (realType.IsGenericType
-                    && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
-                {
-                    elementType = realType.GetGenericArguments()[0];
-
-                    var lableFalse = gen.DefineLabel();
-                    var local = gen.DeclareLocal(realType);
-                    gen.Emit(OpCodes.Stloc_S, local);
-
-                    gen.Emit(OpCodes.Ldloca_S, local);
-                    gen.Emit(OpCodes.Call, realType.GetMethod("get_HasValue"));
-                    gen.Emit(OpCodes.Brfalse_S, lableFalse);
-
-                    gen.Emit(OpCodes.Ldloca_S, local);
-                    gen.Emit(OpCodes.Call, realType.GetMethod("get_Value"));
-                    gen.Emit(OpCodes.Box, elementType = realType.GetGenericArguments()[0]);
-                    gen.Emit(OpCodes.Ret);
-
-                    gen.MarkLabel(lableFalse);
-                    gen.Emit(OpCodes.Ldnull);
-                }
-                else
-                {
-                    // need to box to return value as object
-                    elementType = realType;
-                    gen.Emit(OpCodes.Box, elementType);
-                }
+                throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedType);
             }
-            gen.Emit(OpCodes.Ret);
-            return (Func<object, object>)method.CreateDelegate(typeof(Func<object, object>));
+
+            var entityParameter = Expression.Parameter(typeof(object), "entity");
+            Expression getterExpression = Expression.Property(Expression.Convert(entityParameter, entityDeclaringType), propertyInfo);
+
+            if (propertyType.IsValueType)
+            {
+                getterExpression = Expression.Convert(getterExpression, typeof(object));
+            }
+
+            return Expression.Lambda<Func<object, object>>(getterExpression, entityParameter).Compile();
         }
 
         /// <summary>
@@ -270,7 +229,7 @@ namespace System.Data.Entity.Core.Objects
         /// 
         ///     // if Property is Nullable value type
         ///     private void MemberSetter(object target, object value) {
-        ///     if (AllwNull &amp;&amp; (null == value)) {
+        ///     if (AllowNull &amp;&amp; (null == value)) {
         ///     ((TargetType)target).PropertyName = default(PropertyType?);
         ///     return;
         ///     }
@@ -294,7 +253,7 @@ namespace System.Data.Entity.Core.Objects
         /// 
         ///     // when PropertyType is a reference type
         ///     private void MemberSetter(object target, object value) {
-        ///     if ((AllwNull &amp;&amp; (null == value)) || (value is PropertyType)) {
+        ///     if ((AllowNull &amp;&amp; (null == value)) || (value is PropertyType)) {
         ///     ((TargetType)target).PropertyName = ((PropertyType)value);
         ///     return;
         ///     }
@@ -303,182 +262,79 @@ namespace System.Data.Entity.Core.Objects
         ///     }
         /// </summary>
         /// <exception cref="System.InvalidOperationException">If the method is missing or static or has indexed parameters.
-        ///     Or if the delcaring type is a value type.
+        ///     Or if the declaring type is a value type.
         ///     Or if the parameter type is a pointer.
         ///     Or if the method or declaring class has a
         ///     <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute" />
         ///     .</exception>
-        private static Action<object, object> CreatePropertySetter(
-            RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle rmh, bool allowNull)
+        internal static Action<object, object> CreatePropertySetter(Type entityDeclaringType, PropertyInfo propertyInfo, bool allowNull)
         {
-            MethodInfo mi;
-            Type realType;
-            ValidateSetterProperty(entityDeclaringType, rmh, out mi, out realType);
+            ValidateSetterProperty(propertyInfo);
 
-            // the setter always skips visibility so that we can call our internal method to handle errors
-            // because CreateDynamicMethod asserts ReflectionPermission, method is "elevated" and must be treated carefully
-            var method = CreateDynamicMethod(mi.Name, typeof(void), new[] { typeof(object), typeof(object) });
-            var gen = method.GetILGenerator();
-            GenerateNecessaryPermissionDemands(gen, mi);
+            var entityParameter = Expression.Parameter(typeof(object), "entity");
+            var targetParameter = Expression.Parameter(typeof(object), "target");
+            var propertyType = propertyInfo.PropertyType;
 
-            var elementType = realType;
-            var labelContinueNull = gen.DefineLabel();
-            var labelContinueValue = gen.DefineLabel();
-            var labelInvalidValue = gen.DefineLabel();
-            if (realType.IsValueType)
+            // allowNull comes from a model facet and if it is not possible for the property to allow nulls
+            // then we switch this off even if the model has it switched on.
+            if (propertyType.IsValueType
+                && Nullable.GetUnderlyingType(propertyType) == null)
             {
-                if (realType.IsGenericType
-                    && (typeof(Nullable<>) == realType.GetGenericTypeDefinition()))
-                {
-                    elementType = realType.GetGenericArguments()[0];
-                }
-                else
-                {
-                    // force allowNull false for non-nullable value types
-                    allowNull = false;
-                }
+                allowNull = false;
             }
 
-            // ((TargetType)instance)
-            gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Castclass, mi.DeclaringType);
-
-            // if (value is elementType) {
-            gen.Emit(OpCodes.Ldarg_1);
-            gen.Emit(OpCodes.Isinst, elementType);
-
+            // The value is checked to see if it is a compatible type (or optionally null) and if it
+            // fails this check then a method on EntityUtil is called to throw the appropriate exception.
+            Expression checkValidValue = Expression.TypeIs(targetParameter, propertyType);
             if (allowNull)
             {
-                // reference type or nullable type
-                gen.Emit(OpCodes.Ldarg_1);
-                if (elementType == realType)
-                {
-                    gen.Emit(OpCodes.Brfalse_S, labelContinueNull); // if (null ==
-                }
-                else
-                {
-                    gen.Emit(OpCodes.Brtrue, labelContinueValue);
-                    gen.Emit(OpCodes.Pop); // pop Isinst
-
-                    var local = gen.DeclareLocal(realType);
-                    gen.Emit(OpCodes.Ldloca_S, local); // load valuetype&
-                    gen.Emit(OpCodes.Initobj, realType); // init &
-                    gen.Emit(OpCodes.Ldloc_0); // load valuetype
-                    gen.Emit(OpCodes.Br_S, labelContinueNull);
-                    gen.MarkLabel(labelContinueValue);
-                }
+                checkValidValue = Expression.Or(Expression.ReferenceEqual(targetParameter, Expression.Constant(null)), checkValidValue);
             }
-            gen.Emit(OpCodes.Dup);
-            gen.Emit(OpCodes.Brfalse_S, labelInvalidValue); // (arg1 is Inst)
 
-            if (elementType.IsValueType)
-            {
-                gen.Emit(OpCodes.Unbox_Any, elementType); // ((PropertyType)value)
-
-                if (elementType != realType)
-                {
-                    // new Nullable<PropertyType>
-                    gen.Emit(OpCodes.Newobj, realType.GetConstructor(new[] { elementType }));
-                }
-            }
-            gen.MarkLabel(labelContinueNull);
-            gen.Emit(mi.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, mi); // .Property =
-            gen.Emit(OpCodes.Ret);
-
-            // ThrowInvalidValue(value, typeof(PropertyType), DeclaringType.Name, PropertyName
-            gen.MarkLabel(labelInvalidValue);
-            gen.Emit(OpCodes.Pop); // pop Ldarg_0
-            gen.Emit(OpCodes.Pop); // pop IsInst'
-            gen.Emit(OpCodes.Ldarg_1); // determine if InvalidCast or NullReference
-            gen.Emit(OpCodes.Ldtoken, elementType);
-            gen.Emit(OpCodes.Call, typeof(Type).GetMethod("GetTypeFromHandle", BindingFlags.Static | BindingFlags.Public));
-            gen.Emit(OpCodes.Ldstr, mi.DeclaringType.Name);
-            gen.Emit(OpCodes.Ldstr, mi.Name.Substring(4)); // substring to strip "set_"
-            Debug.Assert(
-                null != (Action<Object, Type, String, String>)EntityUtil.ThrowSetInvalidValue,
-                "missing method ThrowSetInvalidValue(object,Type,string,string)");
-            gen.Emit(
-                OpCodes.Call,
-                typeof(EntityUtil).GetMethod(
-                    "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
-                    new[] { typeof(object), typeof(Type), typeof(string), typeof(string) }, null));
-            gen.Emit(OpCodes.Ret);
-            return (Action<object, object>)method.CreateDelegate(typeof(Action<object, object>));
+            return Expression.Lambda<Action<object, object>>(
+                Expression.IfThenElse(
+                    checkValidValue,
+                    Expression.Assign(
+                        Expression.Property(Expression.Convert(entityParameter, entityDeclaringType), propertyInfo),
+                        Expression.Convert(targetParameter, propertyInfo.PropertyType)),
+                    Expression.Call(
+                        _throwSetInvalidValue,
+                        targetParameter,
+                        Expression.Constant(propertyType),
+                        Expression.Constant(entityDeclaringType.Name),
+                        Expression.Constant(propertyInfo.Name))), entityParameter, targetParameter).Compile();
         }
 
-        internal static void ValidateSetterProperty(
-            RuntimeTypeHandle entityDeclaringType, RuntimeMethodHandle setterMethodHandle, out MethodInfo setterMethodInfo,
-            out Type realType)
+        internal static void ValidateSetterProperty(PropertyInfo propertyInfo)
         {
-            if (default(RuntimeMethodHandle).Equals(setterMethodHandle))
-            {
-                ThrowPropertyNoSetter();
-            }
+            Contract.Assert(propertyInfo != null);
 
-            Debug.Assert(!default(RuntimeTypeHandle).Equals(entityDeclaringType), "Type handle of entity should always be known.");
-            setterMethodInfo = (MethodInfo)MethodBase.GetMethodFromHandle(setterMethodHandle, entityDeclaringType);
+            var setterMethodInfo = propertyInfo.GetSetMethod(nonPublic: true);
+
+            if (setterMethodInfo == null)
+            {
+                throw new InvalidOperationException(Strings.CodeGen_PropertyNoSetter);
+            }
 
             if (setterMethodInfo.IsStatic)
             {
-                ThrowPropertyIsStatic();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
-            if (setterMethodInfo.DeclaringType.IsValueType)
+
+            if (propertyInfo.DeclaringType.IsValueType)
             {
-                ThrowPropertyDeclaringTypeIsValueType();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
 
-            var parameters = setterMethodInfo.GetParameters();
-            if ((null == parameters)
-                || (1 != parameters.Length))
+            if (propertyInfo.GetIndexParameters().Any())
             {
-                // if no parameters (i.e. not a set_Property method), will still throw this message
-                ThrowPropertyIsIndexed();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyIsIndexed);
             }
-            realType = setterMethodInfo.ReturnType;
-            if ((null != realType)
-                && (typeof(void) != realType))
+
+            if (propertyInfo.PropertyType.IsPointer)
             {
-                ThrowPropertyUnsupportedForm();
+                throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedType);
             }
-
-            realType = parameters[0].ParameterType;
-            if (realType.IsPointer)
-            {
-                ThrowPropertyUnsupportedType();
-            }
-        }
-
-        /// <summary>
-        ///     Determines if the specified method requires permission demands to be invoked safely.
-        /// </summary>
-        /// <param name="mi"> Method instance to check. </param>
-        /// <returns> true if the specified method requires permission demands to be invoked safely, false otherwise. </returns>
-        internal static bool RequiresPermissionDemands(MethodBase mi)
-        {
-            Debug.Assert(mi != null);
-            return !IsPublic(mi);
-        }
-
-        private static void GenerateNecessaryPermissionDemands(ILGenerator gen, MethodBase mi)
-        {
-            if (!IsPublic(mi))
-            {
-                gen.Emit(
-                    OpCodes.Ldsfld,
-                    typeof(LightweightCodeGenerator).GetField(
-                        "MemberAccessReflectionPermission", BindingFlags.Static | BindingFlags.NonPublic));
-                gen.Emit(OpCodes.Callvirt, typeof(ReflectionPermission).GetMethod("Demand"));
-            }
-        }
-
-        internal static bool IsPublic(MethodBase method)
-        {
-            return (method.IsPublic && IsPublic(method.DeclaringType));
-        }
-
-        internal static bool IsPublic(Type type)
-        {
-            return ((null == type) || (type.IsPublic && IsPublic(type.DeclaringType)));
         }
 
         /// <summary>
@@ -564,82 +420,6 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return getRelatedEnd;
-        }
-
-        private static void ThrowConstructorNoParameterless(Type type)
-        {
-            throw new InvalidOperationException(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
-        }
-
-        private static void ThrowPropertyDeclaringTypeIsValueType()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
-        }
-
-        private static void ThrowPropertyUnsupportedForm()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedForm);
-        }
-
-        private static void ThrowPropertyUnsupportedType()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedType);
-        }
-
-        private static void ThrowPropertyStrongNameIdentity()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyStrongNameIdentity);
-        }
-
-        private static void ThrowPropertyIsIndexed()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyIsIndexed);
-        }
-
-        private static void ThrowPropertyIsStatic()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
-        }
-
-        private static void ThrowPropertyNoGetter()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyNoGetter);
-        }
-
-        private static void ThrowPropertyNoSetter()
-        {
-            throw new InvalidOperationException(Strings.CodeGen_PropertyNoSetter);
-        }
-
-        internal static readonly ReflectionPermission MemberAccessReflectionPermission =
-            new ReflectionPermission(ReflectionPermissionFlag.MemberAccess);
-
-        [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
-        internal static bool HasMemberAccessReflectionPermission()
-        {
-            try
-            {
-                MemberAccessReflectionPermission.Demand();
-                return true;
-            }
-            catch (SecurityException)
-            {
-                return false;
-            }
-        }
-
-        // we could cache more, like 'new Type[] { ... }' and 'typeof(object)'
-        // but pruned as much as possible for the workingset helps, even little things
-
-        // Assert MemberAccess to skip visibility check & ReflectionEmit so we can generate the method (make calls to EF internals).
-        [SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-        internal static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes)
-        {
-            // Create a transparent dynamic method (Module not specified) to ensure we do not satisfy any link demands
-            // in method callees.
-            return new DynamicMethod(name, returnType, parameterTypes, true);
         }
     }
 }

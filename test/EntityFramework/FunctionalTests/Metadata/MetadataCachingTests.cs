@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace MetadataCachingTests
+namespace System.Data.Entity.Metadata
 {
     using System;
     using System.Data.Entity.Core.EntityClient;

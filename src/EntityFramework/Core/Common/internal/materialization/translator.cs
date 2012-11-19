@@ -21,6 +21,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Security.Permissions;
 
     /// <summary>
     ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the 
@@ -447,14 +448,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     var edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
 
-                    // get MethodInfo for setter
-                    MethodInfo propertyAccessor;
-                    Type propertyType;
-                    LightweightCodeGenerator.ValidateSetterProperty(
-                        edmProperty.EntityDeclaringType, edmProperty.PropertySetterHandle, out propertyAccessor, out propertyType);
+                    LightweightCodeGenerator.ValidateSetterProperty(edmProperty.PropertyInfo);
+                    var propertyAccessor = edmProperty.PropertyInfo.GetSetMethod(nonPublic: true);
+                    var propertyType = edmProperty.PropertyInfo.PropertyType;
 
                     // determine if any security checks are required
-                    if (!LightweightCodeGenerator.IsPublic(propertyAccessor))
+                    if (!IsPublic(propertyAccessor))
                     {
                         _hasNonPublicMembers = true;
                     }
@@ -473,11 +472,20 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         _currentCoordinatorScratchpad.AddExpressionWithErrorHandling(valueReader, valueReaderWithErrorHandling);
                     }
 
-                    var entityDeclaringType = Type.GetTypeFromHandle(edmProperty.EntityDeclaringType);
-                    MemberBinding binding = Expression.Bind(GetProperty(propertyAccessor, entityDeclaringType), valueReader);
+                    var binding = Expression.Bind(GetProperty(propertyAccessor, edmProperty.EntityDeclaringType), valueReader);
                     result.Add(binding);
                 }
                 return result;
+            }
+
+            private static bool IsPublic(MethodBase method)
+            {
+                return (method.IsPublic && IsPublic(method.DeclaringType));
+            }
+
+            private static bool IsPublic(Type type)
+            {
+                return ((null == type) || (type.IsPublic && IsPublic(type.DeclaringType)));
             }
 
             /// <summary>
@@ -1298,7 +1306,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
             private static void DemandMemberAccess()
             {
-                LightweightCodeGenerator.MemberAccessReflectionPermission.Demand();
+                new ReflectionPermission(ReflectionPermissionFlag.MemberAccess).Demand();
             }
 
             /// <summary>
@@ -1420,7 +1428,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     result = LightweightCodeGenerator.GetConstructorForType(type);
 
                     // remember security requirements for this constructor
-                    if (!LightweightCodeGenerator.IsPublic(result))
+                    if (!IsPublic(result))
                     {
                         _hasNonPublicMembers = true;
                     }

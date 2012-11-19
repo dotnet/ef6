@@ -2,7 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -37,61 +40,126 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        ///     Gets or sets the entity set name to be used for this entity type.
+        ///     Configures the entity set name to be used for this entity type.
+        ///     The entity set name can only be configured for the base type in each set.
         /// </summary>
+        /// <param name="entitySetName"> The name of the entity set. </param>
+        /// <returns> The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained. </returns>
         /// <remarks>
-        ///     Setting this will have no effect once it has been configured.
+        ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public string EntitySetName
+        public LightweightEntityConfiguration HasEntitySetName(string entitySetName)
         {
-            get { return _configuration().EntitySetName; }
-            set
+            Contract.Requires(!string.IsNullOrWhiteSpace(entitySetName));
+
+            if (_configuration().EntitySetName == null)
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
-
-                if (_configuration().EntitySetName == null)
-                {
-                    _configuration().EntitySetName = value;
-                }
+                _configuration().EntitySetName = entitySetName;
             }
+
+            return this;
         }
 
         /// <summary>
-        ///     Gets the name of the table that this entity type is mapped to.
+        ///     Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
-        public string TableName
+        /// <param name="propertyName"> The name of the property to be configured. </param>
+        /// <remarks>
+        ///     Calling this will have no effect if the property does not exist.
+        /// </remarks>
+        public void Ignore(string propertyName)
         {
-            get { return _configuration().TableName; }
-        }
+            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
 
-        /// <summary>
-        ///     Gets the database schema of the table that this entity type is mapped to.
-        /// </summary>
-        public string SchemaName
-        {
-            get { return _configuration().SchemaName; }
+            Ignore(_type.GetProperty(propertyName));
         }
 
         /// <summary>
         ///     Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyInfo"> The property to be configured. </param>
+        /// <remarks>
+        ///     Calling this will have no effect if the property does not exist.
+        /// </remarks>
         public void Ignore(PropertyInfo propertyInfo)
         {
-            Contract.Requires(propertyInfo != null);
+            if (propertyInfo != null)
+            {
+                _configuration().Ignore(propertyInfo);
+            }
+        }
 
-            _configuration().Ignore(propertyInfo);
+        /// <summary>
+        ///     Configures the primary key property for this entity type.
+        /// </summary>
+        /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
+        /// <returns> The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured of if the
+        ///     property does not exist.
+        /// </remarks>
+        public LightweightEntityConfiguration HasKey(string propertyName)
+        {
+            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+
+            return HasKey(new[] { propertyName });
+        }
+
+        /// <summary>
+        ///     Configures the primary key property for this entity type.
+        /// </summary>
+        /// <param name="propertyInfo"> The property to be used as the primary key. </param>
+        /// <returns> The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured of if the
+        ///     property does not exist.
+        /// </remarks>
+        public LightweightEntityConfiguration HasKey(PropertyInfo propertyInfo)
+        {
+            return HasKey(new[] { propertyInfo });
         }
 
         /// <summary>
         ///     Configures the primary key property(s) for this entity type.
         /// </summary>
-        /// <param name="propertyInfo"> The property to be used as the primary key. If the primary key is made up of multiple properties, call this method once for each of them. </param>
-        public void HasKey(PropertyInfo propertyInfo)
+        /// <param name="propertyNames"> The names of the properties to be used as the primary key. </param>
+        /// <returns> The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured of if any
+        ///     property does not exist.
+        /// </remarks>
+        public LightweightEntityConfiguration HasKey(IEnumerable<string> propertyNames)
         {
-            Contract.Requires(propertyInfo != null);
+            Contract.Requires(propertyNames != null);
 
-            _configuration().Key(propertyInfo);
+            var propertyInfos = propertyNames
+                .Select(n => _type.GetProperty(n))
+                .ToArray();
+
+            return HasKey(propertyInfos);
+        }
+
+        /// <summary>
+        ///     Configures the primary key property(s) for this entity type.
+        /// </summary>
+        /// <param name="keyProperties"> The properties to be used as the primary key. </param>
+        /// <returns> The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured of if any
+        ///     property does not exist.
+        /// </remarks>
+        public LightweightEntityConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
+        {
+            Contract.Requires(keyProperties != null);
+
+            if (!_configuration().IsKeyConfigured
+                && keyProperties.Any()
+                && keyProperties.All(p => p != null))
+            {
+                _configuration().Key(keyProperties);
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -107,7 +175,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             if (!_configuration().IsTableNameConfigured)
             {
-                _configuration().ToTable(tableName);
+                var databaseName = DatabaseName.Parse(tableName);
+
+                _configuration().ToTable(databaseName.Name, databaseName.Schema);
             }
         }
 

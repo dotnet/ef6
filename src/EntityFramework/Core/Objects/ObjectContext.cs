@@ -1,5 +1,4 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
-
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
@@ -36,10 +35,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
-
-#if !NET40
-
-#endif
 
     /// <summary>
     ///     ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
@@ -3407,9 +3402,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                var ctor = LightweightCodeGenerator.GetConstructorDelegateForType(entityType) as Func<object>;
-                Debug.Assert(ctor != null, "Could not find entity constructor");
-                instance = ctor() as T;
+                instance = LightweightCodeGenerator.GetConstructorDelegateForType(entityType)() as T;
             }
 
             return instance;

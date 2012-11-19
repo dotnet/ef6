@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var plan = GetPlan(recordInfo);
             if (null == result)
             {
-                result = ((Func<object>)plan.ClrType)();
+                result = plan.ClrType();
             }
             SetProperties(record, result, plan.Properties);
             return result;
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private sealed class Plan
         {
             internal readonly TypeUsage Key;
-            internal readonly Delegate ClrType;
+            internal readonly Func<object> ClrType;
             internal readonly PlanEdmProperty[] Properties;
 
             internal Plan(TypeUsage key, ObjectTypeMapping mapping, ReadOnlyCollection<FieldMetadata> fields)

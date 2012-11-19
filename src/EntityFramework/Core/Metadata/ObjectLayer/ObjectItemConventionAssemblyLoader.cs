@@ -467,9 +467,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var ct = cspaceType;
                 var ot = ospaceType;
                 var cp = typeToTrack.Key;
-                var clrp = typeToTrack.Value;
 
-                referenceResolutionListForCurrentType.Add(() => CreateAndAddNavigationProperty(ct, ot, cp, clrp));
+                referenceResolutionListForCurrentType.Add(() => CreateAndAddNavigationProperty(ct, ot, cp));
             }
 
             return true;
@@ -513,7 +512,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         propertyType, new FacetValues
                                           {
                                               Nullable = false
-                                          }), clrProperty, type.TypeHandle);
+                                          }), clrProperty, type);
                 ospaceType.AddMember(property);
             }
             else
@@ -527,7 +526,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private void CreateAndAddNavigationProperty(
-            StructuralType cspaceType, StructuralType ospaceType, NavigationProperty cspaceProperty, PropertyInfo clrProperty)
+            StructuralType cspaceType, StructuralType ospaceType, NavigationProperty cspaceProperty)
         {
             EdmType ospaceRelationship;
             if (SessionData.CspaceToOspace.TryGetValue(cspaceProperty.RelationshipType, out ospaceRelationship))
@@ -565,7 +564,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     foundTarget,
                     "Since the relationship will only be created if it can find the types for both ends, we will never fail to find one of the ends");
 
-                var navigationProperty = new NavigationProperty(cspaceProperty.Name, TypeUsage.Create(targetType), clrProperty);
+                var navigationProperty = new NavigationProperty(cspaceProperty.Name, TypeUsage.Create(targetType));
                 var relationshipType = (RelationshipType)ospaceRelationship;
                 navigationProperty.RelationshipType = relationshipType;
 
@@ -813,7 +812,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                               Nullable = nullableFacetValue
                                           }),
                     clrProperty,
-                    type.TypeHandle);
+                    type);
 
             if (isKeyMember)
             {

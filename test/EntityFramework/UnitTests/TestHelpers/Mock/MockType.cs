@@ -32,6 +32,18 @@ namespace System.Data.Entity
             Setup(t => t.ToString()).Returns(typeName);
             Setup(t => t.Namespace).Returns(@namespace);
 
+            this.Protected()
+                .Setup<PropertyInfo>(
+                    "GetPropertyImpl",
+                    ItExpr.IsAny<string>(),
+                    BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public,
+                    ItExpr.IsNull<Binder>(),
+                    ItExpr.IsNull<Type>(),
+                    ItExpr.IsNull<Type[]>(),
+                    ItExpr.IsNull<ParameterModifier[]>())
+                .Returns<string, BindingFlags, Binder, Type, Type[], ParameterModifier[]>(
+                    (name, bindingAttr, binder, returnType, types, modifiers) => GetProperty(name));
+
             if (hasDefaultCtor)
             {
                 this.Protected()
@@ -83,7 +95,7 @@ namespace System.Data.Entity
 
         public PropertyInfo GetProperty(string name)
         {
-            return _propertyInfos.Single(p => p.Name == name);
+            return _propertyInfos.SingleOrDefault(p => p.Name == name);
         }
 
         public MockType AsCollection()

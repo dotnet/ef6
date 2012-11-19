@@ -597,7 +597,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (relationshipType != null)
                 {
                     // The return value of this property has been verified, so create the property now
-                    var navigationProperty = new NavigationProperty(propertyInfo.Name, TypeUsage.Create(propertyType), propertyInfo);
+                    var navigationProperty = new NavigationProperty(propertyInfo.Name, TypeUsage.Create(propertyType));
                     navigationProperty.RelationshipType = relationshipType;
                     member = navigationProperty;
 
@@ -698,7 +698,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                            {
                                                Nullable = isNullable
                                            }),
-                    property, clrType.TypeHandle);
+                    property, clrType);
             }
             return member;
         }
@@ -741,7 +741,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                               Nullable = edmScalarPropertyAttribute.IsNullable
                                           }),
                     clrProperty,
-                    declaringType.ClrType.TypeHandle);
+                    declaringType.ClrType);
 
                 declaringType.AddMember(enumProperty);
 
@@ -778,7 +778,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                           {
                                               Nullable = false
                                           }),
-                    clrProperty, type.ClrType.TypeHandle);
+                    clrProperty, type.ClrType);
 
                 type.AddMember(newProperty);
             }

@@ -108,6 +108,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _navigationPropertyConfigurations.Remove(propertyPath.Single());
         }
 
+        internal bool IsKeyConfigured
+        {
+            get { return _isKeyConfigured; }
+        }
+
+        internal IEnumerable<PropertyInfo> KeyProperties
+        {
+            get { return _keyProperties; }
+        }
+
         internal virtual void Key(IEnumerable<PropertyInfo> keyProperties)
         {
             Contract.Requires(keyProperties != null);
@@ -595,22 +605,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
+                        {
+                            var primitivePropertyConfiguration =
+                                c.GetConfiguration() as PrimitivePropertyConfiguration;
+
+                            if ((primitivePropertyConfiguration != null)
+                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                return;
+                            }
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                            var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
+                            c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
 
-                                c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
-
-                                c.CopyFrom(principalColumn);
-                            });
+                            c.CopyFrom(principalColumn);
+                        });
             }
         }
 

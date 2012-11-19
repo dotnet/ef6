@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Linq;
     using Moq;
     using Xunit;
 
@@ -32,267 +33,556 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             new LightweightPropertyConfiguration(
                 new MockPropertyInfo(),
                 () =>
-                    {
-                        initialized = true;
+                {
+                    initialized = true;
 
-                        return null;
-                    });
+                    return null;
+                });
 
             Assert.False(initialized);
         }
 
         [Fact]
-        public void Properties_get_inner_values()
-        {
-            var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ColumnName = "Column1",
-                                      ColumnOrder = 1,
-                                      ColumnType = "int",
-                                      ConcurrencyMode = ConcurrencyMode.None,
-                                      DatabaseGeneratedOption = DatabaseGeneratedOption.None,
-                                      IsNullable = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            Assert.Equal("Column1", config.ColumnName);
-            Assert.Equal(1, config.ColumnOrder);
-            Assert.Equal("int", config.ColumnType);
-            Assert.Equal(ConcurrencyMode.None, config.ConcurrencyMode);
-            Assert.Equal(DatabaseGeneratedOption.None, config.DatabaseGeneratedOption);
-            Assert.Equal(false, config.IsNullable);
-            Assert.Equal(null, config.IsUnicode);
-            Assert.Equal(null, config.IsFixedLength);
-            Assert.Equal(null, config.MaxLength);
-            Assert.Equal(null, config.IsMaxLength);
-            Assert.Equal(null, config.Scale);
-            Assert.Equal(null, config.Precision);
-            Assert.Equal(null, config.IsRowVersion);
-        }
-
-        [Fact]
-        public void Properties_get_inner_values_when_binary()
-        {
-            var innerConfig = new BinaryPropertyConfiguration
-                                  {
-                                      IsFixedLength = false,
-                                      MaxLength = 256,
-                                      IsMaxLength = false,
-                                      IsRowVersion = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsRowVersion);
-        }
-
-        [Fact]
-        public void Properties_get_inner_values_when_dateTime()
-        {
-            var innerConfig = new DateTimePropertyConfiguration
-                                  {
-                                      Precision = 8
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            Assert.Equal<byte?>(8, config.Precision);
-        }
-
-        [Fact]
-        public void Properties_get_inner_values_when_decimal()
-        {
-            var innerConfig = new DecimalPropertyConfiguration
-                                  {
-                                      Scale = 2,
-                                      Precision = 8
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            Assert.Equal<byte?>(2, config.Scale);
-            Assert.Equal<byte?>(8, config.Precision);
-        }
-
-        [Fact]
-        public void Properties_get_inner_values_when_string()
-        {
-            var innerConfig = new StringPropertyConfiguration
-                                  {
-                                      IsFixedLength = false,
-                                      MaxLength = 256,
-                                      IsMaxLength = false,
-                                      IsUnicode = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsUnicode);
-        }
-
-        [Fact]
-        public void Properties_set_applicable_unset_inner_values()
+        public void HasColumnName_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.ColumnName = "Column1";
-            config.ColumnOrder = 1;
-            config.ColumnType = "int";
-            config.ConcurrencyMode = ConcurrencyMode.None;
-            config.DatabaseGeneratedOption = DatabaseGeneratedOption.None;
-            config.IsNullable = false;
-            config.IsUnicode = false;
-            config.IsFixedLength = false;
-            config.MaxLength = 255;
-            config.IsMaxLength = false;
-            config.Scale = 2;
-            config.Precision = 8;
-            config.IsRowVersion = false;
+            var result = config.HasColumnName("Column1");
 
-            Assert.Equal("Column1", config.ColumnName);
-            Assert.Equal(1, config.ColumnOrder);
-            Assert.Equal("int", config.ColumnType);
-            Assert.Equal(ConcurrencyMode.None, config.ConcurrencyMode);
-            Assert.Equal(DatabaseGeneratedOption.None, config.DatabaseGeneratedOption);
-            Assert.Equal(false, config.IsNullable);
-            Assert.Equal(null, config.IsUnicode);
-            Assert.Equal(null, config.IsFixedLength);
-            Assert.Equal(null, config.MaxLength);
-            Assert.Equal(null, config.IsMaxLength);
-            Assert.Equal(null, config.Scale);
-            Assert.Equal(null, config.Precision);
-            Assert.Equal(null, config.IsRowVersion);
+            Assert.Equal("Column1", innerConfig.ColumnName);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void Properties_set_unset_inner_values_when_binary()
-        {
-            var innerConfig = new BinaryPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            config.IsFixedLength = false;
-            config.MaxLength = 256;
-            config.IsMaxLength = false;
-            config.IsRowVersion = false;
-
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsRowVersion);
-        }
-
-        [Fact]
-        public void Properties_set_unset_inner_values_when_dateTime()
-        {
-            var innerConfig = new DateTimePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            config.Precision = 8;
-
-            Assert.Equal<byte?>(8, config.Precision);
-        }
-
-        [Fact]
-        public void Properties_set_unset_inner_values_when_decimal()
-        {
-            var innerConfig = new DecimalPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            config.Scale = 2;
-            config.Precision = 8;
-
-            Assert.Equal<byte?>(2, config.Scale);
-            Assert.Equal<byte?>(8, config.Precision);
-        }
-
-        [Fact]
-        public void Properties_set_unset_inner_values_when_string()
-        {
-            var innerConfig = new StringPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            config.IsFixedLength = false;
-            config.MaxLength = 256;
-            config.IsMaxLength = false;
-            config.IsUnicode = false;
-
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsUnicode);
-        }
-
-        [Fact]
-        public void Properties_do_not_set_already_set_or_nonapplicable_inner_values()
+        public void HasColumnName_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
                                   {
-                                      ColumnName = "Column1",
-                                      ColumnOrder = 1,
-                                      ColumnType = "int",
-                                      ConcurrencyMode = ConcurrencyMode.None,
-                                      DatabaseGeneratedOption = DatabaseGeneratedOption.None,
+                                      ColumnName = "Column1"
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasColumnName("Column2");
+
+            Assert.Equal("Column1", innerConfig.ColumnName);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnOrder_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasColumnOrder(1);
+
+            Assert.Equal(1, innerConfig.ColumnOrder);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnOrder_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
+                                      ColumnOrder = 1
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasColumnOrder(2);
+
+            Assert.Equal(1, innerConfig.ColumnOrder);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnType_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasColumnType("int");
+
+            Assert.Equal("int", innerConfig.ColumnType);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnType_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
+                                      ColumnType = "int"
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasColumnType("long");
+
+            Assert.Equal("int", innerConfig.ColumnType);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsConcurrencyToken_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsConcurrencyToken();
+
+            Assert.Equal(ConcurrencyMode.Fixed, innerConfig.ConcurrencyMode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsConcurrencyToken_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
+                                      ConcurrencyMode = ConcurrencyMode.None
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsConcurrencyToken();
+
+            Assert.Equal(ConcurrencyMode.None, innerConfig.ConcurrencyMode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsConcurrencyToken_with_parameter_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsConcurrencyToken(false);
+
+            Assert.Equal(ConcurrencyMode.None, innerConfig.ConcurrencyMode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsConcurrencyToken_with_parameter_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
+                                      ConcurrencyMode = ConcurrencyMode.Fixed
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsConcurrencyToken(false);
+
+            Assert.Equal(ConcurrencyMode.Fixed, innerConfig.ConcurrencyMode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasDatabaseGeneratedOption_evaluates_preconditions()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(
+                () => config.HasDatabaseGeneratedOption((DatabaseGeneratedOption)(-1)));
+
+            Assert.Equal("databaseGeneratedOption", ex.ParamName);
+        }
+
+        [Fact]
+        public void HasDatabaseGeneratedOption_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed);
+
+            Assert.Equal(DatabaseGeneratedOption.Computed, innerConfig.DatabaseGeneratedOption);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasDatabaseGeneratedOption_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
+                                      DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            Assert.Equal(DatabaseGeneratedOption.Computed, innerConfig.DatabaseGeneratedOption);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsOptional_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsOptional();
+
+            Assert.Equal(true, innerConfig.IsNullable);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsOptional_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+                                  {
                                       IsNullable = false
                                   };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.ColumnName = "Column2";
-            config.ColumnOrder = 2;
-            config.ColumnType = "long";
-            config.ConcurrencyMode = ConcurrencyMode.Fixed;
-            config.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
-            config.IsNullable = true;
-            config.IsUnicode = true;
-            config.IsFixedLength = true;
-            config.MaxLength = -1;
-            config.IsMaxLength = true;
-            config.Scale = 4;
-            config.Precision = 16;
-            config.IsRowVersion = true;
+            var result = config.IsOptional();
 
-            Assert.Equal("Column1", config.ColumnName);
-            Assert.Equal(1, config.ColumnOrder);
-            Assert.Equal("int", config.ColumnType);
-            Assert.Equal(ConcurrencyMode.None, config.ConcurrencyMode);
-            Assert.Equal(DatabaseGeneratedOption.None, config.DatabaseGeneratedOption);
-            Assert.Equal(false, config.IsNullable);
-            Assert.Equal(null, config.IsUnicode);
-            Assert.Equal(null, config.IsFixedLength);
-            Assert.Equal(null, config.MaxLength);
-            Assert.Equal(null, config.IsMaxLength);
-            Assert.Equal(null, config.Scale);
-            Assert.Equal(null, config.Precision);
-            Assert.Equal(null, config.IsRowVersion);
+            Assert.Equal(false, innerConfig.IsNullable);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void Properties_do_not_set_already_set_inner_values_when_binary()
+        public void IsRequired_configures_when_unset()
         {
-            var innerConfig = new BinaryPropertyConfiguration
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsRequired();
+
+            Assert.Equal(false, innerConfig.IsNullable);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsRequired_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
                                   {
-                                      IsFixedLength = false,
-                                      MaxLength = 256,
-                                      IsMaxLength = false,
-                                      IsRowVersion = false
+                                      IsNullable = true
                                   };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.IsFixedLength = true;
-            config.MaxLength = -1;
-            config.IsMaxLength = true;
-            config.IsRowVersion = true;
+            var result = config.IsRequired();
 
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsRowVersion);
+            Assert.Equal(true, innerConfig.IsNullable);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void Properties_do_not_set_already_set_inner_values_when_dateTime()
+        public void IsUnicode_configures_when_unset()
+        {
+            var innerConfig = new StringPropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode();
+
+            Assert.Equal(true, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsUnicode_is_noop_when_set()
+        {
+            var innerConfig = new StringPropertyConfiguration
+                                  {
+                                      IsUnicode = false
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode();
+
+            Assert.Equal(false, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsUnicode_is_noop_when_not_string()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode();
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsUnicode_with_parameter_configures_when_unset()
+        {
+            var innerConfig = new StringPropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode(false);
+
+            Assert.Equal(false, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsUnicode_with_parameter_is_noop_when_set()
+        {
+            var innerConfig = new StringPropertyConfiguration
+                                  {
+                                      IsUnicode = true
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode(false);
+
+            Assert.Equal(true, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsUnicode_with_parameter_is_noop_when_not_string()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsUnicode(false);
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsFixedLength_configures_when_unset()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsFixedLength();
+
+            Assert.Equal(true, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsFixedLength_is_noop_when_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.IsFixedLength = false;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsFixedLength();
+
+            Assert.Equal(false, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsFixedLength_is_noop_when_not_length()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsFixedLength();
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsVariableLength_configures_when_unset()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsVariableLength();
+
+            Assert.Equal(false, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsVariableLength_is_noop_when_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.IsFixedLength = true;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsVariableLength();
+
+            Assert.Equal(true, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsVariableLength_is_noop_when_not_length()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsVariableLength();
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_configures_when_unset()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Equal(256, innerConfig.MaxLength);
+            Assert.Equal(false, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_configures_IsUnicode_when_unset()
+        {
+            var innerConfig = new StringPropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Equal(256, innerConfig.MaxLength);
+            Assert.Equal(false, innerConfig.IsFixedLength);
+            Assert.Equal(true, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_does_not_configure_IsFixedLenth_when_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.IsFixedLength = true;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Equal(256, innerConfig.MaxLength);
+            Assert.Equal(true, innerConfig.IsFixedLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_does_not_configure_IsUnicode_when_set()
+        {
+            var innerConfig = new StringPropertyConfiguration
+                                  {
+                                      IsUnicode = false
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Equal(256, innerConfig.MaxLength);
+            Assert.Equal(false, innerConfig.IsFixedLength);
+            Assert.Equal(false, innerConfig.IsUnicode);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_is_noop_when_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.MaxLength = 256;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(128);
+
+            Assert.Equal(256, innerConfig.MaxLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_is_noop_when_IsMaxLength_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.IsMaxLength = true;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Null(innerConfig.MaxLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_is_noop_when_not_length()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasMaxLength(256);
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsMaxLength_configures_when_unset()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsMaxLength();
+
+            Assert.Equal(true, innerConfig.IsMaxLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsMaxLength_is_noop_when_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.IsMaxLength = false;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsMaxLength();
+
+            Assert.Equal(false, innerConfig.IsMaxLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsMaxLength_is_noop_when_MaxLength_set()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            innerConfig.MaxLength = 256;
+
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsMaxLength();
+
+            Assert.Null(innerConfig.IsMaxLength);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsMaxLength_is_noop_when_not_length()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsMaxLength();
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasPrecision_configures_when_unset()
+        {
+            var innerConfig = new DateTimePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasPrecision(8);
+
+            Assert.Equal<byte?>(8, innerConfig.Precision);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasPrecision_is_noop_when_set()
         {
             var innerConfig = new DateTimePropertyConfiguration
                                   {
@@ -300,65 +590,156 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                                   };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.Precision = 16;
+            var result = config.HasPrecision(7);
 
-            Assert.Equal<byte?>(8, config.Precision);
+            Assert.Equal<byte?>(8, innerConfig.Precision);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void Properties_do_not_set_already_set_inner_values_when_decimal()
+        public void HasPrecision_is_noop_when_not_DateTime()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasPrecision(8);
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasPrecision_with_scale_configures_when_unset()
+        {
+            var innerConfig = new DecimalPropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasPrecision(8, 2);
+
+            Assert.Equal<byte?>(8, innerConfig.Precision);
+            Assert.Equal<byte?>(2, innerConfig.Scale);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasPrecision_with_scale_is_noop_when_precision_set()
         {
             var innerConfig = new DecimalPropertyConfiguration
                                   {
-                                      Scale = 2,
                                       Precision = 8
                                   };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.Scale = 4;
-            config.Precision = 16;
+            var result = config.HasPrecision(7, 1);
 
-            Assert.Equal<byte?>(2, config.Scale);
-            Assert.Equal<byte?>(8, config.Precision);
+            Assert.Equal<byte?>(8, innerConfig.Precision);
+            Assert.Null(innerConfig.Scale);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void Properties_do_not_set_already_set_inner_values_when_string()
+        public void HasPrecision_with_scale_is_noop_when_scale_set()
         {
-            var innerConfig = new StringPropertyConfiguration
+            var innerConfig = new DecimalPropertyConfiguration
                                   {
-                                      IsFixedLength = false,
-                                      MaxLength = 256,
-                                      IsMaxLength = false,
-                                      IsUnicode = false
+                                      Scale = 2
                                   };
             var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            config.IsFixedLength = true;
-            config.MaxLength = -1;
-            config.IsMaxLength = true;
-            config.IsUnicode = true;
+            var result = config.HasPrecision(7, 1);
 
-            Assert.Equal(false, config.IsFixedLength);
-            Assert.Equal(256, config.MaxLength);
-            Assert.Equal(false, config.IsMaxLength);
-            Assert.Equal(false, config.IsUnicode);
+            Assert.Null(innerConfig.Precision);
+            Assert.Equal<byte?>(2, innerConfig.Scale);
+            Assert.Same(config, result);
         }
 
         [Fact]
-        public void IsKey_calls_entity_configuration_key_for_property()
+        public void HasPrecision_with_scale_is_noop_when_not_decimal()
         {
-            var typeConfig = new Mock<EntityTypeConfiguration>((Type)new MockType());
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasPrecision(8, 2);
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsRowVersion_configures_when_unset()
+        {
+            var innerConfig = new BinaryPropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsRowVersion();
+
+            Assert.Equal(true, innerConfig.IsRowVersion);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsRowVersion_is_noop_when_set()
+        {
+            var innerConfig = new BinaryPropertyConfiguration
+                                  {
+                                      IsRowVersion = false
+                                  };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsRowVersion();
+
+            Assert.Equal(false, innerConfig.IsRowVersion);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsRowVersion_is_noop_when_not_binary()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.IsRowVersion();
+
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsKey_configures_when_unset()
+        {
+            var type = new MockType()
+                .Property<int>("Property1");
+            var typeConfig = new EntityTypeConfiguration(type);
             var innerConfig = new PrimitivePropertyConfiguration
                                   {
-                                      TypeConfiguration = typeConfig.Object
+                                      TypeConfiguration = typeConfig
                                   };
-            var propertyInfo = new MockPropertyInfo();
+            var propertyInfo = type.GetProperty("Property1");
             var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
 
-            config.IsKey();
+            var result = config.IsKey();
 
-            typeConfig.Verify(e => e.Key(propertyInfo, null), Times.Once());
+            Assert.Equal(1, typeConfig.KeyProperties.Count());
+            Assert.Contains(propertyInfo, typeConfig.KeyProperties);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void IsKey_is_noop_when_set()
+        {
+            var type = new MockType()
+                .Property<int>("Property1")
+                .Property<int>("Property2");
+            var typeConfig = new EntityTypeConfiguration(type);
+            typeConfig.Key(new[] { type.GetProperty("Property1") });
+            var innerConfig = new PrimitivePropertyConfiguration
+            {
+                TypeConfiguration = typeConfig
+            };
+            var propertyInfo = type.GetProperty("Property2");
+            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+
+            var result = config.IsKey();
+
+            Assert.DoesNotContain(propertyInfo, typeConfig.KeyProperties);
+            Assert.Same(config, result);
         }
 
         [Fact]

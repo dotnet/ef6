@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     ///     Represent the edm navigation property class
@@ -30,26 +29,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new OSpace instance of the property class
-        /// </summary>
-        /// <param name="name"> name of the property </param>
-        /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
-        /// <param name="propertyInfo"> for the property </param>
-        internal NavigationProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo)
-            : this(name, typeUsage)
-        {
-            Debug.Assert(name == propertyInfo.Name, "different PropertyName?");
-
-            if (null != propertyInfo)
-            {
-                MethodInfo method;
-
-                method = propertyInfo.GetGetMethod();
-                PropertyGetterHandle = ((null != method) ? method.MethodHandle : default(RuntimeMethodHandle));
-            }
-        }
-
-        /// <summary>
         ///     Returns the kind of the type
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
@@ -59,11 +38,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal const string RelationshipTypeNamePropertyName = "RelationshipType";
         internal const string ToEndMemberNamePropertyName = "ToEndMember";
-
-        /// <summary>
-        ///     Store the handle, allowing the PropertyInfo/MethodInfo/Type references to be GC'd
-        /// </summary>
-        internal readonly RuntimeMethodHandle PropertyGetterHandle;
 
         /// <summary>
         ///     cached dynamic methods to access the property values from a CLR instance

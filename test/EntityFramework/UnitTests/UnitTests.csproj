@@ -157,6 +157,7 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
+    <Compile Include="Core\Objects\LightweightCodeGeneratorTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />
     <Compile Include="Core\Metadata\Edm\ReferentialConstraintTests.cs" />

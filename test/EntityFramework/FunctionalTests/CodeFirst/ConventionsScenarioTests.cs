@@ -104,7 +104,7 @@ namespace FunctionalTests
             modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                                .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.HasMaxLength(256)));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -130,7 +130,7 @@ namespace FunctionalTests
             modelBuilder.Entity<LightweightEntity>();
             modelBuilder.Conventions.Add(
                 entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                                .Configure(p => p.MaxLength = 256));
+                                .Configure(p => p.HasMaxLength(256)));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
