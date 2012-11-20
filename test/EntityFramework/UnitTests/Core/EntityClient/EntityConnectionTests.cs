@@ -156,42 +156,39 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_with_txn()
+            public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_with_ambient_txn()
             {
-                EntityConnectionStoreConnectionTest(StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used, useTransaction : true);
+                using (var transaction = new TransactionScope())
+                {
+                    var storeConnectionState = ConnectionState.Closed;
+                    var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                    storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
+                    storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
+                    storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+
+                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                    Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // open entityConnection (automatically opens store connection)
+                    entityConnection.Open();
+
+                    Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
+                    Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // close entityConnection without explicitly closing underlying store connection 
+                    entityConnection.Close();
+
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                    Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                }
             }
 
             [Fact]
             public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_without_txn()
-            {
-                EntityConnectionStoreConnectionTest(StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used, useTransaction: false);
-            }
-
-            [Fact]
-            public void EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened_with_txn()
-            {
-                EntityConnectionStoreConnectionTest(EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened, useTransaction: true);
-            }
-
-            [Fact]
-            public void EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened_without_txn()
-            {
-                EntityConnectionStoreConnectionTest(EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened, useTransaction: false);
-            }
-
-            [Fact]
-            public void EntityConnection_remains_open_if_underlying_StoreConnection_is_closed_with_txn()
-            {
-                EntityConnectionStoreConnectionTest(EntityConnection_remains_open_if_underlying_StoreConnection_is_closed, useTransaction: true);
-            }
-
-            [Fact]
-            public void EntityConnection_remains_open_if_underlying_StoreConnection_is_closed_without_txn()
-            {
-                EntityConnectionStoreConnectionTest(EntityConnection_remains_open_if_underlying_StoreConnection_is_closed, useTransaction: false);
-            }
-
-            private void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used()
             {
                 var storeConnectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -219,7 +216,32 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
             }
 
-            private void EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened()
+            [Fact]
+            public void EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened_with_ambient_txn()
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    var storeConnectionState = ConnectionState.Closed;
+                    var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                    storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
+                    storeConnectionMock.Setup(m => m.Close()).Verifiable();
+                    storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+
+                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                    Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // open underlying store connection without explicitly opening entityConnection
+                    entityConnection.StoreConnection.Open();
+
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Open)
+                    Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+                }
+            }
+
+            [Fact]
+            public void EntityConnection_remains_closed_if_underlying_StoreConnection_is_opened_without_txn()
             {
                 var storeConnectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -239,11 +261,41 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
             }
 
-            private void EntityConnection_remains_open_if_underlying_StoreConnection_is_closed()
+            [Fact]
+            public void EntityConnection_remains_open_if_underlying_StoreConnection_is_closed_with_ambient_txn()
+            {
+                using (var transaction = new TransactionScope())
+                {
+                    var storeConnectionState = ConnectionState.Closed;
+                    var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+
+                    storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
+                    storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
+                    storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+
+                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                    // open entityConnection - both entityConnection and store connection should now be open
+                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
+                    entityConnection.Open();
+                    Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
+                    Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // now close the underlying store connection without explicitly closing entityConnection
+                    entityConnection.StoreConnection.Close();
+
+                    Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Closed)
+                    Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                }
+            }
+
+            [Fact]
+            public void EntityConnection_remains_open_if_underlying_StoreConnection_is_closed_without_txn()
             {
                 var storeConnectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                
+
                 storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
@@ -262,24 +314,6 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Closed)
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
-            }
-
-            // utility method to run the entity connection-store connection tests both with and without an ambient txn
-            private static void EntityConnectionStoreConnectionTest(
-                Action testToRun,
-                bool useTransaction = false)
-            {
-                if (useTransaction)
-                {
-                    using (var transaction = new TransactionScope())
-                    {
-                        testToRun();
-                    }
-                }
-                else
-                {
-                    testToRun();
-                }
             }
         }
 
