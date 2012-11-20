@@ -2,10 +2,9 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
     using System.Data.Entity.Resources;
     using System.Linq;
 
@@ -15,13 +14,12 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
-                        if (!item.Name.HasContent())
+                        if (string.IsNullOrWhiteSpace(item.Name))
                         {
                             context.AddError(
                                 item,
-                                CsdlConstants.Attribute_Name,
-                                Strings.EdmModel_Validator_Syntactic_MissingName,
-                                XmlErrorCode.InvalidName);
+                                XmlConstants.Name,
+                                Strings.EdmModel_Validator_Syntactic_MissingName);
                         }
                     }
                 );
@@ -30,16 +28,15 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
-                        if (item.Name.HasContent())
+                        if (!string.IsNullOrWhiteSpace(item.Name))
                         {
                             // max length is hard coded in the xsd
                             if (item.Name.Length > 480)
                             {
                                 context.AddError(
                                     item,
-                                    CsdlConstants.Attribute_Name,
-                                    Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name),
-                                    XmlErrorCode.InvalidName);
+                                    XmlConstants.Name,
+                                    Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name));
                             }
                         }
                     }
@@ -49,7 +46,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
-                        if (item.Name.HasContent())
+                        if (!string.IsNullOrWhiteSpace(item.Name))
                         {
                             // max length is hard coded in the xsd
                             if (item.Name.Length < 480)
@@ -60,9 +57,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                 {
                                     context.AddError(
                                         (MetadataItem)item,
-                                        CsdlConstants.Attribute_Name,
-                                        Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name),
-                                        XmlErrorCode.InvalidName);
+                                        XmlConstants.Name,
+                                        Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name));
                                 }
                             }
                         }
@@ -80,9 +76,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             {
                                 context.AddError(
                                     edmAssociationType,
-                                    CsdlConstants.Element_End,
-                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull,
-                                    XmlErrorCode.EdmAssociationType_AssocationEndMustNotBeNull);
+                                    XmlConstants.End,
+                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationType_AssocationEndMustNotBeNull);
                             }
                         }
                     );
@@ -96,9 +91,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             {
                                 context.AddError(
                                     edmAssociationConstraint,
-                                    CsdlConstants.Element_Dependent,
-                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull,
-                                    XmlErrorCode.EdmAssociationConstraint_DependentEndMustNotBeNull);
+                                    XmlConstants.DependentRole,
+                                    Strings.EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentEndMustNotBeNull);
                             }
                         }
                     );
@@ -114,10 +108,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             {
                                 context.AddError(
                                     edmAssociationConstraint,
-                                    CsdlConstants.Element_Dependent,
+                                    XmlConstants.DependentRole,
                                     Strings.
-                                        EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty,
-                                    XmlErrorCode.EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty);
+                                        EdmModel_Validator_Syntactic_EdmAssociationConstraint_DependentPropertiesMustNotBeEmpty);
                             }
                         }
                     );
@@ -131,9 +124,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             {
                                 context.AddError(
                                     edmNavigationProperty,
-                                    CsdlConstants.Attribute_Relationship,
-                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull,
-                                    XmlErrorCode.EdmNavigationProperty_AssocationMustNotBeNull);
+                                    XmlConstants.Relationship,
+                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_AssocationMustNotBeNull);
                             }
                         }
                     );
@@ -147,9 +139,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                             {
                                 context.AddError(
                                     edmNavigationProperty,
-                                    CsdlConstants.Attribute_ResultEnd,
-                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull,
-                                    XmlErrorCode.EdmNavigationProperty_ResultEndMustNotBeNull);
+                                    XmlConstants.ToRole,
+                                    Strings.EdmModel_Validator_Syntactic_EdmNavigationProperty_ResultEndMustNotBeNull);
                             }
                         }
                     );
@@ -162,9 +153,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         {
                             context.AddError(
                                 edmAssociationEnd,
-                                CsdlConstants.Attribute_Type,
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationEnd_EntityTypeMustNotBeNull,
-                                XmlErrorCode.EdmAssociationEnd_EntityTypeMustNotBeNull);
+                                XmlConstants.TypeAttribute,
+                                Strings.EdmModel_Validator_Syntactic_EdmAssociationEnd_EntityTypeMustNotBeNull);
                         }
                     }
                 );
@@ -177,9 +167,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         {
                             context.AddError(
                                 edmEntitySet,
-                                CsdlConstants.Property_ElementType,
-                                Strings.EdmModel_Validator_Syntactic_EdmEntitySet_ElementTypeMustNotBeNull,
-                                XmlErrorCode.EdmEntitySet_ElementTypeMustNotBeNull);
+                                XmlConstants.ElementType,
+                                Strings.EdmModel_Validator_Syntactic_EdmEntitySet_ElementTypeMustNotBeNull);
                         }
                     }
                 );
@@ -192,9 +181,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         {
                             context.AddError(
                                 edmAssociationSet,
-                                CsdlConstants.Property_ElementType,
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_ElementTypeMustNotBeNull,
-                                XmlErrorCode.EdmAssociationSet_ElementTypeMustNotBeNull);
+                                XmlConstants.ElementType,
+                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_ElementTypeMustNotBeNull);
                         }
                     }
                 );
@@ -207,10 +195,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         {
                             context.AddError(
                                 edmAssociationSet,
-                                CsdlConstants.Property_SourceSet,
+                                XmlConstants.FromRole,
                                 // Need special handling in the parser location handler
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull,
-                                XmlErrorCode.EdmAssociationSet_SourceSetMustNotBeNull);
+                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull);
                         }
                     }
                 );
@@ -223,10 +210,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                         {
                             context.AddError(
                                 edmAssociationSet,
-                                CsdlConstants.Property_TargetSet,
+                                XmlConstants.ToRole,
                                 // Need special handling in the parser location handler
-                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull,
-                                XmlErrorCode.EdmAssociationSet_TargetSetMustNotBeNull);
+                                Strings.EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull);
                         }
                     }
                 );
@@ -235,15 +221,34 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             new EdmModelValidationRule<TypeUsage>(
                 (context, edmTypeReference) =>
                     {
-                        if (!DataModelValidationHelper.IsEdmTypeUsageValid(edmTypeReference))
+                        if (!IsEdmTypeUsageValid(edmTypeReference))
                         {
                             context.AddError(
                                 edmTypeReference,
                                 null,
-                                Strings.EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid,
-                                XmlErrorCode.EdmTypeReferenceNotValid);
+                                Strings.EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid);
                         }
                     }
                 );
+
+        private static bool IsEdmTypeUsageValid(TypeUsage typeUsage)
+        {
+            var visitedValidTypeReferences = new HashSet<TypeUsage>();
+
+            return IsEdmTypeUsageValid(typeUsage, visitedValidTypeReferences);
+        }
+
+        private static bool IsEdmTypeUsageValid(
+            TypeUsage typeUsage, HashSet<TypeUsage> visitedValidTypeUsages)
+        {
+            if (visitedValidTypeUsages.Contains(typeUsage))
+            {
+                return false;
+            }
+
+            visitedValidTypeUsages.Add(typeUsage);
+
+            return true;
+        }
     }
 }

@@ -7,24 +7,23 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Data.Entity.Edm.Internal;
     using System.Diagnostics.Contracts;
 
-    /// <summary>
-    ///     The context for EdmModel Validation
-    /// </summary>
-    internal sealed class EdmModelValidationContext : DataModelValidationContext
+    internal sealed class EdmModelValidationContext
     {
-        internal event EventHandler<DataModelErrorEventArgs> OnError;
+        public event EventHandler<DataModelErrorEventArgs> OnError;
 
-        internal EdmModelValidationContext(bool validateSyntax)
+        public EdmModelValidationContext(bool validateSyntax)
         {
             ValidateSyntax = validateSyntax;
         }
 
-        internal EdmModelParentMap ModelParentMap { get; private set; }
+        public bool ValidateSyntax { get; set; }
+        public double ValidationContextVersion { get; set; }
 
-        internal string GetQualifiedPrefix(EdmType item)
+        public EdmModelParentMap ModelParentMap { get; private set; }
+
+        public string GetQualifiedPrefix(EdmType item)
         {
-            Contract.Assert(
-                ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
+            Contract.Requires(ModelParentMap != null);
 
             string qualifiedPrefix = null;
             EdmNamespace parentNamespace;
@@ -36,13 +35,13 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             return qualifiedPrefix;
         }
 
-        internal string GetQualifiedPrefix(EntitySetBase item)
+        public string GetQualifiedPrefix(EntitySetBase item)
         {
-            Contract.Assert(
-                ModelParentMap != null, "Model parent map was not initialized before calling GetQualifiedPrefix?");
+            Contract.Requires(ModelParentMap != null);
 
             string qualifiedPrefix = null;
-            EntityContainer parentContainer = null;
+            EntityContainer parentContainer;
+
             if (ModelParentMap.TryGetEntityContainer(item, out parentContainer))
             {
                 qualifiedPrefix = parentContainer.Name;
@@ -51,7 +50,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             return qualifiedPrefix;
         }
 
-        internal void RaiseDataModelValidationEvent(DataModelErrorEventArgs error)
+        public void RaiseDataModelValidationEvent(DataModelErrorEventArgs error)
         {
             if (OnError != null)
             {
@@ -59,9 +58,9 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             }
         }
 
-        internal void Validate(EdmModel root)
+        public void Validate(EdmModel root)
         {
-            Contract.Assert(root != null, "root cannot be null");
+            Contract.Requires(root != null);
 
             ModelParentMap = new EdmModelParentMap(root);
             ModelParentMap.Compute();
@@ -71,12 +70,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             EdmModelValidator.Validate(root, this);
         }
 
-        internal override void AddError(IMetadataItem item, string propertyName, string errorMessage, int errorCode)
+        public void AddError(IMetadataItem item, string propertyName, string errorMessage)
         {
             RaiseDataModelValidationEvent(
                 new DataModelErrorEventArgs
                     {
-                        ErrorCode = errorCode,
                         ErrorMessage = errorMessage,
                         Item = item,
                         PropertyName = propertyName,

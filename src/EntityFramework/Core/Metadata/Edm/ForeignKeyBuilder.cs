@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _assocationType
                 = new AssociationType(
                     name,
-                    DataModelVersions.GetSsdlNamespace(database.Version),
+                    XmlConstants.GetSsdlNamespace(database.Version),
                     true,
                     DataSpace.SSpace);
 

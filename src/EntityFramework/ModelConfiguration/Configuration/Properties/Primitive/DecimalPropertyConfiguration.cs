@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -64,10 +63,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             switch (facetDescription.FacetName)
             {
-                case SsdlConstants.Attribute_Precision:
+                case XmlConstants.PrecisionElement:
                     column.Precision = facetDescription.IsConstant ? null : Precision ?? column.Precision;
                     break;
-                case SsdlConstants.Attribute_Scale:
+                case XmlConstants.ScaleElement:
                     column.Scale = facetDescription.IsConstant ? null : Scale ?? column.Scale;
                     break;
             }

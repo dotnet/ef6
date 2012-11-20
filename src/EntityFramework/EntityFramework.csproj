@@ -1500,21 +1500,14 @@
     </Compile>
     <Compile Include="Core\Metadata\Edm\DataModelAnnotation.cs" />
     <Compile Include="Edm\Common\DataModelErrorEventArgs.cs" />
-    <Compile Include="Edm\Common\DataModelItem.cs" />
-    <Compile Include="Edm\Common\DataModelVersions.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
     <Compile Include="Core\Metadata\Edm\EdmNamespace.cs" />
     <Compile Include="Core\Metadata\Edm\IQualifiedNameMetadataItem.cs" />
-    <Compile Include="Edm\Internal\EdmConstants.cs" />
     <Compile Include="Edm\Internal\EdmExtensions.cs" />
     <Compile Include="Edm\Internal\EdmModelParentMap.cs" />
     <Compile Include="Edm\Internal\EdmModelVisitor.cs" />
     <Compile Include="Edm\Internal\EdmUtil.cs" />
-    <Compile Include="Edm\Parsing\Xml\Internal\Csdl\CsdlConstants.cs" />
-    <Compile Include="Edm\Parsing\Xml\Internal\Msl\MslConstants.cs" />
-    <Compile Include="Edm\Parsing\Xml\Internal\Ssdl\SsdlConstants.cs" />
-    <Compile Include="Edm\Parsing\Xml\Internal\XmlErrorCode.cs" />
     <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
     <Compile Include="Edm\Serialization\MslSerializer.cs" />
     <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
@@ -1522,8 +1515,6 @@
     <Compile Include="Edm\Serialization\Xml\Internal\Csdl\EdmSerializationVisitor.cs" />
     <Compile Include="Edm\Serialization\Xml\Internal\Msl\DbDatabaseMappingMslSchemaWriter.cs" />
     <Compile Include="Edm\Serialization\Xml\Internal\XmlSchemaWriter.cs" />
-    <Compile Include="Edm\Validation\Internal\DataModelValidationContext.cs" />
-    <Compile Include="Edm\Validation\Internal\DataModelValidationHelper.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationRule.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidationRuleSet.cs" />
     <Compile Include="Edm\Validation\Internal\DataModelValidator.cs" />
