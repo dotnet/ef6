@@ -178,7 +178,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var assembly = new DynamicAssembly();
             var dynamicType =
-                assembly.DynamicType("WeakProviderFactory").HasBaseClass(baseProviderType);
+                assembly.DynamicStructuralType("WeakProviderFactory").HasBaseClass(baseProviderType);
             dynamicType.CtorAccess = MemberAccess.Public;
             dynamicType.Field("Instance").HasType(dynamicType).IsStatic().IsInstance();
             var compiledAssembly = assembly.Compile(new AssemblyName(assemblyName));

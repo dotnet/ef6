@@ -253,8 +253,8 @@ namespace ProductivityApiTests
         {
             var assembly = new DynamicAssembly();
             assembly.HasAttribute(new EdmSchemaAttribute());
-            assembly.DynamicType("PocoEntity").Property("Id").HasType(typeof(int));
-            assembly.DynamicType("EocoEntity").Property("Id").HasType(typeof(int)).HasAttribute(
+            assembly.DynamicStructuralType("PocoEntity").Property("Id").HasType(typeof(int));
+            assembly.DynamicStructuralType("EocoEntity").Property("Id").HasType(typeof(int)).HasAttribute(
                 new EdmEntityTypeAttribute());
             var modelBuilder = assembly.ToBuilder();
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile();

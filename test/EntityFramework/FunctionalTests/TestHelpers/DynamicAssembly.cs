@@ -32,16 +32,39 @@ namespace System.Data.Entity
             get { return _types.Values; }
         }
 
-        public DynamicType DynamicType(string typeName)
+        public DynamicStructuralType DynamicStructuralType(string typeName)
+        {
+            return GetDynamicType<DynamicStructuralType>(typeName);
+        }
+
+        public DynamicEnumType DynamicEnumType(string typeName)
+        {
+            var dynamicEnumType = GetDynamicType<DynamicEnumType>(typeName);
+
+            return dynamicEnumType ??
+                   new DynamicEnumType()
+                       {
+                           Name = typeName
+                       };
+        }
+
+        private T GetDynamicType<T>(string typeName)
+            where T : DynamicType, new()
         {
             DynamicType dynamicType;
+
             if (!_dynamicTypes.TryGetValue(typeName, out dynamicType))
             {
-                dynamicType = new DynamicType();
-                dynamicType.ClassName = typeName;
+                dynamicType = 
+                    new T()
+                    {
+                        Name = typeName
+                    };
+
                 _dynamicTypes.Add(typeName, dynamicType);
             }
-            return dynamicType;
+
+            return (T)dynamicType;
         }
 
         public DynamicAssembly HasAttribute(Attribute a)
@@ -96,14 +119,19 @@ namespace System.Data.Entity
             var module = assemblyBuilder.DefineDynamicModule(moduleName);
             _assemblyCount++;
 
-            foreach (var typeInfo in DynamicTypes)
+            foreach (var enumTypeInfo in DynamicTypes.OfType<DynamicEnumType>())
             {
-                DefineType(module, typeInfo);
+                _types.Add(enumTypeInfo.Name, DefineEnumType(module, enumTypeInfo));
             }
 
-            foreach (var typeInfo in DynamicTypes)
+            foreach (var typeInfo in DynamicTypes.OfType<DynamicStructuralType>())
             {
-                var typeBuilder = _typeBuilders[typeInfo.ClassName];
+                DefineStructuralType(module, typeInfo);
+            }
+
+            foreach (var typeInfo in DynamicTypes.OfType<DynamicStructuralType>())
+            {
+                var typeBuilder = _typeBuilders[typeInfo.Name];
 
                 foreach (var fieldInfo in typeInfo.Fields)
                 {
@@ -129,19 +157,15 @@ namespace System.Data.Entity
             return _types[typeName];
         }
 
-        private void DefineType(ModuleBuilder module, DynamicType typeInfo)
+        public bool TryGetType(string typeName, out Type type)
         {
-            var typeAttributes = TypeAttributes.Class;
-            switch (typeInfo.ClassAccess)
-            {
-                case MemberAccess.Public:
-                    typeAttributes |= TypeAttributes.Public;
-                    break;
-                case MemberAccess.Private:
-                case MemberAccess.Internal:
-                    typeAttributes |= TypeAttributes.NotPublic;
-                    break;
-            }
+            return _types.TryGetValue(typeName, out type);
+        }
+
+        private void DefineStructuralType(ModuleBuilder module, DynamicStructuralType typeInfo)
+        {
+            var typeAttributes = TypeAttributes.Class | GetTypeAccess(typeInfo.TypeAccess);
+
             if (typeInfo.IsAbstract)
             {
                 typeAttributes |= TypeAttributes.Abstract;
@@ -156,12 +180,12 @@ namespace System.Data.Entity
             {
                 baseClass = typeInfo.BaseClass as Type;
             }
-            else if (typeInfo.BaseClass is DynamicType)
+            else if (typeInfo.BaseClass is DynamicStructuralType)
             {
-                baseClass = _typeBuilders[((DynamicType)typeInfo.BaseClass).ClassName].Item1;
+                baseClass = _typeBuilders[((DynamicStructuralType)typeInfo.BaseClass).Name].Item1;
             }
 
-            var typeBuilder = module.DefineType(typeInfo.ClassName, typeAttributes, baseClass);
+            var typeBuilder = module.DefineType(typeInfo.Name, typeAttributes, baseClass);
             foreach (var a in typeInfo.Attributes)
             {
                 typeBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(a));
@@ -172,7 +196,7 @@ namespace System.Data.Entity
                                          ? null
                                          : typeBuilder.DefineDefaultConstructor(GetMethodAttributes(false, typeInfo.CtorAccess));
 
-            _typeBuilders.Add(typeInfo.ClassName, Tuple.Create(typeBuilder, constructorBuilder));
+            _typeBuilders.Add(typeInfo.Name, Tuple.Create(typeBuilder, constructorBuilder));
         }
 
         private void DefineField(TypeBuilder typeBuilder, ConstructorBuilder constructorBuilder, DynamicField fieldInfo)
@@ -183,7 +207,7 @@ namespace System.Data.Entity
                 fieldAttributes |= FieldAttributes.Static;
             }
 
-            var fieldType = _typeBuilders[fieldInfo.FieldType.ClassName].Item1;
+            var fieldType = _typeBuilders[fieldInfo.FieldType.Name].Item1;
             var fieldBuilder = typeBuilder.DefineField(fieldInfo.FieldName, fieldType, fieldAttributes);
 
             if (fieldInfo.SetInstancePattern)
@@ -204,12 +228,21 @@ namespace System.Data.Entity
             var setterAccess = propertyInfo.SetterAccess;
 
             Type propertyType;
-            if (propertyInfo.CollectionType != null)
+            if (propertyInfo.EnumType != null)
+            {
+                propertyType = _types[propertyInfo.EnumType.Item1.Name];
+
+                if (propertyInfo.EnumType.Item2)
+                {
+                    propertyType = typeof(Nullable<>).MakeGenericType(propertyType);    
+                }
+            }
+            else if (propertyInfo.CollectionType != null)
             {
                 if (propertyInfo.ReferenceType != null)
                 {
                     propertyType =
-                        propertyInfo.CollectionType.MakeGenericType(_typeBuilders[propertyInfo.ReferenceType.ClassName].Item1);
+                        propertyInfo.CollectionType.MakeGenericType(_typeBuilders[propertyInfo.ReferenceType.Name].Item1);
                 }
                 else
                 {
@@ -218,8 +251,8 @@ namespace System.Data.Entity
             }
             else if (propertyInfo.ReferenceType != null)
             {
-                propertyType = _typeBuilders[propertyInfo.ReferenceType.ClassName].Item1;
-                switch (_dynamicTypes[propertyInfo.ReferenceType.ClassName].ClassAccess)
+                propertyType = _typeBuilders[propertyInfo.ReferenceType.Name].Item1;
+                switch (_dynamicTypes[propertyInfo.ReferenceType.Name].TypeAccess)
                 {
                     case MemberAccess.Private:
                         getterAccess = MemberAccess.Private;
@@ -287,7 +320,46 @@ namespace System.Data.Entity
             }
         }
 
-        private MethodAttributes GetMethodAttributes(bool isVirtual, MemberAccess memberAccess)
+        private Type DefineEnumType(ModuleBuilder module, DynamicEnumType enumTypeInfo)
+        {
+            var enumBuilder = 
+                module.DefineEnum(
+                    enumTypeInfo.Name, 
+                    GetTypeAccess(enumTypeInfo.TypeAccess), 
+                    enumTypeInfo.UnderlyingType);
+
+            foreach (var a in enumTypeInfo.Attributes)
+            {
+                enumBuilder.SetCustomAttribute(AnnotationAttributeBuilder.Create(a));
+            }
+
+            foreach (var enumMember in enumTypeInfo.Members)
+            {
+                enumBuilder.DefineLiteral(
+                    enumMember.Key, 
+                    Convert.ChangeType(enumMember.Value, enumTypeInfo.UnderlyingType));
+            }
+
+            return enumBuilder.CreateType();
+        }
+
+        private static TypeAttributes GetTypeAccess(MemberAccess typeAccess)
+        {
+            TypeAttributes typeAttributes = 0;
+            switch (typeAccess)
+            {
+                case MemberAccess.Public:
+                    typeAttributes |= TypeAttributes.Public;
+                    break;
+                case MemberAccess.Private:
+                case MemberAccess.Internal:
+                    typeAttributes |= TypeAttributes.NotPublic;
+                    break;
+            }
+            return typeAttributes;
+        }
+
+        private static MethodAttributes GetMethodAttributes(bool isVirtual, MemberAccess memberAccess)
         {
             var attributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName;
             if (isVirtual)
@@ -352,10 +424,43 @@ namespace System.Data.Entity
                 return new CustomAttributeBuilder(
                     typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
                     new object[] { },
-                    new[]
-                        { typeof(DataMemberAttribute).GetProperty("Order") },
+                    new[] { typeof(DataMemberAttribute).GetProperty("Order") },
                     new object[] { attribute.Order });
             }
+        }
+
+        public static CustomAttributeBuilder CreateCustom(EdmTypeAttribute attribute)
+        {
+            return new CustomAttributeBuilder(
+                attribute.GetType().GetConstructor(Type.EmptyTypes),
+                    new object[0],
+                    new PropertyInfo[] 
+                    {
+                        typeof(EdmTypeAttribute).GetProperty("Name"),
+                        typeof(EdmTypeAttribute).GetProperty("NamespaceName")
+                    },
+                    new object[] 
+                    {
+                        attribute.Name,
+                        attribute.NamespaceName
+                    });
+        }
+
+        public static CustomAttributeBuilder CreateCustom(EdmScalarPropertyAttribute attribute)
+        {
+            return new CustomAttributeBuilder(
+                attribute.GetType().GetConstructor(Type.EmptyTypes),
+                    new object[0],
+                    new PropertyInfo[] 
+                    { 
+                        typeof(EdmScalarPropertyAttribute).GetProperty("EntityKeyProperty"), 
+                        typeof(EdmScalarPropertyAttribute).GetProperty("IsNullable") 
+                    },
+                    new object[] 
+                    {
+                        attribute.EntityKeyProperty, 
+                        attribute.IsNullable
+                    });
         }
 
         private static object[] GetArgs(dynamic attribute)
@@ -407,6 +512,21 @@ namespace System.Data.Entity
         {
             return new object[] { };
         }
+
+        private static object[] GetArgs(EdmRelationshipNavigationPropertyAttribute attribute)
+        {
+            return new object[] 
+                { 
+                    attribute.RelationshipNamespaceName, 
+                    attribute.RelationshipName, 
+                    attribute.TargetRoleName 
+                };
+        }
+
+        private static object[] GetArgs(EdmComplexPropertyAttribute attribute)
+        {
+            return new object[0];
+        }
     }
 
     public enum MemberAccess
@@ -440,9 +560,17 @@ namespace System.Data.Entity
             return this;
         }
 
-        public DynamicType ReferenceType { get; set; }
+        public Tuple<DynamicEnumType, bool> EnumType { get; set; }
 
-        public DynamicProperty HasReferenceType(DynamicType referenceType)
+        public Tuple<DynamicEnumType, bool> HasEnumType(DynamicEnumType enumType, bool nullable)
+        {
+            EnumType = new Tuple<DynamicEnumType,bool>(enumType, nullable);
+            return EnumType;
+        }
+
+        public DynamicStructuralType ReferenceType { get; set; }
+
+        public DynamicProperty HasReferenceType(DynamicStructuralType referenceType)
         {
             ReferenceType = referenceType;
             return this;
@@ -450,7 +578,7 @@ namespace System.Data.Entity
 
         public Type CollectionType { get; set; }
 
-        public DynamicProperty HasCollectionType(Type collectionType, DynamicType referenceType)
+        public DynamicProperty HasCollectionType(Type collectionType, DynamicStructuralType referenceType)
         {
             CollectionType = collectionType;
             ReferenceType = referenceType;
@@ -515,12 +643,12 @@ namespace System.Data.Entity
 
     public class DynamicField
     {
-        public DynamicType FieldType { get; set; }
+        public DynamicStructuralType FieldType { get; set; }
         public string FieldName { get; set; }
         public bool Static { get; set; }
         public bool SetInstancePattern { get; set; }
 
-        public DynamicField HasType(DynamicType propertyType)
+        public DynamicField HasType(DynamicStructuralType propertyType)
         {
             FieldType = propertyType;
             return this;
@@ -548,36 +676,41 @@ namespace System.Data.Entity
         }
     }
 
-    public class DynamicType
+    public abstract class DynamicType
     {
-        private MemberAccess _classAccess = MemberAccess.Public;
-        private readonly Dictionary<string, DynamicProperty> _properties = new Dictionary<string, DynamicProperty>();
-        private readonly Dictionary<string, DynamicField> _fields = new Dictionary<string, DynamicField>();
-        private MemberAccess _ctorAccess = MemberAccess.None;
         private readonly List<Attribute> _attributes = new List<Attribute>();
 
-        public string ClassName { get; set; }
-
-        public DynamicType HasClassName(string className)
-        {
-            ClassName = className;
-            return this;
-        }
+        public string Name { get; set; }
 
         public List<Attribute> Attributes
         {
             get { return _attributes; }
         }
 
-        public DynamicType HasAttribute(Attribute a)
+        private MemberAccess _typeAccess = MemberAccess.Public;
+
+        public MemberAccess TypeAccess
         {
-            _attributes.Add(a);
+            get { return _typeAccess; }
+            set { _typeAccess = value; }
+        }
+    }
+
+    public class DynamicStructuralType : DynamicType
+    {
+        private readonly Dictionary<string, DynamicProperty> _properties = new Dictionary<string, DynamicProperty>();
+        private readonly Dictionary<string, DynamicField> _fields = new Dictionary<string, DynamicField>();
+        private MemberAccess _ctorAccess = MemberAccess.None;
+
+        public DynamicStructuralType HasName(string name)
+        {
+            Name = name;
             return this;
         }
 
         public bool IsSealed { get; set; }
 
-        public DynamicType HasSealed(bool isSealed)
+        public DynamicStructuralType HasSealed(bool isSealed)
         {
             IsSealed = isSealed;
             return this;
@@ -585,21 +718,21 @@ namespace System.Data.Entity
 
         public bool IsAbstract { get; set; }
 
-        public DynamicType HasAbstract(bool isAbstract)
+        public DynamicStructuralType HasAbstract(bool isAbstract)
         {
             IsAbstract = isAbstract;
             return this;
         }
 
-        public MemberAccess ClassAccess
+        public DynamicStructuralType HasAttribute(Attribute a)
         {
-            get { return _classAccess; }
-            set { _classAccess = value; }
+            Attributes.Add(a);
+            return this;
         }
 
-        public DynamicType HasClassAccess(MemberAccess access)
+        public DynamicStructuralType HasClassAccess(MemberAccess access)
         {
-            ClassAccess = access;
+            TypeAccess = access;
             return this;
         }
 
@@ -637,7 +770,7 @@ namespace System.Data.Entity
 
         public object BaseClass { get; set; }
 
-        public DynamicType HasBaseClass(object baseClass)
+        public DynamicStructuralType HasBaseClass(object baseClass)
         {
             BaseClass = baseClass;
             return this;
@@ -651,6 +784,53 @@ namespace System.Data.Entity
         public IEnumerable<DynamicField> Fields
         {
             get { return _fields.Values; }
+        }
+    }
+
+    public class DynamicEnumType : DynamicType
+    {
+        private readonly Dictionary<string, object> _members = new Dictionary<string, object>();
+
+        public DynamicEnumType HasName(string name)
+        {
+            Name = name;
+            return this;
+        }
+
+        public DynamicEnumType()
+        {
+            UnderlyingType = typeof(int);
+        }
+
+        public DynamicEnumType HasClassAccess(MemberAccess access)
+        {
+            TypeAccess = access;
+            return this;
+        }
+
+        public Type UnderlyingType { get; set; }
+
+        public DynamicEnumType HasUnderlyingType(Type type)
+        {
+            UnderlyingType = type;
+            return this;
+        }
+
+        public DynamicEnumType HasAttribute(Attribute a)
+        {
+            Attributes.Add(a);
+            return this;
+        }
+
+        public IEnumerable<KeyValuePair<string, object>> Members
+        {
+            get { return _members; }
+        }
+
+        public DynamicEnumType HasMember(string name, object value)
+        {
+            _members[name] = value;
+            return this;
         }
     }
 }

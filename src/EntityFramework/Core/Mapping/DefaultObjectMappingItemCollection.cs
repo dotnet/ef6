@@ -469,7 +469,6 @@ namespace System.Data.Entity.Core.Mapping
             Dictionary<string, ObjectTypeMapping> typeMappings)
         {
             Debug.Assert((edmType != null) && (objectType != null));
-            Debug.Assert((edmType.BuiltInTypeKind == objectType.BuiltInTypeKind), "The BuiltInTypeKind must be same in LoadObjectMapping");
 
             if (Helper.IsEnumType(edmType)
                 ^ Helper.IsEnumType(objectType))
