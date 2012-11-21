@@ -3537,15 +3537,5 @@ namespace ProductivityApiTests
         public string Name { get; set; }
     }
 
-    public class SimpleContext : DbContext
-    {
-        public DbSet<SimpleProduct> Products { get; set; }
-    }
-
-    public class SimpleProduct
-    {
-        public int SimpleProductId { get; set; }
-    }
-
     #endregion
 }
