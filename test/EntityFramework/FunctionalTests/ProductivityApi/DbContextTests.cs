@@ -5,6 +5,7 @@ namespace ProductivityApiTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
@@ -3381,6 +3382,146 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
+        [Fact]
+        public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
+        {
+            Database.SetInitializer(new DropCreateDatabaseAlways<SimpleModelContext>());
+
+            using (var context = new SimpleModelContext())
+            {
+                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+                
+                // ensure there are at least 2 products
+                var product1 = new Product
+                {
+                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open1"
+                };
+                context.Products.Add(product1);
+                var product2 = new Product
+                {
+                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open2"
+                };
+                context.Products.Add(product2);
+                context.SaveChanges();
+
+                var query = from p in context.Products
+                             select p.Name;
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    int i = 0;
+                    foreach (string s in query)
+                    {
+                        if (i == 0)
+                        {
+                            Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
+                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                            // in first iteration close the underlying store connection without explicitly closing entityConnection
+                            entityConnection.StoreConnection.Close();
+                            Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state
+                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                        }
+                        else
+                        {
+                            Assert.True(false, "Should never reach here - should throw InvalidOperationException first");
+                            break;
+                        }
+
+                        i++;
+                    }
+                });
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                // prove that can still re-use the connection even after the above
+                string allStrings = string.Empty;
+                foreach (string s in query)
+                {
+                    allStrings += s;
+                }
+
+                // and show that the entity connection and the store connection are once again closed
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+            }
+        }
+
+        [Fact]
+        public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
+        {
+            Database.SetInitializer(new DropCreateDatabaseAlways<SimpleModelContext>());
+
+            using (var context = new SimpleModelContext())
+            {
+                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+
+                // ensure there are at least 2 products
+                var product1 = new Product
+                {
+                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open1"
+                };
+                context.Products.Add(product1);
+                var product2 = new Product
+                {
+                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open2"
+                };
+                context.Products.Add(product2);
+                context.SaveChanges();
+
+                var query = from p in context.Products
+                            select p.Name;
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    int i = 0;
+                    foreach (string s in query)
+                    {
+                        if (i == 0)
+                        {
+                            Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
+                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                            // in first iteration close the entity connection explicitly (i.e. not through context) in middle of query
+                            entityConnection.Close();
+                            Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                        }
+                        else
+                        {
+                            Assert.True(false, "Should never reach here - should throw InvalidOperationException first");
+                            break;
+                        }
+
+                        i++;
+                    }
+                });
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                // prove that can still re-use the connection even after the above
+                string allStrings = string.Empty;
+                foreach (string s in query)
+                {
+                    allStrings += s;
+                }
+
+                // and show that the entity connection and the store connection are once again closed
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+            }
+        }
+        #endregion
     }
 
     #region Fake contexts
@@ -3394,6 +3535,16 @@ namespace ProductivityApiTests
     {
         public int Id { get; set; }
         public string Name { get; set; }
+    }
+
+    public class SimpleContext : DbContext
+    {
+        public DbSet<SimpleProduct> Products { get; set; }
+    }
+
+    public class SimpleProduct
+    {
+        public int SimpleProductId { get; set; }
     }
 
     #endregion

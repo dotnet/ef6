@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -224,7 +225,7 @@ namespace System.Data.Entity.Core.EntityClient
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                     storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
-                    storeConnectionMock.Setup(m => m.Close()).Verifiable();
+                    storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
@@ -246,7 +247,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var storeConnectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
-                storeConnectionMock.Setup(m => m.Close()).Verifiable();
+                storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
@@ -259,6 +260,12 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Open)
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                // now close underlying store connection (without explicitly closing entityConnection)
+                entityConnection.StoreConnection.Close();
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
             }
 
             [Fact]
@@ -287,6 +294,11 @@ namespace System.Data.Entity.Core.EntityClient
 
                     Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Closed)
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // now re-open the store connection and EntityConnection is "resurrected" to an Open state
+                    entityConnection.StoreConnection.Open();
+                    Assert.Equal(ConnectionState.Open, entityConnection.State);
+                    Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
                 }
             }
 
@@ -314,7 +326,13 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Closed)
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                // now re-open the store connection and EntityConnection is "resurrected" to an Open state
+                entityConnection.StoreConnection.Open();
+                Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
+
         }
 
 #if !NET40
