@@ -238,6 +238,12 @@ namespace System.Data.Entity.Core.EntityClient
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state (when we listen to store connection events this should change to ConnectionState.Open)
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                    // now close underlying store connection (without explicitly closing entityConnection)
+                    entityConnection.StoreConnection.Close();
+
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                    Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
                 }
             }
 

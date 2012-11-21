@@ -3396,12 +3396,12 @@ namespace ProductivityApiTests
                 // ensure there are at least 2 products
                 var product1 = new Product
                 {
-                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open1"
+                    Name = "Implicit_EntityConnection_throws_if_close_underlying_StoreConnection1"
                 };
                 context.Products.Add(product1);
                 var product2 = new Product
                 {
-                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open2"
+                    Name = "Implicit_EntityConnection_throws_if_close_underlying_StoreConnection2"
                 };
                 context.Products.Add(product2);
                 context.SaveChanges();
@@ -3419,13 +3419,13 @@ namespace ProductivityApiTests
                     {
                         if (i == 0)
                         {
-                            Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
-                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+                            Assert.Equal(ConnectionState.Open, entityConnection.State);
+                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                             // in first iteration close the underlying store connection without explicitly closing entityConnection
                             entityConnection.StoreConnection.Close();
-                            Assert.Equal(ConnectionState.Broken, entityConnection.State); // entityConnection state
-                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                            Assert.Equal(ConnectionState.Broken, entityConnection.State);
+                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
                         }
                         else
                         {
@@ -3437,8 +3437,8 @@ namespace ProductivityApiTests
                     }
                 });
 
-                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
-                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // prove that can still re-use the connection even after the above
                 string allStrings = string.Empty;
@@ -3465,12 +3465,12 @@ namespace ProductivityApiTests
                 // ensure there are at least 2 products
                 var product1 = new Product
                 {
-                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open1"
+                    Name = "Implicit_EntityConnection_throws_if_close_EntityConnection_during_query1"
                 };
                 context.Products.Add(product1);
                 var product2 = new Product
                 {
-                    Name = "ImplicitEntityConnection_open_works_even_if_underlying_StoreConnection_is_already_open2"
+                    Name = "Implicit_EntityConnection_throws_if_close_EntityConnection_during_query2"
                 };
                 context.Products.Add(product2);
                 context.SaveChanges();
@@ -3488,13 +3488,13 @@ namespace ProductivityApiTests
                     {
                         if (i == 0)
                         {
-                            Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
-                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
+                            Assert.Equal(ConnectionState.Open, entityConnection.State);
+                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                             // in first iteration close the entity connection explicitly (i.e. not through context) in middle of query
                             entityConnection.Close();
-                            Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
-                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                            Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
                         }
                         else
                         {
@@ -3506,8 +3506,8 @@ namespace ProductivityApiTests
                     }
                 });
 
-                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
-                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // prove that can still re-use the connection even after the above
                 string allStrings = string.Empty;
