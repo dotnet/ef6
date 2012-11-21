@@ -2412,7 +2412,7 @@ namespace ProductivityApiTests
                 context.Configuration.LazyLoadingEnabled = false;
                 var team = context.Teams.FirstOrDefault();
 
-                Assert.Null(team.Drivers);
+                Assert.Equal(0, team.Drivers.Count);
             }
         }
 
