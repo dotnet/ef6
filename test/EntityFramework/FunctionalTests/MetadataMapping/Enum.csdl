@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" Namespace="MessageModel">
+  <EntityContainer Name="MessageContainer">
+    <EntitySet Name="MessageSet" EntityType="MessageModel.Message" />
+    <EntitySet Name="MessageTypeLookUpSet" EntityType="MessageModel.MessageTypeLookUp" />
+    <AssociationSet Name="MessageMessageType" Association="MessageModel.MessageMessageType">
+      <End Role="Message" EntitySet="MessageSet" />
+      <End Role="MessageType" EntitySet="MessageTypeLookUpSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Message">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="MessageType" Type="MessageModel.MessageType" Nullable="false"/>
+    <Property Name="ContentsType" Type="MessageModel.ContentsType" Nullable="true"/>
+    <Property Name="PaymentMethod" Type="MessageModel.PaymentMethod" Nullable="false"/>
+    <NavigationProperty Name="TypeOfMessage" Relationship="MessageModel.MessageMessageType" FromRole="Message" ToRole="MessageType" />
+  </EntityType>
+  <EntityType Name="MessageTypeLookUp">
+    <Key>
+      <PropertyRef Name="TypeOfMessage" />
+    </Key>
+    <Property Name="TypeOfMessage" Type="MessageModel.MessageType" Nullable="false"/>
+    <Property Name="Description" Type="String" Nullable="true" />
+  </EntityType>
+  <EnumType Name="MessageType" IsFlags="false">
+    <Member Name="Express" />
+    <Member Name="Priority" />
+    <Member Name="Ground" />
+  </EnumType>
+  <EnumType Name="ContentsType" IsFlags="true" UnderlyingType="Byte">
+    <Member Name="None" Value="0"/>
+    <Member Name="Liquid" Value="1"/>
+    <Member Name="Perishable" Value="2"/>
+    <Member Name="Food" Value="4"/>
+  </EnumType>
+  <EnumType Name="PaymentMethod" IsFlags="false" UnderlyingType="Int32">
+    <Member Name="Cash" Value="100"/>
+    <Member Name="DebitCard" Value="200"/>
+    <Member Name="CreditCard" Value="400"/>
+  </EnumType>
+
+  <Association Name="MessageMessageType">
+    <End Role="Message" Type="MessageModel.Message" Multiplicity="*" />
+    <End Role="MessageType" Type="MessageModel.MessageTypeLookUp" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="MessageType">
+        <PropertyRef Name="TypeOfMessage" />
+      </Principal>
+      <Dependent Role="Message">
+        <PropertyRef Name="MessageType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+
+</Schema>
