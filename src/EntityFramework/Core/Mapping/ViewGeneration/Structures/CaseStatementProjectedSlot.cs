@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class CaseStatementProjectedSlot : ProjectedSlot
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a slot for <paramref name="statement" />.
         /// </summary>
@@ -23,20 +21,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_withRelationships = withRelationships;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The actual case statement.
         /// </summary>
         private readonly CaseStatement m_caseStatement;
 
         private readonly IEnumerable<WithRelationship> m_withRelationships;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
@@ -64,7 +54,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_caseStatement.ToCompactString(builder);
         }
-
-        #endregion
     }
 }

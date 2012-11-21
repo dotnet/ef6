@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // This class represents th intermediate nodes in the tree (non-leaf nodes)
     internal class OpCellTreeNode : CellTreeNode
     {
-        #region Constructors
-
         // effects: Creates a node with operation opType and no children
         internal OpCellTreeNode(ViewgenContext context, CellTreeOpType opType)
             : base(context)
@@ -45,19 +43,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly AttributeSet m_attrs; // attributes from whole subtree below
         private readonly List<CellTreeNode> m_children;
         private readonly CellTreeOpType m_opType;
         private FragmentQuery m_leftFragmentQuery;
         private FragmentQuery m_rightFragmentQuery;
-
-        #endregion
-
-        #region Properties
 
         // effects: See CellTreeNode.OpType
         internal override CellTreeOpType OpType
@@ -131,10 +121,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return m_children[0].NumBoolSlots;
             }
         }
-
-        #endregion
-
-        #region Methods
 
         internal override TOutput Accept<TInput, TOutput>(SimpleCellTreeVisitor<TInput, TOutput> visitor, TInput param)
         {
@@ -220,10 +206,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             return false;
         }
-
-        #endregion
-
-        #region Union CqlBLock Methods
 
         // requires: node corresponds to a Union node
         // effects: Given a union node and the slots required by the parent,
@@ -346,10 +328,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 boolArray[i] &= another[i];
             }
         }
-
-        #endregion
-
-        #region Join CqlBLock Methods
 
         // requires: node corresponds to an IJ, LOJ, FOJ node
         // effects: Given a union node and the slots required by the parent,
@@ -655,10 +633,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return fragmentQuery;
         }
 
-        #endregion
-
-        #region String methods
-
         /// <summary>
         ///     Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
         /// </summary>
@@ -695,7 +669,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             stringBuilder.Append(")");
         }
-
-        #endregion
     }
 }

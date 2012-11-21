@@ -26,8 +26,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </remarks>
     internal partial class Propagator : UpdateExpressionVisitor<ChangeNode>
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a new propagator.
         /// </summary>
@@ -43,17 +41,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_table = table;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly UpdateTranslator m_updateTranslator;
         private readonly EntitySet m_table;
         private static readonly string _visitorName = typeof(Propagator).FullName;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets context for updates performed by this propagator.
@@ -67,10 +57,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             get { return _visitorName; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Propagate changes from C-Space (contained in <paramref name="parent" /> to the S-Space.
@@ -106,8 +92,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             var elementType = MetadataHelper.GetElementType(nodeType);
             return new ChangeNode(elementType);
         }
-
-        #region Visitor implementation
 
         public override ChangeNode Visit(DbCrossJoinExpression node)
         {
@@ -310,9 +294,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return extentModifications;
         }
-
-        #endregion
-
-        #endregion
     }
 }

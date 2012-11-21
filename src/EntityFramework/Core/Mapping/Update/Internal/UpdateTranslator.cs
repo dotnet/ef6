@@ -1158,8 +1158,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         private class RelationshipConstraintValidator
         {
-            #region Constructor
-
             internal RelationshipConstraintValidator()
             {
                 m_existingRelationships =
@@ -1168,10 +1166,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     new Dictionary<DirectionalRelationship, IEntityStateEntry>(EqualityComparer<DirectionalRelationship>.Default);
                 m_referencingRelationshipSets = new Dictionary<EntitySet, List<AssociationSet>>(EqualityComparer<EntitySet>.Default);
             }
-
-            #endregion
-
-            #region Fields
 
             /// <summary>
             ///     Relationships registered in the validator.
@@ -1187,10 +1181,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ///     Cache used to store relationship sets with ends bound to entity sets.
             /// </summary>
             private readonly Dictionary<EntitySet, List<AssociationSet>> m_referencingRelationshipSets;
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Add an entity to be tracked by the validator. Requires that the input describes an entity.
@@ -1501,10 +1491,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return relationshipSets;
             }
 
-            #endregion
-
-            #region Nested types
-
             /// <summary>
             ///     An instance of an actual or expected relationship. This class describes one direction
             ///     of the relationship.
@@ -1672,8 +1658,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         StringUtil.BuildDelimitedList(ToEntityKey.EntityKeyValues, null, null));
                 }
             }
-
-            #endregion
         }
     }
 }

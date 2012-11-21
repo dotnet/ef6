@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </remarks>
     internal class RecordConverter
     {
-        #region Constructors
-
         /// <summary>
         ///     Initializes a new converter given a command tree context. Initializes a new record layout cache.
         /// </summary>
@@ -28,18 +26,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_updateTranslator = updateTranslator;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     Context used to produce expressions.
         /// </summary>
         private readonly UpdateTranslator m_updateTranslator;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Converts original values in a state entry to a DbNewInstanceExpression. The record must be either an entity or 
@@ -99,7 +89,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 throw;
             }
         }
-
-        #endregion
     }
 }

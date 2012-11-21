@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class BooleanProjectedSlot : ProjectedSlot
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a boolean slot for expression that comes from originalCellNum, i.e., 
         ///     the value of the slot is <paramref name="expr" /> and the name is "_from{<paramref name="originalCellNum" />}", e.g., _from2
@@ -30,10 +28,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 BoolLiteral.EqualityComparer.Equals(expr.AsLiteral, m_originalCell), "Cellid boolean for the slot and cell number disagree");
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The actual value of the slot - could be <see cref="CellIdBoolean" />!
         /// </summary>
@@ -43,10 +37,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         ///     A boolean corresponding to the original cell number (_from0)
         /// </summary>
         private readonly CellIdBoolean m_originalCell;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns "_from0", "_from1" etc. <paramref name="outputMember" /> is ignored.
@@ -97,7 +87,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_expr.ToCompactString(builder);
             builder.Append('>');
         }
-
-        #endregion
     }
 }

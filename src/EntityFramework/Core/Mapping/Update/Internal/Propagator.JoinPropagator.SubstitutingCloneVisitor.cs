@@ -40,8 +40,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </remarks>
             private static class PlaceholderPopulator
             {
-                #region Methods
-
                 /// <summary>
                 ///     Construct a new placeholder with the shape of the given placeholder. Key values are
                 ///     injected into the resulting place holder and default values are substituted with
@@ -108,8 +106,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     return result;
                 }
-
-                #endregion
             }
         }
     }

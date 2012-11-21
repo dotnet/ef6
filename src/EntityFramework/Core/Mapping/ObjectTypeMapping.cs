@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class ObjectTypeMapping : Map
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a new ObjectTypeMapping object
         /// </summary>
@@ -36,12 +34,6 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        #endregion
-
-        #region Fields
-
-        #region Internal
-
         private readonly EdmType m_clrType; //type on the Clr side that is being mapped
         private readonly EdmType m_cdmType; //type on the Cdm side that is being mapped
         private readonly string identity;
@@ -51,12 +43,6 @@ namespace System.Data.Entity.Core.Mapping
 
         private static readonly Dictionary<string, ObjectMemberMapping> EmptyMemberMapping
             = new Dictionary<string, ObjectMemberMapping>(0);
-
-        #endregion
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Gets the type kind for this item
@@ -102,10 +88,6 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return identity; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     get a MemberMap for the member name specified
@@ -199,7 +181,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             return Identity;
         }
-
-        #endregion
     }
 }

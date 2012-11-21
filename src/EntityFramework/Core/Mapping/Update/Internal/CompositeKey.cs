@@ -12,16 +12,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </summary>
     internal class CompositeKey
     {
-        #region Fields
-
         /// <summary>
         ///     Gets components of this composite key.
         /// </summary>
         internal readonly PropagatorResult[] KeyComponents;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     Initialize a new composite key using the given constant values. Order is important.
@@ -33,10 +27,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             KeyComponents = constants;
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Creates a key comparer operating in the context of the given translator.
@@ -61,8 +51,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             return new CompositeKey(mergedKeyValues);
         }
-
-        #endregion
 
         /// <summary>
         ///     Equality and comparison implementation for composite keys.

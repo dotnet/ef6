@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using Xunit;
 
@@ -26,19 +28,25 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             Assert.Equal(OperationAction.None, foreignKeyConstraint.DeleteAction);
 
-            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var table = databaseMapping.Database.AddTable("T");
+
             table.AddForeignKey(foreignKeyConstraint);
 
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType
+                = new AssociationType
+                      {
+                          SourceEnd = new AssociationEndMember("S", new EntityType()),
+                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                      };
+
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
-                new AssociationSet("AS", associationType));
-            associationSetMapping.Table = table;
+                new AssociationSet("AS", associationType), new EntitySet());
+
+            associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(table);
 
             ((IDbMappingConvention)new ManyToManyCascadeDeleteConvention()).Apply(databaseMapping);
 

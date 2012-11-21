@@ -61,7 +61,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count);
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
         [Fact]

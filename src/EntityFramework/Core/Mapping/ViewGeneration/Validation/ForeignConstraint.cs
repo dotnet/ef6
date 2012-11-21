@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     // <child, columns> --> <parent, columns>
     internal class ForeignConstraint : InternalBase
     {
-        #region Constructor
-
         // effects: Creates a foreign key constraint of the form:
         // <i_childTable, i_childColumns> --> <i_parentTable, i_childColumns>
         // i_fkeySet is the name of the constraint
@@ -46,19 +44,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly AssociationSet m_fKeySet; // Just for debugging
         private readonly EntitySet m_parentTable;
         private readonly EntitySet m_childTable;
         private readonly List<MemberPath> m_parentColumns;
         private readonly List<MemberPath> m_childColumns;
-
-        #endregion
-
-        #region Properties
 
         internal EntitySet ParentTable
         {
@@ -79,10 +69,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             get { return m_parentColumns; }
         }
-
-        #endregion
-
-        #region Externally available Methods
 
         // effects: Given a store-side container, returns all the foreign key
         // constraints specified for different tables
@@ -222,10 +208,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
-        #region Methods (mostly) for Query Containment Check via Keys
-
         // requires: constraint.ChildColumns form a key in
         // constraint.ChildTable (actually they should subsume the primary key)
         private void GuaranteeForeignKeyConstraintInCSpace(
@@ -254,10 +236,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 errorLog.AddEntry(record);
             }
         }
-
-        #endregion
-
-        #region Methods for Foreign Keys mapped to association
 
         // effects: Ensures that there is a relationship mapped into the C-space for some cell in m_cellGroup. Else
         // adds an error to errorLog
@@ -551,10 +529,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return true;
         }
 
-        #endregion
-
-        #region Static Helper Methods
-
         // effects: Returns the entity set to which tableFields are mapped
         // and if the mapped fields correspond precisely to the entity set's
         // keys. Else returns null
@@ -659,10 +633,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             return wrappers;
         }
-
-        #endregion
-
-        #region Regular Helper Methods
 
         // requires: all columns in constraint.ParentColumns and
         // constraint.ChildColumns must have been mapped in some cell in m_cellGroup
@@ -904,10 +874,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return found;
         }
 
-        #endregion
-
-        #region String methods
-
         internal string ToUserString()
         {
             var childColsString = MemberPath.PropertiesToUserString(m_childColumns, false);
@@ -923,7 +889,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             builder.Append(m_fKeySet.Name + ": ");
             builder.Append(ToUserString());
         }
-
-        #endregion
     }
 }

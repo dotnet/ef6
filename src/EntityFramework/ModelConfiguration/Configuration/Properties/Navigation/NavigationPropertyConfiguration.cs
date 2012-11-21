@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -168,7 +170,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             ConfigureDependentBehavior(associationType, model, entityTypeConfiguration);
         }
 
-        internal void Configure(DbAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
+        internal void Configure(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(associationSetMapping != null);
             Contract.Requires(databaseMapping != null);

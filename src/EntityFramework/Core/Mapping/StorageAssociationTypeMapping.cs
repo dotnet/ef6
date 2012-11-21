@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Text;
 
     /// <summary>
     ///     Represents the Mapping metadata for an association type map in CS space.
@@ -43,8 +42,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageAssociationTypeMapping : StorageTypeMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct the new AssociationTypeMapping object.
         /// </summary>
@@ -56,18 +53,10 @@ namespace System.Data.Entity.Core.Mapping
             m_relation = relation;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     Type for which the mapping is represented.
         /// </summary>
         private readonly AssociationType m_relation;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     The AssociationTypeType Metadata object for which the mapping is represented.
@@ -97,34 +86,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return new List<EdmType>().AsReadOnly(); }
         }
-
-        #endregion
-
-        #region Methods
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal override void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("AssociationTypeMapping");
-            sb.Append("   ");
-            sb.Append("Type Name:");
-            sb.Append(m_relation.Name);
-            sb.Append("   ");
-            Console.WriteLine(sb.ToString());
-            foreach (var fragment in MappingFragments)
-            {
-                fragment.Print(index + 5);
-            }
-        }
-#endif
-
-        #endregion
     }
 }

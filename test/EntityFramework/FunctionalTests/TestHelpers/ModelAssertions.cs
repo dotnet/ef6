@@ -3,8 +3,10 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Linq.Expressions;
@@ -38,10 +40,10 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => !(structuralType is EntityType) || etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments)
-                    .SelectMany(tmf => tmf.PropertyMappings)
+                    .SelectMany(etm => etm.MappingFragments)
+                    .SelectMany(tmf => tmf.ColumnMappings)
                     .Where(pm => pm.PropertyPath.Contains(property))
-                    .Select(pm => pm.Column);
+                    .Select(pm => pm.ColumnProperty);
 
             return new PropertyAssertions(property, columns.First());
         }
@@ -58,7 +60,7 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments)
+                    .SelectMany(etm => etm.MappingFragments)
                     .Select(tmf => tmf.Table)
                     .Distinct()
                     .Single();
@@ -79,7 +81,7 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments).First(
+                    .SelectMany(etm => etm.MappingFragments).First(
                         mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
                     .Table;
 
@@ -113,7 +115,7 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments)
+                    .SelectMany(etm => etm.MappingFragments)
                     .Where(mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName)
                     .ToList();
 
@@ -138,7 +140,7 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType && isTypeOfMapping == etm.IsHierarchyMapping)
-                    .SelectMany(etm => etm.TypeMappingFragments)
+                    .SelectMany(etm => etm.MappingFragments)
                     .Single(mf => databaseMapping.Database.GetEntitySet(mf.Table).Table == tableName);
 
             return new MappingFragmentAssertions(fragment);
@@ -156,7 +158,7 @@ namespace System.Data.Entity
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .Where(etm => etm.EntityType == structuralType)
-                    .SelectMany(etm => etm.TypeMappingFragments);
+                    .SelectMany(etm => etm.MappingFragments);
 
             Xunit.Assert.Equal(0, fragments.Count());
         }
@@ -379,9 +381,9 @@ namespace System.Data.Entity
 
         internal class MappingFragmentAssertions
         {
-            private readonly DbEntityTypeMappingFragment _fragment;
+            private readonly StorageMappingFragment _fragment;
 
-            public MappingFragmentAssertions(DbEntityTypeMappingFragment fragment)
+            public MappingFragmentAssertions(StorageMappingFragment fragment)
             {
                 _fragment = fragment;
             }
@@ -390,8 +392,10 @@ namespace System.Data.Entity
             {
                 var con =
                     _fragment.ColumnConditions.Single(
-                        cc => String.Equals(cc.Column.Name, column, StringComparison.Ordinal));
+                        cc => String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal));
+
                 Xunit.Assert.True(Equals(con.Value, value) && con.IsNull == null);
+
                 return this;
             }
 
@@ -400,14 +404,16 @@ namespace System.Data.Entity
                 Xunit.Assert.True(
                     _fragment.ColumnConditions.Any(
                         cc =>
-                        String.Equals(cc.Column.Name, column, StringComparison.Ordinal) && cc.Value == null &&
+                        String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal) && cc.Value == null &&
                         cc.IsNull == isNull));
+
                 return this;
             }
 
             public MappingFragmentAssertions HasNoColumnConditions()
             {
-                Xunit.Assert.True(_fragment.ColumnConditions.Count == 0);
+                Xunit.Assert.True(!_fragment.ColumnConditions.Any());
+
                 return this;
             }
 
@@ -415,7 +421,8 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.True(
                     !_fragment.ColumnConditions.Any(
-                        cc => String.Equals(cc.Column.Name, column, StringComparison.Ordinal)));
+                        cc => String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal)));
+
                 return this;
             }
 

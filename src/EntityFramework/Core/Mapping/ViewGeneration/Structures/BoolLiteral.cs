@@ -21,14 +21,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal abstract class BoolLiteral : InternalBase
     {
-        #region Fields
-
         internal static readonly IEqualityComparer<BoolLiteral> EqualityComparer = new BoolLiteralComparer();
         internal static readonly IEqualityComparer<BoolLiteral> EqualityIdentifierComparer = new IdentifierComparer();
-
-        #endregion
-
-        #region Static MakeTermExpression methods
 
         /// <summary>
         ///     Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being <paramref
@@ -55,10 +49,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var result = new DomainTermExpr(EqualityComparer<DomainConstraint>.Default, constraint);
             return result;
         }
-
-        #endregion
-
-        #region Virtual methods
 
         /// <summary>
         ///     Fixes the range of the literal using the new values provided in <paramref name="range" /> and returns a boolean expression corresponding to the new value.
@@ -111,10 +101,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return GetHashCode();
         }
 
-        #endregion
-
-        #region Comparer class
-
         /// <summary>
         ///     This class compares boolean expressions.
         /// </summary>
@@ -144,10 +130,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Identifier Comparer class
-
         /// <summary>
         ///     This class compares just the identifier in boolean expressions.
         /// </summary>
@@ -176,7 +158,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return literal.GetIdentifierHash();
             }
         }
-
-        #endregion
     }
 }

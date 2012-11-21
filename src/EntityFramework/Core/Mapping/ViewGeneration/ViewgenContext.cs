@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
     internal class ViewgenContext : InternalBase
     {
-        #region Fields
-
         private readonly ConfigViewGenerator m_config;
         private readonly ViewTarget m_viewTarget;
 
@@ -42,10 +40,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         // Maps (left) queries to their rewritings in terms of views
         private readonly Dictionary<FragmentQuery, Tile<FragmentQuery>> m_rewritingCache;
-
-        #endregion
-
-        #region Constructors
 
         internal ViewgenContext(
             ViewTarget viewTarget, EntitySetBase extent, IList<Cell> extentCells,
@@ -158,10 +152,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        #endregion
-
-        #region Properties
-
         internal ViewTarget ViewTarget
         {
             get { return m_viewTarget; }
@@ -215,10 +205,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             get { return m_entityContainerMapping; }
         }
 
-        #endregion
-
-        #region InternalMethods
-
         // effects: Returns the cached rewriting of (left) queries in terms of views, if any
         internal bool TryGetCachedRewriting(FragmentQuery query, out Tile<FragmentQuery> rewriting)
         {
@@ -230,10 +216,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         {
             m_rewritingCache[query] = rewriting;
         }
-
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         ///     Checks:
@@ -366,15 +348,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return outputCells;
         }
 
-        #endregion
-
-        #region String Methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             LeftCellWrapper.WrappersToStringBuilder(builder, m_cellWrappers, "Left Celll Wrappers");
         }
-
-        #endregion
     }
 }

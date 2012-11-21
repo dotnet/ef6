@@ -2,17 +2,17 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
-    using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.Core.Mapping;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal static class DbEdmPropertyMappingExtensions
     {
-        public static void SyncNullabilityCSSpace(this DbEdmPropertyMapping propertyMapping)
+        public static void SyncNullabilityCSSpace(this ColumnMappingBuilder propertyMappingBuilder)
         {
-            Contract.Requires(propertyMapping != null);
+            Contract.Requires(propertyMappingBuilder != null);
 
-            propertyMapping.Column.Nullable = propertyMapping.PropertyPath.Last().Nullable;
+            propertyMappingBuilder.ColumnProperty.Nullable = propertyMappingBuilder.PropertyPath.Last().Nullable;
         }
     }
 }

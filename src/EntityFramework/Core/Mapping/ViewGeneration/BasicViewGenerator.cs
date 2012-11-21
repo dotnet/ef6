@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     // LOJ, FOJs
     internal class BasicViewGenerator : InternalBase
     {
-        #region Constructor
-
         // effects: Creates a view generator object that can be used to generate views
         // based on usedCells (projectedSlotMap are useful for deciphering the fields)
         internal BasicViewGenerator(
@@ -40,10 +38,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_domainMap = domainMap;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MemberProjectionIndex m_projectedSlotMap;
         private readonly List<LeftCellWrapper> m_usedCells;
         // Active domain comprises all multiconstants that need to be reconstructed
@@ -54,18 +48,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private readonly ConfigViewGenerator m_config;
         private readonly MemberDomainMap m_domainMap;
 
-        #endregion
-
-        #region Properties
-
         private FragmentQueryProcessor LeftQP
         {
             get { return m_viewgenContext.LeftFragmentQP; }
         }
-
-        #endregion
-
-        #region Exposed Methods
 
         // effects: Given the set of used cells for an extent, returns a
         // view to generate that extent
@@ -106,10 +92,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return rootNode;
         }
-
-        #endregion
-
-        #region Private Methods
 
         // requires: The tree rooted at cellTreeNode is an FOJ tree of
         // LeafCellTreeNodes only, i.e., there is an FOJ node with the
@@ -719,16 +701,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return IsContainedIn(n1, n2) && IsContainedIn(n2, n1);
         }
 
-        #endregion
-
-        #region String methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             // We just print the slotmap for now
             m_projectedSlotMap.ToCompactString(builder);
         }
-
-        #endregion
     }
 }

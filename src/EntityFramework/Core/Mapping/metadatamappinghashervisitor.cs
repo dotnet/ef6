@@ -26,8 +26,6 @@ namespace System.Data.Entity.Core.Mapping
             m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
         }
 
-        #region visitor method
-
         protected override void Visit(StorageEntityContainerMapping storageEntityContainerMapping)
         {
             Debug.Assert(storageEntityContainerMapping != null, "storageEntityContainerMapping cannot be null!");
@@ -721,10 +719,6 @@ namespace System.Data.Entity.Core.Mapping
             // no need to store more info.
         }
 
-        #endregion
-
-        #region hasher helper method
-
         internal string HashValue
         {
             get { return m_hashSourceBuilder.ComputeHash(); }
@@ -843,7 +837,5 @@ namespace System.Data.Entity.Core.Mapping
             visitor.Visit(storageEntityContainerMapping);
             return visitor.HashValue;
         }
-
-        #endregion
     }
 }

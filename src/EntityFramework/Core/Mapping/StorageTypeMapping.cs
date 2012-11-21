@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents the Mapping metadata for a type map in CS space.
@@ -41,8 +42,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal abstract class StorageTypeMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct the new StorageTypeMapping object.
         /// </summary>
@@ -52,11 +51,7 @@ namespace System.Data.Entity.Core.Mapping
             m_fragments = new List<StorageMappingFragment>();
             m_setMapping = setMapping;
         }
-
-        #endregion
-
-        #region Fields
-
+        
         /// <summary>
         ///     ExtentMap that contains this type mapping.
         /// </summary>
@@ -66,10 +61,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     Set of fragments that make up the type Mapping.
         /// </summary>
         private readonly List<StorageMappingFragment> m_fragments;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Mapping fragments that make up this set type
@@ -95,28 +86,22 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal abstract ReadOnlyCollection<EdmType> IsOfTypes { get; }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Add a fragment mapping as child of this type mapping
         /// </summary>
         /// <param name="fragment"> </param>
         internal void AddFragment(StorageMappingFragment fragment)
         {
+            Contract.Requires(fragment != null);
+
             m_fragments.Add(fragment);
         }
 
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal abstract void Print(int index);
-#endif
+        internal void RemoveFragment(StorageMappingFragment fragment)
+        {
+            Contract.Requires(fragment != null);
 
-        #endregion
+            m_fragments.Remove(fragment);
+        }
     }
 }

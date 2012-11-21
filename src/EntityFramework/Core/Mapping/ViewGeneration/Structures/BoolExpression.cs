@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // This class represents an arbitrary boolean expression
     internal partial class BoolExpression : InternalBase
     {
-        #region Constructors
-
         // effects: Create a boolean expression from a literal value
         internal static BoolExpression CreateLiteral(BoolLiteral literal, MemberDomainMap memberDomainMap)
         {
@@ -130,10 +128,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_memberDomainMap = memberDomainMap;
         }
 
-        #endregion
-
-        #region Fields
-
         private DomainBoolExpr m_tree; // The actual tree that has the expression
         // Domain map for various member paths - can be null
         private readonly MemberDomainMap m_memberDomainMap;
@@ -142,10 +136,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly IEqualityComparer<BoolExpression> EqualityComparer = new BoolComparer();
         internal static readonly BoolExpression True = new BoolExpression(true);
         internal static readonly BoolExpression False = new BoolExpression(false);
-
-        #endregion
-
-        #region Properties
 
         // requires: this is of the form "True", "Literal" or "Literal AND ... AND Literal".
         // effects: Yields the individual atoms in this (for True does not
@@ -253,10 +243,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Given a sequence of boolean expressions, yields the
         // corresponding trees in it in the same order
@@ -419,15 +405,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return (m_memberDomainMap != null && IsFinalVisitor.IsFinal(m_tree));
         }
 
-        #endregion
-
-        #region Comparer class
-
         // This class compares boolean expressions
         private class BoolComparer : IEqualityComparer<BoolExpression>
         {
-            #region IEqualityComparer<BoolExpression> Members
-
             public bool Equals(BoolExpression left, BoolExpression right)
             {
                 // Quick check with references
@@ -450,10 +430,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return expression.m_tree.GetHashCode();
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

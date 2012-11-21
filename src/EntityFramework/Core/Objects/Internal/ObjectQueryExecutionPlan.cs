@@ -94,7 +94,34 @@ namespace System.Data.Entity.Core.Objects.Internal
                 sb.Append(" ");
                 sb.Append(objParam.Name);
                 sb.Append(" = ");
-                sb.Append(objParam.Value);
+
+                var value = objParam.Value;
+                Type type = (value != null) ? value.GetType() : null;
+
+                switch (Type.GetTypeCode(type))
+                {
+                    case TypeCode.Empty:
+                    case TypeCode.DBNull:
+                        sb.Append("(null)");
+                        break;
+
+                    case TypeCode.Char:
+                        sb.Append("'");
+                        sb.Append(value);
+                        sb.Append("'");
+                        break;
+
+                    case TypeCode.String:
+                        sb.Append("\"");
+                        sb.Append(value);
+                        sb.Append("\"");
+                        break;
+
+                    default:
+                        sb.Append(value);
+                        break;
+                }
+
                 sb.Append("\n");
             }
 

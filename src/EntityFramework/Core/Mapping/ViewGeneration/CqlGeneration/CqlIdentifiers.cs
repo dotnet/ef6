@@ -12,22 +12,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // and block aliases T, T0, T1, etc
     internal class CqlIdentifiers : InternalBase
     {
-        #region Constructor
-
         internal CqlIdentifiers()
         {
             m_identifiers = new Set<string>(StringComparer.Ordinal);
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly Set<string> m_identifiers;
-
-        #endregion
-
-        #region Methods
 
         // effects: Given a number, returns _from<num> if it does not clashes with
         // any identifier, else returns _from_<next>_<num> where <next> is the first number from 0
@@ -95,7 +85,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             m_identifiers.ToCompactString(builder);
         }
-
-        #endregion
     }
 }

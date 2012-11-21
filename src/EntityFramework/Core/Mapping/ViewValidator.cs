@@ -360,8 +360,6 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
-            #region DbExpressionVisitor<DbExpression> Members
-
             public override DbExpressionEntitySetInfo Visit(DbExpression expression)
             {
                 return null;
@@ -610,15 +608,11 @@ namespace System.Data.Entity.Core.Mapping
             {
                 return null;
             }
-
-            #endregion
         }
 
         internal abstract class DbExpressionEntitySetInfo
         {
         }
-
-        #region DbExpressionEntitySetInfo implementations
 
         private class DbExpressionSimpleTypeEntitySetInfo : DbExpressionEntitySetInfo
         {
@@ -674,7 +668,5 @@ namespace System.Data.Entity.Core.Mapping
                 get { return m_entitySets; }
             }
         }
-
-        #endregion
     }
 }

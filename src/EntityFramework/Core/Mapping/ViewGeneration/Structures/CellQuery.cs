@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal class CellQuery : InternalBase
     {
-        #region Fields
-
         /// <summary>
         ///     Whether query has a 'SELECT DISTINCT' on top.
         /// </summary>
@@ -54,10 +52,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private readonly MemberPath m_extentMemberPath;
         // The basic cell relation for all slots in this
         private BasicCellRelation m_basicCellRelation;
-
-        #endregion
-
-        #region Constructors
 
         // effects: Creates a cell query with the given projection (slots),
         // from part (joinTreeRoot) and the predicate (whereClause)
@@ -104,10 +98,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     existing.m_selectDistinct, existing.m_extentMemberPath)
         {
         }
-
-        #endregion
-
-        #region Properties
 
         internal SelectDistinct SelectDistinctFlag
         {
@@ -180,10 +170,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return GetConjunctsFromOriginalWhereClause(); }
         }
-
-        #endregion
-
-        #region ProjectedSlots related methods
 
         // effects: Returns the slotnum projected slot
         internal ProjectedSlot ProjectedSlotAt(int slotNum)
@@ -720,10 +706,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region BooleanExprs related Methods
-
         // effects: Returns a boolean expression corresponding to the
         // "varNum" boolean in this.
         internal BoolExpression GetBoolVar(int varNum)
@@ -744,10 +726,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             Debug.Assert(cellNum < numBoolVars, "Trying to set boolean with too high an index");
             m_boolExprs[cellNum] = BoolExpression.True;
         }
-
-        #endregion
-
-        #region WhereClause related methods
 
         // requires: The current whereClause corresponds to "True", "OneOfConst" or "
         // "OneOfConst AND ... AND OneOfConst"
@@ -777,10 +755,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Full CellQuery methods
-
         // effects: Determines all the identifiers used in this and adds them to identifiers
         internal void GetIdentifiers(CqlIdentifiers identifiers)
         {
@@ -801,10 +775,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Create a base cell relation that has all the scalar slots of this
             m_basicCellRelation = new BasicCellRelation(this, viewCellRelation, slots);
         }
-
-        #endregion
-
-        #region String Methods
 
         // effects: Modifies stringBuilder to contain a string representation
         // of the cell query in terms of the original cells that are being used
@@ -876,7 +846,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return ToFullString();
         }
-
-        #endregion
     }
 }

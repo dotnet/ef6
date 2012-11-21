@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.Contracts;
     using System.Text;
 
     /// <summary>
@@ -40,8 +41,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageScalarPropertyMapping : StoragePropertyMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a new Scalar EdmProperty mapping object
         /// </summary>
@@ -56,22 +55,15 @@ namespace System.Data.Entity.Core.Mapping
                 "StorageScalarPropertyMapping must only map primitive or enum types");
             Debug.Assert(
                 Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType), "StorageScalarPropertyMapping must only map primitive types");
+            
             m_columnMember = columnMember;
         }
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     S-side member for which the scalar property is being mapped.
         ///     This will be interpreted by the view generation algorithm based on the context.
         /// </summary>
-        private readonly EdmProperty m_columnMember;
-
-        #endregion
-
-        #region Properties
+        private EdmProperty m_columnMember;
 
         /// <summary>
         ///     column name from which the sclar property is being mapped
@@ -79,39 +71,12 @@ namespace System.Data.Entity.Core.Mapping
         internal EdmProperty ColumnProperty
         {
             get { return m_columnMember; }
-        }
-
-        #endregion
-
-        #region Methods
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal override void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("ScalarPropertyMapping");
-            sb.Append("   ");
-            if (EdmProperty != null)
+            set
             {
-                sb.Append("Name:");
-                sb.Append(EdmProperty.Name);
-                sb.Append("   ");
-            }
-            if (ColumnProperty != null)
-            {
-                sb.Append("Column Name:");
-                sb.Append(ColumnProperty.Name);
-            }
-            Console.WriteLine(sb.ToString());
-        }
-#endif
+                Contract.Requires(value != null);
 
-        #endregion
+                m_columnMember = value;
+            }
+        }
     }
 }

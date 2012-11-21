@@ -24,8 +24,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     // views from the initial cells.
     internal class ViewGenerator : InternalBase
     {
-        #region Fields
-
         private readonly CellGroup m_cellGroup; // The initial cells from which we produce views
         private readonly ConfigViewGenerator m_config; // Configuration variables
         private readonly MemberDomainMap m_queryDomainMap;
@@ -33,10 +31,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private readonly Dictionary<EntitySetBase, QueryRewriter> m_queryRewriterCache;
         private readonly List<ForeignConstraint> m_foreignKeyConstraints;
         private readonly StorageEntityContainerMapping m_entityContainerMapping;
-
-        #endregion
-
-        #region Internal API - Only Gatekeeper calls it
 
         // effects: Creates a ViewGenerator object that is capable of
         // producing query or update mapping views given the relevant schema
@@ -209,10 +203,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return errorLog;
         }
-
-        #endregion
-
-        #region Private Methods
 
         // effects: Given the extent cells and a map for the domains of all
         // variables in it, fixes the cell constant domains of the where
@@ -508,15 +498,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return extentCellMap;
         }
 
-        #endregion
-
-        #region String Methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             Cell.CellsToBuilder(builder, m_cellGroup);
         }
-
-        #endregion
     }
 }

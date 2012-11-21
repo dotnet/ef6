@@ -2,23 +2,24 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
 
     /// <summary>
     ///     Represents the Mapping metadata for an AssociationSet in CS space.
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
     ///     --MappingFragment
     ///     --EntityTypeMapping
     ///     --MappingFragment
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     This class represents the metadata for the AssociationSetMapping elements in the
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageAssociationSetMapping : StorageSetMapping
     {
-        #region Constructors
+        private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
 
         /// <summary>
         ///     Construct a new AssociationSetMapping object
@@ -39,68 +40,118 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        #endregion
+        internal StorageAssociationSetMapping(AssociationSet extent, EntitySet entitySet)
+            : base(extent, null)
+        {
+            Contract.Requires(entitySet != null);
 
-        #region Fields
+            var associationTypeMapping
+                = new StorageAssociationTypeMapping(extent.ElementType, this);
 
-        #endregion
+            var mappingFragment
+                = new StorageMappingFragment(entitySet, associationTypeMapping, false);
 
-        #region Properties
+            associationTypeMapping.AddFragment(mappingFragment);
+
+            AddTypeMapping(associationTypeMapping);
+        }
+
+        public virtual AssociationSet AssociationSet
+        {
+            get { return (AssociationSet)Set; }
+        }
 
         /// <summary>
         ///     Gets or sets function mapping information for this association set. May be null.
         /// </summary>
         internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
-        internal EntitySetBase StoreEntitySet
+        internal EntitySet StoreEntitySet
+        {
+            get { return (SingleFragment != null) ? SingleFragment.TableSet : null; }
+            set
+            {
+                Contract.Requires(value != null);
+                Contract.Assert(SingleFragment != null);
+
+                SingleFragment.TableSet = value;
+            }
+        }
+
+        public EntityType Table
+        {
+            get { return (StoreEntitySet != null ? StoreEntitySet.ElementType : null); }
+        }
+
+        public StorageEndPropertyMapping SourceEndMapping
         {
             get
             {
-                if ((TypeMappings.Count != 0)
-                    && (TypeMappings.First().MappingFragments.Count != 0))
-                {
-                    return TypeMappings.First().MappingFragments.First().TableSet;
-                }
-                return null;
+                return (SingleFragment != null)
+                           ? SingleFragment.Properties.OfType<StorageEndPropertyMapping>().FirstOrDefault()
+                           : null;
+            }
+            set
+            {
+                Contract.Requires(value != null);
+                Contract.Assert(SingleFragment != null);
+                Contract.Assert(SingleFragment.Properties.Count == 0);
+
+                SingleFragment.AddProperty(value);
             }
         }
 
-        #endregion
-
-        #region Methods
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal override void Print(int index)
+        public StorageEndPropertyMapping TargetEndMapping
         {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("AssociationSetMapping");
-            sb.Append("   ");
-            sb.Append("Name:");
-            sb.Append(Set.Name);
-            if (QueryView != null)
+            get
             {
-                sb.Append("   ");
-                sb.Append("Query View:");
-                sb.Append(QueryView);
+                return (SingleFragment != null)
+                           ? SingleFragment.Properties.OfType<StorageEndPropertyMapping>().ElementAtOrDefault(1)
+                           : null;
             }
-            Console.WriteLine(sb.ToString());
-            foreach (var typeMapping in TypeMappings)
+            set
             {
-                typeMapping.Print(index + 5);
-            }
-            if (ModificationFunctionMapping != null)
-            {
-                ModificationFunctionMapping.Print(index + 5);
+                Contract.Requires(value != null);
+                Contract.Assert(SingleFragment != null);
+                Contract.Assert(SingleFragment.Properties.Count == 1);
+
+                SingleFragment.AddProperty(value);
             }
         }
-#endif
 
-        #endregion
+        public virtual IList<DataModelAnnotation> Annotations
+        {
+            get { return _annotationsList; }
+        }
+
+        public virtual IEnumerable<StorageConditionPropertyMapping> ColumnConditions
+        {
+            get
+            {
+                return (SingleFragment != null)
+                           ? SingleFragment.ColumnConditions
+                           : Enumerable.Empty<StorageConditionPropertyMapping>();
+            }
+        }
+
+        public void AddColumnCondition(StorageConditionPropertyMapping storageConditionPropertyMapping)
+        {
+            if (SingleFragment != null)
+            {
+                SingleFragment.AddConditionProperty(storageConditionPropertyMapping);
+            }
+        }
+
+        private StorageMappingFragment SingleFragment
+        {
+            get
+            {
+                var typeMapping = TypeMappings.SingleOrDefault();
+
+                return (typeMapping != null)
+                           ? typeMapping.MappingFragments.SingleOrDefault()
+                           : null;
+            }
+        }
     }
 }

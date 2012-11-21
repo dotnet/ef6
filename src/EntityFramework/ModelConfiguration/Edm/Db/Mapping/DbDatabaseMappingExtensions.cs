@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.Edm.Serialization;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -25,11 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             databaseMapping.Model = model;
             databaseMapping.Database = database;
-            var entityContainerMapping
-                = new DbEntityContainerMapping
-                      {
-                          EntityContainer = model.Containers.Single()
-                      };
+            var entityContainerMapping = new StorageEntityContainerMapping(model.Containers.Single());
             databaseMapping.EntityContainerMappings.Add(entityContainerMapping);
 
             return databaseMapping;
@@ -95,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             }
         }
 
-        public static DbEntityTypeMapping GetEntityTypeMapping(
+        public static StorageEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -112,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IEnumerable<DbEntityTypeMapping> GetEntityTypeMappings(
+        public static IEnumerable<StorageEntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -124,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     select etm);
         }
 
-        public static DbEntityTypeMapping GetEntityTypeMapping(
+        public static StorageEntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, Type entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -144,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> GetComplexPropertyMappings(
+        public static IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> GetComplexPropertyMappings(
             this DbDatabaseMapping databaseMapping, Type complexType)
         {
             Contract.Requires(databaseMapping != null);
@@ -152,16 +149,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             return from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                    from etm in esm.EntityTypeMappings
-                   from etmf in etm.TypeMappingFragments
-                   from epm in etmf.PropertyMappings
+                   from etmf in etm.MappingFragments
+                   from epm in etmf.ColumnMappings
                    where epm.PropertyPath
-                       .Any(
-                           p => p.IsComplexType
-                                && p.ComplexType.GetClrType() == complexType)
+                            .Any(
+                                p => p.IsComplexType
+                                     && p.ComplexType.GetClrType() == complexType)
                    select Tuple.Create(epm, etmf.Table);
         }
 
-        public static DbEntitySetMapping GetEntitySetMapping(
+        public static StorageEntitySetMapping GetEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
@@ -174,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .SingleOrDefault(e => e.EntitySet == entitySet);
         }
 
-        public static IEnumerable<DbEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
+        public static IEnumerable<StorageEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
 
@@ -184,7 +181,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .EntitySetMappings;
         }
 
-        public static IEnumerable<DbAssociationSetMapping> GetAssociationSetMappings(
+        public static IEnumerable<StorageAssociationSetMapping> GetAssociationSetMappings(
             this DbDatabaseMapping databaseMapping)
         {
             Contract.Requires(databaseMapping != null);
@@ -195,43 +192,35 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                 .AssociationSetMappings;
         }
 
-        public static DbEntitySetMapping AddEntitySetMapping(
+        public static StorageEntitySetMapping AddEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(entitySet != null);
 
-            var entitySetMapping = new DbEntitySetMapping
-                                       {
-                                           EntitySet = entitySet
-                                       };
+            var entitySetMapping = new StorageEntitySetMapping(entitySet, null);
 
             databaseMapping
                 .EntityContainerMappings
                 .Single()
-                .EntitySetMappings
-                .Add(entitySetMapping);
+                .AddEntitySetMapping(entitySetMapping);
 
             return entitySetMapping;
         }
 
-        public static DbAssociationSetMapping AddAssociationSetMapping(
-            this DbDatabaseMapping databaseMapping, AssociationSet associationSet)
+        public static StorageAssociationSetMapping AddAssociationSetMapping(
+            this DbDatabaseMapping databaseMapping, AssociationSet associationSet, EntitySet entitySet)
         {
             Contract.Requires(databaseMapping != null);
             Contract.Requires(associationSet != null);
 
             var associationSetMapping
-                = new DbAssociationSetMapping
-                      {
-                          AssociationSet = associationSet
-                      }.Initialize();
-
+                = new StorageAssociationSetMapping(associationSet, entitySet).Initialize();
+                      
             databaseMapping
                 .EntityContainerMappings
                 .Single()
-                .AssociationSetMappings
-                .Add(associationSetMapping);
+                .AddAssociationSetMapping(associationSetMapping);
 
             return associationSetMapping;
         }

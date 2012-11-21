@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal class CellIdBoolean : TrueFalseLiteral
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a boolean expression for the variable name specified by <paramref name="index" />, e.g., 0 results in from0, 1 into from1.
         /// </summary>
@@ -26,20 +24,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_slotName = identifiers.GetFromVariable(index);
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     e.g., from0, from1.
         /// </summary>
         private readonly int m_index;
 
         private readonly string m_slotName;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the slotName corresponding to this, ie., _from0 etc.
@@ -48,10 +38,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_slotName; }
         }
-
-        #endregion
-
-        #region BoolLiteral members
 
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
@@ -108,15 +94,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return this;
         }
 
-        #endregion
-
-        #region Other Methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append(SlotName);
         }
-
-        #endregion
     }
 }

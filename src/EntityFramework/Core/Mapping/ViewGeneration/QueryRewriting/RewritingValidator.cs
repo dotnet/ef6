@@ -36,8 +36,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             _errorLog = new ErrorLog();
         }
 
-        #region Main logic
-
         internal void Validate()
         {
             // turn rewritings into cell trees
@@ -228,10 +226,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return memberValueTrees;
         }
 
-        #endregion
-
-        #region Checking constraints on projected condition members
-
         private void CheckConstraintsOnProjectedConditionMembers(
             Dictionary<MemberValueBinding, CellTreeNode> memberValueTrees, LeftCellWrapper wrapper, CellTreeNode sQueryTree,
             BoolExpression inExtentCondition)
@@ -321,8 +315,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return result;
         }
 
-        #endregion
-
         /// <summary>
         ///     Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
         ///     appended to Cquery of c-side member that column m is mapped to
@@ -376,8 +368,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #region Methods for turning a boolean condition into user string
-
         internal static void EntityConfigurationToUserString(BoolExpression condition, StringBuilder builder)
         {
             //By default write the Round tripping message
@@ -389,10 +379,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             condition.AsUserString(builder, "PK", writeRoundTrippingMessage);
         }
-
-        #endregion
-
-        #region WhereClauseVisitor: turns WHERE clause into CellTreeNode
 
         private class WhereClauseVisitor : Visitor<DomainConstraint<BoolLiteral, Constant>, CellTreeNode>
         {
@@ -492,10 +478,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
-        #region DomainConstraintVisitor: checks domain constraints
-
         internal class DomainConstraintVisitor : CellTreeNode.SimpleCellTreeVisitor<bool, bool>
         {
             private readonly LeftCellWrapper m_wrapper;
@@ -576,10 +558,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        #endregion
-
-        #region MemberValueBinding struct: (MemberPath, CellConstant) pair
-
         private struct MemberValueBinding : IEquatable<MemberValueBinding>
         {
             internal readonly MemberPath Member;
@@ -596,17 +574,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 return String.Format(CultureInfo.InvariantCulture, "{0}={1}", Member, Value);
             }
 
-            #region IEquatable<MemberValue> Members
-
             public bool Equals(MemberValueBinding other)
             {
                 return MemberPath.EqualityComparer.Equals(Member, other.Member) &&
                        Constant.EqualityComparer.Equals(Value, other.Value);
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

@@ -4,8 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
@@ -471,7 +473,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal void ConfigureTablesAndConditions(
-            DbEntityTypeMapping entityTypeMapping,
+            StorageEntityTypeMapping entityTypeMapping,
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest)
         {
@@ -555,8 +557,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             var propertyMappings
                 = from etm in entityTypeMappings
-                  from etmf in etm.TypeMappingFragments
-                  from pm in etmf.PropertyMappings
+                  from etmf in etm.MappingFragments
+                  from pm in etmf.ColumnMappings
                   select Tuple.Create(pm, etmf.Table);
 
             Configure(propertyMappings, providerManifest, allowOverride);
@@ -625,7 +627,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(
-            ICollection<DbEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
+            ICollection<StorageEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
             IList<EdmProperty> propertyPath)
         {
             Contract.Requires(entityTypeMappings != null);
@@ -643,8 +645,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                         property.ComplexType.Properties,
                         propertyPath);
                 }
-                else if (!entityTypeMappings.SelectMany(etm => etm.TypeMappingFragments)
-                              .SelectMany(mf => mf.PropertyMappings)
+                else if (!entityTypeMappings.SelectMany(etm => etm.MappingFragments)
+                              .SelectMany(mf => mf.ColumnMappings)
                               .Any(pm => pm.PropertyPath.SequenceEqual(propertyPath))
                          && !entityType.Abstract)
                 {

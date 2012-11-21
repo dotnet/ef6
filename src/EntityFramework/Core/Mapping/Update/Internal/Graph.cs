@@ -22,8 +22,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// <typeparam name="TVertex"> Type of nodes in the graph </typeparam>
     internal class Graph<TVertex>
     {
-        #region Constructors
-
         /// <summary>
         ///     Initialize a new graph
         /// </summary>
@@ -37,10 +35,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             m_predecessorCounts = new Dictionary<TVertex, int>(comparer);
             m_vertices = new HashSet<TVertex>(comparer);
         }
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     Gets successors of the node (outgoing edges).
@@ -58,10 +52,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly HashSet<TVertex> m_vertices;
 
         private readonly IEqualityComparer<TVertex> m_comparer;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the vertices of the graph.
@@ -87,10 +77,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Adds a new node to the graph. Does nothing if the vertex already exists.
@@ -238,7 +224,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             return sb.ToString();
         }
-
-        #endregion
     }
 }

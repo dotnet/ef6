@@ -18,8 +18,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal class ViewLoader
     {
-        #region Constructors 
-
         /// <summary>
         ///     Constructor specifying a metadata workspace to use for mapping views.
         /// </summary>
@@ -28,10 +26,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(null != mappingCollection, "mapping collection required");
             m_mappingCollection = mappingCollection;
         }
-
-        #endregion
-
-        #region Fields
 
         private readonly StorageMappingItemCollection m_mappingCollection;
 
@@ -47,10 +41,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             EqualityComparer<EntitySetBase>.Default);
 
         private readonly ReaderWriterLockSlim m_readerWriterLock = new ReaderWriterLockSlim();
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     For a given extent, returns the function mapping translator.
@@ -442,7 +432,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
         }
-
-        #endregion
     }
 }

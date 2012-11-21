@@ -3,8 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
@@ -103,7 +105,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                    && !facet.Description.IsConstant;
         }
 
-        protected static DbEntityTypeMapping GetEntityTypeMappingInHierarchy(
+        protected static StorageEntityTypeMapping GetEntityTypeMappingInHierarchy(
             DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -122,8 +124,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         .EntityTypeMappings
                         .First(
                             etm => entityType.DeclaredProperties.All(
-                                dp => etm.TypeMappingFragments.First()
-                                          .PropertyMappings.Select(pm => pm.PropertyPath.First()).Contains(dp)));
+                                dp => etm.MappingFragments.First()
+                                          .ColumnMappings.Select(pm => pm.PropertyPath.First()).Contains(dp)));
                 }
             }
 

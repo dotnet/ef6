@@ -593,8 +593,6 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        #region Fields
-
         //EdmItemCollection that is associated with the MSL Loader.
         private EdmItemCollection m_edmCollection;
 
@@ -628,10 +626,6 @@ namespace System.Data.Entity.Core.Mapping
         private readonly ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>
             _cachedInterestingMembers =
                 new ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>();
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         ///     constructor that takes in a list of folder or files or a mix of both and
@@ -820,8 +814,6 @@ namespace System.Data.Entity.Core.Mapping
 
             return errors;
         }
-
-        #endregion Constructors
 
         internal MetadataWorkspace Workspace
         {
@@ -1013,8 +1005,6 @@ namespace System.Data.Entity.Core.Mapping
             }
             return esqlViews;
         }
-
-        #region Get interesting members
 
         /// <summary>
         ///     Return members for MetdataWorkspace.GetRequiredOriginalValueMembers() and MetdataWorkspace.GetRelevantMembersForUpdate() methods.
@@ -1285,8 +1275,6 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
         }
-
-        #endregion
 
         /// <summary>
         ///     Calls the view dictionary to load the view, see detailed comments in the view dictionary class.

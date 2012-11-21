@@ -3,8 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -326,9 +327,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityTypeMapping2 = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityTypeMapping3 = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityTypeMapping1.TypeMappingFragments.Single().Table;
-            var table2 = entityTypeMapping2.TypeMappingFragments.Single().Table;
-            var table3 = entityTypeMapping3.TypeMappingFragments.Single().Table;
+            var table1 = entityTypeMapping1.MappingFragments.Single().Table;
+            var table2 = entityTypeMapping2.MappingFragments.Single().Table;
+            var table3 = entityTypeMapping3.MappingFragments.Single().Table;
 
             Assert.NotSame(table1, table2);
             Assert.NotSame(table1, table3);
@@ -339,15 +340,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P1", table1.Properties[0].Name);
             Assert.Equal("P2", table1.Properties[1].Name);
             Assert.Equal(StoreGeneratedPattern.Identity, table1.Properties[0].StoreGeneratedPattern);
-            Assert.Equal(2, entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityTypeMapping1.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMapping1.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityTypeMapping1.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
 
             Assert.True(entityTypeMapping2.IsHierarchyMapping);
             Assert.Equal(StoreGeneratedPattern.None, table2.Properties[0].StoreGeneratedPattern);
-            Assert.Equal(2, entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P3", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityTypeMapping2.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMapping2.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P3", entityTypeMapping2.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
             Assert.Equal(2, table2.Properties.Count);
             Assert.Equal("P1", table2.Properties[0].Name);
             Assert.Equal("P3", table2.Properties[1].Name);
@@ -355,9 +356,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.False(entityTypeMapping3.IsHierarchyMapping);
             Assert.Equal(StoreGeneratedPattern.None, table3.Properties[0].StoreGeneratedPattern);
-            Assert.Equal(2, entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P4", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityTypeMapping3.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMapping3.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P4", entityTypeMapping3.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
             Assert.Equal(2, table3.Properties.Count);
             Assert.Equal("P1", table3.Properties[0].Name);
             Assert.Equal("P4", table3.Properties[1].Name);
@@ -392,9 +393,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var entityTypeMapping2 = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityTypeMapping3 = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityTypeMapping1.TypeMappingFragments.Single().Table;
-            var table2 = entityTypeMapping2.TypeMappingFragments.Single().Table;
-            var table3 = entityTypeMapping3.TypeMappingFragments.Single().Table;
+            var table1 = entityTypeMapping1.MappingFragments.Single().Table;
+            var table2 = entityTypeMapping2.MappingFragments.Single().Table;
+            var table3 = entityTypeMapping3.MappingFragments.Single().Table;
 
             Assert.NotSame(table1, table2);
             Assert.NotSame(table1, table3);
@@ -405,25 +406,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P1", table1.Properties[0].Name);
             Assert.Equal(StoreGeneratedPattern.Identity, table1.Properties[0].StoreGeneratedPattern);
             Assert.Equal("P2", table1.Properties[1].Name);
-            Assert.Equal(2, entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityTypeMapping1.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityTypeMapping1.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMapping1.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityTypeMapping1.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
 
             Assert.False(entityTypeMapping2.IsHierarchyMapping);
-            Assert.Equal(2, entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
+            Assert.Equal(2, entityTypeMapping2.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMapping2.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
             Assert.Equal(StoreGeneratedPattern.None, table2.Properties[0].StoreGeneratedPattern);
-            Assert.Equal("P3", entityTypeMapping2.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal("P3", entityTypeMapping2.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
             Assert.Equal(2, table2.Properties.Count);
             Assert.Equal("P1", table2.Properties[0].Name);
             Assert.Equal("P3", table2.Properties[1].Name);
             Assert.NotSame(table1.Properties[0], table2.Properties[0]);
 
             Assert.False(entityTypeMapping3.IsHierarchyMapping);
-            Assert.Equal(2, entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings.Count);
+            Assert.Equal(2, entityTypeMapping3.MappingFragments.Single().ColumnMappings.Count());
             Assert.Equal(StoreGeneratedPattern.None, table3.Properties[0].StoreGeneratedPattern);
-            Assert.Equal("P1", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P4", entityTypeMapping3.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal("P1", entityTypeMapping3.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P4", entityTypeMapping3.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
             Assert.Equal(2, table3.Properties.Count);
             Assert.Equal("P1", table3.Properties[0].Name);
             Assert.Equal("P4", table3.Properties[1].Name);
@@ -458,27 +459,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(2, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(2, entitySetMapping.EntityTypeMappings.Count());
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
             Assert.NotSame(table1, table2);
 
             Assert.False(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(2, table1.Properties.Count);
             Assert.Equal("P1", table1.Properties[0].Name);
             Assert.Equal("P2", table1.Properties[1].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
-            Assert.Equal(3, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Equal("P3", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column.Name);
+            Assert.Equal(3, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Equal("P3", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty.Name);
             Assert.Equal(3, table2.Properties.Count);
             Assert.Equal("P1", table2.Properties[0].Name);
             Assert.Equal("P2", table2.Properties[1].Name);
@@ -486,11 +487,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table1.Properties[0], table2.Properties[0]);
             Assert.NotSame(table1.Properties[1], table2.Properties[1]);
             Assert.NotSame(
-                entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column,
-                entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column);
+                entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty,
+                entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty);
             Assert.NotSame(
-                entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column,
-                entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column);
+                entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty,
+                entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty);
         }
 
         //             E
@@ -530,23 +531,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count());
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
-            var table3 = entityType3Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
+            var table3 = entityType3Mapping.MappingFragments.Single().Table;
 
             Assert.False(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(2, table1.Properties.Count);
             Assert.Equal("P1", table1.Properties[0].Name);
             Assert.Equal("P2", table1.Properties[1].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table1.Properties[0]);
-            Assert.Same(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table1.Properties[1]);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table1.Properties[0]);
+            Assert.Same(entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table1.Properties[1]);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Equal(3, table2.Properties.Count);
@@ -556,10 +557,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table1, table2);
             Assert.NotSame(table1.Properties[0], table2.Properties[0]);
             Assert.NotSame(table1.Properties[1], table2.Properties[1]);
-            Assert.Equal(3, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table2.Properties[0]);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table2.Properties[1]);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column, table2.Properties[2]);
+            Assert.Equal(3, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table2.Properties[0]);
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table2.Properties[1]);
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty, table2.Properties[2]);
 
             Assert.False(entityType3Mapping.IsHierarchyMapping);
             Assert.Equal(4, table3.Properties.Count);
@@ -574,11 +575,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table3.Properties[0], table2.Properties[0]);
             Assert.NotSame(table3.Properties[1], table2.Properties[1]);
             Assert.NotSame(table2.Properties[2], table3.Properties[2]);
-            Assert.Equal(4, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table3.Properties[0]);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table3.Properties[1]);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column, table3.Properties[2]);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[3].Column, table3.Properties[3]);
+            Assert.Equal(4, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table3.Properties[0]);
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table3.Properties[1]);
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty, table3.Properties[2]);
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(3).ColumnProperty, table3.Properties[3]);
         }
 
         //             E
@@ -617,23 +618,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count());
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
-            var table3 = entityType3Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
+            var table3 = entityType3Mapping.MappingFragments.Single().Table;
 
             Assert.False(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(2, table1.Properties.Count);
             Assert.Equal("P1", table1.Properties[0].Name);
             Assert.Equal("P2", table1.Properties[1].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table1.Properties[0]);
-            Assert.Same(entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table1.Properties[1]);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table1.Properties[0]);
+            Assert.Same(entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table1.Properties[1]);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Equal("E2", table2.Name);
@@ -644,10 +645,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table1, table2);
             Assert.NotSame(table1.Properties[0], table2.Properties[0]);
             Assert.NotSame(table1.Properties[1], table2.Properties[1]);
-            Assert.Equal(3, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table2.Properties[0]);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table2.Properties[1]);
-            Assert.Same(entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column, table2.Properties[2]);
+            Assert.Equal(3, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table2.Properties[0]);
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table2.Properties[1]);
+            Assert.Same(entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty, table2.Properties[2]);
 
             Assert.False(entityType3Mapping.IsHierarchyMapping);
             Assert.Equal("E3", table3.Name);
@@ -659,10 +660,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.NotSame(table3, table2);
             Assert.NotSame(table1.Properties[0], table3.Properties[0]);
             Assert.NotSame(table1.Properties[1], table3.Properties[1]);
-            Assert.Equal(3, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column, table3.Properties[0]);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column, table3.Properties[1]);
-            Assert.Same(entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column, table3.Properties[2]);
+            Assert.Equal(3, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty, table3.Properties[0]);
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty, table3.Properties[1]);
+            Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty, table3.Properties[2]);
         }
 
         //              E1
@@ -711,13 +712,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(3, entitySetMapping.EntityTypeMappings.Count());
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType1MappingConditions = databaseMapping.GetEntityTypeMappings(entityType1).Single(tm => !tm.IsHierarchyMapping);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
 
             Assert.True(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(4, table1.Properties.Count);
@@ -725,25 +726,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P2", table1.Properties[1].Name);
             Assert.Equal("P3", table1.Properties[2].Name);
             Assert.Equal("disc", table1.Properties[3].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table1.Properties[3], entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column);
-            Assert.Equal("foo", entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Value);
-            Assert.Equal("nvarchar", entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column.TypeName);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Equal("foo", entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().Value);
+            Assert.Equal("nvarchar", entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty.TypeName);
             Assert.Equal(
                 DatabaseMappingGenerator.DiscriminatorMaxLength,
-                entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column.MaxLength);
+                entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty.MaxLength);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Same(table1, table2);
-            Assert.Equal(2, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
+            Assert.Equal(2, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
             Assert.Same(table1.Properties[0], table2.Properties[0]);
             Assert.Same(table1.Properties[1], table2.Properties[1]);
-            Assert.Equal("P1", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P3", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table2.Properties[3], entityType2Mapping.TypeMappingFragments.Single().ColumnConditions.Single().Column);
-            Assert.Equal("bar", entityType2Mapping.TypeMappingFragments.Single().ColumnConditions.Single().Value);
+            Assert.Equal("P1", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P3", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table2.Properties[3], entityType2Mapping.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Equal("bar", entityType2Mapping.MappingFragments.Single().ColumnConditions.Single().Value);
         }
 
         //             E1
@@ -814,16 +815,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(4, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(4, entitySetMapping.EntityTypeMappings.Count());
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType1MappingConditions = databaseMapping.GetEntityTypeMappings(entityType1).Single(x => !x.IsHierarchyMapping);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
-            var table3 = entityType3Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
+            var table3 = entityType3Mapping.MappingFragments.Single().Table;
 
             Assert.True(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(5, table1.Properties.Count);
@@ -832,36 +833,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P3", table1.Properties[2].Name);
             Assert.Equal("P4", table1.Properties[3].Name);
             Assert.Equal("disc", table1.Properties[4].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table1.Properties[4], entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Column);
-            Assert.Equal(1, entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions.Single().Value);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table1.Properties[4], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Equal(1, entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().Value);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Same(table1, table2);
             Assert.Same(table1.Properties[0], table2.Properties[0]);
             Assert.Same(table1.Properties[1], table2.Properties[1]);
-            Assert.Equal(2, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P3", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table2.Properties[4], entityType2Mapping.TypeMappingFragments.Single().ColumnConditions.Single().Column);
-            Assert.Equal(2, entityType2Mapping.TypeMappingFragments.Single().ColumnConditions.Single().Value);
-            Assert.Null(entityType2Mapping.TypeMappingFragments.Single().ColumnConditions.Single().IsNull);
+            Assert.Equal(2, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P3", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table2.Properties[4], entityType2Mapping.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Equal(2, entityType2Mapping.MappingFragments.Single().ColumnConditions.Single().Value);
+            Assert.Null(entityType2Mapping.MappingFragments.Single().ColumnConditions.Single().IsNull);
 
             Assert.False(entityType3Mapping.IsHierarchyMapping);
             Assert.Same(table1, table3);
             Assert.Same(table1.Properties[0], table3.Properties[0]);
             Assert.Same(table1.Properties[1], table3.Properties[1]);
-            Assert.Equal(3, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P3", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Equal("P4", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column.Name);
-            Assert.Same(table3.Properties[4], entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[0].Column);
-            Assert.Equal(3, entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[0].Value);
-            Assert.Equal("int", entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[0].Column.TypeName);
-            Assert.Same(table3.Properties[3], entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[1].Column);
-            Assert.Equal(false, entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[1].IsNull);
+            Assert.Equal(3, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P3", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Equal("P4", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty.Name);
+            Assert.Same(table3.Properties[4], entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
+            Assert.Equal(3, entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).Value);
+            Assert.Equal("int", entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty.TypeName);
+            Assert.Same(table3.Properties[3], entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
+            Assert.Equal(false, entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).IsNull);
         }
 
         //             E1
@@ -942,16 +943,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             //Validate
             var entitySetMapping = databaseMapping.GetEntitySetMapping(model.GetEntitySet(entityType1));
             Assert.NotNull(entitySetMapping);
-            Assert.Equal(4, entitySetMapping.EntityTypeMappings.Count);
+            Assert.Equal(4, entitySetMapping.EntityTypeMappings.Count());
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(entityType1);
             var entityType1MappingConditions = databaseMapping.GetEntityTypeMappings(entityType1).Single(x => !x.IsHierarchyMapping);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            var table1 = entityType1Mapping.TypeMappingFragments.Single().Table;
-            var table2 = entityType2Mapping.TypeMappingFragments.Single().Table;
-            var table3 = entityType3Mapping.TypeMappingFragments.Single().Table;
+            var table1 = entityType1Mapping.MappingFragments.Single().Table;
+            var table2 = entityType2Mapping.MappingFragments.Single().Table;
+            var table3 = entityType3Mapping.MappingFragments.Single().Table;
 
             Assert.True(entityType1Mapping.IsHierarchyMapping);
             Assert.Equal(4, table1.Properties.Count);
@@ -959,37 +960,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal("P2", table1.Properties[1].Name);
             Assert.Equal("P3", table1.Properties[2].Name);
             Assert.Equal("P4", table1.Properties[3].Name);
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table1.Properties[2], entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions[0].Column);
-            Assert.True((bool)entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions[0].IsNull);
-            Assert.Same(table1.Properties[3], entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions[1].Column);
-            Assert.True((bool)entityType1MappingConditions.TypeMappingFragments.Single().ColumnConditions[1].IsNull);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table1.Properties[2], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
+            Assert.True((bool)entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(0).IsNull);
+            Assert.Same(table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
+            Assert.True((bool)entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(1).IsNull);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
             Assert.Same(table1, table2);
             Assert.Same(table1.Properties[0], table2.Properties[0]);
             Assert.Same(table1.Properties[1], table2.Properties[1]);
-            Assert.Equal(2, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P3", entityType2Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table1.Properties[3], entityType2Mapping.TypeMappingFragments.Single().ColumnConditions[0].Column);
-            Assert.True((bool)entityType2Mapping.TypeMappingFragments.Single().ColumnConditions[0].IsNull);
-            Assert.Same(table1.Properties[2], entityType2Mapping.TypeMappingFragments.Single().ColumnConditions[1].Column);
-            Assert.False((bool)entityType2Mapping.TypeMappingFragments.Single().ColumnConditions[1].IsNull);
+            Assert.Equal(2, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P3", entityType2Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table1.Properties[3], entityType2Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
+            Assert.True((bool)entityType2Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).IsNull);
+            Assert.Same(table1.Properties[2], entityType2Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
+            Assert.False((bool)entityType2Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).IsNull);
 
             Assert.False(entityType3Mapping.IsHierarchyMapping);
             Assert.Same(table1, table3);
             Assert.Same(table1.Properties[0], table3.Properties[0]);
             Assert.Same(table1.Properties[1], table3.Properties[1]);
-            Assert.Equal(2, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P4", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Same(table1.Properties[2], entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[0].Column);
-            Assert.True((bool)entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[0].IsNull);
-            Assert.Same(table1.Properties[3], entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[1].Column);
-            Assert.False((bool)entityType3Mapping.TypeMappingFragments.Single().ColumnConditions[1].IsNull);
+            Assert.Equal(2, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P4", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Same(table1.Properties[2], entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
+            Assert.True((bool)entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(0).IsNull);
+            Assert.Same(table1.Properties[3], entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
+            Assert.False((bool)entityType3Mapping.MappingFragments.Single().ColumnConditions.ElementAt(1).IsNull);
         }
 
         [Fact]
@@ -1055,24 +1056,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             var entityTypeMapping = databaseMapping.GetEntityTypeMapping(entityType);
-            var table1 = entityTypeMapping.TypeMappingFragments[0].Table;
-            var table2 = entityTypeMapping.TypeMappingFragments[1].Table;
+            var table1 = entityTypeMapping.MappingFragments[0].Table;
+            var table2 = entityTypeMapping.MappingFragments[1].Table;
             Assert.NotSame(table1, table2);
             Assert.Equal("E1", table1.GetTableName().Name);
             Assert.Equal("E2", table2.GetTableName().Name);
             Assert.Equal(3, table1.Properties.Count);
             Assert.Equal(3, table2.Properties.Count);
-            Assert.Equal(2, entityTypeMapping.TypeMappingFragments.Count);
-            var entityTypeMappingFragment1 = entityTypeMapping.TypeMappingFragments[0];
-            var entityTypeMappingFragment2 = entityTypeMapping.TypeMappingFragments[1];
-            Assert.Equal(3, entityTypeMappingFragment1.PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMappingFragment1.PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityTypeMappingFragment1.PropertyMappings[1].Column.Name);
-            Assert.Equal("P3", entityTypeMappingFragment1.PropertyMappings[2].Column.Name);
-            Assert.Equal(3, entityTypeMappingFragment2.PropertyMappings.Count);
-            Assert.Equal("P1", entityTypeMappingFragment2.PropertyMappings[0].Column.Name);
-            Assert.Equal("P4", entityTypeMappingFragment2.PropertyMappings[1].Column.Name);
-            Assert.Equal("P5", entityTypeMappingFragment2.PropertyMappings[2].Column.Name);
+            Assert.Equal(2, entityTypeMapping.MappingFragments.Count);
+            var entityTypeMappingFragment1 = entityTypeMapping.MappingFragments[0];
+            var entityTypeMappingFragment2 = entityTypeMapping.MappingFragments[1];
+            Assert.Equal(3, entityTypeMappingFragment1.ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMappingFragment1.ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityTypeMappingFragment1.ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Equal("P3", entityTypeMappingFragment1.ColumnMappings.ElementAt(2).ColumnProperty.Name);
+            Assert.Equal(3, entityTypeMappingFragment2.ColumnMappings.Count());
+            Assert.Equal("P1", entityTypeMappingFragment2.ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P4", entityTypeMappingFragment2.ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Equal("P5", entityTypeMappingFragment2.ColumnMappings.ElementAt(2).ColumnProperty.Name);
         }
 
         [Fact]

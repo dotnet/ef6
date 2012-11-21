@@ -290,7 +290,8 @@ namespace System.Data.Entity.Internal
             return new HistoryRepository(
                 OriginalConnectionString,
                 DbProviderServices.GetProviderFactory(Connection),
-                ContextKey)
+                ContextKey,
+                new[] { DefaultSchema })
                 .GetLastModel();
         }
 

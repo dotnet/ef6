@@ -20,8 +20,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal class TypeRestriction : MemberRestriction
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates an incomplete type restriction of the form "<paramref name="member" /> in <paramref name="values" />".
         /// </summary>
@@ -46,10 +44,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : base(slot, domain)
         {
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Requires: <see cref="MemberRestriction.IsComplete" /> is true.
@@ -225,10 +219,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region String methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append("type(");
@@ -237,7 +227,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             StringUtil.ToCommaSeparatedStringSorted(builder, Domain.Values);
             builder.Append(")");
         }
-
-        #endregion
     }
 }

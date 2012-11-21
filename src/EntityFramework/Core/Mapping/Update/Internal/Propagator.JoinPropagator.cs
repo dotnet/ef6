@@ -37,8 +37,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </remarks>
         private partial class JoinPropagator
         {
-            #region Constructors
-
             /// <summary>
             ///     Constructs a join propagator.
             /// </summary>
@@ -83,12 +81,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 m_rightPlaceholderKey = ExtractKey(m_right.Placeholder, m_rightKeySelectors);
             }
 
-            #endregion
-
-            #region Fields
-
-            #region Propagation rules
-
             /**
              * These static dictionaries are initialized by the static constructor for this class.
              * They describe for each combination of input elements (the key) propagation rules, which
@@ -98,8 +90,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private static readonly Dictionary<Ops, Ops> _innerJoinDeleteRules;
             private static readonly Dictionary<Ops, Ops> _leftOuterJoinInsertRules;
             private static readonly Dictionary<Ops, Ops> _leftOuterJoinDeleteRules;
-
-            #endregion
 
             private readonly DbJoinExpression m_joinExpression;
             private readonly Propagator m_parent;
@@ -111,10 +101,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private readonly ChangeNode m_right;
             private readonly CompositeKey m_leftPlaceholderKey;
             private readonly CompositeKey m_rightPlaceholderKey;
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Initialize rules.
@@ -535,10 +521,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return new CompositeKey(keyValues);
             }
 
-            #endregion
-
-            #region Nested types
-
             /// <summary>
             ///     Flags indicating which change elements are available (0-4) and propagation
             ///     rules (0, 5-512)
@@ -576,8 +558,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 #endregion
             }
-
-            #endregion
         }
     }
 }

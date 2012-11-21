@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     // that are related and for which view generation needs to be done together
     internal class CellPartitioner : InternalBase
     {
-        #region Constructor
-
         // effects: Creates a partitioner for cells with extra information
         // about foreign key constraints
         internal CellPartitioner(IEnumerable<Cell> cells, IEnumerable<ForeignConstraint> foreignKeyConstraints)
@@ -25,16 +23,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_cells = cells;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly IEnumerable<Cell> m_cells;
         private readonly IEnumerable<ForeignConstraint> m_foreignKeyConstraints;
-
-        #endregion
-
-        #region Available Methods
 
         // effects: Given a list of cells, segments them into multiple
         // "groups" such that view generation (including validation) of one
@@ -87,10 +77,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             var result = GenerateConnectedComponents(graph);
             return result;
         }
-
-        #endregion
-
-        #region Private Methods
 
         // effects: Returns true iff cell1 is an extent at the end of cell2's
         // relationship set or vice versa
@@ -147,8 +133,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
             return false;
         }
-
-        #endregion
 
         internal override void ToCompactString(StringBuilder builder)
         {

@@ -77,7 +77,7 @@ namespace System.Data.Entity.Migrations.History
         {
             migrationId = null;
 
-            if (!Exists())
+            if (!Exists(contextKey))
             {
                 return null;
             }
@@ -258,17 +258,17 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual bool Exists()
+        public virtual bool Exists(string contextKey = null)
         {
             if (_exists == null)
             {
-                _exists = QueryExists();
+                _exists = QueryExists(contextKey ?? _contextKey);
             }
 
             return _exists.Value;
         }
 
-        private bool QueryExists()
+        private bool QueryExists(string contextKey)
         {
             using (var connection = CreateConnection())
             {
@@ -296,7 +296,7 @@ namespace System.Data.Entity.Migrations.History
 
                             try
                             {
-                                if (context.History.Any(hr => hr.ContextKey == _contextKey))
+                                if (context.History.Any(hr => hr.ContextKey == contextKey))
                                 {
                                     return true;
                                 }

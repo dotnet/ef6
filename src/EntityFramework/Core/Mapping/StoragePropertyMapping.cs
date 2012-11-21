@@ -39,8 +39,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal abstract class StoragePropertyMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct a new EdmProperty mapping object
         /// </summary>
@@ -50,18 +48,10 @@ namespace System.Data.Entity.Core.Mapping
             m_cdmMember = cdmMember;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     EdmProperty metadata representing the Cdm member for which the mapping is specified.
         /// </summary>
         private readonly EdmProperty m_cdmMember;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     The PropertyMetadata object that represents the member for which mapping is being specified
@@ -71,10 +61,6 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_cdmMember; }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     This method is primarily for debugging purposes.
         ///     Will be removed shortly.
@@ -83,7 +69,5 @@ namespace System.Data.Entity.Core.Mapping
         internal virtual void Print(int index)
         {
         }
-
-        #endregion
     }
 }
