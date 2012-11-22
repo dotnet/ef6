@@ -3419,13 +3419,7 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // prove that can still re-use the connection even after the above
-                string allStrings = string.Empty;
-                foreach (string s in query)
-                {
-                    // just iterating over strings - to check that we are not lazily short-circuiting
-                    // but actually are not interested in these strings for this test
-                    allStrings += s;
-                }
+                Assert.True(context.Products.Count() > 0); // this will iterate through results to check that the query will execute
 
                 // and show that the entity connection and the store connection are once again closed
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
@@ -3468,13 +3462,7 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // prove that can still re-use the connection even after the above
-                string allStrings = string.Empty;
-                foreach (string s in query)
-                {
-                    // just iterating over strings - to check that we are not lazily short-circuiting
-                    // but actually are not interested in these strings for this test
-                    allStrings += s;
-                }
+                Assert.True(context.Products.Count() > 0); // this will iterate through results to check that the query will execute
 
                 // and show that the entity connection and the store connection are once again closed
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
