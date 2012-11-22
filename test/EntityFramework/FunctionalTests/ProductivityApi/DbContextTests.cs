@@ -3387,24 +3387,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
-            Database.SetInitializer(new DropCreateDatabaseAlways<SimpleModelContext>());
-
             using (var context = new SimpleModelContext())
             {
                 EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
-                
-                // ensure there are at least 2 products
-                var product1 = new Product
-                {
-                    Name = "Implicit_EntityConnection_throws_if_close_underlying_StoreConnection1"
-                };
-                context.Products.Add(product1);
-                var product2 = new Product
-                {
-                    Name = "Implicit_EntityConnection_throws_if_close_underlying_StoreConnection2"
-                };
-                context.Products.Add(product2);
-                context.SaveChanges();
+
+                Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
                 var query = from p in context.Products
                              select p.Name;
@@ -3412,31 +3399,22 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
-                Assert.Throws<InvalidOperationException>(() =>
-                {
-                    int i = 0;
-                    foreach (string s in query)
+                IEnumerator<string> enumerator = query.GetEnumerator();
+                enumerator.MoveNext();
+
+                // close the underlying store connection without explicitly closing entityConnection
+                entityConnection.StoreConnection.Close();
+                Assert.Equal(ConnectionState.Broken, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // check that we throw when we attempt to use the implicitly-opened entityConnection with closed underlying store connection
+                Exception e = Assert.Throws<InvalidOperationException>(() =>
                     {
-                        if (i == 0)
-                        {
-                            Assert.Equal(ConnectionState.Open, entityConnection.State);
-                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
+                        enumerator.MoveNext();
+                    });
+                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
 
-                            // in first iteration close the underlying store connection without explicitly closing entityConnection
-                            entityConnection.StoreConnection.Close();
-                            Assert.Equal(ConnectionState.Broken, entityConnection.State);
-                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
-                        }
-                        else
-                        {
-                            Assert.True(false, "Should never reach here - should throw InvalidOperationException first");
-                            break;
-                        }
-
-                        i++;
-                    }
-                });
-
+                enumerator.Dispose();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
@@ -3444,6 +3422,8 @@ namespace ProductivityApiTests
                 string allStrings = string.Empty;
                 foreach (string s in query)
                 {
+                    // just iterating over strings - to check that we are not lazily short-circuiting
+                    // but actually are not interested in these strings for this test
                     allStrings += s;
                 }
 
@@ -3456,24 +3436,11 @@ namespace ProductivityApiTests
         [Fact]
         public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
         {
-            Database.SetInitializer(new DropCreateDatabaseAlways<SimpleModelContext>());
-
             using (var context = new SimpleModelContext())
             {
                 EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
 
-                // ensure there are at least 2 products
-                var product1 = new Product
-                {
-                    Name = "Implicit_EntityConnection_throws_if_close_EntityConnection_during_query1"
-                };
-                context.Products.Add(product1);
-                var product2 = new Product
-                {
-                    Name = "Implicit_EntityConnection_throws_if_close_EntityConnection_during_query2"
-                };
-                context.Products.Add(product2);
-                context.SaveChanges();
+                Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
                 var query = from p in context.Products
                             select p.Name;
@@ -3481,31 +3448,22 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
-                Assert.Throws<InvalidOperationException>(() =>
+                IEnumerator<string> enumerator = query.GetEnumerator();
+                enumerator.MoveNext();
+
+                // close the entity connection explicitly (i.e. not through context) in middle of query
+                entityConnection.Close();
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // check that we throw when we attempt to use the implicitly-opened entityConnection
+                Exception e = Assert.Throws<InvalidOperationException>(() =>
                 {
-                    int i = 0;
-                    foreach (string s in query)
-                    {
-                        if (i == 0)
-                        {
-                            Assert.Equal(ConnectionState.Open, entityConnection.State);
-                            Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
-
-                            // in first iteration close the entity connection explicitly (i.e. not through context) in middle of query
-                            entityConnection.Close();
-                            Assert.Equal(ConnectionState.Closed, entityConnection.State);
-                            Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
-                        }
-                        else
-                        {
-                            Assert.True(false, "Should never reach here - should throw InvalidOperationException first");
-                            break;
-                        }
-
-                        i++;
-                    }
+                    enumerator.MoveNext();
                 });
+                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
 
+                enumerator.Dispose();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
@@ -3513,6 +3471,8 @@ namespace ProductivityApiTests
                 string allStrings = string.Empty;
                 foreach (string s in query)
                 {
+                    // just iterating over strings - to check that we are not lazily short-circuiting
+                    // but actually are not interested in these strings for this test
                     allStrings += s;
                 }
 
