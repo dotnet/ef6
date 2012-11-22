@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -76,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public bool EdmV3FeaturesSupported
         {
-            get { return _edmModelVersion == null || _edmModelVersion >= DataModelVersions.Version3; }
+            get { return _edmModelVersion == null || _edmModelVersion >= XmlConstants.EdmVersionForV3; }
         }
 
         private static bool IsEnumType(Type type)

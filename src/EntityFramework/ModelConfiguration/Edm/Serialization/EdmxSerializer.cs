@@ -2,10 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
-    
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.Contracts;
@@ -15,7 +12,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
     internal sealed class EdmxSerializer
     {
         private const string EdmXmlNamespaceV2 = "http://schemas.microsoft.com/ado/2008/10/edmx";
-
         private const string EdmXmlNamespaceV3 = "http://schemas.microsoft.com/ado/2009/11/edmx";
 
         private DbDatabaseMapping _databaseMapping;
@@ -36,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             _databaseMapping = databaseMapping;
             _version = databaseMapping.Model.Version;
             _providerInfo = providerInfo;
-            _namespace = _version == DataModelVersions.Version3 ? EdmXmlNamespaceV3 : EdmXmlNamespaceV2;
+            _namespace = Equals(_version, XmlConstants.EdmVersionForV3) ? EdmXmlNamespaceV3 : EdmXmlNamespaceV2;
 
             _xmlWriter.WriteStartDocument();
 

@@ -3,10 +3,11 @@
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Edm.Validation.Internal.EdmModel;
 
     internal abstract class DataModelValidationRule
     {
         internal abstract Type ValidatedType { get; }
-        internal abstract void Evaluate(DataModelValidationContext context, IMetadataItem item);
+        internal abstract void Evaluate(EdmModelValidationContext context, IMetadataItem item);
     }
 }

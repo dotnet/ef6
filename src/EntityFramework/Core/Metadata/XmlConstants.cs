@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     ///     Class that contains all the constants for various schemas
     /// </summary>
@@ -29,6 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string AnnotationNamespace = "http://schemas.microsoft.com/ado/2009/02/edm/annotation";
 
         internal const string Alias = "Alias";
+        internal const string Self = "Self";
         internal const string Provider = "Provider";
         internal const string ProviderManifestToken = "ProviderManifestToken";
         internal const string CSSpaceSchemaExtension = ".msl";
@@ -50,6 +53,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const double StoreVersionForV1 = 1.0;
         internal const double StoreVersionForV2 = 2.0;
         internal const double StoreVersionForV3 = 3.0;
+
+        public static string GetCsdlNamespace(double edmVersion)
+        {
+            if (Equals(edmVersion, EdmVersionForV1))
+            {
+                return ModelNamespace_1;
+            }
+
+            if (Equals(edmVersion, EdmVersionForV1_1))
+            {
+                return ModelNamespace_1_1;
+            }
+
+            if (Equals(edmVersion, EdmVersionForV2))
+            {
+                return ModelNamespace_2;
+            }
+
+            Contract.Assert(Equals(edmVersion, EdmVersionForV3), "Added a new version?");
+
+            return ModelNamespace_3;
+        }
+
+        public static string GetSsdlNamespace(double edmVersion)
+        {
+            if (Equals(edmVersion, StoreVersionForV1))
+            {
+                return TargetNamespace_1;
+            }
+
+            if (Equals(edmVersion, StoreVersionForV2))
+            {
+                return TargetNamespace_2;
+            }
+
+            Contract.Assert(Equals(edmVersion, StoreVersionForV3), "Added a new version?");
+
+            return TargetNamespace_3;
+        }
 
         // Const element names in the CDM schema xml
         internal const string Association = "Association";

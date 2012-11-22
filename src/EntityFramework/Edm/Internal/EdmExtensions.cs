@@ -4,7 +4,6 @@ namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
@@ -32,10 +31,14 @@ namespace System.Data.Entity.Edm.Internal
                             new HashSet<EdmProperty>(declaringType.DeclaredProperties.Where(p => p != null));
                         foreach (var keyProp in declaringType.DeclaredKeyProperties)
                         {
-                            if (keyProp != null &&
-                                !duplicateKeyProps.Contains(keyProp) &&
-                                entityProps.Contains(keyProp) &&
-                                !string.IsNullOrEmpty(keyProp.Name) &&
+                            if (keyProp != null
+                                &&
+                                !duplicateKeyProps.Contains(keyProp)
+                                &&
+                                entityProps.Contains(keyProp)
+                                &&
+                                !string.IsNullOrEmpty(keyProp.Name)
+                                &&
                                 !string.IsNullOrWhiteSpace(keyProp.Name)
                                 &&
                                 !duplicateKeyPropNames.Contains(keyProp.Name))
@@ -136,9 +139,8 @@ namespace System.Data.Entity.Edm.Internal
 
         internal static bool IsForeignKey(this AssociationType association, double version)
         {
-            if (version >= DataModelVersions.Version2
-                &&
-                association.Constraint != null)
+            if (version >= XmlConstants.EdmVersionForV2
+                && association.Constraint != null)
             {
                 // in V2, referential constraint implies foreign key
                 return true;

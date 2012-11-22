@@ -3,15 +3,14 @@
 namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Edm.Validation.Internal.EdmModel;
 
-    internal abstract class DataModelValidationRule<TContext, TItem> : DataModelValidationRule
-        where TContext : DataModelValidationContext
+    internal abstract class DataModelValidationRule<TItem> : DataModelValidationRule
         where TItem : IMetadataItem
     {
-        protected Action<TContext, TItem> _validate;
+        protected Action<EdmModelValidationContext, TItem> _validate;
 
-        internal DataModelValidationRule(Action<TContext, TItem> validate)
+        internal DataModelValidationRule(Action<EdmModelValidationContext, TItem> validate)
         {
             _validate = validate;
         }
@@ -21,12 +20,9 @@ namespace System.Data.Entity.Edm.Validation.Internal
             get { return typeof(TItem); }
         }
 
-        internal override void Evaluate(DataModelValidationContext context, IMetadataItem item)
+        internal override void Evaluate(EdmModelValidationContext context, IMetadataItem item)
         {
-            Contract.Assert(context is TContext, "context should be " + typeof(TContext));
-            Contract.Assert(item is TItem, "item should be " + typeof(TItem));
-
-            _validate((TContext)context, (TItem)item);
+            _validate(context, (TItem)item);
         }
     }
 }

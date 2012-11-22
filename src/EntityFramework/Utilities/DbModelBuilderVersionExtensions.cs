@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Utilities
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     internal static class DbModelBuilderVersionExtensions
     {
@@ -11,10 +11,10 @@ namespace System.Data.Entity.Utilities
             switch (modelBuilderVersion)
             {
                 case DbModelBuilderVersion.V4_1:
-                    return DataModelVersions.Version2;
+                    return XmlConstants.EdmVersionForV2;
                 case DbModelBuilderVersion.V5_0:
                 case DbModelBuilderVersion.Latest:
-                    return DataModelVersions.Version3;
+                    return XmlConstants.EdmVersionForV3;
                 default:
                     throw new ArgumentOutOfRangeException("modelBuilderVersion");
             }

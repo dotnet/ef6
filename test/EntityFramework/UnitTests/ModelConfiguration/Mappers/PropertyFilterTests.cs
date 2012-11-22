@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -81,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
         [Fact]
         public void PropertyFilter_supports_V3_properties_if_V3_schema_version_is_used()
         {
-            Assert.True(new PropertyFilter(DataModelVersions.Version3).EdmV3FeaturesSupported);
+            Assert.True(new PropertyFilter(XmlConstants.EdmVersionForV3).EdmV3FeaturesSupported);
         }
 
         [Fact]
@@ -93,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
         [Fact]
         public void PropertyFilter_does_not_support_V3_properties_if_V2_schema_version_is_used()
         {
-            Assert.False(new PropertyFilter(DataModelVersions.Version2).EdmV3FeaturesSupported);
+            Assert.False(new PropertyFilter(XmlConstants.EdmVersionForV2).EdmV3FeaturesSupported);
         }
 
         [Fact]
@@ -111,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
         [Fact]
         public void PropertyFilter_validates_spatial_properties_if_V3_schema_version_is_used()
         {
-            PropertyFilter_validates_spatial_types(new PropertyFilter(DataModelVersions.Version3));
+            PropertyFilter_validates_spatial_types(new PropertyFilter(XmlConstants.EdmVersionForV3));
         }
 
         [Fact]
@@ -123,7 +124,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
         [Fact]
         public void PropertyFilter_validates_enum_properties_if_V3_schema_version_is_used()
         {
-            PropertyFilter_validates_enum_types(new PropertyFilter(DataModelVersions.Version3));
+            PropertyFilter_validates_enum_types(new PropertyFilter(XmlConstants.EdmVersionForV3));
         }
 
         [Fact]
@@ -170,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
             Assert.Equal(
                 Strings.UnsupportedUseOfV3Type("BadType", "EnumProp"),
                 Assert.Throws<NotSupportedException>(
-                    () => new PropertyFilter(DataModelVersions.Version2).ValidatePropertiesForModelVersion(mockType, properties)).Message);
+                    () => new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(mockType, properties)).Message);
         }
 
         [Fact]
@@ -185,7 +186,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
                 Strings.UnsupportedUseOfV3Type("BadType", "Geography"),
                 Assert.Throws<NotSupportedException>(
                     () =>
-                    new PropertyFilter(DataModelVersions.Version2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
+                    new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
                     Message);
         }
 
@@ -201,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
                 Strings.UnsupportedUseOfV3Type("BadType", "Geometry"),
                 Assert.Throws<NotSupportedException>(
                     () =>
-                    new PropertyFilter(DataModelVersions.Version2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
+                    new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
                     Message);
         }
 
@@ -240,7 +241,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
 
             mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(properties);
 
-            var filteredProperties = new PropertyFilter(DataModelVersions.Version2).GetProperties(mockType, declaredOnly: false);
+            var filteredProperties = new PropertyFilter(XmlConstants.EdmVersionForV2).GetProperties(mockType, declaredOnly: false);
 
             Assert.Equal(0, filteredProperties.Count());
         }

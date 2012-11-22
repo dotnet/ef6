@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
     /// <summary>
@@ -127,34 +127,30 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
             }
         }
 
-        /// <summary>
-        ///     Get <see cref="EdmModelRuleSet" /> based on version
-        /// </summary>
-        /// <param name="version"> a double value of version </param>
-        /// <returns> <see cref="EdmModelRuleSet" /> </returns>
         internal static EdmModelRuleSet CreateEdmModelRuleSet(double version, bool validateSyntax)
         {
-            if (version == DataModelVersions.Version1)
+            if (Equals(version, XmlConstants.EdmVersionForV1))
             {
                 return new V1RuleSet(validateSyntax);
             }
 
-            if (version == DataModelVersions.Version1_1)
+            if (Equals(version, XmlConstants.EdmVersionForV1_1))
             {
                 return new V1_1RuleSet(validateSyntax);
             }
 
-            if (version == DataModelVersions.Version2)
+            if (Equals(version, XmlConstants.EdmVersionForV2))
             {
                 return new V2RuleSet(validateSyntax);
             }
 
-            if (version == DataModelVersions.Version3)
+            if (Equals(version, XmlConstants.EdmVersionForV3))
             {
                 return new V3RuleSet(validateSyntax);
             }
 
             Debug.Fail("Added new version?");
+
             return null;
         }
     }

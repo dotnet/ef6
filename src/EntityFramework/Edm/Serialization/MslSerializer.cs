@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Edm.Serialization
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Msl;
     using System.Data.Entity.Infrastructure;

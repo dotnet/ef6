@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -69,10 +68,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             switch (facetDescription.FacetName)
             {
-                case SsdlConstants.Attribute_FixedLength:
+                case XmlConstants.FixedLengthElement:
                     column.IsFixedLength = facetDescription.IsConstant ? null : IsFixedLength ?? column.IsFixedLength;
                     break;
-                case SsdlConstants.Attribute_MaxLength:
+                case XmlConstants.MaxLengthElement:
                     column.MaxLength = facetDescription.IsConstant ? null : MaxLength ?? column.MaxLength;
                     column.IsMaxLength = !facetDescription.IsConstant && (IsMaxLength ?? column.IsMaxLength);
                     break;
