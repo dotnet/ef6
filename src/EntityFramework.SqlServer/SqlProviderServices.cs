@@ -751,8 +751,8 @@ namespace System.Data.Entity.SqlServer
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
-            var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName);
             var sqlVersion = GetSqlVersion(storeItemCollection);
+            var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName, sqlVersion);
 
             var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
 

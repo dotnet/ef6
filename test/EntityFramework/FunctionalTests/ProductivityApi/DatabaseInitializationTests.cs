@@ -11,6 +11,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.SqlServer;
     using System.Linq;
     using System.Transactions;
     using BadMappingModel;
@@ -1483,6 +1484,34 @@ namespace ProductivityApiTests
             {
                 Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true)).ValidateMessage
                     ("DatabaseInitializationStrategy_ModelMismatch", context.GetType().Name);
+            }
+        }
+
+        [Fact]
+        public void CreateDatabaseScript_returns_expected_result()
+        {
+            const string databaseName = "ADatabaseName";
+            const string dataFileName = "ADataFileName";
+            const string logFileName = "ALogFileName";
+
+            const string sql8ScriptFormat =
+                "create database [{0}] " +
+                "on primary (name=N'{1}', filename=N'{1}') " +
+                "log on (name=N'{2}', filename=N'{2}')";
+
+            const string sql9ScriptFormat =
+                sql8ScriptFormat + "\r\n" +
+                "if serverproperty('EngineEdition') <> 5 " +
+                "alter database [{0}] set read_committed_snapshot on";
+
+            var sql8Script = String.Format(sql8ScriptFormat, databaseName, dataFileName, logFileName);
+            var sql9Script = String.Format(sql9ScriptFormat, databaseName, dataFileName, logFileName);
+
+            foreach (SqlVersion sqlVersion in Enum.GetValues(typeof(SqlVersion)))
+            {
+                var script = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName, sqlVersion);
+                var expectedScript = (sqlVersion >= SqlVersion.Sql9) ? sql9Script : sql8Script;                
+                Assert.True(String.CompareOrdinal(script, expectedScript) == 0);
             }
         }
     }

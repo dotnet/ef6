@@ -53,9 +53,12 @@ namespace System.Data.Entity.SqlServer
             return builder.GetCommandText();
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EngineEdition")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "serverproperty")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "readcommittedsnapshot")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.SqlServer.SqlDdlBuilder.AppendSql(System.String)")]
-        internal static string CreateDatabaseScript(string databaseName, string dataFileName, string logFileName)
+        internal static string CreateDatabaseScript(string databaseName, string dataFileName, string logFileName, SqlVersion sqlVersion)
         {
             var builder = new SqlDdlBuilder();
             builder.AppendSql("create database ");
@@ -68,6 +71,16 @@ namespace System.Data.Entity.SqlServer
                 builder.AppendSql(" log on ");
                 builder.AppendFileName(logFileName);
             }
+
+            // Set READ_COMMITTED_SNAPSHOT ON, if SQL Server 2005 and up and not SQLAzure.
+            if (sqlVersion >= SqlVersion.Sql9)
+            {
+                builder.AppendNewLine();
+                builder.AppendSql("if serverproperty('EngineEdition') <> 5 alter database ");
+                builder.AppendIdentifier(databaseName);
+                builder.AppendSql(" set read_committed_snapshot on");
+            }
+
             return builder.unencodedStringBuilder.ToString();
         }
 
