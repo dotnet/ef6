@@ -30,8 +30,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     ///</summary>
     internal class Cell : InternalBase
     {
-        #region Constructor
-
         // effects: Creates a cell with the C and S queries 
         private Cell(CellQuery cQuery, CellQuery sQuery, CellLabel label, int cellNumber)
         {
@@ -56,10 +54,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_cellNumber = source.m_cellNumber;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly CellQuery m_cQuery;
         private readonly CellQuery m_sQuery;
         private readonly int m_cellNumber; // cell number that identifies this cell
@@ -67,10 +61,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // that the Cell was constructed over.
         // The view cell relation for all projected slots in this
         private ViewCellRelation m_viewCellRelation;
-
-        #endregion
-
-        #region Properties
 
         // effects: Returns the C query
         internal CellQuery CQuery
@@ -101,10 +91,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return StringUtil.FormatInvariant("V{0}", CellNumber); }
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Determines all the identifiers used in this and adds them to identifiers
         internal void GetIdentifiers(CqlIdentifiers identifiers)
@@ -243,15 +229,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Factory methods
-
         internal static Cell CreateCS(CellQuery cQuery, CellQuery sQuery, CellLabel label, int cellNumber)
         {
             return new Cell(cQuery, sQuery, label, cellNumber);
         }
-
-        #endregion
     }
 }

@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class QualifiedCellIdBoolean : CellIdBoolean
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a boolean of the form "<paramref name="block" />.<paramref name="originalCellNum" />".
         /// </summary>
@@ -24,15 +22,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_block = block;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly CqlBlock m_block;
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
@@ -45,7 +35,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return base.AsCqt(m_block.GetInput(row), skipIsNotNull);
         }
-
-        #endregion
     }
 }

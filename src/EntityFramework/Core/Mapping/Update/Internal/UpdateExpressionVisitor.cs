@@ -37,8 +37,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return new NotSupportedException(Strings.Update_UnsupportedExpressionKind(nodeKind, VisitorName));
         }
 
-        #region IExpressionVisitor<TReturn> Members
-
         public override TReturn Visit(DbExpression expression)
         {
             if (null != expression)
@@ -260,7 +258,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             throw ConstructNotSupportedException(expression);
         }
-
-        #endregion
     }
 }

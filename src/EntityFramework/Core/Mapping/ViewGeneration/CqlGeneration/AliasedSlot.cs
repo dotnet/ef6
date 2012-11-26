@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class QualifiedSlot : ProjectedSlot
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a qualified slot "block_alias.slot_alias"
         /// </summary>
@@ -26,16 +24,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_slot = slot; // Note: slot can be another qualified slot.
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly CqlBlock m_block;
         private readonly ProjectedSlot m_slot;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
@@ -99,7 +89,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             StringUtil.FormatStringBuilder(builder, "{0} ", m_block.CqlAlias);
             m_slot.ToCompactString(builder);
         }
-
-        #endregion
     }
 }

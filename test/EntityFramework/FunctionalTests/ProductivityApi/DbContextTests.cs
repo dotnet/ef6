@@ -5,6 +5,7 @@ namespace ProductivityApiTests
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
@@ -2392,6 +2393,119 @@ namespace ProductivityApiTests
             }
         }
 
+        [Fact]
+        public void Entity_reference_does_not_get_lazily_loaded_if_LazyLoadingEnabled_is_set_to_false()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                var driver = context.Drivers.FirstOrDefault();
+
+                Assert.Null(driver.Team);
+            }
+        }
+
+        [Fact]
+        public void Entity_collection_does_not_get_lazily_loaded_if_LazyLoadingEnabled_is_set_to_false()
+        {
+            using (var context = new F1Context())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+                var team = context.Teams.FirstOrDefault();
+
+                Assert.Equal(0, team.Drivers.Count);
+            }
+        }
+
+        [Fact]
+        public void Lazy_loading_throws_when_done_outside_context_scope()
+        {
+            Team team;
+            using (var context = new F1Context())
+            {
+                team = context.Teams.FirstOrDefault();
+            }
+
+            Assert.Throws<ObjectDisposedException>(() => team.Engine);
+            Assert.Throws<ObjectDisposedException>(() => team.Drivers);
+        }
+
+        [Fact]
+        public void Lazy_loading_wires_up_references_navigations_correctly()
+        {
+            using (var context = new F1Context())
+            {
+                // get driver and engine supplier that would navigate to the same engine
+                var query = context.Drivers.Select(d => new { DriverId = d.Id, EngineSupplierId = d.Team.Engine.EngineSupplier.Id }).AsNoTracking();
+                var tuple = query.FirstOrDefault();
+                var driverId = tuple.DriverId;
+                var engineSupplierId = tuple.EngineSupplierId;
+
+                var driver = context.Drivers.Where(d => d.Id == driverId).Single();
+                var team = driver.Team;
+
+                var engineSupplier = context.EngineSuppliers.Where(es => es.Id == engineSupplierId).Single();
+                var engine = engineSupplier.Engines;
+
+                context.Configuration.LazyLoadingEnabled = false;
+
+                Assert.NotNull(team.Engine);
+            }
+        }
+
+        [Fact]
+        public void Lazy_loading_wires_up_collection_navigations_correctly()
+        {
+            using (var context = new F1Context())
+            {
+                var query = context.Sponsors.SelectMany(s => s.Teams, (s, t) => new { SponsorId = s.Id, EngineId = t.Engine.Id }).AsNoTracking();
+                var tuple = query.FirstOrDefault();
+                var sponsor = context.Sponsors.Where(s => s.Id == tuple.SponsorId).Single();
+                var sponsorTeams = sponsor.Teams;
+
+                var engine = context.Engines.Where(e => e.Id == tuple.EngineId).Single();
+
+                context.Configuration.LazyLoadingEnabled = false;
+
+                Assert.True(engine.Teams.Count > 0);
+                bool engineTeamsContainSponsorTeam = false;
+                foreach (var sponsorTeam in sponsorTeams)
+                {
+                    if (engine.Teams.Contains(sponsorTeam))
+                    {
+                        engineTeamsContainSponsorTeam = true;
+                    }
+                }
+
+                Assert.True(engineTeamsContainSponsorTeam);
+
+                foreach (var engineTeam in engine.Teams)
+                {
+                    Assert.True(sponsorTeams.Contains(engineTeam));
+                }
+            }
+        }
+
+        [Fact]
+        public void Lazy_loading_many_to_many_navigation_works_properly()
+        {
+            using (var context = new F1Context())
+            {
+                var teamId = context.Teams.OrderBy(t => t.Id).AsNoTracking().FirstOrDefault().Id;
+                var sponsorsId = context.Teams.Where(t => t.Id == teamId).SelectMany(t => t.Sponsors).AsNoTracking().Select(s => s.Id).ToList();
+
+                var team = context.Teams.Where(t => t.Id == teamId).Single();
+                var sponsors = team.Sponsors;
+
+                context.Configuration.LazyLoadingEnabled = false;
+
+                foreach (var sponsor in sponsors)
+                {
+                    Assert.True(sponsorsId.Contains(sponsor.Id));
+                }
+            }
+        }
+
         #endregion
 
         #region Proxy creation tests
@@ -3267,6 +3381,94 @@ namespace ProductivityApiTests
             cmd.Connection.Close();
         }
 
+        #endregion
+
+        #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
+        [Fact]
+        public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+
+                Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
+
+                var query = from p in context.Products
+                             select p.Name;
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                IEnumerator<string> enumerator = query.GetEnumerator();
+                enumerator.MoveNext();
+
+                // close the underlying store connection without explicitly closing entityConnection
+                entityConnection.StoreConnection.Close();
+                Assert.Equal(ConnectionState.Broken, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // check that we throw when we attempt to use the implicitly-opened entityConnection with closed underlying store connection
+                Exception e = Assert.Throws<InvalidOperationException>(() =>
+                    {
+                        enumerator.MoveNext();
+                    });
+                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
+
+                enumerator.Dispose();
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // prove that can still re-use the connection even after the above
+                Assert.True(context.Products.Count() > 0); // this will check that the query will still execute
+
+                // and show that the entity connection and the store connection are once again closed
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+            }
+        }
+
+        [Fact]
+        public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+
+                Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
+
+                var query = from p in context.Products
+                            select p.Name;
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
+
+                IEnumerator<string> enumerator = query.GetEnumerator();
+                enumerator.MoveNext();
+
+                // close the entity connection explicitly (i.e. not through context) in middle of query
+                entityConnection.Close();
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // check that we throw when we attempt to use the implicitly-opened entityConnection
+                Exception e = Assert.Throws<InvalidOperationException>(() =>
+                {
+                    enumerator.MoveNext();
+                });
+                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
+
+                enumerator.Dispose();
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // prove that can still re-use the connection even after the above
+                Assert.True(context.Products.Count() > 0); // this will check that the query will still execute
+
+                // and show that the entity connection and the store connection are once again closed
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+            }
+        }
         #endregion
     }
 

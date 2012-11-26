@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
 {
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Reflection;

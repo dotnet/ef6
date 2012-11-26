@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class MemberProjectedSlot : ProjectedSlot
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a projected slot that references the relevant celltree node.
         /// </summary>
@@ -26,15 +24,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_memberPath = node;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MemberPath m_memberPath;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the full metadata path from the root extent to this node, e.g., Person.Adrs.zip
@@ -43,10 +33,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_memberPath; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias, int indentLevel)
         {
@@ -132,10 +118,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Helper methods
-
         /// <summary>
         ///     Given the <paramref name="prefix" />, determines the slots in <paramref name="slots" /> that correspond to the entity key for the entity set or the
         ///     association set end. Returns the list of slots.  Returns null if even one of the key slots is not present in slots.
@@ -188,7 +170,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             return null;
         }
-
-        #endregion
     }
 }

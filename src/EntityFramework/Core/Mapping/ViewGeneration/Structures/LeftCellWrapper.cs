@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     //   the cell
     internal class LeftCellWrapper : InternalBase
     {
-        #region Fields
-
         internal static readonly IEqualityComparer<LeftCellWrapper> BoolEqualityComparer = new BoolWrapperComparer();
 
         private readonly Set<MemberPath> m_attributes; // project: attributes computed by
@@ -47,10 +45,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal static readonly IComparer<LeftCellWrapper> Comparer = new LeftCellWrapperComparer();
         internal static readonly IComparer<LeftCellWrapper> OriginalCellIdComparer = new CellIdComparer();
-
-        #endregion
-
-        #region Constructor
 
         // effects: Creates a LeftCellWrapper of the form:
         // Project[attrs] (Select[var IN {domain}] (Extent)) = cellquery
@@ -76,10 +70,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : this(viewTarget, attrs, fragmentQuery, leftCellQuery, rightCellQuery, memberMaps, Enumerable.Repeat(inputCell, 1))
         {
         }
-
-        #endregion
-
-        #region Properties
 
         internal FragmentQuery FragmentQuery
         {
@@ -154,10 +144,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return result;
             }
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Yields the input cells in wrappers
         internal static IEnumerable<Cell> GetInputCellsForWrappers(IEnumerable<LeftCellWrapper> wrappers)
@@ -323,10 +309,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Equality Comparer class
-
         // This class compares wrappers based on the Right Where Clause and
         // Extent -- needed for the boolean engine
         private class BoolWrapperComparer : IEqualityComparer<LeftCellWrapper>
@@ -358,10 +340,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return BoolExpression.EqualityComparer.GetHashCode(wrapper.RightCellQuery.WhereClause) ^ wrapper.RightExtent.GetHashCode();
             }
         }
-
-        #endregion
-
-        #region Comparer
 
         // A class that compares two cell wrappers. Useful for guiding heuristics
         // and to ensure that the largest selection domain (i.e., the number of
@@ -401,7 +379,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return StringComparer.Ordinal.Compare(x.OriginalCellNumberString, y.OriginalCellNumberString);
             }
         }
-
-        #endregion
     }
 }

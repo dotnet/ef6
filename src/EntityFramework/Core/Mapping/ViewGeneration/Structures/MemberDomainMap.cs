@@ -21,8 +21,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // subset of possibleVales
     internal class MemberDomainMap : InternalBase
     {
-        #region Fields
-
         // Keep track of the actual domain for each member on which we have conditions
         // Note: some subtleties: For QueryDomainMap it holds just C-side condition members. For UpdateDominMap
         // it now holds S-side condition members as well as members with no s-side condition but C-side condition
@@ -40,10 +38,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private readonly Set<MemberPath> m_projectedConditionMembers = new Set<MemberPath>();
 
         private readonly EdmItemCollection m_edmItemCollection;
-
-        #endregion
-
-        #region Constructor
 
         private MemberDomainMap(
             Dictionary<MemberPath, CellConstantSet> domainMap,
@@ -160,18 +154,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region Properties
-
         internal bool IsProjectedConditionMember(MemberPath memberPath)
         {
             return m_projectedConditionMembers.Contains(memberPath);
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Returns an "open-world" domain, i.e.,
         // one in which not-null constants are used to represent some other value from the domain
@@ -416,8 +402,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(") ");
             }
         }
-
-        #endregion
 
         // struct to keep track of the constant set for a particular slot
         private class CellConstantSetInfo : CellConstantSet

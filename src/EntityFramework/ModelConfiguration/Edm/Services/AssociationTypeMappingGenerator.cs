@@ -4,8 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
@@ -54,20 +56,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new ForeignKeyBuilder(databaseMapping.Database, associationType.Name)
                       {
                           PrincipalTable =
-                              principalEntityTypeMapping.TypeMappingFragments.Single().Table,
+                              principalEntityTypeMapping.MappingFragments.Single().Table,
                           DeleteAction = principalEnd.DeleteBehavior != OperationAction.None
                                              ? principalEnd.DeleteBehavior
                                              : OperationAction.None
                       };
 
             dependentEntityTypeMapping
-                .TypeMappingFragments
+                .MappingFragments
                 .Single()
                 .Table
                 .AddForeignKey(foreignKeyConstraint);
 
             foreignKeyConstraint.DependentColumns = associationType.Constraint.ToProperties.Select(
-                dependentProperty => dependentEntityTypeMapping.GetPropertyMapping(dependentProperty).Column);
+                dependentProperty => dependentEntityTypeMapping.GetPropertyMapping(dependentProperty).ColumnProperty);
 
             foreignKeyConstraint.SetAssociationType(associationType);
         }
@@ -134,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var dependentEntityTypeMapping = GetEntityTypeMappingInHierarchy(databaseMapping, dependentEnd.GetEntityType());
 
             var dependentTable = dependentEntityTypeMapping
-                .TypeMappingFragments
+                .MappingFragments
                 .First()
                 .Table;
 
@@ -154,16 +156,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var property in dependentEnd.GetEntityType().KeyProperties())
             {
-                associationSetMapping.TargetEndMapping.PropertyMappings.Add(
-                    new DbEdmPropertyMapping
-                        {
-                            Column = dependentEntityTypeMapping.GetPropertyMapping(property).Column,
-                            PropertyPath = new[] { property }
-                        });
+                associationSetMapping.TargetEndMapping
+                                     .AddProperty(
+                                         new StorageScalarPropertyMapping(
+                                             property,
+                                             dependentEntityTypeMapping.GetPropertyMapping(property).ColumnProperty));
             }
         }
 
-        private static DbAssociationSetMapping GenerateAssociationSetMapping(
+        private static StorageAssociationSetMapping GenerateAssociationSetMapping(
             AssociationType associationType,
             DbDatabaseMapping databaseMapping,
             AssociationEndMember principalEnd,
@@ -178,11 +179,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var associationSetMapping
                 = databaseMapping.AddAssociationSetMapping(
-                    databaseMapping.Model.GetAssociationSet(associationType));
+                    databaseMapping.Model.GetAssociationSet(associationType),
+                    databaseMapping.Database.GetEntitySet(dependentTable));
 
-            associationSetMapping.Table = dependentTable;
-            associationSetMapping.SourceEndMapping.AssociationEnd = principalEnd;
-            associationSetMapping.TargetEndMapping.AssociationEnd = dependentEnd;
+            associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
+            associationSetMapping.SourceEndMapping.EndMember = principalEnd;
+            associationSetMapping.TargetEndMapping.EndMember = dependentEnd;
 
             return associationSetMapping;
         }
@@ -192,8 +194,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             EntityType principalEntityType,
             EntityType dependentEntityType,
             EntityType dependentTable,
-            DbAssociationSetMapping associationSetMapping,
-            DbAssociationEndMapping associationEndMapping,
+            StorageAssociationSetMapping associationSetMapping,
+            StorageEndPropertyMapping associationEndMapping,
             string name,
             AssociationEndMember principalEnd,
             bool isPrimaryKeyColumn = false)
@@ -206,7 +208,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var principalTable
                 = GetEntityTypeMappingInHierarchy(databaseMapping, principalEntityType)
-                    .TypeMappingFragments
+                    .MappingFragments
                     .Single()
                     .Table;
 
@@ -214,15 +216,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new ForeignKeyBuilder(databaseMapping.Database, name)
                       {
                           PrincipalTable = principalTable,
-                          DeleteAction = associationEndMapping.AssociationEnd.DeleteBehavior != OperationAction.None
-                                             ? associationEndMapping.AssociationEnd.DeleteBehavior
+                          DeleteAction = associationEndMapping.EndMember.DeleteBehavior != OperationAction.None
+                                             ? associationEndMapping.EndMember.DeleteBehavior
                                              : OperationAction.None
                       };
 
             var principalNavigationProperty
                 = databaseMapping.Model.GetEntityTypes()
-                    .SelectMany(e => e.DeclaredNavigationProperties)
-                    .SingleOrDefault(n => n.ResultEnd == principalEnd);
+                                 .SelectMany(e => e.DeclaredNavigationProperties)
+                                 .SingleOrDefault(n => n.ResultEnd == principalEnd);
 
             dependentTable.AddForeignKey(foreignKeyConstraint);
 
@@ -240,8 +242,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         private IEnumerable<EdmProperty> GenerateIndependentForeignKeyColumns(
             EntityType principalEntityType,
             EntityType dependentEntityType,
-            DbAssociationSetMapping associationSetMapping,
-            DbAssociationEndMapping associationEndMapping,
+            StorageAssociationSetMapping associationSetMapping,
+            StorageEndPropertyMapping associationEndMapping,
             EntityType dependentTable,
             ForeignKeyBuilder foreignKeyConstraint,
             bool isPrimaryKeyColumn,
@@ -270,29 +272,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 }
 
                 foreignKeyColumn.Nullable
-                    = associationEndMapping.AssociationEnd.IsOptional()
-                      || (associationEndMapping.AssociationEnd.IsRequired()
+                    = associationEndMapping.EndMember.IsOptional()
+                      || (associationEndMapping.EndMember.IsRequired()
                           && dependentEntityType.BaseType != null);
 
                 foreignKeyColumn.StoreGeneratedPattern = StoreGeneratedPattern.None;
 
                 yield return foreignKeyColumn;
 
-                associationEndMapping.PropertyMappings.Add(
-                    new DbEdmPropertyMapping
-                        {
-                            Column = foreignKeyColumn,
-                            PropertyPath = new[] { property }
-                        });
+                associationEndMapping.AddProperty(new StorageScalarPropertyMapping(property, foreignKeyColumn));
 
                 if (foreignKeyColumn.Nullable)
                 {
-                    associationSetMapping.ColumnConditions.Add(
-                        new DbColumnCondition
-                            {
-                                Column = foreignKeyColumn,
-                                IsNull = false
-                            });
+                    associationSetMapping
+                        .AddColumnCondition(new StorageConditionPropertyMapping(null, foreignKeyColumn, null, false));
                 }
             }
         }

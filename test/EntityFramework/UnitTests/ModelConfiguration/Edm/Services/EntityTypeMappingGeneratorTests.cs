@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.NotNull(databaseMapping.GetEntitySetMapping(entitySet));
             Assert.Same(entityType, databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().EntityType);
             Assert.Same(typeof(object), databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().GetClrType());
-            Assert.NotNull(databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().TypeMappingFragments.Single().Table);
+            Assert.NotNull(databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().MappingFragments.Single().Table);
         }
 
         [Fact]
@@ -54,9 +55,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
             var entityTypeMappingFragment
-                = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().TypeMappingFragments.Single();
+                = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().MappingFragments.Single();
 
-            Assert.Equal(2, entityTypeMappingFragment.PropertyMappings.Count());
+            Assert.Equal(2, entityTypeMappingFragment.ColumnMappings.Count());
             Assert.Equal(2, entityTypeMappingFragment.Table.Properties.Count());
         }
 
@@ -85,9 +86,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
             var entityTypeMappingFragment
-                = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().TypeMappingFragments.Single();
+                = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().MappingFragments.Single();
 
-            Assert.Equal(2, entityTypeMappingFragment.PropertyMappings.Count());
+            Assert.Equal(2, entityTypeMappingFragment.ColumnMappings.Count());
             Assert.Equal(2, entityTypeMappingFragment.Table.Properties.Count());
         }
 

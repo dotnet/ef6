@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     /// </summary>
     internal sealed class CqlGenerator : InternalBase
     {
-        #region Constructor
-
         /// <summary>
         ///     Given the generated <paramref name="view" />, the <paramref name="caseStatements" /> for the multiconstant fields,
         ///     the <paramref name="projectedSlotMap" /> that maps different paths of the entityset (for which the view is being generated) to slot indexes in the view,
@@ -41,10 +39,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_identifiers = identifiers;
             m_mappingItemCollection = mappingItemCollection;
         }
-
-        #endregion
-
-        #region Fields
 
         /// <summary>
         ///     The generated view from the cells.
@@ -80,18 +74,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         private readonly StorageMappingItemCollection m_mappingItemCollection;
 
-        #endregion
-
-        #region Properties
-
         private int TotalSlots
         {
             get { return m_projectedSlotMap.Count + m_numBools; }
         }
-
-        #endregion
-
-        #region CqlBlock generation methods for all node types
 
         /// <summary>
         ///     Returns eSQL query that represents a query/update mapping view for the view information that was supplied in the constructor.
@@ -189,10 +175,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
             return requiredSlots;
         }
-
-        #endregion
-
-        #region Multiconstant CaseStatement methods
 
         /// <summary>
         ///     Given the <paramref name="viewBlock" /> tree, generates the case statement blocks on top of it (using <see
@@ -442,10 +424,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        #endregion
-
-        #region Helper methods
-
         /// <summary>
         ///     Given the <paramref name="slotNum" />, returns the output member path that this slot contributes/corresponds to in the extent view.
         ///     If the slot corresponds to one of the boolean variables, returns null.
@@ -466,10 +444,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return index;
         }
 
-        #endregion
-
-        #region String methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append("View: ");
@@ -484,7 +458,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 builder.AppendLine();
             }
         }
-
-        #endregion
     }
 }

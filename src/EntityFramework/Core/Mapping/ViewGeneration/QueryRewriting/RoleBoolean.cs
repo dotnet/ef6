@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class RoleBoolean : TrueFalseLiteral
     {
-        #region Constructor
-
         internal RoleBoolean(EntitySetBase extent)
         {
             m_metadataItem = extent;
@@ -26,15 +24,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_metadataItem = end;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly MetadataItem m_metadataItem;
-
-        #endregion
-
-        #region BoolLiteral members
 
         /// <summary>
         ///     Not supported in this class.
@@ -107,10 +97,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return this;
         }
 
-        #endregion
-
-        #region Other Methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             var end = m_metadataItem as AssociationSetEnd;
@@ -123,7 +109,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append("InSet:" + m_metadataItem);
             }
         }
-
-        #endregion
     }
 }

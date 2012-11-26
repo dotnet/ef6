@@ -25,8 +25,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </remarks>
             private class JoinConditionVisitor : UpdateExpressionVisitor<object>
             {
-                #region Constructors
-
                 /// <summary>
                 ///     Initializes a join predicate visitor. The visitor will populate the given property
                 ///     lists with expressions describing the left and right hand side of equi-join
@@ -38,28 +36,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     m_rightKeySelectors = new List<DbExpression>();
                 }
 
-                #endregion
-
-                #region Fields
-
                 private readonly List<DbExpression> m_leftKeySelectors;
                 private readonly List<DbExpression> m_rightKeySelectors;
                 private static readonly string _visitorName = typeof(JoinConditionVisitor).FullName;
-
-                #endregion
-
-                #region Properties
 
                 protected override string VisitorName
                 {
                     get { return _visitorName; }
                 }
-
-                #endregion
-
-                #region Methods
-
-                #region Static helper methods
 
                 /// <summary>
                 ///     Determine properties from the left and right inputs to an equi-join participating
@@ -96,10 +80,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         "(Update/JoinPropagator) The equi-join must have an equal number of left and right properties");
                 }
 
-                #endregion
-
-                #region Visitor implementation
-
                 /// <summary>
                 ///     Visit and node after its children have visited. There is nothing to do here
                 ///     because only leaf equality nodes contain properties extracted by this visitor.
@@ -133,10 +113,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         throw ConstructNotSupportedException(node);
                     }
                 }
-
-                #endregion
-
-                #endregion
             }
         }
     }

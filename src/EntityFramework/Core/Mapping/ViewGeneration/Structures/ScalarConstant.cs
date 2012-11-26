@@ -17,8 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class ScalarConstant : Constant
     {
-        #region Constructor
-
         /// <summary>
         ///     Creates a scalar constant corresponding to the <paramref name="value" />.
         /// </summary>
@@ -28,27 +26,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_scalar = value;
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     The actual value of the scalar.
         /// </summary>
         private readonly object m_scalar;
 
-        #endregion
-
-        #region Properties
-
         internal object Value
         {
             get { return m_scalar; }
         }
-
-        #endregion
-
-        #region Methods
 
         internal override bool IsNull()
         {
@@ -180,7 +166,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(StringUtil.FormatInvariant("'{0}'", m_scalar));
             }
         }
-
-        #endregion
     }
 }

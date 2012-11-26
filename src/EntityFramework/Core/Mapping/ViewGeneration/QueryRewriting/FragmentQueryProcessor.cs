@@ -155,12 +155,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return _kb.ToString();
         }
 
-        #region Private class AttributeSetComparator
-
         private class AttributeSetComparator : IEqualityComparer<HashSet<MemberPath>>
         {
-            #region IEqualityComparer<HashSet<MemberPath>> Members
-
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode",
                 Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
             public bool Equals(HashSet<MemberPath> x, HashSet<MemberPath> y)
@@ -177,10 +173,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                 }
                 return hashCode;
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

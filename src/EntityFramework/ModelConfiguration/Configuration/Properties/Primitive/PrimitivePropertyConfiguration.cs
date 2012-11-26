@@ -5,8 +5,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -150,14 +151,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         internal virtual void Configure(
-            IEnumerable<Tuple<DbEdmPropertyMapping, EntityType>> propertyMappings,
+            IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
             Contract.Requires(propertyMappings != null);
             Contract.Requires(providerManifest != null);
 
-            propertyMappings.Each(pm => Configure(pm.Item1.Column, pm.Item2, providerManifest, allowOverride));
+            propertyMappings.Each(pm => Configure(pm.Item1.ColumnProperty, pm.Item2, providerManifest, allowOverride));
         }
 
         internal virtual void Configure(

@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     /// </summary>
     internal class ViewCellRelation : CellRelation
     {
-        #region Constructor
-
         // effects: Creates a view cell relation for "cell" with the
         // projected slots given by slots -- cellNumber is the number of the
         // cell for debugging purposes
@@ -31,25 +29,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_cell.SQuery.CreateBasicCellRelation(this);
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly Cell m_cell; // The cell for which this relation exists
         private readonly List<ViewCellSlot> m_slots; // Slots projected from both cell queries
-
-        #endregion
-
-        #region Properties
 
         internal Cell Cell
         {
             get { return m_cell; }
         }
-
-        #endregion
-
-        #region Methods
 
         // requires: slot corresponds to a slot in the corresponding
         // BasicCellRelation
@@ -87,7 +73,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // StringUtil.ToSeparatedStringSorted(builder, m_slots, ", ");
             builder.Append(']');
         }
-
-        #endregion
     }
 }

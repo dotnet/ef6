@@ -9,17 +9,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     // Class representing a key constraint on the basic cell relations
     internal class BasicKeyConstraint : KeyConstraint<BasicCellRelation, MemberProjectedSlot>
     {
-        #region Constructor
-
         //  Constructs a key constraint for the given relation and keyslots
         internal BasicKeyConstraint(BasicCellRelation relation, IEnumerable<MemberProjectedSlot> keySlots)
             : base(relation, keySlots, ProjectedSlot.EqualityComparer)
         {
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Propagates this constraint from the basic cell relation
         // to the corresponding view cell relation and returns the new constraint
@@ -44,7 +38,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             var viewKeyConstraint = new ViewKeyConstraint(viewCellRelation, viewSlots);
             return viewKeyConstraint;
         }
-
-        #endregion
     }
 }

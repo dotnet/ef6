@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -23,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     {
         private const string ProviderInfoAnnotation = "ProviderInfo";
 
-        public static EdmModel Initialize(this EdmModel model, double version = DataModelVersions.Version3)
+        public static EdmModel Initialize(this EdmModel model, double version = XmlConstants.EdmVersionForV3)
         {
             Contract.Requires(model != null);
 
@@ -77,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Contract.Assert(model.Containers.Count == 1);
 
             return model.GetEntityTypes().Select(e => e.GetClrType())
-                .Union(model.GetComplexTypes().Select(ct => ct.GetClrType()));
+                        .Union(model.GetComplexTypes().Select(ct => ct.GetClrType()));
         }
 
         public static NavigationProperty GetNavigationProperty(this EdmModel model, PropertyInfo propertyInfo)
@@ -234,7 +233,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entityType
                 = new EntityType(
                     name,
-                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    XmlConstants.GetCsdlNamespace(model.Version),
                     DataSpace.CSpace);
 
             model.Namespaces.Single().EntityTypes.Add(entityType);
@@ -293,7 +292,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var complexType
                 = new ComplexType(
                     name,
-                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    XmlConstants.GetCsdlNamespace(model.Version),
                     DataSpace.CSpace);
 
             model.Namespaces.Single().ComplexTypes.Add(complexType);
@@ -310,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var enumType
                 = new EnumType(
                     name,
-                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    XmlConstants.GetCsdlNamespace(model.Version),
                     PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
                     false,
                     DataSpace.CSpace);
@@ -383,7 +382,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var associationType
                 = new AssociationType(
                     name,
-                    DataModelVersions.GetCsdlNamespace(model.Version),
+                    XmlConstants.GetCsdlNamespace(model.Version),
                     false,
                     DataSpace.CSpace)
                       {

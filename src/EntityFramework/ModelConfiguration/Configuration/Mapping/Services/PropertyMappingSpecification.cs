@@ -3,21 +3,22 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Diagnostics.Contracts;
 
     internal class PropertyMappingSpecification
     {
         private readonly EntityType _entityType;
         private readonly IList<EdmProperty> _propertyPath;
-        private readonly IList<DbColumnCondition> _conditions;
+        private readonly IList<StorageConditionPropertyMapping> _conditions;
         private readonly bool _isDefaultDiscriminatorCondition;
 
         public PropertyMappingSpecification(
             EntityType entityType,
             IList<EdmProperty> propertyPath,
-            IList<DbColumnCondition> conditions,
+            IList<StorageConditionPropertyMapping> conditions,
             bool isDefaultDiscriminatorCondition)
         {
             Contract.Requires(entityType != null);
@@ -38,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _propertyPath; }
         }
 
-        public IList<DbColumnCondition> Conditions
+        public IList<StorageConditionPropertyMapping> Conditions
         {
             get { return _conditions; }
         }

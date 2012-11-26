@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
@@ -26,15 +28,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
             Assert.Equal(StoreGeneratedPattern.Computed, property.GetStoreGeneratedPattern());
 
-            var edmPropertyMapping = new DbEdmPropertyMapping
-                                         {
-                                             Column = new EdmProperty("C")
-                                         };
+            var edmPropertyMapping = new ColumnMappingBuilder(new EdmProperty("C"), new List<EdmProperty>());
 
             configuration.Configure(
                 new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
                 ProviderRegistry.Sql2008_ProviderManifest);
-            Assert.Equal("rowversion", edmPropertyMapping.Column.TypeName);
+            Assert.Equal("rowversion", edmPropertyMapping.ColumnProperty.TypeName);
         }
 
         [Fact]

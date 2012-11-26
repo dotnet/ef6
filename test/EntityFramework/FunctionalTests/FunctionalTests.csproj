@@ -112,6 +112,9 @@
     <EmbeddedResource Include="Metadata\MetadataCachingModel.csdl" />
     <EmbeddedResource Include="Metadata\MetadataCachingModel.msl" />
     <EmbeddedResource Include="Metadata\MetadataCachingModel.ssdl" />
+    <EmbeddedResource Include="MetadataMapping\Enum.csdl" />
+    <EmbeddedResource Include="MetadataMapping\Enum.msl" />
+    <EmbeddedResource Include="MetadataMapping\Enum.ssdl" />
     <None Include="packages.config" />
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -186,6 +189,7 @@
     <Compile Include="CodeFirst\DataAnnotationScenarioTests.cs" />
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="EntityClient\AsyncScenarios.cs" />
+    <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
     <Compile Include="Metadata\MetadataEnumTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataFunctionsTests.cs" />
@@ -217,6 +221,7 @@
     <Compile Include="Migrations\TransactionScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
+    <Compile Include="Objects\LazyLoadingTests.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
@@ -229,6 +234,7 @@
     <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\QueryEnumTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
+    <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultConnectionFactoryResolver.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
@@ -675,6 +681,7 @@
     <Compile Include="TestHelpers\DynamicTypeDescriptor.cs" />
     <Compile Include="TestHelpers\DbDatabaseMappingExtensions.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

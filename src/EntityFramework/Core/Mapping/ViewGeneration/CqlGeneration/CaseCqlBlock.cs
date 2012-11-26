@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class CaseCqlBlock : CqlBlock
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a <see cref="CqlBlock" /> containing the case statememt for the <paramref name="caseSlot" /> and projecting other slots as is from its child (input). CqlBlock with SELECT (slots),
         /// </summary>
@@ -28,15 +26,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_caseSlotInfo = slots[caseSlot];
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly SlotInfo m_caseSlotInfo;
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel)
         {
@@ -90,7 +80,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             // The SELECT part.
             return cqt.Select(row => GenerateProjectionCqt(row, isTopLevel));
         }
-
-        #endregion
     }
 }

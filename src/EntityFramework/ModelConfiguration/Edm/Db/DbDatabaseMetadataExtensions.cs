@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
@@ -19,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         public const string DefaultSchema = "dbo";
 
         public static EdmModel DbInitialize(
-            this EdmModel database, double version = DataModelVersions.Version3)
+            this EdmModel database, double version = XmlConstants.StoreVersionForV3)
         {
             Contract.Requires(database != null);
 

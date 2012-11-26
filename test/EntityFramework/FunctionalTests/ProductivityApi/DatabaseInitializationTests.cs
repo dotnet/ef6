@@ -852,7 +852,7 @@ namespace ProductivityApiTests
                 Assert.True(context.Database.Exists());
                 Assert.True(context.Database.CompatibleWithModel(throwIfNoMetadata: false));
                 Assert.Throws<NotSupportedException>(() => context.Database.CompatibleWithModel(throwIfNoMetadata: true))
-                    .ValidateMessage("Database_NoDatabaseMetadata");
+                      .ValidateMessage("Database_NoDatabaseMetadata");
             }
         }
 
@@ -875,7 +875,7 @@ namespace ProductivityApiTests
 
                 Assert.True(context.Database.CompatibleWithModel(throwIfNoMetadata: false));
                 Assert.Throws<NotSupportedException>(() => context.Database.CompatibleWithModel(throwIfNoMetadata: true))
-                    .ValidateMessage("Database_NoDatabaseMetadata");
+                      .ValidateMessage("Database_NoDatabaseMetadata");
             }
         }
 
@@ -886,7 +886,7 @@ namespace ProductivityApiTests
             {
                 Assert.True(context.Database.CompatibleWithModel(throwIfNoMetadata: false));
                 Assert.Throws<NotSupportedException>(() => context.Database.CompatibleWithModel(throwIfNoMetadata: true))
-                    .ValidateMessage("Database_NonCodeFirstCompatibilityCheck");
+                      .ValidateMessage("Database_NonCodeFirstCompatibilityCheck");
             }
         }
 
@@ -897,7 +897,7 @@ namespace ProductivityApiTests
             {
                 Assert.True(context.Database.CompatibleWithModel(throwIfNoMetadata: false));
                 Assert.Throws<NotSupportedException>(() => context.Database.CompatibleWithModel(throwIfNoMetadata: true))
-                    .ValidateMessage("Database_NonCodeFirstCompatibilityCheck");
+                      .ValidateMessage("Database_NonCodeFirstCompatibilityCheck");
             }
         }
 
@@ -1348,11 +1348,28 @@ namespace ProductivityApiTests
 
         #endregion
 
-        private class SimpleContextWithDefaultSchema : SimpleModelContext
+        private class SimpleContextWithDefaultSchema : SimpleModelContext, IDbModelCacheKeyProvider
         {
+            private readonly bool _changeModel;
+
+            public SimpleContextWithDefaultSchema(bool changeModel = false)
+            {
+                _changeModel = changeModel;
+            }
+
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.HasDefaultSchema("foo");
+
+                if (_changeModel)
+                {
+                    modelBuilder.Entity<Product>().ToTable("__products");
+                }
+            }
+
+            public string CacheKey
+            {
+                get { return _changeModel.ToString(); }
             }
         }
 
@@ -1447,6 +1464,26 @@ namespace ProductivityApiTests
         {
             TestContextConfigChanges(initialValue: false);
             TestContextConfigChanges(initialValue: true);
+        }
+
+        [Fact]
+        public void Initializer_when_default_schema_should_throw_when_model_changes()
+        {
+            Database.Delete(SimpleConnection<SimpleContextWithDefaultSchema>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<SimpleContextWithDefaultSchema>());
+
+            using (var context = new SimpleContextWithDefaultSchema())
+            {
+                context.Database.Initialize(force: true);
+
+                Assert.Equal(0, context.Products.Count());
+            }
+
+            using (var context = new SimpleContextWithDefaultSchema(changeModel: true))
+            {
+                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true)).ValidateMessage
+                    ("DatabaseInitializationStrategy_ModelMismatch", context.GetType().Name);
+            }
         }
     }
 }

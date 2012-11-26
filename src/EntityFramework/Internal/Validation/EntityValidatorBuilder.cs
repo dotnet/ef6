@@ -5,8 +5,6 @@ namespace System.Data.Entity.Internal.Validation
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
@@ -264,15 +262,16 @@ namespace System.Data.Entity.Internal.Validation
             var facetDerivedAttributes = new List<ValidationAttribute>();
 
             MetadataProperty storeGeneratedItem;
-            var metadataProperty = edmProperty.MetadataProperties.TryGetValue(
-                CsdlConstants.AnnotationNamespace + ":" + SsdlConstants.Attribute_StoreGeneratedPattern,
+
+            edmProperty.MetadataProperties.TryGetValue(
+                XmlConstants.AnnotationNamespace + ":" + XmlConstants.StoreGeneratedPattern,
                 false,
                 out storeGeneratedItem);
 
             var propertyIsStoreGenerated = storeGeneratedItem != null && storeGeneratedItem.Value != null;
 
             Facet nullable;
-            edmProperty.TypeUsage.Facets.TryGetValue(SsdlConstants.Attribute_Nullable, false, out nullable);
+            edmProperty.TypeUsage.Facets.TryGetValue(EdmConstants.Nullable, false, out nullable);
 
             var nullableFacetIsFalse = nullable != null && nullable.Value != null && !(bool)nullable.Value;
 
@@ -288,7 +287,7 @@ namespace System.Data.Entity.Internal.Validation
             }
 
             Facet MaxLength;
-            edmProperty.TypeUsage.Facets.TryGetValue(SsdlConstants.Attribute_MaxLength, false, out MaxLength);
+            edmProperty.TypeUsage.Facets.TryGetValue(XmlConstants.MaxLengthElement, false, out MaxLength);
             if (MaxLength != null && MaxLength.Value != null && MaxLength.Value is int &&
                 !existingAttributes.Any(a => a is MaxLengthAttribute)
                 &&

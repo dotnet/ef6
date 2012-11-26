@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal abstract class ObjectMemberMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
@@ -24,20 +22,8 @@ namespace System.Data.Entity.Core.Mapping
             m_clrMember = clrMember;
         }
 
-        #endregion
-
-        #region Fields
-
-        #region Internal
-
         private readonly EdmMember m_edmMember; //EdmMember metadata representing the Cdm member for which the mapping is specified
         private readonly EdmMember m_clrMember; //EdmMember metadata representing the Clr member for which the mapping is specified
-
-        #endregion
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     The PropertyMetadata object that represents the Cdm member for which mapping is being specified
@@ -59,7 +45,5 @@ namespace System.Data.Entity.Core.Mapping
         ///     Returns the member mapping kind
         /// </summary>
         internal abstract MemberMappingKind MemberMappingKind { get; }
-
-        #endregion
     }
 }

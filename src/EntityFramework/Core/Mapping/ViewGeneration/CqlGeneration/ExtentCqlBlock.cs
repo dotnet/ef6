@@ -15,8 +15,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     /// </summary>
     internal sealed class ExtentCqlBlock : CqlBlock
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates an cql block representing the <paramref name="extent" /> (the FROM part).
         ///     SELECT is given by <paramref name="slots" />, WHERE by <paramref name="whereClause" /> and AS by <paramref
@@ -36,18 +34,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_selectDistinct = selectDistinct;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly EntitySetBase m_extent;
         private readonly string m_nodeTableAlias;
         private readonly CellQuery.SelectDistinct m_selectDistinct;
         private static readonly List<CqlBlock> _emptyChildren = new List<CqlBlock>();
-
-        #endregion
-
-        #region Methods
 
         internal override StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel)
         {
@@ -96,7 +86,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
             return cqt;
         }
-
-        #endregion
     }
 }

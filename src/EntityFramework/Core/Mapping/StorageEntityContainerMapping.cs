@@ -10,10 +10,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
     /// <summary>
@@ -21,10 +19,10 @@ namespace System.Data.Entity.Core.Mapping
     ///     Only one EntityContainerMapping element is allowed in the MSL file for CS mapping.
     ///     <example>
     ///         For Example if conceptually you could represent the CS MSL file as following
-    ///         ---Mapping 
+    ///         ---Mapping
     ///         --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///         --EntitySetMapping
-    ///         --AssociationSetMapping 
+    ///         --AssociationSetMapping
     ///         The type represents the metadata for EntityContainerMapping element in the above example.
     ///         The SetMapping elements that are children of the EntityContainerMapping element
     ///         can be accessed through the properties on this type.
@@ -36,10 +34,8 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class StorageEntityContainerMapping : Map
     {
-        #region Constructors
-
         /// <summary>
-        ///     Construct a new EntityContainer mapping object 
+        ///     Construct a new EntityContainer mapping object
         ///     passing in the C-space EntityContainer  and
         ///     the s-space Entity container metadata objects.
         /// </summary>
@@ -59,9 +55,10 @@ namespace System.Data.Entity.Core.Mapping
             m_generateUpdateViews = generateUpdateViews;
         }
 
-        #endregion
-
-        #region Fields
+        internal StorageEntityContainerMapping(EntityContainer entityContainer)
+            : this(entityContainer, null, null, false, false)
+        {
+        }
 
         private readonly string identity;
         private readonly bool m_validate;
@@ -84,10 +81,6 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly StorageMappingItemCollection m_storageMappingItemCollection;
         private readonly Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups> m_memoizedCellGroupEvaluator;
-
-        #endregion
-
-        #region Properties
 
         public StorageMappingItemCollection StorageMappingItemCollection
         {
@@ -172,6 +165,16 @@ namespace System.Data.Entity.Core.Mapping
             get { return new List<StorageSetMapping>(m_entitySetMappings.Values).AsReadOnly(); }
         }
 
+        public virtual IEnumerable<StorageEntitySetMapping> EntitySetMappings
+        {
+            get { return EntitySetMaps.OfType<StorageEntitySetMapping>(); }
+        }
+
+        public virtual IEnumerable<StorageAssociationSetMapping> AssociationSetMappings
+        {
+            get { return RelationshipSetMaps.OfType<StorageAssociationSetMapping>(); }
+        }
+
         /// <summary>
         ///     a list of all the  entity set maps under this
         ///     container. In CS mapping, the mapping is done
@@ -222,10 +225,6 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return m_generateUpdateViews; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     get an EntitySet mapping based upon the name of the entity set.
@@ -353,59 +352,6 @@ namespace System.Data.Entity.Core.Mapping
             return false;
         }
 
-#if DEBUG
-        ///<summary>
-        ///    The method builds up the spaces required for pretty printing each 
-        ///    part of the mapping.
-        ///</summary>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
-            MessageId = "System.Console.Write(System.String)")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
-            MessageId = "System.Console.WriteLine(System.String)")]
-        internal static string GetPrettyPrintString(ref int index)
-        {
-            var spaces = "";
-            spaces = spaces.PadLeft(index, ' ');
-            Console.WriteLine(spaces + "|");
-            Console.WriteLine(spaces + "|");
-            index++;
-            spaces = spaces.PadLeft(index, ' ');
-            Console.Write(spaces + "-");
-            index++;
-            spaces = spaces.PadLeft(index, ' ');
-            Console.Write("-");
-            index++;
-            spaces = spaces.PadLeft(index, ' ');
-            return spaces;
-        }
-
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal void Print(int index)
-        {
-            var spaces = "";
-            var sb = new StringBuilder();
-            sb.Append(spaces);
-            sb.Append("EntityContainerMapping");
-            sb.Append("   ");
-            sb.Append("Name:");
-            sb.Append(m_entityContainer.Name);
-            sb.Append("   ");
-            Console.WriteLine(sb.ToString());
-            foreach (var extentMapping in m_entitySetMappings.Values)
-            {
-                extentMapping.Print(index + 5);
-            }
-            foreach (var extentMapping in m_associationSetMappings.Values)
-            {
-                extentMapping.Print(index + 5);
-            }
-        }
-#endif
-
         // Methods to modify and access function imports, which association a "functionImport" declared
         // in the model entity container with a targetFunction declared in the target
         internal void AddFunctionImportMapping(EdmFunction functionImport, FunctionImportMapping mapping)
@@ -452,8 +398,6 @@ namespace System.Data.Entity.Core.Mapping
 
             return result;
         }
-
-        #endregion
     }
 
     internal struct InputForComputingCellGroups : IEquatable<InputForComputingCellGroups>, IEqualityComparer<InputForComputingCellGroups>

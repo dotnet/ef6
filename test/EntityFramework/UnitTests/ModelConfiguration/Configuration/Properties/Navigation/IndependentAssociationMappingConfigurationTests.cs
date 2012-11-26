@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
@@ -33,13 +35,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             sourceTable.AddForeignKey(foreignKeyConstraint);
             foreignKeyConstraint.DependentColumns = new[] { fkColumn };
             var targetTable = database.AddTable("Split");
-            var associationSetMapping = new DbAssociationSetMapping().Initialize();
-            associationSetMapping.Table = sourceTable;
-            associationSetMapping.SourceEndMapping.PropertyMappings.Add(
-                new DbEdmPropertyMapping
-                    {
-                        Column = fkColumn
-                    });
+            var associationSetMapping
+                = new StorageAssociationSetMapping(
+                    new AssociationSet("AS", new AssociationType()), database.GetEntitySet(sourceTable)).Initialize();
+            associationSetMapping.SourceEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
 
             var independentAssociationMappingConfiguration
                 = new ForeignKeyAssociationMappingConfiguration();
@@ -63,7 +62,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             independentAssociationMappingConfiguration.ToTable("Split");
 
-            var associationSetMapping = new DbAssociationSetMapping().Initialize();
+            var associationSetMapping
+                = new StorageAssociationSetMapping(
+                    new AssociationSet("AS", new AssociationType()),
+                    new EntitySet())
+                    .Initialize();
+
             var database = new EdmModel().DbInitialize();
 
             Assert.Equal(
@@ -71,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 Assert.Throws<InvalidOperationException>(
                     () => independentAssociationMappingConfiguration
                               .Configure(associationSetMapping, database, new MockPropertyInfo())).
-                    Message);
+                       Message);
         }
 
         [Fact]

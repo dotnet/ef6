@@ -3,9 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
@@ -65,28 +64,28 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             Contract.Requires(column != null);
             Contract.Requires(typeUsage != null);
 
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_FixedLength))
+            if (IsValidFacet(typeUsage, XmlConstants.FixedLengthElement))
             {
                 column.IsFixedLength = property.IsFixedLength;
             }
 
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_MaxLength))
+            if (IsValidFacet(typeUsage, XmlConstants.MaxLengthElement))
             {
                 column.IsMaxLength = property.IsMaxLength;
                 column.MaxLength = property.MaxLength;
             }
 
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Unicode))
+            if (IsValidFacet(typeUsage, XmlConstants.UnicodeElement))
             {
                 column.IsUnicode = property.IsUnicode;
             }
 
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Precision))
+            if (IsValidFacet(typeUsage, XmlConstants.PrecisionElement))
             {
                 column.Precision = property.Precision;
             }
 
-            if (IsValidFacet(typeUsage, SsdlConstants.Attribute_Scale))
+            if (IsValidFacet(typeUsage, XmlConstants.ScaleElement))
             {
                 column.Scale = property.Scale;
             }
@@ -103,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                    && !facet.Description.IsConstant;
         }
 
-        protected static DbEntityTypeMapping GetEntityTypeMappingInHierarchy(
+        protected static StorageEntityTypeMapping GetEntityTypeMappingInHierarchy(
             DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             Contract.Requires(databaseMapping != null);
@@ -122,8 +121,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         .EntityTypeMappings
                         .First(
                             etm => entityType.DeclaredProperties.All(
-                                dp => etm.TypeMappingFragments.First()
-                                          .PropertyMappings.Select(pm => pm.PropertyPath.First()).Contains(dp)));
+                                dp => etm.MappingFragments.First()
+                                          .ColumnMappings.Select(pm => pm.PropertyPath.First()).Contains(dp)));
                 }
             }
 

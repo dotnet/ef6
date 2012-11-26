@@ -3,8 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -60,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal void Configure(
-            DbDatabaseMapping databaseMapping, DbEntityTypeMappingFragment fragment, EntityType entityType)
+            DbDatabaseMapping databaseMapping, StorageMappingFragment fragment, EntityType entityType)
         {
             Contract.Requires(fragment != null);
 
@@ -72,9 +74,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             var column
-                = fragment.PropertyMappings
+                = fragment.ColumnMappings
                     .Where(pm => pm.PropertyPath.SequenceEqual(edmPropertyPath.Single()))
-                    .Select(pm => pm.Column)
+                    .Select(pm => pm.ColumnProperty)
                     .SingleOrDefault();
 
             if (column == null

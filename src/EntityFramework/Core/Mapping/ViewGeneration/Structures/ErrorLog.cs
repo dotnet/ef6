@@ -16,22 +16,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
     internal class ErrorLog : InternalBase
     {
-        #region Constructors
-
         internal ErrorLog()
         {
             m_log = new List<Record>();
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly List<Record> m_log;
-
-        #endregion
-
-        #region Properties
 
         internal int Count
         {
@@ -48,10 +38,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
             }
         }
-
-        #endregion
-
-        #region Methods
 
         internal void AddEntry(Record record)
         {
@@ -93,14 +79,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return builder.ToString();
         }
 
-        #endregion
-
-        #region Nested classes/struct
-
         internal class Record : InternalBase
         {
-            #region Constructor
-
             // effects: Creates an error record for wrappers, a debug message
             // and an error message given by "message". Note: wrappers cannot
             // be null
@@ -154,17 +134,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     lineNumber, columnNumber);
             }
 
-            #endregion
-
-            #region Fields
-
             private EdmSchemaError m_mappingError;
             private List<Cell> m_sourceCells;
             private string m_debugMessage;
-
-            #endregion
-
-            #region Properties
 
             [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             // referenced (indirectly) by System.Data.Entity.Design.dll
@@ -172,10 +144,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 get { return m_mappingError; }
             }
-
-            #endregion
-
-            #region Methods
 
             internal override void ToCompactString(StringBuilder builder)
             {
@@ -253,10 +221,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 return m_mappingError.ToString();
             }
-
-            #endregion
         }
-
-        #endregion
     }
 }

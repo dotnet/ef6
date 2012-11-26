@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Text;
 
     /// <summary>
     ///     Describes modification function mappings for an association set.
@@ -46,17 +45,5 @@ namespace System.Data.Entity.Core.Mapping
                 "AS{{{0}}}:{3}DFunc={{{1}}},{3}IFunc={{{2}}}", AssociationSet, DeleteFunctionMapping,
                 InsertFunctionMapping, Environment.NewLine + "  ");
         }
-
-#if DEBUG
-        internal void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("Association Set Function Mapping");
-            sb.Append("   ");
-            sb.Append(ToString());
-            Console.WriteLine(sb.ToString());
-        }
-#endif
     }
 }

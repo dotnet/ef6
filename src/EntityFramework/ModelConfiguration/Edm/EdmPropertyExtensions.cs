@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Ssdl;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Diagnostics.Contracts;
@@ -17,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             return
                 (StoreGeneratedPattern?)
-                property.Annotations.GetAnnotation(SsdlConstants.Attribute_StoreGeneratedPattern);
+                property.Annotations.GetAnnotation(XmlConstants.StoreGeneratedPattern);
         }
 
         public static void SetStoreGeneratedPattern(
@@ -25,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             Contract.Requires(property != null);
 
-            property.Annotations.SetAnnotation(SsdlConstants.Attribute_StoreGeneratedPattern, storeGeneratedPattern);
+            property.Annotations.SetAnnotation(XmlConstants.StoreGeneratedPattern, storeGeneratedPattern);
         }
 
         public static object GetConfiguration(this EdmProperty property)

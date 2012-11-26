@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// </summary>
     internal class KeyManager
     {
-        #region Fields
-
         private readonly Dictionary<Tuple<EntityKey, string, bool>, int> _foreignKeyIdentifiers =
             new Dictionary<Tuple<EntityKey, string, bool>, int>();
 
@@ -32,10 +30,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private const NodeColor White = 0;
         private const NodeColor Black = 1;
         private const NodeColor Gray = 2;
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Given an identifier, returns the canonical identifier for the clique including all identifiers
@@ -398,8 +392,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
             color[node] = Black; // color the node to indicate we're done visiting it
         }
-
-        #endregion
 
         /// <summary>
         ///     Ensures firstId and secondId belong to the same partition

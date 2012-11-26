@@ -4,13 +4,9 @@ namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    /// <summary>
-    ///     RuleSet for DataModel Validation
-    /// </summary>
     internal abstract class DataModelValidationRuleSet
     {
         private readonly List<DataModelValidationRule> _rules = new List<DataModelValidationRule>();
@@ -29,11 +25,6 @@ namespace System.Data.Entity.Edm.Validation.Internal
             _rules.Remove(rule);
         }
 
-        /// <summary>
-        ///     Get the related rules given certain DataModelItem
-        /// </summary>
-        /// <param name="itemToValidate"> The <see cref="DataModelItem" /> to validate </param>
-        /// <returns> A collection of <see cref="DataModelValidationRule" /> </returns>
         internal IEnumerable<DataModelValidationRule> GetRules(MetadataItem itemToValidate)
         {
             return _rules.Where(r => r.ValidatedType.IsInstanceOfType(itemToValidate));

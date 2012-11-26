@@ -6,8 +6,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // fragments or cells, e.g., line numbers, etc
     internal class CellLabel
     {
-        #region Constructors
-
         /// <summary>
         ///     Copy Constructor
         /// </summary>
@@ -31,17 +29,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_sourceLocation = sourceLocation;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly int m_startLineNumber;
         private readonly int m_startLinePosition;
         private readonly string m_sourceLocation;
-
-        #endregion
-
-        #region Properties
 
         internal int StartLineNumber
         {
@@ -57,7 +47,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_sourceLocation; }
         }
-
-        #endregion
     }
 }

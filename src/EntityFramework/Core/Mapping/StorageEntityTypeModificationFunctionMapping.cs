@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.Contracts;
     using System.Globalization;
-    using System.Text;
 
     /// <summary>
     ///     Describes modification function mappings for an entity type within an entity set.
@@ -53,17 +52,5 @@ namespace System.Data.Entity.Core.Mapping
                 "ET{{{0}}}:{4}DFunc={{{1}}},{4}IFunc={{{2}}},{4}UFunc={{{3}}}", EntityType, DeleteFunctionMapping,
                 InsertFunctionMapping, UpdateFunctionMapping, Environment.NewLine + "  ");
         }
-
-#if DEBUG
-        internal void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("Entity Type Function Mapping");
-            sb.Append("   ");
-            sb.Append(ToString());
-            Console.WriteLine(sb.ToString());
-        }
-#endif
     }
 }

@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
 {
-    using System.Data.Entity.Edm.Db.Mapping;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
+    
     using Xunit;
 
     public sealed class DbAssociationSetMappingExtensionsTests
@@ -10,7 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         [Fact]
         public void Initialize_should_initialize_ends()
         {
-            var associationSetMapping = new DbAssociationSetMapping().Initialize();
+            var associationSetMapping 
+                = new StorageAssociationSetMapping(new AssociationSet("AS", new AssociationType()), new EntitySet()).Initialize();
 
             Assert.NotNull(associationSetMapping.SourceEndMapping);
             Assert.NotNull(associationSetMapping.TargetEndMapping);
@@ -19,7 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var associationSetMapping = new DbAssociationSetMapping();
+            var associationSetMapping 
+                = new StorageAssociationSetMapping(new AssociationSet("AS", new AssociationType()), new EntitySet());
 
             associationSetMapping.SetConfiguration(42);
 

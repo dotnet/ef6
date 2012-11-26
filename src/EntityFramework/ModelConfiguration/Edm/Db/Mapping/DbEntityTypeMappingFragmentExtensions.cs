@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.Contracts;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         private const string UnmappedPropertiesFragmentAnnotation = "UnmappedPropertiesFragment";
 
         public static EdmProperty GetDefaultDiscriminator(
-            this DbEntityTypeMappingFragment entityTypeMapppingFragment)
+            this StorageMappingFragment entityTypeMapppingFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
@@ -26,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void SetDefaultDiscriminator(
-            this DbEntityTypeMappingFragment entityTypeMappingFragment, EdmProperty discriminator)
+            this StorageMappingFragment entityTypeMappingFragment, EdmProperty discriminator)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void RemoveDefaultDiscriminatorAnnotation(
-            this DbEntityTypeMappingFragment entityTypeMappingFragment)
+            this StorageMappingFragment entityTypeMappingFragment)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
@@ -42,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void RemoveDefaultDiscriminator(
-            this DbEntityTypeMappingFragment entityTypeMappingFragment, DbEntitySetMapping entitySetMapping)
+            this StorageMappingFragment entityTypeMappingFragment, StorageEntitySetMapping entitySetMapping)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
@@ -63,26 +64,31 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             {
                 var entityTypeMapping =
                     entitySetMapping.EntityTypeMappings.Single(
-                        etm => etm.TypeMappingFragments.Contains(entityTypeMappingFragment));
-                entityTypeMapping.TypeMappingFragments.Remove(entityTypeMappingFragment);
-                if (entityTypeMapping.TypeMappingFragments.Count == 0)
+                        etm => etm.MappingFragments.Contains(entityTypeMappingFragment));
+
+                entityTypeMapping.RemoveFragment(entityTypeMappingFragment);
+
+                if (entityTypeMapping.MappingFragments.Count == 0)
                 {
-                    entitySetMapping.EntityTypeMappings.Remove(entityTypeMapping);
+                    entitySetMapping.RemoveTypeMapping(entityTypeMapping);
                 }
             }
         }
 
         public static EdmProperty RemoveDefaultDiscriminatorCondition(
-            this DbEntityTypeMappingFragment entityTypeMappingFragment)
+            this StorageMappingFragment entityTypeMappingFragment)
         {
             Contract.Requires(entityTypeMappingFragment != null);
 
             var discriminatorColumn = entityTypeMappingFragment.GetDefaultDiscriminator();
+
             if (discriminatorColumn != null
-                && entityTypeMappingFragment.ColumnConditions.Count > 0)
+                && entityTypeMappingFragment.ColumnConditions.Any())
             {
-                Contract.Assert(entityTypeMappingFragment.ColumnConditions.Count == 1);
-                entityTypeMappingFragment.ColumnConditions.RemoveAt(0);
+                Contract.Assert(entityTypeMappingFragment.ColumnConditions.Count() == 1);
+
+                entityTypeMappingFragment.RemoveConditionProperty(
+                    entityTypeMappingFragment.ColumnConditions.Single());
             }
 
             entityTypeMappingFragment.RemoveDefaultDiscriminatorAnnotation();
@@ -91,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void AddDiscriminatorCondition(
-            this DbEntityTypeMappingFragment entityTypeMapppingFragment,
+            this StorageMappingFragment entityTypeMapppingFragment,
             EdmProperty discriminatorColumn,
             object value)
         {
@@ -100,17 +106,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(value != null);
 
             entityTypeMapppingFragment
-                .ColumnConditions
-                .Add(
-                    new DbColumnCondition
-                        {
-                            Column = discriminatorColumn,
-                            Value = value
-                        });
+                .AddConditionProperty(
+                  new StorageConditionPropertyMapping(null, discriminatorColumn, value, null));
         }
 
         public static void AddNullabilityCondition(
-            this DbEntityTypeMappingFragment entityTypeMapppingFragment,
+            this StorageMappingFragment entityTypeMapppingFragment,
             EdmProperty column,
             bool isNull)
         {
@@ -118,16 +119,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             Contract.Requires(column != null);
 
             entityTypeMapppingFragment
-                .ColumnConditions
-                .Add(
-                    new DbColumnCondition
-                        {
-                            Column = column,
-                            IsNull = isNull
-                        });
+                .AddConditionProperty(
+                    new StorageConditionPropertyMapping(null, column, null, isNull));
         }
 
-        public static bool IsConditionOnlyFragment(this DbEntityTypeMappingFragment entityTypeMapppingFragment)
+        public static bool IsConditionOnlyFragment(this StorageMappingFragment entityTypeMapppingFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
@@ -141,7 +137,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void SetIsConditionOnlyFragment(
-            this DbEntityTypeMappingFragment entityTypeMapppingFragment, bool isConditionOnlyFragment)
+            this StorageMappingFragment entityTypeMapppingFragment, bool isConditionOnlyFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
@@ -156,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             }
         }
 
-        public static bool IsUnmappedPropertiesFragment(this DbEntityTypeMappingFragment entityTypeMapppingFragment)
+        public static bool IsUnmappedPropertiesFragment(this StorageMappingFragment entityTypeMapppingFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 
@@ -170,7 +166,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         }
 
         public static void SetIsUnmappedPropertiesFragment(
-            this DbEntityTypeMappingFragment entityTypeMapppingFragment, bool isUnmappedPropertiesFragment)
+            this StorageMappingFragment entityTypeMapppingFragment, bool isUnmappedPropertiesFragment)
         {
             Contract.Requires(entityTypeMapppingFragment != null);
 

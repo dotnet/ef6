@@ -31,8 +31,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     /// </summary>
     internal class QueryRewriter
     {
-        #region Fields
-
         // The following fields are copied from ViewGenContext
         private readonly MemberPath _extentPath;
         private readonly MemberDomainMap _domainMap;
@@ -58,15 +56,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         private readonly ErrorLog _errorLog = new ErrorLog();
         private readonly ViewGenMode _typesGenerationMode;
 
-        #endregion
-
-        #region Static variables
-
         private static readonly Tile<FragmentQuery> _trueViewSurrogate = CreateTile(FragmentQuery.Create(BoolExpression.True));
-
-        #endregion
-
-        #region Constructor and main entry point
 
         internal QueryRewriter(EdmType generatedType, ViewgenContext context, ViewGenMode typesGenerationMode)
         {
@@ -158,10 +148,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        #endregion
-
-        #region Properties
-
         internal ViewgenContext ViewgenContext
         {
             get { return _context; }
@@ -195,10 +181,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         {
             get { return _fragmentQueries; }
         }
-
-        #endregion
-
-        #region Main logic
 
         private IEnumerable<Constant> GetDomain(MemberPath currentPath)
         {
@@ -830,10 +812,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        #endregion
-
-        #region Computing rewriting
-
         // Find rewriting for query SELECT <attributes> WHERE <whereClause> FROM _extentPath
         // and add view appearing in rewriting to outputUsedViews
         private bool FindRewritingAndUsedViews(
@@ -1160,10 +1138,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return usedViews;
         }
 
-        #endregion
-
-        #region Helper methods
-
         private BoolExpression CreateMemberCondition(MemberPath path, Constant domainValue)
         {
             return FragmentQuery.CreateMemberCondition(path, domainValue, _domainMap);
@@ -1353,7 +1327,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                 Helpers.FormatTraceLine(msg, parameters);
             }
         }
-
-        #endregion
     }
 }

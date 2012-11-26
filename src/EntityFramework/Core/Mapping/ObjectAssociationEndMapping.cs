@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class ObjectAssociationEndMapping : ObjectMemberMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcut a new AssociationEnd member mapping metadata object
         /// </summary>
@@ -21,10 +19,6 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     return the member mapping kind
         /// </summary>
@@ -32,7 +26,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return MemberMappingKind.AssociationEndMapping; }
         }
-
-        #endregion
     }
 }

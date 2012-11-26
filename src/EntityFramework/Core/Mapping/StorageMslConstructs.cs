@@ -2,12 +2,29 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Diagnostics.Contracts;
+
     /// <summary>
     ///     Defines all the string constrcuts defined in CS MSL specification
     /// </summary>
     internal static class StorageMslConstructs
     {
-        #region Fields
+        public static string GetMslNamespace(double version)
+        {
+            if (Equals(version, MappingVersionV1))
+            {
+                return NamespaceUriV1;
+            }
+
+            if (Equals(version, MappingVersionV2))
+            {
+                return NamespaceUriV2;
+            }
+
+            Contract.Assert(Equals(version, MappingVersionV3), "added new version?");
+
+            return NamespaceUriV3;
+        }
 
         internal const string NamespaceUriV1 = "urn:schemas-microsoft-com:windows:storage:mapping:CS";
         internal const string NamespaceUriV2 = "http://schemas.microsoft.com/ado/2008/09/mapping/cs";
@@ -93,7 +110,5 @@ namespace System.Data.Entity.Core.Mapping
         internal const char IdentitySeperator = ':';
         internal const string EntityViewGenerationTypeName = "Edm_EntityMappingGeneratedViews.ViewsForBaseEntitySets";
         internal const string FunctionImportMappingResultMapping = "ResultMapping";
-
-        #endregion
     }
 }

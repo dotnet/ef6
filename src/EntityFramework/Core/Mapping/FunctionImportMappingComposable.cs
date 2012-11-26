@@ -21,8 +21,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class FunctionImportMappingComposable : FunctionImportMapping
     {
-        #region Constructors
-
         internal FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
@@ -58,10 +56,6 @@ namespace System.Data.Entity.Core.Mapping
             m_targetFunctionKeys = targetFunctionKeys;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly StorageMappingItemCollection m_mappingItemCollection;
 
         /// <summary>
@@ -86,16 +80,10 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         private Node m_internalTreeNode;
 
-        #endregion
-
-        #region Properties/Methods
-
         internal EdmProperty[] TvfKeys
         {
             get { return m_targetFunctionKeys; }
         }
-
-        #region GetInternalTree(...) implementation
 
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -197,8 +185,6 @@ namespace System.Data.Entity.Core.Mapping
                 return new FunctionViewOpCopier(cmd, viewArguments).CopyNode(viewNode);
             }
 
-            #region Visitor Members
-
             public override Node Visit(VarRefOp op, Node n)
             {
                 // The original function view has store function calls with arguments represented as command parameter refs.
@@ -220,15 +206,7 @@ namespace System.Data.Entity.Core.Mapping
                     return base.Visit(op, n);
                 }
             }
-
-            #endregion
         }
-
-        #endregion
-
-        #region GenerateFunctionView(...) implementation
-
-        #region GenerateFunctionView
 
         internal DbQueryCommandTree GenerateFunctionView(out DiscriminatorMap discriminatorMap)
         {
@@ -286,10 +264,6 @@ namespace System.Data.Entity.Core.Mapping
                 yield return m_commandParameters[FunctionImport.Parameters.IndexOf(functionImportParameter)];
             }
         }
-
-        #endregion
-
-        #region GenerateStructuralTypeResultMappingView
 
         private DbExpression GenerateStructuralTypeResultMappingView(
             DbExpression storeFunctionInvoke, out DiscriminatorMap discriminatorMap)
@@ -462,10 +436,6 @@ namespace System.Data.Entity.Core.Mapping
             return row.Property(column.Name);
         }
 
-        #endregion
-
-        #region GenerateScalarResultMappingView
-
         private DbExpression GenerateScalarResultMappingView(DbExpression storeFunctionInvoke)
         {
             var queryExpression = storeFunctionInvoke;
@@ -499,11 +469,5 @@ namespace System.Data.Entity.Core.Mapping
             queryExpression = queryExpression.Select(row => scalarView(row));
             return queryExpression;
         }
-
-        #endregion
-
-        #endregion
-
-        #endregion
     }
 }

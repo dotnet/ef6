@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // The WHERE clause is of the form X1 OR X2 OR ... where each Xi is a multiconstant
     internal abstract partial class CellTreeNode : InternalBase
     {
-        #region Constructor
-
         // effects: Creates a cell tree node with a reference to projectedSlotMap for
         // deciphering the fields in this
         protected CellTreeNode(ViewgenContext context)
@@ -33,15 +31,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly ViewgenContext m_viewgenContext;
-
-        #endregion
-
-        #region Properties
 
         // effects: Returns the operation being performed by this node
         internal abstract CellTreeOpType OpType { get; }
@@ -80,10 +70,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_viewgenContext; }
         }
 
-        #endregion
-
-        #region Abstract Methods
-
         // effects: Given a leaf cell node and the slots required by the parent, returns
         // a CqlBlock corresponding to the tree rooted at this
         internal abstract CqlBlock ToCqlBlock(
@@ -98,10 +84,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // type for visitor methods.
         internal abstract TOutput Accept<TInput, TOutput>(CellTreeVisitor<TInput, TOutput> visitor, TInput param);
         internal abstract TOutput Accept<TInput, TOutput>(SimpleCellTreeVisitor<TInput, TOutput> visitor, TInput param);
-
-        #endregion
-
-        #region Visitor methods
 
         // effects: Given a cell tree node , removes unnecessary
         // "nesting" that occurs in the tree -- an unnecessary nesting
@@ -129,10 +111,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             return AssociativeOpFlatteningVisitor.Flatten(this);
         }
-
-        #endregion
-
-        #region Helper methods, e.g., for slots and strings
 
         // effects: Returns true iff the Op (e.g., IJ) is associative, i.e.,
         // A OP (B OP C) is the same as (A OP B) OP C or A OP B OP C
@@ -224,7 +202,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var block = ToCqlBlock(requiredSlots, identifiers, ref blockAliasNum, ref withRelationships);
             block.AsEsql(builder, false, 1);
         }
-
-        #endregion
     }
 }

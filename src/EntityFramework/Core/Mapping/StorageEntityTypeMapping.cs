@@ -5,7 +5,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Text;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
 
     /// <summary>
     ///     Mapping metadata for Entity type.
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap
     ///     --ScalarProperyMap
     ///     --ScalarPropertyMap
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -40,14 +41,12 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap
-    ///     This class represents the metadata for all entity Type map elements in the 
-    ///     above example. Users can access the table mapping fragments under the 
+    ///     This class represents the metadata for all entity Type map elements in the
+    ///     above example. Users can access the table mapping fragments under the
     ///     entity type mapping through this class.
     /// </example>
     internal class StorageEntityTypeMapping : StorageTypeMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Construct the new EntityTypeMapping object.
         /// </summary>
@@ -57,9 +56,12 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        #endregion
+        private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
 
-        #region Fields
+        public IList<DataModelAnnotation> Annotations
+        {
+            get { return _annotationsList; }
+        }
 
         /// <summary>
         ///     Types for which the mapping holds true for.
@@ -71,16 +73,26 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         private readonly Dictionary<string, EdmType> m_isOfEntityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     a list of TypeMetadata that this mapping holds true for.
         /// </summary>
         internal override ReadOnlyCollection<EdmType> Types
         {
             get { return new List<EdmType>(m_entityTypes.Values).AsReadOnly(); }
+        }
+
+        public EntityType EntityType
+        {
+            get { return m_entityTypes.Values.OfType<EntityType>().SingleOrDefault(); }
+        }
+
+        public bool IsHierarchyMapping
+        {
+            get
+            {
+                return (EntityType != null)
+                       && m_isOfEntityTypes.ContainsKey(EntityType.FullName);
+            }
         }
 
         /// <summary>
@@ -92,15 +104,13 @@ namespace System.Data.Entity.Core.Mapping
             get { return new List<EdmType>(m_isOfEntityTypes.Values).AsReadOnly(); }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         ///     Add a Type to the list of types that this mapping is valid for
         /// </summary>
         internal void AddType(EdmType type)
         {
+            Contract.Requires(type != null);
+
             m_entityTypes.Add(type.FullName, type);
         }
 
@@ -109,7 +119,16 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal void AddIsOfType(EdmType type)
         {
+            Contract.Requires(type != null);
+
             m_isOfEntityTypes.Add(type.FullName, type);
+        }
+
+        internal void RemoveIsOfType(EdmType type)
+        {
+            Contract.Requires(type != null);
+
+            m_isOfEntityTypes.Remove(type.FullName);
         }
 
         internal EntityType GetContainerType(string memberName)
@@ -131,40 +150,5 @@ namespace System.Data.Entity.Core.Mapping
             }
             return null;
         }
-
-#if DEBUG
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal override void Print(int index)
-        {
-            StorageEntityContainerMapping.GetPrettyPrintString(ref index);
-            var sb = new StringBuilder();
-            sb.Append("EntityTypeMapping");
-            sb.Append("   ");
-            foreach (var type in m_entityTypes.Values)
-            {
-                sb.Append("Types:");
-                sb.Append(type.FullName);
-                sb.Append("   ");
-            }
-            foreach (var type in m_isOfEntityTypes.Values)
-            {
-                sb.Append("Is-Of Types:");
-                sb.Append(type.FullName);
-                sb.Append("   ");
-            }
-
-            Console.WriteLine(sb.ToString());
-            foreach (var fragment in MappingFragments)
-            {
-                fragment.Print(index + 5);
-            }
-        }
-#endif
-
-        #endregion
     }
 }

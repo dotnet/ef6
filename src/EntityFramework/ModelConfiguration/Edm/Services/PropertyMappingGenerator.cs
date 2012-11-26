@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Diagnostics.Contracts;
@@ -21,8 +21,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         public void Generate(
             EntityType entityType,
             IEnumerable<EdmProperty> properties,
-            DbEntitySetMapping entitySetMapping,
-            DbEntityTypeMappingFragment entityTypeMappingFragment,
+            StorageEntitySetMapping entitySetMapping,
+            StorageMappingFragment entityTypeMappingFragment,
             IList<EdmProperty> propertyPath,
             bool createNewColumn)
         {
@@ -59,11 +59,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 {
                     var tableColumn
                         = entitySetMapping.EntityTypeMappings
-                            .SelectMany(etm => etm.TypeMappingFragments)
-                            .SelectMany(etmf => etmf.PropertyMappings)
-                            .Where(pm => pm.PropertyPath.SequenceEqual(propertyPath))
-                            .Select(pm => pm.Column)
-                            .FirstOrDefault();
+                                          .SelectMany(etm => etm.MappingFragments)
+                                          .SelectMany(etmf => etmf.ColumnMappings)
+                                          .Where(pm => pm.PropertyPath.SequenceEqual(propertyPath))
+                                          .Select(pm => pm.ColumnProperty)
+                                          .FirstOrDefault();
 
                     if (tableColumn == null || createNewColumn)
                     {
@@ -84,12 +84,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         }
                     }
 
-                    entityTypeMappingFragment.PropertyMappings.Add(
-                        new DbEdmPropertyMapping
-                            {
-                                Column = tableColumn,
-                                PropertyPath = propertyPath.ToList()
-                            });
+                    entityTypeMappingFragment.AddColumnMapping(
+                        new ColumnMappingBuilder(tableColumn, propertyPath.ToList()));
                 }
 
                 propertyPath.Remove(property);

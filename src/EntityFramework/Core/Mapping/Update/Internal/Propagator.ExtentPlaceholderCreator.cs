@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         private class ExtentPlaceholderCreator
         {
-            #region Constructors
-
             /// <summary>
             ///     Constructs a new placeholder creator.
             /// </summary>
@@ -28,15 +26,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
             }
 
-            #endregion
-
-            #region Fields
-
             private static readonly Dictionary<PrimitiveTypeKind, object> _typeDefaultMap = InitializeTypeDefaultMap();
-
-            #endregion
-
-            #region Methods
 
             /// <summary>
             ///     Initializes a map from primitive scalar types in the C-Space to default values
@@ -198,8 +188,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return Visit(member);
             }
 
-            #region Visitor implementation
-
             /// <summary>
             ///     Given default values for children members, produces a new default expression for the requested (parent) member.
             /// </summary>
@@ -249,10 +237,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // whether that record is a placeholder or not).
                 result = PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value);
             }
-
-            #endregion
-
-            #endregion
         }
     }
 }

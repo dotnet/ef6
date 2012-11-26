@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     /// </summary>
     internal class ViewCellSlot : ProjectedSlot
     {
-        #region Constructor
-
         // effects: 
         /// <summary>
         ///     Creates a view cell slot that corresponds to <paramref name="slotNum" /> in some cell. The <paramref name="cSlot" /> and <paramref
@@ -29,17 +27,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_sSlot = sSlot;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly int m_slotNum;
         private readonly MemberProjectedSlot m_cSlot;
         private readonly MemberProjectedSlot m_sSlot;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         ///     Returns the slot corresponding to the left cellquery.
@@ -56,10 +46,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         {
             get { return m_sSlot; }
         }
-
-        #endregion
-
-        #region Comparer/String Methods
 
         protected override bool IsEqualTo(ProjectedSlot right)
         {
@@ -144,7 +130,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             m_sSlot.ToCompactString(builder);
             builder.Append('>');
         }
-
-        #endregion
     }
 }

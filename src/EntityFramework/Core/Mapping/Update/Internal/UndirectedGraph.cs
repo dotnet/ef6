@@ -9,24 +9,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     // Maintains a graph where the direction of the edges is not important
     internal class UndirectedGraph<TVertex> : InternalBase
     {
-        #region Constructor
-
         internal UndirectedGraph(IEqualityComparer<TVertex> comparer)
         {
             m_graph = new Graph<TVertex>(comparer);
             m_comparer = comparer;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly Graph<TVertex> m_graph; // Directed graph where we added both edges
         private readonly IEqualityComparer<TVertex> m_comparer;
-
-        #endregion
-
-        #region Properties
 
         internal IEnumerable<TVertex> Vertices
         {
@@ -40,10 +30,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             get { return m_graph.Edges; }
         }
-
-        #endregion
-
-        #region Methods
 
         // effects: Adds a new node to the graph. Does nothing if the vertex already exists.
         internal void AddVertex(TVertex vertex)
@@ -127,7 +113,5 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return StringUtil.FormatInvariant("{0}", componentNum);
             }
         };
-
-        #endregion
     }
 }

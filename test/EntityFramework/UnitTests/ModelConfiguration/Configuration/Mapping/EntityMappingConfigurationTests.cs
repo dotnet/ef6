@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
 {
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
@@ -27,24 +29,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
         [Fact]
         public void Configure_should_update_table_name_when_base_type_is_null()
         {
-            var entityMappingConfiguration = new EntityMappingConfiguration
-                                                 {
-                                                     TableName = new DatabaseName("Foo")
-                                                 };
-            var entityTypeMapping = new DbEntityTypeMapping
-                                        {
-                                            EntityType = new EntityType()
-                                        };
-            var table = new EntityType("foo", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
-            entityTypeMapping.TypeMappingFragments.Add(
-                new DbEntityTypeMappingFragment
-                    {
-                        Table = table
-                    });
+            var entityMappingConfiguration
+                = new EntityMappingConfiguration
+                      {
+                          TableName = new DatabaseName("Foo")
+                      };
+
+            var entityTypeMapping = new StorageEntityTypeMapping(null);
+
+            entityTypeMapping.AddType(new EntityType());
 
             var databaseMapping =
                 new DbDatabaseMapping().Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
-            databaseMapping.Database.AddTable("foo");
+
+            var table = databaseMapping.Database.AddTable("foo");
+            var entitySet = databaseMapping.Database.GetEntitySet(table);
+
+            entityTypeMapping.AddFragment(new StorageMappingFragment(entitySet, entityTypeMapping, false));
+            
             entityMappingConfiguration.Configure(
                 databaseMapping, ProviderRegistry.Sql2008_ProviderManifest, entityTypeMapping.EntityType, ref entityTypeMapping, false, 0, 1);
 

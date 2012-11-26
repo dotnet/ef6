@@ -11,13 +11,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     // This class contains helper methods needed for generating Cql
     internal static class CqlWriter
     {
-        #region Fields
-
         private static readonly Regex _wordIdentifierRegex = new Regex(@"^[_A-Za-z]\w*$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-
-        #endregion
-
-        #region Helper Methods
 
         // effects: Given a block name and a field in it -- returns a string
         // of form "blockName.field". Does not perform any escaping
@@ -58,7 +52,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                     .Append(']');
             }
         }
-
-        #endregion
     }
 }

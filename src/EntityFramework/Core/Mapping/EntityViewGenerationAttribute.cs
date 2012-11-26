@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Mapping
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class EntityViewGenerationAttribute : Attribute
     {
-        #region Constructors
-
         /// <summary>
         ///     Constructor for EntityViewGenerationAttribute
         /// </summary>
@@ -21,21 +19,11 @@ namespace System.Data.Entity.Core.Mapping
             m_viewGenType = viewGenerationType;
         }
 
-        #endregion
-
-        #region Fields
-
         private readonly Type m_viewGenType;
-
-        #endregion
-
-        #region Properties
 
         public Type ViewGenerationType
         {
             get { return m_viewGenType; }
         }
-
-        #endregion
     }
 }

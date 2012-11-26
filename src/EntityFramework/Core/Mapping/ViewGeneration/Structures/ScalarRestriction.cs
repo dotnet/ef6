@@ -19,8 +19,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal class ScalarRestriction : MemberRestriction
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a scalar member restriction with the meaning "<paramref name="member" /> = <paramref name="value" />".
         ///     This constructor is used for creating discriminator type conditions.
@@ -47,10 +45,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             : base(slot, domain)
         {
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Fixes the range of the restriction in accordance with <paramref name="range" />.
@@ -326,10 +320,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        #endregion
-
-        #region String methods
-
         internal override void ToCompactString(StringBuilder builder)
         {
             RestrictedMemberSlot.ToCompactString(builder);
@@ -337,7 +327,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             StringUtil.ToCommaSeparatedStringSorted(builder, Domain.Values);
             builder.Append(")");
         }
-
-        #endregion
     }
 }

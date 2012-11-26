@@ -20,8 +20,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // (nullable) System.Int32 property is {Null, NotNull}.
     internal class Domain : InternalBase
     {
-        #region Constructors
-
         // effects: Creates an "fully-done" set with no values -- possibleDiscreteValues are the values
         // that this domain can take
         internal Domain(Constant value, IEnumerable<Constant> possibleDiscreteValues)
@@ -66,19 +64,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             AssertInvariant();
         }
 
-        #endregion
-
-        #region Fields
-
         // The set of values in the cell constant domain
         private readonly CellConstantSet m_domain; // e.g., 1, 2, NULL, NOT(1, 2, NULL)
         private readonly CellConstantSet m_possibleValues; // e.g., 1, 2, NULL, Undefined
         // Invariant: m_domain is a subset of m_possibleValues except for a
         // negated constant
-
-        #endregion
-
-        #region Properties
 
         // effects: Returns all the possible values that this can contain (including the negated constants)
         internal IEnumerable<Constant> AllPossibleValues
@@ -109,10 +99,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             get { return m_domain; }
         }
-
-        #endregion
-
-        #region Static Helper Methods to create cell constant sets from metadata
 
         // effects: Given a member, determines all possible values that can be created from Metadata
         internal static CellConstantSet DeriveDomainFromMemberPath(
@@ -210,10 +196,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
             return defaultValue;
         }
-
-        #endregion
-
-        #region External methods
 
         internal int GetHash()
         {
@@ -329,10 +311,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             return result;
         }
-
-        #endregion
-
-        #region Helper methods for determining domains from cells
 
         // effects: Given a set of cells, returns all the different values
         // that each memberPath in cells can take
@@ -490,10 +468,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return !domain.SequenceEqual(result);
         }
 
-        #endregion
-
-        #region Private helper methods
-
         // effects: Intersects the values in second with this domain and
         // returns the result
         private Domain Intersect(Domain second)
@@ -566,10 +540,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 "All domain values must be contained in possibleValues");
         }
 
-        #endregion
-
-        #region String methods
-
         // effects: Returns a user-friendly string that can be reported to an end-user
         internal string ToUserString()
         {
@@ -591,7 +561,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         {
             builder.Append(ToUserString());
         }
-
-        #endregion
     }
 }

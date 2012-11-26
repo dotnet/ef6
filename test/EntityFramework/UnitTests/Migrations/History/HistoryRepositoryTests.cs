@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -490,6 +491,33 @@ namespace System.Data.Entity.Migrations.History
 
             Assert.NotNull(model);
             Assert.Equal("Migration 2", migrationId);
+        }
+
+        [MigrationsTheory]
+        public void GetLastModel_should_return_model_based_on_passed_context_key_when_custom_default_schema()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "LegacyKey")
+                      {
+                          CurrentSchema = "foo"
+                      };
+
+            var model = CreateContext<ShopContext_v1>().GetModel();
+
+            ExecuteOperations(
+                GetCreateHistoryTableOperation(historyRepository.CurrentSchema),
+                historyRepository.CreateInsertOperation("Migration", model));
+
+            historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "NewKey", new[] { "foo" });
+
+            string migrationId;
+            model = historyRepository.GetLastModel(out migrationId, "LegacyKey");
+
+            Assert.NotNull(model);
+            Assert.Equal("Migration", migrationId);
         }
 
         [MigrationsTheory]

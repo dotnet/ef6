@@ -17,11 +17,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     // checking methods
     internal abstract class ConstraintBase : InternalBase
     {
-        #region Methods
-
         // effects: Returns an error log record with this constraint's information
         internal abstract ErrorLog.Record GetErrorRecord();
-
-        #endregion
     }
 }

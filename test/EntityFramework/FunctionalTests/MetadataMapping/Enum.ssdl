@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MessageStore" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="MessageContainer_Store">
+    <EntitySet Name="MessageSet" EntityType="Self.Message"  Schema="dbo" Table="Message" />
+    <EntitySet Name="MessageTypeLookUpSet" EntityType="Self.MessageTypeLookUp"  Schema="dbo" Table="MessageTypeLookUp" />
+    <AssociationSet Name="MessageMessageType" Association="MessageStore.MessageMessageType">
+      <End Role="Message" EntitySet="MessageSet" />
+      <End Role="MessageType" EntitySet="MessageTypeLookUpSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Message">
+    <Key>
+      <PropertyRef Name="Id"/>
+    </Key>
+    <Property Name="Id" Type="int"  Nullable="false"/>
+    <Property Name="MessageType" Type="int" Nullable="false"/>
+    <Property Name="ContentsType" Type="int"/>
+    <Property Name="PaymentMethod" Type="bigint" />
+  </EntityType>
+  <EntityType Name="MessageTypeLookUp">
+    <Key>
+      <PropertyRef Name="TypeOfMessage" />
+    </Key>
+    <Property Name="TypeOfMessage" Type="int" Nullable="false"/>
+    <Property Name="Description" Type="nvarchar" MaxLength="256" Nullable="true" />
+  </EntityType>
+
+  <Association Name="MessageMessageType">
+    <End Role="Message" Type="MessageStore.Message" Multiplicity="*" />
+    <End Role="MessageType" Type="MessageStore.MessageTypeLookUp" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="MessageType">
+        <PropertyRef Name="TypeOfMessage" />
+      </Principal>
+      <Dependent Role="Message">
+        <PropertyRef Name="MessageType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

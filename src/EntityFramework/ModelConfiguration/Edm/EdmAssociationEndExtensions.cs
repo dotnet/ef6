@@ -6,17 +6,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
     internal static class EdmAssociationEndExtensions
     {
-        public static bool IsMany(this AssociationEndMember associationEnd)
+        public static bool IsMany(this RelationshipEndMember associationEnd)
         {
             return associationEnd.RelationshipMultiplicity.IsMany();
         }
 
-        public static bool IsOptional(this AssociationEndMember associationEnd)
+        public static bool IsOptional(this RelationshipEndMember associationEnd)
         {
             return associationEnd.RelationshipMultiplicity.IsOptional();
         }
 
-        public static bool IsRequired(this AssociationEndMember associationEnd)
+        public static bool IsRequired(this RelationshipEndMember associationEnd)
         {
             return associationEnd.RelationshipMultiplicity.IsRequired();
         }

@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     /// </summary>
     internal sealed class NegatedConstant : Constant
     {
-        #region Constructors
-
         /// <summary>
         ///     Creates a negated constant with the <paramref name="values" /> in it.
         /// </summary>
@@ -28,27 +26,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_negatedDomain = new Set<Constant>(values, EqualityComparer);
         }
 
-        #endregion
-
-        #region Fields
-
         /// <summary>
         ///     e.g., NOT(1, 2, Undefined)
         /// </summary>
         private readonly Set<Constant> m_negatedDomain;
 
-        #endregion
-
-        #region Properties
-
         internal IEnumerable<Constant> Elements
         {
             get { return m_negatedDomain; }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Returns true if the negated constant contains <paramref name="constant" />.
@@ -307,7 +293,5 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 builder.Append(")");
             }
         }
-
-        #endregion
     }
 }

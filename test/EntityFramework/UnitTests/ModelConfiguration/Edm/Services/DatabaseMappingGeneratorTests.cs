@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             Assert.NotNull(databaseMapping);
             Assert.NotNull(databaseMapping.Database);
-            Assert.Same(model.Containers.Single(), databaseMapping.EntityContainerMappings.Single().EntityContainer);
+            Assert.Same(model.Containers.Single(), databaseMapping.EntityContainerMappings.Single().EdmEntityContainer);
         }
 
         [Fact]
@@ -48,9 +48,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var entityTypeMapping = entitySetMapping.EntityTypeMappings.Single();
 
             Assert.Same(entityType, entityTypeMapping.EntityType);
-            Assert.NotNull(entityTypeMapping.TypeMappingFragments.Single().Table);
-            Assert.Equal("E", entityTypeMapping.TypeMappingFragments.Single().Table.Name);
-            Assert.Equal(2, entityTypeMapping.TypeMappingFragments.Single().Table.Properties.Count);
+            Assert.NotNull(entityTypeMapping.MappingFragments.Single().Table);
+            Assert.Equal("E", entityTypeMapping.MappingFragments.Single().Table.Name);
+            Assert.Equal(2, entityTypeMapping.MappingFragments.Single().Table.Properties.Count);
             Assert.Equal(typeof(object), entityTypeMapping.GetClrType());
         }
 
@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
-            var column = databaseMapping.GetEntityTypeMapping(entityType).TypeMappingFragments.Single().PropertyMappings.Single().Column;
+            var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
             Assert.False(column.Nullable);
             Assert.Null(column.IsFixedLength);
@@ -120,7 +120,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
-            var column = databaseMapping.GetEntityTypeMapping(entityType).TypeMappingFragments.Single().PropertyMappings.Single().Column;
+            var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
             Assert.False(column.Nullable);
             Assert.Null(column.IsFixedLength);
@@ -159,7 +159,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
-            var column = databaseMapping.GetEntityTypeMapping(entityType).TypeMappingFragments.Single().PropertyMappings.Single().Column;
+            var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
             Assert.False(column.Nullable);
             Assert.Null(column.IsFixedLength);
@@ -191,9 +191,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var entitySetMapping = databaseMapping.GetEntitySetMapping(entitySet);
             var entityTypeMapping = entitySetMapping.EntityTypeMappings.Single();
 
-            Assert.Equal(1, entityTypeMapping.TypeMappingFragments.Single().Table.DeclaredKeyProperties.Count());
-            Assert.Equal("Id", entityTypeMapping.TypeMappingFragments.Single().Table.DeclaredKeyProperties.Single().Name);
-            Assert.True(entityTypeMapping.TypeMappingFragments.Single().Table.DeclaredKeyProperties.Single().IsPrimaryKeyColumn);
+            Assert.Equal(1, entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Count());
+            Assert.Equal("Id", entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Single().Name);
+            Assert.True(entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Single().IsPrimaryKeyColumn);
         }
 
         [Fact]
@@ -232,7 +232,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var foreignKeyConstraint
                 =
-                databaseMapping.GetEntityTypeMapping(dependentEntityType).TypeMappingFragments.Single().Table.ForeignKeyBuilders.Single();
+                databaseMapping.GetEntityTypeMapping(dependentEntityType).MappingFragments.Single().Table.ForeignKeyBuilders.Single();
 
             Assert.Equal(2, foreignKeyConstraint.DependentColumns.Count());
             Assert.Equal(associationType.Name, foreignKeyConstraint.Name);
@@ -284,7 +284,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var databaseMapping
                 = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
-            var dependentTable = databaseMapping.GetEntityTypeMapping(dependentEntityType).TypeMappingFragments.Single().Table;
+            var dependentTable = databaseMapping.GetEntityTypeMapping(dependentEntityType).MappingFragments.Single().Table;
             var foreignKeyConstraint = dependentTable.ForeignKeyBuilders.Single();
 
             Assert.Equal(2, dependentTable.Properties.Count());
@@ -337,19 +337,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.NotNull(entitySetMapping);
             var entityTypeMappings = entitySetMapping.EntityTypeMappings;
 
-            Assert.Equal(3, entityTypeMappings.Count);
+            Assert.Equal(3, entityTypeMappings.Count());
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(rootEntityType);
             var entityType2Mapping = databaseMapping.GetEntityTypeMapping(entityType2);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal(3, entityType2Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal(4, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal(3, entityType2Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal(4, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
 
-            var table = entityType1Mapping.TypeMappingFragments.Single().Table;
-            Assert.Same(table, entityType2Mapping.TypeMappingFragments.Single().Table);
-            Assert.Same(table, entityType3Mapping.TypeMappingFragments.Single().Table);
+            var table = entityType1Mapping.MappingFragments.Single().Table;
+            Assert.Same(table, entityType2Mapping.MappingFragments.Single().Table);
+            Assert.Same(table, entityType3Mapping.MappingFragments.Single().Table);
             Assert.Equal(5, table.Properties.Count);
             Assert.Equal("P1", table.Properties[0].Name);
             Assert.Equal("P2", table.Properties[1].Name);
@@ -405,17 +405,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(rootEntityType);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
 
-            Assert.Equal(2, entityType1Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType1Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
+            Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
 
-            Assert.Equal(4, entityType3Mapping.TypeMappingFragments.Single().PropertyMappings.Count);
-            Assert.Equal("P1", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[0].Column.Name);
-            Assert.Equal("P2", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[1].Column.Name);
-            Assert.Equal("P3", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[2].Column.Name);
-            Assert.Equal("P4", entityType3Mapping.TypeMappingFragments.Single().PropertyMappings[3].Column.Name);
+            Assert.Equal(4, entityType3Mapping.MappingFragments.Single().ColumnMappings.Count());
+            Assert.Equal("P1", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
+            Assert.Equal("P2", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
+            Assert.Equal("P3", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty.Name);
+            Assert.Equal("P4", entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(3).ColumnProperty.Name);
 
-            var table = entityType1Mapping.TypeMappingFragments.Single().Table;
+            var table = entityType1Mapping.MappingFragments.Single().Table;
 
             Assert.Equal(5, table.Properties.Count);
         }

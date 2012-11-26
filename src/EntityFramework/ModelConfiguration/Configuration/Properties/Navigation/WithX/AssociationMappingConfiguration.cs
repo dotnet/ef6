@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Db.Mapping;
+    
     using System.Diagnostics.Contracts;
     using System.Reflection;
 
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     public abstract class AssociationMappingConfiguration
     {
         internal abstract void Configure(
-            DbAssociationSetMapping associationSetMapping,
+            StorageAssociationSetMapping associationSetMapping,
             EdmModel database,
             PropertyInfo navigationProperty);
 
@@ -27,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private abstract class AssociationMappingConfigurationContracts : AssociationMappingConfiguration
         {
             internal override void Configure(
-                DbAssociationSetMapping associationSetMapping,
+                StorageAssociationSetMapping associationSetMapping,
                 EdmModel database,
                 PropertyInfo navigationProperty)
             {

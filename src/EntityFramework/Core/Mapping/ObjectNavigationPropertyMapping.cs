@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal class ObjectNavigationPropertyMapping : ObjectMemberMapping
     {
-        #region Constructors
-
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
@@ -22,10 +20,6 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         ///     return the member mapping kind
         /// </summary>
@@ -33,7 +27,5 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return MemberMappingKind.NavigationPropertyMapping; }
         }
-
-        #endregion
     }
 }

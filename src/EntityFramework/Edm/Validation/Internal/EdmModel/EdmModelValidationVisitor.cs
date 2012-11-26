@@ -6,9 +6,6 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
 
-    /// <summary>
-    ///     Visitor for EdmModel Validation
-    /// </summary>
     internal sealed class EdmModelValidationVisitor : EdmModelVisitor
     {
         private readonly EdmModelValidationContext _context;

@@ -5,7 +5,6 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
-    using System.Data.Entity.Edm.Parsing.Xml.Internal.Csdl;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml;
@@ -147,7 +146,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
             if (item.DeleteBehavior
                 != OperationAction.None)
             {
-                _schemaWriter.WriteOperationActionElement(CsdlConstants.Element_OnDelete, item.DeleteBehavior);
+                _schemaWriter.WriteOperationActionElement(XmlConstants.OnDelete, item.DeleteBehavior);
             }
             VisitMetadataItem(item);
             _schemaWriter.WriteEndElement();
@@ -157,11 +156,11 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl
         {
             _schemaWriter.WriteReferentialConstraintElementHeader();
             _schemaWriter.WriteReferentialConstraintRoleElement(
-                CsdlConstants.Element_Principal,
+                XmlConstants.PrincipalRole,
                 item.PrincipalEnd(_currentAssociationType),
                 item.PrincipalEnd(_currentAssociationType).GetEntityType().GetValidKey());
             _schemaWriter.WriteReferentialConstraintRoleElement(
-                CsdlConstants.Element_Dependent, item.DependentEnd, item.ToProperties);
+                XmlConstants.DependentRole, item.DependentEnd, item.ToProperties);
             VisitMetadataItem(item);
             _schemaWriter.WriteEndElement();
         }
