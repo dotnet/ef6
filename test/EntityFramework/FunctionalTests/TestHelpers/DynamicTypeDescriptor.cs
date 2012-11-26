@@ -22,8 +22,6 @@ namespace System.Data.Entity
 
         public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
         {
-            Debug.Assert(objectType == typeof(T));
-
             var defaultDescriptor = base.GetTypeDescriptor(objectType, instance);
 
             return new DynamicTypeDescriptor<T>(defaultDescriptor, _configuration);
