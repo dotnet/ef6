@@ -226,3 +226,7 @@ using System.Diagnostics.CodeAnalysis;
         Target =
             "System.Data.Entity.Core.Objects.ObjectParameterCollection.#System.Collections.Generic.ICollection`1<System.Data.Entity.Core.Objects.ObjectParameter>.IsReadOnly"
         )]
+[assembly: 
+    SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member", 
+        Target = 
+            "System.Data.Entity.Core.Metadata.Edm.ObjectItemLoadingSessionData.#.ctor(System.Data.Entity.Core.Metadata.Edm.KnownAssembliesSet,System.Data.Entity.Core.Metadata.Edm.LockedAssemblyCache,System.Data.Entity.Core.Metadata.Edm.EdmItemCollection,System.Action`1<System.String>,System.Object)")]
