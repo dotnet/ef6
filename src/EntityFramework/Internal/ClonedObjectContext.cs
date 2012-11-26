@@ -43,6 +43,7 @@ namespace System.Data.Entity.Internal
             var clonedEntityConnection = objectContext.Connection.CreateNew(clonedConnection);
 
             _objectContext = objectContext.CreateNew(clonedEntityConnection);
+            _objectContext.CopyContextOptions(objectContext);
 
             if (!String.IsNullOrWhiteSpace(objectContext.DefaultContainerName))
             {

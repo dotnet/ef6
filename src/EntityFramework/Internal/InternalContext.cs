@@ -491,6 +491,9 @@ namespace System.Data.Entity.Internal
             var initializerAction =
                 (Action)_createInitializationAction.MakeGenericMethod(Owner.GetType()).Invoke(this, new[] { initializer });
 
+            var autoDetectChangesEnabled = AutoDetectChangesEnabled;
+            var validateOnSaveEnabled = ValidateOnSaveEnabled;
+
             try
             {
                 UseTempObjectContext();
@@ -499,6 +502,9 @@ namespace System.Data.Entity.Internal
             finally
             {
                 DisposeTempObjectContext();
+
+                AutoDetectChangesEnabled = autoDetectChangesEnabled;
+                ValidateOnSaveEnabled = validateOnSaveEnabled;
             }
         }
 

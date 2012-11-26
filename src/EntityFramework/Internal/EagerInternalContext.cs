@@ -65,7 +65,7 @@ namespace System.Data.Entity.Internal
             get
             {
                 Initialize();
-                return TempObjectContext ?? _objectContext;
+                return ObjectContextInUse;
             }
         }
 
@@ -77,7 +77,16 @@ namespace System.Data.Entity.Internal
         public override ObjectContext GetObjectContextWithoutDatabaseInitialization()
         {
             InitializeContext();
-            return TempObjectContext ?? _objectContext;
+            return ObjectContextInUse;
+        }
+
+        /// <summary>
+        ///     The <see cref="ObjectContext" /> actually being used, which may be the
+        ///     temp context for initialization or the real context.
+        /// </summary>
+        private ObjectContext ObjectContextInUse
+        {
+            get { return TempObjectContext ?? _objectContext; }
         }
 
         #endregion
@@ -193,8 +202,8 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public override bool LazyLoadingEnabled
         {
-            get { return _objectContext.ContextOptions.LazyLoadingEnabled; }
-            set { _objectContext.ContextOptions.LazyLoadingEnabled = value; }
+            get { return ObjectContextInUse.ContextOptions.LazyLoadingEnabled; }
+            set { ObjectContextInUse.ContextOptions.LazyLoadingEnabled = value; }
         }
 
         /// <summary>
@@ -203,8 +212,8 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public override bool ProxyCreationEnabled
         {
-            get { return _objectContext.ContextOptions.ProxyCreationEnabled; }
-            set { _objectContext.ContextOptions.ProxyCreationEnabled = value; }
+            get { return ObjectContextInUse.ContextOptions.ProxyCreationEnabled; }
+            set { ObjectContextInUse.ContextOptions.ProxyCreationEnabled = value; }
         }
 
         #endregion

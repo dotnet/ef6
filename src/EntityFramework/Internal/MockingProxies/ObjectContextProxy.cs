@@ -79,5 +79,14 @@ namespace System.Data.Entity.Internal.MockingProxies
         {
             return new ObjectContextProxy(new ObjectContext(entityConnection));
         }
+
+        public virtual void CopyContextOptions(ObjectContextProxy source)
+        {
+            _objectContext.ContextOptions.LazyLoadingEnabled = source._objectContext.ContextOptions.LazyLoadingEnabled;
+            _objectContext.ContextOptions.ProxyCreationEnabled = source._objectContext.ContextOptions.ProxyCreationEnabled;
+            _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = source._objectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+            _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = source._objectContext.ContextOptions.UseConsistentNullReferenceBehavior;
+            _objectContext.ContextOptions.UseLegacyPreserveChangesBehavior = source._objectContext.ContextOptions.UseLegacyPreserveChangesBehavior;
+        }
     }
 }

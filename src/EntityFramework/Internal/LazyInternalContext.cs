@@ -556,8 +556,8 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets or sets a value indicating whether lazy loading is enabled.
-        ///     If the <see cref="ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the <see cref="ObjectContext" /> has not been created yet, then we store the value given so we can later
+        ///     If the underlying <see cref="ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
+        ///     If the underlying <see cref="ObjectContext" /> has not been created yet, then we store the value given so we can later
         ///     use it when we create the <see cref="ObjectContext" />.  This allows the flag to be changed, for example in
         ///     a DbContext constructor, without it causing the <see cref="ObjectContext" /> to be created.
         /// </summary>
@@ -565,15 +565,17 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                return _objectContext != null
-                           ? _objectContext.ContextOptions.LazyLoadingEnabled
+                var objectContext = ObjectContextInUse;
+                return objectContext != null
+                           ? objectContext.ContextOptions.LazyLoadingEnabled
                            : _initialLazyLoadingFlag;
             }
             set
             {
-                if (_objectContext != null)
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
                 {
-                    _objectContext.ContextOptions.LazyLoadingEnabled = value;
+                    objectContext.ContextOptions.LazyLoadingEnabled = value;
                 }
                 else
                 {
@@ -584,8 +586,8 @@ namespace System.Data.Entity.Internal
 
         /// <summary>
         ///     Gets or sets a value indicating whether proxy creation is enabled.
-        ///     If the ObjectContext exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the ObjectContext has not been created yet, then we store the value given so we can later
+        ///     If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
+        ///     If the underlying ObjectContext has not been created yet, then we store the value given so we can later
         ///     use it when we create the ObjectContext.  This allows the flag to be changed, for example in
         ///     a DbContext constructor, without it causing the ObjectContext to be created.
         /// </summary>
@@ -593,15 +595,17 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                return _objectContext != null
-                           ? _objectContext.ContextOptions.ProxyCreationEnabled
+                var objectContext = ObjectContextInUse;
+                return objectContext != null
+                           ? objectContext.ContextOptions.ProxyCreationEnabled
                            : _initialProxyCreationFlag;
             }
             set
             {
-                if (_objectContext != null)
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
                 {
-                    _objectContext.ContextOptions.ProxyCreationEnabled = value;
+                    objectContext.ContextOptions.ProxyCreationEnabled = value;
                 }
                 else
                 {

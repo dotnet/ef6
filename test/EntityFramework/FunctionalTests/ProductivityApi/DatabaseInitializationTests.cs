@@ -1366,5 +1366,87 @@ namespace ProductivityApiTests
                 Assert.Equal(0, context.Products.Count());
             }
         }
+
+        private class SimpleContextWithConfigChanges : SimpleModelContext
+        {
+            public SimpleContextWithConfigChanges(bool initialValue)
+            {
+                SetInternalContextOptions(initialValue);
+                CheckInternalContextOptions(initialValue);
+            }
+
+            public void SetInternalContextOptions(bool value)
+            {
+                Configuration.LazyLoadingEnabled = value;
+                Configuration.ProxyCreationEnabled = value;
+                Configuration.AutoDetectChangesEnabled = value;
+                Configuration.ValidateOnSaveEnabled = value;
+            }
+
+            public void CheckInternalContextOptions(bool expectedValue)
+            {
+                Assert.True(Configuration.LazyLoadingEnabled == expectedValue);
+                Assert.True(Configuration.ProxyCreationEnabled == expectedValue);
+                Assert.True(Configuration.AutoDetectChangesEnabled == expectedValue);
+                Assert.True(Configuration.ValidateOnSaveEnabled == expectedValue);
+            }
+
+            public void CheckObjectContextOptions(bool expectedValue)
+            {
+                var objectContext = GetObjectContext(this);
+                Assert.True(objectContext.ContextOptions.LazyLoadingEnabled == expectedValue);
+                Assert.True(objectContext.ContextOptions.ProxyCreationEnabled == expectedValue);
+            }
+        }
+
+        private class DbInitializerWithConfigChanges : IDatabaseInitializer<SimpleContextWithConfigChanges>
+        {
+            private readonly bool _initialValue;
+
+            public DbInitializerWithConfigChanges(bool initialValue)
+            {
+                _initialValue = initialValue;
+            }
+
+            public void InitializeDatabase(SimpleContextWithConfigChanges context)
+            {
+                context.CheckInternalContextOptions(_initialValue);
+                context.CheckObjectContextOptions(_initialValue);
+
+                var newValue = !_initialValue;
+
+                context.SetInternalContextOptions(newValue);
+
+                context.CheckInternalContextOptions(newValue);
+                context.CheckObjectContextOptions(newValue);
+            }
+        }
+
+        private static void TestContextConfigChanges(bool initialValue)
+        {
+            Database.SetInitializer(new DbInitializerWithConfigChanges(initialValue));
+
+            using (var context = new SimpleContextWithConfigChanges(initialValue))
+            {
+                context.Database.Initialize(force: true);
+
+                context.CheckInternalContextOptions(initialValue);
+                context.CheckObjectContextOptions(initialValue);
+
+                var newValue = !initialValue;
+
+                context.SetInternalContextOptions(newValue);
+
+                context.CheckInternalContextOptions(newValue);
+                context.CheckObjectContextOptions(newValue);
+            }
+        }
+
+        [Fact]
+        public void Initializer_context_configuration_changes_are_set_and_retrieved_correctly()
+        {
+            TestContextConfigChanges(initialValue: false);
+            TestContextConfigChanges(initialValue: true);
+        }
     }
 }
