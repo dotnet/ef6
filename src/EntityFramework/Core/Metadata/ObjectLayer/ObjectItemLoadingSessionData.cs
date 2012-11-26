@@ -185,6 +185,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         else if (Helper.IsEnumType(type))
                         {
                             var enumType = (ClrEnumType)type;
+                            _cspaceToOspace.Add(_edmItemCollection.GetItem<EnumType>(enumType.CSpaceTypeName), enumType);
                         }
                         else
                         {

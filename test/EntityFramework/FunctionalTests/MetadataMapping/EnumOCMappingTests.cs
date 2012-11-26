@@ -260,6 +260,57 @@ namespace System.Data.Entity.MetadataMapping
                     () => CreateMetadataWorkspace(EnumCsdl(), assembly, true)).Message);
         }
 
+        [Fact]
+        public void Can_load_entity_with_property_of_enum_type_from_different_assembly()
+        {
+            const bool isPOCO = true;
+
+            var enumTypeCsdl = XDocument.Parse(
+@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
+  <EnumType Name=""Enum"" IsFlags=""false"" />
+</Schema>");
+
+            var entityTypeCsdl = XDocument.Parse(
+@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
+  <EntityContainer Name=""EnumModelContainer"">
+    <EntitySet Name=""Entity"" EntityType=""EnumModel.Entity"" />
+  </EntityContainer>
+  <EntityType Name=""Entity"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Nullable=""false"" Type=""Int32"" />
+    <Property Name=""EnumProperty"" Nullable=""false"" Type=""EnumModel.Enum"" />
+  </EntityType>
+</Schema>");
+
+            var assemblyWithEnumType = BuildAssembly(isPOCO, enumTypeCsdl);
+            var assemblyWithEntityType = BuildAssembly(isPOCO, entityTypeCsdl);
+
+            EdmItemCollection edmItemCollection;
+
+            var workspace = new MetadataWorkspace();
+            using (var enumTypeReader = enumTypeCsdl.CreateReader())
+            using (var entityTypeReader = entityTypeCsdl.CreateReader())
+            {
+                edmItemCollection = 
+                    new EdmItemCollection(
+                        new XmlReader[] { enumTypeReader, entityTypeReader });
+            }
+            workspace.RegisterItemCollection(edmItemCollection);
+
+            var objectItemCollection = new ObjectItemCollection();
+
+            objectItemCollection.LoadFromAssembly(assemblyWithEnumType, edmItemCollection);
+            objectItemCollection.LoadFromAssembly(assemblyWithEntityType, edmItemCollection);
+            workspace.RegisterItemCollection(objectItemCollection);
+
+            Assert.Equal(
+                "EnumModel.Entity:EnumModel.Entity",
+                workspace.GetMap("EnumModel.Entity", DataSpace.OSpace, DataSpace.OCSpace).Identity);
+        }
+
+
         #endregion
 
         #region attribute loader (non-POCO)
@@ -820,11 +871,6 @@ namespace System.Data.Entity.MetadataMapping
 
         private static MetadataWorkspace CreateMetadataWorkspace(XDocument cSpaceCsdl, Assembly assembly, bool isPOCO)
         {
-            // assembly can actually be an AssemblyBuilder. The following line ensures that we are 
-            // using the actual assembly otherwise an Assert in ObjectItemAttributeAssemblyLoader.LoadType
-            // will fire.
-            assembly = assembly.GetTypes().First().Assembly;
-
             var workspace = new MetadataWorkspace();
 
             EdmItemCollection edmItemCollection;
@@ -835,6 +881,11 @@ namespace System.Data.Entity.MetadataMapping
             }
             workspace.RegisterItemCollection(edmItemCollection);
 
+
+            // assembly can actually be an AssemblyBuilder. The following line ensures that we are 
+            // using the actual assembly otherwise an Assert in ObjectItemAttributeAssemblyLoader.LoadType
+            // will fire.
+            assembly = assembly.GetTypes().First().Assembly;
             var objectItemCollection = new ObjectItemCollection();
 
             if (isPOCO)
