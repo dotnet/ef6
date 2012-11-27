@@ -3403,8 +3403,9 @@ namespace ProductivityApiTests
                 enumerator.MoveNext();
 
                 // close the underlying store connection without explicitly closing entityConnection
+                // (but entityConnection state is updated automatically)
                 entityConnection.StoreConnection.Close();
-                Assert.Equal(ConnectionState.Broken, entityConnection.State);
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // check that we throw when we attempt to use the implicitly-opened entityConnection with closed underlying store connection

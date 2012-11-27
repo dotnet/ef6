@@ -289,17 +289,20 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 try
                 {
-                    if (_entityClientConnectionState == ConnectionState.Open)
+                    if (StoreConnection == null)
                     {
-                        Debug.Assert(StoreConnection != null);
-                        if (StoreConnection.State
-                            != ConnectionState.Open)
-                        {
-                            return ConnectionState.Broken;
-                        }
+                        return _entityClientConnectionState;
                     }
+                    else
+                    {
+                        ConnectionState storeConnectionState = StoreConnection.State;
+                        if (storeConnectionState != _entityClientConnectionState)
+                        {
+                            _entityClientConnectionState = storeConnectionState;
+                        }
 
-                    return _entityClientConnectionState;
+                        return _entityClientConnectionState;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -531,11 +534,6 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
-            if (State != ConnectionState.Closed)
-            {
-                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
-            }
-
             var closeStoreConnectionOnFailure = false;
             try
             {
@@ -587,11 +585,6 @@ namespace System.Data.Entity.Core.EntityClient
             if (_storeConnection == null)
             {
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
-            }
-
-            if (State != ConnectionState.Closed)
-            {
-                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
             }
 
             var closeStoreConnectionOnFailure = false;
