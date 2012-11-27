@@ -14,19 +14,20 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
     using Xunit;
     using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration
-        ;
+            ;
     using DateTimePropertyConfiguration =
-        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
+            System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
     using DecimalPropertyConfiguration =
-        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
+            System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
     using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
-        ;
+            ;
 
     public sealed class DbModelBuilderTests
     {
@@ -900,5 +901,54 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         }
 
         #endregion
+
+        [Fact]
+        public void Entities_returns_configuration_object()
+        {
+            Assert.NotNull(new DbModelBuilder().Entities());
+        }
+
+        [Fact]
+        public void Properties_returns_configuration_object()
+        {
+            Assert.NotNull(new DbModelBuilder().Properties());
+        }
+
+        [Fact]
+        public void Properties_with_type_returns_configuration_object()
+        {
+            var decimalProperty = new MockPropertyInfo(typeof(decimal), "Property1");
+            var nullableDecimalProperty = new MockPropertyInfo(typeof(decimal?), "Property2");
+            var nonDecimalProperty = new MockPropertyInfo(typeof(string), "Property3");
+
+
+            var config = new DbModelBuilder().Properties<decimal>();
+            Assert.NotNull(config);
+            Assert.Equal(1, config.Predicates.Count());
+
+            var predicate = config.Predicates.Single();
+            Assert.True(predicate(decimalProperty));
+            Assert.True(predicate(nullableDecimalProperty));
+            Assert.False(predicate(nonDecimalProperty));
+        }
+
+        [Fact]
+        public void Properties_with_type_throws_when_not_primitive()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            // Ensure non-struct primitive types are allowed
+            modelBuilder.Properties<byte[]>();
+            modelBuilder.Properties<DbGeography>();
+            modelBuilder.Properties<DbGeometry>();
+            modelBuilder.Properties<string>();
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Properties<object>());
+
+            Assert.Equal(
+                Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(typeof(object)),
+                ex.Message);
+        }
     }
 }

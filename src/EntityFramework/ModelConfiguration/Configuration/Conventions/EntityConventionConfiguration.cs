@@ -3,8 +3,12 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     ///     Allows configuration to be performed for a lightweight convention based on
@@ -12,27 +16,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public class EntityConventionConfiguration
     {
-        private readonly List<Func<Type, bool>> _predicates = new List<Func<Type, bool>>();
-        private Action<LightweightEntityConfiguration> _configurationAction;
-        private PropertyConventionConfiguration _propertyConfiguration;
+        private readonly ConventionsConfiguration _conventionsConfiguration;
+        private readonly IEnumerable<Func<Type, bool>> _predicates;
 
-        internal EntityConventionConfiguration()
+        internal EntityConventionConfiguration(ConventionsConfiguration conventionsConfiguration)
+            : this(conventionsConfiguration, Enumerable.Empty<Func<Type, bool>>())
         {
+            DebugCheck.NotNull(conventionsConfiguration);
         }
 
-        internal Action<LightweightEntityConfiguration> ConfigurationAction
+        private EntityConventionConfiguration(ConventionsConfiguration conventionsConfiguration, IEnumerable<Func<Type, bool>> predicates)
         {
-            get { return _configurationAction; }
+            DebugCheck.NotNull(conventionsConfiguration);
+            DebugCheck.NotNull(predicates);
+
+            _conventionsConfiguration = conventionsConfiguration;
+            _predicates = predicates;
         }
 
-        internal List<Func<Type, bool>> Predicates
+        internal ConventionsConfiguration ConventionsConfiguration
+        {
+            get { return _conventionsConfiguration; }
+        }
+
+        internal IEnumerable<Func<Type, bool>> Predicates
         {
             get { return _predicates; }
-        }
-
-        internal PropertyConventionConfiguration PropertyConfiguration
-        {
-            get { return _propertyConfiguration; }
         }
 
         /// <summary>
@@ -40,14 +49,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     predicate.
         /// </summary>
         /// <param name="predicate"> A function to test each entity type for a condition. </param>
-        /// <returns> The same EntityConventionConfiguration instance so that multiple calls can be chained. </returns>
+        /// <returns> An <see cref="EntityConventionConfiguration" /> instance so that multiple calls can be chained. </returns>
         public EntityConventionConfiguration Where(Func<Type, bool> predicate)
         {
             Check.NotNull(predicate, "predicate");
 
-            _predicates.Add(predicate);
+            return new EntityConventionConfiguration(_conventionsConfiguration, _predicates.Append(predicate));
+        }
 
-            return this;
+        /// <summary>
+        ///     Filters the entity types that this convention applies to based on a predicate
+        ///     while capturing a value to use later during configuration.
+        /// </summary>
+        /// <typeparam name="T"> Type of the captured value. </typeparam>
+        /// <param name="capturingPredicate">
+        ///     A function to capture a value for each entity type. If the value is null, the
+        ///     entity type will be filtered out.
+        ///</param>
+        /// <returns> An <see cref="EntityConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained. </returns>
+        public EntityConventionWithHavingConfiguration<T> Having<T>(Func<Type, T> capturingPredicate)
+            where T : class
+        {
+            Check.NotNull(capturingPredicate, "capturingPredicate");
+
+            return new EntityConventionWithHavingConfiguration<T>(
+                _conventionsConfiguration,
+                _predicates,
+                capturingPredicate);
         }
 
         /// <summary>
@@ -63,20 +91,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
-            _configurationAction = entityConfigurationAction;
+            _conventionsConfiguration.Add(new EntityConvention(_predicates, entityConfigurationAction));
         }
 
-        /// <summary>
-        ///     Allows further configuration of the convention based on the properties of
-        ///     the entity types that this convention applies to.
-        /// </summary>
-        /// <returns> A configuration object that can be used to configure this convention based on properties. </returns>
-        public PropertyConventionConfiguration Properties()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
         {
-            var propertyConfiguration = new PropertyConventionConfiguration();
-            _propertyConfiguration = propertyConfiguration;
+            return base.ToString();
+        }
 
-            return propertyConfiguration;
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

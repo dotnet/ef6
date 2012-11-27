@@ -51,5 +51,17 @@ namespace System.Data.Entity.Utilities
 
             return string.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
         }
+
+        public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> source, TSource value)
+        {
+            DebugCheck.NotNull(source);
+
+            foreach (var element in source)
+            {
+                yield return element;
+            }
+
+            yield return value;
+        }
     }
 }

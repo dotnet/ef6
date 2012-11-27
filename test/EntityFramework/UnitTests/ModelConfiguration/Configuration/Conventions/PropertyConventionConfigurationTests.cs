@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -12,7 +13,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Where_evaluates_preconditions()
         {
-            var properties = new PropertyConventionConfiguration();
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => properties.Where(null));
@@ -20,23 +22,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Where_records_predicates()
+        public void Where_configures_predicates()
         {
             Func<PropertyInfo, bool> predicate1 = p => true;
             Func<PropertyInfo, bool> predicate2 = p => false;
-            var properties = new PropertyConventionConfiguration();
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
 
-            properties.Where(predicate1)
+            var config = properties
+                .Where(predicate1)
                 .Where(predicate2);
 
-            Assert.Equal(2, properties.Predicates.Count);
-            Assert.Same(predicate2, properties.Predicates.Last());
+            Assert.NotNull(config);
+            Assert.Same(conventions, config.ConventionsConfiguration);
+            Assert.Equal(2, config.Predicates.Count());
+            Assert.Same(predicate2, config.Predicates.Last());
         }
 
         [Fact]
         public void Configure_evaluates_preconditions()
         {
-            var properties = new PropertyConventionConfiguration();
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => properties.Configure(null));
@@ -44,14 +51,53 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Configure_sets_action()
+        public void Configure_adds_convention()
         {
+            Func<PropertyInfo, bool> predicate = p => true;
             Action<LightweightPropertyConfiguration> configurationAction = c => { };
-            var properties = new PropertyConventionConfiguration();
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
 
-            properties.Configure(configurationAction);
+            properties
+                .Where(predicate)
+                .Configure(configurationAction);
 
-            Assert.Same(configurationAction, properties.ConfigurationAction);
+            Assert.Equal(36, conventions.Conventions.Count());
+
+            var convention = (PropertyConvention)conventions.Conventions.Last();
+            Assert.Equal(1, convention.Predicates.Count());
+            Assert.Same(predicate, convention.Predicates.Single());
+            Assert.Same(configurationAction, convention.PropertyConfigurationAction);
+        }
+
+        [Fact]
+        public void Having_evaluates_preconditions()
+        {
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
+
+            var ex = Assert.Throws<ArgumentNullException>(
+                () => properties.Having<object>(null));
+            Assert.Equal("capturingPredicate", ex.ParamName);
+        }
+
+        [Fact]
+        public void Having_configures_capturing_predicate()
+        {
+            var conventions = new ConventionsConfiguration();
+            var properties = new PropertyConventionConfiguration(conventions);
+            Func<PropertyInfo, bool> predicate = p => true;
+            Func<PropertyInfo, object> capturingPredicate = p => null;
+
+            var config = properties
+                .Where(predicate)
+                .Having(capturingPredicate);
+
+            Assert.NotNull(config);
+            Assert.Same(conventions, config.ConventionsConfiguration);
+            Assert.Equal(1, config.Predicates.Count());
+            Assert.Same(predicate, config.Predicates.Single());
+            Assert.Same(capturingPredicate, config.CapturingPredicate);
         }
     }
 }

@@ -225,6 +225,57 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Begins configuration of a lightweight convention that applies to all entities in
+        ///     the model.
+        /// </summary>
+        /// <returns> A configuration object for the convention. </returns>
+        public EntityConventionConfiguration Entities()
+        {
+            return new EntityConventionConfiguration(_conventionsConfiguration);
+        }
+
+        /// <summary>
+        ///     Begins configuration of a lightweight convention that applies to all properties
+        ///     in the model.
+        /// </summary>
+        /// <returns> A configuration object for the convention. </returns>
+        public PropertyConventionConfiguration Properties()
+        {
+            return new PropertyConventionConfiguration(_conventionsConfiguration);
+        }
+
+        /// <summary>
+        ///     Begins configuration of a lightweight convention that applies to all primitive
+        ///     properties of the specified type in the model.
+        /// </summary>
+        /// <typeparam name="T"> The type of the properties that the convention will apply to. </typeparam>
+        /// <returns> A configuration object for the convention. </returns>
+        /// <remarks>
+        ///     The convention will apply to both nullable and non-nullable properties of the 
+        ///     specified type.
+        /// </remarks>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public PropertyConventionConfiguration Properties<T>()
+        {
+            PrimitiveType primitiveType;
+            if (!typeof(T).IsPrimitiveType(out primitiveType))
+            {
+                throw Error.ModelBuilder_PropertyFilterTypeMustBePrimitive(typeof(T));
+            }
+
+            var config = new PropertyConventionConfiguration(_conventionsConfiguration);
+
+            return config.Where(
+                p =>
+                {
+                    Type propertyType;
+                    p.PropertyType.TryUnwrapNullableType(out propertyType);
+
+                    return propertyType == typeof(T);
+                });
+        }
+
+        /// <summary>
         ///     Provides access to the settings of this DbModelBuilder that deal with conventions.
         /// </summary>
         public virtual ConventionsConfiguration Conventions

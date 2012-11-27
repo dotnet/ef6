@@ -5363,4 +5363,8 @@
   <data name="DbMigrationsConfiguration_ContextType" xml:space="preserve">
     <value>The type '{0}' does not inherit from DbContext. The DbMigrationsConfiguration.ContextType property must be set to a type that inherits from DbContext.</value>
   </data>
+  <data name="ModelBuilder_PropertyFilterTypeMustBePrimitive" xml:space="preserve">
+    <value>The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>
