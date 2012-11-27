@@ -272,7 +272,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T>type '{0}'. Method not found."
+        ///     A string like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found."
         /// </summary>
         internal static string UnableToDispatchAddOrUpdate(object p0)
         {
@@ -400,8 +400,9 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "A configuration for type '{0}' has already been added. To reference the existing configuration use the Entity<T>() or ComplexType
-        ///                                                                                                                                     <T>() methods."
+        ///     A string like "A configuration for type '{0}' has already been added. To reference the existing configuration use the Entity
+        ///     <T>
+        ///         () or ComplexType<T>() methods."
         /// </summary>
         internal static string DuplicateStructuralTypeConfiguration(object p0)
         {
@@ -673,8 +674,9 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]
-        ///                                                                                                <object_name>."
+        ///     A string like "The database name '{0}' is invalid. Database names must be of the form [
+        ///     <schema_name>
+        ///         .]<object_name>."
         /// </summary>
         internal static string InvalidDatabaseName(object p0)
         {
@@ -1170,7 +1172,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the <entityFramework>configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
+        ///     A string like "The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
         /// </summary>
         internal static string Database_BadLegacyInitializerEntry(object p0, object p1)
         {
@@ -1178,7 +1180,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the <entityFramework>configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
+        ///     A string like "Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
         /// </summary>
         internal static string Database_InitializeFromLegacyConfigFailed(object p0, object p1)
         {
@@ -7740,10 +7742,13 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The collection navigation property '{0}' of type '{1}' returned null. For a collection to be initialized automatically, it must be of type ICollection<T>, IList
-        ///                                                                                                                                                                              <T>, ISet
-        ///                                                                                                                                                                                  <T>or of a concrete type that implements ICollection
-        ///                                                                                                                                                                                      <T>and has a parameterless constructor."
+        ///     A string like "The collection navigation property '{0}' of type '{1}' returned null. For a collection to be initialized automatically, it must be of type ICollection
+        ///     <T>
+        ///         , IList
+        ///         <T>
+        ///             , ISet
+        ///             <T>
+        ///                 or of a concrete type that implements ICollection<T> and has a parameterless constructor."
         /// </summary>
         internal static string PocoEntityWrapper_UnableToMaterializeArbitaryNavPropType(object p0, object p1)
         {
@@ -12863,10 +12868,13 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The collection in the projection is of type '{0}'. For a collection to be materialized to a projection, it must be of type ICollection<T>, IList
-        ///                                                                                                                                                              <T>, ISet
-        ///                                                                                                                                                                  <T>or of a concrete type that implements ICollection
-        ///                                                                                                                                                                      <T>and has a parameterless constructor."
+        ///     A string like "The collection in the projection is of type '{0}'. For a collection to be materialized to a projection, it must be of type ICollection
+        ///     <T>
+        ///         , IList
+        ///         <T>
+        ///             , ISet
+        ///             <T>
+        ///                 or of a concrete type that implements ICollection<T> and has a parameterless constructor."
         /// </summary>
         internal static string ObjectQuery_UnableToMaterializeArbitaryProjectionType(object p0)
         {
@@ -13480,6 +13488,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.DbSpatialServices_NotDbSpatialServices, p0);
         }
+
+        /// <summary>
+        ///     A string like "The '{0}' collection used in the call to '{1}' must contain at least one element."
+        /// </summary>
+        internal static string CollectionEmpty(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.CollectionEmpty, p0, p1);
+        }
+
+        /// <summary>
+        ///     A string like "The type '{0}' does not inherit from DbContext. The DbMigrationsConfiguration.ContextType property must be set to a type that inherits from DbContext."
+        /// </summary>
+        internal static string DbMigrationsConfiguration_ContextType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbMigrationsConfiguration_ContextType, p0);
+        }
     }
 
     /// <summary>
@@ -13617,7 +13641,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T>type '{0}'. Method not found."
+        ///     InvalidOperationException with message like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found."
         /// </summary>
         internal static Exception UnableToDispatchAddOrUpdate(object p0)
         {
@@ -13737,8 +13761,9 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "A configuration for type '{0}' has already been added. To reference the existing configuration use the Entity<T>() or ComplexType
-        ///                                                                                                                                                                   <T>() methods."
+        ///     InvalidOperationException with message like "A configuration for type '{0}' has already been added. To reference the existing configuration use the Entity
+        ///     <T>
+        ///         () or ComplexType<T>() methods."
         /// </summary>
         internal static Exception DuplicateStructuralTypeConfiguration(object p0)
         {
@@ -13962,8 +13987,9 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]
-        ///                                                                                                                      <object_name>."
+        ///     ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [
+        ///     <schema_name>
+        ///         .]<object_name>."
         /// </summary>
         internal static Exception InvalidDatabaseName(object p0)
         {
@@ -14435,7 +14461,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the <entityFramework>configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
+        ///     InvalidOperationException with message like "The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
         /// </summary>
         internal static Exception Database_BadLegacyInitializerEntry(object p0, object p1)
         {
@@ -14443,7 +14469,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the <entityFramework>configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
+        ///     InvalidOperationException with message like "Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the <entityFramework> configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468)."
         /// </summary>
         internal static Exception Database_InitializeFromLegacyConfigFailed(object p0, object p1)
         {
@@ -15124,11 +15150,10 @@ namespace System.Data.Entity.Resources
         }
     }
 
-    ///<summary>
-    ///    AutoGenerated resource class. Usage:
-    ///
-    ///    string s = EntityRes.GetString(EntityRes.MyIdenfitier);
-    ///</summary>
+    /// <summary>
+    ///     AutoGenerated resource class. Usage:
+    ///     string s = EntityRes.GetString(EntityRes.MyIdenfitier);
+    /// </summary>
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal sealed class EntityRes
     {
@@ -17193,6 +17218,8 @@ namespace System.Data.Entity.Resources
         internal const string DbSpatialServicesTypeNotFound = "DbSpatialServicesTypeNotFound";
         internal const string DbSpatialServices_InstanceMissing = "DbSpatialServices_InstanceMissing";
         internal const string DbSpatialServices_NotDbSpatialServices = "DbSpatialServices_NotDbSpatialServices";
+        internal const string CollectionEmpty = "CollectionEmpty";
+        internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

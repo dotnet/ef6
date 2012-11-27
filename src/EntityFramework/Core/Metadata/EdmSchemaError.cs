@@ -120,7 +120,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     break;
             }
 
-            if (String.IsNullOrEmpty(SchemaName) && Line < 0
+            if (String.IsNullOrEmpty(SchemaName)
+                && Line < 0
                 && Column < 0)
             {
                 text = String.Format(

@@ -32,7 +32,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             boolValue = false;
             Facet boolFacet;
-            if (type.Facets.TryGetValue(facetName, false, out boolFacet) && boolFacet.Value != null
+            if (type.Facets.TryGetValue(facetName, false, out boolFacet)
+                && boolFacet.Value != null
                 && !Helper.IsUnboundedFacetValue(boolFacet))
             {
                 boolValue = (bool)boolFacet.Value;
@@ -46,7 +47,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             intValue = 0;
             Facet intFacet;
-            if (type.Facets.TryGetValue(facetName, false, out intFacet) && intFacet.Value != null
+            if (type.Facets.TryGetValue(facetName, false, out intFacet)
+                && intFacet.Value != null
                 && !Helper.IsUnboundedFacetValue(intFacet))
             {
                 intValue = (int)intFacet.Value;
@@ -60,7 +62,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             byteValue = 0;
             Facet byteFacet;
-            if (type.Facets.TryGetValue(facetName, false, out byteFacet) && byteFacet.Value != null
+            if (type.Facets.TryGetValue(facetName, false, out byteFacet)
+                && byteFacet.Value != null
                 && !Helper.IsUnboundedFacetValue(byteFacet))
             {
                 byteValue = (byte)byteFacet.Value;
@@ -72,7 +75,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         internal static bool TryGetPrimitiveTypeKind(TypeUsage type, out PrimitiveTypeKind typeKind)
         {
-            if (type != null && type.EdmType != null
+            if (type != null
+                && type.EdmType != null
                 && type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
             {
                 typeKind = ((PrimitiveType)type.EdmType).PrimitiveTypeKind;
@@ -151,14 +155,14 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return TryGetIntFacetValue(type, ProviderManifest.MaxLengthFacetName, out maxLength);
         }
 
-        ///<summary>
-        ///    It will return true if there there non-boolean facets types that
-        ///    are nulled out.
-        ///    This function needs to be removed till the
-        ///    HasNulledOutFacetValues of TypeUsage class become public
-        ///</summary>
-        ///<param name="type"> </param>
-        ///<returns> </returns>
+        /// <summary>
+        ///     It will return true if there there non-boolean facets types that
+        ///     are nulled out.
+        ///     This function needs to be removed till the
+        ///     HasNulledOutFacetValues of TypeUsage class become public
+        /// </summary>
+        /// <param name="type"> </param>
+        /// <returns> </returns>
         internal static bool HasNulledOutFacetValues(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);

@@ -55,8 +55,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Try and collapse the case expression into a single expression. 
-        ///     If every single then/else expression in the CaseOp is equivalent, then we can 
+        ///     Try and collapse the case expression into a single expression.
+        ///     If every single then/else expression in the CaseOp is equivalent, then we can
         ///     simply replace the CaseOp with the first then/expression. Specifically,
         ///     case when w1 then t1 when w2 then t2 ... when wn then tn else e end
         ///     => t1
@@ -88,13 +88,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Try and remove spurious branches from the case expression. 
-        ///     If any of the WHEN clauses is the 'FALSE' expression, simply remove that 
+        ///     Try and remove spurious branches from the case expression.
+        ///     If any of the WHEN clauses is the 'FALSE' expression, simply remove that
         ///     branch (when-then pair) from the case expression.
-        ///     If any of the WHEN clauses is the 'TRUE' expression, then all branches to the 
-        ///     right of it are irrelevant - eliminate them. Eliminate this branch as well, 
+        ///     If any of the WHEN clauses is the 'TRUE' expression, then all branches to the
+        ///     right of it are irrelevant - eliminate them. Eliminate this branch as well,
         ///     and make the THEN expression of this branch the ELSE expression for the entire
-        ///     Case expression. If the WHEN expression represents the first branch, then 
+        ///     Case expression. If the WHEN expression represents the first branch, then
         ///     replace the entire case expression by the corresponding THEN expression
         /// </summary>
         /// <param name="context"> rule processing context </param>
@@ -207,20 +207,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     If the else clause of the CaseOp is another CaseOp, when two can be collapsed into one. 
-        ///     In particular, 
-        /// 
-        ///     CASE 
-        ///     WHEN W1 THEN T1 
-        ///     WHEN W2 THEN T2 ... 
-        ///     ELSE (CASE 
-        ///     WHEN WN1 THEN TN1, … 
-        ///     ELSE E) 
-        ///             
-        ///     Is transformed into 
-        /// 
-        ///     CASE 
-        ///     WHEN W1 THEN T1 
+        ///     If the else clause of the CaseOp is another CaseOp, when two can be collapsed into one.
+        ///     In particular,
+        ///     CASE
+        ///     WHEN W1 THEN T1
+        ///     WHEN W2 THEN T2 ...
+        ///     ELSE (CASE
+        ///     WHEN WN1 THEN TN1, …
+        ///     ELSE E)
+        ///     Is transformed into
+        ///     CASE
+        ///     WHEN W1 THEN T1
         ///     WHEN W2 THEN T2 ...
         ///     WHEN WN1  THEN TN1 ...
         ///     ELSE E
@@ -304,7 +301,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // ensure that this character does not occur anywhere else. And finally, ensure
             // that the pattern is atmost one character longer than the string itself
             var wildCardIndex = pattern.IndexOf('%');
-            if ((wildCardIndex == -1) ||
+            if ((wildCardIndex == -1)
+                ||
                 (wildCardIndex != pattern.Length - 1)
                 ||
                 (pattern.Length > str.Length + 1))
@@ -401,7 +399,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessNotOverConstantPredicate);
 
         /// <summary>
-        ///     Transform 
+        ///     Transform
         ///     AND(x, true) => x;
         ///     AND(true, x) => x
         ///     AND(x, false) => false
@@ -489,9 +487,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessIsNullOverConstant);
 
         /// <summary>
-        ///     Convert a 
-        ///     IsNull(constant) 
-        ///     to just the 
+        ///     Convert a
+        ///     IsNull(constant)
+        ///     to just the
         ///     False predicate
         /// </summary>
         /// <param name="context"> </param>
@@ -560,11 +558,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessIsNullOverVarRef);
 
         /// <summary>
-        ///     Convert a 
-        ///     IsNull(VarRef(v)) 
-        ///     to just the 
+        ///     Convert a
+        ///     IsNull(VarRef(v))
+        ///     to just the
         ///     False predicate
-        ///    
         ///     if v is guaranteed to be non nullable.
         /// </summary>
         /// <param name="context"> </param>

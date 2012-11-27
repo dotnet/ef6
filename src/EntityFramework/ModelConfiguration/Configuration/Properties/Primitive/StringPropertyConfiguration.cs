@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Used to configure a <see cref="String" /> property of an entity type or
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private StringPropertyConfiguration(StringPropertyConfiguration source)
             : base(source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             IsUnicode = source.IsUnicode;
         }

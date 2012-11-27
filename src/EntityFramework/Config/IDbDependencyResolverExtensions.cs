@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Extension methods to call the <see cref="IDbDependencyResolver.GetService" /> method using
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Config
         /// <returns> The resolved dependency, or null if the resolver could not resolve it. </returns>
         public static T GetService<T>(this IDbDependencyResolver resolver, object key)
         {
-            Contract.Requires(resolver != null);
+            Check.NotNull(resolver, "resolver");
 
             return (T)resolver.GetService(typeof(T), key);
         }
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Config
         /// <returns> The resolved dependency, or null if the resolver could not resolve it. </returns>
         public static T GetService<T>(this IDbDependencyResolver resolver)
         {
-            Contract.Requires(resolver != null);
+            Check.NotNull(resolver, "resolver");
 
             return (T)resolver.GetService(typeof(T), null);
         }
@@ -48,8 +48,8 @@ namespace System.Data.Entity.Config
         /// <returns> The resolved dependency, or null if the resolver could not resolve it. </returns>
         public static object GetService(this IDbDependencyResolver resolver, Type type)
         {
-            Contract.Requires(resolver != null);
-            Contract.Requires(type != null);
+            Check.NotNull(resolver, "resolver");
+            Check.NotNull(type, "type");
 
             return resolver.GetService(type, null);
         }

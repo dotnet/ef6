@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a mapping from a model function import to a store composable or non-composable function.
@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal FunctionImportMapping(EdmFunction functionImport, EdmFunction targetFunction)
         {
-            Contract.Requires(functionImport != null);
-            Contract.Requires(targetFunction != null);
+            DebugCheck.NotNull(functionImport);
+            DebugCheck.NotNull(targetFunction);
 
             FunctionImport = functionImport;
             TargetFunction = targetFunction;

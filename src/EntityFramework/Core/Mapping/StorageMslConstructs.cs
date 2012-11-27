@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Defines all the string constrcuts defined in CS MSL specification
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
                 return NamespaceUriV2;
             }
 
-            Contract.Assert(Equals(version, MappingVersionV3), "added new version?");
+            Debug.Assert(Equals(version, MappingVersionV3), "added new version?");
 
             return NamespaceUriV3;
         }

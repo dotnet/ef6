@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -37,12 +36,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public CascadableNavigationPropertyConfiguration HasForeignKey<TKey>(
             Expression<Func<TDependentEntityType, TKey>> foreignKeyExpression)
         {
-            Contract.Requires(foreignKeyExpression != null);
+            Check.NotNull(foreignKeyExpression, "foreignKeyExpression");
 
             NavigationPropertyConfiguration.Constraint
                 = new ForeignKeyConstraintConfiguration(
                     foreignKeyExpression.GetSimplePropertyAccessList()
-                        .Select(p => p.Single()));
+                                        .Select(p => p.Single()));
 
             return this;
         }

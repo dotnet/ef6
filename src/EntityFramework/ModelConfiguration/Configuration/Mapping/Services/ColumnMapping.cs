@@ -5,9 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     [DebuggerDisplay("{Column.Name}")]
@@ -18,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public ColumnMapping(EdmProperty column)
         {
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(column);
             _column = column;
             _propertyMappings = new List<PropertyMappingSpecification>();
         }

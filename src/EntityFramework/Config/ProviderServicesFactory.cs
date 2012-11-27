@@ -5,7 +5,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Reflection;
 
@@ -42,7 +41,7 @@ namespace System.Data.Entity.Config
 
         public virtual DbProviderServices GetInstanceByConvention(string providerInvariantName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+            DebugCheck.NotEmpty(providerInvariantName);
 
             var providerTemplate =
                 providerInvariantName.Equals("System.Data.SqlClient", StringComparison.OrdinalIgnoreCase)

@@ -8,7 +8,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml.Linq;
 
@@ -27,8 +26,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public MigratorLoggingDecorator(MigratorBase innerMigrator, MigrationsLogger logger)
             : base(innerMigrator)
         {
-            Contract.Requires(innerMigrator != null);
-            Contract.Requires(logger != null);
+            Check.NotNull(innerMigrator, "innerMigrator");
+            Check.NotNull(logger, "logger");
 
             _logger = logger;
             _logger.Verbose(Strings.LoggingTargetDatabase(base.TargetDatabase));

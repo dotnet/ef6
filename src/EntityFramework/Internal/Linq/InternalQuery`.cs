@@ -7,7 +7,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="internalContext"> The backing context. </param>
         public InternalQuery(InternalContext internalContext)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
         }
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public InternalQuery(InternalContext internalContext, ObjectQuery objectQuery)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
             _objectQuery = (ObjectQuery<TElement>)objectQuery;
@@ -80,6 +81,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> A new query containing the defined include path. </returns>
         public virtual IInternalQuery<TElement> Include(string path)
         {
+            DebugCheck.NotEmpty(path);
+
             return new InternalQuery<TElement>(_internalContext, _objectQuery.Include(path));
         }
 
@@ -108,7 +111,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             get
             {
-                Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+                Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
                 return _objectQuery;
             }
@@ -132,7 +135,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         protected void InitializeQuery(ObjectQuery<TElement> objectQuery)
         {
-            Contract.Assert(_objectQuery == null, "InternalQuery should not be initialized twice.");
+            Debug.Assert(_objectQuery == null, "InternalQuery should not be initialized twice.");
 
             _objectQuery = objectQuery;
         }
@@ -148,7 +151,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The query string. </returns>
         public override string ToString()
         {
-            Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+            Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
             return _objectQuery.ToTraceString();
         }
@@ -164,7 +167,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             get
             {
-                Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+                Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
                 return ((IQueryable)_objectQuery).Expression;
             }
@@ -177,7 +180,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             get
             {
-                Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+                Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
                 return _objectQuery.ObjectQueryProvider;
             }
@@ -201,7 +204,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The query results. </returns>
         public virtual IEnumerator<TElement> GetEnumerator()
         {
-            Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+            Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
             InternalContext.Initialize();
 
@@ -229,7 +232,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <returns> The query results. </returns>
         public virtual IDbAsyncEnumerator<TElement> GetAsyncEnumerator()
         {
-            Contract.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
+            Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 
             InternalContext.Initialize();
 

@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     public partial class ConventionsConfiguration
     {
@@ -17,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             public EdmConventionDispatcher(IConvention convention, EdmModel model, DataSpace dataSpace = DataSpace.CSpace)
             {
-                Contract.Requires(convention != null);
-                Contract.Requires(model != null);
+                Check.NotNull(convention, "convention");
+                Check.NotNull(model, "model");
 
                 _convention = convention;
                 _model = model;

@@ -116,8 +116,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type"> CLR type. </param>
         /// <param name="cspaceType"> CSpace Type </param>
-        /// <param name="newOSpaceType"> OSpace type created based on CLR <paramref name="type" /> and <paramref name="cspaceType" /> </param>
-        /// <returns> <c>true</c> if the type was created successfully. Otherwise <c>false</c> . </returns>
+        /// <param name="newOSpaceType">
+        ///     OSpace type created based on CLR <paramref name="type" /> and <paramref name="cspaceType" />
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the type was created successfully. Otherwise <c>false</c> .
+        /// </returns>
         private bool TryCreateType(Type type, EdmType cspaceType, out EdmType newOSpaceType)
         {
             Debug.Assert(type != null, "type != null");
@@ -152,8 +156,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type"> CLR type. </param>
         /// <param name="cspaceType"> CSpace Type </param>
-        /// <param name="newOSpaceType"> OSpace type created based on CLR <paramref name="type" /> and <paramref name="cspaceType" /> </param>
-        /// <returns> <c>true</c> if the type was created successfully. Otherwise <c>false</c> . </returns>
+        /// <param name="newOSpaceType">
+        ///     OSpace type created based on CLR <paramref name="type" /> and <paramref name="cspaceType" />
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the type was created successfully. Otherwise <c>false</c> .
+        /// </returns>
         private bool TryCreateStructuralType(Type type, StructuralType cspaceType, out EdmType newOSpaceType)
         {
             Debug.Assert(type != null, "type != null");
@@ -215,9 +223,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="enumType"> CLR type to create OSpace type from. </param>
         /// <param name="cspaceEnumType"> CSpace type used to get namespace and name for the newly created OSpace type. </param>
-        /// <param name="newOSpaceType"> New enum OSpace type built based on CLR <paramref name="enumType" /> and <paramref
-        ///      name="cspaceEnumType" /> or null if the type could not be built. </param>
-        /// <returns> <c>true</c> if the type was built successfully. <c>false</c> otherwise. </returns>
+        /// <param name="newOSpaceType">
+        ///     New enum OSpace type built based on CLR <paramref name="enumType" /> and
+        ///     <paramref
+        ///         name="cspaceEnumType" />
+        ///     or null if the type could not be built.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the type was built successfully. <c>false</c> otherwise.
+        /// </returns>
         private bool TryCreateEnumType(Type enumType, EnumType cspaceEnumType, out EdmType newOSpaceType)
         {
             Debug.Assert(enumType != null, "enumType != null");
@@ -246,7 +260,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="enumType"> OSpace CLR enum type. </param>
         /// <param name="cspaceEnumType"> CSpace EDM enum type. </param>
-        /// <returns> <c>true</c> if types match. <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if types match. <c>false</c> otherwise.
+        /// </returns>
         private bool UnderlyingEnumTypesMatch(Type enumType, EnumType cspaceEnumType)
         {
             Debug.Assert(enumType != null, "enumType != null");
@@ -283,7 +299,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="enumType"> OSpace CLR enum type. </param>
         /// <param name="cspaceEnumType"> CSpace EDM enum type. </param>
-        /// <returns> <c>true</c> if members match. <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if members match. <c>false</c> otherwise.
+        /// </returns>
         private bool EnumMembersMatch(Type enumType, EnumType cspaceEnumType)
         {
             Debug.Assert(enumType != null, "enumType != null");
@@ -476,7 +494,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private void TrackClosure(Type type)
         {
-            if (SourceAssembly != type.Assembly &&
+            if (SourceAssembly != type.Assembly
+                &&
                 !CacheEntry.ClosureAssemblies.Contains(type.Assembly)
                 &&
                 !(type.IsGenericType &&
@@ -672,7 +691,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Creates an Enum property based on <paramref name="clrProperty" /> and adds it to the parent structural type.
         /// </summary>
-        /// <param name="type"> CLR type owning <paramref name="clrProperty" /> . </param>
+        /// <param name="type">
+        ///     CLR type owning <paramref name="clrProperty" /> .
+        /// </param>
         /// <param name="ospaceType"> OSpace type the created property will be added to. </param>
         /// <param name="cspaceProperty"> Corresponding property from CSpace. </param>
         /// <param name="clrProperty"> CLR property used to build an Enum property. </param>

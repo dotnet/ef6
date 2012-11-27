@@ -6,7 +6,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -14,7 +13,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     {
         public static string CreateMigrationId(string migrationName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
+            DebugCheck.NotEmpty(migrationName);
 
             return UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migrationName;
         }
@@ -32,7 +31,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         public MigrationAssembly(Assembly migrationsAssembly, string migrationsNamespace)
         {
-            Contract.Requires(migrationsAssembly != null);
+            DebugCheck.NotNull(migrationsAssembly);
 
             _migrations
                 = (from t in migrationsAssembly.GetAccessibleTypes()
@@ -68,7 +67,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         public virtual DbMigration GetMigration(string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             var migration
                 = (DbMigration)_migrations

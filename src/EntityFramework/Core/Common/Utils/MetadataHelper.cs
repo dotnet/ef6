@@ -313,16 +313,16 @@ namespace System.Data.Entity.Core.Common.Utils
 
             //find EntitySetMappings where one of the mapping fragment maps some type to the given table
             return containerMapping.EntitySetMaps
-                .Where(
-                    map => map.TypeMappings.Any(
-                        typeMap => typeMap.MappingFragments.Any(
-                            mappingFrag => mappingFrag.TableSet.EdmEquals(table)
-                                       )
-                               )
+                                   .Where(
+                                       map => map.TypeMappings.Any(
+                                           typeMap => typeMap.MappingFragments.Any(
+                                               mappingFrag => mappingFrag.TableSet.EdmEquals(table)
+                                                          )
+                                                  )
                 )
-                .Select(m => m.Set)
-                .Cast<EntitySet>()
-                .Distinct();
+                                   .Select(m => m.Set)
+                                   .Cast<EntitySet>()
+                                   .Distinct();
         }
 
         // effects: Returns this type and its sub types - for refs, gets the

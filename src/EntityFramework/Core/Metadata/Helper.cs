@@ -13,8 +13,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     /// <summary>
     ///     Helper Class for EDM Metadata - this class contains all the helper methods
-    ///     which only accesses public methods/properties. The other partial class contains all 
-    ///     helper methods which just uses internal methods/properties. The reason why we 
+    ///     which only accesses public methods/properties. The other partial class contains all
+    ///     helper methods which just uses internal methods/properties. The reason why we
     ///     did this for allowing view gen to happen at compile time - all the helper
     ///     methods that view gen or mapping uses are in this class. Rest of the
     ///     methods are in this class
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     The method wraps the GetAttribute method on XPathNavigator.
-        ///     The problem with using the method directly is that the 
+        ///     The problem with using the method directly is that the
         ///     Get Attribute method does not differentiate the absence of an attribute and
         ///     having an attribute with Empty string value. In both cases the value returned is an empty string.
-        ///     So in case of optional attributes, it becomes hard to distinguish the case whether the 
+        ///     So in case of optional attributes, it becomes hard to distinguish the case whether the
         ///     xml contains the attribute with empty string or doesn't contain the attribute
         ///     This method will return null if the attribute is not present and otherwise will return the
         ///     attribute value.
@@ -509,8 +509,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Verifies whether the given <paramref name="typeKind" /> is a valid underlying type for an enumeration type.
         /// </summary>
-        /// <param name="typeKind"> <see cref="PrimitiveTypeKind" /> to verifiy. </param>
-        /// <returns> <c>true</c> if the <paramref name="typeKind" /> is a valid underlying type for an enumeration type. Otherwise <c>false</c> . </returns>
+        /// <param name="typeKind">
+        ///     <see cref="PrimitiveTypeKind" /> to verifiy.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the <paramref name="typeKind" /> is a valid underlying type for an enumeration type. Otherwise <c>false</c> .
+        /// </returns>
         internal static bool IsSupportedEnumUnderlyingType(PrimitiveTypeKind typeKind)
         {
             return typeKind == PrimitiveTypeKind.Byte ||
@@ -535,7 +539,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="underlyingTypeKind"> Underlying type of the enumeration type. </param>
         /// <param name="value"> Value to check. </param>
-        /// <returns> <c>true</c> if the <paramref name="value" /> is in range of the <paramref name="underlyingTypeKind" /> . <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if the <paramref name="value" /> is in range of the <paramref name="underlyingTypeKind" /> . <c>false</c> otherwise.
+        /// </returns>
         internal static bool IsEnumMemberValueInRange(PrimitiveTypeKind underlyingTypeKind, long value)
         {
             Debug.Assert(IsSupportedEnumUnderlyingType(underlyingTypeKind), "Unsupported underlying type.");
@@ -544,11 +550,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Checks whether the <paramref name="type" /> is enum type and if this is the case returns its underlying type. Otherwise 
+        ///     Checks whether the <paramref name="type" /> is enum type and if this is the case returns its underlying type. Otherwise
         ///     returns <paramref name="type" /> after casting it to PrimitiveType.
         /// </summary>
         /// <param name="type"> Type to convert to primitive type. </param>
-        /// <returns> Underlying type if <paramref name="type" /> is enumeration type. Otherwise <paramref name="type" /> itself. </returns>
+        /// <returns>
+        ///     Underlying type if <paramref name="type" /> is enumeration type. Otherwise <paramref name="type" /> itself.
+        /// </returns>
         /// <remarks>
         ///     This method should be called only for primitive or enumeration types.
         /// </remarks>
@@ -566,7 +574,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Returns underlying EDM type of a given enum <paramref name="type" />.
         /// </summary>
         /// <param name="type"> Enum type whose underlying EDM type needs to be returned. Must not be null. </param>
-        /// <returns> The underlying EDM type of a given enum <paramref name="type" /> . </returns>
+        /// <returns>
+        ///     The underlying EDM type of a given enum <paramref name="type" /> .
+        /// </returns>
         internal static PrimitiveType GetUnderlyingEdmTypeForEnumType(EdmType type)
         {
             Debug.Assert(type != null, "type != null");

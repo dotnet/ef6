@@ -53,9 +53,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return m_property.Name.GetHashCode();
         }
 
-        ///<summary>
-        ///</summary>
-        ///<returns> </returns>
+        /// <summary>
+        /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             return m_property.Name;

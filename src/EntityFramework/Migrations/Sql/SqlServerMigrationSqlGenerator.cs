@@ -11,14 +11,14 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
 
     /// <summary>
-    ///     Provider to convert provider agnostic migration operations into SQL commands 
+    ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against a Microsoft SQL Server database.
     /// </summary>
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
@@ -46,6 +46,9 @@ namespace System.Data.Entity.Migrations.Sql
         public override IEnumerable<MigrationStatement> Generate(
             IEnumerable<MigrationOperation> migrationOperations, string providerManifestToken)
         {
+            Check.NotNull(migrationOperations, "migrationOperations");
+            Check.NotNull(providerManifestToken, "providerManifestToken");
+
             _statements = new List<MigrationStatement>();
             _generatedSchemas = new HashSet<string>();
             _variableCounter = 0;
@@ -54,7 +57,7 @@ namespace System.Data.Entity.Migrations.Sql
             {
                 _providerManifest
                     = DbProviderServices.GetProviderServices(connection)
-                        .GetProviderManifest(providerManifestToken);
+                                        .GetProviderManifest(providerManifestToken);
             }
 
             migrationOperations.Each<dynamic>(o => Generate(o));
@@ -79,7 +82,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="createTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateTableOperation createTableOperation)
         {
-            Contract.Requires(createTableOperation != null);
+            Check.NotNull(createTableOperation, "createTableOperation");
 
             var databaseName = createTableOperation.Name.ToDatabaseName();
 
@@ -104,8 +107,8 @@ namespace System.Data.Entity.Migrations.Sql
 
         private void WriteCreateTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(createTableOperation != null);
-            Contract.Requires(writer != null);
+            DebugCheck.NotNull(createTableOperation);
+            DebugCheck.NotNull(writer);
 
             writer.WriteLine("CREATE TABLE " + Name(createTableOperation.Name) + " (");
             writer.Indent++;
@@ -154,8 +157,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="table"> The table to mark as a system table. </param>
         protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            Contract.Requires(createTableOperation != null);
-            Contract.Requires(writer != null);
+            Check.NotNull(createTableOperation, "createTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.WriteLine("BEGIN TRY");
 
@@ -175,7 +178,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="createTableOperation"> The name of the schema to create. </param>
         protected virtual void GenerateCreateSchema(string schema)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(schema));
+            Check.NotEmpty(schema, "schema");
 
             using (var writer = Writer())
             {
@@ -198,7 +201,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="addForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddForeignKeyOperation addForeignKeyOperation)
         {
-            Contract.Requires(addForeignKeyOperation != null);
+            Check.NotNull(addForeignKeyOperation, "addForeignKeyOperation");
 
             using (var writer = Writer())
             {
@@ -230,7 +233,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropForeignKeyOperation dropForeignKeyOperation)
         {
-            Contract.Requires(dropForeignKeyOperation != null);
+            Check.NotNull(dropForeignKeyOperation, "dropForeignKeyOperation");
 
             using (var writer = Writer())
             {
@@ -250,7 +253,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="createIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateIndexOperation createIndexOperation)
         {
-            Contract.Requires(createIndexOperation != null);
+            Check.NotNull(createIndexOperation, "createIndexOperation");
 
             using (var writer = Writer())
             {
@@ -280,7 +283,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation)
         {
-            Contract.Requires(dropIndexOperation != null);
+            Check.NotNull(dropIndexOperation, "dropIndexOperation");
 
             using (var writer = Writer())
             {
@@ -300,7 +303,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="addPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddPrimaryKeyOperation addPrimaryKeyOperation)
         {
-            Contract.Requires(addPrimaryKeyOperation != null);
+            Check.NotNull(addPrimaryKeyOperation, "addPrimaryKeyOperation");
 
             using (var writer = Writer())
             {
@@ -323,7 +326,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropPrimaryKeyOperation dropPrimaryKeyOperation)
         {
-            Contract.Requires(dropPrimaryKeyOperation != null);
+            Check.NotNull(dropPrimaryKeyOperation, "dropPrimaryKeyOperation");
 
             using (var writer = Writer())
             {
@@ -343,7 +346,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="addColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddColumnOperation addColumnOperation)
         {
-            Contract.Requires(addColumnOperation != null);
+            Check.NotNull(addColumnOperation, "addColumnOperation");
 
             using (var writer = Writer())
             {
@@ -388,7 +391,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation)
         {
-            Contract.Requires(dropColumnOperation != null);
+            Check.NotNull(dropColumnOperation, "dropColumnOperation");
 
             using (var writer = Writer())
             {
@@ -434,7 +437,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="alterColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation)
         {
-            Contract.Requires(alterColumnOperation != null);
+            Check.NotNull(alterColumnOperation, "alterColumnOperation");
 
             var column = alterColumnOperation.Column;
 
@@ -486,7 +489,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropTableOperation dropTableOperation)
         {
-            Contract.Requires(dropTableOperation != null);
+            Check.NotNull(dropTableOperation, "dropTableOperation");
 
             using (var writer = Writer())
             {
@@ -504,7 +507,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="sqlOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(SqlOperation sqlOperation)
         {
-            Contract.Requires(sqlOperation != null);
+            Check.NotNull(sqlOperation, "sqlOperation");
 
             Statement(sqlOperation.Sql, sqlOperation.SuppressTransaction);
         }
@@ -516,7 +519,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="renameColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameColumnOperation renameColumnOperation)
         {
-            Contract.Requires(renameColumnOperation != null);
+            Check.NotNull(renameColumnOperation, "renameColumnOperation");
 
             using (var writer = Writer())
             {
@@ -539,7 +542,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="renameTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation)
         {
-            Contract.Requires(renameTableOperation != null);
+            Check.NotNull(renameTableOperation, "renameTableOperation");
 
             using (var writer = Writer())
             {
@@ -560,7 +563,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="moveTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(MoveTableOperation moveTableOperation)
         {
-            Contract.Requires(moveTableOperation != null);
+            Check.NotNull(moveTableOperation, "moveTableOperation");
 
             var newSchema = moveTableOperation.NewSchema ?? "dbo";
 
@@ -586,8 +589,8 @@ namespace System.Data.Entity.Migrations.Sql
             }
             else
             {
-                Contract.Assert(moveTableOperation.CreateTableOperation != null);
-                Contract.Assert(!string.IsNullOrWhiteSpace(moveTableOperation.ContextKey));
+                Debug.Assert(moveTableOperation.CreateTableOperation != null);
+                Debug.Assert(!string.IsNullOrWhiteSpace(moveTableOperation.ContextKey));
 
                 using (var writer = Writer())
                 {
@@ -627,8 +630,8 @@ namespace System.Data.Entity.Migrations.Sql
 
         private void Generate(ColumnModel column, IndentedTextWriter writer)
         {
-            Contract.Requires(column != null);
-            Contract.Requires(writer != null);
+            DebugCheck.NotNull(column);
+            DebugCheck.NotNull(writer);
 
             writer.Write(Quote(column.Name));
             writer.Write(" ");
@@ -671,7 +674,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="historyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(HistoryOperation historyOperation)
         {
-            Contract.Requires(historyOperation != null);
+            Check.NotNull(historyOperation, "historyOperation");
 
             using (var writer = Writer())
             {
@@ -680,10 +683,10 @@ namespace System.Data.Entity.Migrations.Sql
                         {
                             var sql
                                 = c.CommandText
-                                    .Replace("insert ", "INSERT ")
-                                    .Replace("values ", "VALUES ")
-                                    .Replace("delete ", "DELETE ")
-                                    .Replace("where ", "WHERE "); // prettify
+                                   .Replace("insert ", "INSERT ")
+                                   .Replace("values ", "VALUES ")
+                                   .Replace("delete ", "DELETE ")
+                                   .Replace("where ", "WHERE "); // prettify
 
                             // inline params
                             c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
@@ -703,7 +706,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(byte[] defaultValue)
         {
-            Contract.Requires(defaultValue != null);
+            Check.NotNull(defaultValue, "defaultValue");
 
             return "0x" + defaultValue.ToHexString();
         }
@@ -760,7 +763,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(string defaultValue)
         {
-            Contract.Assert(defaultValue != null);
+            Check.NotNull(defaultValue, "defaultValue");
 
             return "'" + defaultValue + "'";
         }
@@ -806,8 +809,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(object defaultValue)
         {
-            Contract.Assert(defaultValue != null);
-            Contract.Assert(defaultValue.GetType().IsValueType);
+            Check.NotNull(defaultValue, "defaultValue");
+            Debug.Assert(defaultValue.GetType().IsValueType);
 
             return string.Format(CultureInfo.InvariantCulture, "{0}", defaultValue);
         }
@@ -820,7 +823,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> SQL representing the data type. </returns>
         protected virtual string BuildColumnType(ColumnModel column)
         {
-            Contract.Requires(column != null);
+            Check.NotNull(column, "column");
 
             if (column.IsTimestamp)
             {
@@ -882,7 +885,7 @@ namespace System.Data.Entity.Migrations.Sql
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected virtual string Name(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             var databaseName = name.ToDatabaseName();
 
@@ -907,7 +910,7 @@ namespace System.Data.Entity.Migrations.Sql
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(string sql, bool suppressTransaction = false)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Check.NotEmpty(sql, "sql");
 
             _statements.Add(
                 new MigrationStatement
@@ -919,7 +922,6 @@ namespace System.Data.Entity.Migrations.Sql
 
         /// <summary>
         ///     Gets a new <see cref="IndentedTextWriter" /> that can be used to build SQL.
-        /// 
         ///     This is just a helper method to create a writer. Writing to the writer will
         ///     not cause SQL to be registered for execution. You must pass the generated
         ///     SQL to the Statement method.
@@ -937,7 +939,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
         protected void Statement(IndentedTextWriter writer)
         {
-            Contract.Requires(writer != null);
+            Check.NotNull(writer, "writer");
 
             Statement(writer.InnerWriter.ToString());
         }

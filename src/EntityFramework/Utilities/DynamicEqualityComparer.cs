@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
 
     internal sealed class DynamicEqualityComparer<T> : IEqualityComparer<T>
         where T : class
@@ -12,7 +11,7 @@ namespace System.Data.Entity.Utilities
 
         public DynamicEqualityComparer(Func<T, T, bool> func)
         {
-            Contract.Requires(func != null);
+            DebugCheck.NotNull(func);
 
             _func = func;
         }

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Runtime.Serialization;
 
@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core
         /// <param name="keyValue"> The key value </param>
         public EntityKeyMember(string keyName, object keyValue)
         {
-            Contract.Requires(keyName != null);
-            Contract.Requires(keyValue != null);
+            Check.NotNull(keyName, "keyName");
+            Check.NotNull(keyValue, "keyValue");
             _keyName = keyName;
             _keyValue = keyValue;
         }
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core
             get { return _keyName; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 ValidateWritable(_keyName);
                 _keyName = value;
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core
             get { return _keyValue; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 ValidateWritable(_keyValue);
                 _keyValue = value;

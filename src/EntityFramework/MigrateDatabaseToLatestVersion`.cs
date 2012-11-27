@@ -5,7 +5,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
@@ -38,7 +38,7 @@ namespace System.Data.Entity
         /// <param name="connectionStringName"> The name of the connection string to use for migration. </param>
         public MigrateDatabaseToLatestVersion(string connectionStringName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(connectionStringName));
+            Check.NotEmpty(connectionStringName, "connectionStringName");
 
             _config = new TMigrationsConfiguration
                           {
@@ -49,6 +49,8 @@ namespace System.Data.Entity
         /// <inheritdoc />
         public void InitializeDatabase(TContext context)
         {
+            Check.NotNull(context, "context");
+
             var migrator = new DbMigrator(_config);
             migrator.Update();
         }

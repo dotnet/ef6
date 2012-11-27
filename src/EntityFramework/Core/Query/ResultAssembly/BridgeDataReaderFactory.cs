@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Query.InternalTrees;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class BridgeDataReaderFactory
     {
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     The primary factory method to produce the BridgeDataReader; given a store data 
-        ///     reader and a column map, create the BridgeDataReader, hooking up the IteratorSources  
+        ///     The primary factory method to produce the BridgeDataReader; given a store data
+        ///     reader and a column map, create the BridgeDataReader, hooking up the IteratorSources
         ///     and ResultColumn Hierarchy.  All construction of top level data readers go through
         ///     this method.
         /// </summary>
@@ -32,10 +32,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         public virtual DbDataReader Create(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
         {
-            Contract.Requires(storeDataReader != null);
-            Contract.Requires(columnMap != null);
-            Contract.Requires(workspace != null);
-            Contract.Requires(nextResultColumnMaps != null);
+            DebugCheck.NotNull(storeDataReader);
+            DebugCheck.NotNull(columnMap);
+            DebugCheck.NotNull(workspace);
+            DebugCheck.NotNull(nextResultColumnMaps);
 
             var shaperInfo = CreateShaperInfo(storeDataReader, columnMap, workspace);
             DbDataReader result = new BridgeDataReader(
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         private KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>> CreateShaperInfo(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace)
         {
-            Contract.Requires(storeDataReader != null);
-            Contract.Requires(columnMap != null);
-            Contract.Requires(workspace != null);
+            DebugCheck.NotNull(storeDataReader);
+            DebugCheck.NotNull(columnMap);
+            DebugCheck.NotNull(workspace);
 
             var cacheManager = workspace.GetQueryCacheManager();
             const MergeOption NoTracking = MergeOption.NoTracking;

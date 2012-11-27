@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
@@ -85,8 +86,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.  
-        /// 
+        ///     Providers should override this to return information specific to their provider.
         ///     This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
@@ -133,7 +133,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in EDM.
         /// </summary>
         /// <param name="storeType"> A TypeUsage encapsulating a store type and a set of facets </param>
@@ -141,6 +141,8 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
+            Check.NotNull(storeType, "storeType");
+
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
@@ -271,7 +273,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in SQL Server, taking the store version into consideration.
         /// </summary>
         /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
@@ -279,6 +281,8 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
+            Check.NotNull(edmType, "edmType");
+
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;

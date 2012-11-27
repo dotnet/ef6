@@ -12,7 +12,6 @@ namespace System.Data.Entity.ModelConfiguration
 
     /// <summary>
     ///     Allows configuration to be performed for an complex type in a model.
-    /// 
     ///     A ComplexTypeConfiguration can be obtained via the ComplexType method on
     ///     <see cref="DbModelBuilder" /> or a custom type derived from ComplexTypeConfiguration
     ///     can be registered via the Configurations property on <see cref="DbModelBuilder" />.

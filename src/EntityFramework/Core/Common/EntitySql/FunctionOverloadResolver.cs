@@ -139,8 +139,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // If there is a best candidate, check it for ambiguity against composite ranks of other candidates
             // 
-            if (bestCandidate != null &&
-                !isAmbiguous &&
+            if (bestCandidate != null
+                &&
+                !isAmbiguous
+                &&
                 argTypesFlat.Count > 1
                 && // best candidate may be ambiguous only in the case of 2 or more arguments
                 ranks.Count > 1)

@@ -10,9 +10,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -123,8 +123,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal ExpressionConverter(Funcletizer funcletizer, Expression expression)
         {
-            Contract.Requires(funcletizer != null);
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(funcletizer);
+            DebugCheck.NotNull(expression);
 
             // Funcletize the expression (identify subexpressions that should be evaluated
             // locally)
@@ -375,8 +375,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     after first ensuring that the mapping dictionary has been instantiated.
         /// </summary>
         /// <param name="expression"> The expression for which Span information should be added </param>
-        /// <param name="span"> The Span information, which may be <c>null</c> . If <c>null</c> , no attempt is made to update the dictionary of span mappings. </param>
-        /// <returns> The original <paramref name="expression" /> argument, to allow <c>return AddSpanMapping(expression, span)</c> scenarios </returns>
+        /// <param name="span">
+        ///     The Span information, which may be <c>null</c> . If <c>null</c> , no attempt is made to update the dictionary of span mappings.
+        /// </param>
+        /// <returns>
+        ///     The original <paramref name="expression" /> argument, to allow <c>return AddSpanMapping(expression, span)</c> scenarios
+        /// </returns>
         private DbExpression AddSpanMapping(DbExpression expression, Span span)
         {
             if (span != null
@@ -409,7 +413,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <param name="expression"> The expression for which Span information should be retrieved. </param>
         /// <param name="span"> Will contain the Span information for the specified expression if it is present in the Span mapping dictionary. </param>
-        /// <returns> <c>true</c> if Span information was retrieved for the specified expression and <paramref name="span" /> now contains this information; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if Span information was retrieved for the specified expression and <paramref name="span" /> now contains this information; otherwise <c>false</c> .
+        /// </returns>
         private bool TryGetSpan(DbExpression expression, out Span span)
         {
             if (_spanMappings != null)
@@ -445,8 +451,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     as follows:
         ///     - If neither <paramref name="left" /> nor <paramref name="right" /> have Span information, no changes are made
         ///     - If one of <paramref name="left" /> or <paramref name="right" /> has Span information, that single Span information
-        ///     entry is removed from the Span mapping dictionary and used to create a new entry that maps from the <paramref
-        ///      name="to" />
+        ///     entry is removed from the Span mapping dictionary and used to create a new entry that maps from the
+        ///     <paramref
+        ///         name="to" />
         ///     expression to the Span information.
         ///     - If both <paramref name="left" /> and <paramref name="right" /> have Span information, both entries are removed
         ///     from the Span mapping dictionary, a new Span is created that contains the union of the original Spans, and
@@ -564,10 +571,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private TypeUsage GetCastTargetType(TypeUsage fromType, Type toClrType, Type fromClrType, bool preserveCastForDateTime)
         {
             // An inlined ObjectQuery or an IOrderedQueryable expression being cast to IQueryable for use in a sequence method is a no-op.
-            if (fromClrType != null &&
-                fromClrType.IsGenericType && toClrType.IsGenericType &&
+            if (fromClrType != null
+                &&
+                fromClrType.IsGenericType
+                && toClrType.IsGenericType
+                &&
                 (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
-                 || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) &&
+                 || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
+                &&
                 (toClrType.GetGenericTypeDefinition() == typeof(IQueryable<>)
                  || toClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
                 &&
@@ -598,7 +609,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static TypeUsage ValidateAndAdjustCastTypes(TypeUsage toType, TypeUsage fromType, Type toClrType, Type fromClrType)
         {
             // only support primitives if real casting is involved
-            if (toType == null || !TypeSemantics.IsScalarType(toType)
+            if (toType == null
+                || !TypeSemantics.IsScalarType(toType)
                 || !TypeSemantics.IsScalarType(fromType))
             {
                 throw new NotSupportedException(Strings.ELinq_UnsupportedCast(DescribeClrType(fromClrType), DescribeClrType(toClrType)));
@@ -630,7 +642,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         /// <summary>
         ///     Determines if an instance of fromType can be assigned to an instance of toType using
-        ///     CLR semantics. in case of primitive type, it must rely on identity since unboxing primitive requires 
+        ///     CLR semantics. in case of primitive type, it must rely on identity since unboxing primitive requires
         ///     exact match. for nominal types, rely on subtyping.
         /// </summary>
         private static bool CanOmitCast(TypeUsage fromType, TypeUsage toType, bool preserveCastForDateTime)
@@ -643,7 +655,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             //Note: we could also call here TypeSemantics.IsPrimitiveType(TypeUsage type, PrimitiveTypeKind primitiveTypeKind),
             //  but that checks again whether the type is primitive
-            if (isPrimitiveType && preserveCastForDateTime
+            if (isPrimitiveType
+                && preserveCastForDateTime
                 && ((PrimitiveType)fromType.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.DateTime)
             {
                 return false;
@@ -777,6 +790,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             public override DbExpression Visit(DbParameterReferenceExpression expression)
             {
+                Check.NotNull(expression, "expression");
+
                 if (objectParameters.Contains(expression.ParameterName))
                 {
                     // A DbNullExpression is required for null values; DbConstantExpression otherwise.
@@ -1139,7 +1154,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 case BuiltInTypeKind.RowType:
                     {
                         InitializerMetadata initializerMetadata;
-                        if (!InitializerMetadata.TryGetInitializerMetadata(edmType, out initializerMetadata) ||
+                        if (!InitializerMetadata.TryGetInitializerMetadata(edmType, out initializerMetadata)
+                            ||
                             initializerMetadata.Kind == InitializerMetadataKind.ProjectionInitializer
                             ||
                             initializerMetadata.Kind == InitializerMetadataKind.ProjectionNew)
@@ -1410,12 +1426,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         /// <summary>
         ///     Helper method for String.StartsWith, String.EndsWith and String.Contains
-        /// 
         ///     object.Method(argument), where Method is one of String.StartsWith, String.EndsWith or
         ///     String.Contains is translated into:
-        ///     1) If argument is a constant or parameter and the provider supports escaping: 
+        ///     1) If argument is a constant or parameter and the provider supports escaping:
         ///     object like ("%") + argument1 + ("%"), where argument1 is argument escaped by the provider
-        ///     and ("%") are appended on the begining/end depending on whether 
+        ///     and ("%") are appended on the begining/end depending on whether
         ///     insertPercentAtStart/insertPercentAtEnd are specified
         ///     2) Otherwise:
         ///     object.Method(argument) ->  defaultTranslator
@@ -1488,8 +1503,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Prepare the given input patternValue into a pattern to be used in a LIKE expression by 
-        ///     first escaping it by the provider and then appending "%" and the beginging/end depending 
+        ///     Prepare the given input patternValue into a pattern to be used in a LIKE expression by
+        ///     first escaping it by the provider and then appending "%" and the beginging/end depending
         ///     on whether insertPercentAtStart/insertPercentAtEnd is specified.
         /// </summary>
         private string PreparePattern(string patternValue, bool insertPercentAtStart, bool insertPercentAtEnd, out bool specifyEscape)
@@ -1525,7 +1540,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Translates the arguments into DbExpressions 
+        ///     Translates the arguments into DbExpressions
         ///     and creates a canonical function with the given functionName and these arguments
         /// </summary>
         /// <param name="functionName"> Should represent a non-aggregate canonical function </param>

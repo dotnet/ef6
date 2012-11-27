@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
@@ -103,8 +102,8 @@ namespace System.Data.Entity.Core.EntityClient
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection)
             : this(workspace, connection, false)
         {
-            Contract.Requires(workspace != null);
-            Contract.Requires(connection != null);
+            Check.NotNull(workspace, "workspace");
+            Check.NotNull(connection, "connection");
         }
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace System.Data.Entity.Core.EntityClient
                 // Therefore it is sufficient to identify whether EC(MW, DbConnection) is used
                 if (_userConnectionOptions == null)
                 {
-                    Contract.Assert(_storeConnection != null);
+                    Debug.Assert(_storeConnection != null);
 
                     return string.Format(
                         CultureInfo.InvariantCulture,
@@ -228,7 +227,7 @@ namespace System.Data.Entity.Core.EntityClient
             [ResourceExposure(ResourceScope.Machine)] // Exposes the file names as part of ConnectionString which are a Machine resource
             [ResourceConsumption(ResourceScope.Machine)]
             // For ChangeConnectionString method call. But the paths are not created in this method.
-                set
+            set
             {
                 ValidateChangesPermitted();
                 ChangeConnectionString(value);
@@ -1111,7 +1110,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Create a key to be used with the MetadataCache from a connection options 
+        ///     Create a key to be used with the MetadataCache from a connection options
         ///     object.
         /// </summary>
         /// <param name="paths"> A list of metadata file paths </param>
@@ -1121,7 +1120,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="resultCount"> On entry, the expected size of the result (unused if buildResult is false). After execution, the effective result. </param>
         /// <param name="result"> The key. </param>
         /// <remarks>
-        ///     This method should be called once with buildResult=false, to get 
+        ///     This method should be called once with buildResult=false, to get
         ///     the size of the resulting key, and once with buildResult=true
         ///     and the size specification.
         /// </remarks>
@@ -1208,7 +1207,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Clears the current DbTransaction and the transaction the user enlisted the connection in 
+        ///     Clears the current DbTransaction and the transaction the user enlisted the connection in
         ///     with EnlistTransaction() method.
         /// </summary>
         private void ClearTransactions()
@@ -1234,7 +1233,9 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Event handler invoked when the transaction has completed (either by committing or rolling back).
         /// </summary>
         /// <param name="sender"> The source of the event. </param>
-        /// <param name="e"> The <see cref="TransactionEventArgs" /> that contains the event data. </param>
+        /// <param name="e">
+        ///     The <see cref="TransactionEventArgs" /> that contains the event data.
+        /// </param>
         /// <remarks>
         ///     Note that to avoid threading issues we never reset the <see cref=" _enlistedTransaction" /> field here.
         /// </remarks>

@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -539,8 +539,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             _knownSingluarWords = new List<string>(
                 _irregularPluralsList.Keys.Concat(_assimilatedClassicalInflectionList.Keys).Concat(_oSuffixList.Keys).
-                    Concat(
-                        _classicalInflectionList.Keys).Concat(_irregularVerbList.Keys).Concat(_uninflectiveWords).Except
+                                      Concat(
+                                          _classicalInflectionList.Keys).Concat(_irregularVerbList.Keys).Concat(_uninflectiveWords).Except
                     (
                         _knownConflictingPluralList)); // see the _knowConflictingPluralList comment above
 
@@ -1312,7 +1312,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         {
             // return false when the word is "[\s]*" or leading or tailing with spaces
             // or contains non alphabetical characters
-            if (string.IsNullOrEmpty(word.Trim()) || !word.Equals(word.Trim())
+            if (string.IsNullOrEmpty(word.Trim())
+                || !word.Equals(word.Trim())
                 ||
                 Regex.IsMatch(word, "[^a-zA-Z\\s]"))
             {
@@ -1327,7 +1328,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsUninflective(string word)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(word));
+            DebugCheck.NotEmpty(word);
 
             if (PluralizationServiceUtil.DoesWordContainSuffix(word, _uninflectiveSuffixes, Culture)
                 || (!word.ToLower(Culture).Equals(word) && word.EndsWith("ese", false, Culture))
@@ -1350,7 +1351,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsNoOpWord(string word)
         {
-            if (!IsAlphabets(word) ||
+            if (!IsAlphabets(word)
+                ||
                 word.Length <= 1
                 ||
                 _pronounList.Contains(word.ToLowerInvariant()))
@@ -1375,6 +1377,9 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         /// <param name="plural"> </param>
         public void AddWord(string singular, string plural)
         {
+            DebugCheck.NotEmpty(singular);
+            DebugCheck.NotEmpty(plural);
+
             if (_userDictionary.ExistsInSecond(plural))
             {
                 throw new ArgumentException(Strings.DuplicateEntryInUserDictionary("plural", plural), "plural");

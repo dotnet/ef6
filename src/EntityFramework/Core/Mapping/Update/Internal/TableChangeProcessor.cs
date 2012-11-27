@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -33,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="table"> Table for which changes are being processed. </param>
         internal TableChangeProcessor(EntitySet table)
         {
-            Contract.Requires(table != null);
+            DebugCheck.NotNull(table);
 
             m_table = table;
 
@@ -234,7 +233,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 // if the duplication is due to shared principals, there is a duplicate key exception
                 var stateEntries = SourceInterpreter.GetAllStateEntries(change, compiler.m_translator, m_table)
-                    .Concat(SourceInterpreter.GetAllStateEntries(other, compiler.m_translator, m_table));
+                                                    .Concat(SourceInterpreter.GetAllStateEntries(other, compiler.m_translator, m_table));
                 throw new UpdateException(Strings.Update_DuplicateKeys, null, stateEntries.Cast<ObjectStateEntry>().Distinct());
             }
             else

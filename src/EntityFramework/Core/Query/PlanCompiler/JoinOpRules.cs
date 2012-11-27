@@ -109,7 +109,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Try and handle "project" on both sides only if we're not dealing with 
             // an LOJ. 
             //
-            if ((joinNode.Op.OpType != OpType.LeftOuterJoin) &&
+            if ((joinNode.Op.OpType != OpType.LeftOuterJoin)
+                &&
                 (joinNode.Child0.Op.OpType == OpType.Project)
                 &&
                 (joinNode.Child1.Op.OpType == OpType.Project))
@@ -257,12 +258,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
         ///     CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
-        /// 
         ///     InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
         ///     InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
-        /// 
         ///     LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
-        /// 
         ///     Note that the predicate on the right table in a left-outer-join cannot be pulled
         ///     up above the join.
         /// </summary>

@@ -15,7 +15,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
 
@@ -57,8 +56,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");
-            Debug.Assert(commandTree != null, "CreateCommandDefinition did not validate commandTree argument?");
+            Check.NotNull(providerManifest, "providerManifest");
+            Check.NotNull(commandTree, "commandTree");
 
             var prototype = CreateCommand(providerManifest, commandTree);
             var result = CreateCommandDefinition(prototype);
@@ -76,8 +75,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            Contract.Requires(providerManifest != null);
-            Contract.Requires(commandTree != null);
+            DebugCheck.NotNull(providerManifest);
+            DebugCheck.NotNull(commandTree);
 
             var sqlManifest = (providerManifest as SqlProviderManifest);
             if (sqlManifest == null)
@@ -138,7 +137,8 @@ namespace System.Data.Entity.SqlServer
             if (null != parameters
                 && 0 < parameters.Count)
             {
-                if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete &&
+                if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete
+                    &&
                     commandTree.CommandTreeKind != DbCommandTreeKind.Insert
                     &&
                     commandTree.CommandTreeKind != DbCommandTreeKind.Update)
@@ -157,6 +157,9 @@ namespace System.Data.Entity.SqlServer
 
         protected override void SetDbParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
         {
+            Check.NotNull(parameter, "parameter");
+            Check.NotNull(parameterType, "parameterType");
+
             // Ensure a value that can be used with SqlParameter
             value = EnsureSqlParameterValue(value);
 
@@ -221,6 +224,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
+            Check.NotNull(connection, "connection");
+
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             if (string.IsNullOrEmpty(sqlConnection.ConnectionString))
@@ -409,15 +414,18 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         ///     Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
         ///     Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
-        ///     of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in <paramref
-        ///      name="value" />.
+        ///     of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
+        ///     <paramref
+        ///         name="value" />
+        ///     .
         ///     If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
-        ///     CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of 
+        ///     CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
         ///     DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
         /// </summary>
         internal static object EnsureSqlParameterValue(object value)
         {
-            if (value != null &&
+            if (value != null
+                &&
                 value != DBNull.Value
                 &&
                 Type.GetTypeCode(value.GetType()) == TypeCode.Object)
@@ -587,7 +595,9 @@ namespace System.Data.Entity.SqlServer
             {
                 result = 4000;
             }
-            else if (type == SqlDbType.Char || type == SqlDbType.VarChar ||
+            else if (type == SqlDbType.Char
+                     || type == SqlDbType.VarChar
+                     ||
                      type == SqlDbType.Binary
                      || type == SqlDbType.VarBinary)
             {
@@ -731,6 +741,9 @@ namespace System.Data.Entity.SqlServer
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(providerManifestToken, "providerManifestToken");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             var version = SqlVersionUtils.GetSqlVersion(providerManifestToken);
             return CreateObjectsScript(version, storeItemCollection);
         }
@@ -738,16 +751,19 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         ///     Create the database and the database objects.
         ///     If initial catalog is not specified, but AttachDBFilename is specified, we generate a random database name based on the AttachDBFilename.
-        ///     Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name. 
+        ///     Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name.
         ///     However if we try to replicate the name under which it would be attached, the following scenario would fail:
         ///     The file does not exist, but registered with database.
-        ///     The user calls:  If (DatabaseExists) DeleteDatabase 
+        ///     The user calls:  If (DatabaseExists) DeleteDatabase
         ///     CreateDatabase
         ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
@@ -888,7 +904,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> </returns>
         private static string GetMdfFileName(string attachDBFile)
         {
-            Contract.Requires(!string.IsNullOrEmpty(attachDBFile));
+            DebugCheck.NotEmpty(attachDBFile);
 
             return ExpandDataDirectory(attachDBFile);
         }
@@ -901,15 +917,17 @@ namespace System.Data.Entity.SqlServer
         ///     if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
         ///     3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
         ///     if the there are no databases corresponding to the given file return false, otherwise throw.
-        /// 
-        ///     Note: We open the connection to cover the scenario when the mdf exists, but is not attached. 
-        ///     Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case. 
+        ///     Note: We open the connection to cover the scenario when the mdf exists, but is not attached.
+        ///     Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case.
         ///     Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
         ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 
@@ -988,8 +1006,7 @@ namespace System.Data.Entity.SqlServer
         ///     2.  Else if AttachDBFilename is specified (F) drop all the databases corresponding to F
         ///     if none throw
         ///     3.  If niether the catalog not the file name is specified - throw
-        /// 
-        ///     Note that directly deleting the files does not work for a remote server.  However, even for not attached 
+        ///     Note that directly deleting the files does not work for a remote server.  However, even for not attached
         ///     databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
         /// </summary>
         /// <param name="connection"> </param>
@@ -998,6 +1015,9 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);

@@ -5,13 +5,12 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     internal class DbConfigurationLoader
     {
         public virtual InternalConfiguration TryLoadFromConfig(AppConfig config)
         {
-            Contract.Requires(config != null);
+            DebugCheck.NotNull(config);
 
             var typeName = config.ConfigurationTypeName;
             if (string.IsNullOrWhiteSpace(typeName))
@@ -34,7 +33,7 @@ namespace System.Data.Entity.Config
 
         public virtual bool AppConfigContainsDbConfigurationType(AppConfig config)
         {
-            Contract.Requires(config != null);
+            DebugCheck.NotNull(config);
 
             return !string.IsNullOrWhiteSpace(config.ConfigurationTypeName);
         }

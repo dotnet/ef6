@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -17,6 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void Apply(EdmModel model)
         {
+            Check.NotNull(model, "model");
+
             // Query the model for candidate complex types.
             //   - The rules for complex type discovery are as follows:
             //      1) The entity does not have a key or base type.
@@ -52,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             = associationType.GetOtherEnd(declaringEnd).GetEntityType()
                         let navigationProperties
                             = declaringEntity.NavigationProperties
-                            .Where(n => n.ResultEnd.GetEntityType() == entityType)
+                                             .Where(n => n.ResultEnd.GetEntityType() == entityType)
                         select new
                                    {
                                        DeclaringEnd = declaringEnd,
@@ -98,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                             var complexProperty
                                 = association.DeclaringEntityType
-                                    .AddComplexProperty(navigationProperty.Name, complexType);
+                                             .AddComplexProperty(navigationProperty.Name, complexType);
 
                             foreach (var annotation in navigationProperty.Annotations)
                             {

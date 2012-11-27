@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     /// <summary>
@@ -16,6 +17,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, PrimitivePropertyConfiguration configuration,
             RequiredAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if (configuration.IsNullable == null)
             {
                 configuration.IsNullable = false;

@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly int _firstScopeIndex;
 
         /// <summary>
-        ///     Index of the scope region. 
+        ///     Index of the scope region.
         ///     Outer scope regions have smaller index value than inner scope regions.
         /// </summary>
         internal int ScopeRegionIndex

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Migrations
     using System.ComponentModel;
     using System.Data.Entity.Migrations.Builders;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -42,8 +42,8 @@ namespace System.Data.Entity.Migrations
         protected internal TableBuilder<TColumns> CreateTable<TColumns>(
             string name, Func<ColumnBuilder, TColumns> columnsAction, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(columnsAction != null);
+            Check.NotEmpty(name, "name");
+            Check.NotNull(columnsAction, "columnsAction");
 
             var createTableOperation = new CreateTableOperation(name, anonymousArguments);
 
@@ -52,21 +52,21 @@ namespace System.Data.Entity.Migrations
             var columns = columnsAction(new ColumnBuilder());
 
             columns.GetType().GetProperties()
-                .Each(
-                    (p, i) =>
-                        {
-                            var columnModel = p.GetValue(columns, null) as ColumnModel;
+                   .Each(
+                       (p, i) =>
+                           {
+                               var columnModel = p.GetValue(columns, null) as ColumnModel;
 
-                            if (columnModel != null)
-                            {
-                                if (string.IsNullOrWhiteSpace(columnModel.Name))
-                                {
-                                    columnModel.Name = p.Name;
-                                }
+                               if (columnModel != null)
+                               {
+                                   if (string.IsNullOrWhiteSpace(columnModel.Name))
+                                   {
+                                       columnModel.Name = p.Name;
+                                   }
 
-                                createTableOperation.Columns.Add(columnModel);
-                            }
-                        });
+                                   createTableOperation.Columns.Add(columnModel);
+                               }
+                           });
 
             return new TableBuilder<TColumns>(createTableOperation, this);
         }
@@ -91,9 +91,9 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentColumn));
-            Contract.Requires(!string.IsNullOrWhiteSpace(principalTable));
+            Check.NotEmpty(dependentTable, "dependentTable");
+            Check.NotEmpty(dependentColumn, "dependentColumn");
+            Check.NotEmpty(principalTable, "principalTable");
 
             AddForeignKey(
                 dependentTable,
@@ -125,10 +125,14 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
-            Contract.Requires(dependentColumns != null);
-            Contract.Requires(dependentColumns.Any());
-            Contract.Requires(!string.IsNullOrWhiteSpace(principalTable));
+            Check.NotEmpty(dependentTable, "dependentTable");
+            Check.NotNull(dependentColumns, "dependentColumns");
+            Check.NotEmpty(principalTable, "principalTable");
+
+            if (!dependentColumns.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("dependentColumns", "AddForeignKey"));
+            }
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation(anonymousArguments)
@@ -158,8 +162,8 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(string dependentTable, string name, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(dependentTable, "dependentTable");
+            Check.NotEmpty(name, "name");
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
@@ -186,9 +190,9 @@ namespace System.Data.Entity.Migrations
             string principalTable,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentColumn));
-            Contract.Requires(!string.IsNullOrWhiteSpace(principalTable));
+            Check.NotEmpty(dependentTable, "dependentTable");
+            Check.NotEmpty(dependentColumn, "dependentColumn");
+            Check.NotEmpty(principalTable, "principalTable");
 
             DropForeignKey(
                 dependentTable,
@@ -212,10 +216,14 @@ namespace System.Data.Entity.Migrations
             string principalTable,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(dependentTable));
-            Contract.Requires(dependentColumns != null);
-            Contract.Requires(dependentColumns.Any());
-            Contract.Requires(!string.IsNullOrWhiteSpace(principalTable));
+            Check.NotEmpty(dependentTable, "dependentTable");
+            Check.NotNull(dependentColumns, "dependentColumns");
+            Check.NotEmpty(principalTable, "principalTable");
+
+            if (!dependentColumns.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("dependentColumns", "DropForeignKey"));
+            }
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
@@ -237,7 +245,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropTable(string name, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             AddOperation(new DropTableOperation(name, anonymousArguments));
         }
@@ -251,7 +259,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void MoveTable(string name, string newSchema, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             AddOperation(new MoveTableOperation(name, newSchema, anonymousArguments));
         }
@@ -265,8 +273,8 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void RenameTable(string name, string newName, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(!string.IsNullOrWhiteSpace(newName));
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
 
             AddOperation(new RenameTableOperation(name, newName, anonymousArguments));
         }
@@ -282,9 +290,9 @@ namespace System.Data.Entity.Migrations
         protected internal void RenameColumn(
             string table, string name, string newName, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(!string.IsNullOrWhiteSpace(newName));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
 
             AddOperation(new RenameColumnOperation(table, name, newName, anonymousArguments));
         }
@@ -300,9 +308,9 @@ namespace System.Data.Entity.Migrations
         protected internal void AddColumn(
             string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(columnAction != null);
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(columnAction, "columnAction");
 
             var columnModel = columnAction(new ColumnBuilder());
 
@@ -321,8 +329,8 @@ namespace System.Data.Entity.Migrations
         protected internal void DropColumn(
             string table, string name, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
 
             AddOperation(new DropColumnOperation(table, name, anonymousArguments));
         }
@@ -338,9 +346,9 @@ namespace System.Data.Entity.Migrations
         protected internal void AlterColumn(
             string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(columnAction != null);
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(columnAction, "columnAction");
 
             var columnModel = columnAction(new ColumnBuilder());
 
@@ -365,8 +373,8 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(column));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(column, "column");
 
             AddPrimaryKey(table, new[] { column }, name, anonymousArguments);
         }
@@ -385,9 +393,13 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(columns != null);
-            Contract.Requires(columns.Any());
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+
+            if (!columns.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("columns", "AddPrimaryKey"));
+            }
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation(anonymousArguments)
@@ -410,8 +422,8 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropPrimaryKey(string table, string name, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
@@ -431,7 +443,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropPrimaryKey(string table, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
+            Check.NotEmpty(table, "table");
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
@@ -458,8 +470,8 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(column));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(column, "column");
 
             CreateIndex(table, new[] { column }, unique, name, anonymousArguments);
         }
@@ -480,9 +492,13 @@ namespace System.Data.Entity.Migrations
             string name = null,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(columns != null);
-            Contract.Requires(columns.Any());
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+
+            if (!columns.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("columns", "CreateIndex"));
+            }
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
@@ -509,8 +525,8 @@ namespace System.Data.Entity.Migrations
             string name,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
@@ -534,9 +550,13 @@ namespace System.Data.Entity.Migrations
             string[] columns,
             object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(columns != null);
-            Contract.Requires(columns.Any());
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+
+            if (!columns.Any())
+            {
+                throw new ArgumentException(Strings.CollectionEmpty("columns", "DropIndex"));
+            }
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
@@ -559,7 +579,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected internal void Sql(string sql, bool suppressTransaction = false, object anonymousArguments = null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Check.NotEmpty(sql, "sql");
 
             AddOperation(
                 new SqlOperation(sql, anonymousArguments)
@@ -570,7 +590,7 @@ namespace System.Data.Entity.Migrations
 
         internal void AddOperation(MigrationOperation migrationOperation)
         {
-            Contract.Requires(migrationOperation != null);
+            Check.NotNull(migrationOperation, "migrationOperation");
 
             _operations.Add(migrationOperation);
         }

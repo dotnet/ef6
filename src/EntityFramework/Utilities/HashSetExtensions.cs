@@ -3,14 +3,13 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
 
     internal static class HashSetExtensions
     {
         public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> items)
         {
-            Contract.Requires(set != null);
-            Contract.Requires(items != null);
+            DebugCheck.NotNull(set);
+            DebugCheck.NotNull(items);
 
             foreach (var i in items)
             {

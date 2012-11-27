@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Extensions
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml.Linq;
 
     internal static class XContainerExtensions
@@ -10,8 +10,8 @@ namespace System.Data.Entity.Migrations.Extensions
         public static XElement GetOrCreateElement(
             this XContainer container, string elementName, params XAttribute[] attributes)
         {
-            Contract.Assert(container != null);
-            Contract.Assert(!string.IsNullOrWhiteSpace(elementName));
+            DebugCheck.NotNull(container);
+            DebugCheck.NotEmpty(elementName);
 
             var element = container.Element(elementName);
             if (element == null)

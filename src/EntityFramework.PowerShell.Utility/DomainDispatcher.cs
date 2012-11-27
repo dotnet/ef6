@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    using System.Diagnostics.Contracts;
     using System.Management.Automation;
     using EnvDTE;
 
@@ -18,7 +17,11 @@ namespace System.Data.Entity.Migrations.Utilities
 
         public DomainDispatcher(PSCmdlet cmdlet)
         {
-            Contract.Requires(cmdlet != null);
+            // Not using Check here because this assembly is very small and without resources
+            if (cmdlet == null)
+            {
+                throw new ArgumentNullException("cmdlet");
+            }
 
             _cmdlet = cmdlet;
             _dte = (DTE)cmdlet.GetVariableValue("DTE");
@@ -26,28 +29,44 @@ namespace System.Data.Entity.Migrations.Utilities
 
         public void WriteLine(string text)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(text));
+            // Not using Check here because this assembly is very small and without resources
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentNullException("text");
+            }
 
             _cmdlet.Host.UI.WriteLine(text);
         }
 
         public void WriteWarning(string text)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(text));
+            // Not using Check here because this assembly is very small and without resources
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentNullException("text");
+            }
 
             _cmdlet.WriteWarning(text);
         }
 
         public void WriteVerbose(string text)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(text));
+            // Not using Check here because this assembly is very small and without resources
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentNullException("text");
+            }
 
             _cmdlet.WriteVerbose(text);
         }
 
         public void OpenFile(string fileName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(fileName));
+            // Not using Check here because this assembly is very small and without resources
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                throw new ArgumentNullException("fileName");
+            }
 
             _dte.ItemOperations.OpenFile(fileName);
         }

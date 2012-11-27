@@ -31,8 +31,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     Create a typed-table definition corresponding to an entityset (if specified)
-        /// 
-        ///     The table has exactly one column - the type of the column is specified by 
+        ///     The table has exactly one column - the type of the column is specified by
         ///     the "type" parameter. This table is considered to be un-"flattened"
         /// </summary>
         /// <param name="type"> type of each element (row) of the table </param>
@@ -45,13 +44,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Creates a "flattened" table definition. 
-        /// 
-        ///     The table has one column for each specified property in the "properties" parameter. 
+        ///     Creates a "flattened" table definition.
+        ///     The table has one column for each specified property in the "properties" parameter.
         ///     The name and datatype of each table column are taken from the corresponding property.
-        /// 
         ///     The keys of the table (if any) are those specified in the "keyProperties" parameter
-        /// 
         ///     The table may correspond to an entity set (if the entityset parameter was non-null)
         /// </summary>
         /// <param name="properties"> prperties corresponding to columns of the table </param>

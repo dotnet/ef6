@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private bool _currentIsNull;
 
         /// <summary>
-        ///     An EntityRecordInfo, with EntityKey and EntitySet populated; set 
+        ///     An EntityRecordInfo, with EntityKey and EntitySet populated; set
         ///     by the GatherData expression.
         /// </summary>
         private EntityRecordInfo _currentEntityRecordInfo;
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private EntityRecordInfo _pendingEntityRecordInfo;
 
         /// <summary>
-        ///     The column values; set by the GatherData expression. Really ought 
+        ///     The column values; set by the GatherData expression. Really ought
         ///     to be in the Shaper.State.
         /// </summary>
         internal object[] CurrentColumnValues;
@@ -67,7 +67,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     records.  We keep the pending values separate from the current ones because
         ///     we may have a nested reader in the middle, and while we're reading forward
         ///     on the nested reader we we'll blast over the pending values.
-        /// 
         ///     This should be called as part of the data reader's Read() method.
         /// </summary>
         internal void AcceptPendingValues()
@@ -221,7 +220,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Returns true when the column at the ordinal specified is 
+        ///     Returns true when the column at the ordinal specified is
         ///     a record or reader column that requires special handling.
         /// </summary>
         internal bool IsNestedObject(int ordinal)
@@ -245,7 +244,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #region called from Shaper's Element Expression
 
         /// <summary>
-        ///     Called from the Element expression on the Coordinator to gather all 
+        ///     Called from the Element expression on the Coordinator to gather all
         ///     the data for the record; we just turn around and call the expression
         ///     we build on the RecordStateFactory.
         /// </summary>
@@ -257,7 +256,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Called by the GatherData expression to set the data for the 
+        ///     Called by the GatherData expression to set the data for the
         ///     specified column value
         /// </summary>
         internal bool SetColumnValue(int ordinal, object value)
@@ -267,7 +266,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Called by the GatherData expression to set the data for the 
+        ///     Called by the GatherData expression to set the data for the
         ///     EntityRecordInfo
         /// </summary>
         internal bool SetEntityRecordInfo(EntityKey entityKey, EntitySet entitySet)

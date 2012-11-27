@@ -8,9 +8,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    ///     This class is responsible for keeping track of which assemblies we have already 
-    ///     considered so we don't reconsider them again. 
-    /// 
+    ///     This class is responsible for keeping track of which assemblies we have already
+    ///     considered so we don't reconsider them again.
     ///     The current rules for an assembly to be "seen" is
     ///     1. It is already in our dictionary
     ///     AND

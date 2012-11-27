@@ -6,14 +6,14 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     internal class UpdateDatabaseCommand : MigrationsDomainCommand
     {
         public UpdateDatabaseCommand(
             string sourceMigration, string targetMigration, bool script, bool force, bool verbose)
         {
-            Contract.Requires(
+            Debug.Assert(
                 string.IsNullOrWhiteSpace(sourceMigration) || script,
                 "sourceMigration can only be specified when script is true");
 

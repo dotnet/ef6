@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Validates an input enumerable argument with a specific element type,
@@ -69,31 +69,47 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         public Func<TElementIn, int, string> GetName { get; set; }
 
         /// <summary>
-        ///     Validates the input enumerable, converting each input element and producing the final instance of <typeparamref
-        ///      name="TResult" /> as a result.
+        ///     Validates the input enumerable, converting each input element and producing the final instance of
+        ///     <typeparamref
+        ///         name="TResult" />
+        ///     as a result.
         /// </summary>
-        /// <returns> The instance of <typeparamref name="TResult" /> produced by calling the <see cref="CreateResult" /> function on the list of elements produced by calling the <see
-        ///      cref="ConvertElement" /> function on each element of the input enumerable. </returns>
+        /// <returns>
+        ///     The instance of <typeparamref name="TResult" /> produced by calling the <see cref="CreateResult" /> function on the list of elements produced by calling the
+        ///     <see
+        ///         cref="ConvertElement" />
+        ///     function on each element of the input enumerable.
+        /// </returns>
         /// <exception cref="ArgumentNullException">If the input enumerable itself is null</exception>
-        /// <exception cref="ArgumentNullException">If
+        /// <exception cref="ArgumentNullException">
+        ///     If
         ///     <typeparamref name="TElementIn" />
-        ///     is a nullable type and any element of the input enumerable is null.</exception>
-        /// <exception cref="ArgumentException">If
+        ///     is a nullable type and any element of the input enumerable is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If
         ///     <see cref="ExpectedElementCount" />
-        ///     is set and the actual number of input elements is not equal to this value.</exception>
-        /// <exception cref="ArgumentException">If
+        ///     is set and the actual number of input elements is not equal to this value.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If
         ///     <see cref="ExpectedElementCount" />
         ///     is -1,
         ///     <see cref="AllowEmpty" />
         ///     is set to
         ///     <c>false</c>
-        ///     and the input enumerable is empty.</exception>
-        /// <exception cref="ArgumentException">If
+        ///     and the input enumerable is empty.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If
         ///     <see cref="GetName" />
-        ///     is set and a duplicate name is derived for more than one input element.</exception>
+        ///     is set and a duplicate name is derived for more than one input element.
+        /// </exception>
         /// <remarks>
-        ///     Other exceptions may be thrown by the <see cref="ConvertElement" /> and <see cref="CreateResult" /> functions, and by the <see
-        ///      cref="GetName" /> function, if specified.
+        ///     Other exceptions may be thrown by the <see cref="ConvertElement" /> and <see cref="CreateResult" /> functions, and by the
+        ///     <see
+        ///         cref="GetName" />
+        ///     function, if specified.
         /// </remarks>
         internal TResult Validate()
         {
@@ -116,7 +132,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             Func<List<TElementOut>, TResult> collect,
             Func<TElementIn, int, string> deriveName)
         {
-            Contract.Requires(argument != null);
+            DebugCheck.NotNull(argument);
 
             Debug.Assert(map != null, "Set EnumerableValidator.ConvertElement before calling validate");
             Debug.Assert(collect != null, "Set EnumerableValidator.CreateResult before calling validate");

@@ -22,7 +22,7 @@ namespace System.Data.Entity.Migrations.Model
             if (anonymousArguments != null)
             {
                 anonymousArguments.GetType().GetProperties()
-                    .Each(p => _anonymousArguments.Add(p.Name, p.GetValue(anonymousArguments, null)));
+                                  .Each(p => _anonymousArguments.Add(p.Name, p.GetValue(anonymousArguments, null)));
             }
         }
 

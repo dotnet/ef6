@@ -5,7 +5,7 @@
 
 namespace System.Data.Entity
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity
         public static Task<TEntity> FindAsync<TEntity>(this IDbSet<TEntity> set, params object[] keyValues)
             where TEntity : class
         {
-            Contract.Requires(set != null);
+            Check.NotNull(set, "set");
 
             return set.FindAsync(CancellationToken.None, keyValues);
         }

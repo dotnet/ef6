@@ -13,8 +13,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     ///     in the two sets are treated as updates in the store.
     /// </summary>
     /// <remarks>
-    ///     <para> Additional tags indicating the roles of particular values (e.g., concurrency, undefined, etc.) are stored within each row: where appropriate, constants appearing within a row are associated with a <see
-    ///      cref="PropagatorResult" /> through the <see cref="UpdateTranslator" /> . </para>
+    ///     <para>
+    ///         Additional tags indicating the roles of particular values (e.g., concurrency, undefined, etc.) are stored within each row: where appropriate, constants appearing within a row are associated with a
+    ///         <see
+    ///             cref="PropagatorResult" />
+    ///         through the <see cref="UpdateTranslator" /> .
+    ///     </para>
     ///     <para> The 'leaves' of an update mapping view (UMV) are extent expressions. A change node associated with an extent expression is simply the list of changes to the C-Space requested by a caller. As changes propagate 'up' the UMV expression tree, we recursively apply transformations such that the change node associated with the root of the UMV represents changes to apply in the S-Space. </para>
     /// </remarks>
     internal class ChangeNode
@@ -25,7 +29,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     Constructs a change node containing changes belonging to the specified collection
         ///     schema definition.
         /// </summary>
-        /// <param name="elementType"> Sets <see cref="ElementType" /> property. </param>
+        /// <param name="elementType">
+        ///     Sets <see cref="ElementType" /> property.
+        /// </param>
         internal ChangeNode(TypeUsage elementType)
         {
             m_elementType = elementType;
@@ -69,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets or sets a version of a record at this node with default record. The record has the type 
+        ///     Gets or sets a version of a record at this node with default record. The record has the type
         ///     of the node we are visiting.
         /// </summary>
         internal PropagatorResult Placeholder { get; set; }

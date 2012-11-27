@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Class representing a metadata attribute for an item
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="value"> The value of the attribute </param>
         internal MetadataProperty(string name, EdmType edmType, bool isCollectionType, object value)
         {
-            Contract.Requires(edmType != null);
+            DebugCheck.NotNull(edmType);
 
             _name = name;
             _value = value;

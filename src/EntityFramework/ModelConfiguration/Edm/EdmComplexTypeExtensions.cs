@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     internal static class EdmComplexTypeExtensions
     {
@@ -14,10 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static EdmProperty AddComplexProperty(
             this ComplexType complexType, string name, ComplexType targetComplexType)
         {
-            Contract.Requires(complexType != null);
-            Contract.Requires(complexType.Properties != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(targetComplexType != null);
+            DebugCheck.NotNull(complexType);
+            DebugCheck.NotNull(complexType.Properties);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(targetComplexType);
 
             var property = EdmProperty.Complex(name, targetComplexType);
 
@@ -28,14 +28,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static object GetConfiguration(this ComplexType complexType)
         {
-            Contract.Requires(complexType != null);
+            DebugCheck.NotNull(complexType);
 
             return complexType.Annotations.GetConfiguration();
         }
 
         public static Type GetClrType(this ComplexType complexType)
         {
-            Contract.Requires(complexType != null);
+            DebugCheck.NotNull(complexType);
 
             return complexType.Annotations.GetClrType();
         }

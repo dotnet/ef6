@@ -8,15 +8,15 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     internal static class DbProviderFactoryExtensions
     {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string GetProviderInvariantName(this DbProviderFactory factory)
         {
-            Contract.Requires(factory != null);
+            DebugCheck.NotNull(factory);
 
             const int invariantNameIndex = 2;
 
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Utilities
 
         internal static DbProviderServices GetProviderServices(this DbProviderFactory factory)
         {
-            Contract.Requires(factory != null);
+            DebugCheck.NotNull(factory);
 
             // The EntityClient provider invariant name is not normally registered so we can't use
             // the normal method for looking up this factory.
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Utilities
             }
 
             var invariantName = factory.GetProviderInvariantName();
-            Contract.Assert(invariantName != null);
+            Debug.Assert(invariantName != null);
 
             return DbConfiguration.GetService<DbProviderServices>(invariantName);
         }

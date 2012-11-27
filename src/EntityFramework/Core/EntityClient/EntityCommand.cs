@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This 
+        ///     Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This
         ///     constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
         /// </summary>
         /// <param name="connection"> The connection against which this EntityCommand should execute </param>
@@ -411,9 +411,9 @@ namespace System.Data.Entity.Core.EntityClient
         {
         }
 
-        ///<summary>
-        ///    Create and return a new parameter object representing a parameter in the eSQL statement
-        ///</summary>
+        /// <summary>
+        ///     Create and return a new parameter object representing a parameter in the eSQL statement
+        /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public new virtual EntityParameter CreateParameter()
         {
@@ -443,8 +443,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <returns> An EntityDataReader object </returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        ///     for anything but an entity collection result</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     For stored procedure commands, if called
+        ///     for anything but an entity collection result
+        /// </exception>
         public new virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
             // prepare the query first
@@ -467,8 +469,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <returns> A Task containing sn EntityDataReader object. </returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        ///     for anything but an entity collection result</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     For stored procedure commands, if called
+        ///     for anything but an entity collection result
+        /// </exception>
         public new Task<EntityDataReader> ExecuteReaderAsync()
         {
             return ExecuteReaderAsync(CommandBehavior.Default, CancellationToken.None);
@@ -481,8 +485,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
         /// <returns> A Task containing sn EntityDataReader object. </returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        ///     for anything but an entity collection result</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     For stored procedure commands, if called
+        ///     for anything but an entity collection result
+        /// </exception>
         public new Task<EntityDataReader> ExecuteReaderAsync(CancellationToken cancellationToken)
         {
             return ExecuteReaderAsync(CommandBehavior.Default, cancellationToken);
@@ -495,8 +501,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <returns> A Task containing sn EntityDataReader object. </returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        ///     for anything but an entity collection result</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     For stored procedure commands, if called
+        ///     for anything but an entity collection result
+        /// </exception>
         public new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior)
         {
             return ExecuteReaderAsync(behavior, CancellationToken.None);
@@ -510,8 +518,10 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
         /// <returns> A Task containing sn EntityDataReader object. </returns>
-        /// <exception cref="InvalidOperationException">For stored procedure commands, if called
-        ///     for anything but an entity collection result</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     For stored procedure commands, if called
+        ///     for anything but an entity collection result
+        /// </exception>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "behavior")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
@@ -835,8 +845,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Creates a commandDefinition for the command, using the options specified.  
-        /// 
+        ///     Creates a commandDefinition for the command, using the options specified.
         ///     Note: This method must not be side-effecting of the command
         /// </summary>
         /// <returns> the command definition </returns>
@@ -901,7 +910,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter 
+        ///     Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter
         ///     collection given by the user.
         /// </summary>
         /// <returns> </returns>
@@ -930,7 +939,8 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 // Checking that we can deduce the type from the parameter if the type is not set
-                if (parameter.EdmType == null && parameter.DbType == DbType.Object
+                if (parameter.EdmType == null
+                    && parameter.DbType == DbType.Object
                     && (parameter.Value == null || parameter.Value is DBNull))
                 {
                     throw new InvalidOperationException(Strings.EntityClient_UnknownParameterType(parameterName));

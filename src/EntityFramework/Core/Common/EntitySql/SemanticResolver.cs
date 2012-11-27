@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -46,8 +46,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             IEnumerable<DbParameterReferenceExpression> parameters,
             IEnumerable<DbVariableReferenceExpression> variables)
         {
-            Contract.Requires(perspective != null);
-            Contract.Requires(parserOptions != null);
+            DebugCheck.NotNull(perspective);
+            DebugCheck.NotNull(parserOptions);
 
             return new SemanticResolver(
                 parserOptions,
@@ -102,7 +102,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     Validates that the specified parameters have valid, non-duplicated names
         /// </summary>
         /// <param name="paramDefs"> The set of query parameters </param>
-        /// <returns> A valid dictionary that maps parameter names to <see cref="DbParameterReferenceExpression" /> s using the current NameComparer </returns>
+        /// <returns>
+        ///     A valid dictionary that maps parameter names to <see cref="DbParameterReferenceExpression" /> s using the current NameComparer
+        /// </returns>
         private static Dictionary<string, DbParameterReferenceExpression> ProcessParameters(
             IEnumerable<DbParameterReferenceExpression> paramDefs, ParserOptions parserOptions)
         {
@@ -131,7 +133,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     Validates that the specified variables have valid, non-duplicated names
         /// </summary>
         /// <param name="varDefs"> The set of free variables </param>
-        /// <returns> A valid dictionary that maps variable names to <see cref="DbVariableReferenceExpression" /> s using the current NameComparer </returns>
+        /// <returns>
+        ///     A valid dictionary that maps variable names to <see cref="DbVariableReferenceExpression" /> s using the current NameComparer
+        /// </returns>
         private static Dictionary<string, DbVariableReferenceExpression> ProcessVariables(
             IEnumerable<DbVariableReferenceExpression> varDefs, ParserOptions parserOptions)
         {
@@ -494,7 +498,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 var defaultEntityContainer = TypeResolver.Perspective.GetDefaultContainer();
                 ExpressionResolution defaultEntityContainerResolution;
-                if (defaultEntityContainer != null &&
+                if (defaultEntityContainer != null
+                    &&
                     TryResolveEntityContainerMemberAccess(defaultEntityContainer, name, out defaultEntityContainerResolution)
                     &&
                     defaultEntityContainerResolution.ExpressionClass == ExpressionResolutionClass.MetadataMember)
@@ -716,7 +721,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             string[] names;
             ScopeEntry scopeEntry;
             int scopeIndex;
-            if (IsInAnyGroupScope() &&
+            if (IsInAnyGroupScope()
+                &&
                 dotExpr.IsMultipartIdentifier(out names)
                 &&
                 TryScopeLookup(TypeResolver.GetFullName(names), out scopeEntry, out scopeIndex))
@@ -726,7 +732,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 //
                 // Accept only if names[] match alternative name part by part.
                 //
-                if (iGetAlternativeName != null && iGetAlternativeName.AlternativeName != null
+                if (iGetAlternativeName != null
+                    && iGetAlternativeName.AlternativeName != null
                     &&
                     names.SequenceEqual(iGetAlternativeName.AlternativeName, NameComparer))
                 {
@@ -787,8 +794,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         /// <summary>
         ///     Returns alias name from <paramref name="aliasedExpr" /> ast node if it contains an alias,
-        ///     otherwise creates a new alias name based on the <paramref name="aliasedExpr" />.Expr or <paramref
-        ///      name="convertedExpression" /> information.
+        ///     otherwise creates a new alias name based on the <paramref name="aliasedExpr" />.Expr or
+        ///     <paramref
+        ///         name="convertedExpression" />
+        ///     information.
         /// </summary>
         internal string InferAliasName(AliasedExpr aliasedExpr, DbExpression convertedExpression)
         {

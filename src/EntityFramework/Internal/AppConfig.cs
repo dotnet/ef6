@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     A simple representation of an app.config or web.config file.
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Internal
                 configuration.AppSettings.Settings,
                 (EntityFrameworkSection)configuration.GetSection(EFSectionName))
         {
-            Contract.Requires(configuration != null);
+            DebugCheck.NotNull(configuration);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Internal
         public AppConfig(ConnectionStringSettingsCollection connectionStrings)
             : this(connectionStrings, null, null)
         {
-            Contract.Requires(connectionStrings != null);
+            DebugCheck.NotNull(connectionStrings);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Internal
             KeyValueConfigurationCollection appSettings,
             EntityFrameworkSection entityFrameworkSettings)
         {
-            Contract.Requires(connectionStrings != null);
+            DebugCheck.NotNull(connectionStrings);
 
             _connectionStrings = connectionStrings;
             _appSettings = appSettings ?? new KeyValueConfigurationCollection();
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The connection string, or null if there is no connection string with the specified name </returns>
         public ConnectionStringSettings GetConnectionString(string name)
         {
-            Contract.Requires(!String.IsNullOrWhiteSpace(name));
+            DebugCheck.NotEmpty(name);
 
             return _connectionStrings[name];
         }

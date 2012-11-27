@@ -7,7 +7,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -36,7 +35,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public DbSetDiscoveryService(DbContext context)
         {
-            Contract.Requires(context != null);
+            DebugCheck.NotNull(context);
 
             _context = context;
         }
@@ -71,9 +70,9 @@ namespace System.Data.Entity.Internal
                 // Properties declared directly on DbContext such as Database are skipped
                 const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                 foreach (var propertyInfo in _context.GetType().GetProperties(bindingFlags)
-                    .Where(
-                        p => p.GetIndexParameters().Length == 0 &&
-                             p.DeclaringType != typeof(DbContext)))
+                                                     .Where(
+                                                         p => p.GetIndexParameters().Length == 0 &&
+                                                              p.DeclaringType != typeof(DbContext)))
                 {
                     var entityType = GetSetType(propertyInfo.PropertyType);
                     if (entityType != null)

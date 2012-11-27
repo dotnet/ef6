@@ -2,13 +2,9 @@
 
 namespace System.Data.Entity
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -19,7 +15,6 @@ namespace System.Data.Entity
     /// <typeparam name="TEntity"> The type that defines the set. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    [ContractClass(typeof(IDbSetContracts<>))]
     public interface IDbSet<TEntity> : IQueryable<TEntity>
         where TEntity : class
     {
@@ -136,88 +131,4 @@ namespace System.Data.Entity
         /// <returns> The entity instance, which may be a proxy. </returns>
         TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity;
     }
-
-    #region Interface Member Contracts
-
-    [ContractClassFor(typeof(IDbSet<>))]
-    internal abstract class IDbSetContracts<TEntity> : IDbSet<TEntity>
-        where TEntity : class
-    {
-        IEnumerator<TEntity> IEnumerable<TEntity>.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        Expression IQueryable.Expression
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        Type IQueryable.ElementType
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        IQueryProvider IQueryable.Provider
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        TEntity IDbSet<TEntity>.Find(params object[] keyValues)
-        {
-            throw new NotImplementedException();
-        }
-
-#if !NET40
-
-        Task<TEntity> IDbSet<TEntity>.FindAsync(CancellationToken cancellationToken, params object[] keyValues)
-        {
-            throw new NotImplementedException();
-        }
-
-#endif
-
-        TEntity IDbSet<TEntity>.Add(TEntity entity)
-        {
-            Contract.Requires(entity != null);
-
-            throw new NotImplementedException();
-        }
-
-        TEntity IDbSet<TEntity>.Remove(TEntity entity)
-        {
-            Contract.Requires(entity != null);
-
-            throw new NotImplementedException();
-        }
-
-        TEntity IDbSet<TEntity>.Attach(TEntity entity)
-        {
-            Contract.Requires(entity != null);
-
-            throw new NotImplementedException();
-        }
-
-        ObservableCollection<TEntity> IDbSet<TEntity>.Local
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        TEntity IDbSet<TEntity>.Create()
-        {
-            throw new NotImplementedException();
-        }
-
-        TDerivedEntity IDbSet<TEntity>.Create<TDerivedEntity>()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    #endregion
 }

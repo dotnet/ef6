@@ -5,14 +5,14 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class AddMigrationCommand : MigrationsDomainCommand
     {
         public AddMigrationCommand(string name, bool force, bool ignoreChanges)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotEmpty(name);
 
             Execute(
                 () =>

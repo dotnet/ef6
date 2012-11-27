@@ -5,7 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Convention to enable cascade delete for any required relationships.
@@ -14,8 +15,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
-            Contract.Assert(edmDataModelItem.SourceEnd != null);
-            Contract.Assert(edmDataModelItem.TargetEnd != null);
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
+            Debug.Assert(edmDataModelItem.SourceEnd != null);
+            Debug.Assert(edmDataModelItem.TargetEnd != null);
 
             if (edmDataModelItem.IsSelfReferencing()) // EF DDL gen will fail for self-ref
             {

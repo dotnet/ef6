@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
 
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return ReferentialConstraints.SingleOrDefault(); }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 var constraint = Constraint;
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return KeyMembers.FirstOrDefault() as AssociationEndMember; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
                 Util.ThrowIfReadOnly(this);
 
                 if (KeyMembers.Count == 0)
@@ -118,9 +118,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return KeyMembers.ElementAtOrDefault(1) as AssociationEndMember; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
                 Util.ThrowIfReadOnly(this);
-                Contract.Assert(KeyMembers.Any());
+                Debug.Assert(KeyMembers.Any());
 
                 if (KeyMembers.Count == 1)
                 {
@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Validates a EdmMember object to determine if it can be added to this type's
         ///     Members collection. If this method returns without throwing, it is assumed
         ///     the member is valid.
         /// </summary>

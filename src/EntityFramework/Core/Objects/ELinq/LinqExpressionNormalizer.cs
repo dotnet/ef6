@@ -12,19 +12,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// <summary>
     ///     Replaces expression patterns produced by the compiler with approximations
     ///     used in query translation. For instance, the following VB code:
-    /// 
     ///     x = y
-    ///     
     ///     becomes the expression
-    /// 
     ///     Equal(MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
-    ///     
     ///     which is normalized to
-    /// 
     ///     Equal(x, y)
-    ///     
     ///     Comment convention:
-    /// 
     ///     CODE(Lang): _VB or C# coding pattern being simplified_
     ///     ORIGINAL: _original LINQ expression_
     ///     NORMALIZED: _normalized LINQ expression_
@@ -46,7 +39,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         /// <summary>
         ///     Handle binary patterns:
-        /// 
         ///     - VB 'Is' operator
         ///     - Compare patterns
         /// </summary>
@@ -73,7 +65,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // ORIGINAL: Equal(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
             // NORMALIZED: Equal(x, y)
             Pattern pattern;
-            if (_patterns.TryGetValue(b.Left, out pattern) && pattern.Kind == PatternKind.Compare
+            if (_patterns.TryGetValue(b.Left, out pattern)
+                && pattern.Kind == PatternKind.Compare
                 && IsConstantZero(b.Right))
             {
                 var comparePattern = (ComparePattern)pattern;
@@ -132,7 +125,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         /// <summary>
         ///     Handles MethodCall patterns:
-        /// 
         ///     - Operator overloads
         ///     - VB operators
         /// </summary>
@@ -250,7 +242,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for static Compare method
-                if (m.Method.Name == "Compare" && m.Arguments.Count > 1
+                if (m.Method.Name == "Compare"
+                    && m.Arguments.Count > 1
                     && m.Method.ReturnType == typeof(int))
                 {
                     // CODE(C#): Class.Compare(x, y)
@@ -278,7 +271,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check for instance CompareTo method
-                if (m.Method.Name == "CompareTo" && m.Arguments.Count == 1
+                if (m.Method.Name == "CompareTo"
+                    && m.Arguments.Count == 1
                     && m.Method.ReturnType == typeof(int))
                 {
                     // CODE(C#): x.CompareTo(y)
@@ -345,7 +339,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate)) 
+        ///     Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate))
         ///     and returns the ordinal for the predicate.
         /// </summary>
         /// <remarks>
@@ -507,7 +501,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     CODE(C#): Class.Compare(left, right)
         ///     ORIGINAL: MethodCallExpression(Compare, left, right)
         ///     NORMALIZED: Condition(Equal(left, right), 0, Condition(left > right, 1, -1))
-        /// 
         ///     Why is this an improvement? We know how to evaluate Condition in the store, but we don't
         ///     know how to evaluate MethodCallExpression... Where the CompareTo appears within a larger expression,
         ///     e.g. left.CompareTo(right) > 0, we can further simplify to left > right (we register the "ComparePattern"

@@ -10,7 +10,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Globalization;
 
     /// <summary>
-    ///     Provider to convert provider agnostic migration operations into SQL commands 
+    ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against Microsoft SQL Server Compact Edition.
     /// </summary>
     public class SqlCeMigrationSqlGenerator : SqlServerMigrationSqlGenerator

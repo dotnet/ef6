@@ -205,8 +205,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                     var scalarCond = condition as ScalarRestriction;
                     //Check for mapping of Scalar member condition, ignore type conditions
-                    if (scalarCond != null &&
-                        !mappedConditionMembers.Contains(memberPath) && /* prevents duplicate errors */
+                    if (scalarCond != null
+                        &&
+                        !mappedConditionMembers.Contains(memberPath)
+                        && /* prevents duplicate errors */
                         !leftCellWrapper.OnlyInputCell.CQuery.WhereClause.Equals(leftCellWrapper.OnlyInputCell.SQuery.WhereClause)
                         && /* projection allowed when both conditions are equal */
                         !IsMemberPartOfNotNullCondition(leftCellWrappers, memberPath, m_viewgenContext.ViewTarget))
@@ -222,12 +224,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                     if (m_viewgenContext.ViewTarget
                         == ViewTarget.UpdateView)
                     {
-                        if (scalarCond != null &&
+                        if (scalarCond != null
+                            &&
                             memberPath.IsNullable
                             && IsMemberPartOfNotNullCondition(new[] { leftCellWrapper }, memberPath, m_viewgenContext.ViewTarget))
                         {
                             var rightMemberPath = GetRightMemberPath(memberPath, leftCellWrapper);
-                            if (rightMemberPath != null && rightMemberPath.IsNullable
+                            if (rightMemberPath != null
+                                && rightMemberPath.IsNullable
                                 &&
                                 !IsMemberPartOfNotNullCondition(new[] { leftCellWrapper }, rightMemberPath, m_viewgenContext.ViewTarget))
                             {

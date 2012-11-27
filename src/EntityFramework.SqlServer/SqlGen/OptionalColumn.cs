@@ -52,7 +52,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Internal members
 
         /// <summary>
-        ///     Writes that fragment that represents the optional column 
+        ///     Writes that fragment that represents the optional column
         ///     if the usage manager says it is used.
         /// </summary>
         /// <param name="writer"> </param>

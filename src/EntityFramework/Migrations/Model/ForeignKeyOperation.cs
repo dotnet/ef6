@@ -5,7 +5,6 @@ namespace System.Data.Entity.Migrations.Model
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -38,7 +37,7 @@ namespace System.Data.Entity.Migrations.Model
             get { return _principalTable; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
 
                 _principalTable = value;
             }
@@ -52,7 +51,7 @@ namespace System.Data.Entity.Migrations.Model
             get { return _dependentTable; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
 
                 _dependentTable = value;
             }
@@ -95,7 +94,7 @@ namespace System.Data.Entity.Migrations.Model
                         DependentTable,
                         PrincipalTable,
                         DependentColumns.Join(separator: "_"))
-                        .RestrictTo(128);
+                          .RestrictTo(128);
             }
         }
     }

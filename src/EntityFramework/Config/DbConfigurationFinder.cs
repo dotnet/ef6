@@ -5,7 +5,6 @@ namespace System.Data.Entity.Config
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -15,12 +14,12 @@ namespace System.Data.Entity.Config
     {
         public virtual Type TryFindConfigurationType(Type contextType, IEnumerable<Type> typesToSearch = null)
         {
-            Contract.Requires(contextType != null);
+            DebugCheck.NotNull(contextType);
 
             var typeFromAttribute = contextType.GetCustomAttributes(inherit: true)
-                .OfType<DbConfigurationTypeAttribute>()
-                .Select(a => a.ConfigurationType)
-                .FirstOrDefault();
+                                               .OfType<DbConfigurationTypeAttribute>()
+                                               .Select(a => a.ConfigurationType)
+                                               .FirstOrDefault();
 
             if (typeFromAttribute != null)
             {
@@ -51,7 +50,7 @@ namespace System.Data.Entity.Config
 
         public virtual InternalConfiguration TryCreateConfiguration(Type contextType, IEnumerable<Type> typesToSearch = null)
         {
-            Contract.Requires(contextType != null);
+            DebugCheck.NotNull(contextType);
 
             var configType = TryFindConfigurationType(contextType, typesToSearch ?? contextType.Assembly.GetAccessibleTypes());
 

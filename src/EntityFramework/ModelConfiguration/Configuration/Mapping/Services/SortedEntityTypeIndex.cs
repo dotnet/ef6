@@ -5,8 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     internal class SortedEntityTypeIndex
     {
@@ -22,8 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public void Add(EntitySet entitySet, EntityType entityType)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             var i = 0;
 
@@ -50,8 +50,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public bool Contains(EntitySet entitySet, EntityType entityType)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             List<EntityType> setTypes;
             return _entityTypes.TryGetValue(entitySet, out setTypes) && setTypes.Contains(entityType);
@@ -60,8 +60,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public bool IsRoot(EntitySet entitySet, EntityType entityType)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             var isRoot = true;
             var entityTypes = _entityTypes[entitySet];

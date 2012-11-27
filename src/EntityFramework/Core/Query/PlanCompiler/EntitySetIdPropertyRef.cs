@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         internal static EntitySetIdPropertyRef Instance = new EntitySetIdPropertyRef();
 
-        ///<summary>
-        ///</summary>
-        ///<returns> </returns>
+        /// <summary>
+        /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             return "ENTITYSETID";

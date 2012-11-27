@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Text.RegularExpressions;
 
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbCommandTree(MetadataWorkspace metadata, DataSpace dataSpace)
         {
             // Ensure the metadata workspace is non-null
-            Contract.Requires(metadata != null);
+            DebugCheck.NotNull(metadata);
 
             // Ensure that the data space value is valid
             if (!IsValidDataSpace(dataSpace))

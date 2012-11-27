@@ -226,9 +226,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         ///     3. As a special case we also look into LOJ driving node (left most child in LOJ) and if it is an IJ,
         ///     then we consider attaching LOJ children to nodes inside IJ based on the same principle as above.
         ///     Example: LOJ(IJ(A, B, C), D, E, F) -> LOJ(IJ(LOJ(A, D), B, LOJ(C, E)), F) iff D has FK to A and E has FK to C.
-        ///        
         ///     This normalization enables FK-based join elimination in plan compiler, so for a query such as
-        ///     "select e.ID from ABCDSet" we want plan compiler to produce "select a.ID from A" instead of 
+        ///     "select e.ID from ABCDSet" we want plan compiler to produce "select a.ID from A" instead of
         ///     "select a.ID from A LOJ B LOJ C LOJ D".
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -398,7 +397,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 foreach (var fkExtent in m.Value)
                 {
                     OpCellTreeNode fkExtentLOJ;
-                    if (extentLOJs.TryGetValue(fkExtent, out fkExtentLOJ) &&
+                    if (extentLOJs.TryGetValue(fkExtent, out fkExtentLOJ)
+                        &&
                         // make sure we don't nest twice and we don't create a cycle.
                         !nestedExtents.ContainsKey(fkExtent)
                         && !CheckLOJCycle(fkExtent, principalExtent, nestedExtents))
@@ -641,7 +641,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             CellTreeNode n = new OpCellTreeNode(m_viewgenContext, CellTreeOpType.IJ, n1, n2);
             var isDisjointRight = n.IsEmptyRightFragmentQuery;
 
-            if (m_viewgenContext.ViewTarget == ViewTarget.UpdateView &&
+            if (m_viewgenContext.ViewTarget == ViewTarget.UpdateView
+                &&
                 isDisjointLeft
                 && !isDisjointRight)
             {

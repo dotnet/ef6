@@ -6,13 +6,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -33,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private ManyToManyAssociationMappingConfiguration(ManyToManyAssociationMappingConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _leftKeyColumnNames.AddRange(source._leftKeyColumnNames);
             _rightKeyColumnNames.AddRange(source._rightKeyColumnNames);
@@ -52,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration ToTable(string tableName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             return ToTable(tableName, null);
         }
@@ -65,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration ToTable(string tableName, string schemaName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(tableName));
+            Check.NotEmpty(tableName, "tableName");
 
             _tableName = new DatabaseName(tableName, schemaName);
 
@@ -80,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapLeftKey(params string[] keyColumnNames)
         {
-            Contract.Requires(keyColumnNames != null);
+            Check.NotNull(keyColumnNames, "keyColumnNames");
 
             _leftKeyColumnNames.Clear();
             _leftKeyColumnNames.AddRange(keyColumnNames);
@@ -96,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapRightKey(params string[] keyColumnNames)
         {
-            Contract.Requires(keyColumnNames != null);
+            Check.NotNull(keyColumnNames, "keyColumnNames");
 
             _rightKeyColumnNames.Clear();
             _rightKeyColumnNames.AddRange(keyColumnNames);
@@ -107,6 +105,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal override void Configure(
             StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
+            DebugCheck.NotNull(associationSetMapping);
+            DebugCheck.NotNull(database);
+            DebugCheck.NotNull(navigationProperty);
+
             var table = associationSetMapping.Table;
 
             if (_tableName != null)
@@ -131,8 +133,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void ConfigureColumnNames(
             ICollection<string> keyColumnNames, IList<StorageScalarPropertyMapping> propertyMappings)
         {
-            Contract.Requires(keyColumnNames != null);
-            Contract.Requires(propertyMappings != null);
+            DebugCheck.NotNull(keyColumnNames);
+            DebugCheck.NotNull(propertyMappings);
 
             if ((keyColumnNames.Count > 0)
                 && (keyColumnNames.Count != propertyMappings.Count))
@@ -211,7 +213,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 return ((_tableName != null ? _tableName.GetHashCode() : 0) * 397)
                        ^ _leftKeyColumnNames.Union(_rightKeyColumnNames)
-                             .Aggregate(0, (t, n) => t + n.GetHashCode());
+                                            .Aggregate(0, (t, n) => t + n.GetHashCode());
             }
         }
 

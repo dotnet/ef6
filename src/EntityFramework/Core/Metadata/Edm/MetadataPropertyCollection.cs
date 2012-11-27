@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -29,7 +29,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Given an item, returns all system type attributes for the item.
         private static IEnumerable<MetadataProperty> GetSystemMetadataProperties(MetadataItem item)
         {
-            Contract.Requires(item != null);
+            DebugCheck.NotNull(item);
+
             var type = item.GetType();
             var itemTypeInformation = GetItemTypeInformation(type);
             return itemTypeInformation.GetItemAttributes(item);

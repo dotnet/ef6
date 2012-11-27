@@ -17,7 +17,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     /// <summary>
     ///     Uses query rewriting to determine the case statements, top-level WHERE clause, and the "used views"
     ///     for a given type to be generated.
-    /// 
     ///     Step 1: Method "EnsureIsFullyMapped" goes through the (C) schema metadata and checks whether the query for each
     ///     entity shape can be rewritten from the C fragment queries.
     ///     This step tracks the "used views" which will later be passed to "basic view generation" (i.e., creation of the FOJ/LOJ/IJ/Union relational expressions)
@@ -687,8 +686,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                     foreach (var memberPath in _context.MemberMaps.ProjectedSlotMap.Members)
                     {
                         Constant defaultConstant;
-                        if (memberPath.IsScalarType() &&
-                            !memberPath.IsPartOfKey &&
+                        if (memberPath.IsScalarType()
+                            &&
+                            !memberPath.IsPartOfKey
+                            &&
                             !_domainMap.IsConditionMember(memberPath)
                             &&
                             !Domain.TryGetDefaultValueForMemberPath(memberPath, out defaultConstant))

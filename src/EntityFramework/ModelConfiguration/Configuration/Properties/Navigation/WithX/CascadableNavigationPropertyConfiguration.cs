@@ -5,8 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Configures a relationship that can support cascade on delete functionality.
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         protected CascadableNavigationPropertyConfiguration(
             NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
-            Contract.Requires(navigationPropertyConfiguration != null);
+            Check.NotNull(navigationPropertyConfiguration, "navigationPropertyConfiguration");
 
             _navigationPropertyConfiguration = navigationPropertyConfiguration;
         }

@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's 
+        ///     Validates a EdmMember object to determine if it can be added to this type's
         ///     Members collection. If this method returns without throwing, it is assumed
         ///     the member is valid.
         /// </summary>

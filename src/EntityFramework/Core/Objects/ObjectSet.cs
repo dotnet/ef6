@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
-        ///     all of the entities in the specified EntitySet. 
+        ///     all of the entities in the specified EntitySet.
         ///     Sets the query's command text to the fully-qualified, quoted, EntitySet name, i.e. [EntityContainerName].[EntitySetName]
         ///     Explicitly set MergeOption to AppendOnly in order to mirror CreateQuery behavior
         /// </summary>
@@ -122,8 +122,12 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Create an instance of the type <typeparamref name="TEntity" />.
         /// </summary>
-        /// <returns> An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type <typeparamref
-        ///      name="TEntity" /> , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> . </returns>
+        /// <returns>
+        ///     An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type
+        ///     <typeparamref
+        ///         name="TEntity" />
+        ///     , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> .
+        /// </returns>
         public TEntity CreateObject()
         {
             return Context.CreateObject<TEntity>();
@@ -132,8 +136,12 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Create an instance of the type <typeparamref name="TEntity" />.
         /// </summary>
-        /// <returns> An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type <typeparamref
-        ///      name="TEntity" /> , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> . </returns>
+        /// <returns>
+        ///     An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type
+        ///     <typeparamref
+        ///         name="TEntity" />
+        ///     , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> .
+        /// </returns>
         public T CreateObject<T>() where T : class, TEntity
         {
             return Context.CreateObject<T>();

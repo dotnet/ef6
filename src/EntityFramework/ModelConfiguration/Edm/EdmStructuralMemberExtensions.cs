@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -13,21 +13,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     {
         public static PropertyInfo GetClrPropertyInfo(this EdmMember property)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             return property.Annotations.GetClrPropertyInfo();
         }
 
         public static void SetClrPropertyInfo(this EdmMember property, PropertyInfo propertyInfo)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             property.Annotations.SetClrPropertyInfo(propertyInfo);
         }
 
         public static IEnumerable<T> GetClrAttributes<T>(this EdmMember property) where T : Attribute
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             var clrAttributes = property.Annotations.GetClrAttributes();
             return clrAttributes != null ? clrAttributes.OfType<T>() : Enumerable.Empty<T>();

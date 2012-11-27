@@ -19,10 +19,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///     For detailed functional specification, see "The EDP Type System.docx" and "edm.spec.doc".
     ///     Notes:
     ///     1) The notion of 'type' for the sake of type operation semantics is based on TypeUsage, i.e., EdmType *plus* facets.
-    /// 
     ///     2) EDM built-in primitive types are defined by the EDM Provider Manifest.
-    /// 
-    ///     3) SubType and Promotable are similar notions however subtyping is stricter than promotability. Subtyping is used for mapping 
+    ///     3) SubType and Promotable are similar notions however subtyping is stricter than promotability. Subtyping is used for mapping
     ///     validation while Promotability is used in query, update expression static type validation.
     /// </remarks>
     internal static class TypeSemantics
@@ -43,7 +41,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type1"> The first type to compare. </param>
         /// <param name="type2"> The second type to compare. </param>
-        /// <returns> If the two types are structurally equal, <c>true</c> ; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     If the two types are structurally equal, <c>true</c> ; otherwise <c>false</c> .
+        /// </returns>
         internal static bool IsEqual(TypeUsage type1, TypeUsage type2)
         {
             return CompareTypes(type1, type2, false /*equivalenceOnly*/);
@@ -210,7 +210,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="fromType"> Type to cast from. </param>
         /// <param name="toType"> Type to cast to. </param>
-        /// <returns> <c>true</c> if <paramref name="fromType" /> can be casted to <paramref name="toType" /> ; <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="fromType" /> can be casted to <paramref name="toType" /> ; <c>false</c> otherwise.
+        /// </returns>
         /// <remarks>
         ///     Cast rules:
         ///     - primitive types can be casted to other primitive types
@@ -328,9 +330,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     is a structural nominal type, i.e., EntityType or ComplexType
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
-        /// <returns> <c>true</c> if the
+        /// <returns>
+        ///     <c>true</c> if the
         ///     <param ref="type" />
-        ///     is a nominal type. <c>false</c> otherwise. </returns>
+        ///     is a nominal type. <c>false</c> otherwise.
+        /// </returns>
         internal static bool IsNominalType(TypeUsage type)
         {
             Debug.Assert(!IsEnumerationType(type), "Implicit cast/Softcast is not allowed for enums so we should never see enum type here.");
@@ -394,7 +398,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     determines if <paramref name="type" /> is primitive or enumeration type
         /// </summary>
         /// <param name="type"> Type to verify. </param>
-        /// <returns> <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
+        /// </returns>
         internal static bool IsScalarType(TypeUsage type)
         {
             return IsScalarType(type.EdmType);
@@ -404,7 +410,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     determines if <paramref name="type" /> is primitive or enumeration type
         /// </summary>
         /// <param name="type"> Type to verify. </param>
-        /// <returns> <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise. </returns>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
+        /// </returns>
         internal static bool IsScalarType(EdmType type)
         {
             Debug.Assert(type != null, "type != null");
@@ -665,7 +673,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type1"> an instance of a TypeUsage </param>
         /// <param name="type2"> an instance of a TypeUsage </param>
-        /// <returns> <c>true</c> if type1 and type2 are equal-comparable, <c>false</c> otherwise </returns>
+        /// <returns>
+        ///     <c>true</c> if type1 and type2 are equal-comparable, <c>false</c> otherwise
+        /// </returns>
         internal static bool IsEqualComparableTo(TypeUsage type1, TypeUsage type2)
         {
             if (IsEqualComparable(type1)
@@ -693,7 +703,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type1"> an instance of a TypeUsage </param>
         /// <param name="type2"> an instance of a TypeUsage </param>
-        /// <returns> <c>true</c> if type1 and type2 are order-comparable, <c>false</c> otherwise </returns>
+        /// <returns>
+        ///     <c>true</c> if type1 and type2 are order-comparable, <c>false</c> otherwise
+        /// </returns>
         internal static bool IsOrderComparableTo(TypeUsage type1, TypeUsage type2)
         {
             if (IsOrderComparable(type1)
@@ -1002,14 +1014,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification", 
+        ///     Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification",
         ///     section 7 - Comparison and Dependent Operations for details.
         /// </summary>
         /// <param name="edmType"> an instance of an EdmType </param>
         /// <returns> true if edmType is equal-comparable, false otherwise </returns>
         private static bool IsEqualComparable(EdmType edmType)
         {
-            if (Helper.IsPrimitiveType(edmType) || Helper.IsRefType(edmType) || Helper.IsEntityType(edmType)
+            if (Helper.IsPrimitiveType(edmType)
+                || Helper.IsRefType(edmType)
+                || Helper.IsEntityType(edmType)
                 || Helper.IsEnumType(edmType))
             {
                 return true;

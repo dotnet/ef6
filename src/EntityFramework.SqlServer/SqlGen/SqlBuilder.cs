@@ -7,7 +7,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Diagnostics;
 
     /// <summary>
-    ///     This class is like StringBuilder.  While traversing the tree for the first time, 
+    ///     This class is like StringBuilder.  While traversing the tree for the first time,
     ///     we do not know all the strings that need to be appended e.g. things that need to be
     ///     renamed, nested select statements etc.  So, we use a builder that can collect
     ///     all kinds of sql fragments.
@@ -41,7 +41,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         /// <summary>
         ///     This is to pretty print the SQL.  The writer <see cref="SqlWriter.Write" />
-        ///     needs to know about new lines so that it can add the right amount of 
+        ///     needs to know about new lines so that it can add the right amount of
         ///     indentation at the beginning of lines.
         /// </summary>
         public void AppendLine()

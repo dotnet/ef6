@@ -5,11 +5,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
-    [ContractClass(typeof(ForeignKeyDiscoveryConventionContracts))]
     public abstract class ForeignKeyDiscoveryConvention : IEdmConvention<AssociationType>
     {
         protected virtual bool SupportsMultipleAssociations
@@ -27,8 +26,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
-            Contract.Assert(edmDataModelItem.SourceEnd != null);
-            Contract.Assert(edmDataModelItem.TargetEnd != null);
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
+            Debug.Assert(edmDataModelItem.SourceEnd != null);
+            Debug.Assert(edmDataModelItem.TargetEnd != null);
 
             if ((edmDataModelItem.Constraint != null)
                 || edmDataModelItem.IsIndependent()
@@ -43,10 +45,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            Contract.Assert(principalEnd != null);
-            Contract.Assert(principalEnd.GetEntityType() != null);
-            Contract.Assert(dependentEnd != null);
-            Contract.Assert(dependentEnd.GetEntityType() != null);
+            Debug.Assert(principalEnd != null);
+            Debug.Assert(principalEnd.GetEntityType() != null);
+            Debug.Assert(dependentEnd != null);
+            Debug.Assert(dependentEnd.GetEntityType() != null);
 
             var principalKeyProperties = principalEnd.GetEntityType().KeyProperties();
 
@@ -105,29 +107,5 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 constraint.ToProperties.Each(p => p.Nullable = false);
             }
         }
-
-        #region Base Member Contracts
-
-        [ContractClassFor(typeof(ForeignKeyDiscoveryConvention))]
-        private abstract class ForeignKeyDiscoveryConventionContracts : ForeignKeyDiscoveryConvention
-        {
-            protected override bool MatchDependentKeyProperty(
-                AssociationType associationType,
-                AssociationEndMember dependentAssociationEnd,
-                EdmProperty dependentProperty,
-                EntityType principalEntityType,
-                EdmProperty principalKeyProperty)
-            {
-                Contract.Requires(associationType != null);
-                Contract.Requires(dependentAssociationEnd != null);
-                Contract.Requires(dependentProperty != null);
-                Contract.Requires(principalEntityType != null);
-                Contract.Requires(principalKeyProperty != null);
-
-                return false;
-            }
-        }
-
-        #endregion
     }
 }

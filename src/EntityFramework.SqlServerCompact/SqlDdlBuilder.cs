@@ -236,9 +236,12 @@ namespace System.Data.Entity.SqlServerCompact
             // check for rowversion-like configurations
             Facet storeGenFacet;
             var isTimestamp = false;
-            if (type.EdmType.Name == "binary" &&
-                8 == (int)type.Facets["MaxLength"].Value &&
-                column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet) &&
+            if (type.EdmType.Name == "binary"
+                &&
+                8 == (int)type.Facets["MaxLength"].Value
+                &&
+                column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet)
+                &&
                 storeGenFacet.Value != null
                 &&
                 StoreGeneratedPattern.Computed == (StoreGeneratedPattern)storeGenFacet.Value)
@@ -271,7 +274,8 @@ namespace System.Data.Entity.SqlServerCompact
             }
             builder.Append(column.Nullable ? " null" : " not null");
 
-            if (!isTimestamp && column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet)
+            if (!isTimestamp
+                && column.TypeUsage.Facets.TryGetValue("StoreGeneratedPattern", false, out storeGenFacet)
                 &&
                 storeGenFacet.Value != null)
             {

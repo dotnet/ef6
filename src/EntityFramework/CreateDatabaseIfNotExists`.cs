@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Transactions;
 
     /// <summary>
@@ -29,6 +30,8 @@ namespace System.Data.Entity
         /// <param name="context"> The context. </param>
         public void InitializeDatabase(TContext context)
         {
+            Check.NotNull(context, "context");
+
             bool databaseExists;
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
@@ -58,7 +61,7 @@ namespace System.Data.Entity
         #region Seeding methods
 
         /// <summary>
-        ///     A method that should be overridden to actually add data to the context for seeding. 
+        ///     A method that should be overridden to actually add data to the context for seeding.
         ///     The default implementation does nothing.
         /// </summary>
         /// <param name="context"> The context to seed. </param>

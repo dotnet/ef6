@@ -9,23 +9,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     /// <summary>
     ///     The ColumnMapCopier clones an entire ColumnMap hierarchy; this is different
     ///     than the ColumnMapTranslator, which only copies things that need to be copied.
-    /// 
     ///     Note that this is a stateless visitor; it uses the visitor's argument for its
     ///     state management.
-    /// 
-    ///     The Visitor's argument is a VarMap; anytime a Var is found in the ColumnMap 
+    ///     The Visitor's argument is a VarMap; anytime a Var is found in the ColumnMap
     ///     hierarchy, it is replaced with the replacement from the VarMap.
-    /// 
     ///     Note also that previous implementations of this class attempted to avoid re-
     ///     processing ColumnMaps by caching the results for each input and returning it.
-    ///     I wasn't convinced that we were buying much with all that caching, since the 
-    ///     only ColumnMaps that should be repeated in the hierarchy are simple ones; there 
-    ///     is about as much object creation either way.  The only reason I see that we 
-    ///     want to cache these is if we really cared to have only one VarRefColumnMap 
+    ///     I wasn't convinced that we were buying much with all that caching, since the
+    ///     only ColumnMaps that should be repeated in the hierarchy are simple ones; there
+    ///     is about as much object creation either way.  The only reason I see that we
+    ///     want to cache these is if we really cared to have only one VarRefColumnMap
     ///     instance for a given Var and be able to use reference equality instead of
     ///     comparing the Vars themselves.  I don't believe we're making that guarantee
-    ///     anywhere else, so I've removed that for now because I don't want the added 
-    ///     complexity that the caching adds.  If performance analysis indicates there is 
+    ///     anywhere else, so I've removed that for now because I don't want the added
+    ///     complexity that the caching adds.  If performance analysis indicates there is
     ///     a problem, we can considier addding the cache back in.
     /// </summary>
     internal class ColumnMapCopier : ColumnMapVisitorWithResults<ColumnMap, VarMap>

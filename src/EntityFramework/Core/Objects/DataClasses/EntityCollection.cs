@@ -10,8 +10,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Threading;
@@ -147,7 +148,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override void OnAssociationChanged(CollectionChangeAction collectionChangeAction, object entity)
         {
-            Contract.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             if (!_suppressEvents)
             {
                 if (_onAssociationChangedforObjectView != null)
@@ -232,20 +233,23 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Loads related entities into the local collection. If the collection is already filled
         ///     or partially filled, merges existing entities with the given entities. The given
         ///     entities are not assumed to be the complete set of related entities.
-        /// 
-        ///     Owner and all entities passed in must be in Unchanged or Modified state. We allow 
+        ///     Owner and all entities passed in must be in Unchanged or Modified state. We allow
         ///     deleted elements only when the state manager is already tracking the relationship
         ///     instance.
         /// </summary>
         /// <param name="entities"> Result of query returning related entities </param>
-        /// <exception cref="ArgumentNullException">Thrown when
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when
         ///     <paramref name="entities" />
-        ///     is null.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when an entity in the given
-        ///     collection cannot be related via the current relationship end.</exception>
+        ///     is null.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when an entity in the given
+        ///     collection cannot be related via the current relationship end.
+        /// </exception>
         public void Attach(IEnumerable<TEntity> entities)
         {
-            Contract.Requires(entities != null);
+            Check.NotNull(entities, "entities");
             CheckOwnerNull();
             IList<IEntityWrapper> wrappedEntities = new List<IEntityWrapper>();
             foreach (var entity in entities)
@@ -259,19 +263,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Attaches an entity to the EntityCollection. If the EntityCollection is already filled
         ///     or partially filled, this merges the existing entities with the given entity. The given
         ///     entity is not assumed to be the complete set of related entities.
-        /// 
-        ///     Owner and all entities passed in must be in Unchanged or Modified state. 
+        ///     Owner and all entities passed in must be in Unchanged or Modified state.
         ///     Deleted elements are allowed only when the state manager is already tracking the relationship
         ///     instance.
         /// </summary>
         /// <param name="entity"> The entity to attach to the EntityCollection </param>
-        /// <exception cref="ArgumentNullException">Thrown when
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when
         ///     <paramref name="entity" />
-        ///     is null.</exception>
+        ///     is null.
+        /// </exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
 
@@ -375,6 +380,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity"> </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // Validate that the incoming entity is also detached
             if (null != wrappedEntity.Context
                 && wrappedEntity.MergeOption != MergeOption.NoTracking)
@@ -396,6 +403,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="applyConstraints"> </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // Validate that the incoming entity is also detached
             if (null != wrappedEntity.Context
                 && wrappedEntity.MergeOption != MergeOption.NoTracking)
@@ -464,14 +473,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 else
                 {
                     var tm = ObjectContext.ObjectStateManager.TransactionManager;
-                    Contract.Assert(
+                    Debug.Assert(
                         tm.IsAddTracking || tm.IsAttachTracking,
                         "Exclude being called while not part of attach/add rollback--PromotedEntityKeyRefs will be null.");
                     var values = new List<IEntityWrapper>(_wrappedRelatedEntities.Values);
                     foreach (var wrappedEntity in values)
                     {
                         var otherEnd = GetOtherEndOfRelationship(wrappedEntity) as EntityReference;
-                        Contract.Assert(otherEnd != null, "Other end of FK from a collection should be a reference.");
+                        Debug.Assert(otherEnd != null, "Other end of FK from a collection should be a reference.");
                         var doFullRemove = tm.PopulatedEntityReferences.Contains(otherEnd);
                         var doRelatedEndRemove = tm.AlignedEntityReferences.Contains(otherEnd);
                         if (doFullRemove || doRelatedEndRemove)
@@ -528,7 +537,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             /*preserveForeignKey*/false);
                     }
                 }
-                Contract.Assert(
+                Debug.Assert(
                     _wrappedRelatedEntities.Count == 0, "After removing all related entities local collection count should be zero");
             }
         }
@@ -552,6 +561,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (!relationshipAlreadyExists
                 && ContainsEntity(wrappedEntity))
             {
@@ -565,11 +576,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override bool CanSetEntityType(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             return wrappedEntity.Entity is TEntity;
         }
 
         internal override void VerifyType(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (!CanSetEntityType(wrappedEntity))
             {
                 throw new InvalidOperationException(
@@ -585,6 +600,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             if (_wrappedRelatedEntities != null
                 && _wrappedRelatedEntities.Remove((TEntity)wrappedEntity.Entity))
             {
@@ -604,6 +621,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // For POCO entities - remove the object from the CLR collection
             if (TargetAccessor.HasProperty) // Null if the navigation does not exist in this direction
             {
@@ -642,6 +661,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override bool ContainsEntity(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // Using operator 'as' instead of () allows calling ContainsEntity
             // with entity of different type than TEntity.
             var entity = wrappedEntity.Entity as TEntity;
@@ -708,7 +729,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 relatedEnd.OnRelatedEndClear();
                             }
                         }
-                        Contract.Assert(_wrappedRelatedEntities.Count == 0);
+                        Debug.Assert(_wrappedRelatedEntities.Count == 0);
                     }
                     finally
                     {
@@ -739,8 +760,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Determine if the collection contains a specific object by reference.
         /// </summary>
-        /// <return>true if the collection contains the object by reference;
-        ///     otherwise, false</return>
+        /// <return>
+        ///     true if the collection contains the object by reference;
+        ///     otherwise, false
+        /// </return>
         public bool Contains(TEntity item)
         {
             DeferredLoad();
@@ -780,7 +803,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override bool CheckIfNavigationPropertyContainsEntity(IEntityWrapper wrapper)
         {
-            Contract.Assert(RelationshipNavigation != null, "null RelationshipNavigation");
+            Debug.Assert(RelationshipNavigation != null, "null RelationshipNavigation");
 
             // If the navigation property doesn't exist (e.g. unidirectional prop), then it can't contain the entity.
             if (!TargetAccessor.HasProperty)
@@ -878,11 +901,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal override void AddToLocalCache(IEntityWrapper wrappedEntity, bool applyConstraints)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             WrappedRelatedEntities[(TEntity)wrappedEntity.Entity] = wrappedEntity;
         }
 
         internal override void AddToObjectCache(IEntityWrapper wrappedEntity)
         {
+            DebugCheck.NotNull(wrappedEntity);
+
             // For POCO entities - add the object to the CLR collection
             if (TargetAccessor.HasProperty) // Null if the navigation does not exist in this direction
             {

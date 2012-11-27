@@ -44,9 +44,15 @@ namespace System.Data.Entity.Core.Objects
         ///     Return a <see cref="PropertyInfo" /> instance that represents
         ///     a strongly-typed indexer property on the specified type.
         /// </summary>
-        /// <param name="typedIndexer"> <see cref="Type" /> that may define the appropriate indexer. </param>
-        /// <returns> <see cref="PropertyInfo" /> instance of indexer defined on supplied type that returns an object of any type but <see
-        ///      cref="Object" /> ; or null if no such indexer is defined on the supplied type. </returns>
+        /// <param name="typedIndexer">
+        ///     <see cref="Type" /> that may define the appropriate indexer.
+        /// </param>
+        /// <returns>
+        ///     <see cref="PropertyInfo" /> instance of indexer defined on supplied type that returns an object of any type but
+        ///     <see
+        ///         cref="Object" />
+        ///     ; or null if no such indexer is defined on the supplied type.
+        /// </returns>
         /// <remarks>
         ///     The algorithm here is lifted from System.Windows.Forms.ListBindingHelper,
         ///     from the GetTypedIndexer method.
@@ -58,7 +64,8 @@ namespace System.Data.Entity.Core.Objects
         {
             PropertyInfo indexer = null;
 
-            if (typeof(IList).IsAssignableFrom(type) ||
+            if (typeof(IList).IsAssignableFrom(type)
+                ||
                 typeof(ITypedList).IsAssignableFrom(type)
                 ||
                 typeof(IListSource).IsAssignableFrom(type))
@@ -87,8 +94,12 @@ namespace System.Data.Entity.Core.Objects
         ///     Return the element type for the supplied type.
         /// </summary>
         /// <param name="type"> </param>
-        /// <returns> If <paramref name="type" /> represents a list type that doesn't also implement ITypedList or IListSource, return the element type for items in that list. Otherwise, return the type supplied by <paramref
-        ///      name="type" /> . </returns>
+        /// <returns>
+        ///     If <paramref name="type" /> represents a list type that doesn't also implement ITypedList or IListSource, return the element type for items in that list. Otherwise, return the type supplied by
+        ///     <paramref
+        ///         name="type" />
+        ///     .
+        /// </returns>
         /// <remarks>
         ///     The algorithm here is lifted from System.Windows.Forms.ListBindingHelper,
         ///     from the GetListItemType(object) method.
@@ -142,7 +153,8 @@ namespace System.Data.Entity.Core.Objects
                 // If the property descriptor describes a data record with the EDM type of RowType,
                 // construct the collection of property descriptors from the property's EDM metadata.
                 // Otherwise use the CLR type of the property.
-                if (fieldDescriptor != null && fieldDescriptor.EdmProperty != null
+                if (fieldDescriptor != null
+                    && fieldDescriptor.EdmProperty != null
                     && fieldDescriptor.EdmProperty.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
                 {
                     // Retrieve property descriptors from EDM metadata.

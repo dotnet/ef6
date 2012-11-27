@@ -281,14 +281,22 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                     var propertyType = baseProperty.PropertyType;
 
-                    if (propertyType == typeof(int) || // signed integer types
-                        propertyType == typeof(short) ||
-                        propertyType == typeof(Int64) ||
-                        propertyType == typeof(bool) || // boolean
-                        propertyType == typeof(byte) ||
-                        propertyType == typeof(UInt32) ||
-                        propertyType == typeof(UInt64) ||
-                        propertyType == typeof(float) ||
+                    if (propertyType == typeof(int)
+                        || // signed integer types
+                        propertyType == typeof(short)
+                        ||
+                        propertyType == typeof(Int64)
+                        ||
+                        propertyType == typeof(bool)
+                        || // boolean
+                        propertyType == typeof(byte)
+                        ||
+                        propertyType == typeof(UInt32)
+                        ||
+                        propertyType == typeof(UInt64)
+                        ||
+                        propertyType == typeof(float)
+                        ||
                         propertyType == typeof(double)
                         ||
                         propertyType.IsEnum)

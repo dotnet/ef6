@@ -100,7 +100,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     The varMap output is a dictionary that maintains var renames - this will be used
         ///     by the consumer of this module to fix up references to columns of tables
         ///     that have been eliminated
-        /// 
         ///     The processedNodes dictionary is simply a set of all nodes that have been processed
         ///     in this module - and need no further "join graph" processing
         /// </summary>
@@ -186,13 +185,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Split up the join predicate into equijoin columns and other predicates.
-        /// 
         ///     For example, if I have a predicate of the form T1.C1 = T2.D1 and T1.C2 > T2.D2
-        ///     we would generate 
+        ///     we would generate
         ///     LeftVars = T1.C1
         ///     RightVars = T2.C1
         ///     OtherPredicate = T1.C2 > T2.D2
-        /// 
         ///     Special Cases:
         ///     For fullouter joins, we don't do any splitting - the "OtherPredicate" captures the
         ///     entire join condition.
@@ -241,13 +238,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Build up the annotated node tree for the input subtree. 
-        ///     If the current node is 
+        ///     Build up the annotated node tree for the input subtree.
+        ///     If the current node is
         ///     a ScanTableOp - we build an AugmentedTableNode
         ///     a join (Inner, LOJ, FOJ, CrossJoin) - we build an AugmentedJoinNode,
         ///     after first building annotated node trees for the inputs.
         ///     anything else - we build an AugmentedNode
-        /// 
         ///     We also mark the node as "processed" - so that the caller will not need
         ///     to build join graphs for this again
         /// </summary>
@@ -315,8 +311,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         //
 
         /// <summary>
-        ///     Add a new join edge if possible. 
-        /// 
+        ///     Add a new join edge if possible.
         ///     - Check to see whether the input columns are columns of a table that we're tracking.
         ///     - Make sure that both the tables are "visible" to the current join node
         ///     - If there is already a link between the two tables, make sure that the link's
@@ -397,9 +392,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Build a set of JoinEdges for this join. 
+        ///     Build a set of JoinEdges for this join.
         ///     For cross joins, we simply invoke this function recursively on the children, and return
-        /// 
         ///     For other joins,
         ///     - We first compute the "visibility" for the left and right branches
         ///     - For full outer joins, the "visibility" is the current join node's id. (ie)
@@ -460,7 +454,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Special cases. Nothing further if there exists anything other than 
             // a set of equi-join predicates
-            if (joinNode.Node.Op.OpType == OpType.FullOuterJoin ||
+            if (joinNode.Node.Op.OpType == OpType.FullOuterJoin
+                ||
                 joinNode.OtherPredicate != null
                 ||
                 joinNode.LeftVars.Count == 0)
@@ -551,17 +546,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         //
 
         /// <summary>
-        ///     If edge1 represents (T1, T2), and edge2 represents (T2, T3), try and 
+        ///     If edge1 represents (T1, T2), and edge2 represents (T2, T3), try and
         ///     create a (T1,T3) edge.
-        /// 
         ///     The transitive edge is created if all of the following conditions hold:
         ///     1. edge1 and edge2 are of the same join kind
-        ///     2. If edge1 and edge2 are Left Outer Joins, then 
+        ///     2. If edge1 and edge2 are Left Outer Joins, then
         ///     a. both edges represent joins on the same columns, and
         ///     b. at least one of the edges represents a self join
         ///     3. For inner joins:
         ///     The intersection of the columns on which are the joins represented
-        ///     by edge1 and edge2 is non-empty, the transitive edge is created to represent 
+        ///     by edge1 and edge2 is non-empty, the transitive edge is created to represent
         ///     a join on that intersection.
         ///     If an edge already exists between these tables, then don't add a new edge
         /// </summary>
@@ -676,7 +670,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Given a list of key vars a list of corresponding value vars, creates a list 
+        ///     Given a list of key vars a list of corresponding value vars, creates a list
         ///     of key-value pairs that is ordered based on the keys
         /// </summary>
         /// <param name="keyVars"> </param>
@@ -695,22 +689,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Try to turn left outer joins into inner joins
-        /// 
-        ///     Turn an augmented join node that represents a Left Outer Join into an Inner join 
+        ///     Turn an augmented join node that represents a Left Outer Join into an Inner join
         ///     if all its edges are candidates to be turned into an Inner Join
-        /// 
         ///     An edge representing A LOJ B is a candidate to be turned into an inner join (A INNER JOIN B)
         ///     if the following conditions hold:
-        /// 
-        ///     1. a) There is a foreign key constraint (parent-child relationship) between B and A, 
-        ///     the join is on the constraint, and the joined columns in B are non-nullable, or 
-        /// 
-        ///     b) There is a foreign key constraint between A and B, the join is on the constraint, 
-        ///     and the child multiplicity is One. However, this scenario cannot be specified in the ssdl, 
+        ///     1. a) There is a foreign key constraint (parent-child relationship) between B and A,
+        ///     the join is on the constraint, and the joined columns in B are non-nullable, or
+        ///     b) There is a foreign key constraint between A and B, the join is on the constraint,
+        ///     and the child multiplicity is One. However, this scenario cannot be specified in the ssdl,
         ///     thus this case has not be implemented, and
-        /// 
         ///     2. All the rows from the right table B are preserved (i.e. not filtered out) at the level of the join.
-        ///     This means that if B is participating in any joins prior to being joined with A, these have to be 
+        ///     This means that if B is participating in any joins prior to being joined with A, these have to be
         ///     left outer joins and B has to be a driver (on the left spine).
         /// </summary>
         private void TryTurnLeftOuterJoinsIntoInnerJoins()
@@ -746,7 +735,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Are all the rows from the given table that is part of the subtree rooted 
+        ///     Are all the rows from the given table that is part of the subtree rooted
         ///     at the given root preserved on the root.
         ///     This is true if:
         ///     - The root represents the table
@@ -819,11 +808,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     A LOJ B edge can be turned into an inner join if:
-        /// 
         ///     1. There is a foreign key constraint based on which such transformation is possible
-        /// 
         ///     2. All the rows from the right table B are preserved (i.e. not filtered out) at the level of the join.
-        ///     This means that if B is participating in any joins prior to being joined with A, these have to be 
+        ///     This means that if B is participating in any joins prior to being joined with A, these have to be
         ///     left outer joins and B has to be a driver (on the left spine).
         /// </summary>
         /// <param name="rightNode"> </param>
@@ -835,14 +822,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     A necessary condition for an  A LOJ B edge to be turned into an inner join is 
+        ///     A necessary condition for an  A LOJ B edge to be turned into an inner join is
         ///     the existence of one of the following constraints:
-        /// 
-        ///     a) There is a foreign key constraint (parent-child relationship) between B and A, 
-        ///     the join is on the constraint, and the joined columns in B are non-nullable, or 
-        /// 
-        ///     b) There is a foreign key constraint between A and B, the join is on the constraint, 
-        ///     and the child multiplicity is One. However, this scenario cannot be specified in the ssdl, 
+        ///     a) There is a foreign key constraint (parent-child relationship) between B and A,
+        ///     the join is on the constraint, and the joined columns in B are non-nullable, or
+        ///     b) There is a foreign key constraint between A and B, the join is on the constraint,
+        ///     and the child multiplicity is One. However, this scenario cannot be specified in the ssdl,
         ///     thus this case has not be implemented
         /// </summary>
         /// <param name="joinEdge"> </param>
@@ -921,12 +906,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Checks whether a given table can be eliminated to be replaced by the given replacingTable
         ///     with regards to possible participation in the driving (left) subtree of Left Outer Joins.
-        /// 
-        ///     In order for elimination to happen, one of the two tables has to logically move, 
-        ///     either the replacement table to the original table's location, or the table to the 
+        ///     In order for elimination to happen, one of the two tables has to logically move,
+        ///     either the replacement table to the original table's location, or the table to the
         ///     replacing table's location.
-        /// 
-        ///     For the table that would have to move, it checks whether such move would be valid 
+        ///     For the table that would have to move, it checks whether such move would be valid
         ///     with regards to its participation as driver in Left Outer Joins (<see cref= CanBeMoved />)
         /// </summary>
         /// <param name="table"> </param>
@@ -973,9 +956,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Can the right table of the joinEdge be filtered by joins on the the way up the the given leastCommonAncestor.
-        ///     It can, if 
-        ///     - dissallowAnyJoin is specified, or 
-        ///     - if it is on the right side of a left outer join or participates in any inner join, thus it is only 
+        ///     It can, if
+        ///     - dissallowAnyJoin is specified, or
+        ///     - if it is on the right side of a left outer join or participates in any inner join, thus it is only
         ///     allowed to be on the left side of a left outer join
         /// </summary>
         /// <param name="joinEdge"> </param>
@@ -1005,7 +988,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Determines whether the given table can be moved to the replacing table's location 
+        ///     Determines whether the given table can be moved to the replacing table's location
         ///     with regards to participation in the driving (left) subtree of Left Outer Joins.
         ///     If the table to be moved is part of the driving (left) subtree of a Left Outer Join
         ///     and the replacing table is not part of that subtree then the table cannot be moved,
@@ -1134,7 +1117,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Record that replacingVar is replacing replacedVar.
-        ///     Also, replacedVar was previously replacing any other vars, 
+        ///     Also, replacedVar was previously replacing any other vars,
         ///     add these to the list of replaced vars for the replacingVar too.
         ///     The info about the replacedVar no longer needs to be maintained.
         /// </summary>
@@ -1200,21 +1183,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     This function is a helper function for star selfjoin elimination. All the 
+        ///     This function is a helper function for star selfjoin elimination. All the
         ///     "right" tables of the join edges in the input list are instances of the same table.
-        /// 
         ///     Precondition: Each joinedge is of the form (X, Ai),
         ///     where X is the star-joined table, and A1...An are all instances of the same
         ///     table A
-        /// 
         ///     This function first creates groups of join edges such that all tables
         ///     in a group:
         ///     1. are joined to the center (X) on the same columns
         ///     2. are of the same join kind
         ///     3. are joined on all key columns of table A
         ///     4. if the join type is Left Outer Join, they are not joined on any other columns
-        /// 
-        ///     For each group, we then identify the table with the 
+        ///     For each group, we then identify the table with the
         ///     smallest "Id", and choose that to replace all the other tables from that group
         /// </summary>
         /// <param name="joinEdges"> list of join edges </param>
@@ -1312,9 +1292,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     A join edge qualifies for starting a group for star self join elimination if:
         ///     1. the join is on all key columns of the right table,
-        ///     2. if the join type is Left Outer Join, the join is on no columns 
-        ///     other than the keys of the right table. 
-        ///     NOTE:  The second limitation is really arbitrary, to should be possible 
+        ///     2. if the join type is Left Outer Join, the join is on no columns
+        ///     other than the keys of the right table.
+        ///     NOTE:  The second limitation is really arbitrary, to should be possible
         ///     to also allow other conditions
         /// </summary>
         /// <param name="joinEdge"> </param>
@@ -1568,7 +1548,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Are any of the key columns from the right table of the given join edge referenced 
+        ///     Are any of the key columns from the right table of the given join edge referenced
         ///     elsewhere (outside the join condition)
         /// </summary>
         /// <param name="joinEdge"> </param>
@@ -1665,7 +1645,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Given a ForeignKeyConstraint and lists of vars on which the tables are joined, 
+        ///     Given a ForeignKeyConstraint and lists of vars on which the tables are joined,
         ///     it checks whether the join condition includes (but is not necessarily joined only on)
         ///     the foreign key constraint.
         /// </summary>
@@ -1733,24 +1713,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Try to eliminate the parent table from a 
+        ///     Try to eliminate the parent table from a
         ///     child Left Outer Join parent
         ///     join, given a fk constraint
-        /// 
         ///     More specific:
-        /// 
-        ///     P(p1, p2, p3,…) is the parent table, and C(c1, c2, c3, …) is the child table. 
+        ///     P(p1, p2, p3,…) is the parent table, and C(c1, c2, c3, …) is the child table.
         ///     Say p1,p2 is the PK of P, and c1,c2 is the FK from C to P
-        /// 
         ///     SELECT …
         ///     From C LOJ P ON (p1 = c1 and p2 = c2)
         ///     WHERE …
-        /// 
         ///     If only the keys are used from P, we should but should be carefull about composite keys with nullable foreign key columns.
-        ///     If a composite foreign key has been defined on columns that allow nulls, 
+        ///     If a composite foreign key has been defined on columns that allow nulls,
         ///     and at least one of the columns, upon the insert or update of a row, is set to null, then the foreign key constraint will be satisfied
-        ///     on SqlServer. 
-        /// 
+        ///     on SqlServer.
         ///     Thus we should do the elimination only if
         ///     1.	The key is not composite
         ///     2.	All columns on the child side are non nullable
@@ -1784,8 +1759,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Helper method to try to eliminate the right table given a join edge.
         ///     The right table should be eliminated if:
         ///     1. It does not have non key references, and
-        ///     2. Either its columns are not referenced anywhere outside the join condition or, 
-        ///     if allowRefsForJoinedOnFkOnly is true, the join condition is only on the fk constraint 
+        ///     2. Either its columns are not referenced anywhere outside the join condition or,
+        ///     if allowRefsForJoinedOnFkOnly is true, the join condition is only on the fk constraint
         ///     (which we deduct by only checking the count, since we already checked that the conditions do
         ///     include the fk constraint.
         ///     3. It can be eliminated based on possible participation in a left outer join
@@ -1793,7 +1768,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinEdge"> </param>
         /// <param name="fkConstraintKeyCount"> </param>
         /// <param name="allowRefsForJoinedOnFkOnly"
-        ///     <returns> </returns>
+        /// <returns> </returns>
         private bool TryEliminateRightTable(JoinEdge joinEdge, int fkConstraintKeyCount, bool allowRefsForJoinedOnFkOnly)
         {
             if (HasNonKeyReferences(joinEdge.Right.Table))
@@ -2015,15 +1990,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rebuilds the predicate for a join node and caculates the minimum location id at which it can be specified. 
+        ///     Rebuilds the predicate for a join node and caculates the minimum location id at which it can be specified.
         ///     The predicate is an AND of the equijoin conditions and the "otherPredicate".
-        /// 
         ///     We first remap all columns in the equijoin predicates - if a column pair
         ///     resolves to the same column, then we skip that pair.
-        /// 
         ///     The minimum location id at which a predicate can be specified is the minimum location id that is
-        ///     still at or above the minimum location id of all participating vars.  By default, it is the location id 
-        ///     of the input join node. However, because a table producing a participating var may be moved or 
+        ///     still at or above the minimum location id of all participating vars.  By default, it is the location id
+        ///     of the input join node. However, because a table producing a participating var may be moved or
         ///     replaced by another table, the rebuilt predicate may need to be specified at higher location id.
         /// </summary>
         /// <param name="joinNode"> the current join node </param>
@@ -2095,7 +2068,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Rebuilds a crossjoin node tree. We visit each child of the cross join, and get
-        ///     back a list of nodes. If the list of nodes has 
+        ///     back a list of nodes. If the list of nodes has
         ///     0 children - we return null
         ///     1 child - we return the single child
         ///     otherwise - we build a new crossjoin op with all the children
@@ -2131,7 +2104,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rebuilds the node tree for a join. 
+        ///     Rebuilds the node tree for a join.
         ///     For crossjoins, we delegate to the function above. For other cases, we first
         ///     invoke this function recursively on the left and the right inputs.
         /// </summary>
@@ -2160,7 +2133,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node localPredicateNode;
 
             // The special case first, when we may 'eat' the local predicate
-            if (leftNode != null && rightNode == null
+            if (leftNode != null
+                && rightNode == null
                 && joinNode.Node.Op.OpType == OpType.LeftOuterJoin)
             {
                 // Ignore the local predicate
@@ -2213,15 +2187,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rebuild the node tree for a TableNode. 
-        /// 
+        ///     Rebuild the node tree for a TableNode.
         ///     - Keep following the ReplacementTable links until we get to a node that
-        ///     is either null, or has a "false" value for the IsEliminated property  
+        ///     is either null, or has a "false" value for the IsEliminated property
         ///     - If the result is null, then simply return null
         ///     - If the tableNode we ended up with has already been "placed" in the resulting
         ///     node tree, then return null again
         ///     - If the tableNode has a set of non-nullable columns, then build a filterNode
-        ///     above the ScanTable node (pruning out null values); otherwise, simply return 
+        ///     above the ScanTable node (pruning out null values); otherwise, simply return
         ///     the ScanTable node
         /// </summary>
         /// <param name="tableNode"> the "augmented" tableNode </param>
@@ -2271,7 +2244,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Rebuilds the node tree from the annotated node tree. This function is 
+        ///     Rebuilds the node tree from the annotated node tree. This function is
         ///     simply a dispatcher
         ///     ScanTable - call RebuildNodeTree for ScanTable
         ///     Join - call RebuildNodeTree for joinOp
@@ -2350,7 +2323,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Helper method for <see cref="CombinePredicateNodes" />
-        ///     If the predicateMinimuLocationId is less or equal to the target location id of the current result, it is AND-ed with the 
+        ///     If the predicateMinimuLocationId is less or equal to the target location id of the current result, it is AND-ed with the
         ///     current result, otherwise it is included in the list of predicates that need to be propagated up (outPredicates)
         /// </summary>
         /// <param name="targetNodeId"> </param>
@@ -2395,7 +2368,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the location id of the AugumentedTableNode at which the given var is defined. 
+        ///     Get the location id of the AugumentedTableNode at which the given var is defined.
         ///     If the var is not in th m_varToDefiningNodeMap, then it return the input defaultLocationId
         /// </summary>
         /// <param name="var"> </param>

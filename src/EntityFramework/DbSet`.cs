@@ -7,8 +7,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity
         internal DbSet(InternalSet<TEntity> internalSet)
             : base(internalSet)
         {
-            Contract.Requires(internalSet != null);
+            DebugCheck.NotNull(internalSet);
 
             _internalSet = internalSet;
         }
@@ -138,6 +138,8 @@ namespace System.Data.Entity
         /// </remarks>
         public TEntity Attach(TEntity entity)
         {
+            Check.NotNull(entity, "entity");
+
             _internalSet.Attach(entity);
             return entity;
         }
@@ -154,6 +156,8 @@ namespace System.Data.Entity
         /// </remarks>
         public TEntity Add(TEntity entity)
         {
+            Check.NotNull(entity, "entity");
+
             _internalSet.Add(entity);
             return entity;
         }
@@ -172,6 +176,8 @@ namespace System.Data.Entity
         /// </remarks>
         public TEntity Remove(TEntity entity)
         {
+            Check.NotNull(entity, "entity");
+
             _internalSet.Remove(entity);
             return entity;
         }
@@ -218,7 +224,7 @@ namespace System.Data.Entity
             Justification = "Intentionally just implicit to reduce API clutter.")]
         public static implicit operator DbSet(DbSet<TEntity> entry)
         {
-            Contract.Requires(entry != null);
+            Check.NotNull(entry, "entry");
 
             return (DbSet)entry._internalSet.InternalContext.Set(entry._internalSet.ElementType);
         }
@@ -251,11 +257,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
-        /// <returns> A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated. </returns>
+        /// <returns>
+        ///     A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.
+        /// </returns>
         public DbSqlQuery<TEntity> SqlQuery(string sql, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return new DbSqlQuery<TEntity>(new InternalSqlSetQuery(_internalSet, sql, false, parameters));
         }

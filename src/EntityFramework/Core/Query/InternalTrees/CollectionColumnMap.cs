@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     Represents a column map for a collection column.
     ///     The "element" represents the element of the collection - usually a Structured
     ///     type, but occasionally a collection/simple type as well.
-    ///     The "ForeignKeys" property is optional (but usually necessary) to determine the 
+    ///     The "ForeignKeys" property is optional (but usually necessary) to determine the
     ///     elements of the collection.
     /// </summary>
     internal abstract class CollectionColumnMap : ColumnMap

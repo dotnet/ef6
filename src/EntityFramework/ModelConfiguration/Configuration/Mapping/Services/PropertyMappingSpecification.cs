@@ -5,8 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class PropertyMappingSpecification
     {
@@ -21,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             IList<StorageConditionPropertyMapping> conditions,
             bool isDefaultDiscriminatorCondition)
         {
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entityType);
 
             _entityType = entityType;
             _propertyPath = propertyPath;

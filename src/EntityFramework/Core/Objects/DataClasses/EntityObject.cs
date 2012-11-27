@@ -135,7 +135,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Fail if the change tracker is already set for this EntityObject and it's being set to something different
             // If the original change tracker is associated with a disposed ObjectStateManager, then allow
             // the entity to be attached
-            if (changeTracker != null && EntityChangeTracker != _detachedEntityChangeTracker
+            if (changeTracker != null
+                && EntityChangeTracker != _detachedEntityChangeTracker
                 && !ReferenceEquals(changeTracker, EntityChangeTracker))
             {
                 var entry = EntityChangeTracker as EntityEntry;
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region IEntityWithRelationships
 
         /// <summary>
-        ///     Returns the container for the lazily created relationship 
+        ///     Returns the container for the lazily created relationship
         ///     navigation property objects, collections and refs.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -178,7 +179,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region Protected Change Tracking Methods
 
         /// <summary>
-        ///     This method is called whenever a change is going to be made to an EntityObject 
+        ///     This method is called whenever a change is going to be made to an EntityObject
         ///     property.
         /// </summary>
         /// <param name="property"> The name of the changing property. </param>
@@ -198,7 +199,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called whenever a change is made to an EntityObject 
+        ///     This method is called whenever a change is made to an EntityObject
         ///     property.
         /// </summary>
         /// <param name="property"> The name of the changed property. </param>
@@ -226,8 +227,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity 
-        ///     whenever a change is about to be made to a property of the  
+        ///     This method is called by a ComplexObject contained in this Entity
+        ///     whenever a change is about to be made to a property of the
         ///     ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
@@ -243,8 +244,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity 
-        ///     whenever a change has been made to a property of the  
+        ///     This method is called by a ComplexObject contained in this Entity
+        ///     whenever a change has been made to a property of the
         ///     ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>

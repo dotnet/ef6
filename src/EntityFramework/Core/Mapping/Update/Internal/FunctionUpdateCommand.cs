@@ -14,7 +14,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -41,9 +40,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             : this(translator, stateEntries, stateEntry,
                 translator.GenerateCommandDefinition(functionMapping).CreateCommand())
         {
-            Contract.Requires(functionMapping != null);
-            Contract.Requires(translator != null);
-            Contract.Requires(stateEntries != null);
+            DebugCheck.NotNull(functionMapping);
+            DebugCheck.NotNull(translator);
+            DebugCheck.NotNull(stateEntries);
         }
 
         protected FunctionUpdateCommand(

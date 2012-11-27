@@ -6,37 +6,35 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Globalization;
 
-    ///<summary>
-    ///    A SqlSelectStatement represents a canonical SQL SELECT statement.
-    ///    It has fields for the 5 main clauses
-    ///    <list type="number">
-    ///        <item>SELECT</item>
-    ///        <item>FROM</item>
-    ///        <item>WHERE</item>
-    ///        <item>GROUP BY</item>
-    ///        <item>ORDER BY</item>
-    ///    </list>
-    ///    We do not have HAVING, since the CQT does not have such a node.
-    ///    Each of the fields is a SqlBuilder, so we can keep appending SQL strings
-    ///    or other fragments to build up the clause.
-    ///
-    ///    The FromExtents contains the list of inputs in use for the select statement.
-    ///    There is usually just one element in this - Select statements for joins may
-    ///    temporarily have more than one.
-    ///
-    ///    If the select statement is created by a Join node, we maintain a list of
-    ///    all the extents that have been flattened in the join in AllJoinExtents
-    ///    <example>
-    ///        in J(j1= J(a,b), c)
-    ///        FromExtents has 2 nodes JoinSymbol(name=j1, ...) and Symbol(name=c)
-    ///        AllJoinExtents has 3 nodes Symbol(name=a), Symbol(name=b), Symbol(name=c)
-    ///    </example>
-    ///    If any expression in the non-FROM clause refers to an extent in a higher scope,
-    ///    we add that extent to the OuterExtents list.  This list denotes the list
-    ///    of extent aliases that may collide with the aliases used in this select statement.
-    ///    It is set by <see cref="SqlGenerator.Visit(DbVariableReferenceExpression)" />.
-    ///    An extent is an outer extent if it is not one of the FromExtents.
-    ///</summary>
+    /// <summary>
+    ///     A SqlSelectStatement represents a canonical SQL SELECT statement.
+    ///     It has fields for the 5 main clauses
+    ///     <list type="number">
+    ///         <item>SELECT</item>
+    ///         <item>FROM</item>
+    ///         <item>WHERE</item>
+    ///         <item>GROUP BY</item>
+    ///         <item>ORDER BY</item>
+    ///     </list>
+    ///     We do not have HAVING, since the CQT does not have such a node.
+    ///     Each of the fields is a SqlBuilder, so we can keep appending SQL strings
+    ///     or other fragments to build up the clause.
+    ///     The FromExtents contains the list of inputs in use for the select statement.
+    ///     There is usually just one element in this - Select statements for joins may
+    ///     temporarily have more than one.
+    ///     If the select statement is created by a Join node, we maintain a list of
+    ///     all the extents that have been flattened in the join in AllJoinExtents
+    ///     <example>
+    ///         in J(j1= J(a,b), c)
+    ///         FromExtents has 2 nodes JoinSymbol(name=j1, ...) and Symbol(name=c)
+    ///         AllJoinExtents has 3 nodes Symbol(name=a), Symbol(name=b), Symbol(name=c)
+    ///     </example>
+    ///     If any expression in the non-FROM clause refers to an extent in a higher scope,
+    ///     we add that extent to the OuterExtents list.  This list denotes the list
+    ///     of extent aliases that may collide with the aliases used in this select statement.
+    ///     It is set by <see cref="SqlGenerator.Visit(DbVariableReferenceExpression)" />.
+    ///     An extent is an outer extent if it is not one of the FromExtents.
+    /// </summary>
     internal sealed class SqlSelectStatement : ISqlFragment
     {
         /// <summary>
@@ -156,11 +154,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Write out a SQL select statement as a string.
         ///     We have to
         ///     <list type="number">
-        ///         <item>Check whether the aliases extents we use in this statement have
+        ///         <item>
+        ///             Check whether the aliases extents we use in this statement have
         ///             to be renamed.
         ///             We first create a list of all the aliases used by the outer extents.
         ///             For each of the FromExtents( or AllJoinExtents if it is non-null),
-        ///             rename it if it collides with the previous list.</item>
+        ///             rename it if it collides with the previous list.
+        ///         </item>
         ///         <item>Write each of the clauses (if it exists) as a string</item>
         ///     </list>
         /// </summary>
@@ -265,7 +265,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 GroupBy.WriteSql(writer, sqlGenerator);
             }
 
-            if ((null != orderBy) && !OrderBy.IsEmpty
+            if ((null != orderBy)
+                && !OrderBy.IsEmpty
                 && (IsTopMost || Select.Top != null))
             {
                 writer.WriteLine();

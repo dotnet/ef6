@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Threading;
 
     /// <summary>
@@ -23,22 +23,26 @@ namespace System.Data.Entity.Config
         ///     Constructs a new resolver that will return the given instance for the contract type
         ///     regardless of the key passed to the Get method.
         /// </summary>
-        /// <param name="valueFactory"> The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service. </param>
+        /// <param name="valueFactory">
+        ///     The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service.
+        /// </param>
         public ThreadLocalDependencyResolver(Func<T> valueFactory)
             : this(valueFactory, null)
         {
-            Contract.Requires(valueFactory != null);
+            Check.NotNull(valueFactory, "valueFactory");
         }
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
         ///     if the given key matches exactly the key passed to the Get method.
         /// </summary>
-        /// <param name="valueFactory"> The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service. </param>
+        /// <param name="valueFactory">
+        ///     The <see cref="T:System.Func{T}" /> invoked to produce a new per-thread instance of the target service.
+        /// </param>
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
         public ThreadLocalDependencyResolver(Func<T> valueFactory, object key)
         {
-            Contract.Requires(valueFactory != null);
+            Check.NotNull(valueFactory, "valueFactory");
 
             _threadLocal = new ThreadLocal<T>(valueFactory);
             _key = key;

@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     This method accepts a string parameter that represents a path in a Web (specifically,
-        ///     an ASP.NET) application -- one that starts with a '~' -- and resolves it to a 
+        ///     an ASP.NET) application -- one that starts with a '~' -- and resolves it to a
         ///     canonical file path.
         /// </summary>
         /// <remarks>

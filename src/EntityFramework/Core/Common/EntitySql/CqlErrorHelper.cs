@@ -250,7 +250,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static string GetReadableTypeName(EdmType type)
         {
-            if (type.BuiltInTypeKind == BuiltInTypeKind.RowType ||
+            if (type.BuiltInTypeKind == BuiltInTypeKind.RowType
+                ||
                 type.BuiltInTypeKind == BuiltInTypeKind.CollectionType
                 ||
                 type.BuiltInTypeKind == BuiltInTypeKind.RefType)

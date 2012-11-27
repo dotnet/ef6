@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Mapping
             StorageModificationFunctionMapping deleteFunctionMapping,
             StorageModificationFunctionMapping insertFunctionMapping)
         {
-            Contract.Requires(associationSet != null);
+            DebugCheck.NotNull(associationSet);
 
             AssociationSet = associationSet;
             DeleteFunctionMapping = deleteFunctionMapping;

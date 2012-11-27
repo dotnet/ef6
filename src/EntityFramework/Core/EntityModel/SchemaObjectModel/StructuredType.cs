@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Determines whether this type is of the same type as baseType, 
+        ///     Determines whether this type is of the same type as baseType,
         ///     or is derived from baseType.
         /// </summary>
         /// <param name="baseType"> </param>

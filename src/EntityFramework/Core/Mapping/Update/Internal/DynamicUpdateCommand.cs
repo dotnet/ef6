@@ -11,8 +11,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -32,9 +32,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             DbModificationCommandTree tree, Dictionary<int, string> outputIdentifiers)
             : base(translator, originalValues, currentValues)
         {
-            Contract.Requires(processor != null);
-            Contract.Requires(translator != null);
-            Contract.Requires(tree != null);
+            DebugCheck.NotNull(processor);
+            DebugCheck.NotNull(translator);
+            DebugCheck.NotNull(tree);
 
             _processor = processor;
             _operator = modificationOperator;
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                         await
                                         SpatialHelpers.GetSpatialValueAsync(
                                             Translator.MetadataWorkspace, reader, member.TypeUsage, ordinal, cancellationToken).
-                                            ConfigureAwait(continueOnCapturedContext: false);
+                                                       ConfigureAwait(continueOnCapturedContext: false);
                                 }
                                 else
                                 {

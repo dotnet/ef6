@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal sealed class FunctionImportEntityTypeMapping : FunctionImportStructuralTypeMapping
@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Mapping
             LineInfo lineInfo)
             : base(columnsRenameList, lineInfo)
         {
-            Contract.Requires(isOfTypeEntityTypes != null);
-            Contract.Requires(entityTypes != null);
-            Contract.Requires(conditions != null);
+            DebugCheck.NotNull(isOfTypeEntityTypes);
+            DebugCheck.NotNull(entityTypes);
+            DebugCheck.NotNull(conditions);
 
             IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(isOfTypeEntityTypes.ToList());
             EntityTypes = new ReadOnlyCollection<EntityType>(entityTypes.ToList());
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping
                 IsOfTypeEntityTypes.SelectMany(
                     entityType =>
                     MetadataHelper.GetTypeAndSubtypesOf(entityType, itemCollection, includeAbstractTypes)
-                        .Cast<EntityType>()));
+                                  .Cast<EntityType>()));
         }
 
         internal IEnumerable<String> GetDiscriminatorColumns()

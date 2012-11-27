@@ -3,13 +3,12 @@
 namespace System.Data.Entity.Infrastructure
 {
     /// <summary>
-    ///     A factory for creating derived <see cref="DbContext" /> instances. Implement this 
-    ///     interface to enable design-time services for context types that do not have a 
+    ///     A factory for creating derived <see cref="DbContext" /> instances. Implement this
+    ///     interface to enable design-time services for context types that do not have a
     ///     public default constructor.
-    ///     
     ///     At design-time, derived <see cref="DbContext" /> instances can be created in order to enable specific
     ///     design-time experiences such as model rendering, DDL generation etc. To enable design-time instantiation
-    ///     for derived <see cref="DbContext" /> types that do not have a public, default constructor, implement 
+    ///     for derived <see cref="DbContext" /> types that do not have a public, default constructor, implement
     ///     this interface. Design-time services will auto-discover implementations of this interface that are in the
     ///     same assembly as the derived <see cref="DbContext" /> type.
     /// </summary>

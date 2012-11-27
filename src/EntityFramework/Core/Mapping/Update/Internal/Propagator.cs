@@ -6,13 +6,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     <para> Comments assume there is a map between the CDM and store. Other maps are possible, but for simplicity, we discuss the 'from' portion of the map as the C-Space and the 'to' portion of the map as the S-Space. </para>
-    ///     <para> This class translates C-Space change requests into S-Space change requests given a C-Space change request, an update view loader, and a target table. It has precisely one entry point, the static <see
-    ///      cref="Propagate" /> method. It performs the translation by evaluating an update mapping view w.r.t. change requests (propagating a change request through the view). </para>
+    ///     <para>
+    ///         This class translates C-Space change requests into S-Space change requests given a C-Space change request, an update view loader, and a target table. It has precisely one entry point, the static
+    ///         <see
+    ///             cref="Propagate" />
+    ///         method. It performs the translation by evaluating an update mapping view w.r.t. change requests (propagating a change request through the view).
+    ///     </para>
     /// </summary>
     /// <remarks>
     ///     <para> This class implements propagation rules for the following relational operators in the update mapping view: </para>
@@ -34,8 +38,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private Propagator(UpdateTranslator parent, EntitySet table)
         {
             // Initialize propagator state.
-            Contract.Requires(parent != null);
-            Contract.Requires(table != null);
+            DebugCheck.NotNull(parent);
+            DebugCheck.NotNull(table);
 
             m_updateTranslator = parent;
             m_table = table;
@@ -95,6 +99,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         public override ChangeNode Visit(DbCrossJoinExpression node)
         {
+            Check.NotNull(node, "node");
+
             throw new NotSupportedException(Strings.Update_UnsupportedJoinType(node.ExpressionKind));
         }
 
@@ -107,6 +113,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Results propagated to the given join expression node. </returns>
         public override ChangeNode Visit(DbJoinExpression node)
         {
+            Check.NotNull(node, "node");
+
             if (DbExpressionKind.InnerJoin != node.ExpressionKind
                 && DbExpressionKind.LeftOuterJoin != node.ExpressionKind)
             {
@@ -134,10 +142,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Given the results returned for the left and right inputs to a union, propagates changes
         ///     through the union.
-        /// 
         ///     Propagation rule (U = union node, L = left input, R = right input, D(x) = deleted rows
         ///     in x, I(x) = inserted rows in x)
-        /// 
         ///     U = L union R
         ///     D(U) = D(L) union D(R)
         ///     I(U) = I(L) union I(R)
@@ -146,6 +152,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Result of propagating changes to this union all node. </returns>
         public override ChangeNode Visit(DbUnionAllExpression node)
         {
+            Check.NotNull(node, "node");
+
             // Initialize an empty change node result for the union all node
             var result = BuildChangeNode(node);
 
@@ -170,10 +178,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         /// <summary>
         ///     Propagate projection.
-        /// 
         ///     Propagation rule (P = projection node, S = projection input, D(x) = deleted rows in x,
         ///     I(x) = inserted rows in x)
-        /// 
         ///     P = Proj_f S
         ///     D(P) = Proj_f D(S)
         ///     I(P) = Proj_f I(S)
@@ -182,6 +188,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Result of propagating changes to the projection expression node. </returns>
         public override ChangeNode Visit(DbProjectExpression node)
         {
+            Check.NotNull(node, "node");
+
             // Initialize an empty change node result for the projection node.
             var result = BuildChangeNode(node);
 
@@ -208,7 +216,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Performs projection for a single row. Evaluates each projection argument against the specified 
+        ///     Performs projection for a single row. Evaluates each projection argument against the specified
         ///     row, returning a result with the specified type.
         /// </summary>
         /// <param name="node"> Projection expression. </param>
@@ -217,7 +225,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Projected row. </returns>
         private static PropagatorResult Project(DbProjectExpression node, PropagatorResult row, TypeUsage resultType)
         {
-            Contract.Requires(node != null);
+            DebugCheck.NotNull(node);
 
             Debug.Assert(null != node.Projection, "CQT validates DbProjectExpression.Projection property");
 
@@ -246,7 +254,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Propagation rule (F = filter node, S = input to filter, I(x) = rows inserted
         ///     into x, D(x) = rows deleted from x, Sigma_p = filter predicate)
-        /// 
         ///     F = Sigma_p S
         ///     D(F) = Sigma_p D(S)
         ///     I(F) = Sigma_p I(S)
@@ -255,6 +262,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> </returns>
         public override ChangeNode Visit(DbFilterExpression node)
         {
+            Check.NotNull(node, "node");
+
             // Initialize an empty change node for this filter node.
             var result = BuildChangeNode(node);
 
@@ -282,6 +291,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> </returns>
         public override ChangeNode Visit(DbScanExpression node)
         {
+            Check.NotNull(node, "node");
+
             // Gets modifications requested for this extent from the grouper.
             var extent = node.Target;
             var extentModifications = UpdateTranslator.GetExtentModifications(extent);

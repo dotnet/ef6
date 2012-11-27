@@ -60,9 +60,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal TypeUsage TypeIdType { get; set; }
 
         /// <summary>
-        ///     Add a mapping from the propertyRef (of the old type) to the 
+        ///     Add a mapping from the propertyRef (of the old type) to the
         ///     corresponding property in the new type.
-        /// 
         ///     NOTE: Only to be used by StructuredTypeInfo
         /// </summary>
         /// <param name="propertyRef"> </param>
@@ -146,13 +145,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Determines the offset for structured types in Flattened type. For instance, if the original type is of the form:
-        /// 
         ///     { int X, ComplexType Y }
-        ///     
         ///     and the flattened type is of the form:
-        /// 
         ///     { int X, Y_ComplexType_Prop1, Y_ComplexType_Prop2 }
-        ///     
         ///     GetNestedStructureOffset(Y) returns 1
         /// </summary>
         /// <param name="property"> Complex property. </param>

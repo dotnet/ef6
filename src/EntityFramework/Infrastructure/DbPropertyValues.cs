@@ -5,8 +5,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A collection of all the properties for an underlying entity or complex object.
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalValues"> The internal dictionary. </param>
         internal DbPropertyValues(InternalPropertyValues internalValues)
         {
-            Contract.Requires(internalValues != null);
+            DebugCheck.NotNull(internalValues);
 
             _internalValues = internalValues;
         }
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Infrastructure
             Justification = "Naming is intentional.")]
         public void SetValues(object obj)
         {
-            Contract.Requires(obj != null);
+            Check.NotNull(obj, "obj");
 
             _internalValues.SetValues(obj);
         }
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="dictionary"> The dictionary to read values from. </param>
         public void SetValues(DbPropertyValues propertyValues)
         {
-            Contract.Requires(propertyValues != null);
+            Check.NotNull(propertyValues, "propertyValues");
 
             _internalValues.SetValues(propertyValues._internalValues);
         }
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Infrastructure
         {
             get
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+                Check.NotEmpty(propertyName, "propertyName");
 
                 var value = _internalValues[propertyName];
 
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Infrastructure
             }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+                Check.NotEmpty(propertyName, "propertyName");
 
                 _internalValues[propertyName] = value;
             }

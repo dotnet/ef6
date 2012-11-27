@@ -25,7 +25,9 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Gets the encoding for the text writer to use.
         /// </summary>
-        /// <returns> An <see cref="T:System.Text.Encoding" /> that indicates the encoding for the text writer to use. </returns>
+        /// <returns>
+        ///     An <see cref="T:System.Text.Encoding" /> that indicates the encoding for the text writer to use.
+        /// </returns>
         public override Encoding Encoding
         {
             get { return _writer.Encoding; }
@@ -61,7 +63,9 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Gets the <see cref="T:System.IO.TextWriter" /> to use.
         /// </summary>
-        /// <returns> The <see cref="T:System.IO.TextWriter" /> to use. </returns>
+        /// <returns>
+        ///     The <see cref="T:System.IO.TextWriter" /> to use.
+        /// </returns>
         public TextWriter InnerWriter
         {
             get { return _writer; }
@@ -70,7 +74,9 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and default tab string.
         /// </summary>
-        /// <param name="writer"> The <see cref="T:System.IO.TextWriter" /> to use for output. </param>
+        /// <param name="writer">
+        ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
+        /// </param>
         public IndentedTextWriter(TextWriter writer)
             : this(writer, "    ")
         {
@@ -79,7 +85,9 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and tab string.
         /// </summary>
-        /// <param name="writer"> The <see cref="T:System.IO.TextWriter" /> to use for output. </param>
+        /// <param name="writer">
+        ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
+        /// </param>
         /// <param name="tabString"> The tab string to use for indentation. </param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public IndentedTextWriter(TextWriter writer, string tabString)
@@ -108,8 +116,10 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Outputs the tab string once for each level of indentation according to the <see
-        ///      cref="P:System.CodeDom.Compiler.IndentedTextWriter.Indent" /> property.
+        ///     Outputs the tab string once for each level of indentation according to the
+        ///     <see
+        ///         cref="P:System.CodeDom.Compiler.IndentedTextWriter.Indent" />
+        ///     property.
         /// </summary>
         protected virtual void OutputTabs()
         {

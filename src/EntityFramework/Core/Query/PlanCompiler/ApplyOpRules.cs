@@ -120,11 +120,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessOuterApplyOverDummyProjectOverFilter);
 
         /// <summary>
-        ///     Convert OuterApply(X, Project(Filter(Y, p), constant)) => 
+        ///     Convert OuterApply(X, Project(Filter(Y, p), constant)) =>
         ///     LeftOuterJoin(X, Project(Y, constant), p)
         ///     if "Y" has no external references to X
-        /// 
-        ///     In an ideal world, we would be able to push the Project below the Filter, 
+        ///     In an ideal world, we would be able to push the Project below the Filter,
         ///     and then have the normal ApplyOverFilter rule handle this - but that causes us
         ///     problems because we always try to pull up ProjectOp's as high as possible. Hence,
         ///     the special case for this rule
@@ -191,7 +190,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 capWithProject = true;
                 var varDefNode = projectNode.Child1.Child0;
-                if (varDefNode.Child0.Op.OpType == OpType.NullSentinel && sentinelIsInt32
+                if (varDefNode.Child0.Op.OpType == OpType.NullSentinel
+                    && sentinelIsInt32
                     && trc.CanChangeNullSentinelValue)
                 {
                     varDefNode.Child0 = context.Command.CreateNode(context.Command.CreateVarRefOp(sentinelVar));
@@ -302,32 +302,29 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessOuterApplyOverProject);
 
         /// <summary>
-        ///     Converts a 
-        ///     OuterApply(X, Project(Y, ...)) 
-        ///     => 
+        ///     Converts a
+        ///     OuterApply(X, Project(Y, ...))
+        ///     =>
         ///     Project(OuterApply(X, Project(Y, ...)), ...) or
         ///     Project(OuterApply(X, Y), ...)
-        /// 
         ///     The second (simpler) form is used if a "sentinel" var can be located (ie)
-        ///     some Var of Y that is guaranteed to be non-null. Otherwise, we create a 
+        ///     some Var of Y that is guaranteed to be non-null. Otherwise, we create a
         ///     dummy ProjectNode as the right child of the Apply - which
         ///     simply projects out all the vars of the Y, and adds on a constant (say "1"). This
         ///     constant is now treated as the sentinel var
-        /// 
         ///     Then the existing ProjectOp is pulled up above the the outer-apply, but all the locally defined
-        ///     Vars have their defining expressions now expressed as 
+        ///     Vars have their defining expressions now expressed as
         ///     case when sentinelVar is null then null else oldDefiningExpr end
         ///     where oldDefiningExpr represents the original defining expression
-        ///     This allows us to get nulls for the appropriate columns when necessary. 
-        /// 
-        ///     Special cases. 
+        ///     This allows us to get nulls for the appropriate columns when necessary.
+        ///     Special cases.
         ///     * If the oldDefiningExpr is itself an internal constant equivalent to the null sentinel ("1"),
         ///     we simply project a ref to the null sentinel, no need for cast
-        ///     * If the ProjectOp contained exactly one locally defined Var, and it was a constant, then 
+        ///     * If the ProjectOp contained exactly one locally defined Var, and it was a constant, then
         ///     we simply return - we will be looping endlessly otherwise
-        ///     * If the ProjectOp contained no local definitions, then we don't need to create the 
+        ///     * If the ProjectOp contained no local definitions, then we don't need to create the
         ///     dummy projectOp - we can simply pull up the Project
-        ///     * If any of the defining expressions of the local definitions was simply a VarRefOp 
+        ///     * If any of the defining expressions of the local definitions was simply a VarRefOp
         ///     referencing a Var that was defined by Y, then there is no need to add the case
         ///     expression for that.
         /// </summary>
@@ -353,7 +350,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // If the ProjectOp is the dummy ProjectOp that we would be building (ie)
             // it defines only 1 var - and the defining expression is simply a constant
             // 
-            if (sentinelVar == null &&
+            if (sentinelVar == null
+                &&
                 varDefListNode.Children.Count == 1
                 &&
                 (varDefListNode.Child0.Child0.Op.OpType == OpType.InternalConstant
@@ -663,7 +661,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     A visitor that calculates the number of output columns for a subree 
+        ///     A visitor that calculates the number of output columns for a subree
         ///     with a given root
         /// </summary>
         internal class OutputCountVisitor : BasicOpVisitorOfT<int>
@@ -675,7 +673,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #region Public Methods
 
             /// <summary>
-            ///     Calculates the number of output columns for the subree 
+            ///     Calculates the number of output columns for the subree
             ///     rooted at the given node
             /// </summary>
             /// <param name="node"> </param>
@@ -709,7 +707,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     A default processor for any node. 
+            ///     A default processor for any node.
             ///     Returns the sum of the children outputs
             /// </summary>
             /// <param name="n"> </param>
@@ -825,7 +823,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     A utility class that remaps a given var at its definition and also remaps all its references.  
+        ///     A utility class that remaps a given var at its definition and also remaps all its references.
         ///     The given var is remapped to an arbitrary new var.
         ///     If the var is defined by a ScanTable, all the vars defined by that table and all their references
         ///     are remapped as well.
@@ -855,7 +853,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             /// <summary>
             ///     Update vars in this subtree. Recompute the nodeinfo along the way
-            ///     Unlike the base implementation, we want to visit the childrent, even if no vars are in the 
+            ///     Unlike the base implementation, we want to visit the childrent, even if no vars are in the
             ///     remapping dictionary.
             /// </summary>
             /// <param name="subTree"> </param>
@@ -871,7 +869,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     If the node defines the node that needs to be remapped, 
+            ///     If the node defines the node that needs to be remapped,
             ///     it remaps it to a new var.
             /// </summary>
             /// <param name="op"> </param>

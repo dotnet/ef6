@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a multi-stream nest operation. The first input represents the 
+    ///     Represents a multi-stream nest operation. The first input represents the
     ///     container row, while all the other inputs represent collections
     /// </summary>
     internal class MultiStreamNestOp : NestBaseOp

@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
     using System.Threading;
 
@@ -19,8 +19,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Primitive(string name, PrimitiveType primitiveType)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(primitiveType != null);
+            Check.NotEmpty(name, "name");
+            Check.NotNull(primitiveType, "primitiveType");
 
             return CreateProperty(name, primitiveType);
         }
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Enum(string name, EnumType enumType)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(enumType != null);
+            Check.NotEmpty(name, "name");
+            Check.NotNull(enumType, "enumType");
 
             return CreateProperty(name, enumType);
         }
@@ -37,8 +37,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Complex(string name, ComplexType complexType)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(complexType != null);
+            Check.NotEmpty(name, "name");
+            Check.NotNull(complexType, "complexType");
 
             var property = CreateProperty(name, complexType);
 
@@ -49,8 +49,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static EdmProperty CreateProperty(string name, EdmType edmType)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(edmType != null);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(edmType);
 
             var typeUsage = TypeUsage.Create(edmType, new FacetValues());
 
@@ -83,9 +83,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, Type entityDeclaringType)
             : this(name, typeUsage)
         {
-            Contract.Assert(propertyInfo != null);
-            Contract.Assert(entityDeclaringType != null);
-            Contract.Assert(name == propertyInfo.Name);
+            Debug.Assert(propertyInfo != null);
+            Debug.Assert(entityDeclaringType != null);
+            Debug.Assert(name == propertyInfo.Name);
 
             _propertyInfo = propertyInfo;
             _entityDeclaringType = entityDeclaringType;
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return TypeUsage.EdmType as PrimitiveType; }
             internal set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 var existingStoreGeneratedPattern = StoreGeneratedPattern;

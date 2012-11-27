@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -34,8 +34,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="provider"> The provider to wrap. </param>
         public DbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(provider != null);
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(provider);
 
             _internalContext = internalContext;
             _provider = provider;
@@ -51,6 +51,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public virtual IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             var objectQuery = CreateObjectQuery(expression);
 
             // If the ElementType is different than the generic type then we need to use the ElementType
@@ -72,6 +74,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public virtual IQueryable CreateQuery(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             return CreateQuery(CreateObjectQuery(expression));
         }
 
@@ -80,6 +84,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public virtual TResult Execute<TResult>(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             _internalContext.Initialize();
 
             return ((IQueryProvider)_provider).Execute<TResult>(expression);
@@ -90,6 +96,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         public virtual object Execute(Expression expression)
         {
+            Check.NotNull(expression, "expression");
+
             _internalContext.Initialize();
 
             return ((IQueryProvider)_provider).Execute(expression);
@@ -106,6 +114,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         Task<TResult> IDbAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
+            Check.NotNull(expression, "expression");
+
             _internalContext.Initialize();
 
             return ((IDbAsyncQueryProvider)_provider).ExecuteAsync<TResult>(expression, cancellationToken);
@@ -116,6 +126,8 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
+            Check.NotNull(expression, "expression");
+
             _internalContext.Initialize();
 
             return ((IDbAsyncQueryProvider)_provider).ExecuteAsync(expression, cancellationToken);
@@ -147,7 +159,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         protected ObjectQuery CreateObjectQuery(Expression expression)
         {
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(expression);
 
             expression = new DbQueryVisitor().Visit(expression);
 
@@ -160,7 +172,7 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         protected IInternalQuery CreateInternalQuery(ObjectQuery objectQuery)
         {
-            Contract.Requires(objectQuery != null);
+            DebugCheck.NotNull(objectQuery);
 
             var genericInternalQueryType = typeof(InternalQuery<>).MakeGenericType(
                 ((IQueryable)objectQuery).ElementType);

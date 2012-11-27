@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The SubqueryTracking Visitor serves as a base class for the visitors that may turn 
+    ///     The SubqueryTracking Visitor serves as a base class for the visitors that may turn
     ///     scalar subqueryies into outer-apply subqueries.
     /// </summary>
     internal abstract class SubqueryTrackingVisitor : BasicOpVisitorOfNode
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Augments a node with a number of OuterApply's - one for each subquery
-        ///     If S1, S2, ... are the list of subqueries for the node, and D is the 
+        ///     If S1, S2, ... are the list of subqueries for the node, and D is the
         ///     original (driver) input, we convert D into
         ///     OuterApply(OuterApply(D, S1), S2), ...
         /// </summary>
@@ -168,16 +168,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default processing for RelOps. 
-        ///     - First, we mark the current node as its own ancestor (so that any 
+        ///     Default processing for RelOps.
+        ///     - First, we mark the current node as its own ancestor (so that any
         ///     subqueries that we detect internally will be added to this node's list)
         ///     - then, visit each child
         ///     - finally, accumulate all nested subqueries.
         ///     - if the current RelOp has only one input, then add the nested subqueries via
-        ///     Outer apply nodes to this input. 
-        /// 
-        ///     The interesting RelOps are 
-        ///     Project, Filter, GroupBy, Sort,  
+        ///     Outer apply nodes to this input.
+        ///     The interesting RelOps are
+        ///     Project, Filter, GroupBy, Sort,
         ///     Should we break this out into separate functions instead?
         /// </summary>
         /// <param name="op"> Current RelOp </param>
@@ -251,7 +250,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Visitor for UnnestOp. If the child has any subqueries, we need to convert this
-        ///     into an 
+        ///     into an
         ///     OuterApply(S, Unnest)
         ///     unlike the other cases where the OuterApply will appear as the input of the node
         /// </summary>

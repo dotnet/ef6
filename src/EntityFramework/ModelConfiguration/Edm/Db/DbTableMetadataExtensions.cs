@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     internal static class DbTableMetadataExtensions
     {
@@ -14,8 +13,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static void AddColumn(this EntityType table, EdmProperty column)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(column);
 
             column.SetPreferredName(column.Name);
             column.Name = table.Properties.UniquifyName(column.Name);
@@ -25,38 +24,38 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static void SetConfiguration(this EntityType table, object configuration)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(configuration != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(configuration);
 
             table.Annotations.SetConfiguration(configuration);
         }
 
         public static DatabaseName GetTableName(this EntityType table)
         {
-            Contract.Requires(table != null);
+            DebugCheck.NotNull(table);
 
             return (DatabaseName)table.Annotations.GetAnnotation(TableNameAnnotation);
         }
 
         public static void SetTableName(this EntityType table, DatabaseName tableName)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(tableName != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(tableName);
 
             table.Annotations.SetAnnotation(TableNameAnnotation, tableName);
         }
 
         public static EntityType GetKeyNamesType(this EntityType table)
         {
-            Contract.Requires(table != null);
+            DebugCheck.NotNull(table);
 
             return (EntityType)table.Annotations.GetAnnotation(KeyNamesTypeAnnotation);
         }
 
         public static void SetKeyNamesType(this EntityType table, EntityType entityType)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(entityType);
 
             table.Annotations.SetAnnotation(KeyNamesTypeAnnotation, entityType);
         }

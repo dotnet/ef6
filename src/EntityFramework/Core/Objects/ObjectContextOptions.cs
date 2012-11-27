@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Get or set boolean that determines if related ends can be loaded on demand 
+        ///     Get or set boolean that determines if related ends can be loaded on demand
         ///     when they are accessed through a navigation property.
         /// </summary>
         /// <value> True if related ends can be loaded on demand; otherwise false. </value>
@@ -45,10 +45,10 @@ namespace System.Data.Entity.Core.Objects
         public bool UseConsistentNullReferenceBehavior { get; set; }
 
         /// <summary>
-        ///     This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities. 
-        ///     If this flag is set, then any equality comparison between two operands, both of which are potentially 
-        ///     nullable, will be rewritten to show C# null comparison semantics. As an example: 
-        ///     (operand1 = operand2) will be rewritten as 
+        ///     This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities.
+        ///     If this flag is set, then any equality comparison between two operands, both of which are potentially
+        ///     nullable, will be rewritten to show C# null comparison semantics. As an example:
+        ///     (operand1 = operand2) will be rewritten as
         ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
         ///     The default value is false when using <see cref="ObjectContext" />.
         /// </summary>

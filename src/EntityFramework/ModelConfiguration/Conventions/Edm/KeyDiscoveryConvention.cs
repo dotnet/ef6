@@ -5,13 +5,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
-    [ContractClass(typeof(KeyDiscoveryConventionContracts))]
     public abstract class KeyDiscoveryConvention : IEdmConvention<EntityType>
     {
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             if ((edmDataModelItem.DeclaredKeyProperties.Count > 0)
                 || (edmDataModelItem.BaseType != null))
             {
@@ -29,22 +31,5 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         protected abstract EdmProperty MatchKeyProperty(
             EntityType entityType, IEnumerable<EdmProperty> primitiveProperties);
-
-        #region Base Member Contracts
-
-        [ContractClassFor(typeof(KeyDiscoveryConvention))]
-        private abstract class KeyDiscoveryConventionContracts : KeyDiscoveryConvention
-        {
-            protected override EdmProperty MatchKeyProperty(
-                EntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
-            {
-                Contract.Requires(entityType != null);
-                Contract.Requires(primitiveProperties != null);
-
-                return null;
-            }
-        }
-
-        #endregion
     }
 }

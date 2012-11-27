@@ -7,6 +7,7 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -823,7 +824,7 @@ namespace System.Data.Entity.Objects
 
         private void CleanupDatabase()
         {
-            Contract.Assert(GlobalConnection != null);
+            Debug.Assert(GlobalConnection != null);
 
             GlobalConnection.Close();
             GlobalConnection.Dispose();

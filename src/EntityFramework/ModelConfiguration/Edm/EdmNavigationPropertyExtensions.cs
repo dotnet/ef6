@@ -4,20 +4,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal static class EdmNavigationPropertyExtensions
     {
         public static object GetConfiguration(this NavigationProperty navigationProperty)
         {
-            Contract.Requires(navigationProperty != null);
+            DebugCheck.NotNull(navigationProperty);
 
             return navigationProperty.Annotations.GetConfiguration();
         }
 
         public static void SetConfiguration(this NavigationProperty navigationProperty, object configuration)
         {
-            Contract.Requires(navigationProperty != null);
+            DebugCheck.NotNull(navigationProperty);
 
             navigationProperty.Annotations.SetConfiguration(configuration);
         }

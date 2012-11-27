@@ -5,10 +5,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     [DebuggerDisplay("{Table.Name}")]
@@ -20,7 +19,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public TableMapping(EntityType table)
         {
-            Contract.Requires(table != null);
+            DebugCheck.NotNull(table);
+
             _table = table;
             _entityTypes = new SortedEntityTypeIndex();
             _columns = new List<ColumnMapping>();
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public void AddEntityTypeMappingFragment(
             EntitySet entitySet, EntityType entityType, StorageMappingFragment fragment)
         {
-            Contract.Assert(fragment.Table == Table);
+            Debug.Assert(fragment.Table == Table);
 
             _entityTypes.Add(entitySet, entityType);
 

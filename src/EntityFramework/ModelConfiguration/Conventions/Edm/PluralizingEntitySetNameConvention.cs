@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
 
@@ -19,12 +20,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(EntitySet edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             if (edmDataModelItem.GetConfiguration() == null)
             {
                 edmDataModelItem.Name
                     = model.GetEntitySets()
-                        .Except(new[] { edmDataModelItem })
-                        .UniquifyName(_pluralizationService.Pluralize(edmDataModelItem.Name));
+                           .Except(new[] { edmDataModelItem })
+                           .UniquifyName(_pluralizationService.Pluralize(edmDataModelItem.Name));
             }
         }
     }

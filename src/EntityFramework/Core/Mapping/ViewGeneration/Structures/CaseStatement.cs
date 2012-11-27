@@ -64,7 +64,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Recursively qualifies all <see cref="ProjectedSlot" />s and returns a new deeply qualified <see cref="CaseStatement" />.
+        ///     Recursively qualifies all <see cref="ProjectedSlot" />s and returns a new deeply qualified
+        ///     <see
+        ///         cref="CaseStatement" />
+        ///     .
         /// </summary>
         internal CaseStatement DeepQualify(CqlBlock block)
         {
@@ -161,7 +164,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Simplifies the <see cref="CaseStatement" /> so that unnecessary WHEN/THENs for nulls/undefined values are eliminated. 
+        ///     Simplifies the <see cref="CaseStatement" /> so that unnecessary WHEN/THENs for nulls/undefined values are eliminated.
         ///     Also, adds an ELSE clause if possible.
         /// </summary>
         internal void Simplify()

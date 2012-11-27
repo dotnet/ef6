@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Transactions;
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Migrations.History
             IHistoryContextFactory historyContextFactory = null)
             : base(connectionString, providerFactory)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(contextKey));
+            DebugCheck.NotEmpty(contextKey);
 
             _contextKey = contextKey;
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Migrations.History
             get { return _currentSchema; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                DebugCheck.NotEmpty(value);
 
                 _currentSchema = value;
             }
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual XDocument GetModel(string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             if (!Exists())
             {
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual IEnumerable<string> GetPendingMigrations(IEnumerable<string> localMigrations)
         {
-            Contract.Requires(localMigrations != null);
+            DebugCheck.NotNull(localMigrations);
 
             if (!Exists())
             {
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Migrations.History
                     && firstLocalMigration != null
                     && firstLocalMigration.MigrationName() == Strings.InitialCreate)
                 {
-                    Contract.Assert(pendingMigrations.First() == firstLocalMigration);
+                    Debug.Assert(pendingMigrations.First() == firstLocalMigration);
 
                     pendingMigrations = pendingMigrations.Skip(1);
                 }
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual IEnumerable<string> GetMigrationsSince(string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             var exists = Exists();
 
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual string GetMigrationId(string migrationName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
+            DebugCheck.NotEmpty(migrationName);
 
             if (!Exists())
             {
@@ -340,8 +340,8 @@ namespace System.Data.Entity.Migrations.History
                     try
                     {
                         context.History
-                            .Select(h => h.ProductVersion)
-                            .FirstOrDefault();
+                               .Select(h => h.ProductVersion)
+                               .FirstOrDefault();
 
                         productVersionExists = true;
                     }
@@ -406,8 +406,8 @@ namespace System.Data.Entity.Migrations.History
                     try
                     {
                         context.History
-                            .Select(h => h.CreatedOn)
-                            .FirstOrDefault();
+                               .Select(h => h.CreatedOn)
+                               .FirstOrDefault();
 
                         createdOnExists = true;
                     }
@@ -425,9 +425,8 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual MigrationOperation CreateInsertOperation(string migrationId, XDocument model)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Requires(model != null);
-            Contract.Ensures(Contract.Result<MigrationOperation>() != null);
+            DebugCheck.NotEmpty(migrationId);
+            DebugCheck.NotNull(model);
 
             using (var context = CreateContext())
             {
@@ -451,8 +450,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual MigrationOperation CreateDeleteOperation(string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Ensures(Contract.Result<MigrationOperation>() != null);
+            DebugCheck.NotEmpty(migrationId);
 
             using (var context = CreateContext())
             {
@@ -477,7 +475,7 @@ namespace System.Data.Entity.Migrations.History
 
         public virtual void BootstrapUsingEFProviderDdl(XDocument model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             using (var context = CreateContext())
             {

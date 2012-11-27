@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     This is a temporary adapter class that wraps an <see cref="ObjectStateEntry" /> and
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Internal
 
         public StateEntryAdapter(ObjectStateEntry stateEntry)
         {
-            Contract.Requires(stateEntry != null);
+            DebugCheck.NotNull(stateEntry);
 
             _stateEntry = stateEntry;
         }

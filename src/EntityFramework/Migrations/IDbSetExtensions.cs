@@ -8,7 +8,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -23,7 +22,7 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         ///     Adds or updates entities by key when SaveChanges is called. Equivalent to an "upsert" operation
-        ///     from database terminology. 
+        ///     from database terminology.
         ///     This method can useful when seeding data using Migrations.
         /// </summary>
         /// <param name="entities"> The entities to add or update. </param>
@@ -37,8 +36,8 @@ namespace System.Data.Entity.Migrations
             this IDbSet<TEntity> set, params TEntity[] entities)
             where TEntity : class
         {
-            Contract.Requires(set != null);
-            Contract.Requires(entities != null);
+            Check.NotNull(set, "set");
+            Check.NotNull(entities, "entities");
 
             var dbSet = set as DbSet<TEntity>;
 
@@ -81,9 +80,9 @@ namespace System.Data.Entity.Migrations
             this IDbSet<TEntity> set, Expression<Func<TEntity, object>> identifierExpression, params TEntity[] entities)
             where TEntity : class
         {
-            Contract.Requires(set != null);
-            Contract.Requires(identifierExpression != null);
-            Contract.Requires(entities != null);
+            Check.NotNull(set, "set");
+            Check.NotNull(identifierExpression, "identifierExpression");
+            Check.NotNull(entities, "entities");
 
             var dbSet = set as DbSet<TEntity>;
 
@@ -115,9 +114,9 @@ namespace System.Data.Entity.Migrations
             this DbSet<TEntity> set, IEnumerable<PropertyPath> identifyingProperties, params TEntity[] entities)
             where TEntity : class
         {
-            Contract.Requires(set != null);
-            Contract.Requires(identifyingProperties != null);
-            Contract.Requires(entities != null);
+            DebugCheck.NotNull(set);
+            DebugCheck.NotNull(identifyingProperties);
+            DebugCheck.NotNull(entities);
 
             var internalSet = (InternalSet<TEntity>)((IInternalSetAdapter)set).InternalSet;
             var keyProperties = GetKeyProperties(typeof(TEntity), internalSet);
@@ -130,12 +129,12 @@ namespace System.Data.Entity.Migrations
                         pi => Expression.Equal(
                             Expression.Property(parameter, pi.Last()),
                             Expression.Constant(pi.Last().GetValue(entity, null))))
-                        .Aggregate<BinaryExpression, Expression>(
-                            null,
-                            (current, predicate)
-                            => (current == null)
-                                   ? predicate
-                                   : Expression.AndAlso(current, predicate));
+                                           .Aggregate<BinaryExpression, Expression>(
+                                               null,
+                                               (current, predicate)
+                                               => (current == null)
+                                                      ? predicate
+                                                      : Expression.AndAlso(current, predicate));
 
                 var existing
                     = set.SingleOrDefault(Expression.Lambda<Func<TEntity, bool>>(matchExpression, new[] { parameter }));
@@ -161,13 +160,13 @@ namespace System.Data.Entity.Migrations
             Type entityType, InternalSet<TEntity> internalSet)
             where TEntity : class
         {
-            Contract.Requires(entityType != null);
-            Contract.Requires(internalSet != null);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(internalSet);
 
             return internalSet.InternalContext
-                .GetEntitySetAndBaseTypeForType(typeof(TEntity))
-                .EntitySet.ElementType.KeyMembers
-                .Select(km => new PropertyPath(entityType.GetProperty(km.Name, KeyPropertyBindingFlags)));
+                              .GetEntitySetAndBaseTypeForType(typeof(TEntity))
+                              .EntitySet.ElementType.KeyMembers
+                              .Select(km => new PropertyPath(entityType.GetProperty(km.Name, KeyPropertyBindingFlags)));
         }
     }
 }

@@ -1280,7 +1280,7 @@ namespace ProductivityApiUnitTests
             mockSet.Verify(s => s.Contains("Foo"), Times.Once());
 
             var _ = set.Count;
-            mockSet.Verify(s => s.Count, Times.Exactly(2));
+            mockSet.Verify(s => s.Count, Times.Exactly(1));
 
             mockSet.Setup(s => s.GetEnumerator()).Returns(Enumerable.Empty<string>().GetEnumerator());
             set.GetEnumerator();

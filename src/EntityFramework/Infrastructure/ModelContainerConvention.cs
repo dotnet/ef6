@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="containerName"> The model container name. </param>
         internal ModelContainerConvention(string containerName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(containerName));
+            DebugCheck.NotEmpty(containerName);
 
             _containerName = containerName;
         }
@@ -39,6 +39,8 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="model"> The model. </param>
         public virtual void Apply(EdmModel model)
         {
+            Check.NotNull(model, "model");
+
             model.Containers.Single().Name = _containerName;
         }
 

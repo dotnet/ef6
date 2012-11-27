@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
     /// <summary>
     ///     Type returned by the Translator visitor; allows us to put the logic
-    ///     to ensure a specific return type in a single place, instead of in 
+    ///     to ensure a specific return type in a single place, instead of in
     ///     each Visit method.
     /// </summary>
     internal class TranslatorResult

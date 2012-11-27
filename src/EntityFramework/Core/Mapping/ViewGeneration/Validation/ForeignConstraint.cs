@@ -285,7 +285,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 // Note: If both of them are not-null, they are mapped to the
                 // same association set -- since we checked that particular cell
 
-                if (childEnd != null && parentEnd != null
+                if (childEnd != null
+                    && parentEnd != null
                     &&
                     FindEntitySetForColumnsMappedToEntityKeys(cells, primaryKeyFields) != null)
                 {

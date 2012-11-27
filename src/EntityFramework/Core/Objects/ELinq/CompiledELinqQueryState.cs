@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -27,7 +27,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         /// <param name="elementType"> The element type of the new instance (the 'T' of the ObjectQuery &lt; T &gt; that the new state instance will back)" </param>
         /// <param name="context"> The object context with which the new instance should be associated </param>
-        /// <param name="lambda"> The compiled query definition, as a <see cref="LambdaExpression" /> </param>
+        /// <param name="lambda">
+        ///     The compiled query definition, as a <see cref="LambdaExpression" />
+        /// </param>
         /// <param name="cacheToken"> The cache token to use when retrieving or storing the new instance's execution plan in the query cache </param>
         /// <param name="parameterValues"> The values passed into the CompiledQuery delegate </param>
         internal CompiledELinqQueryState(
@@ -35,7 +37,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, context, lambda)
         {
-            Contract.Requires(parameterValues != null);
+            DebugCheck.NotNull(parameterValues);
 
             _cacheToken = cacheToken;
             _parameterValues = parameterValues;
@@ -179,8 +181,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Overrides GetResultType and attempts to first retrieve the result type from the cache entry.
         /// </summary>
-        /// <returns> The query result type from this compiled query's cache entry, if possible; otherwise defers to <see
-        ///      cref="ELinqQueryState.GetResultType" /> </returns>
+        /// <returns>
+        ///     The query result type from this compiled query's cache entry, if possible; otherwise defers to
+        ///     <see
+        ///         cref="ELinqQueryState.GetResultType" />
+        /// </returns>
         protected override TypeUsage GetResultType()
         {
             var cacheEntry = _cacheEntry;
@@ -196,7 +201,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Gets a LINQ expression that defines this query. 
+        ///     Gets a LINQ expression that defines this query.
         ///     This is overridden to remove parameter references from the underlying expression,
         ///     producing an expression that contains the values of those parameters as <see cref="ConstantExpression" />s.
         /// </summary>

@@ -5,7 +5,6 @@ namespace System.Data.Entity.Migrations.Model
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -35,7 +34,7 @@ namespace System.Data.Entity.Migrations.Model
             get { return _table; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
 
                 _table = value;
             }

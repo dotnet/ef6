@@ -51,9 +51,9 @@ namespace System.Data.Entity.Migrations.Utilities
                       : new XDocument();
 
             configuration.GetOrAddElement("configuration")
-                .GetOrAddElement("runtime")
-                .GetOrAddElement(_asm + "assemblyBinding")
-                .Add(_dependentAssemblyElement);
+                         .GetOrAddElement("runtime")
+                         .GetOrAddElement(_asm + "assemblyBinding")
+                         .Add(_dependentAssemblyElement);
 
             var newConfigurationFile = Path.GetTempFileName();
 

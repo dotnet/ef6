@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -56,12 +57,13 @@ namespace System.Data.Entity.Core.EntityClient
             get { return ((ICollection)InnerList).SyncRoot; }
         }
 
-        [
-            EditorBrowsable(EditorBrowsableState.Never)
-        ]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public override int Add(object value)
         {
             OnChange();
+
+            Check.NotNull(value, "value");
+
             ValidateType(value);
             Validate(-1, value);
             InnerList.Add((EntityParameter)value);
@@ -71,10 +73,9 @@ namespace System.Data.Entity.Core.EntityClient
         public override void AddRange(Array values)
         {
             OnChange();
-            if (null == values)
-            {
-                throw new ArgumentNullException("values");
-            }
+
+            Check.NotNull(values, "values");
+
             foreach (var value in values)
             {
                 ValidateType(value);
@@ -204,6 +205,9 @@ namespace System.Data.Entity.Core.EntityClient
         public override void Insert(int index, object value)
         {
             OnChange();
+
+            Check.NotNull(value, "value");
+
             ValidateType(value);
             Validate(-1, value);
             InnerList.Insert(index, (EntityParameter)value);
@@ -224,6 +228,9 @@ namespace System.Data.Entity.Core.EntityClient
         public override void Remove(object value)
         {
             OnChange();
+
+            Check.NotNull(value, "value");
+
             ValidateType(value);
             var index = IndexOf(value);
             if (-1 != index)

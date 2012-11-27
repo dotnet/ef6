@@ -4,8 +4,8 @@ namespace System.Data.Entity.Migrations
 {
     using System.ComponentModel;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Configuration relating to the use of migrations for a given model.
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations
         /// <param name="context"> Context to be used for updating seed data. </param>
         protected virtual void Seed(TContext context)
         {
-            Contract.Requires(context != null);
+            Check.NotNull(context, "context");
         }
 
         internal override void OnSeed(DbContext context)

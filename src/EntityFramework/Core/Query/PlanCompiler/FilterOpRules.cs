@@ -14,17 +14,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Helpers
 
         /// <summary>
-        ///     Split up a predicate into 2 parts - the pushdown and the non-pushdown predicate. 
-        /// 
+        ///     Split up a predicate into 2 parts - the pushdown and the non-pushdown predicate.
         ///     If the filter node has no external references *and* the "columns" parameter is null,
         ///     then the entire predicate can be pushed down
-        /// 
         ///     We then compute the set of valid column references - if the "columns" parameter
-        ///     is non-null, this set is used. Otherwise, we get the definitions of the 
+        ///     is non-null, this set is used. Otherwise, we get the definitions of the
         ///     input relop node of the filterOp, and use that.
-        /// 
         ///     We use this list of valid column references to identify which parts of the filter
-        ///     predicate can be pushed down - only those parts of the predicate that do not 
+        ///     predicate can be pushed down - only those parts of the predicate that do not
         ///     reference anything beyond these columns are considered for pushdown. The rest are
         ///     stuffed into the nonPushdownPredicate output parameter
         /// </summary>
@@ -373,11 +370,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessFilterOverGroupBy);
 
         /// <summary>
-        ///     Transforms Filter(GroupBy(X, k1.., a1...), p) => 
+        ///     Transforms Filter(GroupBy(X, k1.., a1...), p) =>
         ///     Filter(GroupBy(Filter(X, p1'), k1..., a1...), p2)
-        ///     p1 and p2 represent the parts of p that can and cannot be pushed down 
+        ///     p1 and p2 represent the parts of p that can and cannot be pushed down
         ///     respectively - specifically, p1 must only reference the key columns from
-        ///     the GroupByOp. 
+        ///     the GroupByOp.
         ///     "p1'" is the mapped version of "p1",
         /// </summary>
         /// <param name="context"> Rule processing context </param>
@@ -661,7 +658,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessFilterOverOuterApply);
 
         /// <summary>
-        ///     Convert Filter(OuterApply(X,Y), p) into 
+        ///     Convert Filter(OuterApply(X,Y), p) into
         ///     Filter(CrossApply(X,Y), p)
         ///     if "p" is not null-preserving for Y (ie) "p" does not preserve null values from Y
         /// </summary>
@@ -708,7 +705,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessFilterWithConstantPredicate);
 
         /// <summary>
-        ///     Convert 
+        ///     Convert
         ///     Filter(X, true)  => X
         ///     Filter(X, false) => Project(Filter(SingleRowTableOp, ...), false)
         ///     where ... represent variables that are equivalent to the table columns

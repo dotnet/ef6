@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal.MockingProxies;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Internal
         public ClonedObjectContext(
             ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
         {
-            Contract.Requires(objectContext != null);
+            DebugCheck.NotNull(objectContext);
             // connectionString may be null when connection has been created from DbContextInfo using just a provider
 
             var clonedConnection =
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         private void TransferLoadedAssemblies(ObjectContextProxy source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             var objectItemCollection = source.GetObjectItemCollection();
 
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Internal
                 .Select(i => source.GetClrType((StructuralType)i).Assembly)
                 .Union(
                     objectItemCollection.OfType<EnumType>()
-                        .Select(i => source.GetClrType(i).Assembly))
+                                        .Select(i => source.GetClrType(i).Assembly))
                 .Distinct();
 
             foreach (var assembly in assemblies)

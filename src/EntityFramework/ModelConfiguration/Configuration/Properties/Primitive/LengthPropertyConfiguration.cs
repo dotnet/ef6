@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Used to configure a property with length facets for an entity type or
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         protected LengthPropertyConfiguration(LengthPropertyConfiguration source)
             : base(source)
         {
-            Contract.Requires(source != null);
+            Check.NotNull(source, "source");
 
             IsFixedLength = source.IsFixedLength;
             MaxLength = source.MaxLength;

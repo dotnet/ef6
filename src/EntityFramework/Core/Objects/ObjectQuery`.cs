@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This method creates a new ObjectQuery instance that represents a scan over
-        ///     the specified <paramref name="entitySet" />. This ObjectQuery carries the scan as <see cref="DbExpression" /> 
+        ///     the specified <paramref name="entitySet" />. This ObjectQuery carries the scan as <see cref="DbExpression" />
         ///     and as Entity SQL. This is needed to allow case-sensitive metadata access (provided by the <see cref="DbExpression" /> by default).
         ///     The context specifies the connection on which to execute the query as well as the metadata and result cache.
         ///     The merge option specifies how the cache should be populated/updated.
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Core.Objects
 
         private static string BuildScanEntitySetEsql(EntitySetBase entitySet)
         {
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(entitySet);
             return String.Format(
                 CultureInfo.InvariantCulture,
                 "{0}.{1}",
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Objects
             get { return _name; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 if (!ObjectParameter.ValidateParameterName(value))
                 {
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Except(ObjectQuery<T> query)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -296,9 +296,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> a new ObjectQuery instance. </returns>
         public ObjectQuery<DbDataRecord> GroupBy(string keys, string projection, params ObjectParameter[] parameters)
         {
-            Contract.Requires(keys != null);
-            Contract.Requires(projection != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(keys, "keys");
+            Check.NotNull(projection, "projection");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
@@ -322,7 +322,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Intersect(ObjectQuery<T> query)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -381,8 +381,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the sort key command text is empty.</exception>
         public ObjectQuery<T> OrderBy(string keys, params ObjectParameter[] parameters)
         {
-            Contract.Requires(keys != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(keys, "keys");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
@@ -403,8 +403,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<DbDataRecord> Select(string projection, params ObjectParameter[] parameters)
         {
-            Contract.Requires(projection != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(projection, "projection");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
             {
@@ -425,8 +425,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<TResultType> SelectValue<TResultType>(string projection, params ObjectParameter[] parameters)
         {
-            Contract.Requires(projection != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(projection, "projection");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
             {
@@ -454,9 +454,9 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the sort key or skip count command text is empty.</exception>
         public ObjectQuery<T> Skip(string keys, string count, params ObjectParameter[] parameters)
         {
-            Contract.Requires(keys != null);
-            Contract.Requires(count != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(keys, "keys");
+            Check.NotNull(count, "count");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
             {
@@ -482,7 +482,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the top count command text is empty.</exception>
         public ObjectQuery<T> Top(string count, params ObjectParameter[] parameters)
         {
-            Contract.Requires(count != null);
+            Check.NotNull(count, "count");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(count))
             {
@@ -502,7 +502,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> Union(ObjectQuery<T> query)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
 
             if (IsLinqQuery(this)
                 || IsLinqQuery(query))
@@ -522,7 +522,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the query parameter is null.</exception>
         public ObjectQuery<T> UnionAll(ObjectQuery<T> query)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.UnionAll(QueryState, query.QueryState));
         }
@@ -538,8 +538,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the filter predicate command text is empty.</exception>
         public ObjectQuery<T> Where(string predicate, params ObjectParameter[] parameters)
         {
-            Contract.Requires(predicate != null);
-            Contract.Requires(parameters != null);
+            Check.NotNull(predicate, "predicate");
+            Check.NotNull(parameters, "parameters");
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(predicate))
             {

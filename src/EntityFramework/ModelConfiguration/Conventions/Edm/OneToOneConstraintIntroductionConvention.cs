@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -13,6 +14,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             if (edmDataModelItem.IsOneToOne()
                 && !edmDataModelItem.IsSelfReferencing()
                 && !edmDataModelItem.IsIndependent()
@@ -23,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 if ((sourceKeys.Count() == targetKeys.Count())
                     && sourceKeys.Select(p => p.UnderlyingPrimitiveType)
-                           .SequenceEqual(targetKeys.Select(p => p.UnderlyingPrimitiveType)))
+                                 .SequenceEqual(targetKeys.Select(p => p.UnderlyingPrimitiveType)))
                 {
                     AssociationEndMember _, dependentEnd;
                     if (edmDataModelItem.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd)

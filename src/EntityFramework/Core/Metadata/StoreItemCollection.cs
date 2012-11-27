@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Versioning;
     using System.Xml;
@@ -67,7 +67,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
         ///     encountered during load as the out parameter errors.
-        /// 
         ///     Publicly available from System.Data.Entity.Desgin.dll
         /// </summary>
         /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
@@ -77,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<string> filePaths)
             : base(DataSpace.SSpace)
         {
-            Contract.Requires(filePaths != null);
+            DebugCheck.NotNull(filePaths);
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
 
             Init(
@@ -96,7 +95,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public StoreItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.SSpace)
         {
-            Contract.Requires(xmlReaders != null);
+            Check.NotNull(xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
@@ -123,7 +122,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public StoreItemCollection(params string[] filePaths)
             : base(DataSpace.SSpace)
         {
-            Contract.Requires(filePaths != null);
+            Check.NotNull(filePaths, "filePaths");
             IEnumerable<string> enumerableFilePaths = filePaths;
             EntityUtil.CheckArgumentEmpty(ref enumerableFilePaths, Strings.StoreItemCollectionMustHaveOneArtifact, "filePaths");
 
@@ -164,7 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             out string providerManifestToken,
             out Memoizer<EdmFunction, EdmFunction> cachedCTypeFunction)
         {
-            Contract.Requires(xmlReaders != null);
+            DebugCheck.NotNull(xmlReaders);
             // 'filePaths' can be null
 
             cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
@@ -248,7 +247,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     checks if the schemaKey refers to the provider manifest schema key 
+        ///     checks if the schemaKey refers to the provider manifest schema key
         ///     and if true, loads the provider manifest
         /// </summary>
         /// <param name="connection"> The connection where the store manifest is loaded from </param>

@@ -27,7 +27,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         ///     First coordinator for nested results below this collection. When reading a new row
         ///     for this coordinator, we walk down to the Child.
-        /// 
         ///     NOTE:: this cannot be readonly because we can't know both the parent and the child
         ///     at initialization time; we set the Child in the parent's constructor.
         /// </summary>

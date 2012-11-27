@@ -3,14 +3,14 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 {
     using System.Data.Entity.Core.Mapping;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal static class DbEdmPropertyMappingExtensions
     {
         public static void SyncNullabilityCSSpace(this ColumnMappingBuilder propertyMappingBuilder)
         {
-            Contract.Requires(propertyMappingBuilder != null);
+            DebugCheck.NotNull(propertyMappingBuilder);
 
             propertyMappingBuilder.ColumnProperty.Nullable = propertyMappingBuilder.PropertyPath.Last().Nullable;
         }

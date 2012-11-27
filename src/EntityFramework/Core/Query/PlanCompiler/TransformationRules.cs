@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             BuildLookupTableForRules(PostJoinEliminationRules);
 
         /// <summary>
-        ///     A lookup table built only from rules that rely on nullability of vars and other rules 
+        ///     A lookup table built only from rules that rely on nullability of vars and other rules
         ///     that may be able to perform simplificatios if these have been applied.
         ///     The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>

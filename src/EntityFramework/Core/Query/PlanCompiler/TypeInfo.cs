@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is this the root type?
         ///     True for entity, complex types and ref types, if this is the root of the
-        ///     hierarchy. 
+        ///     hierarchy.
         ///     Always true for Record types
         /// </summary>
         internal bool IsRootType

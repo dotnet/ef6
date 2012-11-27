@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal static class DbForeignKeyConstraintMetadataExtensions
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static bool GetIsTypeConstraint(this ForeignKeyBuilder fk)
         {
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(fk);
 
             var result = fk.Annotations.GetAnnotation(IsTypeConstraint);
             if (result != null)
@@ -26,21 +26,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static void SetIsTypeConstraint(this ForeignKeyBuilder fk)
         {
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(fk);
 
             fk.Annotations.SetAnnotation(IsTypeConstraint, true);
         }
 
         public static void SetIsSplitConstraint(this ForeignKeyBuilder fk)
         {
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(fk);
 
             fk.Annotations.SetAnnotation(IsSplitConstraint, true);
         }
 
         public static AssociationType GetAssociationType(this ForeignKeyBuilder fk)
         {
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(fk);
 
             return fk.Annotations.GetAnnotation(AssociationType) as AssociationType;
         }
@@ -48,8 +48,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         public static void SetAssociationType(
             this ForeignKeyBuilder fk, AssociationType associationType)
         {
-            Contract.Requires(fk != null);
-            Contract.Requires(associationType != null);
+            DebugCheck.NotNull(fk);
+            DebugCheck.NotNull(associationType);
 
             fk.Annotations.SetAnnotation(AssociationType, associationType);
         }

@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Validation;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -45,17 +45,20 @@ namespace System.Data.Entity.Internal.Validation
         /// </summary>
         /// <param name="entityValidationContext"> Validation context. Never null. </param>
         /// <param name="property"> Property to validate. Never null. </param>
-        /// <returns> Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null. </returns>
+        /// <returns>
+        ///     Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
+        /// </returns>
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
-            Contract.Assert(property is InternalPropertyEntry);
+            Debug.Assert(property is InternalPropertyEntry);
 
             var validationErrors = new List<DbValidationError>();
             validationErrors.AddRange(base.Validate(entityValidationContext, property));
 
             // don't drill into complex types if there were errors or the complex property has not been initialized at all
-            if (!validationErrors.Any() && property.CurrentValue != null
+            if (!validationErrors.Any()
+                && property.CurrentValue != null
                 &&
                 _complexTypeValidator != null)
             {

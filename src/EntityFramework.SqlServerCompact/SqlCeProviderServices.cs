@@ -9,6 +9,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Data.SqlServerCe;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -36,6 +37,9 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> T-SQL script for generating schema objects. </returns>
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(providerManifestToken, "providerManifestToken");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             // Call the helper for creating schema objects.
             return string.Concat(SqlDdlBuilder.CreateObjectsScript(storeItemCollection, true).ToArray());
         }
@@ -51,6 +55,9 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> Bool indicating whether database exists or not. </returns>
         protected override bool DbDatabaseExists(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             // Validate and cast the connection.
             ValidateConnection(connection);
 
@@ -84,6 +91,9 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="storeItemCollection"> </param>
         protected override void DbDeleteDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
             // Validate that connection is a SqlCeConnection.
             ValidateConnection(connection);
 
@@ -145,12 +155,8 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
-            #region Check arguments
-
-            ADP1.CheckArgumentNull(connection, "Connection");
-            ADP1.CheckArgumentNull(storeItemCollection, "StoreItemCollection");
-
-            #endregion
+            ADP1.CheckArgumentNull(connection, "connection");
+            ADP1.CheckArgumentNull(storeItemCollection, "storeItemCollection");
 
             // Validate that connection is a SqlCeConnection.
             ValidateConnection(connection);
@@ -283,8 +289,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> an executable command definition object </returns>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
-            Debug.Assert(providerManifest != null, "CreateCommandDefinition passed null provider manifest to CreateDbCommandDefinition?");
-            Debug.Assert(commandTree != null, "CreateCommandDefinition did not validate commandTree argument?");
+            Check.NotNull(providerManifest, "providerManifest");
+            Check.NotNull(commandTree, "commandTree");
 
             var prototype = CreateCommand(providerManifest, commandTree);
             var result = CreateCommandDefinition(prototype);
@@ -385,6 +391,8 @@ namespace System.Data.Entity.SqlServerCompact
         //
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
+            Check.NotNull(connection, "connection");
+
             // vamshikb: Do we need to validate the connection and connection string
             // before returning the ProviderManifestToken????
 
@@ -393,8 +401,7 @@ namespace System.Data.Entity.SqlServerCompact
             // must be remote provider.
             // Throw if it is none.
             //
-            if (connection.GetType()
-                == typeof(SqlCeConnection))
+            if (connection.GetType() == typeof(SqlCeConnection))
             {
                 _isLocalProvider = true;
             }
@@ -482,7 +489,8 @@ namespace System.Data.Entity.SqlServerCompact
             // there is an output parameter. This is because output parameters in SqlClient have their
             // facets clobbered if they are implicitly set (e.g. if the Precision was implicitly set
             // by setting the value)
-            if (!ignoreMaxLengthFacet && size.HasValue
+            if (!ignoreMaxLengthFacet
+                && size.HasValue
                 && (result.Size != size.Value))
             {
                 result.Size = size.Value;

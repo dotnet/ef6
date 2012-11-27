@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents renaming an existing column.
@@ -25,9 +25,9 @@ namespace System.Data.Entity.Migrations.Model
         public RenameColumnOperation(string table, string name, string newName, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(table));
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(!string.IsNullOrWhiteSpace(newName));
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
 
             _table = table;
             _name = name;

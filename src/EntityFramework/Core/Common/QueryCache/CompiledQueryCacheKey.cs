@@ -21,8 +21,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         public override bool Equals(object compareTo)
         {
             Debug.Assert(compareTo != null, "Comparison key should not be null");
-            if (typeof(CompiledQueryCacheKey)
-                != compareTo.GetType())
+            if (typeof(CompiledQueryCacheKey) != compareTo.GetType())
             {
                 return false;
             }

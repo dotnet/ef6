@@ -447,8 +447,10 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 if (!IsComposable)
                 {
                     // All aggregates, built-in and niladic functions must be composable, so throw error here.
-                    if (IsAggregate ||
-                        IsNiladicFunction ||
+                    if (IsAggregate
+                        ||
+                        IsNiladicFunction
+                        ||
                         IsBuiltIn)
                     {
                         AddError(

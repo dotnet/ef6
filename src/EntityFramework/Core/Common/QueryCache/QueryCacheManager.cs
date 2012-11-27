@@ -71,7 +71,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     Constructs a new Query Cache Manager instance, with default values for all 'configurable' parameters.
         /// </summary>
-        /// <returns> A new instance of <see cref="QueryCacheManager" /> configured with default entry count, load factor and recycle period </returns>
+        /// <returns>
+        ///     A new instance of <see cref="QueryCacheManager" /> configured with default entry count, load factor and recycle period
+        /// </returns>
         internal static QueryCacheManager Create()
         {
             return new QueryCacheManager(DefaultMaxNumberOfEntries, DefaultHighMarkPercentageFactor, DefaultRecyclerPeriodInMilliseconds);
@@ -227,7 +229,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
 
         /// <summary>
         ///     Recycler handler. This method is called directly by the eviction timer.
-        ///     It should take no action beyond invoking the <see cref="SweepCache" /> method on the 
+        ///     It should take no action beyond invoking the <see cref="SweepCache" /> method on the
         ///     cache manager instance passed as <paramref name="state" />.
         /// </summary>
         /// <param name="state"> The cache manager instance on which the 'recycle' handler should be invoked </param>
@@ -377,11 +379,15 @@ namespace System.Data.Entity.Core.Common.QueryCache
 
             /// <summary>
             ///     Permanently stops the eviction timer.
-            ///     It will no longer generate periodic callbacks and further calls to <see cref="Suspend" />, <see cref="Resume" />, or <see
-            ///      cref="Stop" />,
+            ///     It will no longer generate periodic callbacks and further calls to <see cref="Suspend" />, <see cref="Resume" />, or
+            ///     <see
+            ///         cref="Stop" />
+            ///     ,
             ///     though thread-safe, will have no effect.
             /// </summary>
-            /// <returns> If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully stopped and cleaned up the underlying timer instance. </returns>
+            /// <returns>
+            ///     If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully stopped and cleaned up the underlying timer instance.
+            /// </returns>
             /// <remarks>
             ///     Thread safe. May be called regardless of the current state of the eviction timer.
             ///     Once stopped, an eviction timer cannot be restarted with the <see cref="Resume" /> method.
@@ -406,8 +412,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
             /// <summary>
             ///     Pauses the operation of the eviction timer.
             /// </summary>
-            /// <returns> If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying <see
-            ///      cref="Timer" /> and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called. </returns>
+            /// <returns>
+            ///     If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying
+            ///     <see
+            ///         cref="Timer" />
+            ///     and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called.
+            /// </returns>
             /// <remarks>
             ///     Thread-safe. May be called regardless of the current state of the eviction timer.
             ///     Once suspended, an eviction timer may be resumed or stopped.
@@ -429,8 +439,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
 
             /// <summary>
-            ///     Causes this eviction timer to generate periodic callbacks, provided it has not been permanently stopped (using the <see
-            ///      cref="Stop" /> method).
+            ///     Causes this eviction timer to generate periodic callbacks, provided it has not been permanently stopped (using the
+            ///     <see
+            ///         cref="Stop" />
+            ///     method).
             /// </summary>
             /// <remarks>
             ///     Thread-safe. May be called regardless of the current state of the eviction timer.

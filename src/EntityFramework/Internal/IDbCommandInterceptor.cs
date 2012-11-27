@@ -4,9 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Diagnostics.Contracts;
 
-    [ContractClass(typeof(IDbCommandInterceptorContracts))]
     internal interface IDbCommandInterceptor
     {
         bool IsEnabled { get; set; }
@@ -14,23 +12,4 @@ namespace System.Data.Entity.Internal
 
         IEnumerable<InterceptedCommand> Commands { get; }
     }
-
-    #region Interface Member Contracts
-
-    [ContractClassFor(typeof(IDbCommandInterceptor))]
-    internal abstract class IDbCommandInterceptorContracts : IDbCommandInterceptor
-    {
-        public bool IsEnabled { get; set; }
-
-        public bool Intercept(DbCommand command)
-        {
-            Contract.Requires(command != null);
-
-            return false;
-        }
-
-        public IEnumerable<InterceptedCommand> Commands { get; private set; }
-    }
-
-    #endregion
 }

@@ -10,13 +10,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via <see cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" /> 
+    ///     Convention to apply column ordering specified via
+    ///     <see
+    ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
     ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
     public class ColumnOrderingConvention : IDbConvention<EntityType>
     {
         public void Apply(EntityType dbDataModelItem, EdmModel model)
         {
+            Check.NotNull(dbDataModelItem, "dbDataModelItem");
+            Check.NotNull(model, "model");
+
             ValidateColumns(dbDataModelItem, model.GetEntitySet(dbDataModelItem).Table);
 
             OrderColumns(dbDataModelItem.Properties)
@@ -35,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         });
 
             dbDataModelItem.ForeignKeyBuilders
-                .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
+                           .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 
         protected virtual void ValidateColumns(EntityType table, string tableName)

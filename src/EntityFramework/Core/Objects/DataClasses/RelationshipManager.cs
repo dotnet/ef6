@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     this flag is used to keep track of nodes which have 
+        ///     this flag is used to keep track of nodes which have
         ///     been visited. Currently used for Exclude operation.
         /// </summary>
         internal bool NodeVisited
@@ -125,14 +125,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>
         ///     Factory method to create a new RelationshipManager object.
-        /// 
         ///     Used by data classes that support relationships. If the change tracker
         ///     requests the RelationshipManager property and the data class does not
         ///     already have a reference to one of these objects, it calls this method
         ///     to create one, then saves a reference to that object. On subsequent accesses
         ///     to that property, the data class should return the saved reference.
-        /// 
-        ///     The reason for using a factory method instead of a public constructor is to 
+        ///     The reason for using a factory method instead of a public constructor is to
         ///     emphasize that this is not something you would normally call outside of a data class.
         ///     By requiring that these objects are created via this method, developers should
         ///     give more thought to the operation, and will generally only use it when
@@ -141,11 +139,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="owner"> Reference to the entity that is calling this method </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="owner" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         /// <returns> A new or existing RelationshipManager for the given entity </returns>
         public static RelationshipManager Create(IEntityWithRelationships owner)
         {
-            Contract.Requires(owner != null);
+            Check.NotNull(owner, "owner");
             var rm = new RelationshipManager();
             rm._owner = owner;
             return rm;
@@ -430,8 +429,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Internal version of GetRelatedEnd which returns the RelatedEnd as a RelatedEnd rather than an IRelatedEnd
         internal RelatedEnd GetRelatedEndInternal(string relationshipName, string targetRoleName)
         {
-            Contract.Requires(relationshipName != null);
-            Contract.Requires(targetRoleName != null);
+            DebugCheck.NotNull(relationshipName);
+            DebugCheck.NotNull(targetRoleName);
 
             var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context == null
@@ -545,7 +544,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>
         ///     Takes an existing EntityReference that was created with the default constructor and initializes it using the provided relationship and target role names.
-        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityReference has already been initialized, 
+        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityReference has already been initialized,
         ///     if the relationship manager already contains a relationship with this name and target role, or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
         /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
@@ -558,9 +557,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string relationshipName, string targetRoleName, EntityReference<TTargetEntity> entityReference)
             where TTargetEntity : class
         {
-            Contract.Requires(relationshipName != null);
-            Contract.Requires(targetRoleName != null);
-            Contract.Requires(entityReference != null);
+            Check.NotNull(relationshipName, "relationshipName");
+            Check.NotNull(targetRoleName, "targetRoleName");
+            Check.NotNull(entityReference, "entityReference");
 
             if (entityReference.WrappedOwner.Entity != null)
             {
@@ -605,7 +604,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>
         ///     Takes an existing EntityCollection that was created with the default constructor and initializes it using the provided relationship and target role names.
-        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityCollection has already been initialized, 
+        ///     This method is designed to be used during deserialization only, and will throw an exception if the provided EntityCollection has already been initialized,
         ///     or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
         /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
@@ -618,9 +617,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string relationshipName, string targetRoleName, EntityCollection<TTargetEntity> entityCollection)
             where TTargetEntity : class
         {
-            Contract.Requires(relationshipName != null);
-            Contract.Requires(targetRoleName != null);
-            Contract.Requires(entityCollection != null);
+            Check.NotNull(relationshipName, "relationshipName");
+            Check.NotNull(targetRoleName, "targetRoleName");
+            Check.NotNull(entityCollection, "entityCollection");
 
             if (entityCollection.WrappedOwner.Entity != null)
             {
@@ -663,7 +662,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         private string PrependNamespaceToRelationshipName(string relationshipName)
         {
-            Contract.Requires(relationshipName != null);
+            DebugCheck.NotNull(relationshipName);
 
             if (!relationshipName.Contains('.'))
             {
@@ -810,7 +809,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Retrieves the AssociationEndMembers that corespond to the target end of a relationship
         ///     given a specific CLR type that exists on the source end of a relationship
-        ///     Note: this method can be very expensive if this RelationshipManager is not attached to an 
+        ///     Note: this method can be very expensive if this RelationshipManager is not attached to an
         ///     ObjectContext because no OSpace Metadata is available
         /// </summary>
         /// <param name="entityClrType"> A CLR type that is on the source role of the relationship </param>
@@ -1049,7 +1048,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns an enumeration of all the related ends.  The enumeration 
+        ///     Returns an enumeration of all the related ends.  The enumeration
         ///     will be empty if the relationships have not been populated.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -1058,7 +1057,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var wrappedOwner = WrappedOwner;
 
             EntityType entityType;
-            if (wrappedOwner.Context != null && wrappedOwner.Context.MetadataWorkspace != null
+            if (wrappedOwner.Context != null
+                && wrappedOwner.Context.MetadataWorkspace != null
                 && TryGetOwnerEntityType(out entityType))
             {
                 // For attached scenario:

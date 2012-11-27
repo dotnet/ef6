@@ -38,7 +38,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Reset atBeginningofLine if we detect the newline string.
         ///     <see cref="SqlBuilder.AppendLine" />
-        ///     Add as many tabs as the value of indent if we are at the 
+        ///     Add as many tabs as the value of indent if we are at the
         ///     beginning of a line.
         /// </summary>
         /// <param name="value"> </param>

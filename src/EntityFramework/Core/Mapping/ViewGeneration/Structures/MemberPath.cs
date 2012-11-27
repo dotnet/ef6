@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     If path corresponds to an entity set (empty path) or an association end (<see cref="Extent" /> is as association set, and path length is 1), 
+        ///     If path corresponds to an entity set (empty path) or an association end (<see cref="Extent" /> is as association set, and path length is 1),
         ///     returns <see cref="EntitySet" /> associated with the value of the slot represented by this path, otherwise returns null.
         /// </summary>
         internal EntitySet EntitySet
@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns the type of attribute denoted by the path. 
+        ///     Returns the type of attribute denoted by the path.
         ///     For example, member type of Person.addr.zip would be integer. For extent, it is the element type.
         /// </summary>
         internal EdmType EdmType
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns false iff the path is 
+        ///     Returns false iff the path is
         ///     * A descendant of some nullable property
         ///     * A descendant of an optional composition/collection
         ///     * A descendant of a property that does not belong to the basetype/rootype of its parent.
@@ -284,7 +284,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var memberDeclaringType = m_path[0].DeclaringType as EntityType;
             var parentType = memberDeclaringType.BaseType as EntityType;
 
-            if (entitySetType.EdmEquals(memberDeclaringType) || MetadataHelper.IsParentOf(memberDeclaringType, entitySetType)
+            if (entitySetType.EdmEquals(memberDeclaringType)
+                || MetadataHelper.IsParentOf(memberDeclaringType, entitySetType)
                 || parentType == null)
             {
                 return true;
@@ -368,8 +369,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns a string that has the list of properties in <paramref name="members" /> (i.e., just the last name) if <paramref
-        ///      name="fullPath" /> is false.
+        ///     Returns a string that has the list of properties in <paramref name="members" /> (i.e., just the last name) if
+        ///     <paramref
+        ///         name="fullPath" />
+        ///     is false.
         ///     Else the <paramref name="fullPath" /> is added.
         /// </summary>
         internal static string PropertiesToUserString(IEnumerable<MemberPath> members, bool fullPath)
@@ -396,8 +399,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name <paramref
-        ///      name="blockAlias" />.path, e.g., T1.Address.Phone.Zip.
+        ///     Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name
+        ///     <paramref
+        ///         name="blockAlias" />
+        ///     .path, e.g., T1.Address.Phone.Zip.
         ///     If a subcomponent belongs to subclass, generates a treat for it, e.g. "TREAT(T1 as Customer).Address".
         ///     Or even "TREAT(TREAT(T1 AS Customer).Address as USAddress).Zip".
         /// </summary>
@@ -613,7 +618,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // In short, Person.pid, Address.pid, PersonAddress.Address.pid,
             // PersonAddress.Person.pid are the same
 
-            if (path0.EdmType is EntityTypeBase || path1.EdmType is EntityTypeBase ||
+            if (path0.EdmType is EntityTypeBase
+                || path1.EdmType is EntityTypeBase
+                ||
                 MetadataHelper.IsNonRefSimpleMember(path0.LeafEdmMember) == false
                 ||
                 MetadataHelper.IsNonRefSimpleMember(path1.LeafEdmMember) == false)
@@ -690,10 +697,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns true if <paramref name="assocPath0" /> and <paramref name="assocPath1" /> are equivalent via a referential constraint in <paramref
-        ///      name="assocSet" />.
-        ///     Requires: <paramref name="assocPath0" /> and <paramref name="assocPath1" /> correspond to paths in <paramref
-        ///      name="assocSet" />.
+        ///     Returns true if <paramref name="assocPath0" /> and <paramref name="assocPath1" /> are equivalent via a referential constraint in
+        ///     <paramref
+        ///         name="assocSet" />
+        ///     .
+        ///     Requires: <paramref name="assocPath0" /> and <paramref name="assocPath1" /> correspond to paths in
+        ///     <paramref
+        ///         name="assocSet" />
+        ///     .
         /// </summary>
         private static bool AreAssocationEndPathsEquivalentViaRefConstraint(
             MemberPath assocPath0,
@@ -709,7 +720,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var property0 = assocPath0.LeafEdmMember as EdmProperty;
             var property1 = assocPath1.LeafEdmMember as EdmProperty;
 
-            if (end0 == null || end1 == null || property0 == null
+            if (end0 == null
+                || end1 == null
+                || property0 == null
                 || property1 == null)
             {
                 return false;
@@ -748,10 +761,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         /// <summary>
         ///     Returns the member path corresponding to that field in the <paramref name="assocSet" />. E.g., given Address.pid, returns PersonAddress.Address.pid.
-        ///     For self-associations, such as ManagerEmployee with referential constraints (and we have 
+        ///     For self-associations, such as ManagerEmployee with referential constraints (and we have
         ///     [ManagerEmployee.Employee.mid, ManagerEmployee.Employee.eid, ManagerEmployee.Manager.mid]), given Employee.mid, returns
         ///     ManagerEmployee.Employee.mid or ManagerEmployee.Manager.mid
-        /// 
         ///     Note: the path need not correspond to a key field of an entity set <see cref="Extent" />.
         /// </summary>
         private MemberPath GetCorrespondingAssociationPath(AssociationSet assocSet)

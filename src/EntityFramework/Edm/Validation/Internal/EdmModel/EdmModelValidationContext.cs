@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     internal sealed class EdmModelValidationContext
     {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         public string GetQualifiedPrefix(EdmType item)
         {
-            Contract.Requires(ModelParentMap != null);
+            Debug.Assert(ModelParentMap != null);
 
             string qualifiedPrefix = null;
             EdmNamespace parentNamespace;
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         public string GetQualifiedPrefix(EntitySetBase item)
         {
-            Contract.Requires(ModelParentMap != null);
+            Debug.Assert(ModelParentMap != null);
 
             string qualifiedPrefix = null;
             EntityContainer parentContainer;
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         public void Validate(EdmModel root)
         {
-            Contract.Requires(root != null);
+            Debug.Assert(root != null);
 
             ModelParentMap = new EdmModelParentMap(root);
             ModelParentMap.Compute();

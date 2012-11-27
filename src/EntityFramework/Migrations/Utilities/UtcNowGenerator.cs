@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Threading;
 
@@ -36,11 +36,11 @@ namespace System.Data.Entity.Migrations.Utilities
             // last value that it returned.
             if (now <= lastNow
                 || now.ToString(MigrationIdFormat, CultureInfo.InvariantCulture)
-                       .Equals(lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal))
+                      .Equals(lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal))
             {
                 now = lastNow.AddMilliseconds(100);
 
-                Contract.Assert(!now.ToString(MigrationIdFormat).Equals(lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal));
+                Debug.Assert(!now.ToString(MigrationIdFormat).Equals(lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal));
             }
 
             _lastNow.Value = now;

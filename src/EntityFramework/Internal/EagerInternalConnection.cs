@@ -4,7 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     A EagerInternalConnection object wraps an already existing DbConnection object.
@@ -19,10 +19,12 @@ namespace System.Data.Entity.Internal
         ///     Creates a new EagerInternalConnection that wraps an existing DbConnection.
         /// </summary>
         /// <param name="existingConnection"> An existing connection. </param>
-        /// <param name="connectionOwned"> If set to <c>true</c> then the underlying connection should be disposed when this object is disposed. </param>
+        /// <param name="connectionOwned">
+        ///     If set to <c>true</c> then the underlying connection should be disposed when this object is disposed.
+        /// </param>
         public EagerInternalConnection(DbConnection existingConnection, bool connectionOwned)
         {
-            Contract.Requires(existingConnection != null);
+            DebugCheck.NotNull(existingConnection);
 
             UnderlyingConnection = existingConnection;
             _connectionOwned = connectionOwned;

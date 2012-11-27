@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Column map for a scalar column - maps 1-1 with a column from a 
+    ///     Column map for a scalar column - maps 1-1 with a column from a
     ///     row of the underlying reader
     /// </summary>
     internal class ScalarColumnMap : SimpleColumnMap

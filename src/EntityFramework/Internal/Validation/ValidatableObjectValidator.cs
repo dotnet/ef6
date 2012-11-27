@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal.Validation
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -31,7 +31,9 @@ namespace System.Data.Entity.Internal.Validation
         /// </summary>
         /// <param name="entityValidationContext"> Validation context. Never null. </param>
         /// <param name="property"> Property to validate. Null if this is the entity that will be validated. Never null if this is the complex type that will be validated. </param>
-        /// <returns> Validation error as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null. </returns>
+        /// <returns>
+        ///     Validation error as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
+        /// </returns>
         /// <remarks>
         ///     Note that <paramref name="property" /> is used to figure out what needs to be validated. If it not null the complex
         ///     type will be validated otherwise the entity will be validated.
@@ -43,7 +45,9 @@ namespace System.Data.Entity.Internal.Validation
         public virtual IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
-            Contract.Assert(
+            DebugCheck.NotNull(entityValidationContext);
+
+            Debug.Assert(
                 (property == null && entityValidationContext.InternalEntity.Entity is IValidatableObject) ||
                 (property != null && (property.CurrentValue == null || property.CurrentValue is IValidatableObject)),
                 "Neither entity nor complex type implements IValidatableObject.");

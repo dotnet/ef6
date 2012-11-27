@@ -9,8 +9,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -34,9 +34,7 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                Contract.Assert(
-                    UnderlyingConnection != null,
-                    "UnderlyingConnection should have been initialized before getting here.");
+                Debug.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
 
                 var asEntityConnection = UnderlyingConnection as EntityConnection;
                 return asEntityConnection != null ? asEntityConnection.StoreConnection : UnderlyingConnection;
@@ -52,9 +50,7 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                Contract.Assert(
-                    UnderlyingConnection != null,
-                    "UnderlyingConnection should have been initialized before getting here.");
+                Debug.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
 
                 return _key
                        ??
@@ -70,14 +66,14 @@ namespace System.Data.Entity.Internal
         ///     metadata specifying the model, or instead is a store connection, in which case it contains no
         ///     model info.
         /// </summary>
-        /// <value> <c>true</c> if the connection contains model info; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the connection contains model info; otherwise, <c>false</c> .
+        /// </value>
         public virtual bool ConnectionHasModel
         {
             get
             {
-                Contract.Assert(
-                    UnderlyingConnection != null,
-                    "UnderlyingConnection should have been initialized before getting here.");
+                Debug.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
 
                 return UnderlyingConnection is EntityConnection;
             }
@@ -122,7 +118,7 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                Contract.Assert(UnderlyingConnection != null);
+                Debug.Assert(UnderlyingConnection != null);
 
                 // Reset the original connection string if it has been changed.
                 // This helps in trying to use the correct connection if the connection string is mutated after it has
@@ -146,11 +142,8 @@ namespace System.Data.Entity.Internal
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
-            Contract.Assert(
-                UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
-            Contract.Assert(
-                UnderlyingConnection is EntityConnection,
-                "Cannot create context from connection for non-EntityConnection.");
+            Debug.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
+            Debug.Assert(UnderlyingConnection is EntityConnection, "Cannot create context from connection for non-EntityConnection.");
 
             var objectContext = new ObjectContext((EntityConnection)UnderlyingConnection);
 
@@ -180,7 +173,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         protected void OnConnectionInitialized()
         {
-            Contract.Assert(UnderlyingConnection != null);
+            Debug.Assert(UnderlyingConnection != null);
 
             _originalConnectionString = AddAppNameCookieToConnectionString(UnderlyingConnection);
 
@@ -207,7 +200,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public static string AddAppNameCookieToConnectionString(DbConnection connection)
         {
-            Contract.Assert(connection != null);
+            DebugCheck.NotNull(connection);
 
             var connectionString = connection.ConnectionString;
 

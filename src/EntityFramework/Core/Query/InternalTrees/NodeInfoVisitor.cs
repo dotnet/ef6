@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     The only public method. Recomputes the nodeInfo for a node in the tree, 
-        ///     but only if the node info has already been computed.  
+        ///     The only public method. Recomputes the nodeInfo for a node in the tree,
+        ///     but only if the node info has already been computed.
         ///     Assumes that the NodeInfo for each child (if computed already) is valid
         /// </summary>
         /// <param name="n"> Node to get NodeInfo for </param>
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Definitions = Local Definitions = referenced table columns
         ///     External References = none
         ///     Keys = keys of entity type
-        ///     RowCount (default): MinRows = 0, MaxRows = * 
+        ///     RowCount (default): MinRows = 0, MaxRows = *
         ///     NonNullableDefinitions : non nullable table columns that are definitions
         ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     External References = the unnestVar + any external references of the
         ///     computed Var (if any)
         ///     RowCount (default): MinRows = 0; MaxRows = *
-        ///     NonNullableDefinitions: default(empty) 
+        ///     NonNullableDefinitions: default(empty)
         ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
         /// <param name="op"> </param>
@@ -210,7 +210,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             // Process keys if it's a TVF with inferred keys, otherwise - no keys.
-            if (n.Child0.Op.OpType == OpType.VarDef && n.Child0.Child0.Op.OpType == OpType.Function
+            if (n.Child0.Op.OpType == OpType.VarDef
+                && n.Child0.Child0.Op.OpType == OpType.Function
                 && op.Table.Keys.Count > 0)
             {
                 // This is a TVF case. 
@@ -354,7 +355,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     references from the predicate
         ///     MaxOneRow = Input's RowCount
         ///     If the predicate is a "false" predicate, then max RowCount is zero
-        ///     If we can infer additional info from the key-selector, we may be 
+        ///     If we can infer additional info from the key-selector, we may be
         ///     able to get better estimates
         ///     NonNullabeDefinitions = NonNullabeDefinitions of the input RelOp
         ///     NonNullableInputDefinitions = NonNullabeDefinitions of the input RelOp
@@ -410,9 +411,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Keys = GroupBy Keys
         ///     External References = any external references from the input + any external
         ///     references from the local computed Vars
-        ///     RowCount = 
-        ///     (1,1) if no group-by keys; 
-        ///     otherwise if input MinRows is 1 then (1, input MaxRows); 
+        ///     RowCount =
+        ///     (1,1) if no group-by keys;
+        ///     otherwise if input MinRows is 1 then (1, input MaxRows);
         ///     otherwise (0, input MaxRows)
         ///     NonNullableDefinitions: non-nullable keys
         ///     NonNullableInputDefinitions : default(empty)
@@ -529,9 +530,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
         ///     External References = any external references from the inputs + any external
         ///     references from the join predicates
-        ///     RowCount: 
+        ///     RowCount:
         ///     FullOuterJoin: MinRows = 0, MaxRows = N
-        ///     InnerJoin: MinRows = 0; 
+        ///     InnerJoin: MinRows = 0;
         ///     MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
         ///     OuterJoin: MinRows = leftInput.MinRows
         ///     MaxRows = N; if both inputs have RowCount lesser than (or equal to) 1, then maxCard = 1
@@ -630,13 +631,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Definitions = Definitions of my children
         ///     LocalDefinitions = None
         ///     Keys = Concatenation of the keys of my children (if every one of them has keys; otherwise, null)
-        ///     External References = any external references from the inputs 
+        ///     External References = any external references from the inputs
         ///     RowCount:
-        ///     CrossApply: minRows=0; MaxRows=Unbounded 
+        ///     CrossApply: minRows=0; MaxRows=Unbounded
         ///     (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
         ///     OuterApply: minRows=leftInput.MinRows; MaxRows=Unbounded
         ///     (MaxRows = 1, if both inputs have MaxRow less than or equal to 1)
-        ///     NonNullableDefinitions = 
+        ///     NonNullableDefinitions =
         ///     CrossApply: NonNullableDefinitions of both children
         ///     OuterApply: NonNullableDefinitions of the left child
         ///     NonNullableInputDefinitions = NonNullabeDefinitions of both children
@@ -692,10 +693,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Definitions = OutputVars
         ///     LocalDefinitions = OutputVars
         ///     Keys = Output Vars for Intersect, Except. For UnionAll ??
-        ///     External References = any external references from the inputs 
+        ///     External References = any external references from the inputs
         ///     RowCount: Min = 0, Max = unbounded.
         ///     For UnionAlls, MinRows = max(MinRows of left and right inputs)
-        ///     NonNullable definitions =   
+        ///     NonNullable definitions =
         ///     UnionAll - Columns that are NonNullableDefinitions on both (children) sides
         ///     Except  - Columns that are NonNullableDefinitions on the left child side
         ///     Intersect - Columns that are NonNullableDefinitions on either side
@@ -854,7 +855,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             // For constrained sort, if the Limit value is Constant(1) and WithTies is false,
             // then MinRows and MaxRows can be adjusted to 0, 1.
-            if (OpType.ConstrainedSort == op.OpType &&
+            if (OpType.ConstrainedSort == op.OpType
+                &&
                 OpType.Constant == n.Child2.Op.OpType
                 &&
                 !((ConstrainedSortOp)op).WithTies)
@@ -873,8 +875,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Computes a NodeInfo for Distinct.
         ///     Definitions = OutputVars that are not external references
         ///     LocalDefinitions = None
-        ///     Keys = Output Vars 
-        ///     External References = any external references from the inputs 
+        ///     Keys = Output Vars
+        ///     External References = any external references from the inputs
         ///     RowCount = Input's RowCount
         ///     NonNullabeDefinitions : NonNullabeDefinitions of the input RelOp that are outputs
         ///     NonNullableInputDefinitions : default(empty) because cannot be used
@@ -1012,7 +1014,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Definitions = OutputVars
         ///     LocalDefinitions = Collection Vars
         ///     Keys = Keys of my child
-        ///     External References = any external references from the inputs 
+        ///     External References = any external references from the inputs
         ///     RowCount=default
         /// </summary>
         /// <param name="op"> The NestOp </param>

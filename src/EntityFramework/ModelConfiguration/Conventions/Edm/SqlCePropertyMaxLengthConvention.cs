@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Convention to set a default maximum length of 4000 for properties whose type supports length facets when SqlCe is the provider.
@@ -17,6 +16,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             var providerInfo = model.GetProviderInfo();
 
             if ((providerInfo != null)
@@ -28,6 +30,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(ComplexType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             var providerInfo = model.GetProviderInfo();
 
             if ((providerInfo != null)
@@ -56,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private static void SetDefaults(EdmProperty property)
         {
-            Contract.Requires(property != null);
+            DebugCheck.NotNull(property);
 
             if ((property.MaxLength == null)
                 && (!property.IsMaxLength))

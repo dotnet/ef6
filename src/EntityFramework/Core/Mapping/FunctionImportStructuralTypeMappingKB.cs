@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils.Boolean;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal sealed class FunctionImportStructuralTypeMappingKB
@@ -21,8 +21,8 @@ namespace System.Data.Entity.Core.Mapping
             IEnumerable<FunctionImportStructuralTypeMapping> structuralTypeMappings,
             ItemCollection itemCollection)
         {
-            Contract.Requires(structuralTypeMappings != null);
-            Contract.Requires(itemCollection != null);
+            DebugCheck.NotNull(structuralTypeMappings);
+            DebugCheck.NotNull(itemCollection);
 
             m_itemCollection = itemCollection;
 
@@ -258,9 +258,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Determines which explicitly mapped types in the function import mapping cannot be generated.
         ///     For IsTypeOf declarations, reports if no type in hierarchy can be produced.
-        /// 
         ///     Works by:
-        /// 
         ///     - Converting type mapping conditions into vertices
         ///     - Checking that some assignment satisfies
         /// </summary>
@@ -493,9 +491,9 @@ namespace System.Data.Entity.Core.Mapping
             foreach (var isTypeOf in m_isTypeOfLineInfos.Keys)
             {
                 if (!MetadataHelper.GetTypeAndSubtypesOf(isTypeOf, m_itemCollection, false)
-                         .Cast<EntityType>()
-                         .Intersect(reachableTypes)
-                         .Any())
+                                   .Cast<EntityType>()
+                                   .Intersect(reachableTypes)
+                                   .Any())
                 {
                     // no type in the hierarchy is reachable...
                     isTypeOfEntityTypes.AddRange(isTypeOf, m_isTypeOfLineInfos.EnumerateValues(isTypeOf));

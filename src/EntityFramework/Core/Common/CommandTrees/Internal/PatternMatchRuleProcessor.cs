@@ -4,13 +4,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
-    ///     PatternMatchRuleProcessor is a specialization of <see cref="DbExpressionRuleProcessingVisitor" /> that uses a collection of <see
-    ///      cref="PatternMatchRule" />s 
+    ///     PatternMatchRuleProcessor is a specialization of <see cref="DbExpressionRuleProcessingVisitor" /> that uses a collection of
+    ///     <see
+    ///         cref="PatternMatchRule" />
+    ///     s
     ///     as its ruleset. The static Create methods can be used to construct a new PatternMatchRuleProcessor that applies the specified PatternMatchRules, which is
     ///     returned as a Func&lt;DbExpression, DbExpression&gt; that can be invoked directly on an expression to apply the ruleset to it.
     /// </summary>
@@ -28,7 +30,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         private DbExpression Process(DbExpression expression)
         {
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(expression);
+
             expression = VisitExpression(expression);
             return expression;
         }
@@ -40,7 +43,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         internal static Func<DbExpression, DbExpression> Create(params PatternMatchRule[] rules)
         {
-            Contract.Requires(rules != null);
+            DebugCheck.NotNull(rules);
 
             return new PatternMatchRuleProcessor(new ReadOnlyCollection<PatternMatchRule>(rules)).Process;
         }

@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -51,7 +50,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             CoordinatorFactory<T> rootCoordinatorFactory, Action checkPermissions, bool readerOwned)
             : base(reader, context, workspace, mergeOption, stateCount)
         {
-            Contract.Requires(rootCoordinatorFactory != null);
+            DebugCheck.NotNull(rootCoordinatorFactory);
 
             RootCoordinator = (Coordinator<T>)rootCoordinatorFactory.CreateCoordinator(parent: null, next: null);
             if (null != checkPermissions)
@@ -67,7 +66,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         #region "Public" Surface Area
 
         /// <summary>
-        ///     Events raised when the shaper has finished enumerating results. Useful for callback 
+        ///     Events raised when the shaper has finished enumerating results. Useful for callback
         ///     to set parameter values.
         /// </summary>
         internal event EventHandler OnDone;
@@ -668,7 +667,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             /// <summary>
             ///     Requires: the row is currently positioned at the start of an element.
-            /// 
             ///     Reads all rows in the element and sets up state for the next element (if any).
             /// </summary>
             private void ReadElement()

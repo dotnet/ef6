@@ -4,8 +4,8 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -25,8 +25,10 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalCollectionEntry _internalCollectionEntry;
 
         /// <summary>
-        ///     Creates a <see cref="DbCollectionEntry{TEntity,TElement}" /> from information in the given <see
-        ///      cref="InternalCollectionEntry" />.
+        ///     Creates a <see cref="DbCollectionEntry{TEntity,TElement}" /> from information in the given
+        ///     <see
+        ///         cref="InternalCollectionEntry" />
+        ///     .
         ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
         ///     the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
@@ -34,7 +36,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbCollectionEntry<TEntity, TElement> Create(InternalCollectionEntry internalCollectionEntry)
         {
-            Contract.Requires(internalCollectionEntry != null);
+            DebugCheck.NotNull(internalCollectionEntry);
 
             // Note that the implementation of this Create method is different than for the other DbMemberEntry classes.
             // This is because the DbMemberEntry is defined in terms of the ICollection<TElement> while this class
@@ -49,7 +51,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalCollectionEntry"> The internal entry. </param>
         internal DbCollectionEntry(InternalCollectionEntry internalCollectionEntry)
         {
-            Contract.Requires(internalCollectionEntry != null);
+            DebugCheck.NotNull(internalCollectionEntry);
 
             _internalCollectionEntry = internalCollectionEntry;
         }
@@ -126,7 +128,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a value indicating whether the collection of entities has been loaded from the database.
         /// </summary>
-        /// <value> <c>true</c> if the collection is loaded; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the collection is loaded; otherwise, <c>false</c> .
+        /// </value>
         public bool IsLoaded
         {
             get { return _internalCollectionEntry.IsLoaded; }
@@ -148,7 +152,7 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbCollectionEntry" /> class for 
+        ///     Returns a new instance of the non-generic <see cref="DbCollectionEntry" /> class for
         ///     the navigation property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>

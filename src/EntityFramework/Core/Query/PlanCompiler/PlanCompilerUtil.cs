@@ -15,7 +15,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Utility method that determines whether a given CaseOp subtree can be optimized.
         ///     Called by both PreProcessor and NominalTypeEliminator.
-        /// 
         ///     If the case statement is of the shape:
         ///     case when X then NULL else Y, or
         ///     case when X then Y else NULL,
@@ -92,11 +91,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Combine two predicates by trying to avoid the predicate parts of the 
+        ///     Combine two predicates by trying to avoid the predicate parts of the
         ///     second one that are already present in the first one.
-        /// 
-        ///     In particular, given two nodes, predicate1 and predicate2, 
-        ///     it creates a combined predicate logically equivalent to 
+        ///     In particular, given two nodes, predicate1 and predicate2,
+        ///     it creates a combined predicate logically equivalent to
         ///     predicate1 AND predicate2,
         ///     but it does not include any AND parts of predicate2 that are present
         ///     in predicate1.
@@ -132,11 +130,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a list of AND parts for a given predicate. 
+        ///     Create a list of AND parts for a given predicate.
         ///     For example, if the predicate is of the shape:
         ///     ((p1 and p2) and (p3 and p4)) the list is p1, p2, p3, p4
-        ///     The predicates p1,p2, p3, p4 may be roots of subtrees that 
-        ///     have nodes with AND ops, but 
+        ///     The predicates p1,p2, p3, p4 may be roots of subtrees that
+        ///     have nodes with AND ops, but
         ///     would not be broken unless they are the AND nodes themselves.
         /// </summary>
         /// <param name="predicate"> </param>

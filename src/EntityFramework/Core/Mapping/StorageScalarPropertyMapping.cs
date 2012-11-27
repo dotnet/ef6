@@ -3,16 +3,15 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
-    using System.Text;
 
     /// <summary>
     ///     Mapping metadata for scalar properties.
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -28,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -36,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     This class represents the metadata for all the scalar property map elements in the 
+    ///     This class represents the metadata for all the scalar property map elements in the
     ///     above example.
     /// </example>
     internal class StorageScalarPropertyMapping : StoragePropertyMapping
@@ -55,7 +54,7 @@ namespace System.Data.Entity.Core.Mapping
                 "StorageScalarPropertyMapping must only map primitive or enum types");
             Debug.Assert(
                 Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType), "StorageScalarPropertyMapping must only map primitive types");
-            
+
             m_columnMember = columnMember;
         }
 
@@ -73,7 +72,7 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_columnMember; }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
 
                 m_columnMember = value;
             }

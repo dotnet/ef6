@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -23,16 +23,16 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public TypeMapper(MappingContext mappingContext)
         {
-            Contract.Requires(mappingContext != null);
+            DebugCheck.NotNull(mappingContext);
 
             _mappingContext = mappingContext;
 
             _knownTypes.AddRange(
                 mappingContext.ModelConfiguration
-                    .ConfiguredTypes
-                    .Select(t => t.Assembly)
-                    .Distinct()
-                    .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
+                              .ConfiguredTypes
+                              .Select(t => t.Assembly)
+                              .Distinct()
+                              .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
         }
 
         public MappingContext MappingContext
@@ -42,8 +42,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public EnumType MapEnumType(Type type)
         {
-            Contract.Requires(type != null);
-            Contract.Assert(type.IsEnum);
+            DebugCheck.NotNull(type);
+            Debug.Assert(type.IsEnum);
 
             var enumType = _mappingContext.Model.GetEnumType(type.Name);
 
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public ComplexType MapComplexType(Type type, bool discoverNested = false)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             if (!type.IsValidStructuralType())
             {
@@ -124,7 +124,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public EntityType MapEntityType(Type type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             if (!type.IsValidStructuralType())
             {
@@ -146,7 +146,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 entityType = _mappingContext.Model.AddEntityType(type.Name);
                 entityType.Abstract = type.IsAbstract;
 
-                Contract.Assert(type.BaseType != null);
+                Debug.Assert(type.BaseType != null);
 
                 var baseType = _mappingContext.Model.GetEntityType(type.BaseType.Name);
 
@@ -200,10 +200,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
-            Contract.Requires(type != null);
-            Contract.Requires(annotations != null);
-            Contract.Requires(propertyMappingAction != null);
-            Contract.Requires(structuralTypeConfiguration != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(annotations);
+            DebugCheck.NotNull(propertyMappingAction);
+            DebugCheck.NotNull(structuralTypeConfiguration);
 
             annotations.SetClrType(type);
 
@@ -232,8 +232,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         private void MapDerivedTypes(Type type, EntityType entityType)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(entityType);
 
             if (type.IsSealed)
             {
@@ -260,9 +260,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         private void LiftDerivedType(Type derivedType, EntityType derivedEntityType, EntityType entityType)
         {
-            Contract.Requires(derivedType != null);
-            Contract.Requires(derivedEntityType != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(derivedType);
+            DebugCheck.NotNull(derivedEntityType);
+            DebugCheck.NotNull(entityType);
 
             _mappingContext.Model.ReplaceEntitySet(derivedEntityType, _mappingContext.Model.GetEntitySet(entityType));
 
@@ -271,8 +271,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         private void LiftInheritedProperties(Type type, EntityType entityType)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(entityType);
 
             var entityTypeConfiguration
                 = _mappingContext.ModelConfiguration.GetStructuralTypeConfiguration(type) as EntityTypeConfiguration;
@@ -298,8 +298,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         private void LiftInheritedProperties(
             Type type, EntityType entityType, EntityTypeConfiguration entityTypeConfiguration)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(entityType);
 
             var members = entityType.DeclaredMembers.ToList();
 

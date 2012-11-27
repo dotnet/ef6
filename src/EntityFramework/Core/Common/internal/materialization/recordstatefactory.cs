@@ -11,12 +11,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
     /// <summary>
     ///     An immutable class used to generate new RecordStates, which are used
-    ///     at runtime to produce value-layer (aka DataReader) results.  
-    /// 
-    ///     Contains static information collected by the Translator visitor.  The 
+    ///     at runtime to produce value-layer (aka DataReader) results.
+    ///     Contains static information collected by the Translator visitor.  The
     ///     expressions produced by the Translator are compiled.  The RecordStates
     ///     will refer to this object for all static information.
-    /// 
     ///     This class is cached in the query cache as part of the CoordinatorFactory.
     /// </summary>
     internal class RecordStateFactory
@@ -81,8 +79,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         /// <summary>
         ///     Description of this RecordStateFactory, used for debugging only; while this
-        ///     is not  needed in retail code, it is pretty important because it's the only 
-        ///     description we'll have once we compile the Expressions; debugging a problem 
+        ///     is not  needed in retail code, it is pretty important because it's the only
+        ///     description we'll have once we compile the Expressions; debugging a problem
         ///     with retail bits would be pretty hard without this.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]

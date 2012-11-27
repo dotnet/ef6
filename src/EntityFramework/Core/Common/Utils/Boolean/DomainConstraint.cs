@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
     /// <summary>
     ///     Represents a constraint of the form:
-    /// 
     ///     Var1 in Range
     /// </summary>
     /// <typeparam name="T_Element"> Type of range elements. </typeparam>

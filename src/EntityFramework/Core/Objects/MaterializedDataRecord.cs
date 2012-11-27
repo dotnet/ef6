@@ -24,8 +24,8 @@ namespace System.Data.Entity.Core.Objects
         private readonly TypeUsage _edmUsage;
         private readonly object[] _values;
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         internal MaterializedDataRecord(MetadataWorkspace workspace, TypeUsage edmUsage, object[] values)
         {
             Debug.Assert(null != edmUsage && null != values, "null recordType or values");
@@ -40,8 +40,8 @@ namespace System.Data.Entity.Core.Objects
             _values = values; // take ownership of the array
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public DataRecordInfo DataRecordInfo
         {
             get
@@ -66,43 +66,43 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override int FieldCount
         {
             get { return _values.Length; }
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override object this[int ordinal]
         {
             get { return GetValue(ordinal); }
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override object this[string name]
         {
             get { return GetValue(GetOrdinal(name)); }
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override bool GetBoolean(int ordinal)
         {
             return ((bool)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override byte GetByte(int ordinal)
         {
             return ((byte)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetBytes(int ordinal, long fieldOffset, byte[] buffer, int bufferOffset, int length)
         {
@@ -194,15 +194,15 @@ namespace System.Data.Entity.Core.Objects
             return cbytes;
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override char GetChar(int ordinal)
         {
             return ((string)GetValue(ordinal))[0];
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetChars(int ordinal, long fieldOffset, char[] buffer, int bufferOffset, int length)
         {
@@ -292,8 +292,8 @@ namespace System.Data.Entity.Core.Objects
             return cchars;
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public DbDataRecord GetDataRecord(int ordinal)
         {
             return ((DbDataRecord)_values[ordinal]);
@@ -307,86 +307,86 @@ namespace System.Data.Entity.Core.Objects
             return GetDbDataReader(i);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override string GetDataTypeName(int ordinal)
         {
             return GetMember(ordinal).TypeUsage.EdmType.Name;
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override DateTime GetDateTime(int ordinal)
         {
             return ((DateTime)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Decimal GetDecimal(int ordinal)
         {
             return ((Decimal)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override double GetDouble(int ordinal)
         {
             return ((double)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Type GetFieldType(int ordinal)
         {
             var edmMemberType = GetMember(ordinal).TypeUsage.EdmType;
             return edmMemberType.ClrType ?? typeof(Object);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override float GetFloat(int ordinal)
         {
             return ((float)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Guid GetGuid(int ordinal)
         {
             return ((Guid)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Int16 GetInt16(int ordinal)
         {
             return ((Int16)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Int32 GetInt32(int ordinal)
         {
             return ((Int32)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override Int64 GetInt64(int ordinal)
         {
             return ((Int64)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override string GetName(int ordinal)
         {
             return GetMember(ordinal).Name;
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override int GetOrdinal(string name)
         {
             if (null == _fieldNameLookup)
@@ -396,22 +396,22 @@ namespace System.Data.Entity.Core.Objects
             return _fieldNameLookup.GetOrdinal(name);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override string GetString(int ordinal)
         {
             return ((string)_values[ordinal]);
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override object GetValue(int ordinal)
         {
             return _values[ordinal];
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override int GetValues(object[] values)
         {
             if (null == values)
@@ -432,8 +432,8 @@ namespace System.Data.Entity.Core.Objects
             return DataRecordInfo.FieldMetadata[ordinal].FieldType;
         }
 
-        ///<summary>
-        ///</summary>
+        /// <summary>
+        /// </summary>
         public override bool IsDBNull(int ordinal)
         {
             return (DBNull.Value == _values[ordinal]);
@@ -566,7 +566,8 @@ namespace System.Data.Entity.Core.Objects
             var cache = _filterCache;
 
             // Use a cached version if possible
-            if (filtering && cache != null
+            if (filtering
+                && cache != null
                 && cache.IsValid(attributes))
             {
                 return cache.FilteredProperties;
@@ -579,7 +580,8 @@ namespace System.Data.Entity.Core.Objects
 
             //Build up the attribute cache, since our PropertyDescriptor doesn't store it internally.
             // _values is set only during construction.
-            if (null == _attrCache && null != attributes
+            if (null == _attrCache
+                && null != attributes
                 && 0 < attributes.Length)
             {
                 _attrCache = new Dictionary<object, AttributeCollection>();

@@ -5,14 +5,14 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents the Mapping metadata for a type map in CS space.
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap
     ///     --ScalarProperyMap
     ///     --ScalarPropertyMap
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap
-    ///     This class represents the metadata for all the Type map elements in the 
+    ///     This class represents the metadata for all the Type map elements in the
     ///     above example namely EntityTypeMapping, AssociationTypeMapping and CompositionTypeMapping.
     ///     The TypeMapping elements contain TableMappingFragments which in turn contain the property maps.
     /// </example>
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping
             m_fragments = new List<StorageMappingFragment>();
             m_setMapping = setMapping;
         }
-        
+
         /// <summary>
         ///     ExtentMap that contains this type mapping.
         /// </summary>
@@ -92,14 +92,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="fragment"> </param>
         internal void AddFragment(StorageMappingFragment fragment)
         {
-            Contract.Requires(fragment != null);
+            DebugCheck.NotNull(fragment);
 
             m_fragments.Add(fragment);
         }
 
         internal void RemoveFragment(StorageMappingFragment fragment)
         {
-            Contract.Requires(fragment != null);
+            DebugCheck.NotNull(fragment);
 
             m_fragments.Remove(fragment);
         }

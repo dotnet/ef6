@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Data.Entity.Migrations.Extensions;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
@@ -33,8 +33,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// <returns> True if the document was modified; false if no change was made. </returns>
         public virtual bool AddConnectionFactoryToConfig(XDocument config, ConnectionFactorySpecification specification)
         {
-            Contract.Requires(config != null);
-            Contract.Requires(specification != null);
+            DebugCheck.NotNull(config);
+            DebugCheck.NotNull(specification);
 
             var entityFramework = config
                 .GetOrCreateElement(ConfigurationElementName)
@@ -66,7 +66,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// <returns> True if the document was modified; false if no change was made. </returns>
         public virtual bool AddOrUpdateConnectionFactoryInConfig(XDocument config, ConnectionFactorySpecification specification)
         {
-            Contract.Requires(config != null);
+            DebugCheck.NotNull(config);
 
             var connectionFactoryElement = config
                 .GetOrCreateElement(ConfigurationElementName)
@@ -107,8 +107,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// <returns> True if the document was modified; false if no change was made. </returns>
         public virtual bool AddOrUpdateConfigSection(XDocument config, Version entityFrameworkVersion)
         {
-            Contract.Requires(config != null);
-            Contract.Requires(entityFrameworkVersion != null);
+            DebugCheck.NotNull(config);
+            DebugCheck.NotNull(entityFrameworkVersion);
 
             var configSections = config
                 .GetOrCreateElement(ConfigurationElementName)

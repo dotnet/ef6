@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     ///     Additional information for a "Table" node
     ///     AugmentedTableNode - the augmentedTableNode is a subclass of AugmentedNode,
     ///     and represents a ScanTable node. In addition to the information above, this
-    ///     class keeps track of all join edges that this node participates in, 
+    ///     class keeps track of all join edges that this node participates in,
     ///     whether this table has been eliminated, and finally, how high in the tree
     ///     this node is visible
     /// </summary>

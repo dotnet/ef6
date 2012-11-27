@@ -5,7 +5,7 @@ namespace System.Data.Entity.Spatial
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     internal class SpatialServicesLoader
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Spatial
             }
 
             var efProvider = _resolver.GetService<DbProviderServices>("System.Data.SqlClient");
-            Contract.Assert(efProvider != null); // Root resolver will return SQL provider or throw
+            Debug.Assert(efProvider != null);
 
             try
             {

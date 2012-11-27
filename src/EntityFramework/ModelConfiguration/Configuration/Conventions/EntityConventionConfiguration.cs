@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Allows configuration to be performed for a lightweight convention based on
@@ -43,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same EntityConventionConfiguration instance so that multiple calls can be chained. </returns>
         public EntityConventionConfiguration Where(Func<Type, bool> predicate)
         {
-            Contract.Requires(predicate != null);
+            Check.NotNull(predicate, "predicate");
 
             _predicates.Add(predicate);
 
@@ -53,11 +53,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
-        /// <param name="entityConfigurationAction"> An action that performs configuration against a <see
-        ///      cref="LightweightEntityConfiguration" /> . </param>
+        /// <param name="entityConfigurationAction">
+        ///     An action that performs configuration against a
+        ///     <see
+        ///         cref="LightweightEntityConfiguration" />
+        ///     .
+        /// </param>
         public void Configure(Action<LightweightEntityConfiguration> entityConfigurationAction)
         {
-            Contract.Requires(entityConfigurationAction != null);
+            Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
             _configurationAction = entityConfigurationAction;
         }

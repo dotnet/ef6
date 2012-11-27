@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarPropertyMap
     ///     --ScalarProperyMap
     ///     --ScalarPropertyMap
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap
-    ///     This class represents the metadata for all property map elements in the 
+    ///     This class represents the metadata for all property map elements in the
     ///     above example. This includes the scalar property maps, complex property maps
     ///     and end property maps.
     /// </example>

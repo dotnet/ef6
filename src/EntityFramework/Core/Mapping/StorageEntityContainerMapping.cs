@@ -9,8 +9,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entitySetName"> the name of the entity set </param>
         internal StorageSetMapping GetEntitySetMapping(String entitySetName)
         {
-            Contract.Requires(entitySetName != null);
+            DebugCheck.NotNull(entitySetName);
             //Key for EntitySetMapping should be EntitySet name and Entoty type name
             StorageSetMapping setMapping = null;
             m_entitySetMappings.TryGetValue(entitySetName, out setMapping);
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
         internal StorageSetMapping GetRelationshipSetMapping(string relationshipSetName)
         {
-            Contract.Requires(relationshipSetName != null);
+            DebugCheck.NotNull(relationshipSetName);
             StorageSetMapping setMapping = null;
             m_associationSetMappings.TryGetValue(relationshipSetName, out setMapping);
             return setMapping;

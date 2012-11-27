@@ -5,18 +5,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
-    ///     Allows derived configuration classes for entities and complex types to be registered with a <see cref="DbModelBuilder" />.
+    ///     Allows derived configuration classes for entities and complex types to be registered with a
+    ///     <see
+    ///         cref="DbModelBuilder" />
+    ///     .
     /// </summary>
     /// <remarks>
     ///     Derived configuration classes are created by deriving from <see cref="EntityTypeConfiguration" />
     ///     or <see cref="ComplexTypeConfiguration" /> and using a type to be included in the model as the generic
     ///     parameter.
-    /// 
     ///     Configuration can be performed without creating derived configuration classes via the Entity and ComplexType
     ///     methods on <see cref="DbModelBuilder" />.
     /// </remarks>
@@ -26,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal ConfigurationRegistrar(ModelConfiguration modelConfiguration)
         {
-            Contract.Requires(modelConfiguration != null);
+            DebugCheck.NotNull(modelConfiguration);
 
             _modelConfiguration = modelConfiguration;
         }
@@ -42,8 +45,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             EntityTypeConfiguration<TEntityType> entityTypeConfiguration)
             where TEntityType : class
         {
-            Contract.Requires(entityTypeConfiguration != null);
-            Contract.Assert(entityTypeConfiguration.Configuration != null);
+            Check.NotNull(entityTypeConfiguration, "entityTypeConfiguration");
+            Debug.Assert(entityTypeConfiguration.Configuration != null);
 
             _modelConfiguration.Add((EntityTypeConfiguration)entityTypeConfiguration.Configuration);
 
@@ -61,8 +64,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ComplexTypeConfiguration<TComplexType> complexTypeConfiguration)
             where TComplexType : class
         {
-            Contract.Requires(complexTypeConfiguration != null);
-            Contract.Assert(complexTypeConfiguration.Configuration != null);
+            Check.NotNull(complexTypeConfiguration, "complexTypeConfiguration");
+            Debug.Assert(complexTypeConfiguration.Configuration != null);
 
             _modelConfiguration.Add((ComplexTypeConfiguration)complexTypeConfiguration.Configuration);
 

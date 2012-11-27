@@ -207,11 +207,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         /// <summary>
         ///     Given the <paramref name="member" /> and one of its <paramref name="possibleType" />s, determine the attributes that are relevant
-        ///     for this <paramref name="possibleType" /> and return a <see cref="MemberPath" /> signature corresponding to the <paramref
-        ///      name="possibleType" /> and the attributes.
+        ///     for this <paramref name="possibleType" /> and return a <see cref="MemberPath" /> signature corresponding to the
+        ///     <paramref
+        ///         name="possibleType" />
+        ///     and the attributes.
         ///     If <paramref name="needKeysOnly" />=true, collect the key fields only.
         /// </summary>
-        /// <param name="possibleType"> the <paramref name="member" /> 's type or one of its subtypes </param>
+        /// <param name="possibleType">
+        ///     the <paramref name="member" /> 's type or one of its subtypes
+        /// </param>
         private static void GatherSignatureFromTypeStructuralMembers(
             MemberProjectionIndex index,
             EdmItemCollection edmItemCollection,

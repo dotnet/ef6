@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         private Shaper<RecordState> _shaper;
 
         /// <summary>
-        ///     Enumerator over shapers for NextResult() calls. 
+        ///     Enumerator over shapers for NextResult() calls.
         ///     Null for nested data readers (depth > 0);
         /// </summary>
         private IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> _nextResultShaperInfoEnumerator;
@@ -82,9 +82,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Shaper<RecordState> shaper, CoordinatorFactory<RecordState> coordinatorFactory, int depth,
             IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> nextResultShaperInfos)
         {
-            Contract.Requires(null != shaper);
-            Contract.Requires(null != coordinatorFactory);
-            Contract.Requires(depth == 0 || nextResultShaperInfos == null, "Nested data readers should not have multiple result sets.");
+            DebugCheck.NotNull(shaper);
+            DebugCheck.NotNull(coordinatorFactory);
+            Debug.Assert(depth == 0 || nextResultShaperInfos == null, "Nested data readers should not have multiple result sets.");
 
             _nextResultShaperInfoEnumerator = nextResultShaperInfos;
             _initialize = () => SetShaper(shaper, coordinatorFactory, depth);
@@ -202,9 +202,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     Implicitly close this (nested) data reader; will be called whenever 
+        ///     Implicitly close this (nested) data reader; will be called whenever
         ///     the user has done a GetValue() or a Read() on a parent reader/record
-        ///     to ensure that we consume all our results.  We do that because we 
+        ///     to ensure that we consume all our results.  We do that because we
         ///     our design requires us to be positioned at the next nested reader's
         ///     first row.
         /// </summary>
@@ -219,9 +219,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     An asynchronous version of <see cref="CloseImplicitly" />, which
-        ///     implicitly closes this (nested) data reader; will be called whenever 
+        ///     implicitly closes this (nested) data reader; will be called whenever
         ///     the user has done a GetValue() or a ReadAsync() on a parent reader/record
-        ///     to ensure that we consume all our results.  We do that because we 
+        ///     to ensure that we consume all our results.  We do that because we
         ///     our design requires us to be positioned at the next nested reader's
         ///     first row.
         /// </summary>
@@ -260,9 +260,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #endif
 
         /// <summary>
-        ///     Figure out the CLR type from the TypeMetadata object; For scalars, 
-        ///     we can get this from the metadata workspace, but for the rest, we 
-        ///     just guess at "Object".  You need to use the DataRecordInfo property 
+        ///     Figure out the CLR type from the TypeMetadata object; For scalars,
+        ///     we can get this from the metadata workspace, but for the rest, we
+        ///     just guess at "Object".  You need to use the DataRecordInfo property
         ///     to get better information for those.
         /// </summary>
         /// <param name="typeUsage"> </param>

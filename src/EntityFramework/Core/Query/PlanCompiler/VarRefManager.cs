@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Determines whether any var from a given list of keys is referenced by any of defining node's right relatives, 
+        ///     Determines whether any var from a given list of keys is referenced by any of defining node's right relatives,
         ///     with the exception of the relatives brunching at the given targetJoinNode.
         /// </summary>
         /// <param name="keys"> A list of vars to check for </param>
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Does the list of outputs of the given SetOp contain a var 
+        ///     Does the list of outputs of the given SetOp contain a var
         ///     from the given VarVec defined by the SetOp's child with the given index
         /// </summary>
         /// <param name="op"> </param>

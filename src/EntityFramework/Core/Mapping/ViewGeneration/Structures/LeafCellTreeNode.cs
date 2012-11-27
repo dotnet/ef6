@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             StorageAssociationSetMapping colocatedAssociationSetMap)
         {
             var mapFragment = colocatedAssociationSetMap.TypeMappings.First().MappingFragments.First();
-            var storeEntitySet = (EntitySet)(colocatedAssociationSetMap.StoreEntitySet);
+            var storeEntitySet = (colocatedAssociationSetMap.StoreEntitySet);
             IEnumerable<EdmMember> keyProperties = storeEntitySet.ElementType.KeyMembers;
             //Find the end that's mapped to primary key
             foreach (StorageEndPropertyMapping endMap in mapFragment.Properties)

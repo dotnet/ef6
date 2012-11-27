@@ -6,7 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -19,7 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
-            Contract.Assert(edmDataModelItem.DeclaredKeyProperties != null);
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
+            Debug.Assert(edmDataModelItem.DeclaredKeyProperties != null);
 
             if ((edmDataModelItem.DeclaredKeyProperties.Count == 1)
                 && !(from p in edmDataModelItem.DeclaredProperties
@@ -29,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var property = edmDataModelItem.DeclaredKeyProperties.Single();
 
-                Contract.Assert(property.TypeUsage != null);
+                Debug.Assert(property.TypeUsage != null);
 
                 if ((property.GetStoreGeneratedPattern() == null)
                     && property.PrimitiveType != null

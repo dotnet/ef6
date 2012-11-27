@@ -4,7 +4,6 @@ namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Xml;
     using System.Xml.Linq;
@@ -14,7 +13,7 @@ namespace System.Data.Entity.Utilities
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static XDocument GetModel(this DbContext context)
         {
-            Contract.Requires(context != null);
+            DebugCheck.NotNull(context);
 
             return GetModel(w => EdmxWriter.WriteEdmx(context, w));
         }
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Utilities
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static XDocument GetModel(Action<XmlWriter> writeXml)
         {
-            Contract.Requires(writeXml != null);
+            DebugCheck.NotNull(writeXml);
 
             using (var memoryStream = new MemoryStream())
             {

@@ -21,6 +21,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, ModelConfiguration configuration,
             ForeignKeyAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if (memberInfo.IsValidEdmScalarProperty())
             {
                 ApplyNavigationProperty(memberInfo, configuration, attribute);

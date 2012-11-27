@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same PropertyConventionConfiguration instance so that multiple calls can be chained. </returns>
         public PropertyConventionConfiguration Where(Func<PropertyInfo, bool> predicate)
         {
-            Contract.Requires(predicate != null);
+            Check.NotNull(predicate, "predicate");
 
             _predicates.Add(predicate);
 
@@ -47,11 +47,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Allows configuration of the properties that this convention applies to.
         /// </summary>
-        /// <param name="propertyConfigurationAction"> An action that performs configuration against a <see
-        ///      cref="LightweightPropertyConfiguration" /> . </param>
+        /// <param name="propertyConfigurationAction">
+        ///     An action that performs configuration against a
+        ///     <see
+        ///         cref="LightweightPropertyConfiguration" />
+        ///     .
+        /// </param>
         public void Configure(Action<LightweightPropertyConfiguration> propertyConfigurationAction)
         {
-            Contract.Requires(propertyConfigurationAction != null);
+            Check.NotNull(propertyConfigurationAction, "propertyConfigurationAction");
 
             _configurationAction = propertyConfigurationAction;
         }

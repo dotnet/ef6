@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Adapted from <see cref="System.Lazy{T}" /> to allow the initializer to take an input object and
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Internal
         /// <param name="action"> The action. </param>
         public RetryAction(Action<TInput> action)
         {
-            Contract.Requires(action != null);
+            DebugCheck.NotNull(action);
 
             _action = action;
         }

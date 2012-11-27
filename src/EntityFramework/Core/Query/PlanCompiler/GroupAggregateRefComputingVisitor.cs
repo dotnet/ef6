@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     A visitor that collects all group aggregates and the corresponding function aggregates 
+    ///     A visitor that collects all group aggregates and the corresponding function aggregates
     ///     that are defined over them, referred to as 'candidate aggregates'. The candidate aggregates are aggregates
     ///     that have an argument that has the corresponding group aggregate as the only external reference
     /// </summary>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region 'Public'
 
         /// <summary>
-        ///     Produces a list of all GroupAggregateVarInfos, each of which represents a single group aggregate 
+        ///     Produces a list of all GroupAggregateVarInfos, each of which represents a single group aggregate
         ///     and it candidate function aggregates. It also produces a delegate that given a child node returns the parent node
         /// </summary>
         /// <param name="itree"> </param>
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region AncillaryOps
 
         /// <summary>
-        ///     Determines whether the var or a property of the var (if the var is defined as a NewRecord) 
+        ///     Determines whether the var or a property of the var (if the var is defined as a NewRecord)
         ///     is defined exclusively over a single group aggregate. If so, it registers it as such with the
         ///     group aggregate var info manager.
         /// </summary>
@@ -150,8 +150,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOps Visitors
 
         /// <summary>
-        ///     If the op is a collection aggregate function it checks whether its arguement can be translated over 
-        ///     a single group aggregate var. If so, it is tracked as a candidate to be pushed into that 
+        ///     If the op is a collection aggregate function it checks whether its arguement can be translated over
+        ///     a single group aggregate var. If so, it is tracked as a candidate to be pushed into that
         ///     group by into node.
         /// </summary>
         /// <param name="op"> </param>

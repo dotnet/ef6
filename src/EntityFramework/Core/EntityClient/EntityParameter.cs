@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
 
     /// <summary>
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.EntityClient
         private EntityParameter(EntityParameter source)
             : this()
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             source.CloneHelper(this);
 
@@ -149,9 +149,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Helper method to validate the parameter name; Ideally we'd only call this once, but 
+        ///     Helper method to validate the parameter name; Ideally we'd only call this once, but
         ///     we have to put an argumentName on the Argument exception, and the property setter would
-        ///     need "value" which confuses folks when they call the constructor that takes the value 
+        ///     need "value" which confuses folks when they call the constructor that takes the value
         ///     of the parameter.  c'est la vie.
         /// </summary>
         /// <param name="parameterName"> </param>
@@ -581,8 +581,10 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 // Spatial types have only DbType 'Object', and cannot be represented in the static type map.
                 PrimitiveType primitiveParameterType;
-                if (DbType == DbType.Object &&
-                    Value != null &&
+                if (DbType == DbType.Object
+                    &&
+                    Value != null
+                    &&
                     ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
                     &&
                     Helper.IsSpatialType(primitiveParameterType))
@@ -666,7 +668,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         internal virtual void CopyTo(DbParameter destination)
         {
-            Contract.Requires(destination != null);
+            DebugCheck.NotNull(destination);
             CloneHelper((EntityParameter)destination);
         }
 

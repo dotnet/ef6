@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml.Linq;
     using EnvDTE;
 
@@ -23,7 +23,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         [CLSCompliant(false)]
         public SqlCompactConnectionFactoryConfigurator(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             var manipulator = new ConfigFileManipulator();
             var processor = new ConfigFileProcessor();

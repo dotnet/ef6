@@ -16,10 +16,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     internal sealed class JoinCqlBlock : CqlBlock
     {
         /// <summary>
-        ///     Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (<paramref
-        ///     name="children" />),
-        ///     ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (<paramref
-        ///     name="blockAliasNum" />).
+        ///     Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (
+        ///     <paramref
+        ///         name="children" />
+        ///     ),
+        ///     ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (
+        ///     <paramref
+        ///         name="blockAliasNum" />
+        ///     ).
         /// </summary>
         internal JoinCqlBlock(
             CellTreeOpType opType,
@@ -65,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 builder.Append(" (");
                 child.AsEsql(builder, false, indentLevel + 1);
                 builder.Append(") AS ")
-                    .Append(child.CqlAlias);
+                       .Append(child.CqlAlias);
 
                 // The ON part.
                 if (i > 0)
@@ -147,8 +151,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             private readonly List<SingleClause> m_singleClauses;
 
             /// <summary>
-            ///     Adds an <see cref="SingleClause" /> element for a join of the form <paramref name="leftSlot" /> = <paramref
-            ///      name="rightSlot" />.
+            ///     Adds an <see cref="SingleClause" /> element for a join of the form <paramref name="leftSlot" /> =
+            ///     <paramref
+            ///         name="rightSlot" />
+            ///     .
             /// </summary>
             internal void Add(
                 QualifiedSlot leftSlot, MemberPath leftSlotOutputMember, QualifiedSlot rightSlot, MemberPath rightSlotOutputMember)
@@ -219,8 +225,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 internal StringBuilder AsEsql(StringBuilder builder)
                 {
                     builder.Append(m_leftSlot.GetQualifiedCqlName(m_leftSlotOutputMember))
-                        .Append(" = ")
-                        .Append(m_rightSlot.GetQualifiedCqlName(m_rightSlotOutputMember));
+                           .Append(" = ")
+                           .Append(m_rightSlot.GetQualifiedCqlName(m_rightSlotOutputMember));
                     return builder;
                 }
 

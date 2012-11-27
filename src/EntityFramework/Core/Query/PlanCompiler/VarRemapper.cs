@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Update vars in just this node (and not the entire subtree) 
+        ///     Update vars in just this node (and not the entire subtree)
         ///     Does *not* recompute the nodeinfo - there are at least some consumers of this
         ///     function that do not want the recomputation - transformation rules, for example
         /// </summary>
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region VisitorMethods
 
         /// <summary>
-        ///     Default visitor for a node - does not visit the children 
+        ///     Default visitor for a node - does not visit the children
         ///     The reason we have this method is because the default VisitDefault
         ///     actually visits the children, and we don't want to do that
         /// </summary>

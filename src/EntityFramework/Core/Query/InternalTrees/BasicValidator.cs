@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
 #if DEBUG
     /// <summary>
-    ///     The BasicValidator validates the shape of the IQT. It ensures that the 
+    ///     The BasicValidator validates the shape of the IQT. It ensures that the
     ///     various Ops in the tree have the right kinds and number of arguments.
     /// </summary>
     internal class BasicValidator : BasicOpVisitor
@@ -159,7 +159,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             VisitDefault(n);
             Assert(op.Type != null, "ScalarOp {0} with no datatype!", op.OpType);
-            if (op.OpType != OpType.Element &&
+            if (op.OpType != OpType.Element
+                &&
                 op.OpType != OpType.Exists
                 &&
                 op.OpType != OpType.Collect)

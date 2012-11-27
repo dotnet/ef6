@@ -9,8 +9,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         }
 
         /// <summary>
-        ///     Find the Foreign Key Associations that relate EntitySets used in these left cell wrappers and 
+        ///     Find the Foreign Key Associations that relate EntitySets used in these left cell wrappers and
         ///     add any equivalence facts between sets implied by 1:1 associations.
         ///     We can collect other implication facts but we don't have a scenario that needs them( yet ).
         /// </summary>
@@ -139,16 +139,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             public virtual IEnumerable<AssociationSet> Filter(
                 IList<EntityType> entityTypes, IEnumerable<AssociationSet> associationSets)
             {
-                Contract.Requires(entityTypes != null);
-                Contract.Requires(associationSets != null);
+                DebugCheck.NotNull(entityTypes);
+                DebugCheck.NotNull(associationSets);
 
                 return associationSets
                     .Where(
                         a => a.ElementType.IsForeignKey
                              && a.ElementType.AssociationEndMembers
-                                    .All(
-                                        aem => (aem.RelationshipMultiplicity == RelationshipMultiplicity.One)
-                                               && entityTypes.Contains(aem.GetEntityType())));
+                                 .All(
+                                     aem => (aem.RelationshipMultiplicity == RelationshipMultiplicity.One)
+                                            && entityTypes.Contains(aem.GetEntityType())));
             }
         }
 

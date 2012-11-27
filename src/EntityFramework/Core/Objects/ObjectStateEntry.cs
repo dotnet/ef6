@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     // Detached - nothing
 
@@ -26,7 +26,6 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     ///     Represets either a entity, entity stub or relationship
     /// </summary>
-    [ContractClass(typeof(ObjectStateEntryContracts))]
     public abstract class ObjectStateEntry : IEntityStateEntry, IEntityChangeTracker
     {
         #region common entry fields
@@ -42,7 +41,7 @@ namespace System.Data.Entity.Core.Objects
         // ObjectStateEntry will not be detached and creation will be handled from ObjectStateManager
         internal ObjectStateEntry(ObjectStateManager cache, EntitySet entitySet, EntityState state)
         {
-            Contract.Requires(cache != null);
+            DebugCheck.NotNull(cache);
 
             _cache = cache;
             _entitySet = entitySet;
@@ -159,19 +158,19 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> IEnumerable of modified properties names, names are in term of c-space </returns>
         public abstract IEnumerable<string> GetModifiedProperties();
 
-        ///<summary>
-        ///    set the state to Modified.
-        ///</summary>
-        ///<param> </param>
-        ///<returns> </returns>
-        ///<exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
+        /// <summary>
+        ///     set the state to Modified.
+        /// </summary>
+        /// <param> </param>
+        /// <returns> </returns>
+        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public abstract void SetModified();
 
-        ///<summary>
-        ///    Marks specified property as modified.
-        ///</summary>
-        ///<param name="propertyName"> This API recognizes the names in terms of OSpace </param>
-        ///<exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
+        /// <summary>
+        ///     Marks specified property as modified.
+        /// </summary>
+        /// <param name="propertyName"> This API recognizes the names in terms of OSpace </param>
+        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public abstract void SetModifiedProperty(string propertyName);
 
         /// <summary>
@@ -356,50 +355,5 @@ namespace System.Data.Entity.Core.Objects
         }
 
         #endregion // Internal members
-
-        #region Base Member Contracts
-
-        [ContractClassFor(typeof(ObjectStateEntry))]
-        private abstract class ObjectStateEntryContracts : ObjectStateEntry
-        {
-            private ObjectStateEntryContracts()
-                : base(new ObjectStateManager(), null, EntityState.Unchanged)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void ApplyCurrentValues(object currentEntity)
-            {
-                Contract.Requires<ArgumentNullException>(currentEntity != null);
-
-                throw new NotImplementedException();
-            }
-
-            public override void ApplyOriginalValues(object originalEntity)
-            {
-                Contract.Requires(originalEntity != null);
-
-                throw new NotImplementedException();
-            }
-
-            internal override void EntityComplexMemberChanging(
-                string entityMemberName, object complexObject, string complexObjectMemberName)
-            {
-                Contract.Requires(complexObjectMemberName != null);
-                Contract.Requires(complexObject != null);
-
-                throw new NotImplementedException();
-            }
-
-            internal override void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName)
-            {
-                Contract.Requires(complexObjectMemberName != null);
-                Contract.Requires(complexObject != null);
-
-                throw new NotImplementedException();
-            }
-        }
-
-        #endregion
     }
 }

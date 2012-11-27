@@ -5,9 +5,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Instances of this class are used to create DbConnection objects for
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="baseConnectionString"> The connection string to use for options to the database other than the 'Initial Catalog'. The 'Initial Catalog' will be prepended to this string based on the database name when CreateConnection is called. </param>
         public SqlConnectionFactory(string baseConnectionString)
         {
-            Contract.Requires(baseConnectionString != null);
+            Check.NotNull(baseConnectionString, "baseConnectionString");
 
             _baseConnectionString = baseConnectionString;
         }
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Infrastructure
             get { return _providerFactoryCreator ?? (name => DbProviderFactories.GetFactory(name)); }
             set
             {
-                Contract.Assert(value != null);
+                DebugCheck.NotNull(value);
                 _providerFactoryCreator = value;
             }
         }
@@ -94,6 +94,8 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
+
             // If the "name or connection string" contains an '=' character then it is treated as a connection string.
             var connectionString = nameOrConnectionString;
             if (!DbHelpers.TreatAsConnectionString(nameOrConnectionString))

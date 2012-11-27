@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Public Entity SQL Parser class.
@@ -29,10 +29,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="query"> EntitySQL query to be parsed. </param>
         /// <param name="parameters"> optional query parameters </param>
-        /// <returns> <see cref="ParseResult" /> containing <see cref="DbCommandTree" /> and information describing inline function definitions if any. </returns>
+        /// <returns>
+        ///     <see cref="ParseResult" /> containing <see cref="DbCommandTree" /> and information describing inline function definitions if any.
+        /// </returns>
         public ParseResult Parse(string query, params DbParameterReferenceExpression[] parameters)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
             if (parameters != null)
             {
                 IEnumerable<DbParameterReferenceExpression> paramsEnum = parameters;
@@ -48,7 +50,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         public DbLambda ParseLambda(string query, params DbVariableReferenceExpression[] variables)
         {
-            Contract.Requires(query != null);
+            Check.NotNull(query, "query");
             if (variables != null)
             {
                 IEnumerable<DbVariableReferenceExpression> varsEnum = variables;

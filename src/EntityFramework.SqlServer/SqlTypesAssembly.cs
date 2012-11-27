@@ -3,9 +3,9 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -66,14 +66,14 @@ namespace System.Data.Entity.SqlServer
             // Explicit cast from SqlBoolean to bool
             sqlBooleanToBoolean =
                 Expressions.Lambda<object, bool>("sqlBooleanValue", sqlBoolVal => sqlBoolVal.ConvertTo(SqlBooleanType).ConvertTo<bool>()).
-                    Compile();
+                            Compile();
 
             // Explicit cast from SqlBoolean to bool? for non-Null values; otherwise null
             sqlBooleanToNullableBoolean = Expressions.Lambda<object, bool?>(
                 "sqlBooleanValue", sqlBoolVal =>
                                    sqlBoolVal.ConvertTo(SqlBooleanType).Property<bool>("IsNull")
-                                       .IfTrueThen(Expressions.Null<bool?>())
-                                       .Else(sqlBoolVal.ConvertTo(SqlBooleanType).ConvertTo<bool>().ConvertTo<bool?>())).Compile();
+                                             .IfTrueThen(Expressions.Null<bool?>())
+                                             .Else(sqlBoolVal.ConvertTo(SqlBooleanType).ConvertTo<bool>().ConvertTo<bool?>())).Compile();
 
             // SqlBytes has instance byte[] property 'Value'
             sqlBytesToByteArray =
@@ -84,7 +84,7 @@ namespace System.Data.Entity.SqlServer
             sqlCharsToString =
                 Expressions.Lambda<object, string>(
                     "sqlCharsValue", sqlCharsVal => sqlCharsVal.ConvertTo(SqlCharsType).Call("ToSqlString").Property<string>("Value")).
-                    Compile();
+                            Compile();
 
             // Explicit cast from SqlString to string
             sqlStringToString =
@@ -100,30 +100,31 @@ namespace System.Data.Entity.SqlServer
             sqlDoubleToNullableDouble = Expressions.Lambda<object, double?>(
                 "sqlDoubleValue", sqlDoubleVal =>
                                   sqlDoubleVal.ConvertTo(SqlDoubleType).Property<bool>("IsNull")
-                                      .IfTrueThen(Expressions.Null<double?>())
-                                      .Else(sqlDoubleVal.ConvertTo(SqlDoubleType).ConvertTo<double>().ConvertTo<double?>())).Compile();
+                                              .IfTrueThen(Expressions.Null<double?>())
+                                              .Else(sqlDoubleVal.ConvertTo(SqlDoubleType).ConvertTo<double>().ConvertTo<double?>()))
+                                                   .Compile();
 
             // Explicit cast from SqlInt32 to int
             sqlInt32ToInt =
                 Expressions.Lambda<object, int>("sqlInt32Value", sqlInt32Val => sqlInt32Val.ConvertTo(SqlInt32Type).ConvertTo<int>()).
-                    Compile();
+                            Compile();
 
             // Explicit cast from SqlInt32 to int? for non-Null values; otherwise null
             sqlInt32ToNullableInt = Expressions.Lambda<object, int?>(
                 "sqlInt32Value", sqlInt32Val =>
                                  sqlInt32Val.ConvertTo(SqlInt32Type).Property<bool>("IsNull")
-                                     .IfTrueThen(Expressions.Null<int?>())
-                                     .Else(sqlInt32Val.ConvertTo(SqlInt32Type).ConvertTo<int>().ConvertTo<int?>())).Compile();
+                                            .IfTrueThen(Expressions.Null<int?>())
+                                            .Else(sqlInt32Val.ConvertTo(SqlInt32Type).ConvertTo<int>().ConvertTo<int?>())).Compile();
 
             // SqlXml has instance string property 'Value'
             sqlXmlToString =
                 Expressions.Lambda<object, string>("sqlXmlValue", sqlXmlVal => sqlXmlVal.ConvertTo(SqlXmlType).Property<string>("Value")).
-                    Compile();
+                            Compile();
 
             isSqlGeographyNull =
                 Expressions.Lambda<object, bool>(
                     "sqlGeographyValue", sqlGeographyValue => sqlGeographyValue.ConvertTo(SqlGeographyType).Property<bool>("IsNull")).
-                    Compile();
+                            Compile();
             isSqlGeometryNull =
                 Expressions.Lambda<object, bool>(
                     "sqlGeometryValue", sqlGeometryValue => sqlGeometryValue.ConvertTo(SqlGeometryType).Property<bool>("IsNull")).Compile();
@@ -339,7 +340,7 @@ namespace System.Data.Entity.SqlServer
 
         internal object ConvertToSqlTypesGeography(DbGeography geographyValue)
         {
-            Contract.Requires(geographyValue != null);
+            DebugCheck.NotNull(geographyValue);
             var result = GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
             return result;
         }
@@ -358,7 +359,7 @@ namespace System.Data.Entity.SqlServer
 
         internal object ConvertToSqlTypesGeometry(DbGeometry geometryValue)
         {
-            Contract.Requires(geometryValue != null);
+            DebugCheck.NotNull(geometryValue);
 
             var result = GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
             return result;

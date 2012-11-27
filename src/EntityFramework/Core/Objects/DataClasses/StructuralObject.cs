@@ -44,9 +44,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Notification that a property has been changed.
         /// </summary>
         /// <remarks>
-        ///     The PropertyChanged event can indicate all properties on the 
-        ///     object have changed by using either a null reference 
-        ///     (Nothing in Visual Basic) or String.Empty as the property name 
+        ///     The PropertyChanged event can indicate all properties on the
+        ///     object have changed by using either a null reference
+        ///     (Nothing in Visual Basic) or String.Empty as the property name
         ///     in the PropertyChangedEventArgs.
         /// </remarks>
         [field: NonSerialized]
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Notification that a property is about to be changed.
         /// </summary>
         /// <remarks>
-        ///     The PropertyChanging event can indicate all properties on the 
-        ///     object are changing by using either a null reference 
-        ///     (Nothing in Visual Basic) or String.Empty as the property name 
+        ///     The PropertyChanging event can indicate all properties on the
+        ///     object are changing by using either a null reference
+        ///     (Nothing in Visual Basic) or String.Empty as the property name
         ///     in the PropertyChangingEventArgs.
         /// </remarks>
         [field: NonSerialized]
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called whenever a change is made to an object 
+        ///     This method is called whenever a change is made to an object
         ///     property's value.
         /// </summary>
         /// <param name="property"> The name for the changed property. </param>
@@ -169,8 +169,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity 
-        ///     whenever a change is about to be made to a property of the  
+        ///     This method is called by a ComplexObject contained in this Entity
+        ///     whenever a change is about to be made to a property of the
         ///     ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
@@ -180,8 +180,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string entityMemberName, ComplexObject complexObject, string complexMemberName);
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity 
-        ///     whenever a change has been made to a property of the  
+        ///     This method is called by a ComplexObject contained in this Entity
+        ///     whenever a change has been made to a property of the
         ///     ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
@@ -200,7 +200,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         /// <param name="first"> The first byte array value to compare </param>
         /// <param name="second"> The second byte array value to compare </param>
-        /// <returns> <c>true</c> if both arrays are <c>null</c> , or if both arrays are of the same length and contain the same byte values; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if both arrays are <c>null</c> , or if both arrays are of the same length and contain the same byte values; otherwise <c>false</c> .
+        /// </returns>
         protected internal static bool BinaryEquals(byte[] first, byte[] second)
         {
             if (ReferenceEquals(first, second))
@@ -1081,7 +1083,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Validates that the property is not null, and throws if it is
         /// </summary>
-        /// <param name="value"> <see cref="DbGeography" /> value to be checked. </param>
+        /// <param name="value">
+        ///     <see cref="DbGeography" /> value to be checked.
+        /// </param>
         /// <param name="isNullable"> Flag indicating if this property is allowed to be null. </param>
         /// <param name="propertyName"> Name of the property that is being validated. </param>
         /// <exception cref="System.Data.ConstraintException">The value is null for a non-nullable property</exception>
@@ -1100,7 +1104,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Validates that the property is not null, and throws if it is
         /// </summary>
-        /// <param name="value"> <see cref="DbGeography" /> value to be checked. </param>
+        /// <param name="value">
+        ///     <see cref="DbGeography" /> value to be checked.
+        /// </param>
         /// <param name="isNullable"> Flag indicating if this property is allowed to be null. </param>
         /// <exception cref="System.Data.ConstraintException">The value is null for a non-nullable property</exception>
         protected internal static DbGeography SetValidValue(DbGeography value, bool isNullable)
@@ -1111,7 +1117,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Validates that the property is not null, and throws if it is
         /// </summary>
-        /// <param name="value"> <see cref="DbGeometry" /> value to be checked. </param>
+        /// <param name="value">
+        ///     <see cref="DbGeometry" /> value to be checked.
+        /// </param>
         /// <param name="isNullable"> Flag indicating if this property is allowed to be null. </param>
         /// <param name="propertyName"> Name of the property that is being validated. </param>
         /// <exception cref="System.Data.ConstraintException">The value is null for a non-nullable property</exception>
@@ -1130,7 +1138,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Validates that the property is not null, and throws if it is
         /// </summary>
-        /// <param name="value"> <see cref="DbGeometry" /> value to be checked. </param>
+        /// <param name="value">
+        ///     <see cref="DbGeometry" /> value to be checked.
+        /// </param>
         /// <param name="isNullable"> Flag indicating if this property is allowed to be null. </param>
         /// <exception cref="System.Data.ConstraintException">The value is null for a non-nullable property</exception>
         protected internal static DbGeometry SetValidValue(DbGeometry value, bool isNullable)

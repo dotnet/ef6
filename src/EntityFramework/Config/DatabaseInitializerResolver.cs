@@ -4,7 +4,6 @@ namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     internal class DatabaseInitializerResolver : IDbDependencyResolver
     {
@@ -28,8 +27,8 @@ namespace System.Data.Entity.Config
 
         public virtual void SetInitializer(Type contextType, object initializer)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(initializer != null);
+            DebugCheck.NotNull(contextType);
+            DebugCheck.NotNull(initializer);
 
             _initializers.AddOrUpdate(contextType, initializer, (c, i) => initializer);
         }

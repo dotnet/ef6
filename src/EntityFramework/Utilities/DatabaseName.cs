@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     [SuppressMessage("Microsoft.Contracts", "CC1036",
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
@@ -12,11 +12,11 @@ namespace System.Data.Entity.Utilities
     {
         public static DatabaseName Parse(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotEmpty(name);
 
             var parts = name.Trim().Split(new[] { '.' });
 
-            Contract.Assert(parts.Length > 0);
+            Debug.Assert(parts.Length > 0);
 
             if (parts.Length > 2)
             {
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Utilities
 
         public DatabaseName(string name, string schema)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotEmpty(name);
 
             _name = name;
             _schema = schema;

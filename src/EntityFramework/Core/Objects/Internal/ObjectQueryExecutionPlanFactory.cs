@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
 
     internal class ObjectQueryExecutionPlanFactory
     {
@@ -131,8 +130,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         public ObjectResult<TResultType> ExecuteCommandTree<TResultType>(
             ObjectContext context, DbQueryCommandTree query, MergeOption mergeOption)
         {
-            Contract.Requires(context != null);
-            Contract.Requires(query != null);
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(query);
 
             var execPlan = Prepare(context, query, typeof(TResultType), mergeOption, null, null, DbExpressionBuilder.AliasGenerator);
             return execPlan.Execute<TResultType>(context, null);

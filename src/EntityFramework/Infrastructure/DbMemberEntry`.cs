@@ -5,9 +5,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -24,7 +24,10 @@ namespace System.Data.Entity.Infrastructure
         #region  Factory methods
 
         /// <summary>
-        ///     Creates a <see cref="DbMemberEntry{TEntity,TProperty}" /> from information in the given <see cref="InternalMemberEntry" />.
+        ///     Creates a <see cref="DbMemberEntry{TEntity,TProperty}" /> from information in the given
+        ///     <see
+        ///         cref="InternalMemberEntry" />
+        ///     .
         ///     This method will create an instance of the appropriate subclass depending on the metadata contained
         ///     in the InternalMemberEntry instance.
         /// </summary>
@@ -32,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbMemberEntry<TEntity, TProperty> Create(InternalMemberEntry internalMemberEntry)
         {
-            Contract.Requires(internalMemberEntry != null);
+            DebugCheck.NotNull(internalMemberEntry);
 
             return internalMemberEntry.CreateDbMemberEntry<TEntity, TProperty>();
         }
@@ -58,7 +61,7 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbMemberEntry" /> class for 
+        ///     Returns a new instance of the non-generic <see cref="DbMemberEntry" /> class for
         ///     the property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>
@@ -96,7 +99,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Validates this property.
         /// </summary>
-        /// <returns> Collection of <see cref="DbValidationError" /> objects. Never null. If the entity is valid the collection will be empty. </returns>
+        /// <returns>
+        ///     Collection of <see cref="DbValidationError" /> objects. Never null. If the entity is valid the collection will be empty.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public ICollection<DbValidationError> GetValidationErrors()
         {

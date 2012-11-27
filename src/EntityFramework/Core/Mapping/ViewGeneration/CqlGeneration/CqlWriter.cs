@@ -48,8 +48,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             {
                 var newName = name.Replace("]", "]]");
                 builder.Append('[')
-                    .Append(newName)
-                    .Append(']');
+                       .Append(newName)
+                       .Append(']');
             }
         }
     }

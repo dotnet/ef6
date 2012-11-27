@@ -6,8 +6,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         public static EdmModel DbInitialize(
             this EdmModel database, double version = XmlConstants.StoreVersionForV3)
         {
-            Contract.Requires(database != null);
+            DebugCheck.NotNull(database);
 
             database.Version = version;
             database.Name = "CodeFirstDatabase";
@@ -37,13 +37,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static StoreItemCollection ToStoreItemCollection(this EdmModel database)
         {
-            Contract.Requires(database != null);
+            DebugCheck.NotNull(database);
 
             // Provider information should be first class in EDM when we ship
             // but for now we use our annotation
             var providerInfo = database.GetProviderInfo();
 
-            Contract.Assert(providerInfo != null);
+            Debug.Assert(providerInfo != null);
 
             var stringBuilder = new StringBuilder();
 
@@ -67,8 +67,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static EntityType AddTable(this EdmModel database, string name)
         {
-            Contract.Requires(database != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotNull(database);
+            DebugCheck.NotEmpty(name);
 
             var uniqueIdentifier = database.GetEntityTypes().UniquifyName(name);
 
@@ -97,8 +97,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
 
         public static EntityType FindTableByName(this EdmModel database, DatabaseName tableName)
         {
-            Contract.Requires(database != null);
-            Contract.Requires(tableName != null);
+            DebugCheck.NotNull(database);
+            DebugCheck.NotNull(tableName);
 
             return database.GetEntityTypes().SingleOrDefault(
                 t =>

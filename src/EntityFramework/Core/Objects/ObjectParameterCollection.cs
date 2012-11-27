@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Text;
 
     /// <summary>
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal ObjectParameterCollection(ClrPerspective perspective)
         {
-            Contract.Requires(perspective != null);
+            DebugCheck.NotNull(perspective);
 
             // The perspective is required to do type-checking on parameters as they
             // are added to the collection.
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly List<ObjectParameter> _parameters;
 
         /// <summary>
-        ///     A CLR perspective necessary to do type-checking on parameters as they 
+        ///     A CLR perspective necessary to do type-checking on parameters as they
         ///     are added to the collection.
         /// </summary>
         private readonly ClrPerspective _perspective;
@@ -120,19 +120,23 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This method adds the specified parameter object to the collection. If
-        ///     the parameter object already exists in the collection, an exception is 
+        ///     the parameter object already exists in the collection, an exception is
         ///     thrown.
         /// </summary>
         /// <param name="item"> The parameter object to add to the collection. </param>
         /// <returns> </returns>
         /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
-        /// <exception cref="ArgumentException">If the parameter argument already exists in the collection. This 
+        /// <exception cref="ArgumentException">
+        ///     If the parameter argument already exists in the collection. This
         ///     behavior differs from that of most collections which allow duplicate
-        ///     entries.</exception>
-        /// <exception cref="ArgumentException">If another parameter with the same name as the parameter argument
+        ///     entries.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     If another parameter with the same name as the parameter argument
         ///     already exists in the collection. Note that the lookup is case-
-        ///     insensitive. This behavior differs from that of most collections,  
-        ///     and is more like that of a Dictionary.</exception>
+        ///     insensitive. This behavior differs from that of most collections,
+        ///     and is more like that of a Dictionary.
+        /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">If the type of the specified parameter is invalid.</exception>
         public void Add(ObjectParameter item)
         {
@@ -205,7 +209,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Contains(string name)
         {
-            Contract.Requires(name != null);
+            Check.NotNull(name, "name");
 
             if (IndexOf(name)
                 != -1)
@@ -237,8 +241,8 @@ namespace System.Data.Entity.Core.Objects
         #region Remove
 
         /// <summary>
-        ///     This method removes an instance of a parameter from the collection by 
-        ///     reference if it exists in the collection.  To remove a parameter by name, 
+        ///     This method removes an instance of a parameter from the collection by
+        ///     reference if it exists in the collection.  To remove a parameter by name,
         ///     first use the Contains(name) method or this[name] indexer to retrieve
         ///     the parameter instance, then remove it using this method.
         /// </summary>
@@ -342,19 +346,28 @@ namespace System.Data.Entity.Core.Objects
         ///     Locks or unlocks this parameter collection, allowing its contents to be added to, removed from, or cleared.
         ///     Calling this method consecutively with the same value has no effect but does not throw an exception.
         /// </summary>
-        /// <param name="isReadOnly"> If <c>true</c> , this parameter collection is now locked; otherwise it is unlocked </param>
+        /// <param name="isReadOnly">
+        ///     If <c>true</c> , this parameter collection is now locked; otherwise it is unlocked
+        /// </param>
         internal void SetReadOnly(bool isReadOnly)
         {
             _locked = isReadOnly;
         }
 
         /// <summary>
-        ///     Creates a new copy of the specified parameter collection containing copies of its element <see cref="ObjectParameter" />s.
+        ///     Creates a new copy of the specified parameter collection containing copies of its element
+        ///     <see
+        ///         cref="ObjectParameter" />
+        ///     s.
         ///     If the specified argument is <c>null</c>, then <c>null</c> is returned.
         /// </summary>
         /// <param name="copyParams"> The parameter collection to copy </param>
-        /// <returns> The new collection containing copies of <paramref name="copyParams" /> parameters, if <paramref
-        ///      name="copyParams" /> is non-null; otherwise <c>null</c> . </returns>
+        /// <returns>
+        ///     The new collection containing copies of <paramref name="copyParams" /> parameters, if
+        ///     <paramref
+        ///         name="copyParams" />
+        ///     is non-null; otherwise <c>null</c> .
+        /// </returns>
         internal static ObjectParameterCollection DeepCopy(ObjectParameterCollection copyParams)
         {
             if (null == copyParams)
@@ -377,7 +390,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     This private method checks for the existence of a given parameter object
-        ///     by name by iterating through the list and comparing each parameter name 
+        ///     by name by iterating through the list and comparing each parameter name
         ///     to the specified name. This is a case-insensitive lookup.
         /// </summary>
         private int IndexOf(string name)

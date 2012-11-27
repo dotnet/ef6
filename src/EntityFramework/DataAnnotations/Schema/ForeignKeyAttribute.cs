@@ -5,8 +5,8 @@
 
 namespace System.ComponentModel.DataAnnotations.Schema
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Denotes a property used as a foreign key in a relationship.
@@ -27,7 +27,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="name"> If placed on a foreign key property, the name of the associated navigation property. If placed on a navigation property, the name of the associated foreign key(s). If a navigation property has multiple foreign keys, a comma separated list should be supplied. </param>
         public ForeignKeyAttribute(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             _name = name;
         }

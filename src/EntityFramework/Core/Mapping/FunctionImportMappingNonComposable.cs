@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using OM = System.Collections.ObjectModel;
 
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Mapping
             ItemCollection itemCollection)
             : base(functionImport, targetFunction)
         {
-            Contract.Requires(structuralTypeMappingsList != null);
-            Contract.Requires(itemCollection != null);
+            DebugCheck.NotNull(structuralTypeMappingsList);
+            DebugCheck.NotNull(itemCollection);
             Debug.Assert(!functionImport.IsComposableAttribute, "!functionImport.IsComposableAttribute");
             Debug.Assert(!targetFunction.IsComposableAttribute, "!targetFunction.IsComposableAttribute");
 
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Given discriminator values (ordinally aligned with DiscriminatorColumns), determines 
+        ///     Given discriminator values (ordinally aligned with DiscriminatorColumns), determines
         ///     the entity type to return. Throws a CommandExecutionException if the type is ambiguous.
         /// </summary>
         internal EntityType Discriminate(object[] discriminatorValues, int resultSetIndex)

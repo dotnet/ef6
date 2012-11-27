@@ -6,7 +6,8 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.IO;
     using System.Text;
     using EnvDTE;
@@ -141,10 +142,10 @@ namespace System.Data.Entity.Migrations
 
         private string LoadTemplate(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            DebugCheck.NotEmpty(name);
 
             var stream = GetType().Assembly.GetManifestResourceStream("System.Data.Entity.Templates." + name);
-            Contract.Assert(stream != null);
+            Debug.Assert(stream != null);
 
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {

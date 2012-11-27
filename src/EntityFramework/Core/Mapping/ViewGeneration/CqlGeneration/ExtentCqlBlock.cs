@@ -17,8 +17,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     {
         /// <summary>
         ///     Creates an cql block representing the <paramref name="extent" /> (the FROM part).
-        ///     SELECT is given by <paramref name="slots" />, WHERE by <paramref name="whereClause" /> and AS by <paramref
-        ///      name="blockAliasNum" />.
+        ///     SELECT is given by <paramref name="slots" />, WHERE by <paramref name="whereClause" /> and AS by
+        ///     <paramref
+        ///         name="blockAliasNum" />
+        ///     .
         /// </summary>
         internal ExtentCqlBlock(
             EntitySetBase extent,

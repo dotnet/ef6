@@ -73,10 +73,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Determine if the specified member is compatible with lazy loading.
         /// </summary>
         /// <param name="ospaceEntityType"> OSpace EntityType representing a type that may be proxied. </param>
-        /// <param name="member"> Member of the <paramref name="ospaceEntityType" /> to be examined. </param>
+        /// <param name="member">
+        ///     Member of the <paramref name="ospaceEntityType" /> to be examined.
+        /// </param>
         /// <returns> True if the member is compatible with lazy loading; otherwise false. </returns>
         /// <remarks>
-        ///     To be compatible with lazy loading, 
+        ///     To be compatible with lazy loading,
         ///     a member must meet the criteria for being able to be proxied (defined elsewhere),
         ///     and must be a navigation property.
         ///     In addition, for relationships with a multiplicity of Many,
@@ -120,8 +122,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <typeparam name="TItem"> property type </typeparam>
         /// <param name="propertyValue"> The property value whose associated relationship is to be loaded. </param>
         /// <param name="relationshipName"> String name of the relationship. </param>
-        /// <param name="targetRoleName"> String name of the related end to be loaded for the relationship specified by <paramref
-        ///      name="relationshipName" /> . </param>
+        /// <param name="targetRoleName">
+        ///     String name of the related end to be loaded for the relationship specified by
+        ///     <paramref
+        ///         name="relationshipName" />
+        ///     .
+        /// </param>
         /// <param name="wrapperObject"> Entity wrapper object used to retrieve RelationshipManager for the proxied entity. </param>
         /// <returns> True if the value instance was mutated and can be returned False if the class should refetch the value because the instance has changed </returns>
         private static bool LoadProperty<TItem>(

@@ -6,13 +6,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
     /// <summary>
     ///     Decorator to produce a SQL script instead of applying changes to the database.
-    ///     Using this decorator to wrap <see cref="DbMigrator" /> will prevent <see cref="DbMigrator" /> 
+    ///     Using this decorator to wrap <see cref="DbMigrator" /> will prevent <see cref="DbMigrator" />
     ///     from applying any changes to the target database.
     /// </summary>
     public class MigratorScriptingDecorator : MigratorBase
@@ -26,7 +25,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public MigratorScriptingDecorator(MigratorBase innerMigrator)
             : base(innerMigrator)
         {
-            Contract.Requires(innerMigrator != null);
+            Check.NotNull(innerMigrator, "innerMigrator");
         }
 
         /// <summary>

@@ -95,7 +95,7 @@ namespace CmdLine
         {
             return
                 GetCustomAttributes(member, typeof(CommandLineArgumentsAttribute)).Cast<CommandLineArgumentsAttribute>()
-                    .FirstOrDefault();
+                                                                                  .FirstOrDefault();
         }
     }
 }

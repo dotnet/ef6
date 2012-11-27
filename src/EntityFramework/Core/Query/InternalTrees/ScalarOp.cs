@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Two scalarOps are equivalent (usually) if their OpTypes and types are the 
+        ///     Two scalarOps are equivalent (usually) if their OpTypes and types are the
         ///     same. Obviously, their arguments need to be equivalent as well - but that's
         ///     checked elsewhere
         /// </summary>

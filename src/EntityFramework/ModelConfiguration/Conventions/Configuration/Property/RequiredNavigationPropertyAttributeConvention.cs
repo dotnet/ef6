@@ -18,6 +18,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             PropertyInfo memberInfo, NavigationPropertyConfiguration configuration,
             RequiredAttribute attribute)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+            Check.NotNull(attribute, "attribute");
+
             if ((configuration.RelationshipMultiplicity == null)
                 && !memberInfo.PropertyType.IsCollection())
             {

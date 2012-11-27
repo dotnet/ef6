@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to discover foreign key properties whose names match the principal type primary key property name(s).
@@ -16,6 +17,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType principalEntityType,
             EdmProperty principalKeyProperty)
         {
+            Check.NotNull(associationType, "associationType");
+            Check.NotNull(dependentAssociationEnd, "dependentAssociationEnd");
+            Check.NotNull(dependentProperty, "dependentProperty");
+            Check.NotNull(principalEntityType, "principalEntityType");
+            Check.NotNull(principalKeyProperty, "principalKeyProperty");
+
             return string.Equals(
                 dependentProperty.Name, principalKeyProperty.Name, StringComparison.OrdinalIgnoreCase);
         }

@@ -7,7 +7,8 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -38,8 +39,8 @@ namespace System.Data.Entity.Config
 
         public DbConfigurationManager(DbConfigurationLoader loader, DbConfigurationFinder finder)
         {
-            Contract.Requires(loader != null);
-            Contract.Requires(finder != null);
+            DebugCheck.NotNull(loader);
+            DebugCheck.NotNull(finder);
 
             _loader = loader;
             _finder = finder;
@@ -76,7 +77,7 @@ namespace System.Data.Entity.Config
 
         public virtual void SetConfiguration(InternalConfiguration configuration, bool lookInConfig = true)
         {
-            Contract.Requires(configuration != null);
+            DebugCheck.NotNull(configuration);
 
             if (lookInConfig)
             {
@@ -101,8 +102,8 @@ namespace System.Data.Entity.Config
 
         public virtual void EnsureLoadedForContext(Type contextType)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
+            DebugCheck.NotNull(contextType);
+            Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
 
             var contextAssembly = contextType.Assembly;
 
@@ -158,9 +159,9 @@ namespace System.Data.Entity.Config
 
         public virtual void PushConfiguration(AppConfig config, Type contextType)
         {
-            Contract.Requires(config != null);
-            Contract.Requires(contextType != null);
-            Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
+            DebugCheck.NotNull(config);
+            DebugCheck.NotNull(contextType);
+            Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
 
             var configuration = _loader.TryLoadFromConfig(config)
                                 ?? _finder.TryCreateConfiguration(contextType)
@@ -178,7 +179,7 @@ namespace System.Data.Entity.Config
 
         public virtual void PopConfiguration(AppConfig config)
         {
-            Contract.Requires(config != null);
+            DebugCheck.NotNull(config);
 
             lock (_lock)
             {

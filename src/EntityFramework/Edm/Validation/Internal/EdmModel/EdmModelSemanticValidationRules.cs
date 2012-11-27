@@ -4,12 +4,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
@@ -613,13 +612,11 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
                                     out isAnyPrinicipalRolePropertyNullable,
                                     out isPrinicipalRolePropertiesSubsetofKeyProperties);
 
-                                Contract.Assert(
+                                Debug.Assert(
                                     constraint.PrincipalEnd(edmAssociationType).GetEntityType().GetValidKey().Any(),
                                     "There should be some ref properties in Principal Role");
-                                Contract.Assert(
-                                    constraint.ToProperties.Count() != 0,
-                                    "There should be some ref properties in Dependent Role");
-                                Contract.Assert(
+                                Debug.Assert(constraint.ToProperties.Count() != 0, "There should be some ref properties in Dependent Role");
+                                Debug.Assert(
                                     isDependentRoleKeyProperty,
                                     "The properties in the PrincipalRole must be the key of the Entity type referred to by the principal role");
 
@@ -1219,8 +1216,8 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         private static bool IsPrimitiveTypesEqual(EdmProperty primitiveType1, EdmProperty primitiveType2)
         {
-            Contract.Assert(primitiveType1.IsPrimitiveType, "primitiveType1 must be a PrimitiveType");
-            Contract.Assert(primitiveType2.IsPrimitiveType, "primitiveType2 must be a PrimitiveType");
+            Debug.Assert(primitiveType1.IsPrimitiveType, "primitiveType1 must be a PrimitiveType");
+            Debug.Assert(primitiveType2.IsPrimitiveType, "primitiveType2 must be a PrimitiveType");
 
             if (primitiveType1.PrimitiveType.PrimitiveTypeKind
                 == primitiveType2.PrimitiveType.PrimitiveTypeKind)

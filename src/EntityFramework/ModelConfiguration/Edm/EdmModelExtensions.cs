@@ -10,8 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -24,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static EdmModel Initialize(this EdmModel model, double version = XmlConstants.EdmVersionForV3)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             model.Name = "CodeFirstModel";
             model.Version = version;
@@ -40,15 +41,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static DbProviderInfo GetProviderInfo(this EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             return (DbProviderInfo)model.Annotations.GetAnnotation(ProviderInfoAnnotation);
         }
 
         public static void SetProviderInfo(this EdmModel model, DbProviderInfo providerInfo)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(providerInfo != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(providerInfo);
 
             model.Annotations.SetAnnotation(ProviderInfoAnnotation, providerInfo);
         }
@@ -56,9 +57,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static bool HasCascadeDeletePath(
             this EdmModel model, EntityType sourceEntityType, EntityType targetEntityType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(sourceEntityType != null);
-            Contract.Requires(targetEntityType != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(sourceEntityType);
+            DebugCheck.NotNull(targetEntityType);
 
             return (from a in model.GetAssociationTypes()
                     from ae in a.Members.Cast<AssociationEndMember>()
@@ -72,8 +73,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static IEnumerable<Type> GetClrTypes(this EdmModel model)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Containers.Count == 1);
 
             return model.GetEntityTypes().Select(e => e.GetClrType())
                         .Union(model.GetComplexTypes().Select(ct => ct.GetClrType()));
@@ -81,8 +82,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static NavigationProperty GetNavigationProperty(this EdmModel model, PropertyInfo propertyInfo)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(propertyInfo != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(propertyInfo);
 
             var navigationProperties
                 = (from e in model.GetEntityTypes()
@@ -96,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static EdmItemCollection ToEdmItemCollection(this EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             var stringBuilder = new StringBuilder();
 
@@ -117,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static void ValidateCsdl(this EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             model.ValidateAndSerializeCsdl(XmlWriter.Create(Stream.Null));
         }
@@ -126,15 +127,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Justification = "Used by test code.")]
         public static List<DataModelErrorEventArgs> GetCsdlErrors(this EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             return model.SerializeAndGetCsdlErrors(XmlWriter.Create(Stream.Null));
         }
 
         public static void ValidateAndSerializeCsdl(this EdmModel model, XmlWriter writer)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(writer != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(writer);
 
             var validationErrors = model.SerializeAndGetCsdlErrors(writer);
 
@@ -146,8 +147,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static List<DataModelErrorEventArgs> SerializeAndGetCsdlErrors(this EdmModel model, XmlWriter writer)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(writer != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(writer);
 
             var validationErrors = new List<DataModelErrorEventArgs>();
             var csdlSerializer = new CsdlSerializer();
@@ -162,8 +163,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static DbDatabaseMapping GenerateDatabaseMapping(
             this EdmModel model, DbProviderManifest providerManifest)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return new DatabaseMappingGenerator(providerManifest).Generate(model);
         }
@@ -172,63 +173,63 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Justification = "Used by test code.")]
         public static EdmType GetStructuralType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return (EdmType)model.GetEntityType(name) ?? model.GetComplexType(name);
         }
 
         public static EntityType GetEntityType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().EntityTypes.SingleOrDefault(e => e.Name == name);
         }
 
         public static EntityType GetEntityType(this EdmModel model, Type clrType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(clrType != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(clrType);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().EntityTypes.SingleOrDefault(e => e.GetClrType() == clrType);
         }
 
         public static ComplexType GetComplexType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().ComplexTypes.SingleOrDefault(e => e.Name == name);
         }
 
         public static ComplexType GetComplexType(this EdmModel model, Type clrType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(clrType != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(clrType);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().ComplexTypes.SingleOrDefault(e => e.GetClrType() == clrType);
         }
 
         public static EnumType GetEnumType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().EnumTypes.SingleOrDefault(e => e.Name == name);
         }
 
         public static EntityType AddEntityType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             var entityType
                 = new EntityType(
@@ -243,26 +244,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static EntitySet GetEntitySet(this EdmModel model, EntityType entityType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(entityType != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(model.Containers.Count == 1);
 
             return model.GetEntitySets().SingleOrDefault(e => e.ElementType == entityType.GetRootType());
         }
 
         public static AssociationSet GetAssociationSet(this EdmModel model, AssociationType associationType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(associationType != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(associationType);
+            Debug.Assert(model.Containers.Count == 1);
 
             return model.Containers.Single().AssociationSets.SingleOrDefault(a => a.ElementType == associationType);
         }
 
         public static IEnumerable<EntitySet> GetEntitySets(this EdmModel model)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Containers.Count == 1);
 
             return model.Containers.Single().EntitySets;
         }
@@ -270,10 +271,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static EntitySet AddEntitySet(
             this EdmModel model, string name, EntityType elementType, string table = null)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(elementType != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(elementType);
+            Debug.Assert(model.Containers.Count == 1);
 
             var entitySet = new EntitySet(name, null, table, null, elementType);
 
@@ -285,9 +286,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static ComplexType AddComplexType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             var complexType
                 = new ComplexType(
@@ -302,9 +303,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static EnumType AddEnumType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             var enumType
                 = new EnumType(
@@ -323,33 +324,33 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Justification = "Used by test code.")]
         public static AssociationType GetAssociationType(this EdmModel model, string name)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().AssociationTypes.SingleOrDefault(a => a.Name == name);
         }
 
         public static IEnumerable<AssociationType> GetAssociationTypes(this EdmModel model)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().AssociationTypes;
         }
 
         public static IEnumerable<EntityType> GetEntityTypes(this EdmModel model)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().EntityTypes;
         }
 
         public static IEnumerable<ComplexType> GetComplexTypes(this EdmModel model)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.Namespaces.Single().ComplexTypes;
         }
@@ -357,8 +358,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static IEnumerable<AssociationType> GetAssociationTypesBetween(
             this EdmModel model, EntityType first, EntityType second)
         {
-            Contract.Requires(model != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             return model.GetAssociationTypes().Where(
                 a => (a.SourceEnd.GetEntityType() == first && a.TargetEnd.GetEntityType() == second)
@@ -373,11 +374,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             EntityType targetEntityType,
             RelationshipMultiplicity targetAssociationEndKind)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(sourceEntityType != null);
-            Contract.Requires(targetEntityType != null);
-            Contract.Assert(model.Namespaces.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(sourceEntityType);
+            DebugCheck.NotNull(targetEntityType);
+            Debug.Assert(model.Namespaces.Count == 1);
 
             var associationType
                 = new AssociationType(
@@ -401,16 +402,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static void AddAssociationType(this EdmModel model, AssociationType associationType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(associationType != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(associationType);
 
             model.Namespaces.Single().AssociationTypes.Add(associationType);
         }
 
         public static void AddAssociationSet(this EdmModel model, AssociationSet associationSet)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(associationSet != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(associationSet);
 
             model.Containers.Single().AddEntitySetBase(associationSet);
         }
@@ -418,10 +419,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static void RemoveEntityType(
             this EdmModel model, EntityType entityType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(entityType != null);
-            Contract.Assert(model.Namespaces.Count == 1);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(model.Namespaces.Count == 1);
+            Debug.Assert(model.Containers.Count == 1);
 
             model.Namespaces.Single().EntityTypes.Remove(entityType);
 
@@ -438,9 +439,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static void ReplaceEntitySet(
             this EdmModel model, EntityType entityType, EntitySet newSet)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(entityType != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityType);
+            Debug.Assert(model.Containers.Count == 1);
 
             var container = model.Containers.Single();
             var entitySet = container.EntitySets.SingleOrDefault(a => a.ElementType == entityType);
@@ -470,10 +471,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static void RemoveAssociationType(
             this EdmModel model, AssociationType associationType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(associationType != null);
-            Contract.Assert(model.Namespaces.Count == 1);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(associationType);
+            Debug.Assert(model.Namespaces.Count == 1);
+            Debug.Assert(model.Containers.Count == 1);
 
             model.Namespaces.Single().AssociationTypes.Remove(associationType);
 
@@ -491,10 +492,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static AssociationSet AddAssociationSet(
             this EdmModel model, string name, AssociationType associationType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
-            Contract.Requires(associationType != null);
-            Contract.Assert(model.Containers.Count == 1);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(associationType);
+            Debug.Assert(model.Containers.Count == 1);
 
             var associationSet
                 = new AssociationSet(name, associationType)
@@ -511,8 +512,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static IEnumerable<EntityType> GetDerivedTypes(
             this EdmModel model, EntityType entityType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityType);
 
             return model.GetEntityTypes().Where(et => et.BaseType == entityType);
         }
@@ -520,8 +521,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public static IEnumerable<EntityType> GetSelfAndAllDerivedTypes(
             this EdmModel model, EntityType entityType)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(entityType);
 
             var entityTypes = new List<EntityType>();
             AddSelfAndAllDerivedTypes(model, entityType, entityTypes);

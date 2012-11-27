@@ -5,7 +5,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
 
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="providerInvariantName"> The provider invariant name that specifies the version of SQL Server Compact Edition that should be used. </param>
         public SqlCeConnectionFactory(string providerInvariantName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
 
             _providerInvariantName = providerInvariantName;
             _databaseDirectory = "|DataDirectory|";
@@ -55,9 +56,9 @@ namespace System.Data.Entity.Infrastructure
         public SqlCeConnectionFactory(
             string providerInvariantName, string databaseDirectory, string baseConnectionString)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-            Contract.Requires(databaseDirectory != null);
-            Contract.Requires(baseConnectionString != null);
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(databaseDirectory, "databaseDirectory");
+            Check.NotNull(baseConnectionString, "baseConnectionString");
 
             _providerInvariantName = providerInvariantName;
             _databaseDirectory = databaseDirectory;
@@ -112,9 +113,11 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An initialized DbConnection. </returns>
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
+            Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
+
             var factory = DbProviderFactories.GetFactory(ProviderInvariantName);
 
-            Contract.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
+            Debug.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
 
             var connection = factory.CreateConnection();
             if (connection == null)

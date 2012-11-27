@@ -6,8 +6,8 @@ namespace System.Data.Entity.Internal.MockingProxies
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Reflection;
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal.MockingProxies
 
         public ObjectContextProxy(ObjectContext objectContext)
         {
-            Contract.Requires(objectContext != null);
+            DebugCheck.NotNull(objectContext);
 
             _objectContext = objectContext;
         }
@@ -84,9 +84,12 @@ namespace System.Data.Entity.Internal.MockingProxies
         {
             _objectContext.ContextOptions.LazyLoadingEnabled = source._objectContext.ContextOptions.LazyLoadingEnabled;
             _objectContext.ContextOptions.ProxyCreationEnabled = source._objectContext.ContextOptions.ProxyCreationEnabled;
-            _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = source._objectContext.ContextOptions.UseCSharpNullComparisonBehavior;
-            _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = source._objectContext.ContextOptions.UseConsistentNullReferenceBehavior;
-            _objectContext.ContextOptions.UseLegacyPreserveChangesBehavior = source._objectContext.ContextOptions.UseLegacyPreserveChangesBehavior;
+            _objectContext.ContextOptions.UseCSharpNullComparisonBehavior =
+                source._objectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+            _objectContext.ContextOptions.UseConsistentNullReferenceBehavior =
+                source._objectContext.ContextOptions.UseConsistentNullReferenceBehavior;
+            _objectContext.ContextOptions.UseLegacyPreserveChangesBehavior =
+                source._objectContext.ContextOptions.UseLegacyPreserveChangesBehavior;
         }
     }
 }

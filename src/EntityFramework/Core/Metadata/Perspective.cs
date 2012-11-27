@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             MetadataWorkspace metadataWorkspace,
             DataSpace targetDataspace)
         {
-            Contract.Requires(metadataWorkspace != null);
+            DebugCheck.NotNull(metadataWorkspace);
 
             m_metadataWorkspace = metadataWorkspace;
             m_targetDataspace = targetDataspace;
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="outMember"> returns the member in target space, if a match is found </param>
         internal virtual bool TryGetMember(StructuralType type, String memberName, bool ignoreCase, out EdmMember outMember)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
             EntityUtil.CheckStringArgument(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal virtual bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
             EntityUtil.CheckStringArgument(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Get the default entity container
-        ///     returns null for any perspective other 
+        ///     returns null for any perspective other
         ///     than the CLR perspective
         /// </summary>
         /// <returns> The default container </returns>

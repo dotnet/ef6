@@ -17,11 +17,11 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
 #if !NET40
 
 #endif
@@ -68,8 +68,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DbProviderFactory storeProviderFactory, DbCommandTree commandTree,
             BridgeDataReaderFactory bridgeDataReaderFactory = null, ColumnMapFactory columnMapFactory = null)
         {
-            Contract.Requires(storeProviderFactory != null);
-            Contract.Requires(commandTree != null);
+            DebugCheck.NotNull(storeProviderFactory);
+            DebugCheck.NotNull(commandTree);
 
             _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 }
                 else
                 {
-                    Contract.Assert(
+                    Debug.Assert(
                         DbCommandTreeKind.Function == commandTree.CommandTreeKind, "only query and function command trees are supported");
                     var entityCommandTree = (DbFunctionCommandTree)commandTree;
 
@@ -315,7 +315,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         #region properties
 
         /// <summary>
-        ///     Property to expose the known parameters for the query, so the Command objects 
+        ///     Property to expose the known parameters for the query, so the Command objects
         ///     constructor can poplulate it's parameter collection from.
         /// </summary>
         internal virtual IEnumerable<EntityParameter> Parameters
@@ -399,8 +399,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Internal execute method -- copies command information from the map command 
-        ///     to the command objects, executes them, and builds the result assembly 
+        ///     Internal execute method -- copies command information from the map command
+        ///     to the command objects, executes them, and builds the result assembly
         ///     structures needed to return the data reader
         /// </summary>
         /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
@@ -452,8 +452,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 #if !NET40
 
         /// <summary>
-        ///     Internal execute method -- Asynchronously copies command information from the map command 
-        ///     to the command objects, executes them, and builds the result assembly 
+        ///     Internal execute method -- Asynchronously copies command information from the map command
+        ///     to the command objects, executes them, and builds the result assembly
         ///     structures needed to return the data reader
         /// </summary>
         /// <exception cref="InvalidOperationException">behavior must specify CommandBehavior.SequentialAccess</exception>
@@ -560,7 +560,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             {
                 reader = await
                          storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken)
-                             .ConfigureAwait(continueOnCapturedContext: false);
+                                             .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception e)
             {

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="internalSet"> The internal set. </param>
         public InternalDbSet(IInternalSet<TEntity> internalSet)
         {
-            Contract.Requires(internalSet != null);
+            DebugCheck.NotNull(internalSet);
 
             _internalSet = internalSet;
         }
@@ -120,6 +120,8 @@ namespace System.Data.Entity.Internal.Linq
         /// <inheritdoc />
         public override object Create(Type derivedEntityType)
         {
+            Check.NotNull(derivedEntityType, "derivedEntityType");
+
             return _internalSet.Create(derivedEntityType);
         }
 

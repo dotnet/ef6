@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -84,6 +85,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override DbExpression Visit(DbVariableReferenceExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             var result = base.Visit(expression);
             if (result.ExpressionKind
                 == DbExpressionKind.VariableReference)
@@ -115,6 +118,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override DbExpression Visit(DbParameterReferenceExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             var result = base.Visit(expression);
             if (result.ExpressionKind
                 == DbExpressionKind.ParameterReference)

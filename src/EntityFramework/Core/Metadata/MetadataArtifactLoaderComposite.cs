@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     This class represents a super-collection (a collection of collections) 
+    ///     This class represents a super-collection (a collection of collections)
     ///     of artifact resources. Typically, this "meta-collection" would contain
     ///     artifacts represented as individual files, directories (which are in
     ///     turn collections of files), and embedded resources.
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded 
+        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded
         ///     form
         /// </summary>
         /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>

@@ -4,7 +4,7 @@ namespace System.Data.Entity.Edm.Validation.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
 
     internal abstract class DataModelValidationRuleSet
@@ -13,14 +13,14 @@ namespace System.Data.Entity.Edm.Validation.Internal
 
         protected void AddRule(DataModelValidationRule rule)
         {
-            Contract.Assert(!_rules.Contains(rule), "should not add the duplicate rule");
+            Debug.Assert(!_rules.Contains(rule), "should not add the duplicate rule");
 
             _rules.Add(rule);
         }
 
         protected void RemoveRule(DataModelValidationRule rule)
         {
-            Contract.Assert(_rules.Contains(rule), "should exist");
+            Debug.Assert(_rules.Contains(rule), "should exist");
 
             _rules.Remove(rule);
         }

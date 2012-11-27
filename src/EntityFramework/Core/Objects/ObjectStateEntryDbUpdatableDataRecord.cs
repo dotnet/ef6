@@ -3,18 +3,19 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     internal sealed class ObjectStateEntryDbUpdatableDataRecord : CurrentValueRecord
     {
         internal ObjectStateEntryDbUpdatableDataRecord(EntityEntry cacheEntry, StateManagerTypeMetadata metadata, object userObject)
             : base(cacheEntry, metadata, userObject)
         {
-            Contract.Requires(cacheEntry != null);
-            Contract.Requires(userObject != null);
-            Contract.Requires(metadata != null);
+            DebugCheck.NotNull(cacheEntry);
+            DebugCheck.NotNull(userObject);
+            DebugCheck.NotNull(metadata);
             Debug.Assert(!cacheEntry.IsKeyEntry, "Cannot create an ObjectStateEntryDbUpdatableDataRecord for a key entry");
+
             switch (cacheEntry.State)
             {
                 case EntityState.Unchanged:
@@ -31,7 +32,8 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectStateEntryDbUpdatableDataRecord(RelationshipEntry cacheEntry)
             : base(cacheEntry)
         {
-            Contract.Requires(cacheEntry != null);
+            DebugCheck.NotNull(cacheEntry);
+
             switch (cacheEntry.State)
             {
                 case EntityState.Unchanged:

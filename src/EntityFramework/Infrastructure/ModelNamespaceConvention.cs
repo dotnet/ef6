@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="modelNamespace"> The model namespace. </param>
         internal ModelNamespaceConvention(string modelNamespace)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(modelNamespace));
+            DebugCheck.NotEmpty(modelNamespace);
 
             _modelNamespace = modelNamespace;
         }
@@ -39,6 +39,8 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="model"> The model. </param>
         public virtual void Apply(EdmModel model)
         {
+            Check.NotNull(model, "model");
+
             model.Namespaces.Single().Name = _modelNamespace;
         }
 

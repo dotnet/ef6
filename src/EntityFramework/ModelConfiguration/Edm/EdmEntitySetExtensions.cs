@@ -4,20 +4,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal static class EdmEntitySetExtensions
     {
         public static object GetConfiguration(this EntitySet entitySet)
         {
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(entitySet);
 
             return entitySet.Annotations.GetConfiguration();
         }
 
         public static void SetConfiguration(this EntitySet entitySet, object configuration)
         {
-            Contract.Requires(entitySet != null);
+            DebugCheck.NotNull(entitySet);
 
             entitySet.Annotations.SetConfiguration(configuration);
         }

@@ -9,22 +9,20 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
 
     /// <summary>
-    ///     Helper class that is used by design time tools to run migrations related  
+    ///     Helper class that is used by design time tools to run migrations related
     ///     commands that need to interact with an application that is being edited
     ///     in Visual Studio.
-    /// 
     ///     Because the application is being edited the assemblies need to
     ///     be loaded in a separate AppDomain to ensure the latest version
     ///     is always loaded.
-    /// 
     ///     The App/Web.config file from the startup project is also copied
     ///     to ensure that any configuration is applied.
     /// </summary>
@@ -70,7 +68,7 @@ namespace System.Data.Entity.Migrations.Design
             string dataDirectory,
             DbConnectionInfo connectionStringInfo)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(assemblyName));
+            Check.NotEmpty(assemblyName, "assemblyName");
 
             _assemblyName = assemblyName;
             _configurationTypeName = configurationTypeName;
@@ -268,7 +266,9 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Releases all resources used by the facade.
         /// </summary>
-        /// <param name="disposing"> <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources. </param>
+        /// <param name="disposing">
+        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && _appDomain != null)
@@ -442,7 +442,7 @@ namespace System.Data.Entity.Migrations.Design
                 {
                     var assemblyName = assembly.GetName().Name;
                     var types = assembly.GetAccessibleTypes()
-                        .Where(t => typeof(TBase).IsAssignableFrom(t));
+                                        .Where(t => typeof(TBase).IsAssignableFrom(t));
 
                     if (typeNameSpecified)
                     {
@@ -484,11 +484,11 @@ namespace System.Data.Entity.Migrations.Design
                         }
                     }
 
-                    Contract.Assert(types.Count() == 1);
+                    Debug.Assert(types.Count() == 1);
                     type = types.Single();
                 }
 
-                Contract.Assert(type != null);
+                Debug.Assert(type != null);
 
                 return type;
             }
@@ -664,8 +664,8 @@ namespace System.Data.Entity.Migrations.Design
                 var assembly = LoadAssembly();
 
                 var contextTypes = assembly.GetAccessibleTypes()
-                    .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)
-                    .ToList();
+                                           .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)
+                                           .ToList();
 
                 AppDomain.CurrentDomain.SetData("result", contextTypes);
             }

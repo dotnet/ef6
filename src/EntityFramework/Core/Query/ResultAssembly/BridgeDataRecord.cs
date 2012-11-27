@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading;
     using System.Threading.Tasks;
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     The current record that we're responsible for; this will change from row to row
-        ///     on the source data reader.  Will be set to null when parent the enumerator has  
+        ///     on the source data reader.  Will be set to null when parent the enumerator has
         ///     returned false.
         /// </summary>
         private RecordState _source;
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     Set to the current data record when we hand them out.  (For data reader columns,
-        ///     we use it's attached data record) The Close, GetValue and Read methods ensures 
+        ///     we use it's attached data record) The Close, GetValue and Read methods ensures
         ///     that this is implicitly closed when we move past it.
         /// </summary>
         private BridgeDataReader _currentNestedReader;
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         internal BridgeDataRecord(Shaper<RecordState> shaper, int depth)
         {
-            Contract.Requires(null != shaper);
+            DebugCheck.NotNull(shaper);
             Shaper = shaper;
             Depth = depth;
             // Rest of state is set through the SetRecordSource method.
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #endif
 
         /// <summary>
-        ///     Called by our parent object to ensure that we're marked as implicitly 
+        ///     Called by our parent object to ensure that we're marked as implicitly
         ///     closed;  will not be called for root level data readers.
         /// </summary>
         internal void CloseImplicitly()
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     An asynchronous version of <see cref="CloseImplicitly" />, which
-        ///     is called by our parent object to ensure that we're marked as implicitly 
+        ///     is called by our parent object to ensure that we're marked as implicitly
         ///     closed;  will not be called for root level data readers.
         /// </summary>
         internal Task CloseImplicitlyAsync(CancellationToken cancellationToken)
@@ -358,8 +358,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     Determine whether we have been explicitly closed by our owning 
-        ///     data reader; only data records that are responsible for processing 
+        ///     Determine whether we have been explicitly closed by our owning
+        ///     data reader; only data records that are responsible for processing
         ///     data reader requests can be explicitly closed;
         /// </summary>
         internal bool IsExplicitlyClosed
@@ -369,8 +369,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     Determine whether the parent data reader or record moved on from
-        ///     where we can be considered open, (because the consumer of the 
-        ///     parent data reader/record called either the GetValue() or Read() 
+        ///     where we can be considered open, (because the consumer of the
+        ///     parent data reader/record called either the GetValue() or Read()
         ///     methods on the parent);
         /// </summary>
         internal bool IsImplicitlyClosed
@@ -409,7 +409,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     Helper method to get the edm TypeUsage for the specified column;
-        /// 
         ///     If the column requested is a record, we'll pick up whatever the
         ///     current record says it is, otherwise we'll take whatever was stored
         ///     on our record state.
@@ -509,7 +508,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     implementation for DbDataRecord.GetValue() method
-        /// 
         ///     This method is used by most of the column getters on this
         ///     class to retrieve the value from the source reader.  Therefore,
         ///     it asserts all the good things, like that the reader is open,
@@ -551,7 +549,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         /// <summary>
         ///     For nested objects (records/readers) we have a bit more work to do; this
-        ///     method extracts it all out from the main GetValue method so it doesn't 
+        ///     method extracts it all out from the main GetValue method so it doesn't
         ///     have to be so big.
         /// </summary>
         /// <param name="result"> </param>

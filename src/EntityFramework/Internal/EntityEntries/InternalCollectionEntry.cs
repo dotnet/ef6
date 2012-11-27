@@ -10,7 +10,7 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     The internal class used to implement <see cref="DbCollectionEntry" /> and 
+    ///     The internal class used to implement <see cref="DbCollectionEntry" /> and
     ///     <see cref="DbCollectionEntry{TEntity,TElement}" />.
     ///     This internal class contains all the common implementation between the generic and non-generic
     ///     entry classes and also allows for a clean internal factoring without compromising the public API.

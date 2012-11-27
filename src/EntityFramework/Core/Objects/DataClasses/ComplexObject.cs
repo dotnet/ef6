@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Removes this instance from the parent it was attached to. 
+        ///     Removes this instance from the parent it was attached to.
         ///     Parent may be an Entity or ComplexObject
         /// </summary>
         internal void DetachFromParent()

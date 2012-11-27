@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     public sealed class DbProviderInfo
     {
@@ -11,8 +11,8 @@ namespace System.Data.Entity.Infrastructure
 
         public DbProviderInfo(string providerInvariantName, string providerManifestToken)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerManifestToken));
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
 
             _providerInvariantName = providerInvariantName;
             _providerManifestToken = providerManifestToken;

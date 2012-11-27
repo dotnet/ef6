@@ -15,10 +15,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using AttributeSet = System.Data.Entity.Core.Common.Utils.Set<MemberPath>;
 
     /// <summary>
-    ///     This class stores the C or S query. For example, 
-    ///     (C) SELECT (p type Person) AS D1, p.pid, p.name FROM p in P WHERE D1 
+    ///     This class stores the C or S query. For example,
+    ///     (C) SELECT (p type Person) AS D1, p.pid, p.name FROM p in P WHERE D1
     ///     (S) SELECT True AS D1, pid, name FROM SPerson WHERE D1
-    /// 
     ///     The cell query is stored in a "factored" manner for ease of
     ///     cell-merging and cell manipulation. It contains:
     ///     * Projection: A sequence of slots and a sequence of boolean slots (one

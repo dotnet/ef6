@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Aggregates are pseudo-expressions. They look and feel like expressions, but 
+    ///     Aggregates are pseudo-expressions. They look and feel like expressions, but
     ///     are severely restricted in where they can appear - only in the aggregates clause
     ///     of a group-by expression.
     /// </summary>

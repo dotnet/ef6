@@ -87,7 +87,7 @@ namespace System.Data.Entity.Spatial
 
         /// <summary>
         ///     An asynchronous version of GetGeometry, which
-        ///     reads an instance of <see cref="DbGeometry" /> from the column at the specified column ordinal. 
+        ///     reads an instance of <see cref="DbGeometry" /> from the column at the specified column ordinal.
         ///     Providers should override with an appropriate implementation. The <paramref name="cancellationToken" />
         ///     may optionally be ignored. The default implementation invokes the synchronous
         ///     GetGeometry method and returns a completed task, blocking the calling thread.

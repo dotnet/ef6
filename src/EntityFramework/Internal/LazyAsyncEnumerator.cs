@@ -6,7 +6,8 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -18,10 +19,12 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
         /// </summary>
-        /// <param name="getEnumeratorAsync"> Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null. </param>
+        /// <param name="getEnumeratorAsync">
+        ///     Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null.
+        /// </param>
         public LazyAsyncEnumerator(Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)
         {
-            Contract.Requires(getEnumeratorAsync != null);
+            DebugCheck.NotNull(getEnumeratorAsync);
 
             _getEnumeratorAsync = getEnumeratorAsync;
         }
@@ -58,7 +61,7 @@ namespace System.Data.Entity.Internal
                 && !_asyncEnumeratorTask.IsCanceled
                 && !_asyncEnumeratorTask.IsFaulted)
             {
-                Contract.Assert(
+                Debug.Assert(
                     _asyncEnumeratorTask.IsCompleted,
                     "Task hasn't completed, this means that the tasks returned from MoveNextAsync wasn't awaited on.");
                 _asyncEnumeratorTask.Result.Dispose();
@@ -67,8 +70,6 @@ namespace System.Data.Entity.Internal
 
         public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
-            Contract.Ensures(Contract.Result<Task<bool>>() != null);
-
             var enumerator = await GetEnumeratorAsync(CancellationToken.None).ConfigureAwait(continueOnCapturedContext: false);
             return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }

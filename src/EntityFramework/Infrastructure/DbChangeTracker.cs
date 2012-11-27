@@ -5,8 +5,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalContext"> The internal context. </param>
         internal DbChangeTracker(InternalContext internalContext)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
         }
@@ -65,8 +65,10 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Detects changes made to the properties and relationships of POCO entities.  Note that some types of
-        ///     entity (such as change tracking proxies and entities that derive from <see
-        ///      cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />)
+        ///     entity (such as change tracking proxies and entities that derive from
+        ///     <see
+        ///         cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />
+        ///     )
         ///     report changes automatically and a call to DetectChanges is not normally needed for these types of entities.
         ///     Also note that normally DetectChanges is called automatically by many of the methods of <see cref="DbContext" />
         ///     and its related classes such that it is rare that this method will need to be called explicitly.

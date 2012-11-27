@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Encapsulates the result (represented as a Ref to the resulting Entity) of navigating from
@@ -25,12 +25,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // Validate that the specified relationship ends are:
             // 1. Non-null
             // 2. From the same metadata workspace as that used by the command tree
-            Contract.Requires(sourceEnd != null);
-            Contract.Requires(targetEnd != null);
+            DebugCheck.NotNull(sourceEnd);
+            DebugCheck.NotNull(targetEnd);
 
             // Validate that the specified target entity ref is:
             // 1. Non-null
-            Contract.Requires(targetEntityRef != null);
+            DebugCheck.NotNull(targetEntityRef);
 
             // Validate that the specified source and target ends are:
             // 1. Declared by the same relationship type

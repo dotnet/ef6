@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Utility class that tries to produce an equivalent tree to the input tree over 
+    ///     Utility class that tries to produce an equivalent tree to the input tree over
     ///     a single group aggregate variable and no other external references
     /// </summary>
     internal class GroupAggregateVarComputationTranslator : BasicOpVisitorOfNode
@@ -44,8 +44,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Try to produce an equivalent tree to the input subtree, over a single group aggregate variable.
-        ///     Such translation can only be produced if all external references of the input subtree are to a 
-        ///     single group aggregate var, or to vars that are can be translated over that single group 
+        ///     Such translation can only be produced if all external references of the input subtree are to a
+        ///     single group aggregate var, or to vars that are can be translated over that single group
         ///     aggregate var
         /// </summary>
         /// <param name="subtree"> The input subtree </param>
@@ -139,8 +139,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a 
-        ///     group aggregate var. 
+        ///     If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a
+        ///     group aggregate var.
         ///     Otherwise do default processing
         /// </summary>
         /// <param name="op"> </param>
@@ -159,15 +159,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     If the Subtree rooted at the collect is of the following structure:
-        /// 
         ///     PhysicalProject(outputVar)
         ///     |
         ///     Project(s)
         ///     |
         ///     Unnest
-        /// 
         ///     where the unnest is over the group aggregate var and the output var
-        ///     is either a reference to the group aggregate var or to a constant, it returns the 
+        ///     is either a reference to the group aggregate var or to a constant, it returns the
         ///     translation of the ouput var.
         /// </summary>
         /// <param name="n"> </param>
@@ -265,10 +263,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     (1) If the given var or the given property of the given var are defined over a group aggregate var, 
+        ///     (1) If the given var or the given property of the given var are defined over a group aggregate var,
         ///     (2) and if that group aggregate var matches the var represented by represented by _targetGroupAggregateVarInfo
         ///     if any
-        /// 
         ///     it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
         ///     is not set, it sets it to the group aggregate var representing the referenced var.
         /// </summary>
@@ -312,8 +309,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default processing for nodes. 
-        ///     Visits the children and if any child has changed it creates a new node 
+        ///     Default processing for nodes.
+        ///     Visits the children and if any child has changed it creates a new node
         ///     for the parent.
         ///     If the reference of the child node did not change, the child node did not change either,
         ///     this is because a node can only be reused "as is" when building a template.

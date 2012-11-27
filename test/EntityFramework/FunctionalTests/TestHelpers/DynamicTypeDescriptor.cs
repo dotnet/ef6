@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
@@ -21,7 +22,6 @@ namespace System.Data.Entity
 
         public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
         {
-            Contract.Requires(objectType == typeof(T));
             var defaultDescriptor = base.GetTypeDescriptor(objectType, instance);
 
             return new DynamicTypeDescriptor<T>(defaultDescriptor, _configuration);
@@ -123,7 +123,7 @@ namespace System.Data.Entity
 
         public void SetPropertyAttributes<TProperty>(Expression<Func<T, TProperty>> property, params Attribute[] attributes)
         {
-            Contract.Requires(property != null);
+            Debug.Assert(property != null);
 
             PropertyAttributes[property.GetSimplePropertyAccess().Single().Name] = attributes;
         }

@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Specifies whether events handled from an underlying collection or individual bound item
         ///     should result in list change events being fired from this IBindingList.
-        ///     <b>True</b> to prevent events from being fired from this IBindingList; 
+        ///     <b>True</b> to prevent events from being fired from this IBindingList;
         ///     otherwise <b>false</b> to allow events to propogate.
         /// </summary>
         private bool _suspendEvent;
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Objects
         private int _addNewIndex = -1;
 
         /// <summary>
-        ///     Object that maintains the underlying bound list, 
+        ///     Object that maintains the underlying bound list,
         ///     and specifies the operations allowed on that list.
         /// </summary>
         private readonly IObjectViewData<TElement> _viewData;
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="index"> The zero-based index of the element to get or set. </param>
         /// <remarks>
         ///     This strongly-typed indexer is used by the data binding in WebForms and ASP.NET
-        ///     to determine the Type of elements in the bound list. 
+        ///     to determine the Type of elements in the bound list.
         ///     The list of properties available for binding can then be determined from that element Type.
         /// </remarks>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]

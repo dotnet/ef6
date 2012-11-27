@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock, 
+        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
         ///     this method doesn't provide any locking mechanism.
         /// </summary>
         /// <param name="assemblyToLookup"> </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock, 
+        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
         ///     this method doesn't provide any locking mechanism.
         /// </summary>
         /// <param name="assembly"> </param>

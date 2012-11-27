@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Common
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     DataRecordInfo class providing a simple way to access both the type information and the column information.
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="memberInfo"> </param>
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
-            Contract.Requires(metadata != null);
+            Check.NotNull(metadata, "metadata");
             var members = TypeHelpers.GetAllStructuralMembers(metadata.EdmType);
 
             var fieldList = new List<FieldMetadata>(members.Count);
@@ -38,7 +38,8 @@ namespace System.Data.Entity.Core.Common
             {
                 foreach (var member in memberInfo)
                 {
-                    if ((null != member) &&
+                    if ((null != member)
+                        &&
                         (0 <= members.IndexOf(member))
                         &&
                         ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind)

@@ -68,9 +68,15 @@ namespace System.Data.Entity.Core.Objects
         ///     If neither <paramref name="span1" /> nor <paramref name="span2" /> are null, a new span instance is returned
         ///     that contains the merged span paths from both.
         /// </summary>
-        /// <param name="span1"> The first span instance from which to include span paths; may be <c>null</c> </param>
-        /// <param name="span2"> The second span instance from which to include span paths; may be <c>null</c> </param>
-        /// <returns> A span instance representing the union of the two arguments; may be <c>null</c> if both arguments are null </returns>
+        /// <param name="span1">
+        ///     The first span instance from which to include span paths; may be <c>null</c>
+        /// </param>
+        /// <param name="span2">
+        ///     The second span instance from which to include span paths; may be <c>null</c>
+        /// </param>
+        /// <returns>
+        ///     A span instance representing the union of the two arguments; may be <c>null</c> if both arguments are null
+        /// </returns>
         internal static Span CopyUnion(Span span1, Span span2)
         {
             if (null == span1)

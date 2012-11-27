@@ -7,9 +7,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml.Linq;
 
@@ -83,8 +83,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal virtual string GetMigrationId(string migration)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migration));
-            Contract.Requires(migration != Strings.AutomaticMigration);
+            DebugCheck.NotEmpty(migration);
+            Debug.Assert(migration != Strings.AutomaticMigration);
 
             return _this.GetMigrationId(migration);
         }
@@ -112,14 +112,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal virtual void AutoMigrate(
             string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
         {
-            Contract.Requires(targetModel != null);
+            Check.NotNull(targetModel, "targetModel");
 
             _this.AutoMigrate(migrationId, sourceModel, targetModel, downgrading);
         }
 
         internal virtual void ApplyMigration(DbMigration migration, DbMigration lastMigration)
         {
-            Contract.Requires(migration != null);
+            DebugCheck.NotNull(migration);
 
             _this.ApplyMigration(migration, lastMigration);
         }
@@ -131,10 +131,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal virtual void RevertMigration(string migrationId, DbMigration migration, XDocument sourceModel, XDocument targetModel)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Requires(migration != null);
-            Contract.Requires(sourceModel != null);
-            Contract.Requires(targetModel != null);
+            DebugCheck.NotEmpty(migrationId);
+            DebugCheck.NotNull(migration);
+            DebugCheck.NotNull(sourceModel);
+            DebugCheck.NotNull(targetModel);
 
             _this.RevertMigration(migrationId, migration, sourceModel, targetModel);
         }
@@ -146,15 +146,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal virtual void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
-            Contract.Requires(migrationStatements != null);
+            DebugCheck.NotNull(migrationStatements);
 
             _this.ExecuteStatements(migrationStatements);
         }
 
         internal virtual void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
         {
-            Contract.Requires(transaction != null);
-            Contract.Requires(migrationStatement != null);
+            DebugCheck.NotNull(transaction);
+            DebugCheck.NotNull(migrationStatement);
 
             _this.ExecuteSql(transaction, migrationStatement);
         }
@@ -162,22 +162,22 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal virtual void Upgrade(
             IEnumerable<string> pendingMigrations, string targetMigrationId, string lastMigrationId)
         {
-            Contract.Requires(pendingMigrations != null);
+            DebugCheck.NotNull(pendingMigrations);
 
             _this.Upgrade(pendingMigrations, targetMigrationId, lastMigrationId);
         }
 
         internal virtual void Downgrade(IEnumerable<string> pendingMigrations)
         {
-            Contract.Requires(pendingMigrations != null);
-            Contract.Requires(pendingMigrations.Count() > 1);
+            DebugCheck.NotNull(pendingMigrations);
+            Debug.Assert(pendingMigrations.Count() > 1);
 
             _this.Downgrade(pendingMigrations);
         }
 
         internal virtual void UpgradeHistory(IEnumerable<MigrationOperation> upgradeOperations)
         {
-            Contract.Requires(upgradeOperations != null);
+            DebugCheck.NotNull(upgradeOperations);
 
             _this.UpgradeHistory(upgradeOperations);
         }

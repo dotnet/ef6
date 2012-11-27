@@ -15,13 +15,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
+            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(model, "model");
+
             edmDataModelItem.DeclaredKeyProperties
-                .Each(
-                    p =>
-                        {
-                            edmDataModelItem.RemoveMember(p);
-                            edmDataModelItem.AddKeyMember(p);
-                        });
+                            .Each(
+                                p =>
+                                    {
+                                        edmDataModelItem.RemoveMember(p);
+                                        edmDataModelItem.AddKeyMember(p);
+                                    });
 
             new PropertyFilter(model.Version)
                 .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true)

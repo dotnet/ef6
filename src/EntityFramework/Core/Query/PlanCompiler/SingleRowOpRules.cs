@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverAnything);
 
         /// <summary>
-        ///     Convert a 
+        ///     Convert a
         ///     SingleRowOp(X) => X
         ///     if X produces at most one row
         /// </summary>
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverProject);
 
         /// <summary>
-        ///     Convert 
+        ///     Convert
         ///     SingleRowOp(Project) => Project(SingleRowOp)
         /// </summary>
         /// <param name="context"> Rule Processing context </param>

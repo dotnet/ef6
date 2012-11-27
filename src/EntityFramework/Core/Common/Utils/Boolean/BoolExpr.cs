@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// </summary>
     /// <remarks>
     ///     Comments use the following notation convention:
-    /// 
     ///     "A . B" means "A and B"
     ///     "A + B" means "A or B"
     ///     "!A" means "not A"
@@ -86,7 +85,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
                 var candidateTermCount = simplifiedCandidate.CountTerms();
 
                 // see if it's better than the current result best result
-                if (null == result || // bootstrap
+                if (null == result
+                    || // bootstrap
                     candidateUniqueTermCount < resultUniqueTermCount
                     || // check if the candidate improves on # of terms
                     (candidateUniqueTermCount == resultUniqueTermCount && // in case of tie, choose based on total

@@ -16,9 +16,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.GroupBy, ProcessGroupByWithSimpleVarRedefinitions);
 
         /// <summary>
-        ///     If the GroupByOp defines some computedVars as part of its keys, but those computedVars are simply 
-        ///     redefinitions of other Vars, then eliminate the computedVars. 
-        /// 
+        ///     If the GroupByOp defines some computedVars as part of its keys, but those computedVars are simply
+        ///     redefinitions of other Vars, then eliminate the computedVars.
         ///     GroupBy(X, VarDefList(VarDef(cv1, VarRef(v1)), ...), VarDefList(...))
         ///     can be transformed into
         ///     GroupBy(X, VarDefList(...))
@@ -119,12 +118,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessGroupByOverProject);
 
         /// <summary>
-        ///     Converts a GroupBy(Project(X, c1,..ck), agg1, agg2, .. aggm) => 
+        ///     Converts a GroupBy(Project(X, c1,..ck), agg1, agg2, .. aggm) =>
         ///     GroupBy(X, agg1', agg2', .. aggm')
-        ///     where agg1', agg2', .. aggm'  are the "mapped" versions 
-        ///     of agg1, agg2, .. aggm, such that the references to c1, ... ck are 
+        ///     where agg1', agg2', .. aggm'  are the "mapped" versions
+        ///     of agg1, agg2, .. aggm, such that the references to c1, ... ck are
         ///     replaced by their definitions.
-        /// 
         ///     We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
         /// </summary>
         /// <param name="context"> Rule processing context </param>
@@ -164,7 +162,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             for (var i = 0; i < projectNodeVarDefList.Children.Count; i++)
             {
                 var varDefNode = projectNodeVarDefList.Children[i];
-                if (varDefNode.Child0.Op.OpType == OpType.Constant || varDefNode.Child0.Op.OpType == OpType.InternalConstant
+                if (varDefNode.Child0.Op.OpType == OpType.Constant
+                    || varDefNode.Child0.Op.OpType == OpType.InternalConstant
                     || varDefNode.Child0.Op.OpType == OpType.NullSentinel)
                 {
                     //We shouldn't modify the original project definitions, thus we copy it  
@@ -214,8 +213,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     "Public" entry point. In the subtree rooted at the given root, 
-            ///     replace each occurance of the given vars with their definitions, 
+            ///     "Public" entry point. In the subtree rooted at the given root,
+            ///     replace each occurance of the given vars with their definitions,
             ///     where each key-value pair in the dictionary is a var-definition pair.
             /// </summary>
             /// <param name="varReplacementTable"> </param>
@@ -255,7 +254,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Used to determine whether any of the given vars occurs more than once 
+        ///     Used to determine whether any of the given vars occurs more than once
         ///     in a given subtree.
         /// </summary>
         internal class VarRefUsageFinder : BasicOpVisitor
@@ -271,7 +270,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     Public entry point. Returns true if at least one of the given vars occurs more than 
+            ///     Public entry point. Returns true if at least one of the given vars occurs more than
             ///     once in the subree rooted at the given root.
             /// </summary>
             /// <param name="varVec"> </param>
@@ -327,10 +326,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     If the GroupByOp has no aggregates:
-        /// 
         ///     (1) and if it includes all all the keys of the input, than it is unnecessary
         ///     GroupBy (X, keys) -> Project(X, keys) where keys includes all keys of X.
-        /// 
         ///     (2) else it can be turned into a Distinct:
         ///     GroupBy (X, keys) -> Distinct(X, keys)
         /// </summary>

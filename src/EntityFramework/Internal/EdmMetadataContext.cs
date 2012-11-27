@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal class EdmMetadataContext : DbContext
     {
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Internal
 
         public static void ConfigureEdmMetadata(ModelConfiguration modelConfiguration)
         {
-            Contract.Requires(modelConfiguration != null);
+            DebugCheck.NotNull(modelConfiguration);
 
 #pragma warning disable 612,618
             modelConfiguration.Entity(typeof(EdmMetadata)).ToTable(TableName);

@@ -323,7 +323,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             //Ignore the warnings for attributes in V2 since we would see warnings for undeclared attributes in empty namespace
             //that are on elements in custom namespace. For undeclared attributes in known namespace, we would see errors.
-            if ((SchemaVersion >= XmlConstants.EdmVersionForV2) && (reader.NodeType == XmlNodeType.Attribute)
+            if ((SchemaVersion >= XmlConstants.EdmVersionForV2)
+                && (reader.NodeType == XmlNodeType.Attribute)
                 && (e.Severity == XmlSeverityType.Warning))
             {
                 return;
@@ -842,7 +843,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
                 return false;
             }
                 // For ssdl and provider manifest, make sure that the type is present in this schema or primitive schema
-            else if (DataModel != SchemaDataModelOption.EntityDataModel && type.Schema != this
+            else if (DataModel != SchemaDataModelOption.EntityDataModel
+                     && type.Schema != this
                      && type.Schema != SchemaManager.PrimitiveSchema)
             {
                 Debug.Assert(type.Namespace != Namespace, "Using element is not allowed in the schema of ssdl and provider manifest");

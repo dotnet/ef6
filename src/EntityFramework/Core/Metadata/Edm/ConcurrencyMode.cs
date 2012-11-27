@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         None,
 
         /// <summary>
-        ///     Fixed concurrency mode: the property is always validated at 
+        ///     Fixed concurrency mode: the property is always validated at
         ///     write time
         /// </summary>
         Fixed,

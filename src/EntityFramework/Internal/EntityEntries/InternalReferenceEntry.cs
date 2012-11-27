@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The navigation property value. </returns>
         protected override object GetNavigationPropertyFromRelatedEnd(object entity)
         {
-            Contract.Assert(!(RelatedEnd is IDisposable), "RelatedEnd is not expected to be disposable.");
+            Debug.Assert(!(RelatedEnd is IDisposable), "RelatedEnd is not expected to be disposable.");
 
             // To avoid needing to access the generic EntityReference<T> class we instead
             // treat the RelatedEnd as an IEnumerable and get the single value that way.
@@ -93,8 +93,8 @@ namespace System.Data.Entity.Internal
         private static void SetValueOnEntityReference<TRelatedEntity>(IRelatedEnd entityReference, object value)
             where TRelatedEntity : class
         {
-            Contract.Assert(entityReference is EntityReference<TRelatedEntity>);
-            Contract.Assert(value == null || value is TRelatedEntity);
+            Debug.Assert(entityReference is EntityReference<TRelatedEntity>);
+            Debug.Assert(value == null || value is TRelatedEntity);
 
             ((EntityReference<TRelatedEntity>)entityReference).Value = (TRelatedEntity)value;
         }
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Internal
                     }
                     else
                     {
-                        Contract.Assert(
+                        Debug.Assert(
                             InternalEntityEntry.State == EntityState.Detached
                             || InternalEntityEntry.State == EntityState.Deleted);
 

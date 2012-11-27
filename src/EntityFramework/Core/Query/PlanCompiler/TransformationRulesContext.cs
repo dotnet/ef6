@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public methods and properties
 
         /// <summary>
-        ///     Whether any rule was applied that may have caused modifications such that projection pruning 
+        ///     Whether any rule was applied that may have caused modifications such that projection pruning
         ///     may be useful
         /// </summary>
         internal bool ProjectionPrunningRequired
@@ -56,11 +56,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     "Remap" an expression tree, replacing all references to vars in varMap with
         ///     copies of the corresponding expression
         ///     The subtree is modified *inplace* - it is the caller's responsibility to make
-        ///     a copy of the subtree if necessary. 
+        ///     a copy of the subtree if necessary.
         ///     The "replacement" expression (the replacement for the VarRef) is copied and then
-        ///     inserted into the appropriate location into the subtree. 
-        /// 
-        ///     Note: we only support replacements in simple ScalarOp trees. This must be 
+        ///     inserted into the appropriate location into the subtree.
+        ///     Note: we only support replacements in simple ScalarOp trees. This must be
         ///     validated by the caller.
         /// </summary>
         /// <param name="node"> Current subtree to process </param>
@@ -135,7 +134,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is the given var guaranteed to be non-nullable with regards to the node
         ///     that is currently being processed.
-        ///     True, if it is listed as such on any on the node infos on any of the 
+        ///     True, if it is listed as such on any on the node infos on any of the
         ///     current relop ancestors.
         /// </summary>
         /// <param name="var"> </param>
@@ -166,11 +165,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Is it safe to use a null sentinel with any value?
         ///     It may not be safe if:
         ///     1. The top most sort includes null sentinels. If the null sentinel is replaced with a different value
-        ///     and is used as a sort key it may change the sorting results 
+        ///     and is used as a sort key it may change the sorting results
         ///     2. If any of the ancestors is Distinct, GroupBy, Intersect or Except,
-        ///     because the null sentinel may be used as a key.  
-        ///     3. If the null sentinel is defined in the left child of an apply it may be used at the right side, 
-        ///     thus in these cases we also verify that the right hand side does not have any Distinct, GroupBy, 
+        ///     because the null sentinel may be used as a key.
+        ///     3. If the null sentinel is defined in the left child of an apply it may be used at the right side,
+        ///     thus in these cases we also verify that the right hand side does not have any Distinct, GroupBy,
         ///     Intersect or Except.
         /// </summary>
         internal bool CanChangeNullSentinelValue
@@ -265,13 +264,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Get a mapping from Var->Expression for a VarDefListOp tree. This information
-        ///     will be used by later stages to replace all references to the Vars by the 
+        ///     will be used by later stages to replace all references to the Vars by the
         ///     corresponding expressions
-        /// 
         ///     This function uses a few heuristics along the way. It uses the varRefMap
         ///     parameter to determine if a computed Var (defined by this VarDefListOp)
         ///     has been referenced multiple times, and if it has, it checks to see if
-        ///     the defining expression is too big (> 100 nodes). This is to avoid 
+        ///     the defining expression is too big (> 100 nodes). This is to avoid
         ///     bloating up the entire query tree with too many copies.
         /// </summary>
         /// <param name="varDefListNode"> The varDefListOp subtree </param>
@@ -301,8 +299,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Note: we check for more than 2 references, (rather than just more than 1) - this
                 // is simply to let some additional cases through
                 // 
-                if ((nonLeafNodeCount > 100) &&
-                    (varRefMap != null) &&
+                if ((nonLeafNodeCount > 100)
+                    &&
+                    (varRefMap != null)
+                    &&
                     varRefMap.TryGetValue(varDefOp.Var, out refCount)
                     &&
                     (refCount > 2))
@@ -417,7 +417,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
         /// <summary>
-        ///     Used to see all the applied rules. 
+        ///     Used to see all the applied rules.
         ///     One way to use it is to put a conditional breakpoint at the end of
         ///     PostProcessSubTree with the condition m_relOpAncestors.Count == 0
         /// </summary>
@@ -429,8 +429,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RuleProcessingContext Overrides
 
         /// <summary>
-        ///     Callback function to invoke *before* rules are applied. 
-        ///     Calls the VarRemapper to update any Vars in this node, and recomputes 
+        ///     Callback function to invoke *before* rules are applied.
+        ///     Calls the VarRemapper to update any Vars in this node, and recomputes
         ///     the nodeinfo
         /// </summary>
         /// <param name="n"> </param>
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Callback function to invoke *before* rules are applied. 
+        ///     Callback function to invoke *before* rules are applied.
         ///     Calls the VarRemapper to update any Vars in the entire subtree
         ///     If the given node has a RelOp it is pushed on the relOp ancestors stack.
         /// </summary>
@@ -492,7 +492,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Callback function to invoke *after* rules are applied
         ///     Recomputes the node info, if this node has changed
-        ///     If the rule is among the rules after which projection pruning may be beneficial, 
+        ///     If the rule is among the rules after which projection pruning may be beneficial,
         ///     m_projectionPrunningRequired is set to true.
         ///     If the rule is among the rules after which reapplying the nullability rules may be beneficial,
         ///     m_reapplyNullabilityRules is set to true.
@@ -543,9 +543,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     that are found in the subtree. Note that this count is approximate - it is only
         ///     intended to be used as a hint. It is the caller's responsibility to initialize
         ///     nodeCount to a sane value on entry into this function
-        ///     And finally, if the varRefMap parameter is non-null, we keep track of 
+        ///     And finally, if the varRefMap parameter is non-null, we keep track of
         ///     how often a Var is referenced within the subtree
-        /// 
         ///     The non-leaf-node count and the varRefMap are used by GetVarMap to determine
         ///     if expressions can be composed together
         /// </summary>

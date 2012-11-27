@@ -28,7 +28,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             foreach (var member in ospaceEntityType.Members)
             {
                 var clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
-                if (clrProperty != null &&
+                if (clrProperty != null
+                    &&
                     EntityProxyFactory.CanProxyGetter(clrProperty)
                     &&
                     LazyLoadBehavior.IsLazyLoadCandidate(ospaceEntityType, member))

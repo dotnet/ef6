@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Checks if the Real Key represents different FK values 
+        ///     Checks if the Real Key represents different FK values
         ///     than those present when the Conceptual Null was created
         /// </summary>
         /// <param name="conceptualNullKey"> The key representing the Conceptual Null </param>

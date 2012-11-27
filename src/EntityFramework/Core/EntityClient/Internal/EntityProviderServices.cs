@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     The class for provider services of the entity client
@@ -28,14 +28,17 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
+            Check.NotNull(providerManifest, "providerManifest");
+            Check.NotNull(commandTree, "commandTree");
+
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
         }
 
         internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
         {
-            Contract.Requires(storeProviderFactory != null);
-            Contract.Requires(commandTree != null);
+            DebugCheck.NotNull(storeProviderFactory);
+            DebugCheck.NotNull(commandTree);
 
             return new EntityCommandDefinition(storeProviderFactory, commandTree);
         }
@@ -46,8 +49,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <param name="commandTree"> The command tree for which the data space should be validated </param>
         internal override void ValidateDataSpace(DbCommandTree commandTree)
         {
-            if (commandTree.DataSpace
-                != DataSpace.CSpace)
+            DebugCheck.NotNull(commandTree);
+
+            if (commandTree.DataSpace != DataSpace.CSpace)
             {
                 throw new ProviderIncompatibleException(Strings.EntityClient_RequiresNonStoreCommandTree);
             }
@@ -64,13 +68,16 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
         public override DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
+            Check.NotNull(prototype, "prototype");
+
             return ((EntityCommand)prototype).GetCommandDefinition();
         }
 
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
-            if (connection.GetType()
-                != typeof(EntityConnection))
+            Check.NotNull(connection, "connection");
+
+            if (connection.GetType() != typeof(EntityConnection))
             {
                 throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(EntityConnection)));
             }
@@ -80,6 +87,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
         {
+            Check.NotNull(manifestToken, "manifestToken");
+
             return MetadataItem.EdmProviderManifest;
         }
     }

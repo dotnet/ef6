@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <param name="argComparer"> Optional. Comparer used to determine if two functions arguments are the same. </param>
         internal Memoizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
         {
-            Contract.Requires(function != null);
+            DebugCheck.NotNull(function);
 
             _function = function;
             _resultCache = new Dictionary<TArg, Result>(argComparer);
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Encapsulates a 'deferred' result. The result is constructed with a delegate (must not 
+        ///     Encapsulates a 'deferred' result. The result is constructed with a delegate (must not
         ///     be null) and when the user requests a value the delegate is invoked and stored.
         /// </summary>
         private class Result

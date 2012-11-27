@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -182,11 +183,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbExpression e)
         {
+            Check.NotNull(e, "e");
+
             throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(e.GetType().FullName));
         }
 
         public override void Visit(DbConstantExpression e)
         {
+            Check.NotNull(e, "e");
+
             Debug.Assert(TypeSemantics.IsScalarType(e.ResultType), "Non-scalar type constant expressions are not supported.");
             var primitive = TypeHelpers.GetPrimitiveTypeUsageForScalar(e.ResultType);
 
@@ -285,12 +290,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             _key.Append("NULL:");
             _key.Append(e.ResultType.Identity);
         }
 
         public override void Visit(DbVariableReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             _key.Append("Var(");
             VisitVariableName(e.VariableName);
             _key.Append(")");
@@ -298,6 +307,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbParameterReferenceExpression e)
         {
+            Check.NotNull(e, "e");
+
             _key.Append("@");
             _key.Append(e.ParameterName);
             _key.Append(":");
@@ -306,11 +317,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbFunctionExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitFunction(e.Function, e.Arguments);
         }
 
         public override void Visit(DbLambdaExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             _key.Append("Lambda(");
             foreach (var v in expression.Lambda.Variables)
             {
@@ -334,6 +349,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbPropertyExpression e)
         {
+            Check.NotNull(e, "e");
+
             e.Instance.Accept(this);
             VisitExprKind(e.ExpressionKind);
             _key.Append(e.Property.Name);
@@ -341,11 +358,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbComparisonExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbLikeExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             e.Argument.Accept(this);
@@ -362,6 +383,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbLimitExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             if (e.WithTies)
             {
@@ -376,11 +399,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbIsNullExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbArithmeticExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             foreach (var a in e.Arguments)
             {
@@ -392,61 +419,85 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbAndExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbOrExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbNotExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbDistinctExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbElementExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbIsEmptyExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbUnionAllExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbIntersectExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbExceptExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitBinary(e);
         }
 
         public override void Visit(DbTreatExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitCastOrTreat(e);
         }
 
         public override void Visit(DbCastExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitCastOrTreat(e);
         }
 
         public override void Visit(DbIsOfExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             e.Argument.Accept(this);
@@ -457,6 +508,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbOfTypeExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             e.Argument.Accept(this);
@@ -467,6 +520,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbCaseExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             for (var idx = 0; idx < e.When.Count; idx++)
@@ -483,6 +538,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbNewInstanceExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append(':');
             _key.Append(e.ResultType.EdmType.Identity);
@@ -513,6 +570,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append("(ESET(");
             _key.Append(e.EntitySet.EntityContainer.Name);
@@ -527,6 +586,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbRelationshipNavigationExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             e.NavigationSource.Accept(this);
@@ -541,21 +602,29 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbDerefExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbRefKeyExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbEntityRefExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitUnary(e);
         }
 
         public override void Visit(DbScanExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             _key.Append(e.Target.EntityContainer.Name);
@@ -568,6 +637,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbFilterExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);
@@ -578,6 +649,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbProjectExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);
@@ -588,6 +661,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbCrossJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             foreach (var i in e.Inputs)
@@ -599,6 +674,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbJoinExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Left);
@@ -610,6 +687,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbApplyExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);
@@ -619,6 +698,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbGroupByExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitGroupBinding(e.Input);
@@ -672,6 +753,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbSkipExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);
@@ -683,6 +766,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbSortExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);
@@ -692,6 +777,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbQuantifierExpression e)
         {
+            Check.NotNull(e, "e");
+
             VisitExprKind(e.ExpressionKind);
             _key.Append('(');
             VisitBinding(e.Input);

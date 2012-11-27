@@ -3,7 +3,8 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     internal sealed class DefaultModelCacheKey : IDbModelCacheKey
     {
@@ -13,9 +14,9 @@ namespace System.Data.Entity.Internal
 
         public DefaultModelCacheKey(Type contextType, string providerName, string customKey)
         {
-            Contract.Requires(contextType != null);
-            Contract.Requires(typeof(DbContext).IsAssignableFrom(contextType));
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerName));
+            DebugCheck.NotNull(contextType);
+            Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
+            DebugCheck.NotEmpty(providerName);
 
             _contextType = contextType;
             _providerName = providerName;
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Internal
 
         private bool Equals(DefaultModelCacheKey other)
         {
-            Contract.Requires(other != null);
+            DebugCheck.NotNull(other);
 
             return _contextType == other._contextType
                    && string.Equals(_providerName, other._providerName)

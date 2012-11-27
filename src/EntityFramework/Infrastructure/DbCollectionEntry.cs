@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal static DbCollectionEntry Create(InternalCollectionEntry internalCollectionEntry)
         {
-            Contract.Requires(internalCollectionEntry != null);
+            DebugCheck.NotNull(internalCollectionEntry);
 
             return (DbCollectionEntry)internalCollectionEntry.CreateDbMemberEntry();
         }
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalCollectionEntry"> The internal entry. </param>
         internal DbCollectionEntry(InternalCollectionEntry internalCollectionEntry)
         {
-            Contract.Requires(internalCollectionEntry != null);
+            DebugCheck.NotNull(internalCollectionEntry);
 
             _internalCollectionEntry = internalCollectionEntry;
         }
@@ -114,7 +114,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Gets a value indicating whether the collection of entities has been loaded from the database.
         /// </summary>
-        /// <value> <c>true</c> if the collection is loaded; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if the collection is loaded; otherwise, <c>false</c> .
+        /// </value>
         public bool IsLoaded
         {
             get { return _internalCollectionEntry.IsLoaded; }

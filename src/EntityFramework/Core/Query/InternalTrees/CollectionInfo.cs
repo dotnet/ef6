@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Represents information about one collection being managed by the NestOps. 
+    ///     Represents information about one collection being managed by the NestOps.
     ///     The CollectionVar is a Var that represents the entire collection.
     /// </summary>
     internal class CollectionInfo
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     list of vars describing the collection element; flattened to remove 
+        ///     list of vars describing the collection element; flattened to remove
         ///     nested collections
         /// </summary>
         internal VarList FlattenedElementVars

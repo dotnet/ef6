@@ -18,7 +18,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -26,23 +25,22 @@ namespace System.Data.Entity
     ///     This code centric approach to building an Entity Data Model (EDM) model is known as 'Code First'.
     /// </summary>
     /// <remarks>
-    ///     DbModelBuilder is typically used to configure a model by overriding <see
-    ///      cref="DbContext.OnModelCreating(DbModelBuilder)" />. 
-    ///     You can also use DbModelBuilder independently of DbContext to build a model and then construct a 
+    ///     DbModelBuilder is typically used to configure a model by overriding
+    ///     <see
+    ///         cref="DbContext.OnModelCreating(DbModelBuilder)" />
+    ///     .
+    ///     You can also use DbModelBuilder independently of DbContext to build a model and then construct a
     ///     <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" />.
     ///     The recommended approach, however, is to use OnModelCreating in <see cref="DbContext" /> as
     ///     the workflow is more intuitive and takes care of common tasks, such as caching the created model.
-    /// 
     ///     Types that form your model are registered with DbModelBuilder and optional configuration can be
     ///     performed by applying data annotations to your classes and/or using the fluent style DbModelBuilder
-    ///     API. 
-    /// 
+    ///     API.
     ///     When the Build method is called a set of conventions are run to discover the initial model.
     ///     These conventions will automatically discover aspects of the model, such as primary keys, and
     ///     will also process any data annotations that were specified on your classes. Finally
-    ///     any configuration that was performed using the DbModelBuilder API is applied. 
-    /// 
-    ///     Configuration done via the DbModelBuilder API takes precedence over data annotations which 
+    ///     any configuration that was performed using the DbModelBuilder API is applied.
+    ///     Configuration done via the DbModelBuilder API takes precedence over data annotations which
     ///     in turn take precedence over the default conventions.
     /// </remarks>
     public class DbModelBuilder
@@ -53,15 +51,14 @@ namespace System.Data.Entity
         private readonly object _lock = new object();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class. 
-        /// 
-        ///     The process of discovering the initial model will use the set of conventions included 
+        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class.
+        ///     The process of discovering the initial model will use the set of conventions included
         ///     in the most recent version of the Entity Framework installed on your machine.
         /// </summary>
         /// <remarks>
-        ///     Upgrading to newer versions of the Entity Framework may cause breaking changes 
-        ///     in your application because new conventions may cause the initial model to be 
-        ///     configured differently. There is an alternate constructor that allows a specific 
+        ///     Upgrading to newer versions of the Entity Framework may cause breaking changes
+        ///     in your application because new conventions may cause the initial model to be
+        ///     configured differently. There is an alternate constructor that allows a specific
         ///     version of conventions to be specified.
         /// </remarks>
         public DbModelBuilder()
@@ -70,7 +67,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class that will use 
+        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class that will use
         ///     a specific set of conventions to discover the initial model.
         /// </summary>
         /// <param name="modelBuilderVersion"> The version of conventions to be used. </param>
@@ -111,8 +108,8 @@ namespace System.Data.Entity
             ConventionsConfiguration conventionsConfiguration,
             DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
         {
-            Contract.Requires(modelConfiguration != null);
-            Contract.Requires(conventionsConfiguration != null);
+            DebugCheck.NotNull(modelConfiguration);
+            DebugCheck.NotNull(conventionsConfiguration);
             if (!(Enum.IsDefined(typeof(DbModelBuilderVersion), modelBuilderVersion)))
             {
                 throw new ArgumentOutOfRangeException("modelBuilderVersion");
@@ -125,7 +122,7 @@ namespace System.Data.Entity
 
         private DbModelBuilder(DbModelBuilder source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _modelConfiguration = source._modelConfiguration.Clone();
             _conventionsConfiguration = source._conventionsConfiguration.Clone();
@@ -141,7 +138,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Excludes a type from the model. This is used to remove types from the model that were added 
+        ///     Excludes a type from the model. This is used to remove types from the model that were added
         ///     by convention during initial model discovery.
         /// </summary>
         /// <typeparam name="T"> The type to be excluded. </typeparam>
@@ -166,14 +163,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Excludes the specified type(s) from the model. This is used to remove types from the model that were added 
+        ///     Excludes the specified type(s) from the model. This is used to remove types from the model that were added
         ///     by convention during initial model discovery.
         /// </summary>
         /// <param name="types"> The types to be excluded from the model. </param>
         /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
         public virtual DbModelBuilder Ignore(IEnumerable<Type> types)
         {
-            Contract.Requires(types != null);
+            Check.NotNull(types, "types");
 
             foreach (var type in types)
             {
@@ -207,7 +204,7 @@ namespace System.Data.Entity
         /// <returns> The configuration object for the specified entity type. </returns>
         internal virtual EntityTypeConfiguration Entity(Type entityType)
         {
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(entityType);
 
             var config = _modelConfiguration.Entity(entityType);
             config.IsReplaceable = true;
@@ -236,7 +233,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the <see cref="ConfigurationRegistrar" /> for this DbModelBuilder. 
+        ///     Gets the <see cref="ConfigurationRegistrar" /> for this DbModelBuilder.
         ///     The registrar allows derived entity and complex type configurations to be registered with this builder.
         /// </summary>
         public virtual ConfigurationRegistrar Configurations
@@ -253,7 +250,7 @@ namespace System.Data.Entity
         /// <returns> The model that was built. </returns>
         public virtual DbModel Build(DbConnection providerConnection)
         {
-            Contract.Requires(providerConnection != null);
+            Check.NotNull(providerConnection, "providerConnection");
 
             DbProviderManifest providerManifest;
             var providerInfo = providerConnection.GetProviderInfo(out providerManifest);
@@ -270,7 +267,7 @@ namespace System.Data.Entity
         /// <returns> The model that was built. </returns>
         public virtual DbModel Build(DbProviderInfo providerInfo)
         {
-            Contract.Requires(providerInfo != null);
+            Check.NotNull(providerInfo, "providerInfo");
 
             var providerManifest = GetProviderManifest(providerInfo);
 
@@ -286,8 +283,8 @@ namespace System.Data.Entity
 
         private DbModel Build(DbProviderManifest providerManifest, DbProviderInfo providerInfo)
         {
-            Contract.Requires(providerManifest != null);
-            Contract.Requires(providerInfo != null);
+            DebugCheck.NotNull(providerManifest);
+            DebugCheck.NotNull(providerInfo);
 
             var model = new EdmModel().Initialize(_modelBuilderVersion.GetEdmVersion());
             model.SetProviderInfo(providerInfo);
@@ -318,7 +315,7 @@ namespace System.Data.Entity
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
-            Contract.Requires(providerInfo != null);
+            DebugCheck.NotNull(providerInfo);
 
             var providerFactory = DbProviderFactories.GetFactory(providerInfo.ProviderInvariantName);
             var providerServices = providerFactory.GetProviderServices();
@@ -329,17 +326,17 @@ namespace System.Data.Entity
 
         private void MapTypes(EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             var typeMapper = new TypeMapper(new MappingContext(_modelConfiguration, _conventionsConfiguration, model));
 
             _modelConfiguration.Entities
-                .Where(type => typeMapper.MapEntityType(type) == null)
-                .Each(t => { throw Error.InvalidEntityType(t); });
+                               .Where(type => typeMapper.MapEntityType(type) == null)
+                               .Each(t => { throw Error.InvalidEntityType(t); });
 
             _modelConfiguration.ComplexTypes
-                .Where(type => typeMapper.MapComplexType(type) == null)
-                .Each(t => { throw Error.CodeFirstInvalidComplexType(t); });
+                               .Where(type => typeMapper.MapComplexType(type) == null)
+                               .Each(t => { throw Error.CodeFirstInvalidComplexType(t); });
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",

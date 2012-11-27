@@ -4,7 +4,7 @@ namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     public class SsdlSerializer
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Edm.Serialization
         public virtual bool Serialize(
             EdmModel dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter)
         {
-            Contract.Requires(dbDatabase != null);
-            Contract.Requires(xmlWriter != null);
+            Check.NotNull(dbDatabase, "dbDatabase");
+            Check.NotNull(xmlWriter, "xmlWriter");
 
             var visitor = new EdmSerializationVisitor(xmlWriter, dbDatabase.Version, serializeDefaultNullability: true);
 

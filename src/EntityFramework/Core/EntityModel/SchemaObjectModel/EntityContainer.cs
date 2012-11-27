@@ -307,7 +307,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Find the EntityContainerEntitySet in the same EntityContainer with the name from the extent 
+        ///     Find the EntityContainerEntitySet in the same EntityContainer with the name from the extent
         ///     attribute
         /// </summary>
         /// <param name="name"> the name of the EntityContainerProperty to find </param>
@@ -544,7 +544,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             Debug.Assert(
                 left.ParentElement.ParentElement == right.ParentElement.ParentElement, "both end should belong to the same entity container");
 
-            if (ReferenceEquals(left.EntitySet, right.EntitySet) &&
+            if (ReferenceEquals(left.EntitySet, right.EntitySet)
+                &&
                 ReferenceEquals(left.ParentElement.Relationship, right.ParentElement.Relationship)
                 &&
                 left.Name == right.Name)

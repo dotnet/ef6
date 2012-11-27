@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.IO.Compression;
     using System.Xml.Linq;
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Migrations.Edm
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public virtual byte[] Compress(XDocument model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             using (var outStream = new MemoryStream())
             {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Migrations.Edm
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public virtual XDocument Decompress(byte[] bytes)
         {
-            Contract.Requires(bytes != null);
+            DebugCheck.NotNull(bytes);
 
             using (var memoryStream = new MemoryStream(bytes))
             {

@@ -22,7 +22,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this item represents a complex property.
         /// </summary>
-        /// <value> <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> .
+        /// </value>
         bool IsComplex { get; }
 
         /// <summary>

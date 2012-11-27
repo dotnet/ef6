@@ -16,7 +16,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Initializes a new instance of <see cref="PrimitiveTypeVarInfo" /> class.
         /// </summary>
-        /// <param name="newVar"> New <see cref="Var" /> that replaces current <see cref="Var" /> . </param>
+        /// <param name="newVar">
+        ///     New <see cref="Var" /> that replaces current <see cref="Var" /> .
+        /// </param>
         internal PrimitiveTypeVarInfo(Var newVar)
         {
             Debug.Assert(newVar != null, "newVar != null");

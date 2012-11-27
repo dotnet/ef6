@@ -6,8 +6,8 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     This resolver is always the last resolver in the internal resolver chain and is
@@ -29,8 +29,8 @@ namespace System.Data.Entity.Config
             DefaultProviderServicesResolver defaultProviderServicesResolver,
             DatabaseInitializerResolver databaseInitializerResolver)
         {
-            Contract.Requires(defaultProviderServicesResolver != null);
-            Contract.Requires(databaseInitializerResolver != null);
+            DebugCheck.NotNull(defaultProviderServicesResolver);
+            DebugCheck.NotNull(databaseInitializerResolver);
 
             _databaseInitializerResolver = databaseInitializerResolver;
 

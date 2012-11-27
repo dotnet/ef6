@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Single-stream nest aggregation Op. 
+    ///     Single-stream nest aggregation Op.
     ///     (Somewhat similar to a group-by op - should we merge these?)
     /// </summary>
     internal class SingleStreamNestOp : NestBaseOp

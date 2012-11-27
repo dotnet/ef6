@@ -6,8 +6,9 @@ namespace System.Data.Entity.Internal
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A local (in-memory) view of the entities in a DbSet.
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Internal
         /// <param name="internalContext"> The internal context. </param>
         public DbLocalView(InternalContext internalContext)
         {
-            Contract.Requires(internalContext != null);
+            DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
 
@@ -78,10 +79,12 @@ namespace System.Data.Entity.Internal
         ///     This method looks at the change made to the collection and reflects those changes in the
         ///     state manager.
         /// </summary>
-        /// <param name="e"> The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data. </param>
+        /// <param name="e">
+        ///     The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data.
+        /// </param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            Contract.Assert(
+            Debug.Assert(
                 e.Action != NotifyCollectionChangedAction.Reset,
                 "Should not get Reset event from our derived implementation of ObservableCollection.");
 
@@ -122,10 +125,12 @@ namespace System.Data.Entity.Internal
         ///     The local view is kept in sync with these changes.
         /// </summary>
         /// <param name="sender"> The sender. </param>
-        /// <param name="e"> The <see cref="System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data. </param>
+        /// <param name="e">
+        ///     The <see cref="System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data.
+        /// </param>
         private void StateManagerChangedHandler(object sender, CollectionChangeEventArgs e)
         {
-            Contract.Assert(
+            Debug.Assert(
                 e.Action == CollectionChangeAction.Add || e.Action == CollectionChangeAction.Remove,
                 "Not expecting Action of Refresh from the state manager");
 

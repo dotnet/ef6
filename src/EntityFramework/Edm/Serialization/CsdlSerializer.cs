@@ -7,7 +7,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Csdl;
     using System.Data.Entity.Edm.Validation.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -33,8 +33,8 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         public bool Serialize(EdmModel model, XmlWriter xmlWriter)
         {
-            Contract.Requires(model != null);
-            Contract.Requires(xmlWriter != null);
+            Check.NotNull(model, "model");
+            Check.NotNull(xmlWriter, "xmlWriter");
 
             if (model.Namespaces.Count != 1
                 || model.Containers.Count != 1)

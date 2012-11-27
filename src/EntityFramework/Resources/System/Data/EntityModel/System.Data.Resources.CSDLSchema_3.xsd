@@ -105,7 +105,8 @@
     <xs:complexType name="TDocumentation">
         <xs:annotation>
             <xs:documentation>
-                The Documentation element is used to provide documentation of comments on the contents of the XML file.  It is valid
+                The Documentation element is used to provide documentation of comments on the contents of the XML file.
+                It is valid
                 under Schema, Type, Index and Relationship elements.
             </xs:documentation>
         </xs:annotation>

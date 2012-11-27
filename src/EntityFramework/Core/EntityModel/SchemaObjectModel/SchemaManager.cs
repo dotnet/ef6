@@ -367,7 +367,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             var baseUri = xmlReader.BaseURI;
             Uri uri = null;
 
-            if (!string.IsNullOrEmpty(baseUri) &&
+            if (!string.IsNullOrEmpty(baseUri)
+                &&
                 Uri.TryCreate(baseUri, UriKind.Absolute, out uri)
                 &&
                 uri.Scheme == "file")
@@ -384,7 +385,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         /// <summary>
         ///     Add the given list of newErrors to the error collection. If there is a error in the new errors,
-        ///     it sets the errorEncountered to true. Returns true if the number of errors encountered is more 
+        ///     it sets the errorEncountered to true. Returns true if the number of errors encountered is more
         ///     than max errors
         /// </summary>
         /// <returns> </returns>

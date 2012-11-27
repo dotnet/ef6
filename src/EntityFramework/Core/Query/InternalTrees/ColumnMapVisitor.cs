@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
     ///     Basic Visitor Design Pattern support for ColumnMap hierarchy;
-    /// 
     ///     This visitor class will walk the entire hierarchy, but does not
     ///     return results; it's useful for operations such as printing and
     ///     searching.

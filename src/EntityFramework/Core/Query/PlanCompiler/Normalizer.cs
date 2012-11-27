@@ -130,13 +130,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     GroupBy(Unnest(X), empty, count(y))
         ///     where "empty" describes the fact that the groupby has no keys, and y is an
         ///     element var of the Unnest
-        /// 
         ///     Part 2 is a VarRef that refers to the aggregate var for count(y) described above.
-        /// 
         ///     Logically, we would replace the entire functionOp by element(GroupBy...). However,
         ///     since we also want to translate element() into single-row-subqueries, we do this
         ///     here as well.
-        /// 
         ///     The function itself is replaced by the VarRef, and the GroupBy is added to the list
         ///     of scalar subqueries for the current relOp node on the stack
         /// </summary>

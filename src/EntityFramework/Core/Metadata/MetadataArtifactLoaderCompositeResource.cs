@@ -25,9 +25,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _originalPath;
 
         /// <summary>
-        ///     This constructor expects to get the paths that have potential to turn into multiple 
+        ///     This constructor expects to get the paths that have potential to turn into multiple
         ///     artifacts like
-        /// 
         ///     res://*/foo.csdl   -- could be multiple assemblies
         ///     res://MyAssembly/  -- could be multiple artifacts in the one assembly
         /// </summary>
@@ -63,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded 
+        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded
         ///     form.
         /// </summary>
         /// <remarks>

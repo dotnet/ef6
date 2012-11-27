@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -25,8 +25,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Expression funcletizedExpression,
             IEnumerable<ParameterExpression> compiledQueryParameters)
         {
-            Contract.Requires(parameterReference != null);
-            Contract.Requires(funcletizedExpression != null);
+            DebugCheck.NotNull(parameterReference);
+            DebugCheck.NotNull(funcletizedExpression);
+
             _compiledQueryParameters = compiledQueryParameters ?? Enumerable.Empty<ParameterExpression>();
             _parameterReference = parameterReference;
             _type = funcletizedExpression.Type;

@@ -5,7 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Xml;
 
@@ -22,11 +23,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
         public void Serialize(DbDatabaseMapping databaseMapping, DbProviderInfo providerInfo, XmlWriter xmlWriter)
         {
-            Contract.Requires(xmlWriter != null);
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(providerInfo != null);
-            Contract.Assert(databaseMapping.Model != null);
-            Contract.Assert(databaseMapping.Database != null);
+            DebugCheck.NotNull(xmlWriter);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(providerInfo);
+            Debug.Assert(databaseMapping.Model != null);
+            Debug.Assert(databaseMapping.Database != null);
 
             _xmlWriter = xmlWriter;
             _databaseMapping = databaseMapping;
@@ -121,8 +122,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
         private IDisposable Element(string elementName, params string[] attributes)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(elementName));
-            Contract.Requires(attributes != null);
+            DebugCheck.NotEmpty(elementName);
+            DebugCheck.NotNull(attributes);
 
             _xmlWriter.WriteStartElement(elementName, _namespace);
 

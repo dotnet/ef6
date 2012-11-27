@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Additional information for a node. 
-    ///     AugmentedNode - this is the base class for all annotations. This class 
+    ///     Additional information for a node.
+    ///     AugmentedNode - this is the base class for all annotations. This class
     ///     wraps a Node, an id for the node (where the "id" is assigned in DFS order),
     ///     and a list of children. All Nodes that are neither joins, nor scanTables
     ///     are represented by this class

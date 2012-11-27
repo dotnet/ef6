@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     - a set of local definitions
     ///     - a set of definitions
     ///     - a set of keys
-    ///     - a set of non-nullable definitions 
+    ///     - a set of non-nullable definitions
     ///     - a set of non-nullable definitions that are visible at this node
-    ///     NOTE: When adding a new member to track inforation, make sure to update the Clear method 
+    ///     NOTE: When adding a new member to track inforation, make sure to update the Clear method
     ///     in this class to set that member to the default value.
     /// </summary>
     internal class ExtendedNodeInfo : NodeInfo

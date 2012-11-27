@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships, 
+    ///     Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships,
     ///     and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those iterfaces.
     ///     This improves the speed and memory utilization for the standard code-gen cases in materialization.
     /// </summary>

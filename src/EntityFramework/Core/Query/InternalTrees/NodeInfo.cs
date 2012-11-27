@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     The NodeInfo class represents additional information about a node in the tree.
     ///     By default, this includes a set of external references for each node (ie) references
     ///     to Vars that are not defined in the same subtree
-    ///     The NodeInfo class also includes a "hashValue" that is a hash value for the entire 
+    ///     The NodeInfo class also includes a "hashValue" that is a hash value for the entire
     ///     subtree rooted at this node
-    ///     NOTE: When adding a new member to track inforation, make sure to update the Clear method 
+    ///     NOTE: When adding a new member to track inforation, make sure to update the Clear method
     ///     in this class to set that member to the default value.
     /// </summary>
     internal class NodeInfo
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Computes the hash value for this node. The hash value is simply the 
-        ///     local hash value for this node info added with the hash values of the child 
+        ///     Computes the hash value for this node. The hash value is simply the
+        ///     local hash value for this node info added with the hash values of the child
         ///     nodes
         /// </summary>
         /// <param name="cmd"> current command </param>

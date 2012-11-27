@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using JoinDictionary = System.Collections.Generic.Dictionary<CompositeKey, Tuple<CompositeKey, PropagatorResult>>;
 
@@ -46,10 +46,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <param name="parent"> Handler of propagation for the entire update mapping view </param>
             internal JoinPropagator(ChangeNode left, ChangeNode right, DbJoinExpression node, Propagator parent)
             {
-                Contract.Requires(left != null);
-                Contract.Requires(right != null);
-                Contract.Requires(node != null);
-                Contract.Requires(parent != null);
+                DebugCheck.NotNull(left);
+                DebugCheck.NotNull(right);
+                DebugCheck.NotNull(node);
+                DebugCheck.NotNull(parent);
 
                 m_left = left;
                 m_right = right;
@@ -274,10 +274,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var rightDeletes = ProcessKeys(m_right.Deleted, m_rightKeySelectors);
                 var rightInserts = ProcessKeys(m_right.Inserted, m_rightKeySelectors);
                 var allKeys = leftDeletes.Keys
-                    .Concat(leftInserts.Keys)
-                    .Concat(rightDeletes.Keys)
-                    .Concat(rightInserts.Keys)
-                    .Distinct(m_parent.UpdateTranslator.KeyComparer);
+                                         .Concat(leftInserts.Keys)
+                                         .Concat(rightDeletes.Keys)
+                                         .Concat(rightInserts.Keys)
+                                         .Distinct(m_parent.UpdateTranslator.KeyComparer);
 
                 // Perform propagation one key at a time
                 foreach (var key in allKeys)
@@ -427,7 +427,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var leftKey = left.Item1;
                 var rightKey = right.Item1;
                 Dictionary<PropagatorResult, PropagatorResult> map = null;
-                if (!ReferenceEquals(null, leftKey) &&
+                if (!ReferenceEquals(null, leftKey)
+                    &&
                     !ReferenceEquals(null, rightKey)
                     &&
                     !ReferenceEquals(leftKey, rightKey))
@@ -466,8 +467,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             /// <param name="key"> Key producing the left hand side. </param>
             /// <param name="mode"> Mode used to populate the placeholder </param>
-            /// <returns> Record corresponding to the type of the left input to the join. Each value in the record is flagged as <see
-            ///      cref="PropagatorFlags.Unknown" /> except when it is a component of the key. </returns>
+            /// <returns>
+            ///     Record corresponding to the type of the left input to the join. Each value in the record is flagged as
+            ///     <see
+            ///         cref="PropagatorFlags.Unknown" />
+            ///     except when it is a component of the key.
+            /// </returns>
             private PropagatorResult LeftPlaceholder(CompositeKey key, PopulateMode mode)
             {
                 return PlaceholderPopulator.Populate(m_left.Placeholder, key, m_leftPlaceholderKey, mode);

@@ -42,7 +42,7 @@ namespace System.Data.Entity.Utilities
                 result = left.Value
                              ? (bool?)null
                              : // unknown
-                         false;
+                             false;
             }
             else
             {

@@ -199,9 +199,9 @@
                     }
                     else
                     {
-                        var dynamicType = _assembly.DynamicTypes.Single(t => t.Name == propertyTypeName);
+                        var type = ResolveType(propertyTypeName);                      
 
-                        var dynamicEnumType = dynamicType as DynamicEnumType;
+                        var dynamicEnumType = type as DynamicEnumType;
                         if(dynamicEnumType != null)
                         {
                             property.HasEnumType(dynamicEnumType, propertyIsNullable);
@@ -209,8 +209,28 @@
                         }
                         else
                         {
-                            property.HasReferenceType((DynamicStructuralType)dynamicType);
-                            AddComplexPropertyAttribute(property);
+                            var dynamicStructuralType = type as DynamicStructuralType;
+                            if (dynamicStructuralType != null)
+                            {
+                                property.HasReferenceType((DynamicStructuralType)dynamicStructuralType);
+                                AddComplexPropertyAttribute(property);
+                            }
+                            else
+                            {
+                                Debug.Assert(type.GetType() is Type);
+
+                                var clrType = (Type)type;
+                                property.HasType(clrType);
+
+                                if (clrType.IsEnum)
+                                {
+                                    AddScalarPropertyAttribute(propertyDefinition, property);
+                                }
+                                else
+                                {
+                                    AddComplexPropertyAttribute(property);
+                                }
+                            }
                         }
                     }
                 }
@@ -394,6 +414,20 @@
             typeNamespace =
                 (string)typeElement.Attribute(_csdlMappingTestExtNs + "OSpaceTypeNamespace") ??
                 GetModelNamespace(typeElement);
+        }
+
+        private object ResolveType(string typeName)
+        {
+            object type;
+            if((type = _assembly.DynamicTypes.SingleOrDefault(t => t.Name == typeName)) == null)
+            {
+                if ((type = _createdAssemblies.SelectMany(a => a.GetTypes()).SingleOrDefault(t => t.FullName == typeName)) == null)
+                {
+                    throw new InvalidOperationException(string.Format("Cannot resolve type {0}", typeName));
+                }
+            }
+                    
+            return type;
         }
     }
 }

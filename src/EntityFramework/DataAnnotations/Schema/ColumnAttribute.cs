@@ -5,8 +5,8 @@
 
 namespace System.ComponentModel.DataAnnotations.Schema
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Specifies the database column that a property is mapped to.
@@ -32,7 +32,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="name"> The name of the column the property is mapped to. </param>
         public ColumnAttribute(string name)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             _name = name;
         }
@@ -53,7 +53,10 @@ namespace System.ComponentModel.DataAnnotations.Schema
             get { return _order; }
             set
             {
-                Contract.Requires<ArgumentOutOfRangeException>(value >= 0);
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("value");
+                }
 
                 _order = value;
             }
@@ -67,7 +70,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             get { return _typeName; }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Check.NotEmpty(value, "value");
 
                 _typeName = value;
             }

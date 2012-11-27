@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // public APIs on ObjectQuery and must be checked here
             // (the base class performs similar checks on the ObjectContext and MergeOption arguments).
             //
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(expression);
             // closure bindings and initializers are explicitly allowed to be null
 
             _expression = expression;
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, query)
         {
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(expression);
             _expression = expression;
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
@@ -100,7 +100,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // If a merge option was explicitly specified, and it does not match the plan's merge option, then the plan is no longer valid.
                 // If the context flag UseCSharpNullComparisonBehavior was modified, then the plan is no longer valid.
                 if ((explicitMergeOption.HasValue &&
-                     explicitMergeOption.Value != plan.MergeOption) ||
+                     explicitMergeOption.Value != plan.MergeOption)
+                    ||
                     _recompileRequired()
                     ||
                     ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior)
@@ -253,8 +254,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     eLINQ queries do not have command text. This method always returns <c>false</c>.
         /// </summary>
-        /// <param name="commandText"> Always set to <c>null</c> </param>
-        /// <returns> Always returns <c>false</c> </returns>
+        /// <param name="commandText">
+        ///     Always set to <c>null</c>
+        /// </param>
+        /// <returns>
+        ///     Always returns <c>false</c>
+        /// </returns>
         internal override bool TryGetCommandText(out string commandText)
         {
             commandText = null;
@@ -267,7 +272,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     queries to produce an Expression tree where parameter references have been replaced with constants.
         /// </summary>
         /// <param name="expression"> The LINQ expression that describes this query </param>
-        /// <returns> Always returns <c>true</c> </returns>
+        /// <returns>
+        ///     Always returns <c>true</c>
+        /// </returns>
         internal override bool TryGetExpression(out Expression expression)
         {
             expression = Expression;

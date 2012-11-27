@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Data.Entity.Migrations.Extensions;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using EnvDTE;
 
     /// <summary>
@@ -16,8 +16,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         /// </summary>
         public virtual void FindConfigFiles(ProjectItems items, Action<ProjectItem> action)
         {
-            Contract.Requires(items != null);
-            Contract.Requires(action != null);
+            DebugCheck.NotNull(items);
+            DebugCheck.NotNull(action);
 
             foreach (ProjectItem projectItem in items)
             {

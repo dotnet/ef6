@@ -11,8 +11,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EdmItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.CSpace)
         {
-            Contract.Requires(xmlReaders != null);
+            Check.NotNull(xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EdmItemCollection(params string[] filePaths)
             : base(DataSpace.CSpace)
         {
-            Contract.Requires(filePaths != null);
+            Check.NotNull(filePaths, "filePaths");
 
             // Wrap the file paths in instances of the MetadataArtifactLoader class, which provides
             // an abstraction and a uniform interface over a diverse set of metadata artifacts.
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<string> filePaths,
             bool throwOnError)
         {
-            Contract.Requires(xmlReaders != null);
+            DebugCheck.NotNull(xmlReaders);
 
             // do the basic initialization
             Init();
@@ -341,7 +341,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(double edmVersion)
         {
-            if (edmVersion == XmlConstants.EdmVersionForV1 || edmVersion == XmlConstants.EdmVersionForV1_1
+            if (edmVersion == XmlConstants.EdmVersionForV1
+                || edmVersion == XmlConstants.EdmVersionForV1_1
                 || edmVersion == XmlConstants.EdmVersionForV2)
             {
                 return _primitiveTypeMaps.GetTypes().Where(type => !Helper.IsSpatialType(type)).ToList().AsReadOnly();

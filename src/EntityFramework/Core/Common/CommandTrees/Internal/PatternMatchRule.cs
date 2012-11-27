@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     PatternMatchRule is a specialization of <see cref="DbExpressionRule" /> that uses a Func&lt;DbExpression, bool&gt; 'pattern'
@@ -41,8 +41,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        ///     Constructs a new PatternMatch rule with the specified pattern, processor and default <see
-        ///      cref="DbExpressionRule.ProcessedAction" /> of <see cref="DbExpressionRule.ProcessedAction.Reset" />
+        ///     Constructs a new PatternMatch rule with the specified pattern, processor and default
+        ///     <see
+        ///         cref="DbExpressionRule.ProcessedAction" />
+        ///     of <see cref="DbExpressionRule.ProcessedAction.Reset" />
         /// </summary>
         internal static PatternMatchRule Create(Func<DbExpression, bool> matchFunc, Func<DbExpression, DbExpression> processor)
         {
@@ -50,14 +52,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         /// <summary>
-        ///     Constructs a new PatternMatchRule with the specified pattern, processor and <see
-        ///      cref="DbExpressionRule.ProcessedAction" />
+        ///     Constructs a new PatternMatchRule with the specified pattern, processor and
+        ///     <see
+        ///         cref="DbExpressionRule.ProcessedAction" />
         /// </summary>
         internal static PatternMatchRule Create(
             Func<DbExpression, bool> matchFunc, Func<DbExpression, DbExpression> processor, ProcessedAction onProcessed)
         {
-            Contract.Requires(matchFunc != null);
-            Contract.Requires(processor != null);
+            DebugCheck.NotNull(matchFunc);
+            DebugCheck.NotNull(processor);
 
             return new PatternMatchRule(matchFunc, processor, onProcessed);
         }

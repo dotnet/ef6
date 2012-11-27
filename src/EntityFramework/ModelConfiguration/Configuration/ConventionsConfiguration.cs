@@ -4,17 +4,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Conventions.Sets;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -33,15 +31,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal ConventionsConfiguration(IEnumerable<IConvention> conventionSet)
         {
-            Contract.Requires(conventionSet != null);
-            Contract.Assert(conventionSet.All(c => c != null));
+            DebugCheck.NotNull(conventionSet);
+            Debug.Assert(conventionSet.All(c => c != null));
 
             _conventions.AddRange(conventionSet);
         }
 
         private ConventionsConfiguration(ConventionsConfiguration source)
         {
-            Contract.Requires(source != null);
+            DebugCheck.NotNull(source);
 
             _conventions.AddRange(source._conventions);
         }
@@ -57,8 +55,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="conventions"> The conventions to be enabled. </param>
         public void Add(params IConvention[] conventions)
         {
-            Contract.Requires(conventions != null);
-            Contract.Assert(conventions.All(c => c != null));
+            Check.NotNull(conventions, "conventions");
+            Debug.Assert(conventions.All(c => c != null));
 
             conventions.Each(c => _conventions.Add(c));
         }
@@ -77,11 +75,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
         /// </summary>
-        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
-        ///      cref="EntityConventionConfiguration" /> . </param>
+        /// <param name="entityConventionConfigurationAction">
+        ///     An action that performs configuration against an
+        ///     <see
+        ///         cref="EntityConventionConfiguration" />
+        ///     .
+        /// </param>
         public void Add(Action<EntityConventionConfiguration> entityConventionConfigurationAction)
         {
-            Contract.Requires(entityConventionConfigurationAction != null);
+            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
 
             Add(CreateConvention(entityConventionConfigurationAction));
         }
@@ -96,7 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void AddAfter<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
         {
-            Contract.Requires(newConvention != null);
+            Check.NotNull(newConvention, "newConvention");
 
             var index = IndexOf<TExistingConvention>();
 
@@ -113,14 +115,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     This convention will run after the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
-        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
-        ///      cref="EntityConventionConfiguration" /> . </param>
+        /// <param name="entityConventionConfigurationAction">
+        ///     An action that performs configuration against an
+        ///     <see
+        ///         cref="EntityConventionConfiguration" />
+        ///     .
+        /// </param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddAfter<TExistingConvention>(
             Action<EntityConventionConfiguration> entityConventionConfigurationAction)
             where TExistingConvention : IConvention
         {
-            Contract.Requires(entityConventionConfigurationAction != null);
+            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
 
             AddAfter<TExistingConvention>(CreateConvention(entityConventionConfigurationAction));
         }
@@ -135,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void AddBefore<TExistingConvention>(IConvention newConvention)
             where TExistingConvention : IConvention
         {
-            Contract.Requires(newConvention != null);
+            Check.NotNull(newConvention, "newConvention");
 
             var index = IndexOf<TExistingConvention>();
 
@@ -152,14 +158,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     This convention will run before the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
-        /// <param name="entityConventionConfigurationAction"> An action that performs configuration against an <see
-        ///      cref="EntityConventionConfiguration" /> . </param>
+        /// <param name="entityConventionConfigurationAction">
+        ///     An action that performs configuration against an
+        ///     <see
+        ///         cref="EntityConventionConfiguration" />
+        ///     .
+        /// </param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public void AddBefore<TExistingConvention>(
             Action<EntityConventionConfiguration> entityConventionConfigurationAction)
             where TExistingConvention : IConvention
         {
-            Contract.Requires(entityConventionConfigurationAction != null);
+            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
 
             AddBefore<TExistingConvention>(CreateConvention(entityConventionConfigurationAction));
         }
@@ -185,7 +195,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static LightweightConvention CreateConvention(
             Action<EntityConventionConfiguration> entityConventionConfigurationAction)
         {
-            Contract.Requires(entityConventionConfigurationAction != null);
+            DebugCheck.NotNull(entityConventionConfigurationAction);
 
             var entityConventionConfiguration = new EntityConventionConfiguration();
             entityConventionConfigurationAction(entityConventionConfiguration);
@@ -199,7 +209,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="conventions"> The conventions to be disabled. </param>
         public void Remove(params IConvention[] conventions)
         {
-            Contract.Requires(conventions != null);
+            Check.NotNull(conventions, "conventions");
 
             conventions.Each(c => _conventions.Remove(c));
         }
@@ -225,7 +235,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyModel(EdmModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             foreach (var convention in _conventions)
             {
@@ -235,7 +245,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyDatabase(EdmModel database)
         {
-            Contract.Requires(database != null);
+            DebugCheck.NotNull(database);
 
             foreach (var convention in _conventions)
             {
@@ -245,7 +255,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyMapping(DbDatabaseMapping databaseMapping)
         {
-            Contract.Requires(databaseMapping != null);
+            DebugCheck.NotNull(databaseMapping);
 
             foreach (var convention in _conventions)
             {
@@ -260,7 +270,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyModelConfiguration(ModelConfiguration modelConfiguration)
         {
-            Contract.Requires(modelConfiguration != null);
+            DebugCheck.NotNull(modelConfiguration);
 
             foreach (var convention in _conventions.OfType<IConfigurationConvention>())
             {
@@ -270,8 +280,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyModelConfiguration(Type type, ModelConfiguration modelConfiguration)
         {
-            Contract.Requires(type != null);
-            Contract.Requires(modelConfiguration != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(modelConfiguration);
 
             foreach (var convention in _conventions.OfType<IConfigurationConvention<Type, ModelConfiguration>>())
             {
@@ -283,8 +293,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Type type, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
-            Contract.Requires(type != null);
-            Contract.Requires(structuralTypeConfiguration != null);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(structuralTypeConfiguration);
 
             foreach (var convention in _conventions)
             {
@@ -308,8 +318,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyPropertyConfiguration(PropertyInfo propertyInfo, ModelConfiguration modelConfiguration)
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(modelConfiguration != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(modelConfiguration);
 
             foreach (var convention in _conventions.OfType<IConfigurationConvention<PropertyInfo, ModelConfiguration>>()
                 )
@@ -321,8 +331,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal void ApplyPropertyConfiguration(
             PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(propertyConfiguration != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(propertyConfiguration);
 
             var propertyConfigurationType
                 = StructuralTypeConfiguration.GetPropertyConfigurationType(propertyInfo.PropertyType);
@@ -339,8 +349,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             PropertyInfo propertyInfo, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
-            Contract.Requires(propertyInfo != null);
-            Contract.Requires(structuralTypeConfiguration != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(structuralTypeConfiguration);
 
             foreach (var convention in _conventions)
             {

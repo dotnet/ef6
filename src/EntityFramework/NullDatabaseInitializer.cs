@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that does nothing. Using this
@@ -18,6 +19,7 @@ namespace System.Data.Entity
         /// <inheritdoc />
         public void InitializeDatabase(TContext context)
         {
+            Check.NotNull(context, "context");
         }
     }
 }

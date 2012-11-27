@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        /// For mocking.
+        ///     For mocking.
         /// </summary>
         internal Command()
         {
@@ -158,7 +158,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="modelType"> EdmMetadata.PrimitiveTypeKind of the primitive type </param>
         /// <param name="type"> A TypeUsage that represents the specified primitive type </param>
-        /// <returns> <c>True</c> if the specified primitive type could be retrieved; otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>True</c> if the specified primitive type could be retrieved; otherwise <c>false</c> .
+        /// </returns>
         private static bool TryGetPrimitiveType(PrimitiveTypeKind modelType, out TypeUsage type)
         {
             type = null;
@@ -343,7 +345,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Create a "flat" table definition object (ie) the table has one column 
+        ///     Create a "flat" table definition object (ie) the table has one column
         ///     for each property of the specified row type
         /// </summary>
         /// <param name="type"> the shape of each row of the table </param>
@@ -355,7 +357,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     Create a "flat" table defintion. The table has one column for each property
-        ///     specified, and the key columns of the table are those specified in the 
+        ///     specified, and the key columns of the table are those specified in the
         ///     keyMembers parameter
         /// </summary>
         /// <param name="properties"> list of columns for the table </param>
@@ -448,12 +450,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="oldVar"> Parameter variable that needs to replaced. </param>
         /// <param name="generateReplacementType"> Delegate that generates the replacement parameter's type. </param>
-        /// <returns> A new ParameterVar instance created of <paramref name="oldVar" /> . </returns>
+        /// <returns>
+        ///     A new ParameterVar instance created of <paramref name="oldVar" /> .
+        /// </returns>
         /// <remarks>
         ///     This method should be used only to replace external enum or strong spatial parameters with a counterpart whose
-        ///     type is the underlying type of the enum type, or the union type contating the strong spatial type of the <paramref
-        ///      name="oldVar" />.
-        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed 
+        ///     type is the underlying type of the enum type, or the union type contating the strong spatial type of the
+        ///     <paramref
+        ///         name="oldVar" />
+        ///     .
+        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed
         ///     the <paramref name="oldVar" />) is invalidated internally and should no longer be used.
         /// </remarks>
         /// Func
@@ -472,11 +478,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Creates a variable for the given enum parameter variable and replaces it in parameter map.
         /// </summary>
         /// <param name="oldVar"> Enum parameter variable that needs to replaced. </param>
-        /// <returns> A new ParameterVar instance created of <paramref name="oldVar" /> . </returns>
+        /// <returns>
+        ///     A new ParameterVar instance created of <paramref name="oldVar" /> .
+        /// </returns>
         /// <remarks>
         ///     This method should be used only to replace external enum parameter with a counterpart whose
         ///     type is the underlying type of the enum type of the <paramref name="oldVar" />.
-        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed 
+        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed
         ///     the <paramref name="oldVar" />) is invalidated internally and should no longer be used.
         /// </remarks>
         internal virtual ParameterVar ReplaceEnumParameterVar(ParameterVar oldVar)
@@ -488,11 +496,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Creates a variable for the given spatial parameter variable and replaces it in parameter map.
         /// </summary>
         /// <param name="oldVar"> Spatial parameter variable that needs to replaced. </param>
-        /// <returns> A new ParameterVar instance created of <paramref name="oldVar" /> . </returns>
+        /// <returns>
+        ///     A new ParameterVar instance created of <paramref name="oldVar" /> .
+        /// </returns>
         /// <remarks>
         ///     This method should be used only to replace external strong spatial parameter with a counterpart whose
         ///     type is the appropriate union type for <paramref name="oldVar" />.
-        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed 
+        ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed
         ///     the <paramref name="oldVar" />) is invalidated internally and should no longer be used.
         /// </remarks>
         internal virtual ParameterVar ReplaceStrongSpatialParameterVar(ParameterVar oldVar)
@@ -656,7 +666,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Create an "internal" constantOp - only for use by the plan compiler to 
+        ///     Create an "internal" constantOp - only for use by the plan compiler to
         ///     represent internally generated constants.
         ///     User constants in the query should never get into this function
         /// </summary>
@@ -778,7 +788,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     Creates a new SoftCastOp and casts the input to the desired type.
-        /// 
         ///     The caller is expected to determine if the cast is necessary or not
         /// </summary>
         /// <param name="type"> Type metadata that represents the type to which the argument should be cast </param>
@@ -849,7 +858,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Build out a new NewEntityOp constructing the entity <paramref name="type" /> scoped to the <paramref name="entitySet" />.
+        ///     Build out a new NewEntityOp constructing the entity <paramref name="type" /> scoped to the
+        ///     <paramref
+        ///         name="entitySet" />
+        ///     .
         /// </summary>
         internal virtual NewEntityOp CreateScopedNewEntityOp(TypeUsage type, List<RelProperty> relProperties, EntitySet entitySet)
         {
@@ -1619,7 +1631,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         ///     Check to see if two types are considered "equal" for the purposes
-        ///     of the plan compiler. 
+        ///     of the plan compiler.
         ///     Two types are considered to be equal if their "identities" are equal.
         /// </summary>
         /// <param name="x"> </param>
@@ -1649,11 +1661,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Builds out a UNION-ALL ladder from a sequence of node,var pairs.
         ///     Assumption: Each node produces exactly one Var
-        /// 
         ///     If the input sequence has zero elements, we return null
         ///     If the input sequence has one element, we return that single element
         ///     Otherwise, we build out a UnionAll ladder from each of the inputs. If the input sequence was {A,B,C,D},
-        ///     we build up a union-all ladder that looks like 
+        ///     we build up a union-all ladder that looks like
         ///     (((A UA B) UA C) UA D)
         /// </summary>
         /// <param name="inputNodes"> list of input nodes - one for each branch </param>
@@ -1738,8 +1749,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Build a projectOp tree over the input. 
-        ///     This function builds a projectOp tree over the input. The Outputs (vars) of the project are the 
+        ///     Build a projectOp tree over the input.
+        ///     This function builds a projectOp tree over the input. The Outputs (vars) of the project are the
         ///     list of vars from the input (inputVars), plus one computed Var for each of the computed expressions
         ///     (computedExpressions)
         /// </summary>
@@ -1774,7 +1785,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     A "simpler" builder method for ProjectOp. The assumption is that the only output is the
         ///     (var corresponding to) the computedExpression. None of the Vars of the "input" are projected out
-        /// 
         ///     The single output Var is returned in the "outputVar" parameter
         /// </summary>
         /// <param name="input"> the input relop </param>
@@ -1791,10 +1801,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Build the equivalent of an OfTypeExpression over the input (ie) produce the set of values from the
         ///     input that are of the desired type (exactly of the desired type, if the "includeSubtypes" parameter is false).
-        /// 
         ///     Further more, "update" the result element type to be the desired type.
-        /// 
-        ///     We accomplish this by first building a FilterOp with an IsOf (or an IsOfOnly) predicate for the desired 
+        ///     We accomplish this by first building a FilterOp with an IsOf (or an IsOfOnly) predicate for the desired
         ///     type. We then build out a ProjectOp over the FilterOp, where we introduce a "Fake" TreatOp over the input
         ///     element to cast it to the right type. The "Fake" TreatOp is only there for "compile-time" typing reasons,
         ///     and will be ignored in the rest of the plan compiler

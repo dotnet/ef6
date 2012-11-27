@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
 
     /// <summary>
@@ -181,8 +181,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal void Remove(T item)
         {
-            Contract.Requires(item != null);
-            Contract.Requires(Contains(item));
+            DebugCheck.NotNull(item);
+            Debug.Assert(Contains(item));
             ThrowIfReadOnly();
 
             _collectionData.OrderedList.Remove(item);

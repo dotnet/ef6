@@ -14,12 +14,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
     /// <summary>
     ///     Describes top-level query mapping view projection of the form:
-    /// 
-    ///     SELECT VALUE CASE 
+    ///     SELECT VALUE CASE
     ///     WHEN Discriminator = DiscriminatorValue1 THEN EntityType1(...)
     ///     WHEN Discriminator = DiscriminatorValue2 THEN EntityType2(...)
     ///     ...
-    ///     
     ///     Supports optimizing queries to leverage user supplied discriminator values
     ///     in TPH mappings rather than introducing our own. This avoids the need
     ///     to introduce a CASE statement in the store.
@@ -292,11 +290,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <summary>
         ///     Utility method determining whether two expressions appearing within the same scope
         ///     are equivalent. May return false negatives, but no false positives. In other words,
-        /// 
         ///     x != y --> !ExpressionsCompatible(x, y)
-        ///     
         ///     but does not guarantee
-        /// 
         ///     x == y --> ExpressionsCompatible(x, y)
         /// </summary>
         private static bool ExpressionsCompatible(DbExpression x, DbExpression y)

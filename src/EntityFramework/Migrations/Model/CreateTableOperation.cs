@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents creating a table.
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Migrations.Model
         public CreateTableOperation(string name, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
+            Check.NotEmpty(name, "name");
 
             _name = name;
         }
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Model
             get { return _primaryKey; }
             set
             {
-                Contract.Requires(value != null);
+                Check.NotNull(value, "value");
 
                 _primaryKey = value;
                 _primaryKey.Table = Name;

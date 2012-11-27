@@ -14,6 +14,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
@@ -207,9 +208,9 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     Tries to generate the Oftype or OfTypeOnly query view for a given entity set and type. 
+            ///     Tries to generate the Oftype or OfTypeOnly query view for a given entity set and type.
             ///     Returns false if the view could not be generated.
-            ///     Possible reasons for failing are 
+            ///     Possible reasons for failing are
             ///     1) Passing in OfTypeOnly on an abstract type
             ///     2) In user-specified query views mode a query for the given type is absent
             /// </summary>
@@ -251,7 +252,7 @@ namespace System.Data.Entity.Core.Mapping
             ///     Returns the update or query view for an Extent as a
             ///     string.
             ///     There are a series of steps that we go through for discovering a view for an extent.
-            ///     To start with we assume that we are working with Generated Views. To find out the 
+            ///     To start with we assume that we are working with Generated Views. To find out the
             ///     generated view we go to the ObjectItemCollection and see if it is not-null. If the ObjectItemCollection
             ///     is non-null, we get the view generation assemblies that it might have cached during the
             ///     Object metadata discovery.If there are no view generation assemblies we switch to the
@@ -262,7 +263,7 @@ namespace System.Data.Entity.Core.Mapping
             ///     the query or update is issued from the Value layer and this is the first time view has been asked for.
             ///     The compile time view gen for value layer queries will work for very simple scenarios.
             ///     If the users wants to get the performance benefit, they should call MetadataWorkspace.LoadFromAssembly.
-            ///     At this point we go through the referenced assemblies of the entry assembly( this wont work for Asp.net 
+            ///     At this point we go through the referenced assemblies of the entry assembly( this wont work for Asp.net
             ///     or if the viewgen assembly was not referenced by the executing application).
             ///     and try to see if there were any view gen assemblies. If there are, we collect the views for all extents.
             ///     Once we have all the generated views gathered, we try to get the view for the extent passed in.
@@ -421,13 +422,13 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     this method do the following check on the generated views in the EntityViewContainer, 
+            ///     this method do the following check on the generated views in the EntityViewContainer,
             ///     then add those views all at once to the dictionary
             ///     1. there should be one storeageEntityContainerMapping that has the same h
             ///     C side and S side names as the EnittyViewcontainer
-            ///     2. Generate the hash for the storageEntityContainerMapping in the MM closure, 
+            ///     2. Generate the hash for the storageEntityContainerMapping in the MM closure,
             ///     and this hash should be the same in EntityViewContainer
-            ///     3. Generate the hash for all of the view text in the EntityViewContainer and 
+            ///     3. Generate the hash for all of the view text in the EntityViewContainer and
             ///     this hash should be the same as the stored on in the EntityViewContainer
             /// </summary>
             /// <param name="entityViewContainer"> </param>
@@ -643,9 +644,9 @@ namespace System.Data.Entity.Core.Mapping
             params string[] filePaths)
             : base(DataSpace.CSSpace)
         {
-            Contract.Requires(edmCollection != null);
-            Contract.Requires(storeCollection != null);
-            Contract.Requires(filePaths != null);
+            Check.NotNull(edmCollection, "edmCollection");
+            Check.NotNull(storeCollection, "storeCollection");
+            Check.NotNull(filePaths, "filePaths");
 
             m_edmCollection = edmCollection;
             m_storeItemCollection = storeCollection;
@@ -674,7 +675,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping 
+        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping
         ///     in all the files.
         /// </summary>
         /// <param name="edmCollection"> The edm metadata collection that this mapping is to use </param>
@@ -687,7 +688,7 @@ namespace System.Data.Entity.Core.Mapping
             IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.CSSpace)
         {
-            Contract.Requires(xmlReaders != null);
+            Check.NotNull(xmlReaders, "xmlReaders");
 
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
 
@@ -700,7 +701,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping 
+        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping
         ///     in all the files.
         /// </summary>
         /// <param name="edmCollection"> The edm metadata collection that this mapping is to use </param>
@@ -722,7 +723,7 @@ namespace System.Data.Entity.Core.Mapping
             // we will check the parameters for this internal ctor becuase
             // it is pretty much publicly exposed through the MetadataItemCollectionFactory
             // in System.Data.Entity.Design
-            Contract.Requires(xmlReaders != null);
+            DebugCheck.NotNull(xmlReaders);
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
             // filePaths is allowed to be null
 
@@ -730,7 +731,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping 
+        ///     constructor that takes in a list of XmlReaders and creates metadata for mapping
         ///     in all the files.
         /// </summary>
         /// <param name="edmCollection"> The edm metadata collection that this mapping is to use </param>
@@ -749,7 +750,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Initializer that takes in a list of XmlReaders and creates metadata for mapping 
+        ///     Initializer that takes in a list of XmlReaders and creates metadata for mapping
         ///     in all the files.
         /// </summary>
         /// <param name="edmCollection"> The edm metadata collection that this mapping is to use </param>
@@ -764,9 +765,9 @@ namespace System.Data.Entity.Core.Mapping
             List<string> filePaths,
             bool throwOnError)
         {
-            Contract.Requires(xmlReaders != null);
-            Contract.Requires(edmCollection != null);
-            Contract.Requires(storeCollection != null);
+            DebugCheck.NotNull(xmlReaders);
+            DebugCheck.NotNull(edmCollection);
+            DebugCheck.NotNull(storeCollection);
 
             m_edmCollection = edmCollection;
             m_storeItemCollection = storeCollection;
@@ -778,7 +779,8 @@ namespace System.Data.Entity.Core.Mapping
 
             var errors = new List<EdmSchemaError>();
 
-            if (m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion &&
+            if (m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
+                &&
                 m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
                 &&
                 m_edmCollection.EdmVersion != m_storeItemCollection.StoreSchemaVersion)
@@ -1012,8 +1014,12 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entitySet"> An EntitySet belonging to the C-Space. Must not be null. </param>
         /// <param name="entityType"> An EntityType that participates in the given EntitySet. Must not be null. </param>
         /// <param name="interestingMembersKind"> Scenario the members should be returned for. </param>
-        /// <returns> ReadOnlyCollection of interesting members for the requested scenario ( <paramref
-        ///      name="interestingMembersKind" /> ). </returns>
+        /// <returns>
+        ///     ReadOnlyCollection of interesting members for the requested scenario (
+        ///     <paramref
+        ///         name="interestingMembersKind" />
+        ///     ).
+        /// </returns>
         internal ReadOnlyCollection<EdmMember> GetInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
@@ -1031,8 +1037,12 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="entitySet"> An EntitySet belonging to the C-Space. Must not be null. </param>
         /// <param name="entityType"> An EntityType that participates in the given EntitySet. Must not be null. </param>
         /// <param name="interestingMembersKind"> Scenario the members should be returned for. </param>
-        /// <returns> ReadOnlyCollection of interesting members for the requested scenario ( <paramref
-        ///      name="interestingMembersKind" /> ). </returns>
+        /// <returns>
+        ///     ReadOnlyCollection of interesting members for the requested scenario (
+        ///     <paramref
+        ///         name="interestingMembersKind" />
+        ///     ).
+        /// </returns>
         private ReadOnlyCollection<EdmMember> FindInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
@@ -1099,8 +1109,10 @@ namespace System.Data.Entity.Core.Mapping
 
         /// <summary>
         ///     Finds interesting entity properties - primary keys (if requested), properties (including complex properties and nested properties)
-        ///     with concurrency mode set to fixed and C-Side condition members and adds them to the <paramref
-        ///      name="interestingMembers" />.
+        ///     with concurrency mode set to fixed and C-Side condition members and adds them to the
+        ///     <paramref
+        ///         name="interestingMembers" />
+        ///     .
         /// </summary>
         /// <param name="entityTypeMapping"> Entity type mapping. Must not be null. </param>
         /// <param name="interestingMembersKind"> Scenario the members should be returned for. </param>
@@ -1148,7 +1160,8 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     // (7) All complex members - partial update scenarios only
                     // (3.1) The complex property or its one of its children has fixed concurrency mode
-                    if (interestingMembersKind == InterestingMembersKind.PartialUpdate ||
+                    if (interestingMembersKind == InterestingMembersKind.PartialUpdate
+                        ||
                         MetadataHelper.GetConcurrencyMode(complexPropMapping.EdmProperty) == ConcurrencyMode.Fixed
                         || HasFixedConcurrencyModeInAnyChildProperty(complexPropMapping))
                     {
@@ -1170,7 +1183,9 @@ namespace System.Data.Entity.Core.Mapping
         ///     Recurses down the complex property to find whether any of the nseted properties has concurrency mode set to "Fixed"
         /// </summary>
         /// <param name="complexMapping"> Complex property mapping. Must not be null. </param>
-        /// <returns> <c>true</c> if any of the descendant properties has concurrency mode set to "Fixed". Otherwise <c>false</c> . </returns>
+        /// <returns>
+        ///     <c>true</c> if any of the descendant properties has concurrency mode set to "Fixed". Otherwise <c>false</c> .
+        /// </returns>
         private static bool HasFixedConcurrencyModeInAnyChildProperty(StorageComplexPropertyMapping complexMapping)
         {
             Debug.Assert(complexMapping != null, "complexMapping != null");
@@ -1206,7 +1221,9 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Finds foreign key properties and adds them to the <paramref name="interestingMembers" />.
         /// </summary>
-        /// <param name="entitySetBase"> Entity set <paramref name="entityType" /> relates to. Must not be null. </param>
+        /// <param name="entitySetBase">
+        ///     Entity set <paramref name="entityType" /> relates to. Must not be null.
+        /// </param>
         /// <param name="entityType"> Entity type for which to find foreign key properties. Must not be null. </param>
         /// <param name="interestingMembers"> The list the interesting members (if any) will be added to. Must not be null. </param>
         private static void FindForeignKeyProperties(
@@ -1220,14 +1237,16 @@ namespace System.Data.Entity.Core.Mapping
                 // select all foreign key properties defined on the entityType and all its ancestors
                 interestingMembers.AddRange(
                     MetadataHelper.GetTypeAndParentTypesOf(entityType, true)
-                        .SelectMany(e => ((EntityType)e).Properties)
-                        .Where(p => entitySet.ForeignKeyDependents.SelectMany(fk => fk.Item2.ToProperties).Contains(p)));
+                                  .SelectMany(e => ((EntityType)e).Properties)
+                                  .Where(p => entitySet.ForeignKeyDependents.SelectMany(fk => fk.Item2.ToProperties).Contains(p)));
             }
         }
 
         /// <summary>
-        ///     Finds interesting members for modification functions mapped to stored procedures and adds them to the <paramref
-        ///      name="interestingMembers" />.
+        ///     Finds interesting members for modification functions mapped to stored procedures and adds them to the
+        ///     <paramref
+        ///         name="interestingMembers" />
+        ///     .
         /// </summary>
         /// <param name="functionMappings"> Modification function mapping. Must not be null. </param>
         /// <param name="interestingMembersKind"> Update scenario the members will be used in (in general - partial update vs. full update). </param>
@@ -1432,7 +1451,8 @@ namespace System.Data.Entity.Core.Mapping
             {
                 m_mappingVersion = currentLoaderVersion;
             }
-            if (expectedVersion != XmlConstants.UndefinedVersion && currentLoaderVersion != XmlConstants.UndefinedVersion
+            if (expectedVersion != XmlConstants.UndefinedVersion
+                && currentLoaderVersion != XmlConstants.UndefinedVersion
                 && currentLoaderVersion != expectedVersion)
             {
                 // Check that the mapping version is the same as the storage and model version

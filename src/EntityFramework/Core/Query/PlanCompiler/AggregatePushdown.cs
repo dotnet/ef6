@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
     /// <summary>
     ///     The Aggregate Pushdown feature tries to identify function aggregates defined over a
-    ///     group aggregate and push their definitions in the group by into node corresponding to 
+    ///     group aggregate and push their definitions in the group by into node corresponding to
     ///     the group aggregate.
     /// </summary>
     internal class AggregatePushdown
@@ -67,8 +67,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Try to push the given function aggregate candidate to the corresponding group into node.
-        ///     The candidate can be pushed if all ancestors of the group into node up to the least common 
-        ///     ancestor between the group into node and the function aggregate have one of the following node op types:  
+        ///     The candidate can be pushed if all ancestors of the group into node up to the least common
+        ///     ancestor between the group into node and the function aggregate have one of the following node op types:
         ///     Project
         ///     Filter
         ///     ConstraintSortOp
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Check whether all nodes in the given list of nodes are of types 
+        ///     Check whether all nodes in the given list of nodes are of types
         ///     that we know how to propagate an aggregate through
         /// </summary>
         /// <param name="nodes"> </param>

@@ -5,8 +5,8 @@ namespace System.Data.Entity.Internal
     using System.Collections;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a raw SQL query against the context for entities in an entity set.
@@ -23,12 +23,14 @@ namespace System.Data.Entity.Internal
         /// </summary>
         /// <param name="set"> The set. </param>
         /// <param name="sql"> The SQL. </param>
-        /// <param name="isNoTracking"> if set to <c>true</c> then the entities will not be tracked. </param>
+        /// <param name="isNoTracking">
+        ///     if set to <c>true</c> then the entities will not be tracked.
+        /// </param>
         /// <param name="parameters"> The parameters. </param>
         internal InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, object[] parameters)
             : base(sql, parameters)
         {
-            Contract.Requires(set != null);
+            DebugCheck.NotNull(set);
 
             _set = set;
             _isNoTracking = isNoTracking;
@@ -51,7 +53,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this instance is set to track entities or not.
         /// </summary>
-        /// <value> <c>true</c> if this instance is no-tracking; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is no-tracking; otherwise, <c>false</c> .
+        /// </value>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
         public bool IsNoTracking

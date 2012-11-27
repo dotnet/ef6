@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Migrations.Extensions
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     [DebuggerStepThrough]
@@ -12,8 +12,8 @@ namespace System.Data.Entity.Migrations.Extensions
     {
         public static void Each<T>(this IEnumerable<T> ts, Action<T> action)
         {
-            Contract.Requires(ts != null);
-            Contract.Requires(action != null);
+            DebugCheck.NotNull(ts);
+            DebugCheck.NotNull(action);
 
             foreach (var t in ts)
             {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Migrations.Extensions
 
         public static string Join<T>(this IEnumerable<T> ts, Func<T, string> selector = null, string separator = ", ")
         {
-            Contract.Requires(ts != null);
+            DebugCheck.NotNull(ts);
 
             selector = selector ?? (t => t.ToString());
 

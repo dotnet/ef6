@@ -4,7 +4,7 @@ namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Utilities
 
         public static DatabaseName ToDatabaseName(this string s)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(s));
+            DebugCheck.NotEmpty(s);
 
             return DatabaseName.Parse(s);
         }
@@ -26,8 +26,8 @@ namespace System.Data.Entity.Utilities
 
         public static string MigrationName(this string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
-            Contract.Assert(migrationId.IsValidMigrationId());
+            DebugCheck.NotEmpty(migrationId);
+            Debug.Assert(migrationId.IsValidMigrationId());
 
             return migrationId.Substring(16);
         }
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsValidMigrationId(this string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             return _migrationIdPattern.IsMatch(migrationId)
                    || migrationId == DbMigrator.InitialDatabase;
@@ -53,14 +53,14 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsAutomaticMigration(this string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             return migrationId.EndsWith(Strings.AutomaticMigration, StringComparison.Ordinal);
         }
 
         public static string ToAutomaticMigrationId(this string migrationId)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationId));
+            DebugCheck.NotEmpty(migrationId);
 
             var timeStampInt = Convert.ToInt64(migrationId.Substring(0, 15), CultureInfo.InvariantCulture) - 1;
 

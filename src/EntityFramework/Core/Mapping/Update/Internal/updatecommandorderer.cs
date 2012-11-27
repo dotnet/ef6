@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     internal class UpdateCommandOrderer : Graph<UpdateCommand>
@@ -217,7 +217,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // need to add a dependency (from the perspective of the target, the update
                             // is a no-op)
                             ForeignKeyValue originalFK;
-                            if (ModificationOperator.Update != command.Operator ||
+                            if (ModificationOperator.Update != command.Operator
+                                ||
                                 !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.OriginalValues, true, out originalFK)
                                 ||
                                 !_keyComparer.Equals(originalFK, fk))
@@ -250,7 +251,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // need to add a dependency (from the perspective of the source, the update
                             // is a no-op)
                             ForeignKeyValue currentFK;
-                            if (ModificationOperator.Update != command.Operator ||
+                            if (ModificationOperator.Update != command.Operator
+                                ||
                                 !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.CurrentValues, false, out currentFK)
                                 ||
                                 !_keyComparer.Equals(currentFK, fk))
@@ -302,7 +304,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // need to add a dependency (from the perspective of the target, the update
                             // is a no-op)
                             ForeignKeyValue originalFK;
-                            if (ModificationOperator.Update != command.Operator ||
+                            if (ModificationOperator.Update != command.Operator
+                                ||
                                 !ForeignKeyValue.TryCreateTargetKey(fkConstraint, command.OriginalValues, true, out originalFK)
                                 ||
                                 !_keyComparer.Equals(originalFK, fk))
@@ -327,7 +330,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // need to add a dependency (from the perspective of the source, the update
                             // is a no-op)
                             ForeignKeyValue currentFK;
-                            if (ModificationOperator.Update != command.Operator ||
+                            if (ModificationOperator.Update != command.Operator
+                                ||
                                 !ForeignKeyValue.TryCreateSourceKey(fkConstraint, command.CurrentValues, false, out currentFK)
                                 ||
                                 !_keyComparer.Equals(currentFK, fk))
@@ -504,7 +508,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal ForeignKeyValueComparer(IEqualityComparer<CompositeKey> baseComparer)
             {
-                Contract.Requires(baseComparer != null);
+                DebugCheck.NotNull(baseComparer);
                 _baseComparer = baseComparer;
             }
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -27,7 +28,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         public override void Visit(DbParameterReferenceExpression expression)
         {
-            Debug.Assert(expression != null, "Command tree subexpressions should never be null");
+            Check.NotNull(expression, "expression");
 
             paramMappings[expression.ParameterName] = expression;
         }

@@ -11,7 +11,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -116,7 +115,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> The escaped string that can be used as pattern in a LIKE expression </returns>
         internal static string EscapeLikeText(string text, bool alwaysEscapeEscapeChar, out bool usedEscapeChar)
         {
-            Contract.Requires(text != null);
+            DebugCheck.NotNull(text);
 
             usedEscapeChar = false;
             if (!(text.Contains("%") || text.Contains("_") || text.Contains("[")
@@ -127,7 +126,10 @@ namespace System.Data.Entity.SqlServer
             var sb = new StringBuilder(text.Length);
             foreach (var c in text)
             {
-                if (c == '%' || c == '_' || c == '[' || c == '^'
+                if (c == '%'
+                    || c == '_'
+                    || c == '['
+                    || c == '^'
                     || c == LikeEscapeChar)
                 {
                     sb.Append(LikeEscapeChar);
@@ -143,8 +145,7 @@ namespace System.Data.Entity.SqlServer
         #region Overrides
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.  
-        /// 
+        ///     Providers should override this to return information specific to their provider.
         ///     This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
@@ -345,7 +346,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in EDM.
         /// </summary>
         /// <param name="storeType"> A TypeUsage encapsulating a store type and a set of facets </param>
@@ -354,6 +355,8 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
+            Check.NotNull(storeType, "storeType");
+
             var storeTypeName = storeType.EdmType.Name.ToLowerInvariant();
             if (!base.StoreTypeNameToEdmPrimitiveType.ContainsKey(storeTypeName))
             {
@@ -521,7 +524,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     This method takes a type and a set of facets and returns the best mapped equivalent type 
+        ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in SQL Server, taking the store version into consideration.
         /// </summary>
         /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
@@ -529,6 +532,7 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
         {
+            Check.NotNull(edmType, "edmType");
             Debug.Assert(edmType.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = edmType.EdmType as PrimitiveType;
@@ -765,6 +769,8 @@ namespace System.Data.Entity.SqlServer
         /// <returns> Equivalent to the argument, with the wildcard characters and the escape character escaped </returns>
         public override string EscapeLikeArgument(string argument)
         {
+            Check.NotNull(argument, "argument");
+
             bool usedEscapeCharacter;
             return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }

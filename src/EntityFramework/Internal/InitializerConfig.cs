@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Configuration;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal class InitializerConfig
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Internal
 
         public InitializerConfig(EntityFrameworkSection entityFrameworkSettings, KeyValueConfigurationCollection appSettings)
         {
-            Contract.Requires(entityFrameworkSettings != null);
-            Contract.Requires(appSettings != null);
+            DebugCheck.NotNull(entityFrameworkSettings);
+            DebugCheck.NotNull(appSettings);
 
             _entityFrameworkSettings = entityFrameworkSettings;
             _appSettings = appSettings;
@@ -37,11 +37,11 @@ namespace System.Data.Entity.Internal
             Func<object[]> initializerArgs,
             Func<object, object, string> exceptionMessage)
         {
-            Contract.Requires(requiredContextType != null);
-            Contract.Requires(contextTypeName != null);
-            Contract.Requires(initializerTypeName != null);
-            Contract.Requires(initializerArgs != null);
-            Contract.Requires(exceptionMessage != null);
+            DebugCheck.NotNull(requiredContextType);
+            DebugCheck.NotNull(contextTypeName);
+            DebugCheck.NotNull(initializerTypeName);
+            DebugCheck.NotNull(initializerArgs);
+            DebugCheck.NotNull(exceptionMessage);
 
             try
             {
@@ -71,27 +71,27 @@ namespace System.Data.Entity.Internal
 
         private object TryGetInitializerFromEntityFrameworkSection(Type contextType)
         {
-            Contract.Requires(contextType != null);
+            DebugCheck.NotNull(contextType);
 
             return _entityFrameworkSettings.Contexts
-                .OfType<ContextElement>()
-                .Where(
-                    e => e.IsDatabaseInitializationDisabled
-                         || !string.IsNullOrWhiteSpace(e.DatabaseInitializer.InitializerTypeName))
-                .Select(
-                    e => TryGetInitializer(
-                        contextType,
-                        e.ContextTypeName,
-                        e.DatabaseInitializer.InitializerTypeName ?? string.Empty,
-                        e.IsDatabaseInitializationDisabled,
-                        () => e.DatabaseInitializer.Parameters.GetTypedParameterValues(),
-                        Strings.Database_InitializeFromConfigFailed))
-                .FirstOrDefault(i => i != null);
+                                           .OfType<ContextElement>()
+                                           .Where(
+                                               e => e.IsDatabaseInitializationDisabled
+                                                    || !string.IsNullOrWhiteSpace(e.DatabaseInitializer.InitializerTypeName))
+                                           .Select(
+                                               e => TryGetInitializer(
+                                                   contextType,
+                                                   e.ContextTypeName,
+                                                   e.DatabaseInitializer.InitializerTypeName ?? string.Empty,
+                                                   e.IsDatabaseInitializationDisabled,
+                                                   () => e.DatabaseInitializer.Parameters.GetTypedParameterValues(),
+                                                   Strings.Database_InitializeFromConfigFailed))
+                                           .FirstOrDefault(i => i != null);
         }
 
         private object TryGetInitializerFromLegacyConfig(Type contextType)
         {
-            Contract.Requires(contextType != null);
+            DebugCheck.NotNull(contextType);
 
             foreach (var key in _appSettings.AllKeys.Where(k => k.StartsWith(ConfigKeyKey, StringComparison.OrdinalIgnoreCase)))
             {

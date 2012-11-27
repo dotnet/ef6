@@ -13,7 +13,7 @@
       BE AWARE THAT THE ORDER IN WHICH TYPES ARE DESCRIBED IN THE PROVIDER MANIFEST IS RELEVANT AND HAVE IMPACT IN LOOKUP
 PROCESS
       -->
-      
+
         <Type Name="tinyint" PrimitiveTypeKind="Byte"></Type>
         <Type Name="smallint" PrimitiveTypeKind="Int16"></Type>
         <Type Name="int" PrimitiveTypeKind="Int32"></Type>
@@ -264,7 +264,7 @@ PROCESS
         <!-- END AGGREGATES ############################################# -->
 
         <!-- BEGIN STRING FUNCTIONS ##################################### -->
-        
+
         <!-- ASCII( arg )  not supported -->
         <!-- CHAR( arg )  not supported-->
         <!-- CHARINDEX( strSearch, strTarget [, startLocation ] )
@@ -362,8 +362,8 @@ PROCESS
             <Parameter Name="strPattern" Type="String" Mode="In" />
             <Parameter Name="strTarget" Type="String" Mode="In" />
         </Function>
-      
-        <!-- QUOTENAME( character_string [,quote_character] ) not supported -->                
+
+        <!-- QUOTENAME( character_string [,quote_character] ) not supported -->
 
         <!-- REPLACE( strTarget, strSearch, strReplacement )
             strTarget: nchar, nvarchar, ntext
@@ -390,10 +390,10 @@ PROCESS
             <Parameter Name="strTarget" Type="String" Mode="In" />
             <Parameter Name="count" Type="Int32" Mode="In" />
         </Function>
-        
-        <!-- REVERSE( arg ) not supported -->    
+
+        <!-- REVERSE( arg ) not supported -->
         <!-- RIGHT( atr, count ) not supported -->
-                
+
         <!-- RTRIM( arg1 ) 
             str: nchar, nvarchar, ntext
             returns:  nvarchar, ntext
@@ -402,10 +402,10 @@ PROCESS
             <ReturnType Type="String" />
             <Parameter Name="str" Type="String" Mode="In" />
         </Function>
-        
-        <!-- SOUNDEX( arg ) not supported -->    
+
+        <!-- SOUNDEX( arg ) not supported -->
         <!-- SPACE( arg ) not supported -->
-            
+
         <!-- STR( number [,length [,decimal]] ) 
                 number: float
                 length: int
@@ -450,7 +450,7 @@ PROCESS
                 strReplacement: nvarchar, ntext
                 returns: nvarchar, ntext
         -->
-      
+
         <!-- pragyaa. ntext gives an error . Doc bug. -->
         <Function Name="STUFF" BuiltIn="true">
             <ReturnType Type="String" />
@@ -459,7 +459,7 @@ PROCESS
             <Parameter Name="length" Type="Int32" Mode="In" />
             <Parameter Name="strReplacement" Type="String" Mode="In" />
         </Function>
-      
+
         <!-- SUBSTRING( str, start, length )
                 str:  nchar, nvarchar, varbinary, ntext, image
                 start: int
@@ -488,7 +488,7 @@ PROCESS
             <ReturnType Type="Int32" />
             <Parameter Name="arg" Type="String" Mode="In" />
         </Function>
-      
+
         <!-- UPPER( arg ) 
                 str: nchar, nvarchar, ntext
                 returns: nvarchar, ntext   
@@ -498,7 +498,7 @@ PROCESS
             <ReturnType Type="String" />
             <Parameter Name="str" Type="String" Mode="In" />
         </Function>
-       
+
         <!-- END STRING FUNCTIONS ####################################### -->
 
         <!-- BEGIN MATH FUNCTIONS ####################################### -->
@@ -863,7 +863,7 @@ PROCESS
         </Function>
 
         <!-- SQUARE( arg ) not supported-->
-                
+
         <!-- TAN( arg )
                 arg: float
                 returns: float   
@@ -963,7 +963,7 @@ PROCESS
         </Function>
 
         <!-- DAY( date ) not supported -->
-            
+
         <!-- GETDATE()
             returns: datetime   
         -->
@@ -972,7 +972,7 @@ PROCESS
         </Function>
 
         <!-- SYSDATETIMEOFFSET() not supported -->
-        <!-- GETUTCDATE() not supported -->    
+        <!-- GETUTCDATE() not supported -->
         <!-- MONTH( date ) not supported -->
         <!-- YEAR( date )not supported -->
 
@@ -1031,7 +1031,7 @@ PROCESS
         <!-- USER_NAME() not supported -->
         <!-- ISdecimal( arg ) not supported -->
         <!-- ISDATE( arg ) not supported -->
-      
+
         <!-- END SYSTEM FUNCTIONS ####################################### -->
     </Functions>
 </ProviderManifest>

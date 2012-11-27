@@ -5,7 +5,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Serialization.Xml.Internal.Msl;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     public class MslSerializer
@@ -17,8 +17,8 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         public virtual bool Serialize(DbDatabaseMapping databaseMapping, XmlWriter xmlWriter)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(xmlWriter != null);
+            Check.NotNull(databaseMapping, "databaseMapping");
+            Check.NotNull(xmlWriter, "xmlWriter");
 
             var schemaWriter = new DbModelMslSchemaWriter(xmlWriter, databaseMapping.Model.Version);
 

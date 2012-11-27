@@ -4,13 +4,11 @@ namespace System.Data.Entity.Migrations.Sql
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Model;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     Common base class for providers that convert provider agnostic migration 
+    ///     Common base class for providers that convert provider agnostic migration
     ///     operations into database provider specific SQL commands.
     /// </summary>
-    [ContractClass(typeof(MigrationSqlGeneratorContracts))]
     public abstract class MigrationSqlGenerator
     {
         /// <summary>
@@ -21,22 +19,5 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> A list of SQL statements to be executed to perform the migration operations. </returns>
         public abstract IEnumerable<MigrationStatement> Generate(
             IEnumerable<MigrationOperation> migrationOperations, string providerManifestToken);
-
-        #region Contracts
-
-        [ContractClassFor(typeof(MigrationSqlGenerator))]
-        internal abstract class MigrationSqlGeneratorContracts : MigrationSqlGenerator
-        {
-            public override IEnumerable<MigrationStatement> Generate(
-                IEnumerable<MigrationOperation> migrationOperations, string providerManifestToken)
-            {
-                Contract.Requires(migrationOperations != null);
-                Contract.Requires(!string.IsNullOrWhiteSpace(providerManifestToken));
-
-                return default(IEnumerable<MigrationStatement>);
-            }
-        }
-
-        #endregion
     }
 }

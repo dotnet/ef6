@@ -4,7 +4,8 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     ///     Contains metadata for a property of a complex object or entity.
@@ -22,8 +23,12 @@ namespace System.Data.Entity.Internal
         /// <param name="declaringType"> The type that the property is declared on. </param>
         /// <param name="propertyType"> Type of the property. </param>
         /// <param name="propertyName"> The property name. </param>
-        /// <param name="isMapped"> if set to <c>true</c> the property is mapped in the EDM. </param>
-        /// <param name="isComplex"> if set to <c>true</c> the property is a complex property. </param>
+        /// <param name="isMapped">
+        ///     if set to <c>true</c> the property is mapped in the EDM.
+        /// </param>
+        /// <param name="isComplex">
+        ///     if set to <c>true</c> the property is a complex property.
+        /// </param>
         public PropertyEntryMetadata(
             Type declaringType, Type propertyType, string propertyName, bool isMapped, bool isComplex)
             : base(declaringType, propertyType, propertyName)
@@ -45,10 +50,10 @@ namespace System.Data.Entity.Internal
         public static PropertyEntryMetadata ValidateNameAndGetMetadata(
             InternalContext internalContext, Type declaringType, Type requestedType, string propertyName)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(declaringType != null);
-            Contract.Requires(requestedType != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(declaringType);
+            DebugCheck.NotNull(requestedType);
+            DebugCheck.NotEmpty(propertyName);
 
             Type propertyType;
             DbHelpers.GetPropertyTypes(declaringType).TryGetValue(propertyName, out propertyType);
@@ -79,9 +84,8 @@ namespace System.Data.Entity.Internal
                     }
                     else
                     {
-                        Contract.Assert(
-                            edmProperty.TypeUsage.EdmType is StructuralType,
-                            "Expected a structural type if property type is not primitive.");
+                        Debug.Assert(
+                            edmProperty.TypeUsage.EdmType is StructuralType, "Expected a structural type if property type is not primitive.");
 
                         var objectItemCollection =
                             (ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace);
@@ -102,8 +106,7 @@ namespace System.Data.Entity.Internal
                     return null;
                 }
 
-                Contract.Assert(
-                    propertyType != null, "If the property has a getter or setter, then it must exist and have a type.");
+                Debug.Assert(propertyType != null, "If the property has a getter or setter, then it must exist and have a type.");
             }
 
             if (!requestedType.IsAssignableFrom(propertyType))
@@ -143,7 +146,9 @@ namespace System.Data.Entity.Internal
         ///     That is, not whether or not this is a property on a complex object, but rather if the
         ///     property itself is a complex property.
         /// </summary>
-        /// <value> <c>true</c> if this instance is complex; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is complex; otherwise, <c>false</c> .
+        /// </value>
         public bool IsComplex
         {
             get { return _isComplex; }
@@ -161,7 +166,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether this instance is mapped in the EDM.
         /// </summary>
-        /// <value> <c>true</c> if this instance is mapped; otherwise, <c>false</c> . </value>
+        /// <value>
+        ///     <c>true</c> if this instance is mapped; otherwise, <c>false</c> .
+        /// </value>
         public bool IsMapped
         {
             get { return _isMapped; }

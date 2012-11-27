@@ -8,7 +8,7 @@
             Common Data Model Schema Definition Language.
         </xs:documentation>
     </xs:annotation>
-  
+
     <!-- Root Level element for CS Mapping -->
     <xs:element name="Mapping" type="csmsl:TMapping" />
 
@@ -34,8 +34,6 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
-
-
 
 
     <!-- Type for Alias Element-->
@@ -66,7 +64,7 @@
         <xs:attribute name="FunctionName" type="xs:string" use="required" />
         <xs:attribute name="FunctionImportName" type="csmsl:TSimpleIdentifier" use="required" />
     </xs:complexType>
-  
+
     <!-- Type for FunctionImport/ResultMapping element -->
     <xs:complexType name="TFunctionImportMappingResultMapping">
         <xs:choice>
@@ -82,7 +80,7 @@
         </xs:sequence>
         <xs:attribute name="TypeName" type="xs:string" use="required" />
     </xs:complexType>
-  
+
     <!-- Type for EntitySet Mapping element-->
     <xs:complexType name="TEntitySetMapping">
         <xs:choice>
@@ -134,7 +132,7 @@
         </xs:choice>
         <xs:attribute name="TypeName" type="xs:string" use="required" />
     </xs:complexType>
-  
+
     <!-- Type for MappingFragment Element-->
     <xs:complexType name="TMappingFragment">
         <xs:group ref="csmsl:TPropertyGroup" minOccurs="1" maxOccurs="1" />
@@ -150,7 +148,7 @@
             <xs:element minOccurs="0" maxOccurs="1" name="UpdateFunction" type="csmsl:TEntityTypeModificationFunctionWithResult" />
         </xs:all>
     </xs:complexType>
-  
+
     <!-- Type for AssociationSetMapping/ModificationFunctionMapping element -->
     <xs:complexType name="TAssociationSetModificationFunctionMapping">
         <xs:all>
@@ -241,7 +239,7 @@
         <xs:group ref="csmsl:TFunctionMappingComplexPropertyPropertyGroup" minOccurs="1" maxOccurs="1" />
         <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />
         <xs:attribute name="TypeName" type="xs:string" use="required" />
-    </xs:complexType>  
+    </xs:complexType>
 
     <!-- Grouping for result bindings in function mappings -->
     <xs:group name="TResultBindingGroup">
@@ -324,7 +322,7 @@
         <xs:attribute name="TypeName" type="xs:string" use="optional" />
         <xs:attribute name="IsPartial" type="xs:boolean" use="optional" />
     </xs:complexType>
-  
+
     <!-- Type for ScalarProperty Element-->
     <xs:complexType name="TScalarProperty">
         <xs:attribute name="Name" type="csmsl:TSimpleIdentifier" use="required" />

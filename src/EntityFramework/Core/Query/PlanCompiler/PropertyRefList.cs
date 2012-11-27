@@ -118,9 +118,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             get { return m_propertyReferences.Keys; }
         }
 
-        ///<summary>
-        ///</summary>
-        ///<returns> </returns>
+        /// <summary>
+        /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             var x = "{";

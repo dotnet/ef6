@@ -4,9 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
@@ -14,7 +12,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
@@ -22,8 +19,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     {
         public static void AddColumn(EntityType table, EdmProperty column)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(column);
 
             if (!table.Properties.Contains(column))
             {
@@ -43,8 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static EdmProperty RemoveColumn(EntityType table, EdmProperty column)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(column);
 
             if (!column.IsPrimaryKeyColumn)
             {
@@ -57,8 +54,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static EdmProperty IncludeColumn(
             EntityType table, EdmProperty templateColumn, bool useExisting)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(templateColumn != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(templateColumn);
 
             var existingColumn =
                 table.Properties.SingleOrDefault(c => string.Equals(c.Name, templateColumn.Name, StringComparison.Ordinal));
@@ -92,9 +89,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntityType toTable,
             bool isMappingAnyInheritedProperty)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
 
             if (fromTable != toTable)
             {
@@ -231,9 +228,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private static void MoveForeignKeyConstraint(
             EntityType fromTable, EntityType toTable, ForeignKeyBuilder fk)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(fk);
 
             fromTable.RemoveForeignKey(fk);
 
@@ -261,8 +258,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EdmModel database, EntityType toTable,
             ForeignKeyBuilder fk)
         {
-            Contract.Requires(toTable != null);
-            Contract.Requires(fk != null);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(fk);
 
             var newFk
                 = new ForeignKeyBuilder(
@@ -326,9 +323,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EdmModel database, EntityType fromTable, EntityType toTable,
             EdmProperty column)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(column);
 
             FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                 .ToArray()
@@ -338,8 +335,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void MoveAllDeclaredForeignKeyConstraintsForPrimaryKeyColumns(
             EntityType entityType, EntityType fromTable, EntityType toTable)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
 
             foreach (var column in fromTable.DeclaredKeyProperties)
             {
@@ -362,8 +359,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void CopyAllForeignKeyConstraintsForPrimaryKeyColumns(
             EdmModel database, EntityType fromTable, EntityType toTable)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
 
             foreach (var column in fromTable.DeclaredKeyProperties)
             {
@@ -386,9 +383,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void MoveAllForeignKeyConstraintsForColumn(
             EntityType fromTable, EntityType toTable, EdmProperty column)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(column);
 
             FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                 .ToArray()
@@ -397,8 +394,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static void RemoveAllForeignKeyConstraintsForColumn(EntityType table, EdmProperty column)
         {
-            Contract.Requires(table != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(table);
+            DebugCheck.NotNull(column);
 
             table.ForeignKeyBuilders
                  .Where(fk => fk.DependentColumns.Contains(column))
@@ -417,9 +414,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             bool useExisting,
             bool allowPkConstraintCopy)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(column);
 
             var movedColumn = column;
 
@@ -439,9 +436,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static EdmProperty MoveColumnAndAnyConstraints(
             EntityType fromTable, EntityType toTable, EdmProperty column, bool useExisting)
         {
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
-            Contract.Requires(column != null);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
+            DebugCheck.NotNull(column);
 
             var movedColumn = column;
 
@@ -557,9 +554,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntitySet toSet,
             bool useExistingColumns)
         {
-            Contract.Requires(associationSetMapping != null);
-            Contract.Requires(dependentMapping != null);
-            Contract.Requires(toSet != null);
+            DebugCheck.NotNull(associationSetMapping);
+            DebugCheck.NotNull(dependentMapping);
+            DebugCheck.NotNull(toSet);
 
             var toTable = toSet.ElementType;
 
@@ -587,10 +584,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntityType toTable,
             bool useExistingColumns)
         {
-            Contract.Requires(databaseMapping != null);
-            Contract.Requires(entityType != null);
-            Contract.Requires(fromTable != null);
-            Contract.Requires(toTable != null);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(fromTable);
+            DebugCheck.NotNull(toTable);
 
             foreach (
                 var associationSetMapping in
@@ -617,9 +614,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                               : associationSetMapping.TargetEndMapping;
 
                     MoveAssociationSetMappingDependents(
-                        associationSetMapping, 
-                        dependentMapping, 
-                        databaseMapping.Database.GetEntitySet(toTable), 
+                        associationSetMapping,
+                        dependentMapping,
+                        databaseMapping.Database.GetEntitySet(toTable),
                         useExistingColumns);
                 }
             }
@@ -635,9 +632,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntityType dependentTable,
             bool isSplitting)
         {
-            Contract.Requires(principalTable != null);
-            Contract.Requires(dependentTable != null);
-            Contract.Requires(entityType != null);
+            DebugCheck.NotNull(principalTable);
+            DebugCheck.NotNull(dependentTable);
+            DebugCheck.NotNull(entityType);
 
             var foreignKeyConstraintMetadata
                 = new ForeignKeyBuilder(

@@ -8,10 +8,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     public interface IEntityWithRelationships
     {
         /// <summary>
-        ///     The RelationshipManager property is used for elationship fixup.  
+        ///     The RelationshipManager property is used for elationship fixup.
         ///     Classes that expose relationships must implement this property
         ///     by constructing and setting RelationshipManager in their constructor.
-        ///     The implementation of this property should use the static method RelationshipManager.Create 
+        ///     The implementation of this property should use the static method RelationshipManager.Create
         ///     to create a new RelationshipManager when needed. Once created, it is expected that this
         ///     object will be stored on the entity and will be provided through this property.
         /// </summary>

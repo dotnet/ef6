@@ -259,13 +259,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Converts the query statement to a normalized and validated <see cref="DbExpression" />. 
+        ///     Converts the query statement to a normalized and validated <see cref="DbExpression" />.
         ///     This entry point to the semantic analysis phase is used when producing a
         ///     query command tree or producing only a <see cref="DbExpression" />.
         /// </summary>
         /// <param name="astStatement"> The query statement </param>
-        /// <param name="sr"> The <see cref="SemanticResolver" /> instance to use </param>
-        /// <returns> An instance of <see cref="DbExpression" /> , adjusted to handle 'inline' projections and validated to produce a result edmType appropriate for the root of a query command tree. </returns>
+        /// <param name="sr">
+        ///     The <see cref="SemanticResolver" /> instance to use
+        /// </param>
+        /// <returns>
+        ///     An instance of <see cref="DbExpression" /> , adjusted to handle 'inline' projections and validated to produce a result edmType appropriate for the root of a query command tree.
+        /// </returns>
         private static DbExpression ConvertQueryStatementToDbExpression(
             Statement astStatement, SemanticResolver sr, out List<FunctionDefinition> functionDefs)
         {
@@ -907,8 +911,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     If methodExpr.Expr is in the form of "Name1.Name2(...)" then ignore entity containers during resolution of the left expression 
-        ///     in the context of the invocation: "EntityContainer.EntitySet(...)" is not a valid expression and it should not shadow 
+        ///     If methodExpr.Expr is in the form of "Name1.Name2(...)" then ignore entity containers during resolution of the left expression
+        ///     in the context of the invocation: "EntityContainer.EntitySet(...)" is not a valid expression and it should not shadow
         ///     a potentially valid interpretation as "Namespace.EntityType/Function(...)".
         /// </summary>
         private static IDisposable ConvertMethodExpr_TryEnterIgnoreEntityContainerNameResolution(DotExpr leftExpr, SemanticResolver sr)
@@ -928,7 +932,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private static IDisposable ConvertMethodExpr_TryEnterV1ViewGenBackwardCompatibilityResolution(DotExpr leftExpr, SemanticResolver sr)
         {
-            if (leftExpr != null && leftExpr.Left is Identifier
+            if (leftExpr != null
+                && leftExpr.Left is Identifier
                 &&
                 (sr.ParserOptions.ParserCompilationMode == ParserOptions.CompilationMode.RestrictedViewGenerationMode ||
                  sr.ParserOptions.ParserCompilationMode == ParserOptions.CompilationMode.UserViewGenerationMode))
@@ -1021,7 +1026,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Ensure edmType has a contructor.
             //
-            if (!TypeSemantics.IsComplexType(metadataType.TypeUsage) &&
+            if (!TypeSemantics.IsComplexType(metadataType.TypeUsage)
+                &&
                 !TypeSemantics.IsEntityType(metadataType.TypeUsage)
                 &&
                 !TypeSemantics.IsRelationshipType(metadataType.TypeUsage))
@@ -1741,10 +1747,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             else
             {
                 var toEndCandidates = relationshipType.Members.Select(m => (RelationshipEndMember)m)
-                    .Where(
-                        e => TypeSemantics.IsStructurallyEqualOrPromotableTo(refType, e.TypeUsage.EdmType) &&
-                             (e.RelationshipMultiplicity == RelationshipMultiplicity.One ||
-                              e.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne)).ToArray();
+                                                      .Where(
+                                                          e =>
+                                                          TypeSemantics.IsStructurallyEqualOrPromotableTo(refType, e.TypeUsage.EdmType) &&
+                                                          (e.RelationshipMultiplicity == RelationshipMultiplicity.One ||
+                                                           e.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne)).ToArray();
                 switch (toEndCandidates.Length)
                 {
                     case 1:
@@ -1795,9 +1802,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             else
             {
                 var fromEndCandidates = relationshipType.Members.Select(m => (RelationshipEndMember)m)
-                    .Where(
-                        e => TypeSemantics.IsStructurallyEqualOrPromotableTo(driverEntityType.GetReferenceType(), e.TypeUsage.EdmType) &&
-                             !e.EdmEquals(toEnd)).ToArray();
+                                                        .Where(
+                                                            e =>
+                                                            TypeSemantics.IsStructurallyEqualOrPromotableTo(
+                                                                driverEntityType.GetReferenceType(), e.TypeUsage.EdmType) &&
+                                                            !e.EdmEquals(toEnd)).ToArray();
                 switch (fromEndCandidates.Length)
                 {
                     case 1:
@@ -1920,9 +1929,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             else
             {
                 var fromEndCandidates = relationshipType.Members.Select(m => (RelationshipEndMember)m)
-                    .Where(
-                        e => TypeSemantics.IsStructurallyEqualOrPromotableTo(sourceRefType, e.TypeUsage.EdmType) &&
-                             (toEnd == null || !e.EdmEquals(toEnd))).ToArray();
+                                                        .Where(
+                                                            e =>
+                                                            TypeSemantics.IsStructurallyEqualOrPromotableTo(
+                                                                sourceRefType, e.TypeUsage.EdmType) &&
+                                                            (toEnd == null || !e.EdmEquals(toEnd))).ToArray();
                 switch (fromEndCandidates.Length)
                 {
                     case 1:
@@ -1947,7 +1958,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (toEnd == null)
             {
                 var toEndCandidates = relationshipType.Members.Select(m => (RelationshipEndMember)m)
-                    .Where(e => !e.EdmEquals(fromEnd)).ToArray();
+                                                      .Where(e => !e.EdmEquals(fromEnd)).ToArray();
                 switch (toEndCandidates.Length)
                 {
                     case 1:
@@ -4189,11 +4200,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     projectionItems.AddRange(
                         sr.CurrentScopeRegion.GroupAggregateInfos
-                            .Where(groupAggregateInfo => groupAggregateInfo.AggregateKind == GroupAggregateKind.Function)
-                            .Select(
-                                groupAggregateInfo => new KeyValuePair<string, DbExpression>(
-                                                          groupAggregateInfo.AggregateName,
-                                                          groupBinding.Variable.Property(groupAggregateInfo.AggregateName))));
+                          .Where(groupAggregateInfo => groupAggregateInfo.AggregateKind == GroupAggregateKind.Function)
+                          .Select(
+                              groupAggregateInfo => new KeyValuePair<string, DbExpression>(
+                                                        groupAggregateInfo.AggregateName,
+                                                        groupBinding.Variable.Property(groupAggregateInfo.AggregateName))));
 
                     DbExpression projectExpression = DbExpressionBuilder.NewRow(projectionItems);
                     groupBinding = groupBinding.Project(projectExpression).BindAs(sr.GenerateInternalName("groupPartitionDefs"));
@@ -4428,8 +4439,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             internal readonly string Name;
 
             /// <summary>
-            ///     Optional alternative name of the group key. 
-            ///     Used to support the following scenario: 
+            ///     Optional alternative name of the group key.
+            ///     Used to support the following scenario:
             ///     SELECT Price, p.Price   FROM ... as p GROUP BY p.Price
             ///     In this case the group key Name is "Price" and the AlternativeName is "p.Price" as if it is coming as an escaped identifier.
             /// </summary>

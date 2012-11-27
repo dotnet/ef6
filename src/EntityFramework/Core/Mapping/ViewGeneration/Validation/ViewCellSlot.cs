@@ -16,8 +16,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     {
         // effects: 
         /// <summary>
-        ///     Creates a view cell slot that corresponds to <paramref name="slotNum" /> in some cell. The <paramref name="cSlot" /> and <paramref
-        ///      name="sSlot" /> represent the
+        ///     Creates a view cell slot that corresponds to <paramref name="slotNum" /> in some cell. The <paramref name="cSlot" /> and
+        ///     <paramref
+        ///         name="sSlot" />
+        ///     represent the
         ///     slots in the left and right queries of the view cell.
         /// </summary>
         internal ViewCellSlot(int slotNum, MemberProjectedSlot cSlot, MemberProjectedSlot sSlot)

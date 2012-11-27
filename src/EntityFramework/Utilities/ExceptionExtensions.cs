@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Core;
-    using System.Diagnostics.Contracts;
     using System.Security;
     using System.Threading;
 
@@ -11,7 +10,7 @@ namespace System.Data.Entity.Utilities
     {
         public static bool IsCatchableExceptionType(this Exception e)
         {
-            Contract.Requires(e != null);
+            DebugCheck.NotNull(e);
 
             // a 'catchable' exception is defined by what it is not.
             var type = e.GetType();
@@ -26,7 +25,7 @@ namespace System.Data.Entity.Utilities
 
         public static bool IsCatchableEntityExceptionType(this Exception e)
         {
-            Contract.Requires(e != null);
+            DebugCheck.NotNull(e);
 
             var type = e.GetType();
 

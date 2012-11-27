@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // check if this method has the FunctionAttribute (known proxy)
                 var functionAttribute = linq.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false)
-                    .Cast<DbFunctionAttribute>().FirstOrDefault();
+                                            .Cast<DbFunctionAttribute>().FirstOrDefault();
                 if (null != functionAttribute)
                 {
                     return _functionCallTranslator.TranslateFunctionCall(parent, linq, functionAttribute);
@@ -147,8 +147,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Tries to get a translator for the given method info.  
-            ///     If the given method info corresponds to a Visual Basic property, 
+            ///     Tries to get a translator for the given method info.
+            ///     If the given method info corresponds to a Visual Basic property,
             ///     it also initializes the Visual Basic translators if they have not been initialized
             /// </summary>
             /// <param name="methodInfo"> </param>
@@ -684,8 +684,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Recursively rewrite the argument expression to unwrap any "structured" set sources 
-                ///     using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping 
+                ///     Recursively rewrite the argument expression to unwrap any "structured" set sources
+                ///     using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
                 ///     and EntityCollection as argument types to functions.
                 ///     NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
                 /// </summary>
@@ -756,7 +756,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 /// <summary>
                 ///     Removes casts where possible, for example Cast from a Reference type to Object type
-                ///     Handles nested converts recursively. Removing no-op casts is required to prevent the 
+                ///     Handles nested converts recursively. Removing no-op casts is required to prevent the
                 ///     expression converter from complaining.
                 /// </summary>
                 /// <param name="functionArg"> </param>
@@ -780,7 +780,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Checks if the return type specified by the call expression matches that expected by the 
+                ///     Checks if the return type specified by the call expression matches that expected by the
                 ///     function definition. Performs a recursive check in case of Collection type.
                 /// </summary>
                 /// <param name="result"> DbFunctionExpression for the function definition </param>
@@ -1192,7 +1192,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     ExpressionConverter parent, MethodCallExpression call, CqtExpression patternExpression, CqtExpression inputExpression)
                 {
                     DbExpression indexOfExpression = parent.CreateCanonicalFunction(IndexOf, call, patternExpression, inputExpression)
-                        .Equal(DbExpressionBuilder.Constant(1));
+                                                           .Equal(DbExpressionBuilder.Constant(1));
                     return indexOfExpression;
                 }
             }
@@ -1232,7 +1232,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                     DbExpression indexOfExpression = parent.CreateCanonicalFunction(
                         IndexOf, call, reversePatternExpression, reverseInputExpression)
-                        .Equal(DbExpressionBuilder.Constant(1));
+                                                           .Equal(DbExpressionBuilder.Constant(1));
                     return indexOfExpression;
                 }
             }
@@ -1271,7 +1271,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     if (call.Arguments.Count == 1)
                     {
                         length = parent.CreateCanonicalFunction(Length, call, target)
-                            .Minus(arg1);
+                                       .Minus(arg1);
                     }
                     else
                     {
@@ -1337,7 +1337,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         // Length(this) - (arg1 + arg2)
                         CqtExpression substringLength =
                             parent.CreateCanonicalFunction(Length, call, thisString)
-                                .Minus(arg1.Plus(arg2));
+                                  .Minus(arg1.Plus(arg2));
 
                         // Substring(this, substringStartIndex, substringLenght)
                         CqtExpression secondSubstring =
@@ -1412,7 +1412,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             thisString,
                             arg1.Plus(DbExpressionBuilder.Constant(1)),
                             parent.CreateCanonicalFunction(Length, call, thisString)
-                                .Minus(arg1));
+                                  .Minus(arg1));
 
                     // result = Concat( Concat (firstSubstring, value), secondSubstring )
                     var arg2 = parent.TranslateExpression(call.Arguments[1]);
@@ -1454,7 +1454,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     //Length(value) = 0
                     CqtExpression emptyStringExpression =
                         parent.CreateCanonicalFunction(Length, call, value)
-                            .Equal(DbExpressionBuilder.Constant(0));
+                              .Equal(DbExpressionBuilder.Constant(0));
 
                     CqtExpression result = isNullExpression.Or(emptyStringExpression);
                     return result;
@@ -2706,7 +2706,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     return
                         sourceBinding.Filter(
                             parent.CreateEqualsExpression(sourceBinding.Variable, value, pattern, sourceArgumentType, valueExpression.Type))
-                            .Exists();
+                                     .Exists();
                 }
             }
 
@@ -3133,7 +3133,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     //    rightProject = (select loj
                     //                    from {1} left outer join x.lojRightInput as loj on true)
                     // loj comes from the right side of the left outer join.
-                    if (rightProjectProjection.Instance != rightProject.Input.Variable ||
+                    if (rightProjectProjection.Instance != rightProject.Input.Variable
+                        ||
                         rightProjectProjection.Property.Name != loj.Right.VariableName
                         ||
                         loj.JoinCondition.ExpressionKind != DbExpressionKind.Constant)

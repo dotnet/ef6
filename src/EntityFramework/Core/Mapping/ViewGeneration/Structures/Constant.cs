@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal abstract bool IsUndefined();
 
         /// <summary>
-        ///     Returns true if this constant contains not null. 
+        ///     Returns true if this constant contains not null.
         ///     Implemented in <see cref="NegatedConstant" /> class, all other implementations return false.
         /// </summary>
         internal abstract bool HasNotNull();

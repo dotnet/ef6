@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     An abstract base type for types that implement the IExpressionVisitor interface to derive from.
@@ -20,10 +20,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbUnaryExpression to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         protected virtual void VisitUnaryExpression(DbUnaryExpression expression)
         {
-            Contract.Requires(expression != null);
+            Check.NotNull(expression, "expression");
 
             VisitExpression(expression.Argument);
         }
@@ -34,10 +35,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbBinaryExpression to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         protected virtual void VisitBinaryExpression(DbBinaryExpression expression)
         {
-            Contract.Requires(expression != null);
+            Check.NotNull(expression, "expression");
 
             VisitExpression(expression.Left);
             VisitExpression(expression.Right);
@@ -49,10 +51,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="binding"> The DbExpressionBinding to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="binding" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         protected virtual void VisitExpressionBindingPre(DbExpressionBinding binding)
         {
-            Contract.Requires(binding != null);
+            Check.NotNull(binding, "binding");
             VisitExpression(binding.Expression);
         }
 
@@ -70,10 +73,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="binding"> The DbGroupExpressionBinding to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="binding" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         protected virtual void VisitGroupExpressionBindingPre(DbGroupExpressionBinding binding)
         {
-            Contract.Requires(binding != null);
+            Check.NotNull(binding, "binding");
             VisitExpression(binding.Expression);
         }
 
@@ -99,10 +103,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="lambda"> The DbLambda that is about to be visited </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="lambda" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         protected virtual void VisitLambdaPre(DbLambda lambda)
         {
-            Contract.Requires(lambda != null);
+            Check.NotNull(lambda, "lambda");
         }
 
         /// <summary>
@@ -123,11 +128,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The expression to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public virtual void VisitExpression(DbExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            Contract.Requires(expression != null);
+            Check.NotNull(expression, "expression");
             expression.Accept(this);
         }
 
@@ -137,10 +143,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expressionList"> The list of expressions to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expressionList" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public virtual void VisitExpressionList(IList<DbExpression> expressionList)
         {
-            Contract.Requires(expressionList != null);
+            Check.NotNull(expressionList, "expressionList");
             for (var idx = 0; idx < expressionList.Count; idx++)
             {
                 VisitExpression(expressionList[idx]);
@@ -153,10 +160,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="aggregates"> The list of aggregates to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="aggregates" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public virtual void VisitAggregateList(IList<DbAggregate> aggregates)
         {
-            Contract.Requires(aggregates != null);
+            Check.NotNull(aggregates, "aggregates");
             for (var idx = 0; idx < aggregates.Count; idx++)
             {
                 VisitAggregate(aggregates[idx]);
@@ -169,11 +177,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="aggregate"> The aggregate to visit. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="aggregate" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public virtual void VisitAggregate(DbAggregate aggregate)
         {
             // #433613: PreSharp warning 56506: Parameter 'aggregate' to this public method must be validated: A null-dereference can occur here.
-            Contract.Requires(aggregate != null);
+            Check.NotNull(aggregate, "aggregate");
             VisitExpressionList(aggregate.Arguments);
         }
 
@@ -200,12 +209,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The expression </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
-        /// <exception cref="NotSupportedException">Always thrown if this method is called, since it indicates that
+        ///     is null
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        ///     Always thrown if this method is called, since it indicates that
         ///     <paramref name="expression" />
-        ///     is of an unsupported type</exception>
+        ///     is of an unsupported type
+        /// </exception>
         public override void Visit(DbExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
@@ -215,9 +229,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbConstantExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbConstantExpression expression)
         {
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -226,9 +242,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbNullExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbNullExpression expression)
         {
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -237,9 +255,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbVariableReferenceExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbVariableReferenceExpression expression)
         {
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -248,9 +268,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbParameterReferenceExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbParameterReferenceExpression expression)
         {
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -259,9 +281,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbFunctionExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbFunctionExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionList(expression.Arguments);
         }
 
@@ -271,9 +296,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbLambdaExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbLambdaExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionList(expression.Arguments);
 
             VisitLambdaPre(expression.Lambda);
@@ -287,9 +315,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbPropertyExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbPropertyExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             if (expression.Instance != null)
             {
                 VisitExpression(expression.Instance);
@@ -302,9 +333,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbComparisonExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbComparisonExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -314,9 +348,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbLikeExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbLikeExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpression(expression.Argument);
             VisitExpression(expression.Pattern);
             VisitExpression(expression.Escape);
@@ -328,9 +365,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbLimitExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbLimitExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpression(expression.Argument);
             VisitExpression(expression.Limit);
         }
@@ -341,9 +381,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbIsNullExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbIsNullExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -353,9 +396,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbArithmeticExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbArithmeticExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionList(expression.Arguments);
         }
 
@@ -365,9 +411,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbAndExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbAndExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -377,9 +426,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbOrExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbOrExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -389,9 +441,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbNotExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbNotExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -401,9 +456,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbDistinctExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbDistinctExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -413,9 +471,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbElementExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbElementExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -425,9 +486,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbIsEmptyExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbIsEmptyExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -437,9 +501,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbUnionAllExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbUnionAllExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -449,9 +516,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbIntersectExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbIntersectExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -461,9 +531,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbExceptExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbExceptExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitBinaryExpression(expression);
         }
 
@@ -473,9 +546,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbOfTypeExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbOfTypeExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -485,9 +561,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbTreatExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbTreatExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -497,9 +576,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbCastExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbCastExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -509,9 +591,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbIsOfExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbIsOfExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -521,9 +606,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbCaseExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbCaseExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionList(expression.When);
             VisitExpressionList(expression.Then);
             VisitExpression(expression.Else);
@@ -535,9 +623,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbNewInstanceExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbNewInstanceExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionList(expression.Arguments);
             if (expression.HasRelatedEntityReferences)
             {
@@ -554,9 +645,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbRefExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbRefExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -566,9 +660,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbRelationshipNavigationExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbRelationshipNavigationExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpression(expression.NavigationSource);
         }
 
@@ -578,9 +675,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DeRefExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbDerefExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -590,9 +690,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbRefKeyExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbRefKeyExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -602,9 +705,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbEntityRefExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbEntityRefExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitUnaryExpression(expression);
         }
 
@@ -614,9 +720,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbScanExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbScanExpression expression)
         {
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -625,9 +733,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbFilterExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbFilterExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Predicate);
             VisitExpressionBindingPost(expression.Input);
@@ -639,9 +750,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbProjectExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbProjectExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Projection);
             VisitExpressionBindingPost(expression.Input);
@@ -653,9 +767,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbCrossJoinExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbCrossJoinExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             foreach (var b in expression.Inputs)
             {
                 VisitExpressionBindingPre(b);
@@ -673,9 +790,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbJoinExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbJoinExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Left);
             VisitExpressionBindingPre(expression.Right);
 
@@ -691,9 +811,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbApplyExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbApplyExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
 
             // #433613: PreSharp warning 56506: Parameter 'expression.Apply' to this public method must be validated: A null-dereference can occur here.
@@ -711,9 +834,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbGroupByExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitGroupExpressionBindingPre(expression.Input);
             VisitExpressionList(expression.Keys);
             VisitGroupExpressionBindingMid(expression.Input);
@@ -727,9 +853,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbSkipExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbSkipExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
             foreach (var sortKey in expression.SortOrder)
             {
@@ -745,9 +874,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbSortExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbSortExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
             for (var idx = 0; idx < expression.SortOrder.Count; idx++)
             {
@@ -762,9 +894,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbQuantifierExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbQuantifierExpression expression)
         {
+            Check.NotNull(expression, "expression");
+
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Predicate);
             VisitExpressionBindingPost(expression.Input);

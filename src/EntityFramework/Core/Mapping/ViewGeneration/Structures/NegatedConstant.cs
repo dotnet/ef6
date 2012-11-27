@@ -19,7 +19,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     Creates a negated constant with the <paramref name="values" /> in it.
         /// </summary>
-        /// <param name="values"> must have no <see cref=" NegatedConstant" /> items </param>
+        /// <param name="values">
+        ///     must have no <see cref=" NegatedConstant" /> items
+        /// </param>
         internal NegatedConstant(IEnumerable<Constant> values)
         {
             Debug.Assert(!values.Any(v => v is NegatedConstant), "Negated constant values must not contain another negated constant.");

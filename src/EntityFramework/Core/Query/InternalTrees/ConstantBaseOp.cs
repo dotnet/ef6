@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Two CostantBaseOps are equivalent if they are of the same 
+        ///     Two CostantBaseOps are equivalent if they are of the same
         ///     derived type and have the same type and value.
         /// </summary>
         /// <param name="other"> the other Op </param>

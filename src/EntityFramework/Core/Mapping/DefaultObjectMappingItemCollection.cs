@@ -5,21 +5,21 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
 
     /// <summary>
     ///     The class creates a default OCMapping between a TypeMetadata in O space
-    ///     and an TypeMetadata in Edm space. The loader expects that for each member in 
+    ///     and an TypeMetadata in Edm space. The loader expects that for each member in
     ///     C space type there exists a member in O space type that has the same name. The member maps will be stored in
     ///     C space member order.
     /// </summary>
     internal class DefaultObjectMappingItemCollection : MappingItemCollection
     {
         /// <summary>
-        ///     Constrcutor to create an instance of DefaultObjectMappingItemCollection.
+        ///     Constructor to create an instance of DefaultObjectMappingItemCollection.
         ///     To start with we will create a Schema under which maps will be created.
         /// </summary>
         /// <param name="edmCollection"> </param>
@@ -29,8 +29,9 @@ namespace System.Data.Entity.Core.Mapping
             ObjectItemCollection objectCollection)
             : base(DataSpace.OCSpace)
         {
-            Contract.Requires(edmCollection != null);
-            Contract.Requires(objectCollection != null);
+            DebugCheck.NotNull(edmCollection);
+            DebugCheck.NotNull(objectCollection);
+
             m_edmCollection = edmCollection;
             m_objectCollection = objectCollection;
             LoadPrimitiveMaps();
@@ -221,7 +222,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method creates a default mapping between two TypeMetadatas - one in 
+        ///     The method creates a default mapping between two TypeMetadatas - one in
         ///     C space and one in O space. The precondition for calling this method is that
         ///     the type in Object space contains the members with the same name as those of defined in
         ///     C space. It is not required the otherway.
@@ -369,7 +370,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     checks if the schemaKey refers to the primitive OC mapping schema and if true, 
+        ///     checks if the schemaKey refers to the primitive OC mapping schema and if true,
         ///     loads the maps between primitive types
         /// </summary>
         /// <returns> returns the loaded schema if the schema key refers to a primitive schema </returns>
@@ -397,7 +398,8 @@ namespace System.Data.Entity.Core.Mapping
             //there should be only one map
             if (clrTypeIndexes.ContainsKey(clrName))
             {
-                if (BuiltInTypeKind.PrimitiveType != objectMap.ClrType.BuiltInTypeKind &&
+                if (BuiltInTypeKind.PrimitiveType != objectMap.ClrType.BuiltInTypeKind
+                    &&
                     BuiltInTypeKind.RowType != objectMap.ClrType.BuiltInTypeKind
                     &&
                     BuiltInTypeKind.CollectionType != objectMap.ClrType.BuiltInTypeKind)
@@ -411,7 +413,8 @@ namespace System.Data.Entity.Core.Mapping
             }
             if (cdmTypeIndexes.ContainsKey(cdmName))
             {
-                if (BuiltInTypeKind.PrimitiveType != objectMap.EdmType.BuiltInTypeKind &&
+                if (BuiltInTypeKind.PrimitiveType != objectMap.EdmType.BuiltInTypeKind
+                    &&
                     BuiltInTypeKind.RowType != objectMap.EdmType.BuiltInTypeKind
                     &&
                     BuiltInTypeKind.CollectionType != objectMap.EdmType.BuiltInTypeKind)
@@ -429,7 +432,7 @@ namespace System.Data.Entity.Core.Mapping
 
         /// <summary>
         ///     The method fills up the children of ObjectMapping. It goes through the
-        ///     members in CDM type and finds the member in Object space with the same name 
+        ///     members in CDM type and finds the member in Object space with the same name
         ///     and creates a member map between them. These member maps are added
         ///     as children of the object mapping.
         /// </summary>
@@ -599,7 +602,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validates the scalar property on the cspace side and ospace side and creates a new 
+        ///     Validates the scalar property on the cspace side and ospace side and creates a new
         ///     ObjectPropertyMapping, if everything maps property
         /// </summary>
         /// <param name="edmProperty"> </param>
@@ -741,7 +744,7 @@ namespace System.Data.Entity.Core.Mapping
                 edmEnumType.Members.OrderBy(m => Convert.ToInt64(m.Value, CultureInfo.InvariantCulture)).ThenBy(m => m.Name).GetEnumerator();
             var objectEnumTypeMembersSortedEnumerator =
                 objectEnumType.Members.OrderBy(m => Convert.ToInt64(m.Value, CultureInfo.InvariantCulture)).ThenBy(m => m.Name).
-                    GetEnumerator();
+                               GetEnumerator();
 
             if (edmEnumTypeMembersSortedEnumerator.MoveNext())
             {

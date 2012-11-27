@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     Represents a provider specific SQL statement to be executed directly against the target database.
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Migrations.Model
         public SqlOperation(string sql, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
+            Check.NotEmpty(sql, "sql");
 
             _sql = sql;
         }

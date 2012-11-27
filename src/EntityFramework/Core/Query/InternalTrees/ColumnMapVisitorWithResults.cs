@@ -3,8 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Basic Visitor Design Pattern support for ColumnMap hierarchy; 
-    /// 
+    ///     Basic Visitor Design Pattern support for ColumnMap hierarchy;
     ///     This visitor class allows you to return results; it's useful for operations
     ///     that copy or manipulate the hierarchy.
     /// </summary>

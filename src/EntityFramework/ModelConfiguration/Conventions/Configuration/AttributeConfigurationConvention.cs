@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -15,7 +15,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <typeparam name="TMemberInfo"> The type of member to look for. </typeparam>
     /// <typeparam name="TConfiguration"> The type of the configuration to look for. </typeparam>
     /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
-    [ContractClass(typeof(AttributeConfigurationConventionContracts<,,>))]
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]
     public abstract class AttributeConfigurationConvention<TMemberInfo, TConfiguration, TAttribute>
         : IConfigurationConvention<TMemberInfo, TConfiguration>
@@ -32,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private AttributeConfigurationConvention(AttributeProvider attributeProvider)
         {
-            Contract.Requires(attributeProvider != null);
+            DebugCheck.NotNull(attributeProvider);
 
             _attributeProvider = attributeProvider;
         }
@@ -42,29 +41,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         void IConfigurationConvention<TMemberInfo, TConfiguration>.Apply(
             TMemberInfo memberInfo, Func<TConfiguration> configuration)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+
             foreach (var attribute in _attributeProvider.GetAttributes(memberInfo).OfType<TAttribute>())
             {
                 Apply(memberInfo, configuration(), attribute);
             }
         }
     }
-
-    #region Base Member Contracts
-
-    [ContractClassFor(typeof(AttributeConfigurationConvention<,,>))]
-    internal abstract class AttributeConfigurationConventionContracts<TMemberInfo, TConfiguration, TAttribute>
-        : AttributeConfigurationConvention<TMemberInfo, TConfiguration, TAttribute>
-        where TMemberInfo : MemberInfo
-        where TConfiguration : ConfigurationBase
-        where TAttribute : Attribute
-    {
-        public override void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute)
-        {
-            Contract.Requires(memberInfo != null);
-            Contract.Requires(configuration != null);
-            Contract.Requires(attribute != null);
-        }
-    }
-
-    #endregion
 }

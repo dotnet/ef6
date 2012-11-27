@@ -7,56 +7,47 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
 
-    ///<summary>
-    ///    This interface is implemented by any object that can resolve a dependency, either directly
-    ///    or through use of an external container.
-    ///</summary>
-    ///<remarks>
-    ///    Note that multiple threads may call into the same IDbDependencyResolver instance which means
-    ///    that implementations of this interface must be either immutable or thread-safe.
-    /// 
-    ///    The public services currently resolved using IDbDependencyResolver are:
-    /// 
-    ///    <see cref="IDatabaseInitializer{TContext}" />
-    ///    Object returned: A database initializer for the given context type
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    /// 
-    ///    <see cref="MigrationSqlGenerator" />
-    ///    Object returned: A SQL generator that can be used for Migrations and other actions that cause a database to be created
-    ///    Lifetime of returned service: Transient—a new object should be returned each time GetService is called
-    ///    Key is the ADO.NET provider invariant name string
-    /// 
-    ///    <see cref="DbProviderServices" />
-    ///    Object returned: An EF provider
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is the ADO.NET provider invariant name string
-    /// 
-    ///    <see cref="IDbConnectionFactory" />
-    ///    Object returned: The default connection factory that will be used when EF creates a database connection by convention
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    ///
-    ///    <see cref="IManifestTokenService" />
-    ///    Object returned: A service that can generated a provider manifest token from a connection
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    /// 
-    ///    <see cref="IDbProviderFactoryService" />
-    ///    Object returned: A service that can obtain a provider factory from a given connection
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    /// 
-    ///    <see cref="IDbModelCacheKeyFactory" />
-    ///    Object returned: A factory that will generate a model cache key for a given context
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    /// 
-    ///    <see cref="DbSpatialServices" />
-    ///    Object returned: an EF spatial provider
-    ///    Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///    Key is not used; will be null
-    ///</remarks>
+    /// <summary>
+    ///     This interface is implemented by any object that can resolve a dependency, either directly
+    ///     or through use of an external container.
+    /// </summary>
+    /// <remarks>
+    ///     Note that multiple threads may call into the same IDbDependencyResolver instance which means
+    ///     that implementations of this interface must be either immutable or thread-safe.
+    ///     The public services currently resolved using IDbDependencyResolver are:
+    ///     <see cref="IDatabaseInitializer{TContext}" />
+    ///     Object returned: A database initializer for the given context type
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    ///     <see cref="MigrationSqlGenerator" />
+    ///     Object returned: A SQL generator that can be used for Migrations and other actions that cause a database to be created
+    ///     Lifetime of returned service: Transient—a new object should be returned each time GetService is called
+    ///     Key is the ADO.NET provider invariant name string
+    ///     <see cref="DbProviderServices" />
+    ///     Object returned: An EF provider
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is the ADO.NET provider invariant name string
+    ///     <see cref="IDbConnectionFactory" />
+    ///     Object returned: The default connection factory that will be used when EF creates a database connection by convention
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    ///     <see cref="IManifestTokenService" />
+    ///     Object returned: A service that can generated a provider manifest token from a connection
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    ///     <see cref="IDbProviderFactoryService" />
+    ///     Object returned: A service that can obtain a provider factory from a given connection
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    ///     <see cref="IDbModelCacheKeyFactory" />
+    ///     Object returned: A factory that will generate a model cache key for a given context
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    ///     <see cref="DbSpatialServices" />
+    ///     Object returned: an EF spatial provider
+    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Key is not used; will be null
+    /// </remarks>
     public interface IDbDependencyResolver
     {
         /// <summary>

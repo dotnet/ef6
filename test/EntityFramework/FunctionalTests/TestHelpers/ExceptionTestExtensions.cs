@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
@@ -14,8 +15,8 @@ namespace System.Data.Entity
             string expectedResourceKey,
             params object[] parameters)
         {
-            Contract.Requires(exception != null);
-            Contract.Requires(expectedResourceKey != null);
+            Debug.Assert(exception != null);
+            Debug.Assert(expectedResourceKey != null);
 
             ValidateMessage(exception, TestBase.EntityFrameworkAssembly, expectedResourceKey, null, parameters);
         }
@@ -27,9 +28,9 @@ namespace System.Data.Entity
             string resourceTable = null,
             params object[] parameters)
         {
-            Contract.Requires(exception != null);
-            Contract.Requires(resourceAssembly != null);
-            Contract.Requires(expectedResourceKey != null);
+            Debug.Assert(exception != null);
+            Debug.Assert(resourceAssembly != null);
+            Debug.Assert(expectedResourceKey != null);
 
             if (resourceTable == null
                 && resourceAssembly == TestBase.EntityFrameworkAssembly)

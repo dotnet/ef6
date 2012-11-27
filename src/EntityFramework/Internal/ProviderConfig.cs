@@ -9,7 +9,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
 
@@ -23,14 +22,14 @@ namespace System.Data.Entity.Internal
 
         public ProviderConfig(EntityFrameworkSection entityFrameworkSettings)
         {
-            Contract.Requires(entityFrameworkSettings != null);
+            DebugCheck.NotNull(entityFrameworkSettings);
 
             _entityFrameworkSettings = entityFrameworkSettings;
         }
 
         public virtual DbProviderServices TryGetDbProviderServices(string providerInvariantName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+            DebugCheck.NotEmpty(providerInvariantName);
 
             var providerElement = TryGetProviderElement(providerInvariantName);
 
@@ -41,7 +40,7 @@ namespace System.Data.Entity.Internal
 
         public virtual Func<MigrationSqlGenerator> TryGetMigrationSqlGeneratorFactory(string providerInvariantName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariantName));
+            DebugCheck.NotEmpty(providerInvariantName);
 
             var providerElement = TryGetProviderElement(providerInvariantName);
 
@@ -98,9 +97,9 @@ namespace System.Data.Entity.Internal
         private ProviderElement TryGetProviderElement(string providerInvariantName)
         {
             return _entityFrameworkSettings.Providers
-                .OfType<ProviderElement>()
-                .FirstOrDefault(
-                    e => providerInvariantName.Equals(e.InvariantName, StringComparison.OrdinalIgnoreCase));
+                                           .OfType<ProviderElement>()
+                                           .FirstOrDefault(
+                                               e => providerInvariantName.Equals(e.InvariantName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

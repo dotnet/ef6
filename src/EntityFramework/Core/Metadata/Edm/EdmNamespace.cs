@@ -17,8 +17,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly List<EnumType> enumTypesList = new List<EnumType>();
 
         /// <summary>
-        ///     Gets all <see cref="EdmType" /> s declared within the namspace. Includes <see cref="AssociationType" /> s, <see
-        ///      cref="ComplexType" /> s, <see cref="EntityType" /> s.
+        ///     Gets all <see cref="EdmType" /> s declared within the namspace. Includes <see cref="AssociationType" /> s,
+        ///     <see
+        ///         cref="ComplexType" />
+        ///     s, <see cref="EntityType" /> s.
         /// </summary>
         public IEnumerable<EdmType> NamespaceItems
         {

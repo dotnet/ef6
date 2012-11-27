@@ -4,16 +4,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
 
     /// <summary>
@@ -29,8 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal NotNullConditionConfiguration(
             EntityMappingConfiguration entityMapConfiguration, PropertyPath propertyPath)
         {
-            Contract.Requires(entityMapConfiguration != null);
-            Contract.Requires(propertyPath != null);
+            DebugCheck.NotNull(entityMapConfiguration);
+            DebugCheck.NotNull(propertyPath);
 
             _entityMappingConfiguration = entityMapConfiguration;
             PropertyPath = propertyPath;
@@ -38,8 +36,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private NotNullConditionConfiguration(EntityMappingConfiguration owner, NotNullConditionConfiguration source)
         {
-            Contract.Requires(source != null);
-            Contract.Requires(owner != null);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(owner);
 
             _entityMappingConfiguration = owner;
             PropertyPath = source.PropertyPath;
@@ -52,8 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         ///     Configures the condition to require a value in the property.
-        /// 
-        ///     Rows that do not have a value assigned to column that this property is stored in are 
+        ///     Rows that do not have a value assigned to column that this property is stored in are
         ///     assumed to be of the base type of this entity type.
         /// </summary>
         public void HasValue()
@@ -64,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal void Configure(
             DbDatabaseMapping databaseMapping, StorageMappingFragment fragment, EntityType entityType)
         {
-            Contract.Requires(fragment != null);
+            DebugCheck.NotNull(fragment);
 
             var edmPropertyPath = EntityMappingConfiguration.PropertyPathToEdmPropertyPath(PropertyPath, entityType);
 
@@ -75,9 +72,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var column
                 = fragment.ColumnMappings
-                    .Where(pm => pm.PropertyPath.SequenceEqual(edmPropertyPath.Single()))
-                    .Select(pm => pm.ColumnProperty)
-                    .SingleOrDefault();
+                          .Where(pm => pm.PropertyPath.SequenceEqual(edmPropertyPath.Single()))
+                          .Select(pm => pm.ColumnProperty)
+                          .SingleOrDefault();
 
             if (column == null
                 || !fragment.Table.Properties.Contains(column))

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Base class for simple column maps; can be either a VarRefColumnMap or 
+    ///     Base class for simple column maps; can be either a VarRefColumnMap or
     ///     ScalarColumnMap; the former is used pretty much throughout the PlanCompiler,
     ///     while the latter will only be used once we generate the final Plan.
     /// </summary>

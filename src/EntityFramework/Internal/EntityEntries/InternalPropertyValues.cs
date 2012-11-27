@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -33,11 +33,13 @@ namespace System.Data.Entity.Internal
         /// </summary>
         /// <param name="internalContext"> The internal context with which the entity of complex object is associated. </param>
         /// <param name="type"> The type of the entity or complex object. </param>
-        /// <param name="isEntityValues"> If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object. </param>
+        /// <param name="isEntityValues">
+        ///     If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.
+        /// </param>
         protected InternalPropertyValues(InternalContext internalContext, Type type, bool isEntityValues)
         {
-            Contract.Requires(internalContext != null);
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(internalContext);
+            DebugCheck.NotNull(type);
 
             _internalContext = internalContext;
             _type = type;
@@ -130,7 +132,7 @@ namespace System.Data.Entity.Internal
         /// <param name="value"> The object to read values from. </param>
         public void SetValues(object value)
         {
-            Contract.Requires(value != null);
+            DebugCheck.NotNull(value);
 
             var getters = DbHelpers.GetPropertyGetters(value.GetType());
 
@@ -186,7 +188,7 @@ namespace System.Data.Entity.Internal
         /// <param name="values"> The dictionary to read values from. </param>
         public void SetValues(InternalPropertyValues values)
         {
-            Contract.Requires(values != null);
+            DebugCheck.NotNull(values);
 
             // Setting values from a derived type is allowed, but setting values from a base type is not.
             if (!_type.IsAssignableFrom(values.ObjectType))
@@ -222,13 +224,13 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+                DebugCheck.NotEmpty(propertyName);
 
                 return GetItem(propertyName).Value;
             }
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+                DebugCheck.NotEmpty(propertyName);
 
                 var asPropertyValues = value as DbPropertyValues;
                 if (asPropertyValues != null)
@@ -324,7 +326,9 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Gets a value indicating whether the object for this dictionary is an entity or a complex object.
         /// </summary>
-        /// <value> <c>true</c> if this this is a dictionary for an entity; <c>false</c> if it is a dictionary for a complex object. </value>
+        /// <value>
+        ///     <c>true</c> if this this is a dictionary for an entity; <c>false</c> if it is a dictionary for a complex object.
+        /// </value>
         public bool IsEntityValues
         {
             get { return _isEntityValues; }

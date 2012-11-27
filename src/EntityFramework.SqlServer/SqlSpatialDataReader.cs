@@ -102,9 +102,7 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>
         ///     Builds and compiles the Expression equivalent of the following:
-        ///   
         ///     (BinaryReader r) => { var result = new SpatialType(); result.Read(r); return r; }
-        ///   
         ///     The construct/read pattern is preferred over casting the result of calling GetValue on the DataReader,
         ///     because constructing the value directly allows client code to specify the type, rather than SqlClient using
         ///     the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.

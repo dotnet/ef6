@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal void AddType(EdmType type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             m_entityTypes.Add(type.FullName, type);
         }
@@ -119,14 +119,14 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal void AddIsOfType(EdmType type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             m_isOfEntityTypes.Add(type.FullName, type);
         }
 
         internal void RemoveIsOfType(EdmType type)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             m_isOfEntityTypes.Remove(type.FullName);
         }

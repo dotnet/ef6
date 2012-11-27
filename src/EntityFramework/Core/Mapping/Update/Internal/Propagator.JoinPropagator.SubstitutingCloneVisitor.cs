@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     internal partial class Propagator
     {
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     PropagatorResult placeholder, CompositeKey key,
                     CompositeKey placeholderKey, PopulateMode mode)
                 {
-                    Contract.Requires(placeholder != null);
-                    Contract.Requires(key != null);
-                    Contract.Requires(placeholderKey != null);
+                    DebugCheck.NotNull(placeholder);
+                    DebugCheck.NotNull(key);
+                    DebugCheck.NotNull(placeholderKey);
 
                     // Figure out which flags to apply to generated elements.
                     var isNull = mode == PopulateMode.NullModified || mode == PopulateMode.NullPreserve;

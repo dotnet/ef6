@@ -2,7 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -52,9 +53,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
                 Util.ThrowIfReadOnly(this);
-                Contract.Assert(ElementType.SourceEnd != null);
+                Debug.Assert(ElementType.SourceEnd != null);
 
                 var associationSetEnd = new AssociationSetEnd(value, this, ElementType.SourceEnd);
 
@@ -81,10 +82,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             set
             {
-                Contract.Requires(value != null);
+                DebugCheck.NotNull(value);
                 Util.ThrowIfReadOnly(this);
-                Contract.Assert(AssociationSetEnds.Any());
-                Contract.Assert(ElementType.TargetEnd != null);
+                Debug.Assert(AssociationSetEnds.Any());
+                Debug.Assert(ElementType.TargetEnd != null);
 
                 var associationSetEnd = new AssociationSetEnd(value, this, ElementType.TargetEnd);
 

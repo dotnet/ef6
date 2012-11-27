@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
@@ -98,8 +98,8 @@ namespace System.Data.Entity.Core
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityKey(string qualifiedEntitySetName, IEnumerable<KeyValuePair<string, object>> entityKeyValues)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
-            Contract.Requires(entityKeyValues != null);
+            Check.NotEmpty(qualifiedEntitySetName, "qualifiedEntitySetName");
+            Check.NotNull(entityKeyValues, "entityKeyValues");
 
             InitializeEntitySetName(qualifiedEntitySetName);
             InitializeKeyValues(entityKeyValues);
@@ -115,8 +115,8 @@ namespace System.Data.Entity.Core
         /// <param name="entityKeyValues"> The key-value pairs that identify the entity </param>
         public EntityKey(string qualifiedEntitySetName, IEnumerable<EntityKeyMember> entityKeyValues)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
-            Contract.Requires(entityKeyValues != null);
+            Check.NotEmpty(qualifiedEntitySetName, "qualifiedEntitySetName");
+            Check.NotNull(entityKeyValues, "entityKeyValues");
 
             InitializeEntitySetName(qualifiedEntitySetName);
             InitializeKeyValues(new KeyValueReader(entityKeyValues));
@@ -133,9 +133,9 @@ namespace System.Data.Entity.Core
         /// <param name="keyValue"> The key value that identifies the entity </param>
         public EntityKey(string qualifiedEntitySetName, string keyName, object keyValue)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
-            Contract.Requires(!string.IsNullOrWhiteSpace(keyName));
-            Contract.Requires(keyValue != null);
+            Check.NotEmpty(qualifiedEntitySetName, "qualifiedEntitySetName");
+            Check.NotEmpty(keyName, "keyName");
+            Check.NotNull(keyValue, "keyValue");
 
             InitializeEntitySetName(qualifiedEntitySetName);
 
@@ -159,11 +159,11 @@ namespace System.Data.Entity.Core
         /// <param name="record"> an IExtendedDataRecord that represents the entity </param>
         internal EntityKey(EntitySet entitySet, IExtendedDataRecord record)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entitySet.Name != null);
-            Contract.Requires(entitySet.EntityContainer != null);
-            Contract.Requires(entitySet.EntityContainer.Name != null);
-            Contract.Requires(record != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entitySet.Name);
+            DebugCheck.NotNull(entitySet.EntityContainer);
+            DebugCheck.NotNull(entitySet.EntityContainer.Name);
+            DebugCheck.NotNull(record);
 
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core
         /// <param name="record"> an IExtendedDataRecord that represents the entity </param>
         internal EntityKey(string qualifiedEntitySetName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
+            DebugCheck.NotEmpty(qualifiedEntitySetName);
 
             InitializeEntitySetName(qualifiedEntitySetName);
 
@@ -195,8 +195,8 @@ namespace System.Data.Entity.Core
         /// <param name="entitySet"> EntitySet of the entity </param>
         internal EntityKey(EntitySetBase entitySet)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entitySet.EntityContainer != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entitySet.EntityContainer);
 
             _entitySetName = entitySet.Name;
             _entityContainerName = entitySet.EntityContainer.Name;
@@ -214,9 +214,9 @@ namespace System.Data.Entity.Core
         /// <param name="singletonKeyValue"> The single value that composes the entity's key, assumed to contain the correct type. </param>
         internal EntityKey(EntitySetBase entitySet, object singletonKeyValue)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entitySet.EntityContainer != null);
-            Contract.Requires(singletonKeyValue != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entitySet.EntityContainer);
+            DebugCheck.NotNull(singletonKeyValue);
 
             _singletonKeyValue = singletonKeyValue;
             _entitySetName = entitySet.Name;
@@ -236,9 +236,9 @@ namespace System.Data.Entity.Core
         /// <param name="compositeKeyValues"> A list of the values (at least 2) that compose the entity's key, assumed to contain correct types. </param>
         internal EntityKey(EntitySetBase entitySet, object[] compositeKeyValues)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(entitySet.EntityContainer != null);
-            Contract.Requires(compositeKeyValues != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entitySet.EntityContainer);
+            DebugCheck.NotNull(compositeKeyValues);
 
             _compositeKeyValues = compositeKeyValues;
             _entitySetName = entitySet.Name;
@@ -386,7 +386,7 @@ namespace System.Data.Entity.Core
         /// <exception cref="ArgumentException">the entity set could not be located in the workspace</exception>
         public EntitySet GetEntitySet(MetadataWorkspace metadataWorkspace)
         {
-            Contract.Requires(metadataWorkspace != null);
+            Check.NotNull(metadataWorkspace, "metadataWorkspace");
             if (String.IsNullOrEmpty(_entityContainerName)
                 || String.IsNullOrEmpty(_entitySetName))
             {
@@ -600,7 +600,8 @@ namespace System.Data.Entity.Core
                 // temporary keys are compared by CLR reference, and we've already
                 // checked reference equality.
                 // If the first key is a composite key and the second one isn't, they're not equal.
-                if (null != key1._compositeKeyValues && null != key2._compositeKeyValues
+                if (null != key1._compositeKeyValues
+                    && null != key2._compositeKeyValues
                     && key1._compositeKeyValues.Length == key2._compositeKeyValues.Length)
                 {
                     if (key1._containsByteArray)
@@ -759,7 +760,7 @@ namespace System.Data.Entity.Core
                     new[]
                         {
                             Helper.GetModelTypeUsage(singletonKeyMember).Constant(_singletonKeyValue)
-                                .As(singletonKeyMember.Name)
+                                  .As(singletonKeyMember.Name)
                         };
             }
             else
@@ -825,10 +826,11 @@ namespace System.Data.Entity.Core
 
         internal void InitializeEntitySetName(string qualifiedEntitySetName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(qualifiedEntitySetName));
+            DebugCheck.NotEmpty(qualifiedEntitySetName);
 
             var result = qualifiedEntitySetName.Split('.');
-            if (result.Length != 2 || string.IsNullOrWhiteSpace(result[0])
+            if (result.Length != 2
+                || string.IsNullOrWhiteSpace(result[0])
                 || string.IsNullOrWhiteSpace(result[1]))
             {
                 throw new ArgumentException(Strings.EntityKey_InvalidQualifiedEntitySetName, "qualifiedEntitySetName");
@@ -856,7 +858,7 @@ namespace System.Data.Entity.Core
             bool allowNullKeys = false,
             bool tokenizeStrings = false)
         {
-            Contract.Requires(entityKeyValues != null);
+            DebugCheck.NotNull(entityKeyValues);
 
             var numExpectedKeyValues = entityKeyValues.Count();
             if (numExpectedKeyValues == 1)
@@ -901,30 +903,30 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Validates the record parameter passed to the EntityKey constructor, 
-        ///     and converts the data into the form required by EntityKey.  For singleton keys, 
+        ///     Validates the record parameter passed to the EntityKey constructor,
+        ///     and converts the data into the form required by EntityKey.  For singleton keys,
         ///     this is a single object.  For composite keys, this is an object array.
         /// </summary>
         /// <param name="entitySet"> the entity set metadata object which this key refers to </param>
         /// <param name="record"> the parameter to validate </param>
         private void InitializeKeyValues(EntitySet entitySet, IExtendedDataRecord record)
         {
-            Contract.Requires(entitySet != null);
-            Contract.Requires(record != null);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(record);
 
             // Note that this method is only called when constructing keys from internal code
             // paths such as the materializer and therefore uses Asserts to check conditions
             // that will be compiled out of the retail build.
 
             var numExpectedKeyValues = entitySet.ElementType.KeyMembers.Count;
-            Contract.Assert(numExpectedKeyValues > 0);
+            Debug.Assert(numExpectedKeyValues > 0);
 
             _keyNames = entitySet.ElementType.KeyMemberNames;
 
-            Contract.Assert(record.DataRecordInfo.RecordType.EdmType is EntityType);
+            Debug.Assert(record.DataRecordInfo.RecordType.EdmType is EntityType);
             var entityType = (EntityType)record.DataRecordInfo.RecordType.EdmType;
 
-            Contract.Assert(entitySet.ElementType.IsAssignableFrom(entityType));
+            Debug.Assert(entitySet.ElementType.IsAssignableFrom(entityType));
 
             if (numExpectedKeyValues == 1)
             {
@@ -1161,36 +1163,36 @@ namespace System.Data.Entity.Core
         {
             if (_singletonKeyValue != null)
             {
-                Contract.Assert(!isTemporary);
-                Contract.Assert(_compositeKeyValues == null);
+                Debug.Assert(!isTemporary);
+                Debug.Assert(_compositeKeyValues == null);
                 if (entitySet != null)
                 {
-                    Contract.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == 1);
+                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == 1);
                 }
             }
             else if (_compositeKeyValues != null)
             {
-                Contract.Assert(!isTemporary);
+                Debug.Assert(!isTemporary);
                 if (entitySet != null)
                 {
-                    Contract.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count > 1);
-                    Contract.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == _compositeKeyValues.Length);
+                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count > 1);
+                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == _compositeKeyValues.Length);
                 }
                 for (var i = 0; i < _compositeKeyValues.Length; ++i)
                 {
-                    Contract.Assert(_compositeKeyValues[i] != null);
+                    Debug.Assert(_compositeKeyValues[i] != null);
                 }
             }
             else if (!IsTemporary)
             {
                 // one of our static keys
-                Contract.Assert(EntityKeyValues == null);
-                Contract.Assert(EntityContainerName == null);
-                Contract.Assert(EntitySetName != null);
+                Debug.Assert(EntityKeyValues == null);
+                Debug.Assert(EntityContainerName == null);
+                Debug.Assert(EntitySetName != null);
             }
             else
             {
-                Contract.Assert(EntityKeyValues == null);
+                Debug.Assert(EntityKeyValues == null);
             }
         }
 

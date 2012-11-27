@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static Type GetDelegateType(IEnumerable<Type> inputTypes, Type returnType)
         {
-            Contract.Requires(returnType != null);
+            DebugCheck.NotNull(returnType);
 
             // Determine Func<> type (generic args are the input parameter types plus the return type)
             inputTypes = inputTypes ?? Enumerable.Empty<Type>();
@@ -191,7 +191,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private static Type FindIEnumerable(Type seqType)
         {
             // Ignores "terminal" primitive types in the EDM although they may implement IEnumerable<>
-            if (seqType == null || seqType == typeof(string)
+            if (seqType == null
+                || seqType == typeof(string)
                 || seqType == typeof(byte[]))
             {
                 return null;
@@ -264,14 +265,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
             genericTypeArguments = null;
 
             // check requirements for a match
-            if (null == test || null == match || !match.IsInterface || !match.IsGenericTypeDefinition
+            if (null == test
+                || null == match
+                || !match.IsInterface
+                || !match.IsGenericTypeDefinition
                 || null == test.DeclaringType)
             {
                 return false;
             }
 
             // we might be looking at the interface implementation directly
-            if (test.DeclaringType.IsInterface && test.DeclaringType.IsGenericType
+            if (test.DeclaringType.IsInterface
+                && test.DeclaringType.IsGenericType
                 && test.DeclaringType.GetGenericTypeDefinition() == match)
             {
                 return true;

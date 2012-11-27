@@ -5,7 +5,6 @@ namespace CmdLine
     using System;
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Console.Resources;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -171,7 +170,10 @@ namespace CmdLine
 
         public static char PromptKey(string prompt, params char[] allowedKeys)
         {
-            Contract.Requires(allowedKeys != null);
+            if (allowedKeys == null)
+            {
+                throw new ArgumentNullException("allowedKeys");
+            }
 
             char keyChar;
             bool validKey;

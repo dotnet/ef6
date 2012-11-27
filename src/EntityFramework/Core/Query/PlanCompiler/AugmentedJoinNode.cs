@@ -5,13 +5,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    ///<summary>
-    ///    Additional information for a JoinNode 
-    ///    AugmentedJoinNode - represents all joins (cross-joins, leftouter, fullouter
-    ///    and innerjoins). This class represents a number of column equijoin conditions
-    ///    via the LeftVars and RightVars properties, and also keeps track of additional
-    ///    (non-equijoin column) join predicates
-    ///</summary>
+    /// <summary>
+    ///     Additional information for a JoinNode
+    ///     AugmentedJoinNode - represents all joins (cross-joins, leftouter, fullouter
+    ///     and innerjoins). This class represents a number of column equijoin conditions
+    ///     via the LeftVars and RightVars properties, and also keeps track of additional
+    ///     (non-equijoin column) join predicates
+    /// </summary>
     internal sealed class AugmentedJoinNode : AugmentedNode
     {
         #region private state

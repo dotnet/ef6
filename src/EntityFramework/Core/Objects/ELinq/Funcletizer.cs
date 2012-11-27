@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ParameterExpression rootContextParameter,
             ReadOnlyCollection<ParameterExpression> compiledQueryParameters)
         {
-            Contract.Requires(rootContext != null);
-            Contract.Requires(rootContextParameter != null);
-            Contract.Requires(compiledQueryParameters != null);
+            DebugCheck.NotNull(rootContext);
+            DebugCheck.NotNull(rootContextParameter);
+            DebugCheck.NotNull(compiledQueryParameters);
 
             return new Funcletizer(Mode.CompiledQueryEvaluation, rootContext, rootContextParameter, compiledQueryParameters);
         }
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static Funcletizer CreateQueryFuncletizer(ObjectContext rootContext)
         {
-            Contract.Requires(rootContext != null);
+            DebugCheck.NotNull(rootContext);
 
             return new Funcletizer(Mode.ConventionalQuery, rootContext, null, null);
         }
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         internal Expression Funcletize(Expression expression, out Func<bool> recompileRequired)
         {
-            Contract.Requires(expression != null);
+            DebugCheck.NotNull(expression);
 
             // Find all candidates for funcletization. Some sub-expressions are reduced to constants,
             // others are reduced to variables. The rules vary based on the _mode.
@@ -164,12 +164,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Returns a function indicating whether the given expression and all of its children satisfy the 
+        ///     Returns a function indicating whether the given expression and all of its children satisfy the
         ///     'localCriterion'.
         /// </summary>
         private static Func<Expression, bool> Nominate(Expression expression, Func<Expression, bool> localCriterion)
         {
-            Contract.Requires(localCriterion != null);
+            DebugCheck.NotNull(localCriterion);
             var candidates = new HashSet<Expression>();
             var cannotBeNominated = false;
             Func<Expression, Func<Expression, Expression>, Expression> visit = (exp, baseVisit) =>
@@ -208,7 +208,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the node may be evaluated locally and whether 
+        ///     Determines whether the node may be evaluated locally and whether
         ///     it is a constant. Assumes that all children are also client expressions.
         /// </summary>
         private bool IsImmutable(Expression expression)
@@ -244,7 +244,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the node may be evaluated locally and whether 
+        ///     Determines whether the node may be evaluated locally and whether
         ///     it is a variable. Assumes that all children are also variable client expressions.
         /// </summary>
         private bool IsClosureExpression(Expression expression)
@@ -300,7 +300,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private bool TryGetTypeUsageForTerminal(Type type, out TypeUsage typeUsage)
         {
-            Contract.Requires(type != null);
+            DebugCheck.NotNull(type);
 
             if (_rootContext.Perspective.TryGetTypeByName(
                 TypeSystem.GetNonNullableType(type).FullName,
@@ -346,9 +346,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Func<Expression, bool> isClientConstant,
                 Func<Expression, bool> isClientVariable)
             {
-                Contract.Requires(funcletizer != null);
-                Contract.Requires(isClientConstant != null);
-                Contract.Requires(isClientVariable != null);
+                DebugCheck.NotNull(funcletizer);
+                DebugCheck.NotNull(isClientConstant);
+                DebugCheck.NotNull(isClientVariable);
 
                 _funcletizer = funcletizer;
                 _isClientConstant = isClientConstant;
@@ -574,7 +574,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             /// </summary>
             private Expression InlineObjectQuery(ObjectQuery inlineQuery, Type expressionType)
             {
-                Contract.Requires(inlineQuery != null);
+                DebugCheck.NotNull(inlineQuery);
 
                 Expression queryExpression;
                 if (_funcletizer._mode

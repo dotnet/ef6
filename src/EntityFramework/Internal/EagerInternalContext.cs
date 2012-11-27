@@ -7,11 +7,11 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
-    ///     An <see cref="EagerInternalContext" /> is an <see cref="InternalContext" /> where the <see cref="ObjectContext" /> 
+    ///     An <see cref="EagerInternalContext" /> is an <see cref="InternalContext" /> where the <see cref="ObjectContext" />
     ///     instance that it wraps is set immediately at construction time rather than being created lazily. In this case
     ///     the internal context may or may not own the <see cref="ObjectContext" /> instance but will only dispose it
     ///     if it does own it.
@@ -37,12 +37,16 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Constructs an <see cref="EagerInternalContext" /> for an already existing <see cref="ObjectContext" />.
         /// </summary>
-        /// <param name="owner"> The owner <see cref="DbContext" /> . </param>
-        /// <param name="objectContext"> The existing <see cref="ObjectContext" /> . </param>
+        /// <param name="owner">
+        ///     The owner <see cref="DbContext" /> .
+        /// </param>
+        /// <param name="objectContext">
+        ///     The existing <see cref="ObjectContext" /> .
+        /// </param>
         public EagerInternalContext(DbContext owner, ObjectContext objectContext, bool objectContextOwned)
             : base(owner)
         {
-            Contract.Requires(objectContext != null);
+            DebugCheck.NotNull(objectContext);
 
             _objectContext = objectContext;
             _objectContextOwned = objectContextOwned;
@@ -189,6 +193,8 @@ namespace System.Data.Entity.Internal
         /// <inheritdoc />
         public override void OverrideConnection(IInternalConnection connection)
         {
+            DebugCheck.NotNull(connection);
+
             throw Error.EagerInternalContext_CannotSetConnectionInfo();
         }
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -19,11 +20,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType principalEntityType,
             EdmProperty principalKeyProperty)
         {
+            Check.NotNull(associationType, "associationType");
+            Check.NotNull(dependentAssociationEnd, "dependentAssociationEnd");
+            Check.NotNull(dependentProperty, "dependentProperty");
+            Check.NotNull(principalEntityType, "principalEntityType");
+            Check.NotNull(principalKeyProperty, "principalKeyProperty");
+
             var otherEnd = associationType.GetOtherEnd(dependentAssociationEnd);
 
             var navigationProperty
                 = dependentAssociationEnd.GetEntityType().NavigationProperties
-                    .SingleOrDefault(n => n.ResultEnd == otherEnd);
+                                         .SingleOrDefault(n => n.ResultEnd == otherEnd);
 
             if (navigationProperty == null)
             {

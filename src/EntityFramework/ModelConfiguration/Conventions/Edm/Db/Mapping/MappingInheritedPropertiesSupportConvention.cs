@@ -3,9 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Edm.Internal;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
@@ -19,28 +17,30 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         public void Apply(DbDatabaseMapping databaseMapping)
         {
+            Check.NotNull(databaseMapping, "databaseMapping");
+
             databaseMapping.EntityContainerMappings
-                .SelectMany(ecm => ecm.EntitySetMappings)
-                .Each(
-                    esm =>
-                        {
-                            foreach (var etm in esm.EntityTypeMappings)
-                            {
-                                if (RemapsInheritedProperties(databaseMapping, etm)
-                                    && HasBaseWithIsTypeOf(esm, etm.EntityType))
-                                {
-                                    throw Error.UnsupportedHybridInheritanceMapping(etm.EntityType.Name);
-                                }
-                            }
-                        });
+                           .SelectMany(ecm => ecm.EntitySetMappings)
+                           .Each(
+                               esm =>
+                                   {
+                                       foreach (var etm in esm.EntityTypeMappings)
+                                       {
+                                           if (RemapsInheritedProperties(databaseMapping, etm)
+                                               && HasBaseWithIsTypeOf(esm, etm.EntityType))
+                                           {
+                                               throw Error.UnsupportedHybridInheritanceMapping(etm.EntityType.Name);
+                                           }
+                                       }
+                                   });
         }
 
         private static bool RemapsInheritedProperties(
             DbDatabaseMapping databaseMapping, StorageEntityTypeMapping entityTypeMapping)
         {
             var inheritedProperties = entityTypeMapping.EntityType.Properties
-                .Except(entityTypeMapping.EntityType.DeclaredProperties)
-                .Except(entityTypeMapping.EntityType.GetKeyProperties());
+                                                       .Except(entityTypeMapping.EntityType.DeclaredProperties)
+                                                       .Except(entityTypeMapping.EntityType.GetKeyProperties());
 
             foreach (var property in inheritedProperties)
             {
@@ -53,10 +53,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     while (baseType != null)
                     {
                         if (databaseMapping.GetEntityTypeMappings(baseType)
-                            .Select(baseTypeMapping => GetFragmentForPropertyMapping(baseTypeMapping, property))
-                            .Any(
-                                baseFragment => baseFragment != null
-                                                && baseFragment.Table != fragment.Table))
+                                           .Select(baseTypeMapping => GetFragmentForPropertyMapping(baseTypeMapping, property))
+                                           .Any(
+                                               baseFragment => baseFragment != null
+                                                               && baseFragment.Table != fragment.Table))
                         {
                             return true;
                         }
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             StorageEntityTypeMapping entityTypeMapping, EdmProperty property)
         {
             return entityTypeMapping.MappingFragments
-                .SingleOrDefault(tmf => tmf.ColumnMappings.Any(pm => pm.PropertyPath.Last() == property));
+                                    .SingleOrDefault(tmf => tmf.ColumnMappings.Any(pm => pm.PropertyPath.Last() == property));
         }
 
         private static bool HasBaseWithIsTypeOf(StorageEntitySetMapping entitySetMapping, EntityType entityType)
@@ -81,8 +81,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             while (baseType != null)
             {
                 if (entitySetMapping.EntityTypeMappings
-                    .Where(etm => etm.EntityType == baseType)
-                    .Any(etm => etm.IsHierarchyMapping))
+                                    .Where(etm => etm.EntityType == baseType)
+                                    .Any(etm => etm.IsHierarchyMapping))
                 {
                     return true;
                 }

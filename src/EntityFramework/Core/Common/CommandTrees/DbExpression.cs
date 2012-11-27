@@ -63,18 +63,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public abstract void Accept(DbExpressionVisitor visitor);
 
         /// <summary>
         ///     The visitor pattern interface method for expression visitors that produce a result value of a specific type.
         /// </summary>
         /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType"> The type of the result produced by <paramref name="visitor" /> </typeparam>
+        /// <typeparam name="TResultType">
+        ///     The type of the result produced by <paramref name="visitor" />
+        /// </typeparam>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
-        /// <returns> An instance of <typeparamref name="TResultType" /> . </returns>
+        ///     is null
+        /// </exception>
+        /// <returns>
+        ///     An instance of <typeparamref name="TResultType" /> .
+        /// </returns>
         public abstract TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor);
 
         #region Equals / GetHashCode
@@ -104,7 +110,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified binary value, which may be <c>null</c>
         /// </summary>
         /// <param name="value"> The binary value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified binary value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified binary value
+        /// </returns>
         public static DbExpression FromBinary(byte[] value)
         {
             if (null == value)
@@ -123,7 +131,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) Boolean value
         /// </summary>
         /// <param name="value"> The Boolean value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Boolean value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Boolean value
+        /// </returns>
         public static DbExpression FromBoolean(bool? value)
         {
             if (!value.HasValue)
@@ -142,7 +152,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) byte value
         /// </summary>
         /// <param name="value"> The byte value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified byte value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified byte value
+        /// </returns>
         public static DbExpression FromByte(byte? value)
         {
             if (!value.HasValue)
@@ -161,7 +173,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) <see cref="DateTime" /> value
         /// </summary>
         /// <param name="value"> The DateTime value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified DateTime value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified DateTime value
+        /// </returns>
         public static DbExpression FromDateTime(DateTime? value)
         {
             if (!value.HasValue)
@@ -180,7 +194,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) <see cref="DateTimeOffset" /> value
         /// </summary>
         /// <param name="value"> The DateTimeOffset value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified DateTimeOffset value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified DateTimeOffset value
+        /// </returns>
         public static DbExpression FromDateTimeOffset(DateTimeOffset? value)
         {
             if (!value.HasValue)
@@ -199,7 +215,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) decimal value
         /// </summary>
         /// <param name="value"> The decimal value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified decimal value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified decimal value
+        /// </returns>
         public static DbExpression FromDecimal(decimal? value)
         {
             if (!value.HasValue)
@@ -218,7 +236,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) double value
         /// </summary>
         /// <param name="value"> The double value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified double value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified double value
+        /// </returns>
         public static DbExpression FromDouble(double? value)
         {
             if (!value.HasValue)
@@ -237,7 +257,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified <see cref="DbGeography" /> value, which may be null.
         /// </summary>
         /// <param name="value"> The DbGeography value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified DbGeography value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified DbGeography value
+        /// </returns>
         public static DbExpression FromGeography(DbGeography value)
         {
             if (value == null)
@@ -256,7 +278,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified <see cref="DbGeometry" /> value, which may be null.
         /// </summary>
         /// <param name="value"> The DbGeometry value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified DbGeometry value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified DbGeometry value
+        /// </returns>
         public static DbExpression FromGeometry(DbGeometry value)
         {
             if (value == null)
@@ -275,7 +299,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) <see cref="Guid" /> value
         /// </summary>
         /// <param name="value"> The Guid value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Guid value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Guid value
+        /// </returns>
         public static DbExpression FromGuid(Guid? value)
         {
             if (!value.HasValue)
@@ -294,7 +320,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) Int16 value
         /// </summary>
         /// <param name="value"> The Int16 value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Int16 value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Int16 value
+        /// </returns>
         public static DbExpression FromInt16(short? value)
         {
             if (!value.HasValue)
@@ -313,7 +341,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) Int32 value
         /// </summary>
         /// <param name="value"> The Int32 value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Int32 value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Int32 value
+        /// </returns>
         public static DbExpression FromInt32(int? value)
         {
             if (!value.HasValue)
@@ -332,7 +362,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) Int64 value
         /// </summary>
         /// <param name="value"> The Int64 value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Int64 value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Int64 value
+        /// </returns>
         public static DbExpression FromInt64(long? value)
         {
             if (!value.HasValue)
@@ -351,7 +383,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified (nullable) Single value
         /// </summary>
         /// <param name="value"> The Single value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified Single value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified Single value
+        /// </returns>
         public static DbExpression FromSingle(float? value)
         {
             if (!value.HasValue)
@@ -370,7 +404,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Creates a <see cref="DbExpression" /> that represents the specified string value
         /// </summary>
         /// <param name="value"> The string value on which the returned expression should be based </param>
-        /// <returns> A <see cref="DbExpression" /> that represents the specified string value </returns>
+        /// <returns>
+        ///     A <see cref="DbExpression" /> that represents the specified string value
+        /// </returns>
         public static DbExpression FromString(string value)
         {
             if (null == value)

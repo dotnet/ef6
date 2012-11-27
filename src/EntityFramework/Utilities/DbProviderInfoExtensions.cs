@@ -3,13 +3,12 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics.Contracts;
 
     internal static class DbProviderInfoExtensions
     {
         public static bool IsSqlCe(this DbProviderInfo providerInfo)
         {
-            Contract.Requires(providerInfo != null);
+            DebugCheck.NotNull(providerInfo);
 
             return !string.IsNullOrWhiteSpace(providerInfo.ProviderInvariantName) &&
                    providerInfo.ProviderInvariantName.StartsWith(

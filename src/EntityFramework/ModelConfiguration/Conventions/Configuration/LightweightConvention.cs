@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -16,13 +16,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public LightweightConvention(EntityConventionConfiguration conventionConfiguration)
         {
-            Contract.Requires(conventionConfiguration != null);
+            DebugCheck.NotNull(conventionConfiguration);
 
             _configuration = conventionConfiguration;
         }
 
         public void Apply(Type memberInfo, Func<EntityTypeConfiguration> configuration)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+
             if (_configuration.ConfigurationAction != null
                 && _configuration.Predicates.All(p => p(memberInfo)))
             {
@@ -32,6 +35,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         public void Apply(PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
+            Check.NotNull(memberInfo, "memberInfo");
+            Check.NotNull(configuration, "configuration");
+
             if (_configuration.PropertyConfiguration != null
                 && _configuration.PropertyConfiguration.ConfigurationAction != null
                 && _configuration.Predicates.All(p => p(memberInfo.ReflectedType))

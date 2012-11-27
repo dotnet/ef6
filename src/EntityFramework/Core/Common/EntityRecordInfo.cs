@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Common
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     EntityRecordInfo class providing a simple way to access both the type information and the column information.
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Common
         public EntityRecordInfo(EntityType metadata, IEnumerable<EdmMember> memberInfo, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata), memberInfo)
         {
-            Contract.Requires(entityKey != null);
-            Contract.Requires(entitySet != null);
+            Check.NotNull(entityKey, "entityKey");
+            Check.NotNull(entitySet, "entitySet");
 
             _entityKey = entityKey;
             ValidateEntityType(entitySet);
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata))
         {
-            Contract.Requires(entityKey != null);
+            DebugCheck.NotNull(entityKey);
 
             _entityKey = entityKey;
 #if DEBUG
@@ -89,9 +89,12 @@ namespace System.Data.Entity.Core.Common
         // using EntitySetBase versus EntitySet prevents the unnecessary cast of ElementType to EntityType
         private void ValidateEntityType(EntitySetBase entitySet)
         {
-            if (!ReferenceEquals(RecordType.EdmType, null) &&
-                !ReferenceEquals(_entityKey, EntityKey.EntityNotValidKey) &&
-                !ReferenceEquals(_entityKey, EntityKey.NoEntitySetKey) &&
+            if (!ReferenceEquals(RecordType.EdmType, null)
+                &&
+                !ReferenceEquals(_entityKey, EntityKey.EntityNotValidKey)
+                &&
+                !ReferenceEquals(_entityKey, EntityKey.NoEntitySetKey)
+                &&
                 !ReferenceEquals(RecordType.EdmType, entitySet.ElementType)
                 &&
                 !entitySet.ElementType.IsBaseTypeOf(RecordType.EdmType))

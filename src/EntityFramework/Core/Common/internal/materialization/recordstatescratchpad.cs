@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// <summary>
     ///     Used in the Translator to aggregate information about a (nested) record
     ///     state.  After the translator visits the columnMaps, it will compile
-    ///     the recordState(s) which produces an immutable RecordStateFactory that 
+    ///     the recordState(s) which produces an immutable RecordStateFactory that
     ///     can be shared amongst many query instances.
     /// </summary>
     internal class RecordStateScratchpad

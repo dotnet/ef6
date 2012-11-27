@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Design
 {
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Scaffolds code-based migrations to apply pending model changes to the database.
@@ -19,14 +19,13 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="migrationsConfiguration"> Configuration to be used for scaffolding. </param>
         public MigrationScaffolder(DbMigrationsConfiguration migrationsConfiguration)
         {
-            Contract.Requires(migrationsConfiguration != null);
+            Check.NotNull(migrationsConfiguration, "migrationsConfiguration");
 
             _migrator = new DbMigrator(migrationsConfiguration);
         }
 
         /// <summary>
         ///     Gets or sets the namespace used in the migration's generated code.
-        /// 
         ///     By default, this is the same as MigrationsNamespace on the migrations
         ///     configuration object passed into the constructor. For VB.NET projects, this
         ///     will need to be updated to take into account the project's root namespace.
@@ -53,7 +52,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> The scaffolded migration. </returns>
         public virtual ScaffoldedMigration Scaffold(string migrationName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
+            Check.NotEmpty(migrationName, "migrationName");
 
             return _migrator.Scaffold(migrationName, Namespace, ignoreChanges: false);
         }
@@ -66,7 +65,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> The scaffolded migration. </returns>
         public virtual ScaffoldedMigration Scaffold(string migrationName, bool ignoreChanges)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(migrationName));
+            Check.NotEmpty(migrationName, "migrationName");
 
             return _migrator.Scaffold(migrationName, Namespace, ignoreChanges);
         }

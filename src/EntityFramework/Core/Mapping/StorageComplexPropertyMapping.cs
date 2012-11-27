@@ -5,14 +5,13 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Text;
 
     /// <summary>
     ///     Mapping metadata for Complex properties.
     /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping 
+    ///     --Mapping
     ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
     ///     --EntitySetMapping
     ///     --EntityTypeMapping
@@ -34,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --AssociationSetMapping 
+    ///     --AssociationSetMapping
     ///     --AssociationTypeMapping
     ///     --MappingFragment
     ///     --EndPropertyMap
@@ -42,8 +41,8 @@ namespace System.Data.Entity.Core.Mapping
     ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
     ///     --EndPropertyMap
     ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     This class represents the metadata for all the complex property map elements in the 
-    ///     above example. ComplexPropertyMaps contain ComplexTypeMaps which define mapping based 
+    ///     This class represents the metadata for all the complex property map elements in the
+    ///     above example. ComplexPropertyMaps contain ComplexTypeMaps which define mapping based
     ///     on the type of the ComplexProperty in case of inheritance.
     /// </example>
     internal class StorageComplexPropertyMapping : StoragePropertyMapping

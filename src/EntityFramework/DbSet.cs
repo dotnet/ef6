@@ -9,8 +9,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -21,7 +21,6 @@ namespace System.Data.Entity
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    [ContractClass(typeof(DbSetContracts))]
     public abstract class DbSet : DbQuery, IInternalSetAdapter
     {
         #region Fields and constructors
@@ -136,7 +135,7 @@ namespace System.Data.Entity
         /// </remarks>
         public object Attach(object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             InternalSet.Attach(entity);
             return entity;
@@ -154,7 +153,7 @@ namespace System.Data.Entity
         /// </remarks>
         public object Add(object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             InternalSet.Add(entity);
             return entity;
@@ -174,7 +173,7 @@ namespace System.Data.Entity
         /// </remarks>
         public object Remove(object entity)
         {
-            Contract.Requires(entity != null);
+            Check.NotNull(entity, "entity");
 
             InternalSet.Remove(entity);
             return entity;
@@ -261,11 +260,13 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
-        /// <returns> A <see cref="DbSqlQuery" /> object that will execute the query when it is enumerated. </returns>
+        /// <returns>
+        ///     A <see cref="DbSqlQuery" /> object that will execute the query when it is enumerated.
+        /// </returns>
         public DbSqlQuery SqlQuery(string sql, params object[] parameters)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(sql));
-            Contract.Requires(parameters != null);
+            Check.NotEmpty(sql, "sql");
+            Check.NotNull(parameters, "parameters");
 
             return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
         }
@@ -291,21 +292,6 @@ namespace System.Data.Entity
         public new Type GetType()
         {
             return base.GetType();
-        }
-
-        #endregion
-
-        #region Base Member Contracts
-
-        [ContractClassFor(typeof(DbSet))]
-        private abstract class DbSetContracts : DbSet
-        {
-            public override object Create(Type derivedEntityType)
-            {
-                Contract.Requires(derivedEntityType != null);
-
-                throw new NotImplementedException();
-            }
         }
 
         #endregion

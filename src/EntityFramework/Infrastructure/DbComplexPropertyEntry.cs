@@ -4,8 +4,8 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
 
     /// <summary>
     ///     A non-generic version of the <see cref="DbComplexPropertyEntry{TEntity, TProperty}" /> class.
@@ -15,8 +15,10 @@ namespace System.Data.Entity.Infrastructure
         #region Fields and constructors
 
         /// <summary>
-        ///     Creates a <see cref="DbComplexPropertyEntry{TEntity,TComplexProperty}" /> from information in the given <see
-        ///      cref="InternalPropertyEntry" />.
+        ///     Creates a <see cref="DbComplexPropertyEntry{TEntity,TComplexProperty}" /> from information in the given
+        ///     <see
+        ///         cref="InternalPropertyEntry" />
+        ///     .
         ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
         ///     the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
@@ -24,7 +26,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The new entry. </returns>
         internal new static DbComplexPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
         {
-            Contract.Requires(internalPropertyEntry != null);
+            DebugCheck.NotNull(internalPropertyEntry);
 
             return (DbComplexPropertyEntry)internalPropertyEntry.CreateDbMemberEntry();
         }
@@ -50,7 +52,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> An object representing the nested property. </returns>
         public DbPropertyEntry Property(string propertyName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DbPropertyEntry.Create(((InternalPropertyEntry)InternalMemberEntry).Property(propertyName));
         }
@@ -64,7 +66,7 @@ namespace System.Data.Entity.Infrastructure
             Justification = "Rule predates more fluent naming conventions.")]
         public DbComplexPropertyEntry ComplexProperty(string propertyName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(propertyName));
+            Check.NotEmpty(propertyName, "propertyName");
 
             return
                 Create(((InternalPropertyEntry)InternalMemberEntry).Property(propertyName, null, requireComplex: true));

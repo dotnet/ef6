@@ -8,14 +8,14 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Linq.Expressions;
     using System.Reflection;
 
     /// <summary>
-    ///     An immutable representation of an Entity Data Model (EDM) model that can be used to create an 
-    ///     <see cref="ObjectContext" /> or can be passed to the constructor of a <see cref="DbContext" />. 
+    ///     An immutable representation of an Entity Data Model (EDM) model that can be used to create an
+    ///     <see cref="ObjectContext" /> or can be passed to the constructor of a <see cref="DbContext" />.
     ///     For increased performance, instances of this type should be cached and re-used to construct contexts.
     /// </summary>
     public class DbCompiledModel
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="modelaseMapping"> The EDM metadata model. </param>
         internal DbCompiledModel(DbModel model)
         {
-            Contract.Requires(model != null);
+            DebugCheck.NotNull(model);
 
             _workspace = new CodeFirstCachedMetadataWorkspace(model.DatabaseMapping);
             _cachedModelBuilder = model.CachedModelBuilder;
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public TContext CreateObjectContext<TContext>(DbConnection existingConnection) where TContext : ObjectContext
         {
-            Contract.Requires(existingConnection != null);
+            Check.NotNull(existingConnection, "existingConnection");
 
             var metadataWorkspace = _workspace.GetMetadataWorkspace(existingConnection);
             var entityConnection = new EntityConnection(metadataWorkspace, existingConnection);
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Infrastructure
                 constructorDelegate =
                     Expression.Lambda<Func<EntityConnection, ObjectContext>>(
                         Expression.New(constructor, connectionParam), connectionParam).
-                        Compile();
+                               Compile();
 
                 _contextConstructors.TryAdd(typeof(TContext), constructorDelegate);
             }

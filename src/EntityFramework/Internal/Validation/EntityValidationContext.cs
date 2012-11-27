@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Internal.Validation
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.Contracts;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Contains information needed to validate an entity or its properties.
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Internal.Validation
         /// <param name="externalValidationContexts"> External contexts needed for validation. </param>
         public EntityValidationContext(InternalEntityEntry entityEntry, ValidationContext externalValidationContext)
         {
-            Contract.Requires(entityEntry != null);
-            Contract.Requires(externalValidationContext != null);
+            DebugCheck.NotNull(entityEntry);
+            DebugCheck.NotNull(externalValidationContext);
 
             _entityEntry = entityEntry;
             ExternalValidationContext = externalValidationContext;

@@ -19,26 +19,34 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Get boolean that specifies whether newly-created items can be added to the binding list.
         /// </summary>
-        /// <value> <b>True</b> if newly-created items can be added to the binding list; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if newly-created items can be added to the binding list; otherwise <b>false</b> .
+        /// </value>
         bool AllowNew { get; }
 
         /// <summary>
         ///     Get boolean that specifies whether properties of elements in the binding list can be modified.
         /// </summary>
-        /// <value> <b>True</b> if elements can be edited; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if elements can be edited; otherwise <b>false</b> .
+        /// </value>
         bool AllowEdit { get; }
 
         /// <summary>
         ///     Get boolean that specifies whether elements can be removed from the binding list.
         /// </summary>
-        /// <value> <b>True</b> if elements can be removed from the binding list; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if elements can be removed from the binding list; otherwise <b>false</b> .
+        /// </value>
         bool AllowRemove { get; }
 
         /// <summary>
         ///     Get boolean that specifies whether the IObjectViewData instance implicitly fires list changed events
         ///     when items are added to the binding list.
         /// </summary>
-        /// <value> <b>True</b> if the IObjectViewData instance fires list changed events on add; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if the IObjectViewData instance fires list changed events on add; otherwise <b>false</b> .
+        /// </value>
         /// <remarks>
         ///     List changed events are fired by the ObjectContext if the IObjectViewData.OnCollectionChanged
         ///     method returns a non-null ListChangedEventArgs object.
@@ -49,7 +57,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Get boolean that specifies whether the IObjectViewData instance implicitly fires list changed events
         ///     when items are removed from the binding list.
         /// </summary>
-        /// <value> <b>True</b> if the IObjectViewData instance fires list changed events on remove; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if the IObjectViewData instance fires list changed events on remove; otherwise <b>false</b> .
+        /// </value>
         /// <remarks>
         ///     List changed events are fired by the ObjectContext if the IObjectViewData.OnCollectionChanged
         ///     method returns a non-null ListChangedEventArgs object.
@@ -60,7 +70,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Get boolean that specifies whether the IObjectViewData instance implicitly fires list changed events
         ///     when all items are cleared from the binding list.
         /// </summary>
-        /// <value> <b>True</b> if the IObjectViewData instance fires list changed events on clear; otherwise <b>false</b> . </value>
+        /// <value>
+        ///     <b>True</b> if the IObjectViewData instance fires list changed events on clear; otherwise <b>false</b> .
+        /// </value>
         /// <remarks>
         ///     List changed events are fired by the ObjectContext if the IObjectViewData.OnCollectionChanged
         ///     method returns a non-null ListChangedEventArgs object.
@@ -76,10 +88,12 @@ namespace System.Data.Entity.Core.Objects
         ///     Add an item to the binding list.
         /// </summary>
         /// <param name="item"> Item to be added. The value of this parameter will never be null, and the item is guaranteed to not already exist in the binding list. </param>
-        /// <param name="isAddNew"> <b>True</b> if this method is being called as part of a IBindingList.AddNew operation; otherwise <b>false</b> . </param>
+        /// <param name="isAddNew">
+        ///     <b>True</b> if this method is being called as part of a IBindingList.AddNew operation; otherwise <b>false</b> .
+        /// </param>
         /// <returns> Index of added item in the binding list. </returns>
         /// <remarks>
-        ///     If <paramref name="isAddNew" /> is true, 
+        ///     If <paramref name="isAddNew" /> is true,
         ///     the item should only be added to the list returned by the List property, and not any underlying collection.
         ///     Otherwise, the item should be added to the binding list as well as any underlying collection.
         /// </remarks>
@@ -100,10 +114,14 @@ namespace System.Data.Entity.Core.Objects
         ///     Remove an item from the binding list.
         /// </summary>
         /// <param name="item"> Item to be removed. The value of this parameter will never be null. The item does not have to exist in the binding list. </param>
-        /// <param name="isCancelNew"> <b>True</b> if this method is being called as part of a ICancelAddNew.CancelNew operation; otherwise <b>false</b> . </param>
-        /// <returns> <b>True</b> if item was removed from list; otherwise <b>false</b> if item was not present in the binding list. </returns>
+        /// <param name="isCancelNew">
+        ///     <b>True</b> if this method is being called as part of a ICancelAddNew.CancelNew operation; otherwise <b>false</b> .
+        /// </param>
+        /// <returns>
+        ///     <b>True</b> if item was removed from list; otherwise <b>false</b> if item was not present in the binding list.
+        /// </returns>
         /// <remarks>
-        ///     If <paramref name="isCancelNew" /> is true, 
+        ///     If <paramref name="isCancelNew" /> is true,
         ///     the item should only be removed from the binding list, and not any underlying collection.
         ///     Otherwise, the item should be removed from the binding list as well as any underlying collection.
         /// </remarks>
