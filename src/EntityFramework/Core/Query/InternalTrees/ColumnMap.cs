@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -70,7 +71,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="name"> column name </param>
         internal ColumnMap(TypeUsage type, string name)
         {
-            Debug.Assert(type != null, "Unspecified type");
+            DebugCheck.NotNull(type);
             _type = type;
             _name = name;
         }
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             get { return _name; }
             set
             {
-                Debug.Assert(!String.IsNullOrEmpty(value), "invalid name?");
+                DebugCheck.NotEmpty(value);
                 _name = value;
             }
         }

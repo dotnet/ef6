@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -19,7 +20,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         /// </summary>
         internal QualifiedSlot(CqlBlock block, ProjectedSlot slot)
         {
-            Debug.Assert(block != null && slot != null, "Null input to QualifiedSlot constructor");
+            DebugCheck.NotNull(block);
+            DebugCheck.NotNull(slot);
+
             m_block = block;
             m_slot = slot; // Note: slot can be another qualified slot.
         }

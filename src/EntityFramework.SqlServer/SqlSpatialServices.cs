@@ -99,7 +99,7 @@ namespace System.Data.Entity.SqlServer
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
-            Throw.IfNull(wellKnownValue, "wellKnownValue");
+            Check.NotNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
             if (wellKnownValue.WellKnownText != null)
@@ -120,7 +120,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
-            Throw.IfNull(providerValue, "providerValue");
+            Check.NotNull(providerValue, "providerValue");
 
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeographyType);
             return SqlTypes.IsSqlGeographyNull(normalizedProviderValue) ? null : CreateGeography(this, normalizedProviderValue);
@@ -168,7 +168,7 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var spatialValue = geographyValue.AsSpatialValue();
 
@@ -191,7 +191,7 @@ namespace System.Data.Entity.SqlServer
 
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
-            Throw.IfNull(wellKnownValue, "wellKnownValue");
+            Check.NotNull(wellKnownValue, "wellKnownValue");
 
             object result = null;
             if (wellKnownValue.WellKnownText != null)
@@ -212,7 +212,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
-            Throw.IfNull(providerValue, "providerValue");
+            Check.NotNull(providerValue, "providerValue");
 
             var normalizedProviderValue = NormalizeProviderValue(providerValue, SqlTypes.SqlGeometryType);
             return SqlTypes.IsSqlGeometryNull(normalizedProviderValue) ? null : CreateGeometry(this, normalizedProviderValue);
@@ -221,7 +221,7 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var spatialValue = geometryValue.AsSpatialValue();
 
@@ -593,7 +593,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_STSrid.Value.GetValue(sqlGeographyValue, null);
@@ -602,7 +602,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string GetSpatialTypeName(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STGeometryType.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -611,7 +611,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetDimension(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STDimension.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -620,7 +620,7 @@ namespace System.Data.Entity.SqlServer
 
         public override byte[] AsBinary(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STAsBinary.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -629,7 +629,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsGml(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_AsGml.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -638,7 +638,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsText(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STAsText.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -647,7 +647,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsEmpty(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STIsEmpty.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -656,7 +656,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool SpatialEquals(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -666,7 +666,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Disjoint(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -676,7 +676,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Intersects(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -686,7 +686,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Buffer(DbGeography geographyValue, double distance)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STBuffer.Value.Invoke(sqlGeographyValue, new object[] { distance });
@@ -695,7 +695,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double Distance(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -705,7 +705,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Intersection(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -715,7 +715,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Union(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -725,7 +725,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography Difference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -735,7 +735,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography SymmetricDifference(DbGeography geographyValue, DbGeography otherGeography)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlgeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var sqlotherGeography = ConvertToSqlValue(otherGeography, "otherGeography");
@@ -745,7 +745,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetElementCount(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STNumGeometries.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -754,7 +754,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography ElementAt(DbGeography geographyValue, int nValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STGeometryN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
@@ -763,7 +763,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLatitude(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Lat.Value.GetValue(sqlGeographyValue, null);
@@ -772,7 +772,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLongitude(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Long.Value.GetValue(sqlGeographyValue, null);
@@ -781,7 +781,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetElevation(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_Z.Value.GetValue(sqlGeographyValue, null);
@@ -790,7 +790,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetMeasure(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = ipi_SqlGeography_M.Value.GetValue(sqlGeographyValue, null);
@@ -799,7 +799,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLength(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STLength.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -808,7 +808,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GetStartPoint(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STStartPoint.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -817,7 +817,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography GetEndPoint(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STEndPoint.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -826,7 +826,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsClosed(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STIsClosed.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -835,7 +835,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetPointCount(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STNumPoints.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -844,7 +844,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeography PointAt(DbGeography geographyValue, int nValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STPointN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
@@ -853,7 +853,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetArea(DbGeography geographyValue)
         {
-            Throw.IfNull(geographyValue, "geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
             var result = imi_SqlGeography_STArea.Value.Invoke(sqlGeographyValue, new object[] { });
@@ -1002,7 +1002,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STSrid.Value.GetValue(sqlGeometryValue, null);
@@ -1011,7 +1011,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string GetSpatialTypeName(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STGeometryType.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1020,7 +1020,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int GetDimension(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STDimension.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1029,7 +1029,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetEnvelope(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STEnvelope.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1038,7 +1038,7 @@ namespace System.Data.Entity.SqlServer
 
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STAsBinary.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1047,7 +1047,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsGml(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_AsGml.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1056,7 +1056,7 @@ namespace System.Data.Entity.SqlServer
 
         public override string AsText(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STAsText.Value.Invoke(sqlGeometryValue, new object[] { });
             return ConvertSqlCharsToString(result);
@@ -1064,7 +1064,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsEmpty(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsEmpty.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1073,7 +1073,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsSimple(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsSimple.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1082,7 +1082,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetBoundary(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STBoundary.Value.Invoke(sqlGeometryValue, new object[] { });
             return GeometryFromProviderValue(result);
@@ -1090,7 +1090,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool GetIsValid(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsValid.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1099,7 +1099,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool SpatialEquals(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1109,7 +1109,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Disjoint(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1119,7 +1119,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Intersects(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1129,7 +1129,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Touches(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1139,7 +1139,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Crosses(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1149,7 +1149,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Within(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1159,7 +1159,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Contains(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1169,7 +1169,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Overlaps(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
             var result = imi_SqlGeometry_STOverlaps.Value.Invoke(sqlgeometryValue, new[] { sqlotherGeometry });
@@ -1178,7 +1178,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool Relate(DbGeometry geometryValue, DbGeometry otherGeometry, string matrix)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1188,7 +1188,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Buffer(DbGeometry geometryValue, double distance)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STBuffer.Value.Invoke(sqlGeometryValue, new object[] { distance });
@@ -1197,7 +1197,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double Distance(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1207,7 +1207,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetConvexHull(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STConvexHull.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1216,7 +1216,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Intersection(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1226,7 +1226,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Union(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1236,7 +1236,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry Difference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1246,7 +1246,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry SymmetricDifference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlgeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var sqlotherGeometry = ConvertToSqlValue(otherGeometry, "otherGeometry");
@@ -1256,7 +1256,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetElementCount(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumGeometries.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1265,7 +1265,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry ElementAt(DbGeometry geometryValue, int nValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STGeometryN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
@@ -1274,7 +1274,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetXCoordinate(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STX.Value.GetValue(sqlGeometryValue, null);
@@ -1283,7 +1283,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetYCoordinate(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_STY.Value.GetValue(sqlGeometryValue, null);
@@ -1292,7 +1292,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetElevation(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_Z.Value.GetValue(sqlGeometryValue, null);
@@ -1301,7 +1301,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetMeasure(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = ipi_SqlGeometry_M.Value.GetValue(sqlGeometryValue, null);
@@ -1310,7 +1310,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetLength(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STLength.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1319,7 +1319,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetStartPoint(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STStartPoint.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1328,7 +1328,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetEndPoint(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STEndPoint.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1337,7 +1337,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsClosed(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsClosed.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1346,7 +1346,7 @@ namespace System.Data.Entity.SqlServer
 
         public override bool? GetIsRing(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STIsRing.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1355,7 +1355,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetPointCount(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumPoints.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1364,7 +1364,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry PointAt(DbGeometry geometryValue, int nValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STPointN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
@@ -1373,7 +1373,7 @@ namespace System.Data.Entity.SqlServer
 
         public override double? GetArea(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STArea.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1382,7 +1382,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetCentroid(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STCentroid.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1391,7 +1391,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetPointOnSurface(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STPointOnSurface.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1400,7 +1400,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry GetExteriorRing(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STExteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1409,7 +1409,7 @@ namespace System.Data.Entity.SqlServer
 
         public override int? GetInteriorRingCount(DbGeometry geometryValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STNumInteriorRing.Value.Invoke(sqlGeometryValue, new object[] { });
@@ -1418,7 +1418,7 @@ namespace System.Data.Entity.SqlServer
 
         public override DbGeometry InteriorRingAt(DbGeometry geometryValue, int nValue)
         {
-            Throw.IfNull(geometryValue, "geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
             var result = imi_SqlGeometry_STInteriorRingN.Value.Invoke(sqlGeometryValue, new object[] { nValue });

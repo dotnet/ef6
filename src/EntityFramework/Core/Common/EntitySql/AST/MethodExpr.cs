@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             NodeList<RelshipNavigationExpr> relationships)
             : base(distinctKind)
         {
-            Debug.Assert(expr != null, "expr != null");
+            DebugCheck.NotNull(expr);
             Debug.Assert(args == null || args.Count > 0, "args must be null or a non-empty list");
 
             _expr = expr;

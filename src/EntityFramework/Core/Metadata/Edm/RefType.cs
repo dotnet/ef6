@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if entityType argument is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RefType(EntityType entityType)
-            : base(GetIdentity(EntityUtil.GenericCheckArgumentNull(entityType, "entityType")),
+            : base(GetIdentity(Check.NotNull(entityType, "entityType")),
                 EdmConstants.TransientNamespace, entityType.DataSpace)
         {
             _elementType = entityType;

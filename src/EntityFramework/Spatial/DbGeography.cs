@@ -674,10 +674,8 @@ namespace System.Data.Entity.Spatial
         /// </exception>
         public DbGeography Buffer(double? distance)
         {
-            if (!distance.HasValue)
-            {
-                throw new ArgumentNullException("distance");
-            }
+            Check.NotNull(distance, "distance");
+
             return _spatialProvider.Buffer(this, distance.Value);
         }
 

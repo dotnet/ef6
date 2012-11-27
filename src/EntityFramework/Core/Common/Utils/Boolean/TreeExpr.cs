@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="children"> Child expressions </param>
         protected TreeExpr(IEnumerable<BoolExpr<T_Identifier>> children)
         {
-            Debug.Assert(null != children);
+            DebugCheck.NotNull(children);
             _children = new Set<BoolExpr<T_Identifier>>(children);
             _children.MakeReadOnly();
             _hashCode = _children.GetElementsHashCode();

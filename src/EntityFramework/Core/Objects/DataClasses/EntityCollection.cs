@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -369,7 +368,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         public void Add(TEntity item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             Add(EntityWrapperFactory.WrapEntityUsingContext(item, ObjectContext));
         }
@@ -427,7 +426,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
         public bool Remove(TEntity item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             DeferredLoad();
             return RemoveInternal(item);

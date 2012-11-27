@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal DistinctOp(VarVec keyVars)
             : this()
         {
-            Debug.Assert(keyVars != null);
+            DebugCheck.NotNull(keyVars);
             Debug.Assert(!keyVars.IsEmpty);
             m_keys = keyVars;
         }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Collections;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                         {
                             parserState = ParserState.NullTermination;
                             continue;
-                        } // MDAC 83540
+                        }
                         if (Char.IsControl(currentChar))
                         {
                             throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition));
@@ -176,7 +177,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                         startposition = currentPosition;
                         if ('=' != currentChar)
                         {
-                            // MDAC 86902
                             parserState = ParserState.Key;
                             break;
                         }
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                         {
                             parserState = ParserState.NullTermination;
                             continue;
-                        } // MDAC 83540
+                        }
                         throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(startposition)); // unbalanced single quote
 
                     case ParserState.NullTermination: // [\\s;\u0000]*
@@ -328,7 +328,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                         if (Char.IsWhiteSpace(currentChar))
                         {
                             continue;
-                        } // MDAC 83540
+                        }
                         throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(currentPosition));
 
                     default:
@@ -521,7 +521,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         private static NameValuePair ParseInternal(Hashtable parsetable, string connectionString, Hashtable synonyms)
         {
-            Debug.Assert(null != connectionString, "null connectionstring");
+            DebugCheck.NotNull(connectionString);
             var buffer = new StringBuilder();
             NameValuePair localKeychain = null, keychain = null;
 #if DEBUG

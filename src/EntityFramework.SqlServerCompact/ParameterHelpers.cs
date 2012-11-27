@@ -5,14 +5,15 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
 
     internal static class ParameterHelpers
     {
         internal static void PopulateParameterFromTypeUsage(DbParameter parameter, TypeUsage type)
         {
-            ADP1.CheckArgumentNull(parameter, "parameter");
-            ADP1.CheckArgumentNull(type, "type");
+            Check.NotNull(parameter, "parameter");
+            Check.NotNull(type, "type");
 
             // parameter.Direction - take the default. we don't support output 
             // parameters.

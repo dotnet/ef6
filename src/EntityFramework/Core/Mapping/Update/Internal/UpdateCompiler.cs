@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -422,7 +423,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Requires: all arguments are set
         private DbExpression GenerateEqualityExpression(DbExpressionBinding target, EdmProperty property, PropagatorResult value)
         {
-            Debug.Assert(null != target && null != property && null != value);
+            DebugCheck.NotNull(target);
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(value);
 
             var propertyExpression = GeneratePropertyExpression(target, property);
             var valueExpression = GenerateValueExpression(property, value);
@@ -438,7 +441,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Requires: all arguments are set
         private static DbExpression GeneratePropertyExpression(DbExpressionBinding target, EdmProperty property)
         {
-            Debug.Assert(null != target && null != property);
+            DebugCheck.NotNull(target);
+            DebugCheck.NotNull(property);
 
             return target.Variable.Property(property);
         }
@@ -447,7 +451,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Requires: all arguments are set, and the value must be simple (scalar)
         private DbExpression GenerateValueExpression(EdmProperty property, PropagatorResult value)
         {
-            Debug.Assert(null != value && value.IsSimple && null != property);
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(value);
+
+            Debug.Assert(value.IsSimple);
             Debug.Assert(Helper.IsPrimitiveType(property.TypeUsage.EdmType), "Properties in SSpace should be primitive.");
 
             if (value.IsNull)
@@ -511,7 +518,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Requires: all arguments set
         private static DbExpressionBinding GetTarget(TableChangeProcessor processor)
         {
-            Debug.Assert(null != processor);
+            DebugCheck.NotNull(processor);
 
             // use a fixed var name since the command trees all have exactly one binding
             return processor.Table.Scan().BindAs(s_targetVarName);

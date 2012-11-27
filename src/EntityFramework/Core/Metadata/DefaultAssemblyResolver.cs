@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool TryFindWildcardAssemblyMatch(AssemblyName referenceName, out Assembly assembly)
         {
-            Debug.Assert(referenceName != null);
+            DebugCheck.NotNull(referenceName);
 
             foreach (var current in GetAllDiscoverableAssemblies())
             {

@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Objects
         internal RelationshipEntry(ObjectStateManager cache, EntityState state, RelationshipWrapper relationshipWrapper)
             : base(cache, null, state)
         {
-            Debug.Assert(null != relationshipWrapper, "null RelationshipWrapper");
+            DebugCheck.NotNull(relationshipWrapper);
             Debug.Assert(
                 EntityState.Added == state ||
                 EntityState.Unchanged == state ||
@@ -435,7 +435,7 @@ namespace System.Data.Entity.Core.Objects
             get { return _relationshipWrapper; }
             set
             {
-                Debug.Assert(null != value, "don't set wrapper to null");
+                DebugCheck.NotNull(value);
                 _relationshipWrapper = value;
             }
         }
@@ -722,14 +722,14 @@ namespace System.Data.Entity.Core.Objects
 
         internal RelationshipEntry GetNextRelationshipEnd(EntityKey entityKey)
         {
-            Debug.Assert(null != (object)entityKey, "null EntityKey");
+            DebugCheck.NotNull((object)entityKey);
             Debug.Assert(entityKey.Equals(Key0) || entityKey.Equals(Key1), "EntityKey mismatch");
             return (entityKey.Equals(Key0) ? NextKey0 : NextKey1);
         }
 
         internal void SetNextRelationshipEnd(EntityKey entityKey, RelationshipEntry nextEnd)
         {
-            Debug.Assert(null != (object)entityKey, "null EntityKey");
+            DebugCheck.NotNull((object)entityKey);
             Debug.Assert(entityKey.Equals(Key0) || entityKey.Equals(Key1), "EntityKey mismatch");
             if (entityKey.Equals(Key0))
             {

@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         public void HasKey_should_throw_with_null_expression()
         {
             Assert.Equal(
-                Error.ArgumentNull("keyExpression").Message,
+                new ArgumentNullException("keyExpression").Message,
                 Assert.Throws<ArgumentNullException>(() => new EntityTypeConfiguration<object>().HasKey<int>(null)).Message);
         }
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -119,7 +120,7 @@ namespace System.Data.Entity.Core.Mapping
         [Conditional("DEBUG")]
         internal void AssertModificationFunctionMappingInvariants(StorageEntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
-            Debug.Assert(null != modificationFunctionMapping, "modification function mapping must not be null");
+            DebugCheck.NotNull(modificationFunctionMapping);
             Debug.Assert(
                 modificationFunctionMapping.EntityType.Equals(Set.ElementType) ||
                 Helper.IsSubtypeOf(modificationFunctionMapping.EntityType, Set.ElementType),

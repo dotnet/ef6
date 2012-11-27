@@ -347,14 +347,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return _primitiveTypeMaps.GetTypes().Where(type => !Helper.IsSpatialType(type)).ToList().AsReadOnly();
             }
-            else if (edmVersion == XmlConstants.EdmVersionForV3)
+
+            if (edmVersion == XmlConstants.EdmVersionForV3)
             {
                 return _primitiveTypeMaps.GetTypes();
             }
-            else
-            {
-                throw new ArgumentException(Strings.InvalidEDMVersion(edmVersion.ToString(CultureInfo.CurrentCulture)));
-            }
+
+            throw new ArgumentException(Strings.InvalidEDMVersion(edmVersion.ToString(CultureInfo.CurrentCulture)));
         }
 
         /// <summary>

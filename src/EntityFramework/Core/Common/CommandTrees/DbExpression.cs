@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -27,8 +28,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             CheckExpressionKind(kind);
             _kind = kind;
 
-            Debug.Assert(
-                type != null, string.Format(CultureInfo.InvariantCulture, "{0}.Type is null in DbExpression constructor", GetType().Name));
+            DebugCheck.NotNull(type);
             if (!TypeSemantics.IsNullable(type))
             {
                 type = type.ShallowCopy(

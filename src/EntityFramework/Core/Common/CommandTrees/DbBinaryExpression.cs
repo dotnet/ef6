@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     The abstract base type for expressions that accept two expression operands.
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbBinaryExpression(DbExpressionKind kind, TypeUsage type, DbExpression left, DbExpression right)
             : base(kind, type)
         {
-            Debug.Assert(left != null, "DbBinaryExpression.Left cannot be null");
-            Debug.Assert(right != null, "DbBinaryExpression.Right cannot be null");
+            DebugCheck.NotNull(left);
+            DebugCheck.NotNull(right);
 
             _left = left;
             _right = right;

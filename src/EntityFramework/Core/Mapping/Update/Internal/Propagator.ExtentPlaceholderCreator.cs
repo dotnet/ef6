@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns> </returns>
             private PropagatorResult CreateAssociationSetPlaceholder(AssociationSet associationSet)
             {
-                Debug.Assert(null != associationSet, "Caller must verify parameters are not null");
+                DebugCheck.NotNull(associationSet);
 
                 var endMetadata = associationSet.ElementType.AssociationEndMembers;
                 var endReferenceValues = new PropagatorResult[endMetadata.Count];

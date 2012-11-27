@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -80,8 +80,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal VarInfo CreatePrimitiveTypeVarInfo(Var v, Var newVar)
         {
-            Debug.Assert(v != null, "v != null");
-            Debug.Assert(newVar != null, "newVar != null");
+            DebugCheck.NotNull(v);
+            DebugCheck.NotNull(newVar);
 
             PlanCompiler.Assert(TypeSemantics.IsScalarType(v.Type), "The current variable should be of primitive or enum type.");
             PlanCompiler.Assert(TypeSemantics.IsScalarType(newVar.Type), "The new variable should be of primitive or enum type.");

@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void InternalValidate(MetadataItem item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
-            Debug.Assert(item != null, "InternalValidate is called with a null item, the caller should check for null first");
+            DebugCheck.NotNull(item);
 
             // If the item has already been validated or we need to skip readonly items, then skip
             if ((item.IsReadOnly && SkipReadOnlyItems)

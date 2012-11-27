@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a paren expression ast node.
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal ParenExpr(Node expr)
         {
-            Debug.Assert(expr != null, "expr != null");
+            DebugCheck.NotNull(expr);
             _expr = expr;
         }
 

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -937,8 +938,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns> VarDefNode referencing the newly created Var. </returns>
         private Node FlattenEnumOrStrongSpatialVar(VarDefOp varDefOp, Node node)
         {
-            Debug.Assert(varDefOp != null, "varDefOp != null");
-            Debug.Assert(node != null, "node != null");
+            DebugCheck.NotNull(varDefOp);
+            DebugCheck.NotNull(node);
 
             Var newVar;
             var newVarDefNode = m_command.CreateVarDefNode(node, out newVar);

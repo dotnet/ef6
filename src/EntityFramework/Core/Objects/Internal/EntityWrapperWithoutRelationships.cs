@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// </summary>
     /// <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal sealed class EntityWrapperWithoutRelationships<TEntity> : EntityWrapper<TEntity>
+        where TEntity : class
     {
         /// <summary>
         ///     Constructs a wrapper as part of the materialization process.  This constructor is only used

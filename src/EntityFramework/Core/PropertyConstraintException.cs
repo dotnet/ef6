@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core
 {
+    using System.Data.Entity.Utilities;
     using System.Runtime.Serialization;
     using System.Security;
     using System.Security.Permissions;
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message, string propertyName) // required ctor
             : base(message)
         {
-            EntityUtil.CheckStringArgument(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
             _propertyName = propertyName;
         }
 
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message, string propertyName, Exception innerException) // required ctor
             : base(message, innerException)
         {
-            EntityUtil.CheckStringArgument(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
             _propertyName = propertyName;
         }
 

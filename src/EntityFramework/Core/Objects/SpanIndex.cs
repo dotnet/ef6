@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -59,8 +60,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal void AddSpannedRowType(RowType spannedRowType, TypeUsage originalRowType)
         {
-            Debug.Assert(spannedRowType != null, "Spanned RowType cannot be null");
-            Debug.Assert(originalRowType != null, "Original RowType cannot be null");
+            DebugCheck.NotNull(spannedRowType);
+            DebugCheck.NotNull(originalRowType);
             Debug.Assert(originalRowType.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType, "Original RowType must be a RowType");
 
             if (null == _rowMap)
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal bool HasSpanMap(RowType spanRowType)
         {
-            Debug.Assert(spanRowType != null, "Span RowType cannot be null");
+            DebugCheck.NotNull(spanRowType);
             if (null == _spanMap)
             {
                 return false;
@@ -95,8 +96,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal void AddSpanMap(RowType rowType, Dictionary<int, AssociationEndMember> columnMap)
         {
-            Debug.Assert(rowType != null, "Span row type cannot be null");
-            Debug.Assert(columnMap != null, "Span column map cannot be null");
+            DebugCheck.NotNull(rowType);
+            DebugCheck.NotNull(columnMap);
 
             if (null == _spanMap)
             {

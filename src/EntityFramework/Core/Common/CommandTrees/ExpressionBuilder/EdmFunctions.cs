@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static EdmFunction ResolveCanonicalFunction(string functionName, TypeUsage[] argumentTypes)
         {
-            Debug.Assert(!string.IsNullOrEmpty(functionName), "Function name must not be null");
+            DebugCheck.NotEmpty(functionName);
 
             var functions = new List<EdmFunction>(
                 EdmProviderManifest.Instance.GetStoreFunctions().Where(

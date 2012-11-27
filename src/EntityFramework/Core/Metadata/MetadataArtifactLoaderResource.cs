@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -26,8 +27,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="uriRegistry"> The global registry of URIs </param>
         internal MetadataArtifactLoaderResource(Assembly assembly, string resourceName, ICollection<string> uriRegistry)
         {
-            Debug.Assert(assembly != null);
-            Debug.Assert(resourceName != null);
+            DebugCheck.NotNull(assembly);
+            DebugCheck.NotNull(resourceName);
 
             _assembly = assembly;
             _resourceName = resourceName;

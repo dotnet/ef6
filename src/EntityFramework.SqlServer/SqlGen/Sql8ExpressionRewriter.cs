@@ -42,7 +42,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns> The new tree </returns>
         internal static DbQueryCommandTree Rewrite(DbQueryCommandTree originalTree)
         {
-            Debug.Assert(originalTree != null, "OriginalTree is null");
+            DebugCheck.NotNull(originalTree);
             var rewriter = new Sql8ExpressionRewriter(originalTree.MetadataWorkspace);
             var newQuery = rewriter.VisitExpression(originalTree.Query);
 
@@ -72,10 +72,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         /// <summary>
         ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///         
-        ///         
-        ///     <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
         /// <param name="e"> </param>
         /// <returns> </returns>
@@ -88,10 +85,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         /// <summary>
         ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///         
-        ///         
-        ///     <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
         /// <param name="e"> </param>
         /// <returns> </returns>
@@ -103,6 +97,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
+        ///     <see
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         ///     Logicaly, <see cref="DbSkipExpression" /> translates to:
         ///     SELECT Y.x1, Y.x2, ..., Y.xn
         ///     FROM (
@@ -124,24 +120,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     SORT
         ///     |
         ///     NON-DISTINCT EXCEPT  (specially translated,
-        ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///                                                     
-        ///                                                     
-        ///     <DbPropertyExpression>
-        ///         sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
-        ///         |
-        ///         | - Left:  clone of input
-        ///         | - Right:
-        ///         |
-        ///         Limit
-        ///         |
-        ///         | - Limit: Count
-        ///         | - Input
-        ///         |
-        ///         Sort
-        ///         |
-        ///         input
+        ///     |
+        ///     | - Left:  clone of input
+        ///     | - Right:
+        ///     |
+        ///     Limit
+        ///     |
+        ///     | - Limit: Count
+        ///     | - Input
+        ///     |
+        ///     Sort
+        ///     |
+        ///     input
         /// </summary>
         /// <param name="e"> </param>
         /// <returns> </returns>
@@ -184,10 +174,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     This method is invoked when tranforming <see cref="DbIntersectExpression" /> and <see cref="DbExceptExpression" /> by doing comparison over all input columns.
         ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///         
-        ///         
-        ///     <DbPropertyExpression>sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
         /// <param name="left"> </param>
         /// <param name="right"> </param>
@@ -358,17 +345,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method for
         ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///                           
-        ///                           
-        ///     <DbPropertyExpression>
-        ///         sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
-        ///         Removes all pairs of property expressions from list1 and list2, for which the property expression in list1
-        ///         does not have a 'matching' property expression in list2.
-        ///         The lists list1 and list2 are known to not create duplicate, and the purpose of the sortList is just for this method.
-        ///         Thus, to optimize the match process, we remove the seen property expressions from the sort list in
-        ///         <see cref="HasMatchInList" />
-        ///         when iterating both list simultaneously.
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
+        ///     Removes all pairs of property expressions from list1 and list2, for which the property expression in list1
+        ///     does not have a 'matching' property expression in list2.
+        ///     The lists list1 and list2 are known to not create duplicate, and the purpose of the sortList is just for this method.
+        ///     Thus, to optimize the match process, we remove the seen property expressions from the sort list in
+        ///     <see cref="HasMatchInList" />
+        ///     when iterating both list simultaneously.
         /// </summary>
         /// <param name="list1"> </param>
         /// <param name="list2"> </param>
@@ -465,15 +448,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method for
         ///     <see
-        ///         cref="TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList
-        ///                           
-        ///                           
-        ///     <DbPropertyExpression>
-        ///         sortExpressionsOverLeft, string sortExpressionsBindingVariableName)"/>
-        ///         Creates a
-        ///         <see cref="DbProjectExpression" />
-        ///         over the given inputBinding that projects out the given flattenedProperties.
-        ///         and updates the flattenedProperties to be over the newly created project.
+        ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
+        ///     Creates a
+        ///     <see cref="DbProjectExpression" />
+        ///     over the given inputBinding that projects out the given flattenedProperties.
+        ///     and updates the flattenedProperties to be over the newly created project.
         /// </summary>
         /// <param name="inputBinding"> </param>
         /// <param name="flattenedProperties"> </param>

@@ -322,7 +322,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         [SuppressMessage("Microsoft.Usage", "CA2301", Justification = "metadata.ClrType is not expected to be an Embedded Interop Type.")]
         internal void ValidateInitializerMetadata(InitializerMetadata metadata)
         {
-            Debug.Assert(null != metadata);
+            DebugCheck.NotNull(metadata);
             InitializerMetadata existingMetadata;
             if (_initializers != null
                 && _initializers.TryGetValue(metadata.ClrType, out existingMetadata))
@@ -783,7 +783,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             private ParameterReferenceRemover(ObjectParameterCollection availableParams)
             {
-                Debug.Assert(availableParams != null, "Parameter collection cannot be null");
+                DebugCheck.NotNull(availableParams);
 
                 objectParameters = availableParams;
             }
@@ -904,7 +904,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // (which acts as both a set and a structure containing a property)
         private DbExpression NormalizeSetSource(DbExpression input)
         {
-            Debug.Assert(null != input);
+            DebugCheck.NotNull(input);
 
             // If input looks like "select x from (...) as x", rewrite it as "(...)".
             // If input has span information attached to to it then leave it as is, otherwise 
@@ -975,7 +975,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // Translate a LINQ expression to a CQT expression.
         private DbExpression TranslateExpression(Expression linq)
         {
-            Debug.Assert(null != linq);
+            DebugCheck.NotNull(linq);
 
             DbExpression result;
             if (!_bindingContext.TryGetBoundExpression(linq, out result))
@@ -1047,8 +1047,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // from the CLR type
         private static bool TypeUsageEquals(TypeUsage left, TypeUsage right)
         {
-            Debug.Assert(null != left);
-            Debug.Assert(null != right);
+            DebugCheck.NotNull(left);
+            DebugCheck.NotNull(right);
             if (left.EdmType.EdmEquals(right.EdmType))
             {
                 return true;

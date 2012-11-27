@@ -302,22 +302,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The argument property '{0}' cannot be null."
-        /// </summary>
-        internal static string ArgumentPropertyIsNull(object p0)
-        {
-            return EntityRes.GetString(EntityRes.ArgumentPropertyIsNull, p0);
-        }
-
-        /// <summary>
-        /// A string like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static string PreconditionFailed(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.PreconditionFailed, p0, p1);
-        }
-
-        /// <summary>
         /// A string like "The type '{0}' has already been configured as a complex type. It cannot be reconfigured as an entity type."
         /// </summary>
         internal static string EntityTypeConfigurationMismatch(object p0)
@@ -10462,14 +10446,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The specified variable name is not valid. Variable names cannot be empty."
-        /// </summary>
-        internal static string Cqt_Binding_VariableNameNotValid
-        {
-            get { return EntityRes.GetString(EntityRes.Cqt_Binding_VariableNameNotValid); }
-        }
-
-        /// <summary>
         /// A string like "DbGroupExpressionBinding requires an input expression with a collection ResultType."
         /// </summary>
         internal static string Cqt_GroupBinding_CollectionRequired
@@ -11339,14 +11315,6 @@ namespace System.Data.Entity.Resources
         internal static string EntityParameterContainedByAnotherCollection
         {
             get { return EntityRes.GetString(EntityRes.EntityParameterContainedByAnotherCollection); }
-        }
-
-        /// <summary>
-        /// A string like "The EntityParameterCollection only accepts non-null EntityParameter type objects."
-        /// </summary>
-        internal static string EntityParameterNull
-        {
-            get { return EntityRes.GetString(EntityRes.EntityParameterNull); }
         }
 
         /// <summary>
@@ -12726,54 +12694,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "You must specify a valid projection list."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidProjectionList
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidProjectionList); }
-        }
-
-        /// <summary>
-        /// A string like "You must specify a valid key list for sorting the results."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidSortKeyList
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidSortKeyList); }
-        }
-
-        /// <summary>
-        /// A string like "You must specify a valid key list for grouping the results."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidGroupKeyList
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidGroupKeyList); }
-        }
-
-        /// <summary>
-        /// A string like "You must specify a valid skip count."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidSkipCount
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidSkipCount); }
-        }
-
-        /// <summary>
-        /// A string like "You must specify a valid result count."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidTopCount
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidTopCount); }
-        }
-
-        /// <summary>
-        /// A string like "You must specify a valid predicate for filtering the results."
-        /// </summary>
-        internal static string ObjectQuery_QueryBuilder_InvalidFilterPredicate
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_InvalidFilterPredicate); }
-        }
-
-        /// <summary>
         /// A string like "'{0}' is not a valid type for type filtering operations. Type filtering is only valid on entity types and complex types."
         /// </summary>
         internal static string ObjectQuery_QueryBuilder_InvalidResultType(object p0)
@@ -12795,14 +12715,6 @@ namespace System.Data.Entity.Resources
         internal static string ObjectQuery_QueryBuilder_NotSupportedLinqSource
         {
             get { return EntityRes.GetString(EntityRes.ObjectQuery_QueryBuilder_NotSupportedLinqSource); }
-        }
-
-        /// <summary>
-        /// A string like "The command text for an ObjectQuery instance cannot be empty."
-        /// </summary>
-        internal static string ObjectQuery_InvalidEmptyQuery
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_InvalidEmptyQuery); }
         }
 
         /// <summary>
@@ -13107,14 +13019,6 @@ namespace System.Data.Entity.Resources
         internal static string ObjectQuery_Span_SpanPathSyntaxError
         {
             get { return EntityRes.GetString(EntityRes.ObjectQuery_Span_SpanPathSyntaxError); }
-        }
-
-        /// <summary>
-        /// A string like "The path consists only of white space."
-        /// </summary>
-        internal static string ObjectQuery_Span_WhiteSpacePath
-        {
-            get { return EntityRes.GetString(EntityRes.ObjectQuery_Span_WhiteSpacePath); }
         }
 
         /// <summary>
@@ -13634,22 +13538,6 @@ namespace System.Data.Entity.Resources
         internal static Exception ArgumentIsNullOrWhitespace(object p0)
         {
             return new ArgumentException(Strings.ArgumentIsNullOrWhitespace(p0));
-        }
-
-        /// <summary>
-        /// ArgumentException with message like "The argument property '{0}' cannot be null."
-        /// </summary>
-        internal static Exception ArgumentPropertyIsNull(object p0)
-        {
-            return new ArgumentException(Strings.ArgumentPropertyIsNull(p0));
-        }
-
-        /// <summary>
-        /// ArgumentException with message like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static Exception PreconditionFailed(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PreconditionFailed(p0, p1));
         }
 
         /// <summary>
@@ -15092,14 +14980,6 @@ namespace System.Data.Entity.Resources
             return new InvalidOperationException(Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(p0));
         }
         /// <summary>
-        /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
-        /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
-        
-        /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -15168,8 +15048,6 @@ namespace System.Data.Entity.Resources
         internal const string NoSqlGeneratorForProvider = "NoSqlGeneratorForProvider";
         internal const string ToolingFacade_AssemblyNotFound = "ToolingFacade_AssemblyNotFound";
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
-        internal const string ArgumentPropertyIsNull = "ArgumentPropertyIsNull";
-        internal const string PreconditionFailed = "PreconditionFailed";
         internal const string EntityTypeConfigurationMismatch = "EntityTypeConfigurationMismatch";
         internal const string ComplexTypeConfigurationMismatch = "ComplexTypeConfigurationMismatch";
         internal const string KeyPropertyNotFound = "KeyPropertyNotFound";
@@ -16438,7 +16316,6 @@ namespace System.Data.Entity.Resources
         internal const string Cqt_Factory_MethodResultTypeNotSupported = "Cqt_Factory_MethodResultTypeNotSupported";
         internal const string Cqt_Aggregate_InvalidFunction = "Cqt_Aggregate_InvalidFunction";
         internal const string Cqt_Binding_CollectionRequired = "Cqt_Binding_CollectionRequired";
-        internal const string Cqt_Binding_VariableNameNotValid = "Cqt_Binding_VariableNameNotValid";
         internal const string Cqt_GroupBinding_CollectionRequired = "Cqt_GroupBinding_CollectionRequired";
         internal const string Cqt_GroupBinding_GroupVariableNameNotValid = "Cqt_GroupBinding_GroupVariableNameNotValid";
         internal const string Cqt_Binary_CollectionsRequired = "Cqt_Binary_CollectionsRequired";
@@ -16548,7 +16425,6 @@ namespace System.Data.Entity.Resources
         internal const string EntityParameterCollectionInvalidIndex = "EntityParameterCollectionInvalidIndex";
         internal const string InvalidEntityParameterType = "InvalidEntityParameterType";
         internal const string EntityParameterContainedByAnotherCollection = "EntityParameterContainedByAnotherCollection";
-        internal const string EntityParameterNull = "EntityParameterNull";
         internal const string EntityParameterCollectionRemoveInvalidObject = "EntityParameterCollectionRemoveInvalidObject";
         internal const string ADP_ConnectionStringSyntax = "ADP_ConnectionStringSyntax";
         internal const string ExpandingDataDirectoryFailed = "ExpandingDataDirectoryFailed";
@@ -16721,16 +16597,9 @@ namespace System.Data.Entity.Resources
         internal const string CalculatedEnumValueOutOfRange = "CalculatedEnumValueOutOfRange";
         internal const string EnumMemberValueOutOfItsUnderylingTypeRange = "EnumMemberValueOutOfItsUnderylingTypeRange";
         internal const string SpatialWithUseStrongSpatialTypesFalse = "SpatialWithUseStrongSpatialTypesFalse";
-        internal const string ObjectQuery_QueryBuilder_InvalidProjectionList = "ObjectQuery_QueryBuilder_InvalidProjectionList";
-        internal const string ObjectQuery_QueryBuilder_InvalidSortKeyList = "ObjectQuery_QueryBuilder_InvalidSortKeyList";
-        internal const string ObjectQuery_QueryBuilder_InvalidGroupKeyList = "ObjectQuery_QueryBuilder_InvalidGroupKeyList";
-        internal const string ObjectQuery_QueryBuilder_InvalidSkipCount = "ObjectQuery_QueryBuilder_InvalidSkipCount";
-        internal const string ObjectQuery_QueryBuilder_InvalidTopCount = "ObjectQuery_QueryBuilder_InvalidTopCount";
-        internal const string ObjectQuery_QueryBuilder_InvalidFilterPredicate = "ObjectQuery_QueryBuilder_InvalidFilterPredicate";
         internal const string ObjectQuery_QueryBuilder_InvalidResultType = "ObjectQuery_QueryBuilder_InvalidResultType";
         internal const string ObjectQuery_QueryBuilder_InvalidQueryArgument = "ObjectQuery_QueryBuilder_InvalidQueryArgument";
         internal const string ObjectQuery_QueryBuilder_NotSupportedLinqSource = "ObjectQuery_QueryBuilder_NotSupportedLinqSource";
-        internal const string ObjectQuery_InvalidEmptyQuery = "ObjectQuery_InvalidEmptyQuery";
         internal const string ObjectQuery_InvalidConnection = "ObjectQuery_InvalidConnection";
         internal const string ObjectQuery_InvalidQueryName = "ObjectQuery_InvalidQueryName";
         internal const string ObjectQuery_UnableToMapResultType = "ObjectQuery_UnableToMapResultType";
@@ -16769,7 +16638,6 @@ namespace System.Data.Entity.Resources
         internal const string ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection = "ObjectQuery_Span_IncludeRequiresEntityOrEntityCollection";
         internal const string ObjectQuery_Span_NoNavProp = "ObjectQuery_Span_NoNavProp";
         internal const string ObjectQuery_Span_SpanPathSyntaxError = "ObjectQuery_Span_SpanPathSyntaxError";
-        internal const string ObjectQuery_Span_WhiteSpacePath = "ObjectQuery_Span_WhiteSpacePath";
         internal const string EntityProxyTypeInfo_ProxyHasWrongWrapper = "EntityProxyTypeInfo_ProxyHasWrongWrapper";
         internal const string EntityProxyTypeInfo_CannotSetEntityCollectionProperty = "EntityProxyTypeInfo_CannotSetEntityCollectionProperty";
         internal const string EntityProxyTypeInfo_ProxyMetadataIsUnavailable = "EntityProxyTypeInfo_ProxyMetadataIsUnavailable";

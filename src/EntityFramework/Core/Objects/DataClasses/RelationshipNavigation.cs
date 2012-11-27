@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
 
     /// <summary>
@@ -33,9 +34,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal RelationshipNavigation(
             string relationshipName, string from, string to, NavigationPropertyAccessor fromAccessor, NavigationPropertyAccessor toAccessor)
         {
-            EntityUtil.CheckStringArgument(relationshipName, "relationshipName");
-            EntityUtil.CheckStringArgument(from, "from");
-            EntityUtil.CheckStringArgument(to, "to");
+            Check.NotEmpty(relationshipName, "relationshipName");
+            Check.NotEmpty(@from, "from");
+            Check.NotEmpty(to, "to");
 
             _relationshipName = relationshipName;
             _from = from;

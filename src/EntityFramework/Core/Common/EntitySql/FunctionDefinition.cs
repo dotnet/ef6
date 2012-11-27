@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Entity SQL query inline function definition, returned as a part of <see cref="ParseResult" />.
@@ -17,8 +17,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal FunctionDefinition(string name, DbLambda lambda, int startPosition, int endPosition)
         {
-            Debug.Assert(name != null, "name can not be null");
-            Debug.Assert(lambda != null, "lambda cannot be null");
+            DebugCheck.NotNull(name);
+            DebugCheck.NotNull(lambda);
 
             _name = name;
             _lambda = lambda;

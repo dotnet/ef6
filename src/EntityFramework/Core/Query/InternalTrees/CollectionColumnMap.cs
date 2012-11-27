@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a column map for a collection column.
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             TypeUsage type, string name, ColumnMap elementMap, SimpleColumnMap[] keys, SimpleColumnMap[] foreignKeys)
             : base(type, name)
         {
-            Debug.Assert(elementMap != null, "Must specify column map for element");
+            DebugCheck.NotNull(elementMap);
 
             m_element = elementMap;
             m_keys = keys ?? new SimpleColumnMap[0];

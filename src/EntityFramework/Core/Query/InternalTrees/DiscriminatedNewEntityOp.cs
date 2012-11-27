@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             EntitySet entitySet, List<RelProperty> relProperties)
             : base(OpType.DiscriminatedNewEntity, type, true, entitySet, relProperties)
         {
-            Debug.Assert(null != discriminatorMap, "null discriminator map");
+            DebugCheck.NotNull(discriminatorMap);
             m_discriminatorMap = discriminatorMap;
         }
 

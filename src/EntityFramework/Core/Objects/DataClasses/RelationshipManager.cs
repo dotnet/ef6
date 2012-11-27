@@ -291,7 +291,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             EntityCollection<TTargetEntity> collection)
             where TTargetEntity : class
         {
-            Debug.Assert(collection != null, "collection is null");
+            DebugCheck.NotNull(collection);
             // If there is a previousCollection, we only need to merge the items that are 
             // in the collection but not in the previousCollection
             // Ensure that all of the items in the previousCollection are already in the new collection
@@ -482,10 +482,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private RelatedEnd GetRelatedEndInternal(
             string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship, bool throwOnError)
         {
-            Debug.Assert(relationshipName != null, "null relationshipNameFromUser");
-            Debug.Assert(targetRoleName != null, "null targetRoleName");
+            DebugCheck.NotNull(relationshipName);
+            DebugCheck.NotNull(targetRoleName);
             // existingRelatedEnd can be null if we are not trying to initialize an existing end
-            Debug.Assert(relationship != null, "null relationshipType");
+            DebugCheck.NotNull(relationship);
 
             AssociationEndMember sourceEnd;
             AssociationEndMember targetEnd;
@@ -1193,7 +1193,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // or a portion of it, raise exception. 
         internal static void RemoveRelatedEntitiesFromObjectStateManager(IEntityWrapper wrappedEntity)
         {
-            Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
+            DebugCheck.NotNull(wrappedEntity);
             foreach (var relatedEnd in wrappedEntity.RelationshipManager.Relationships)
             {
                 // only some of the related ends may have gotten attached, so just skip the ones that weren't
@@ -1274,7 +1274,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //For a given relationship removes passed in entity from owners relationship
         internal void RemoveEntity(string toRole, string relationshipName, IEntityWrapper wrappedEntity)
         {
-            Debug.Assert(wrappedEntity != null, "IEntityWrapper instance is null.");
+            DebugCheck.NotNull(wrappedEntity);
             RelatedEnd relatedEnd;
             if (TryGetCachedRelatedEnd(relationshipName, toRole, out relatedEnd))
             {
@@ -1303,7 +1303,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             var wrappedOwner = WrappedOwner;
             Debug.Assert(wrappedOwner.Entity != null);
-            Debug.Assert(visited != null);
+            DebugCheck.NotNull(visited);
 
             // Dictionary< propertyName, <propertyValue, counter>>
             properties = new Dictionary<string, KeyValuePair<object, IntBox>>();
@@ -1382,8 +1382,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private static bool CheckIfAllPropertiesWereRetrieved(
             Dictionary<string, KeyValuePair<object, IntBox>> properties, List<string> propertiesToRetrieve)
         {
-            Debug.Assert(properties != null);
-            Debug.Assert(propertiesToRetrieve != null);
+            DebugCheck.NotNull(properties);
+            DebugCheck.NotNull(propertiesToRetrieve);
 
             var isSuccess = true;
 
@@ -1444,7 +1444,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // If some of Principal entities don't exist or some property cannot be checked - this is violation of RI Constraints
         internal void CheckReferentialConstraintProperties(EntityEntry ownerEntry)
         {
-            Debug.Assert(ownerEntry != null);
+            DebugCheck.NotNull(ownerEntry);
 
             List<string> propertiesToRetrieve; // used to check if the owner is a dependent end of some RI Constraint
             bool propertiesToPropagateExist; // used to check if the owner is a principal end of some RI Constraint
@@ -1594,8 +1594,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal void AttachContextToRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
-            Debug.Assert(null != context, "context");
-            Debug.Assert(null != entitySet, "entitySet");
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(entitySet);
             if (null != _relationships)
             {
                 // If GetAllRelatedEnds was called while the entity was not attached to the context
@@ -1632,8 +1632,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         internal void ResetContextOnRelatedEnds(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
-            Debug.Assert(null != context, "context");
-            Debug.Assert(null != entitySet, "entitySet");
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(entitySet);
             if (null != _relationships)
             {
                 foreach (var relatedEnd in Relationships)

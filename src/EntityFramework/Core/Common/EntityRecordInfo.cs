@@ -90,14 +90,10 @@ namespace System.Data.Entity.Core.Common
         private void ValidateEntityType(EntitySetBase entitySet)
         {
             if (!ReferenceEquals(RecordType.EdmType, null)
-                &&
-                !ReferenceEquals(_entityKey, EntityKey.EntityNotValidKey)
-                &&
-                !ReferenceEquals(_entityKey, EntityKey.NoEntitySetKey)
-                &&
-                !ReferenceEquals(RecordType.EdmType, entitySet.ElementType)
-                &&
-                !entitySet.ElementType.IsBaseTypeOf(RecordType.EdmType))
+                && !ReferenceEquals(_entityKey, EntityKey.EntityNotValidKey)
+                && !ReferenceEquals(_entityKey, EntityKey.NoEntitySetKey)
+                && !ReferenceEquals(RecordType.EdmType, entitySet.ElementType)
+                && !entitySet.ElementType.IsBaseTypeOf(RecordType.EdmType))
             {
                 throw new ArgumentException(Strings.EntityTypesDoNotAgree);
             }

@@ -5,12 +5,12 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.SqlServerCompact.Utilities;
 
     /// <summary>
     ///     An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
-    /*CQT_PUBLIC_API(*/
-    internal /*)*/ abstract class BasicExpressionVisitor : DbExpressionVisitor
+    internal abstract class BasicExpressionVisitor : DbExpressionVisitor
     {
         #region protected API, may be overridden to add functionality at specific points in the traversal
 
@@ -24,7 +24,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         protected virtual void VisitUnaryExpression(DbUnaryExpression expression)
         {
-            VisitExpression(ADP1.CheckArgumentNull(expression, "expression").Argument);
+            VisitExpression(Check.NotNull(expression, "expression").Argument);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         protected virtual void VisitBinaryExpression(DbBinaryExpression expression)
         {
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpression(expression.Left);
             VisitExpression(expression.Right);
@@ -53,7 +53,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         protected virtual void VisitExpressionBindingPre(DbExpressionBinding binding)
         {
-            ADP1.CheckArgumentNull(binding, "binding");
+            Check.NotNull(binding, "binding");
             VisitExpression(binding.Expression);
         }
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         protected virtual void VisitGroupExpressionBindingPre(DbGroupExpressionBinding binding)
         {
-            ADP1.CheckArgumentNull(binding, "binding");
+            Check.NotNull(binding, "binding");
             VisitExpression(binding.Expression);
         }
 
@@ -110,8 +110,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         protected virtual void VisitLambdaFunctionPre(EdmFunction function, DbExpression body)
         {
-            ADP1.CheckArgumentNull(function, "function");
-            ADP1.CheckArgumentNull(body, "body");
+            Check.NotNull(function, "function");
+            Check.NotNull(body, "body");
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace System.Data.Entity.SqlServerCompact
         public void VisitExpression(DbExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression").Accept(this);
+            Check.NotNull(expression, "expression").Accept(this);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         public virtual void VisitExpressionList(IList<DbExpression> expressionList)
         {
-            ADP1.CheckArgumentNull(expressionList, "expressionList");
+            Check.NotNull(expressionList, "expressionList");
             for (var idx = 0; idx < expressionList.Count; idx++)
             {
                 VisitExpression(expressionList[idx]);
@@ -168,7 +168,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         public virtual void VisitAggregateList(IList<DbAggregate> aggregates)
         {
-            ADP1.CheckArgumentNull(aggregates, "aggregates");
+            Check.NotNull(aggregates, "aggregates");
             for (var idx = 0; idx < aggregates.Count; idx++)
             {
                 VisitAggregate(aggregates[idx]);
@@ -186,7 +186,7 @@ namespace System.Data.Entity.SqlServerCompact
         public virtual void VisitAggregate(DbAggregate aggregate)
         {
             // #433613: PreSharp warning 56506: Parameter 'aggregate' to this public method must be validated: A null-dereference can occur here.
-            VisitExpressionList(ADP1.CheckArgumentNull(aggregate, "aggregate").Arguments);
+            VisitExpressionList(Check.NotNull(aggregate, "aggregate").Arguments);
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             throw ADP1.NotSupported(); // EntityRes.GetString(EntityRes.Cqt_General_UnsupportedExpression, expression.GetType().FullName));
         }
@@ -225,7 +225,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbConstantExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbNullExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbVariableReferenceExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbParameterReferenceExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbFunctionExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionList(expression.Arguments);
         }
@@ -316,7 +316,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbPropertyExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             if (expression.Instance != null)
             {
@@ -348,7 +348,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbLikeExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpression(expression.Argument);
             VisitExpression(expression.Pattern);
@@ -366,7 +366,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbLimitExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpression(expression.Argument);
             VisitExpression(expression.Limit);
@@ -395,7 +395,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         public override void Visit(DbArithmeticExpression expression)
         {
-            VisitExpressionList(ADP1.CheckArgumentNull(expression, "expression").Arguments);
+            VisitExpressionList(Check.NotNull(expression, "expression").Arguments);
         }
 
         /// <summary>
@@ -578,7 +578,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbCaseExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionList(expression.When);
             VisitExpressionList(expression.Then);
@@ -596,7 +596,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbNewInstanceExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            VisitExpressionList(ADP1.CheckArgumentNull(expression, "expression").Arguments);
+            VisitExpressionList(Check.NotNull(expression, "expression").Arguments);
         }
 
         /// <summary>
@@ -623,7 +623,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbRelationshipNavigationExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            VisitExpression(ADP1.CheckArgumentNull(expression, "expression").NavigationSource);
+            VisitExpression(Check.NotNull(expression, "expression").NavigationSource);
         }
 
         /// <summary>
@@ -676,7 +676,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbScanExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
         }
 
         /// <summary>
@@ -690,7 +690,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbFilterExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Predicate);
@@ -708,7 +708,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbProjectExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Projection);
@@ -726,7 +726,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbCrossJoinExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             foreach (var b in expression.Inputs)
             {
@@ -750,7 +750,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbJoinExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Left);
             VisitExpressionBindingPre(expression.Right);
@@ -772,7 +772,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbApplyExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
 
@@ -796,7 +796,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbGroupByExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitGroupExpressionBindingPre(expression.Input);
             VisitExpressionList(expression.Keys);
@@ -816,7 +816,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbSortExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
             for (var idx = 0; idx < expression.SortOrder.Count; idx++)
@@ -837,7 +837,7 @@ namespace System.Data.Entity.SqlServerCompact
         public override void Visit(DbQuantifierExpression expression)
         {
             // #433613: PreSharp warning 56506: Parameter 'expression' to this public method must be validated: A null-dereference can occur here.
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
             VisitExpression(expression.Predicate);
@@ -854,7 +854,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </exception>
         public override void Visit(DbSkipExpression expression)
         {
-            ADP1.CheckArgumentNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             VisitExpressionBindingPre(expression.Input);
             foreach (var s in expression.SortOrder)

@@ -526,7 +526,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             internal static DbExpression Substitute(
                 DbExpression original, string referencedVariable, Dictionary<string, DbExpression> propertyValues)
             {
-                Debug.Assert(original != null, "Original expression cannot be null");
+                DebugCheck.NotNull(original);
                 var visitor = new ValueSubstituter(referencedVariable, propertyValues);
                 return visitor.VisitExpression(original);
             }
@@ -536,8 +536,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
             private ValueSubstituter(string varName, Dictionary<string, DbExpression> replValues)
             {
-                Debug.Assert(varName != null, "Variable name cannot be null");
-                Debug.Assert(replValues != null, "Replacement values cannot be null");
+                DebugCheck.NotNull(varName);
+                DebugCheck.NotNull(replValues);
 
                 variableName = varName;
                 replacements = replValues;

@@ -8,55 +8,29 @@ namespace System.Data.Entity.SqlServerCompact
 
     internal static class ADP1
     {
-        // The class ADP1 defines the exceptions that are specific to the Adapters.
-        // The class contains functions that take the proper informational variables and then construct
-        // the appropriate exception with an error string obtained from the resource Framework.txt.
-        // The exception is then returned to the caller, so that the caller may then throw from its
-        // location so that the catcher of the exception will have the appropriate call stack.
-        // This class is used so that there will be compile time checking of error messages.
-        // The resource Framework.txt will ensure proper string text based on the appropriate
-        // locale.
-
-        //
-        // COM+ exceptions
-        //
         internal static ArgumentException Argument(string error)
         {
-            var e = new ArgumentException(error);
-            return e;
-        }
-
-        internal static ArgumentNullException ArgumentNull(string parameter)
-        {
-            var e = new ArgumentNullException(parameter);
-            return e;
+            return new ArgumentException(error);
         }
 
         internal static InvalidOperationException InvalidOperation(string error)
         {
-            var e = new InvalidOperationException(error);
-            return e;
+            return new InvalidOperationException(error);
         }
 
         internal static NotImplementedException NotImplemented(string error)
         {
-            var e = new NotImplementedException(error);
-
-            return e;
+            return new NotImplementedException(error);
         }
 
         internal static NotSupportedException NotSupported()
         {
-            var e = new NotSupportedException();
-
-            return e;
+            return new NotSupportedException();
         }
 
         internal static NotSupportedException NotSupported(string error)
         {
-            var e = new NotSupportedException(error);
-
-            return e;
+            return new NotSupportedException(error);
         }
 
         #region Metadata Exceptions
@@ -186,19 +160,6 @@ namespace System.Data.Entity.SqlServerCompact
         internal static NotSupportedException ColumnGreaterThanMaxLengthNotSupported(object p0, object p1)
         {
             return NotSupported(EntityRes.GetString(EntityRes.ColumnGreaterThanMaxLengthNotSupported, new[] { p0, p1 }));
-        }
-
-        ////////////////////////////////////////////////////////////////////////
-        //
-        // Helper Functions
-        //
-        internal static T CheckArgumentNull<T>(T value, string parameterName) where T : class
-        {
-            if (null == value)
-            {
-                throw ArgumentNull(parameterName);
-            }
-            return value;
         }
 
         // global constant strings

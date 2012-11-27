@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -100,7 +99,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> ObjectQuery implementing the expression logic. </returns>
         IQueryable<TElement> IQueryProvider.CreateQuery<TElement>(Expression expression)
         {
-            DbHelpers.ThrowIfNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             if (!typeof(IQueryable<TElement>).IsAssignableFrom(expression.Type))
             {
@@ -121,7 +120,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> Single result from execution. </returns>
         TResult IQueryProvider.Execute<TResult>(Expression expression)
         {
-            DbHelpers.ThrowIfNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             var query = CreateQuery<TResult>(expression);
 
@@ -137,7 +136,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> ObjectQuery instance implementing the given expression. </returns>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
-            DbHelpers.ThrowIfNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             if (!typeof(IQueryable).IsAssignableFrom(expression.Type))
             {
@@ -161,7 +160,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> Single result from execution. </returns>
         object IQueryProvider.Execute(Expression expression)
         {
-            DbHelpers.ThrowIfNull(expression, "expression");
+            Check.NotNull(expression, "expression");
 
             var query = CreateQuery(expression, expression.Type);
             var objQuery = ((IEnumerable)query).Cast<object>();

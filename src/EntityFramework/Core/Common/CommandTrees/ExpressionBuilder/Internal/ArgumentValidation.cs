@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static void RequirePolymorphicType(TypeUsage type)
         {
-            Debug.Assert(type != null, "Ensure type is non-null before calling RequirePolymorphicType");
+            DebugCheck.NotNull(type);
 
             if (!TypeSemantics.IsPolymorphicType(type))
             {
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         private static void RequireCompatibleType(
             DbExpression expression, TypeUsage requiredResultType, string argumentName, int argumentIndex)
         {
-            Debug.Assert(expression != null, "Ensure expression is non-null before checking for type compatibility");
-            Debug.Assert(requiredResultType != null, "Ensure type is non-null before checking for type compatibility");
+            DebugCheck.NotNull(expression);
+            DebugCheck.NotNull(requiredResultType);
 
             if (!TypeSemantics.IsStructurallyEqualOrPromotableTo(expression.ResultType, requiredResultType))
             {
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         private static void RequireCompatibleType(
             DbExpression expression, PrimitiveTypeKind requiredResultType, string argumentName, int index)
         {
-            Debug.Assert(expression != null, "Ensure expression is non-null before checking for type compatibility");
+            DebugCheck.NotNull(expression);
 
             PrimitiveTypeKind valueTypeKind;
             var valueIsPrimitive = TypeHelpers.TryGetPrimitiveTypeKind(expression.ResultType, out valueTypeKind);
@@ -95,8 +95,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         private static void RequireCompatibleType(
             DbExpression from, RelationshipEndMember end, bool allowAllRelationshipsInSameTypeHierarchy)
         {
-            Debug.Assert(from != null, "Ensure navigation source expression is non-null before calling RequireCompatibleType");
-            Debug.Assert(end != null, "Ensure navigation start end is non-null before calling RequireCompatibleType");
+            DebugCheck.NotNull(from);
+            DebugCheck.NotNull(end);
 
             var endType = end.TypeUsage;
             if (!TypeSemantics.IsReferenceType(endType))
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static void RequireCollectionArgument<TExpressionType>(DbExpression argument)
         {
-            Debug.Assert(argument != null, "Validate argument is non-null before calling CheckCollectionArgument");
+            DebugCheck.NotNull(argument);
 
             if (!TypeSemantics.IsCollectionType(argument.ResultType))
             {
@@ -134,7 +134,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static TypeUsage RequireCollectionArguments<TExpressionType>(DbExpression left, DbExpression right)
         {
-            Debug.Assert(left != null && right != null, "Ensure left and right are non-null before calling RequireCollectionArguments");
+            DebugCheck.NotNull(left);
+            DebugCheck.NotNull(right);
 
             if (!TypeSemantics.IsCollectionType(left.ResultType)
                 || !TypeSemantics.IsCollectionType(right.ResultType))
@@ -243,10 +244,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateBindAs(DbExpression input, string varName)
         {
-            if (string.IsNullOrEmpty(varName))
-            {
-                throw new ArgumentException(Strings.Cqt_Binding_VariableNameNotValid, "varName");
-            }
+            Check.NotEmpty(varName, "varName");
 
             // Ensure the DbExpression has a collection result type
             TypeUsage elementType = null;
@@ -262,15 +260,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateGroupBindAs(DbExpression input, string varName, string groupVarName)
         {
-            if (string.IsNullOrEmpty(varName))
-            {
-                throw new ArgumentException(Strings.Cqt_Binding_VariableNameNotValid, "varName");
-            }
-
-            if (string.IsNullOrEmpty(groupVarName))
-            {
-                throw new ArgumentException(Strings.Cqt_GroupBinding_GroupVariableNameNotValid, "groupVarName");
-            }
+            Check.NotEmpty(varName, "varName");
+            Check.NotEmpty(groupVarName, "groupVarName");
 
             // Ensure the DbExpression has a collection result type
             TypeUsage elementType = null;
@@ -290,7 +281,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static FunctionParameter[] GetExpectedParameters(EdmFunction function)
         {
-            Debug.Assert(function != null, "Ensure function is non-null before calling GetExpectedParameters");
+            DebugCheck.NotNull(function);
+
             return function.Parameters.Where(p => p.Mode == ParameterMode.In || p.Mode == ParameterMode.InOut).ToArray();
         }
 
@@ -337,10 +329,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             ValidateSortClause(key);
 
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(collation))
-            {
-                throw new ArgumentOutOfRangeException("collation", Strings.Cqt_Sort_EmptyCollationInvalid);
-            }
+            Check.NotEmpty(collation, "collation");
 
             if (!TypeSemantics.IsPrimitiveType(key.ResultType, PrimitiveTypeKind.String))
             {
@@ -543,7 +532,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             validAggregates = aggValidator.Validate();
 
             // Either the Keys or Aggregates may be omitted, but not both
-            if (0 == validKeys.Count && 0 == validAggregates.Count)
+            if (0 == validKeys.Count
+                && 0 == validAggregates.Count)
             {
                 throw new ArgumentException(Strings.Cqt_GroupBy_AtLeastOneKeyOrAggregate);
             }
@@ -693,10 +683,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             CheckType(type);
 
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException(Strings.Cqt_Binding_VariableNameNotValid, "name");
-            }
+            Check.NotEmpty(name, "name");
         }
 
         #endregion
@@ -788,14 +775,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             // A comparison of the specified kind must exist between the left and right arguments
             var equality = true;
             var order = true;
-            if (DbExpressionKind.GreaterThanOrEquals == kind 
+            if (DbExpressionKind.GreaterThanOrEquals == kind
                 || DbExpressionKind.LessThanOrEquals == kind)
             {
                 equality = TypeSemantics.IsEqualComparableTo(left.ResultType, right.ResultType);
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
-            else if (DbExpressionKind.Equals == kind 
-                || DbExpressionKind.NotEquals == kind)
+            else if (DbExpressionKind.Equals == kind
+                     || DbExpressionKind.NotEquals == kind)
             {
                 equality = TypeSemantics.IsEqualComparableTo(left.ResultType, right.ResultType);
             }
@@ -804,7 +791,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
 
-            if (!equality || !order)
+            if (!equality
+                || !order)
             {
                 throw new ArgumentException(Strings.Cqt_Comparison_ComparableRequired);
             }
@@ -1828,8 +1816,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         /// </remarks>
         private static bool ClrEdmEnumTypesMatch(EnumType edmEnumType, Type clrEnumType)
         {
-            Debug.Assert(edmEnumType != null, "edmEnumType != null");
-            Debug.Assert(clrEnumType != null, "clrEnumType != null");
+            DebugCheck.NotNull(edmEnumType);
+            DebugCheck.NotNull(clrEnumType);
             Debug.Assert(clrEnumType.IsEnum, "non enum clr type.");
 
             // check that type names are the same and both types have the same number of members

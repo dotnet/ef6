@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
     using DomainBoolExpr =
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : this(slot, new Domain(values, possibleValues))
         {
-            Debug.Assert(possibleValues != null);
+            DebugCheck.NotNull(possibleValues);
         }
 
         private readonly MemberProjectedSlot m_restrictedMemberSlot;

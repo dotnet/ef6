@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -456,7 +457,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         private static List<String> GetTypeBasedMemberPathList(IEnumerable<MemberPath> nonConditionalScalarAttributes)
         {
-            Debug.Assert(nonConditionalScalarAttributes != null);
+            DebugCheck.NotNull(nonConditionalScalarAttributes);
             var typeBasedMembers = new List<string>();
             foreach (var memberPath in nonConditionalScalarAttributes)
             {

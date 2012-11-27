@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Threading;
 
@@ -64,8 +65,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             int? maxValue,
             object defaultValue)
         {
-            EntityUtil.CheckStringArgument(facetName, "facetName");
-            EntityUtil.GenericCheckArgumentNull(facetType, "facetType");
+            Check.NotEmpty(facetName, "facetName");
+            Check.NotNull(facetType, "facetType");
 
             if (minValue.HasValue
                 || maxValue.HasValue)

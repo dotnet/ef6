@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -207,7 +208,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             ref List<SlotInfo> foreignKeySlots,
             out WithRelationship withRelationship)
         {
-            Debug.Assert(foreignKeySlots != null);
+            DebugCheck.NotNull(foreignKeySlots);
             withRelationship = null;
 
             //Get the map for foreign key end

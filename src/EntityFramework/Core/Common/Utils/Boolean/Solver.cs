@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// </summary>
         internal Vertex CreateLeafVertex(int variable, Vertex[] children)
         {
-            Debug.Assert(null != children, "children must be specified");
+            DebugCheck.NotNull(children);
             Debug.Assert(2 <= children.Length, "must be at least 2 children");
             Debug.Assert(children.All(child => child != null), "children must not be null");
             Debug.Assert(children.All(child => child.IsSink()), "children must be sinks");
@@ -276,7 +277,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         [Conditional("DEBUG")]
         private void AssertVerticesValid(IEnumerable<Vertex> vertices)
         {
-            Debug.Assert(null != vertices);
+            DebugCheck.NotNull(vertices);
             foreach (var vertex in vertices)
             {
                 AssertVertexValid(vertex);
@@ -376,9 +377,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal Triple(T1 value1, T2 value2, T3 value3)
         {
-            Debug.Assert(null != value1, "null key element");
-            Debug.Assert(null != value2, "null key element");
-            Debug.Assert(null != value3, "null key element");
+            DebugCheck.NotNull((object)value1);
+            DebugCheck.NotNull((object)value2);
+            DebugCheck.NotNull((object)value3);
+
             _value1 = value1;
             _value2 = value2;
             _value3 = value3;

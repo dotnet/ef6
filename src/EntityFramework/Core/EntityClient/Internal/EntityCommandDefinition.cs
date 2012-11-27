@@ -296,7 +296,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         private static FunctionImportMappingNonComposable GetTargetFunctionMapping(DbFunctionCommandTree functionCommandTree)
         {
             Debug.Assert(functionCommandTree.DataSpace == DataSpace.CSpace, "map from CSpace->SSpace function");
-            Debug.Assert(functionCommandTree != null, "null functionCommandTree");
+            DebugCheck.NotNull(functionCommandTree);
             Debug.Assert(!functionCommandTree.EdmFunction.IsComposableAttribute, "functionCommandTree.EdmFunction must be non-composable.");
 
             // Find mapped store function.

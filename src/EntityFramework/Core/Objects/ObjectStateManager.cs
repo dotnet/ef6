@@ -193,8 +193,8 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entitySet"> the entity set of the given object </param>
         internal virtual EntityEntry AddKeyEntry(EntityKey entityKey, EntitySet entitySet)
         {
-            Debug.Assert((object)entityKey != null, "entityKey cannot be null.");
-            Debug.Assert(entitySet != null, "entitySet must be non-null.");
+            DebugCheck.NotNull((object)entityKey);
+            DebugCheck.NotNull(entitySet);
 
             // We need to determine if an equivalent entry already exists;
             // this is illegal in certain cases.
@@ -248,12 +248,12 @@ namespace System.Data.Entity.Core.Objects
         internal virtual EntityEntry AddEntry(
             IEntityWrapper wrappedObject, EntityKey passedKey, EntitySet entitySet, string argumentName, bool isAdded)
         {
-            Debug.Assert(wrappedObject != null, "entity wrapper cannot be null.");
-            Debug.Assert(wrappedObject.Entity != null, "entity cannot be null.");
-            Debug.Assert(wrappedObject.Context != null, "the context should be already set");
-            Debug.Assert(entitySet != null, "entitySet must be non-null.");
+            DebugCheck.NotNull(wrappedObject);
+            DebugCheck.NotNull(wrappedObject.Entity);
+            DebugCheck.NotNull(wrappedObject.Context);
+            DebugCheck.NotNull(entitySet);
             // shadowValues is allowed to be null
-            Debug.Assert(argumentName != null, "argumentName cannot be null.");
+            DebugCheck.NotNull(argumentName);
 
             var entityKey = passedKey;
 
@@ -592,8 +592,8 @@ namespace System.Data.Entity.Core.Objects
             IEntityWrapper wrappedEntity,
             bool replacingEntry)
         {
-            Debug.Assert(keyEntry != null, "keyEntry must be non-null.");
-            Debug.Assert(wrappedEntity != null, "entity cannot be null.");
+            DebugCheck.NotNull(keyEntry);
+            DebugCheck.NotNull(wrappedEntity);
             // shadowValues is allowed to be null
 
             // Future Enhancement: Fixup already has this information, don't rediscover it
@@ -640,10 +640,10 @@ namespace System.Data.Entity.Core.Objects
             bool setIsLoaded,
             bool keyEntryInitialized)
         {
-            Debug.Assert(keyEntry != null, "keyEntry must be non-null.");
-            Debug.Assert(wrappedEntity != null, "entity wrapper cannot be null.");
-            Debug.Assert(wrappedEntity.Entity != null, "entity cannot be null.");
-            Debug.Assert(wrappedEntity.Context != null, "the context should be already set");
+            DebugCheck.NotNull(keyEntry);
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
+            DebugCheck.NotNull(wrappedEntity.Context);
 
             if (!keyEntryInitialized)
             {
@@ -703,8 +703,8 @@ namespace System.Data.Entity.Core.Objects
 
         internal virtual void TrackPromotedRelationship(RelatedEnd relatedEnd, IEntityWrapper wrappedEntity)
         {
-            Debug.Assert(relatedEnd != null);
-            Debug.Assert(wrappedEntity != null);
+            DebugCheck.NotNull(relatedEnd);
+            DebugCheck.NotNull(wrappedEntity);
             Debug.Assert(wrappedEntity.Entity != null);
             Debug.Assert(
                 TransactionManager.IsAttachTracking || TransactionManager.IsAddTracking,
@@ -1408,11 +1408,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entitySet"> </param>
         internal virtual EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet)
         {
-            Debug.Assert(wrappedObject != null, "entity wrapper cannot be null.");
-            Debug.Assert(wrappedObject.Entity != null, "entity cannot be null.");
-            Debug.Assert(wrappedObject.Context != null, "the context should be already set");
-            Debug.Assert(entitySet != null, "entitySet must be non-null.");
-            Debug.Assert(entityKey != null, "argumentName cannot be null.");
+            DebugCheck.NotNull(wrappedObject);
+            DebugCheck.NotNull(wrappedObject.Entity);
+            DebugCheck.NotNull(wrappedObject.Context);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityKey);
 
             // Get a StateManagerTypeMetadata for the entity type.
             var typeMetadata = GetOrAddStateManagerTypeMetadata(wrappedObject.IdentityType, entitySet);
@@ -1453,13 +1453,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="forAttach"> If true, then the exception message will reflect a bad key to attach, otherwise it will reflect a general inconsistency </param>
         private void CheckKeyMatchesEntity(IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySetForType, bool forAttach)
         {
-            Debug.Assert(wrappedEntity != null, "Cannot verify key for null entity wrapper.");
-            Debug.Assert(wrappedEntity.Entity != null, "Cannot verify key for null entity.");
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
 
-            Debug.Assert((object)entityKey != null, "Cannot verify a null EntityKey.");
+            DebugCheck.NotNull((object)entityKey);
             Debug.Assert(
                 !entityKey.IsTemporary, "Verifying a temporary EntityKey doesn't make sense because the key doesn't contain any values.");
-            Debug.Assert(entitySetForType != null, "Cannot verify against a null entity set.");
+            DebugCheck.NotNull(entitySetForType);
 
             var entitySetForKey = entityKey.GetEntitySet(MetadataWorkspace);
             if (entitySetForKey == null)
@@ -1563,7 +1563,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private void AddRelationshipToLookup(RelationshipEntry relationship)
         {
-            Debug.Assert(relationship != null, "relationship can't be null");
+            DebugCheck.NotNull(relationship);
 
             AddRelationshipEndToLookup(relationship.RelationshipWrapper.Key0, relationship);
             if (!relationship.RelationshipWrapper.Key0.Equals(relationship.RelationshipWrapper.Key1))
@@ -1982,9 +1982,9 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         internal virtual void FixupKey(EntityEntry entry)
         {
-            Debug.Assert(entry != null, "entry should not be null.");
+            DebugCheck.NotNull(entry);
             Debug.Assert(entry.State == EntityState.Added, "Cannot do key fixup for an entry not in the Added state.");
-            Debug.Assert(entry.Entity != null, "must have entity, can't be entity stub in added state");
+            DebugCheck.NotNull(entry.Entity);
 
             var oldKey = entry.EntityKey;
             Debug.Assert(entry == _addedEntityStore[oldKey], "not the same EntityEntry");
@@ -2092,7 +2092,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal virtual void ReplaceKeyWithTemporaryKey(EntityEntry entry)
         {
-            Debug.Assert(entry != null, "entry should not be null.");
+            DebugCheck.NotNull(entry);
             Debug.Assert(entry.State != EntityState.Added, "Cannot replace key with a temporary key if the entry is in Added state.");
             Debug.Assert(!entry.IsKeyEntry, "Cannot replace a key of a KeyEntry");
 
@@ -2138,7 +2138,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private void ResetEntityKey(EntityEntry entry, EntityKey value)
         {
-            Debug.Assert((object)entry.EntityKey != null, "Cannot reset an entry's key if it hasn't been set in the first place.");
+            DebugCheck.NotNull((object)entry.EntityKey);
             Debug.Assert(!_inRelationshipFixup, "already _inRelationshipFixup");
             Debug.Assert(!entry.EntityKey.Equals(value), "the keys should not be equal");
 
@@ -2235,7 +2235,7 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry targetEntry;
 
             VerifyParametersForChangeRelationshipState(sourceEntity, targetEntity, out sourceEntry, out targetEntry);
-            EntityUtil.CheckStringArgument(navigationProperty, "navigationProperty");
+            Check.NotEmpty(navigationProperty, "navigationProperty");
 
             var relatedEnd = sourceEntry.WrappedEntity.RelationshipManager.GetRelatedEnd(navigationProperty);
 
@@ -2504,7 +2504,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal virtual EntityEntry GetEntityEntry(object entity)
         {
-            Debug.Assert(entity != null, "entity is null");
+            DebugCheck.NotNull(entity);
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             var entry = FindEntityEntry(entity);
@@ -2837,7 +2837,7 @@ namespace System.Data.Entity.Core.Objects
 
         private void AddEntityEntryToDictionary(EntityEntry entry, EntityState state)
         {
-            Debug.Assert(null != (object)entry.EntityKey, "missing EntityKey");
+            DebugCheck.NotNull((object)entry.EntityKey);
 
             if (entry.RequiresAnyChangeTracking)
             {
@@ -3021,8 +3021,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(Type entityType, EntitySet entitySet)
         {
-            Debug.Assert(entityType != null, "entityType cannot be null.");
-            Debug.Assert(entitySet != null, "must have entitySet to correctly qualify Type");
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(entitySet);
 
             StateManagerTypeMetadata typeMetadata;
             if (!_metadataMapping.TryGetValue(new EntitySetQualifiedType(entityType, entitySet), out typeMetadata))
@@ -3042,7 +3042,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(EdmType edmType)
         {
-            Debug.Assert(edmType != null, "edmType cannot be null.");
+            DebugCheck.NotNull(edmType);
             Debug.Assert(
                 Helper.IsEntityType(edmType) ||
                 Helper.IsComplexType(edmType),
@@ -3064,8 +3064,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         private StateManagerTypeMetadata AddStateManagerTypeMetadata(EntitySet entitySet, ObjectTypeMapping mapping)
         {
-            Debug.Assert(null != entitySet, "null entitySet");
-            Debug.Assert(null != mapping, "null mapping");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(mapping);
 
             var edmType = mapping.EdmType;
             Debug.Assert(
@@ -3095,7 +3095,7 @@ namespace System.Data.Entity.Core.Objects
 
         private StateManagerTypeMetadata AddStateManagerTypeMetadata(EdmType edmType, ObjectTypeMapping mapping)
         {
-            Debug.Assert(null != edmType, "null EdmType");
+            DebugCheck.NotNull(edmType);
             Debug.Assert(
                 Helper.IsEntityType(edmType) ||
                 Helper.IsComplexType(edmType),
@@ -3830,8 +3830,8 @@ namespace System.Data.Entity.Core.Objects
         internal virtual EntityKey CreateEntityKey(EntitySet entitySet, object entity)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            Debug.Assert(entitySet != null, "null entitySet");
-            Debug.Assert(entity != null, "null entity");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entity);
 
             // Creates an EntityKey based on the values in the entity and the given EntitySet
             var keyMembers = entitySet.ElementType.KeyMembers;

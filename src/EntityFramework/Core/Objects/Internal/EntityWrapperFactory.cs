@@ -101,14 +101,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <typeparam name="TEntity"> </typeparam>
         /// <returns> </returns>
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
-            where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+            where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
             return (entity) => new LightweightEntityWrapper<TEntity>((TEntity)entity);
         }
 
         // Returns a delegate that creates a strategy-based wrapper for entities that implement IEntityWithRelationships
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedWithRelationships<TEntity>()
-            where TEntity : IEntityWithRelationships
+            where TEntity : class, IEntityWithRelationships
         {
             Func<object, IPropertyAccessorStrategy> propertyAccessorStrategy;
             Func<object, IEntityKeyStrategy> keyStrategy;
@@ -122,6 +122,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         // Returns a delegate that creates a strategy-based wrapper for entities that do not implement IEntityWithRelationships
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedWithoutRelationships<TEntity>()
+            where TEntity : class
         {
             Func<object, IPropertyAccessorStrategy> propertyAccessorStrategy;
             Func<object, IEntityKeyStrategy> keyStrategy;

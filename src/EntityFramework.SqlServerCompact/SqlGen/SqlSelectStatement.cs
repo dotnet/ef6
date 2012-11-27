@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -340,7 +341,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         //
         private static void WriteOffsetFetch(SqlWriter writer, TopClause top, SkipClause skip, SqlGenerator sqlGenerator)
         {
-            Debug.Assert(skip != null);
+            DebugCheck.NotNull(skip);
             skip.WriteSql(writer, sqlGenerator);
             if (top != null)
             {

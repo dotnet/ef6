@@ -127,8 +127,7 @@ namespace System.Data.Entity.Core.EntityClient
                         Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
                 }
 
-                if (connection.State
-                    != ConnectionState.Closed)
+                if (connection.State != ConnectionState.Closed)
                 {
                     throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
                 }

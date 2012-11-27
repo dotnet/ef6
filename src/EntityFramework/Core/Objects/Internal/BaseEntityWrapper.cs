@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// </summary>
     /// <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal abstract class BaseEntityWrapper<TEntity> : IEntityWrapper
+        where TEntity : class
     {
         // This enum allows boolean flags to be added to the wrapper without introducing a new field
         // for each one.  This helps keep the wrapper memory footprint small, which is important
@@ -40,7 +42,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         protected BaseEntityWrapper(TEntity entity, RelationshipManager relationshipManager)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            Debug.Assert(entity != null, "Factory should ensure wrapped entity here is never null.");
+            DebugCheck.NotNull(entity);
             if (relationshipManager == null)
             {
                 throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
@@ -66,7 +68,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Type identityType)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            Debug.Assert(entity != null, "Factory should ensure wrapped entity here is never null.");
+            DebugCheck.NotNull(entity);
             if (relationshipManager == null)
             {
                 throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
@@ -131,7 +133,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // See IEntityWrapper documentation
         public void AttachContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
-            Debug.Assert(null != context, "context");
+            DebugCheck.NotNull(context);
             Context = context;
             MergeOption = mergeOption;
             if (entitySet != null)
@@ -143,8 +145,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         // See IEntityWrapper documentation
         public void ResetContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
-            Debug.Assert(null != entitySet, "entitySet should not be null");
-            Debug.Assert(null != context, "context");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(context);
             Debug.Assert(
                 MergeOption.NoTracking == mergeOption ||
                 MergeOption.AppendOnly == mergeOption,

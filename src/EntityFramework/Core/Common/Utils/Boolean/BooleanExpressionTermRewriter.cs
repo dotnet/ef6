@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Rewrites the terms in a Boolean expression tree.
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="translator"> Translator delegate; must not be null </param>
         internal BooleanExpressionTermRewriter(Func<TermExpr<T_From>, BoolExpr<T_To>> translator)
         {
-            Debug.Assert(null != translator);
+            DebugCheck.NotNull(translator);
             _translator = translator;
         }
 

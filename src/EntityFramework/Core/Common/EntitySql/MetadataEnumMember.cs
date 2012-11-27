@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.EnumMember" />.
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal MetadataEnumMember(string name, TypeUsage enumType, EnumMember enumMember)
             : base(MetadataMemberClass.EnumMember, name)
         {
-            Debug.Assert(enumType != null, "enumType must not be null");
-            Debug.Assert(enumMember != null, "enumMember must not be null");
+            DebugCheck.NotNull(enumType);
+            DebugCheck.NotNull(enumMember);
             EnumType = enumType;
             EnumMember = enumMember;
         }

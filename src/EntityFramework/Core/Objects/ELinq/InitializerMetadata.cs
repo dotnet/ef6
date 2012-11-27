@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private InitializerMetadata(Type clrType)
         {
-            Debug.Assert(null != clrType);
+            DebugCheck.NotNull(clrType);
             ClrType = clrType;
             Identity = _identifierPrefix + Interlocked.Increment(ref s_identifier).ToString(CultureInfo.InvariantCulture);
         }
@@ -108,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         public bool Equals(InitializerMetadata other)
         {
-            Debug.Assert(null != other, "must not use a null key");
+            DebugCheck.NotNull(other);
             if (ReferenceEquals(this, other))
             {
                 return true;
@@ -268,7 +269,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             internal ProjectionNewMetadata(NewExpression newExpression)
                 : base(newExpression.Type)
             {
-                Debug.Assert(null != newExpression);
+                DebugCheck.NotNull(newExpression);
                 _newExpression = newExpression;
             }
 
@@ -375,7 +376,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             internal ProjectionInitializerMetadata(MemberInitExpression initExpression)
                 : base(initExpression.Type)
             {
-                Debug.Assert(null != initExpression);
+                DebugCheck.NotNull(initExpression);
                 _initExpression = initExpression;
             }
 
@@ -467,7 +468,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             internal EntityCollectionInitializerMetadata(Type type, NavigationProperty navigationProperty)
                 : base(type)
             {
-                Debug.Assert(null != navigationProperty);
+                DebugCheck.NotNull(navigationProperty);
                 _navigationProperty = navigationProperty;
             }
 

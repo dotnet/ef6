@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Text.RegularExpressions;
@@ -79,8 +80,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal CqlLexer(string query, ParserOptions parserOptions)
             : this()
         {
-            Debug.Assert(query != null, "query must not be null");
-            Debug.Assert(parserOptions != null, "parserOptions must not be null");
+            DebugCheck.NotNull(query);
+            DebugCheck.NotNull(parserOptions);
 
             _query = query;
             _parserOptions = parserOptions;
@@ -535,7 +536,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns> Literal Token </returns>
         internal Token NewLiteralToken(string literal, LiteralKind literalKind)
         {
-            Debug.Assert(!String.IsNullOrEmpty(literal), "literal must not be null or empty");
+            DebugCheck.NotEmpty(literal);
             Debug.Assert(literalKind != LiteralKind.Null, "literalKind must not be LiteralKind.Null");
 
             var literalValue = literal;
@@ -768,7 +769,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns> </returns>
         private static bool IsValidBinaryValue(string binaryValue)
         {
-            Debug.Assert(null != binaryValue, "binaryValue must not be null");
+            DebugCheck.NotNull(binaryValue);
 
             if (String.IsNullOrEmpty(binaryValue))
             {

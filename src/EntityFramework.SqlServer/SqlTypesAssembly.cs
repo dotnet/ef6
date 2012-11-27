@@ -347,13 +347,13 @@ namespace System.Data.Entity.SqlServer
 
         internal object SqlTypesGeographyFromBinary(byte[] wellKnownBinary, int srid)
         {
-            Debug.Assert(wellKnownBinary != null, "Validate WKB before calling SqlTypesGeographyFromBinary");
+            DebugCheck.NotNull(wellKnownBinary);
             return sqlGeographyFromWKBByteArray(wellKnownBinary, srid);
         }
 
         internal object SqlTypesGeographyFromText(string wellKnownText, int srid)
         {
-            Debug.Assert(wellKnownText != null, "Validate WKT before calling SqlTypesGeographyFromText");
+            DebugCheck.NotNull(wellKnownText);
             return sqlGeographyFromWKTString(wellKnownText, srid);
         }
 
@@ -367,13 +367,13 @@ namespace System.Data.Entity.SqlServer
 
         internal object SqlTypesGeometryFromBinary(byte[] wellKnownBinary, int srid)
         {
-            Debug.Assert(wellKnownBinary != null, "Validate WKB before calling SqlTypesGeometryFromBinary");
+            DebugCheck.NotNull(wellKnownBinary);
             return sqlGeometryFromWKBByteArray(wellKnownBinary, srid);
         }
 
         internal object SqlTypesGeometryFromText(string wellKnownText, int srid)
         {
-            Debug.Assert(wellKnownText != null, "Validate WKT before calling SqlTypesGeometryFromText");
+            DebugCheck.NotNull(wellKnownText);
             return sqlGeometryFromWKTString(wellKnownText, srid);
         }
 
@@ -383,7 +383,7 @@ namespace System.Data.Entity.SqlServer
 
         private object GetSqlTypesSpatialValue(IDbSpatialValue spatialValue, Type requiredProviderValueType)
         {
-            Debug.Assert(spatialValue != null, "Ensure spatial value is non-null before calling GetSqlTypesSpatialValue");
+            DebugCheck.NotNull(spatialValue);
 
             // If the specified value was created by this spatial services implementation, its underlying Microsoft.SqlServer.Types.SqlGeography value is available via the ProviderValue property.
             var providerValue = spatialValue.ProviderValue;
@@ -448,7 +448,7 @@ namespace System.Data.Entity.SqlServer
 
         private static Func<TArg, int, object> CreateStaticConstructorDelegate<TArg>(Type spatialType, string methodName)
         {
-            Debug.Assert(spatialType != null, "Ensure spatialType is non-null before calling CreateStaticConstructorDelegate");
+            DebugCheck.NotNull(spatialType);
             var dataParam = Expression.Parameter(typeof(TArg));
             var sridParam = Expression.Parameter(typeof(int));
             var staticCtorMethod = spatialType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);

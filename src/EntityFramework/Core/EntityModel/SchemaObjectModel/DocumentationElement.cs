@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Xml;
@@ -74,7 +73,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         protected override bool HandleText(XmlReader reader)
         {
             var text = reader.Value;
-            if (!StringUtil.IsNullOrEmptyOrWhiteSpace(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 AddError(ErrorCode.UnexpectedXmlElement, EdmSchemaErrorSeverity.Error, Strings.InvalidDocumentationBothTextAndStructure);
             }

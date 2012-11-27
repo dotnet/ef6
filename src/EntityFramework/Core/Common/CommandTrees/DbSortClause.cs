@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Specifies a sort key that can be used as part of the sort order in a DbSortExpression.
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal DbSortClause(DbExpression key, bool asc, string collation)
         {
-            Debug.Assert(key != null, "DbSortClause key cannot be null");
+            DebugCheck.NotNull(key);
 
             _expr = key;
             _asc = asc;

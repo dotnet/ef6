@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text;
@@ -33,8 +34,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             Dictionary<object, TypedColumnMap> typeChoices)
             : base(type, name, baseTypeColumns)
         {
-            Debug.Assert(typeDiscriminator != null, "Must specify a type discriminator column");
-            Debug.Assert(typeChoices != null, "No type choices for polymorphic column");
+            DebugCheck.NotNull(typeDiscriminator);
+            DebugCheck.NotNull(typeChoices);
             m_typedColumnMap = typeChoices;
             m_typeDiscriminator = typeDiscriminator;
         }

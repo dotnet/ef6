@@ -40,8 +40,7 @@ namespace System.Data.Entity.Internal
             }
 
             var keyNames = entitySet.ElementType.KeyMembers.Select(m => m.Name).ToList();
-            if (keyNames.Count
-                != keyValues.Length)
+            if (keyNames.Count != keyValues.Length)
             {
                 throw new ArgumentException(Strings.DbSet_WrongNumberOfKeyValuesPassed, keyValuesParamName);
             }

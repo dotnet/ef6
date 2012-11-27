@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
@@ -122,7 +123,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected virtual void ReportPropertyChanging(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             OnPropertyChanging(property);
         }
@@ -137,7 +138,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected virtual void ReportPropertyChanged(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             OnPropertyChanged(property);
         }

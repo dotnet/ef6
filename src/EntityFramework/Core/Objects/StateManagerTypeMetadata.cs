@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class StateManagerTypeMetadata
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal StateManagerTypeMetadata(EdmType edmType, ObjectTypeMapping mapping)
         {
-            Debug.Assert(null != edmType, "null EdmType");
+            DebugCheck.NotNull(edmType);
             Debug.Assert(
                 Helper.IsEntityType(edmType) ||
                 Helper.IsComplexType(edmType),

@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DbExpressionKind applyKind, TypeUsage resultRowCollectionTypeUsage, DbExpressionBinding input, DbExpressionBinding apply)
             : base(applyKind, resultRowCollectionTypeUsage)
         {
-            Debug.Assert(input != null, "DbApplyExpression input cannot be null");
-            Debug.Assert(input != null, "DbApplyExpression apply cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(apply);
             Debug.Assert(
                 DbExpressionKind.CrossApply == applyKind || DbExpressionKind.OuterApply == applyKind,
                 "Invalid DbExpressionKind for DbApplyExpression");

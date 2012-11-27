@@ -4,7 +4,7 @@ namespace System.Data.Entity.Edm.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     internal static class EdmExtensions
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Edm.Internal
 
         internal static AssociationEndMember GetFromEnd(this NavigationProperty navProp)
         {
-            Debug.Assert(navProp.Association != null, "Association on NavigationProperty should not be null, consider adding a null check");
+            DebugCheck.NotNull(navProp.Association);
             return navProp.Association.SourceEnd == navProp.ResultEnd
                        ? navProp.Association.TargetEnd
                        : navProp.Association.SourceEnd;
@@ -125,8 +125,8 @@ namespace System.Data.Entity.Edm.Internal
         internal static AssociationEndMember PrincipalEnd(
             this ReferentialConstraint constraint, AssociationType association)
         {
-            Debug.Assert(constraint != null, "Constraint cannot be null");
-            Debug.Assert(association != null, "AssociationType cannot be null");
+            DebugCheck.NotNull(constraint);
+            DebugCheck.NotNull(association);
             return constraint.DependentEnd == association.SourceEnd ? association.TargetEnd : association.SourceEnd;
         }
 

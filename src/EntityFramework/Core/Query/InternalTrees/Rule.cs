@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="nodeProcessDelegate"> The callback to invoke </param>
         protected Rule(OpType opType, ProcessNodeDelegate nodeProcessDelegate)
         {
-            Debug.Assert(nodeProcessDelegate != null, "null process delegate");
+            DebugCheck.NotNull(nodeProcessDelegate);
             Debug.Assert(opType != OpType.NotValid, "bad OpType");
             Debug.Assert(opType != OpType.Leaf, "bad OpType - Leaf");
 

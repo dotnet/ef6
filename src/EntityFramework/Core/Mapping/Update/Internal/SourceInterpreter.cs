@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     This class determines the state entries contributing to an expression
@@ -36,9 +36,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             PropagatorResult source, UpdateTranslator translator,
             EntitySet sourceTable)
         {
-            Debug.Assert(null != source);
-            Debug.Assert(null != translator);
-            Debug.Assert(null != sourceTable);
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(translator);
+            DebugCheck.NotNull(sourceTable);
 
             var interpreter = new SourceInterpreter(translator, sourceTable);
             interpreter.RetrieveResultMarkup(source);
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private void RetrieveResultMarkup(PropagatorResult source)
         {
-            Debug.Assert(null != source);
+            DebugCheck.NotNull(source);
 
             if (source.Identifier
                 != PropagatorResult.NullIdentifier)
@@ -67,10 +67,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // Return the owner as well if the owner is also mapped to this table.
                             PropagatorResult owner;
                             if (m_translator.KeyManager.TryGetIdentifierOwner(source.Identifier, out owner)
-                                &&
-                                null != owner.StateEntry
-                                &&
-                                ExtentInScope(owner.StateEntry.EntitySet))
+                                && null != owner.StateEntry
+                                && ExtentInScope(owner.StateEntry.EntitySet))
                             {
                                 m_stateEntries.Add(owner.StateEntry);
                             }

@@ -2809,7 +2809,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static string ExtractAlias(MethodInfo method)
         {
-            Debug.Assert(method != null, "Ensure method is non-null before calling ExtractAlias");
+            DebugCheck.NotNull(method);
             var aliases = ExtractAliases(method);
             Debug.Assert(aliases.Length > 0, "Incompatible method: at least one parameter is required");
             return aliases[0];
@@ -2817,7 +2817,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         internal static string[] ExtractAliases(MethodInfo method)
         {
-            Debug.Assert(method != null, "Ensure method is non-null before calling ExtractAlias");
+            DebugCheck.NotNull(method);
             var methodParams = method.GetParameters();
             int start;
             int paramCount;
@@ -2871,7 +2871,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         private static bool TryGetAnonymousTypeValues<TInstance, TRequired>(
             object instance, out List<KeyValuePair<string, TRequired>> values)
         {
-            Debug.Assert(instance != null, "Ensure instance is non-null before calling TryGetAnonymousTypeValues");
+            DebugCheck.NotNull(instance);
 
             // The following heuristic is used to approximate whether or not TInstance is an anonymous type:
             // - Derived directly from System.Object

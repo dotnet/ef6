@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.Versioning;
@@ -82,8 +83,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ICollection<string> uriRegistry,
             MetadataArtifactAssemblyResolver resolver)
         {
-            Debug.Assert(path != null);
-            Debug.Assert(resolver != null);
+            DebugCheck.NotNull(path);
+            DebugCheck.NotNull(resolver);
 
             // res:// -based artifacts
             //
@@ -144,7 +145,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //For CreateCompositeFromFilePaths method call. But the path is not created in this method.
         public static MetadataArtifactLoader CreateCompositeFromFilePaths(IEnumerable<string> filePaths, string validExtension)
         {
-            Debug.Assert(!string.IsNullOrEmpty(validExtension));
+            DebugCheck.NotEmpty(validExtension);
 
             return CreateCompositeFromFilePaths(filePaths, validExtension, new DefaultAssemblyResolver());
         }
@@ -224,8 +225,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="validExtension"> </param>
         internal static void CheckArtifactExtension(string path, string validExtension)
         {
-            Debug.Assert(!string.IsNullOrEmpty(path));
-            Debug.Assert(!string.IsNullOrEmpty(validExtension));
+            DebugCheck.NotEmpty(path);
+            DebugCheck.NotEmpty(validExtension);
 
             var extension = GetExtension(path);
             if (!extension.Equals(validExtension, StringComparison.OrdinalIgnoreCase))
@@ -314,7 +315,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if the resource identifies a C-Space artifact </returns>
         protected static bool IsCSpaceArtifact(string resource)
         {
-            Debug.Assert(!string.IsNullOrEmpty(resource));
+            DebugCheck.NotEmpty(resource);
 
             var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
@@ -332,7 +333,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if the resource identifies an S-Space artifact </returns>
         protected static bool IsSSpaceArtifact(string resource)
         {
-            Debug.Assert(!string.IsNullOrEmpty(resource));
+            DebugCheck.NotEmpty(resource);
 
             var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
@@ -350,7 +351,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if the resource identifies a CS-Space artifact </returns>
         protected static bool IsCSSpaceArtifact(string resource)
         {
-            Debug.Assert(!string.IsNullOrEmpty(resource));
+            DebugCheck.NotEmpty(resource);
 
             var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))
@@ -386,7 +387,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if the resource identifies a valid artifact </returns>
         internal static bool IsValidArtifact(string resource)
         {
-            Debug.Assert(!string.IsNullOrEmpty(resource));
+            DebugCheck.NotEmpty(resource);
 
             var extn = GetExtension(resource);
             if (!string.IsNullOrEmpty(extn))

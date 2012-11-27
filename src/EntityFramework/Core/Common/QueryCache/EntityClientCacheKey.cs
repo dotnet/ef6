@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Data.Entity.Core.Common.Internal;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns> </returns>
         public override bool Equals(object otherObject)
         {
-            Debug.Assert(null != otherObject, "otherObject must not be null");
+            DebugCheck.NotNull(otherObject);
             if (typeof(EntityClientCacheKey) != otherObject.GetType())
             {
                 return false;

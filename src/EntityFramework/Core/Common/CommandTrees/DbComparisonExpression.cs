@@ -20,8 +20,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbComparisonExpression(DbExpressionKind kind, TypeUsage booleanResultType, DbExpression left, DbExpression right)
             : base(kind, booleanResultType, left, right)
         {
-            Debug.Assert(left != null, "DbComparisonExpression left cannot be null");
-            Debug.Assert(right != null, "DbComparisonExpression right cannot be null");
+            DebugCheck.NotNull(left);
+            DebugCheck.NotNull(right);
             Debug.Assert(TypeSemantics.IsBooleanType(booleanResultType), "DbComparisonExpression result type must be a Boolean type");
             Debug.Assert(
                 DbExpressionKind.Equals == kind ||

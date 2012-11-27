@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class StateManagerMemberMetadata
@@ -17,8 +18,8 @@ namespace System.Data.Entity.Core.Objects
         internal StateManagerMemberMetadata(ObjectPropertyMapping memberMap, EdmProperty memberMetadata, bool isPartOfKey)
         {
             // if memberMap is null, then this is a shadowstate
-            Debug.Assert(null != memberMap, "shadowstate not supported");
-            Debug.Assert(null != memberMetadata, "CSpace should never be null");
+            DebugCheck.NotNull(memberMap);
+            DebugCheck.NotNull(memberMetadata);
             _clrProperty = memberMap.ClrProperty;
             _edmProperty = memberMetadata;
             _isPartOfKey = isPartOfKey;

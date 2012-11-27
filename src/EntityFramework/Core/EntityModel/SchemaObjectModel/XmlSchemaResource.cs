@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal struct XmlSchemaResource
@@ -13,9 +14,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public XmlSchemaResource(string namespaceUri, string resourceName, XmlSchemaResource[] importedSchemas)
         {
-            Debug.Assert(!string.IsNullOrEmpty(namespaceUri), "namespaceUri is null or empty");
-            Debug.Assert(!string.IsNullOrEmpty(resourceName), "resourceName is null or empty");
-            Debug.Assert(importedSchemas != null, "importedSchemas is null");
+            DebugCheck.NotEmpty(namespaceUri);
+            DebugCheck.NotEmpty(resourceName);
+            DebugCheck.NotNull(importedSchemas);
             NamespaceUri = namespaceUri;
             ResourceName = resourceName;
             ImportedSchemas = importedSchemas;
@@ -23,8 +24,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public XmlSchemaResource(string namespaceUri, string resourceName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(namespaceUri), "namespaceUri is null or empty");
-            Debug.Assert(!string.IsNullOrEmpty(resourceName), "resourceName is null or empty");
+            DebugCheck.NotEmpty(namespaceUri);
+            DebugCheck.NotEmpty(resourceName);
             NamespaceUri = namespaceUri;
             ResourceName = resourceName;
             ImportedSchemas = _emptyImportList;

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -182,7 +183,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ConversionCache convertedItemCache,
             Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            Debug.Assert(providerManifest != null, "This will make the dataspace to be default SSpace");
+            DebugCheck.NotNull(providerManifest);
             // Try to fetch from the collection first
             GlobalItem item;
 
@@ -1113,8 +1114,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         private static EnumType ConvertToEnumType(Som.SchemaEnumType somEnumType, Dictionary<Som.SchemaElement, GlobalItem> newGlobalItems)
         {
-            Debug.Assert(somEnumType != null, "somEnumType != null");
-            Debug.Assert(newGlobalItems != null, "newGlobalItems != null");
+            DebugCheck.NotNull(somEnumType);
+            DebugCheck.NotNull(newGlobalItems);
             Debug.Assert(
                 somEnumType.UnderlyingType is Som.ScalarType,
                 "At this point the underlying type should have already been validated and should be ScalarType");
@@ -1166,7 +1167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> The Documentation object resulting from the convert operation </returns>
         private static Documentation ConvertToDocumentation(Som.DocumentationElement element)
         {
-            Debug.Assert(null != element, "ConvertToDocumentation cannot be invoked with a null Som.Documentation element");
+            DebugCheck.NotNull(element);
             return element.MetadataDocumentation;
         }
 
@@ -1415,7 +1416,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static DataSpace GetDataSpace(DbProviderManifest providerManifest)
         {
-            Debug.Assert(providerManifest != null, "null provider manifest will be consider as SSpace");
+            DebugCheck.NotNull(providerManifest);
             // Target attributes is for types and sets in target space.
             if (providerManifest is EdmProviderManifest)
             {

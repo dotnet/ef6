@@ -118,7 +118,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <returns> true if true constant; false if false constant; null is null constant </returns>
             private static bool? ConvertResultToBool(PropagatorResult result)
             {
-                Debug.Assert(null != result && result.IsSimple, "Must be a simple Boolean result");
+                DebugCheck.NotNull(result);
+                Debug.Assert(result.IsSimple, "Must be a simple Boolean result");
 
                 if (result.IsNull)
                 {
@@ -320,8 +321,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Check.NotNull(node, "node");
 
-                Debug.Assert(null != node, "node is not visited when null");
-
                 var match = -1;
                 var statementOrdinal = 0;
 
@@ -373,8 +372,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Check.NotNull(node, "node");
 
-                Debug.Assert(null != node, "node is not visited when null");
-
                 return m_row;
             }
 
@@ -386,8 +383,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public override PropagatorResult Visit(DbPropertyExpression node)
             {
                 Check.NotNull(node, "node");
-
-                Debug.Assert(null != node, "node is not visited when null");
 
                 // Retrieve the result of evaluating the instance for the property.
                 var instance = Visit(node.Instance);
@@ -417,8 +412,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Check.NotNull(node, "node");
 
-                Debug.Assert(null != node, "node is not visited when null");
-
                 // Flag the expression as 'preserve', since constants (by definition) cannot vary
                 var result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, node.Value);
 
@@ -433,8 +426,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public override PropagatorResult Visit(DbRefKeyExpression node)
             {
                 Check.NotNull(node, "node");
-
-                Debug.Assert(null != node, "node is not visited when null");
 
                 // Retrieve the result of evaluating the child argument.
                 var argument = Visit(node.Argument);
@@ -452,8 +443,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             {
                 Check.NotNull(node, "node");
 
-                Debug.Assert(null != node, "node is not visited when null");
-
                 // Flag the expression as 'preserve', since nulls (by definition) cannot vary
                 var result = PropagatorResult.CreateSimpleValue(PropagatorFlags.Preserve, null);
 
@@ -468,8 +457,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public override PropagatorResult Visit(DbTreatExpression node)
             {
                 Check.NotNull(node, "node");
-
-                Debug.Assert(null != node, "node is not visited when null");
 
                 var childResult = Visit(node.Argument);
                 var nodeType = node.ResultType;
@@ -496,8 +483,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public override PropagatorResult Visit(DbCastExpression node)
             {
                 Check.NotNull(node, "node");
-
-                Debug.Assert(null != node, "node is not visited when null");
 
                 var childResult = Visit(node.Argument);
                 var nodeType = node.ResultType;
@@ -570,8 +555,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public override PropagatorResult Visit(DbIsNullExpression node)
             {
                 Check.NotNull(node, "node");
-
-                Debug.Assert(null != node, "node is not visited when null");
 
                 var argumentResult = Visit(node.Argument);
                 var result = argumentResult.IsNull;

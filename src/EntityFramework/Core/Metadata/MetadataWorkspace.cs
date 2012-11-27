@@ -446,7 +446,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual void ImplicitLoadAssemblyForType(Type type, Assembly callingAssembly)
         {
             // this exists separately from LoadFromAssembly so that we can handle generics, like IEnumerable<Product>
-            Debug.Assert(null != type, "null type");
+            DebugCheck.NotNull(type);
             ItemCollection collection;
             if (TryGetItemCollection(DataSpace.OSpace, out collection))
             {
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // used by ObjectContext.*GetObjectByKey when the clr type is not available
             // so we check the OCMap to find the clr type else attempt to autoload the OSpace from callingAssembly
-            Debug.Assert(null != type, "null type");
+            DebugCheck.NotNull(type);
             Map map;
             if (!TryGetMap(type, DataSpace.OCSpace, out map))
             {
@@ -707,7 +707,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             entityContainer = null;
             // null check exists in call stack, but throws for "identity" not "name"
-            EntityUtil.GenericCheckArgumentNull(name, "name");
+            Check.NotNull(name, "name");
             var collection = GetItemCollection(dataSpace, false);
             return (null != collection) && collection.TryGetEntityContainer(name, out entityContainer);
         }
@@ -744,7 +744,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             entityContainer = null;
             // null check exists in call stack, but throws for "identity" not "name"
-            EntityUtil.GenericCheckArgumentNull(name, "name");
+            Check.NotNull(name, "name");
             var collection = GetItemCollection(dataSpace, false);
             return (null != collection) && collection.TryGetEntityContainer(name, ignoreCase, out entityContainer);
         }
@@ -785,8 +785,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual ReadOnlyCollection<EdmFunction> GetFunctions(string name, string namespaceName, DataSpace dataSpace, bool ignoreCase)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            EntityUtil.CheckStringArgument(namespaceName, "namespaceName");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
             var collection = GetItemCollection(dataSpace, true);
 
             // Get the function with this full name, which is namespace name plus name
@@ -814,8 +814,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             out EdmFunction function)
         {
             function = null;
-            EntityUtil.GenericCheckArgumentNull(name, "name");
-            EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
+            Check.NotNull(name, "name");
+            Check.NotNull(namespaceName, "namespaceName");
             var collection = GetItemCollection(dataSpace, false);
 
             // Get the function with this full name, which is namespace name plus name
@@ -1090,8 +1090,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 edmSpaceType == null || edmSpaceType is StructuralType || edmSpaceType is EnumType,
                 "Only structural or enum type expected");
 
-            if (edmSpaceType.DataSpace
-                != DataSpace.CSpace)
+            if (edmSpaceType.DataSpace != DataSpace.CSpace)
             {
                 throw new ArgumentException(Strings.ArgumentMustBeCSpaceType, "edmSpaceType");
             }
@@ -1203,8 +1202,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
                 "Only structural or enum type expected");
 
-            if (objectSpaceType.DataSpace
-                != DataSpace.OSpace)
+            if (objectSpaceType.DataSpace != DataSpace.OSpace)
             {
                 throw new ArgumentException(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
             }
@@ -1278,7 +1276,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if a mapped target function exists; false otherwise </returns>
         internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping targetFunctionMapping)
         {
-            Debug.Assert(null != functionImport);
+            DebugCheck.NotNull(functionImport);
             var entityContainerMaps = GetItems<StorageEntityContainerMapping>(DataSpace.CSSpace);
             foreach (var containerMapping in entityContainerMaps)
             {
@@ -1316,7 +1314,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
             DebugCheck.NotNull(edmSpaceTypeUsage);
-            Debug.Assert(edmSpaceTypeUsage.EdmType != null, "The TypeUsage object does not have an EDMType.");
+            DebugCheck.NotNull(edmSpaceTypeUsage.EdmType);
 
             EdmType clrType = null;
             if (Helper.IsPrimitiveType(edmSpaceTypeUsage.EdmType))
@@ -1507,8 +1505,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var associationSet = entitySet as AssociationSet;
 
             //Check that EntitySet is from CSpace
-            if (entitySet.EntityContainer.DataSpace
-                != DataSpace.CSpace)
+            if (entitySet.EntityContainer.DataSpace != DataSpace.CSpace)
             {
                 if (associationSet != null)
                 {

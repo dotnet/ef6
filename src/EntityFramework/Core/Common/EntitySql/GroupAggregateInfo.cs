@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.EntitySql.AST;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -24,8 +25,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             ScopeRegion definingScopeRegion)
         {
             Debug.Assert(aggregateKind != GroupAggregateKind.None, "aggregateKind != GroupAggregateKind.None");
-            Debug.Assert(errCtx != null, "errCtx != null");
-            Debug.Assert(definingScopeRegion != null, "definingScopeRegion != null");
+            DebugCheck.NotNull(errCtx);
+            DebugCheck.NotNull(definingScopeRegion);
 
             AggregateKind = aggregateKind;
             AstNode = astNode;
@@ -36,8 +37,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         protected void AttachToAstNode(string aggregateName, TypeUsage resultType)
         {
+            DebugCheck.NotNull(aggregateName);
+            DebugCheck.NotNull(resultType);
             Debug.Assert(AstNode != null, "AstNode must be set.");
-            Debug.Assert(aggregateName != null && resultType != null, "aggregateName and aggregateDefinition must not be null.");
             Debug.Assert(AggregateName == null && AggregateStubExpression == null, "Cannot reattach.");
 
             AggregateName = aggregateName;

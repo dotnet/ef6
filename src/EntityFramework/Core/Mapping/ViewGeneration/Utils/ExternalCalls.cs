@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -25,8 +26,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
             StorageMappingItemCollection mappingItemCollection,
             ParserOptions.CompilationMode compilationMode)
         {
-            Debug.Assert(!String.IsNullOrEmpty(viewDef), "!String.IsNullOrEmpty(viewDef)");
-            Debug.Assert(mappingItemCollection != null, "mappingItemCollection != null");
+            DebugCheck.NotEmpty(viewDef);
+            DebugCheck.NotNull(mappingItemCollection);
 
             Perspective perspective = new TargetPerspective(mappingItemCollection.Workspace);
             var parserOptions = new ParserOptions();
@@ -43,8 +44,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
             ParserOptions.CompilationMode compilationMode,
             IEnumerable<DbParameterReferenceExpression> parameters)
         {
-            Debug.Assert(!String.IsNullOrEmpty(viewDef), "!String.IsNullOrEmpty(viewDef)");
-            Debug.Assert(mappingItemCollection != null, "mappingItemCollection != null");
+            DebugCheck.NotEmpty(viewDef);
+            DebugCheck.NotNull(mappingItemCollection);
 
             Perspective perspective = new TargetPerspective(mappingItemCollection.Workspace);
             var parserOptions = new ParserOptions();
@@ -75,8 +76,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
             IList<FunctionParameter> functionParameters,
             EdmItemCollection edmItemCollection)
         {
-            Debug.Assert(functionParameters != null, "functionParameters != null");
-            Debug.Assert(edmItemCollection != null, "edmItemCollection != null");
+            DebugCheck.NotNull(functionParameters);
+            DebugCheck.NotNull(edmItemCollection);
 
             var workspace = new MetadataWorkspace();
             workspace.RegisterItemCollection(edmItemCollection);

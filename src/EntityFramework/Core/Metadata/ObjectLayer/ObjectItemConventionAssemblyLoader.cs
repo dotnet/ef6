@@ -124,8 +124,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         private bool TryCreateType(Type type, EdmType cspaceType, out EdmType newOSpaceType)
         {
-            Debug.Assert(type != null, "type != null");
-            Debug.Assert(cspaceType != null, "cspaceType != null");
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(cspaceType);
             Debug.Assert(cspaceType is StructuralType || Helper.IsEnumType(cspaceType), "Structural or enum type expected");
 
             newOSpaceType = null;
@@ -164,8 +164,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         private bool TryCreateStructuralType(Type type, StructuralType cspaceType, out EdmType newOSpaceType)
         {
-            Debug.Assert(type != null, "type != null");
-            Debug.Assert(cspaceType != null, "cspaceType != null");
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(cspaceType);
 
             var referenceResolutionListForCurrentType = new List<Action>();
             newOSpaceType = null;
@@ -234,9 +234,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         private bool TryCreateEnumType(Type enumType, EnumType cspaceEnumType, out EdmType newOSpaceType)
         {
-            Debug.Assert(enumType != null, "enumType != null");
+            DebugCheck.NotNull(enumType);
             Debug.Assert(enumType.IsEnum, "enum type expected");
-            Debug.Assert(cspaceEnumType != null, "cspaceEnumType != null");
+            DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
             Debug.Assert(TypesMatchByConvention(enumType, cspaceEnumType), "The types passed as parameters don't match by convention.");
 
@@ -265,9 +265,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         private bool UnderlyingEnumTypesMatch(Type enumType, EnumType cspaceEnumType)
         {
-            Debug.Assert(enumType != null, "enumType != null");
+            DebugCheck.NotNull(enumType);
             Debug.Assert(enumType.IsEnum, "expected enum OSpace type");
-            Debug.Assert(cspaceEnumType != null, "cspaceEnumType != null");
+            DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
 
             // Note that TryGetPrimitiveType() will return false not only for types that are not primitive 
@@ -304,9 +304,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         private bool EnumMembersMatch(Type enumType, EnumType cspaceEnumType)
         {
-            Debug.Assert(enumType != null, "enumType != null");
+            DebugCheck.NotNull(enumType);
             Debug.Assert(enumType.IsEnum, "expected enum OSpace type");
-            Debug.Assert(cspaceEnumType != null, "cspaceEnumType != null");
+            DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
             Debug.Assert(
                 cspaceEnumType.UnderlyingType.ClrEquivalentType == enumType.GetEnumUnderlyingType(),
@@ -807,12 +807,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static void AddScalarMember(
             Type type, PropertyInfo clrProperty, StructuralType ospaceType, EdmProperty cspaceProperty, EdmType propertyType)
         {
-            Debug.Assert(type != null, "type != null");
-            Debug.Assert(clrProperty != null, "clrProperty != null");
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(clrProperty);
             Debug.Assert(clrProperty.CanRead && clrProperty.CanWrite, "The clr property has to have a setter and a getter.");
-            Debug.Assert(ospaceType != null, "ospaceType != null");
-            Debug.Assert(cspaceProperty != null, "cspaceProperty != null");
-            Debug.Assert(propertyType != null, "propertyType != null");
+            DebugCheck.NotNull(ospaceType);
+            DebugCheck.NotNull(cspaceProperty);
+            DebugCheck.NotNull(propertyType);
             Debug.Assert(Helper.IsScalarType(propertyType), "Property has to be primitive or enum.");
 
             var cspaceType = cspaceProperty.DeclaringType;

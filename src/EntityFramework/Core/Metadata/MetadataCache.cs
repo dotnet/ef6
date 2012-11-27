@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Versioning;
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //For MetadataArtifactLoader.Create method call. But the path is not created in this method.
         internal static List<MetadataArtifactLoader> SplitPaths(string paths)
         {
-            Debug.Assert(!string.IsNullOrEmpty(paths), "paths cannot be empty or null");
+            DebugCheck.NotEmpty(paths);
 
             string[] results;
 
@@ -636,7 +637,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
             internal void LoadEdmItemCollection(MetadataArtifactLoader loader)
             {
-                Debug.Assert(loader != null, "loader is null");
+                DebugCheck.NotNull(loader);
 
                 var readers = loader.CreateReaders(DataSpace.CSpace);
                 try
@@ -811,7 +812,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             public EdmItemCollectionLoader(MetadataArtifactLoader loader)
             {
-                Debug.Assert(loader != null, "loader must never be null");
+                DebugCheck.NotNull(loader);
                 _loader = loader;
             }
 
@@ -838,8 +839,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <param name="edmItemCollection"> </param>
             internal StoreItemCollectionLoader(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
             {
-                Debug.Assert(edmItemCollection != null, "EdmItemCollection must never be null");
-                Debug.Assert(loader != null, "loader must never be null");
+                DebugCheck.NotNull(edmItemCollection);
+                DebugCheck.NotNull(loader);
                 //StoreItemCollection requires atleast one SSDL path.
                 if ((loader.GetPaths(DataSpace.SSpace) == null)
                     || (loader.GetPaths(DataSpace.SSpace).Count == 0))

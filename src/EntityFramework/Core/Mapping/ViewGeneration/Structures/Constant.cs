@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -147,7 +148,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
-                Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
+                DebugCheck.NotNull(outputMember.LeafEdmMember);
                 var constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
 
                 builder.Append("CAST(NULL AS ");
@@ -158,7 +159,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
-                Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty path.");
+                DebugCheck.NotNull(outputMember.LeafEdmMember);
                 var constType = Helper.GetModelTypeUsage(outputMember.LeafEdmMember).EdmType;
 
                 return TypeUsage.Create(constType).Null();
@@ -219,8 +220,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
-                Debug.Fail("Should not be called.");
-                return null; // To keep the compiler happy
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             /// <summary>
@@ -228,8 +229,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
-                Debug.Fail("Should not be called.");
-                return null; // To keep the compiler happy
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             public override int GetHashCode()
@@ -248,8 +249,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override string ToUserString()
             {
-                Debug.Fail("We should not emit a message about Undefined constants to the user.");
-                return null;
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             internal override void ToCompactString(StringBuilder builder)
@@ -291,8 +292,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
-                Debug.Fail("Should not be called.");
-                return null; // To keep the compiler happy
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             /// <summary>
@@ -300,8 +301,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
-                Debug.Fail("Should not be called.");
-                return null; // To keep the compiler happy
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             public override int GetHashCode()
@@ -320,8 +321,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             /// </summary>
             internal override string ToUserString()
             {
-                Debug.Fail("We should not emit a message about Undefined constants to the user.");
-                return null;
+                // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
+                throw new NotSupportedException();
             }
 
             internal override void ToCompactString(StringBuilder builder)

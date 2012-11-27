@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -371,10 +372,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> The number of field values returned </returns>
         public override int GetValues(object[] values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
+            Check.NotNull(values, "values");
+
             var minValue = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < minValue; i++)
             {

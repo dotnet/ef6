@@ -301,7 +301,7 @@ namespace System.Data.Entity.Internal
         /// <param name="value"> The value. </param>
         private void SetPropertyValueUsingValues(InternalPropertyValues internalValues, object value)
         {
-            Debug.Assert(internalValues != null, "Expected to throw before calling this method.");
+            DebugCheck.NotNull(internalValues);
 
             var nestedValues = internalValues[Name] as InternalPropertyValues;
             if (nestedValues != null)

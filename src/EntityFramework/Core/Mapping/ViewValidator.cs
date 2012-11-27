@@ -64,8 +64,8 @@ namespace System.Data.Entity.Core.Mapping
 
             internal ViewExpressionValidator(StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
             {
-                Debug.Assert(null != setMapping);
-                Debug.Assert(null != elementType);
+                DebugCheck.NotNull(setMapping);
+                DebugCheck.NotNull(elementType);
 
                 _setMapping = setMapping;
                 _elementType = elementType;
@@ -302,7 +302,7 @@ namespace System.Data.Entity.Core.Mapping
 
             internal AssociationSetViewValidator(StorageSetMapping setMapping)
             {
-                Debug.Assert(setMapping != null);
+                DebugCheck.NotNull(setMapping);
                 _setMapping = setMapping;
             }
 

@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
 
             private Dictionary<EntitySetBase, GeneratedView> SerializedGetGeneratedViews(EntityContainer container)
             {
-                Debug.Assert(container != null);
+                DebugCheck.NotNull(container);
 
                 // Note that extentMappingViews will contain both query and update views.
                 Dictionary<EntitySetBase, GeneratedView> extentMappingViews;
@@ -171,9 +171,9 @@ namespace System.Data.Entity.Core.Mapping
                 EntityContainer entityContainer, EntitySetBase entity, EntityTypeBase type, bool includeSubtypes,
                 out GeneratedView generatedView)
             {
-                Debug.Assert(entityContainer != null);
-                Debug.Assert(entity != null);
-                Debug.Assert(type != null);
+                DebugCheck.NotNull(entityContainer);
+                DebugCheck.NotNull(entity);
+                DebugCheck.NotNull(type);
 
                 if (type.Abstract)
                 {
@@ -1023,8 +1023,8 @@ namespace System.Data.Entity.Core.Mapping
         internal ReadOnlyCollection<EdmMember> GetInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
-            Debug.Assert(entitySet != null, "entitySet != null");
-            Debug.Assert(entityType != null, "entityType != null");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             var key = new Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>(entitySet, entityType, interestingMembersKind);
             return _cachedInterestingMembers.GetOrAdd(key, FindInterestingMembers(entitySet, entityType, interestingMembersKind));
@@ -1046,8 +1046,8 @@ namespace System.Data.Entity.Core.Mapping
         private ReadOnlyCollection<EdmMember> FindInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {
-            Debug.Assert(entitySet != null, "entitySet != null");
-            Debug.Assert(entityType != null, "entityType != null");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entityType);
 
             var interestingMembers = new List<EdmMember>();
 
@@ -1095,8 +1095,8 @@ namespace System.Data.Entity.Core.Mapping
         private static void FindInterestingAssociationMappingMembers(
             StorageAssociationTypeMapping associationTypeMapping, List<EdmMember> interestingMembers)
         {
-            Debug.Assert(associationTypeMapping != null, "entityTypeMapping != null");
-            Debug.Assert(interestingMembers != null, "interestingMembers != null");
+            DebugCheck.NotNull(associationTypeMapping);
+            DebugCheck.NotNull(interestingMembers);
 
             //(2) Ends participating in association are "interesting"
             interestingMembers.AddRange(
@@ -1120,8 +1120,8 @@ namespace System.Data.Entity.Core.Mapping
         private static void FindInterestingEntityMappingMembers(
             StorageEntityTypeMapping entityTypeMapping, InterestingMembersKind interestingMembersKind, List<EdmMember> interestingMembers)
         {
-            Debug.Assert(entityTypeMapping != null, "entityTypeMapping != null");
-            Debug.Assert(interestingMembers != null, "interestingMembers != null");
+            DebugCheck.NotNull(entityTypeMapping);
+            DebugCheck.NotNull(interestingMembers);
 
             foreach (var propertyMapping in entityTypeMapping.MappingFragments.SelectMany(mf => mf.AllProperties))
             {
@@ -1188,7 +1188,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </returns>
         private static bool HasFixedConcurrencyModeInAnyChildProperty(StorageComplexPropertyMapping complexMapping)
         {
-            Debug.Assert(complexMapping != null, "complexMapping != null");
+            DebugCheck.NotNull(complexMapping);
 
             foreach (var propertyMapping in complexMapping.TypeMappings.SelectMany(m => m.AllProperties))
             {
@@ -1255,10 +1255,9 @@ namespace System.Data.Entity.Core.Mapping
             StorageEntityTypeModificationFunctionMapping functionMappings, InterestingMembersKind interestingMembersKind,
             ref List<EdmMember> interestingMembers)
         {
-            Debug.Assert(
-                functionMappings != null && functionMappings.UpdateFunctionMapping != null,
-                "Expected function mapping fragment with non-null update function mapping");
-            Debug.Assert(interestingMembers != null, "interestingMembers != null");
+            DebugCheck.NotNull(functionMappings);
+            DebugCheck.NotNull(functionMappings.UpdateFunctionMapping);
+            DebugCheck.NotNull(interestingMembers);
 
             // for partial update scenarios (e.g. EntityDataSourceControl) all members are interesting otherwise the data may be corrupt. 
             // See bugs #272992 and #124460 in DevDiv database for more details. For full update scenarios and the obsolete 
@@ -1508,9 +1507,9 @@ namespace System.Data.Entity.Core.Mapping
         private static void CheckForDuplicateItems(
             EdmItemCollection edmItemCollection, StoreItemCollection storeItemCollection, List<EdmSchemaError> errorCollection)
         {
-            Debug.Assert(
-                edmItemCollection != null && storeItemCollection != null && errorCollection != null,
-                "The parameters must not be null in CheckForDuplicateItems");
+            DebugCheck.NotNull(edmItemCollection);
+            DebugCheck.NotNull(storeItemCollection);
+            DebugCheck.NotNull(errorCollection);
 
             foreach (var item in edmItemCollection)
             {

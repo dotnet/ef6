@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             : base(opType, type)
         {
             Debug.Assert(scoped || entitySet == null, "entitySet cann't be set of constructor isn't scoped");
-            Debug.Assert(relProperties != null, "expected non-null list of rel-properties");
+            DebugCheck.NotNull(relProperties);
             m_scoped = scoped;
             m_entitySet = entitySet;
             m_relProperties = relProperties;

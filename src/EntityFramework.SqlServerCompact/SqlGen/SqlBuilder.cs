@@ -4,7 +4,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Diagnostics;
+    using System.Data.Entity.SqlServerCompact.Utilities;
 
     /// <summary>
     ///     This class is like StringBuilder.  While traversing the tree for the first time,
@@ -35,7 +35,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <param name="s"> </param>
         public void Append(object s)
         {
-            Debug.Assert(s != null);
+            DebugCheck.NotNull(s);
             sqlFragments.Add(s);
         }
 

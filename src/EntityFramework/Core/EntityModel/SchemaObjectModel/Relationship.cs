@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> XmlReader positioned at the end element </param>
         private void HandleEndElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var end = new RelationshipEnd(this);
             end.Parse(reader);
 
@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> XmlReader positioned at the constraint element </param>
         private void HandleConstraintElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var constraint = new ReferentialConstraint(this);
             constraint.Parse(reader);

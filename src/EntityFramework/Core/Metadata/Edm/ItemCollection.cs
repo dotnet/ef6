@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
@@ -262,8 +263,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if name or namespaceName arguments passed in are null</exception>
         public EdmType GetType(string name, string namespaceName, bool ignoreCase)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
-            EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
+            Check.NotNull(name, "name");
+            Check.NotNull(namespaceName, "namespaceName");
             return GetItem<EdmType>(EdmType.CreateEdmTypeIdentity(namespaceName, name), ignoreCase);
         }
 
@@ -278,8 +279,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
         public bool TryGetType(string name, string namespaceName, bool ignoreCase, out EdmType type)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
-            EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
+            Check.NotNull(name, "name");
+            Check.NotNull(namespaceName, "namespaceName");
             GlobalItem item = null;
             TryGetValue(EdmType.CreateEdmTypeIdentity(namespaceName, name), ignoreCase, out item);
             type = item as EdmType;
@@ -377,8 +378,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">if no function is found with the given name or with given input parameters</exception>
         internal bool TryGetFunction(string functionName, TypeUsage[] parameterTypes, bool ignoreCase, out EdmFunction function)
         {
-            EntityUtil.GenericCheckArgumentNull(functionName, "functionName");
-            EntityUtil.GenericCheckArgumentNull(parameterTypes, "parameterTypes");
+            Check.NotNull(functionName, "functionName");
+            Check.NotNull(parameterTypes, "parameterTypes");
             var functionIdentity = EdmFunction.BuildIdentity(functionName, parameterTypes);
             GlobalItem item = null;
             function = null;
@@ -400,7 +401,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if name argument passed in is null</exception>
         public EntityContainer GetEntityContainer(string name)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
+            Check.NotNull(name, "name");
             return GetEntityContainer(name, false /*ignoreCase*/);
         }
 
@@ -413,7 +414,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntityContainer(string name, out EntityContainer entityContainer)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
+            Check.NotNull(name, "name");
             return TryGetEntityContainer(name, false /*ignoreCase*/, out entityContainer);
         }
 
@@ -446,7 +447,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
         public bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
+            Check.NotNull(name, "name");
             GlobalItem item = null;
             if (TryGetValue(name, ignoreCase, out item)
                 && Helper.IsEntityContainer(item))

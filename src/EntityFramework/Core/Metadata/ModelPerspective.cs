@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
+
     /// <summary>
     ///     Internal helper class for query
     /// </summary>
@@ -26,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> True if the retrieval succeeded </returns>
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage typeUsage)
         {
-            EntityUtil.CheckStringArgument(fullName, "fullName");
+            Check.NotEmpty(fullName, "fullName");
             typeUsage = null;
             EdmType edmType = null;
             if (MetadataWorkspace.TryGetItem(fullName, ignoreCase, TargetDataspace, out edmType))

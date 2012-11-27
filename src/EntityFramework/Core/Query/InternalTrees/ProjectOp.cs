@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal ProjectOp(VarVec vars)
             : this()
         {
-            Debug.Assert(null != vars, "null vars?");
+            DebugCheck.NotNull(vars);
             Debug.Assert(!vars.IsEmpty, "empty varlist?");
             m_vars = vars;
         }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Creates an empty map with keys compared using comparer
         internal KeyToListMap(IEqualityComparer<TKey> comparer)
         {
-            Debug.Assert(null != comparer);
+            DebugCheck.NotNull(comparer);
             m_map = new Dictionary<TKey, List<TValue>>(comparer);
         }
 

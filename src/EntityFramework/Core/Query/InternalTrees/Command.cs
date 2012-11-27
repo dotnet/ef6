@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -466,7 +467,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <
         private ParameterVar ReplaceParameterVar(ParameterVar oldVar, Func<TypeUsage, TypeUsage> generateReplacementType)
         {
-            Debug.Assert(oldVar != null, "oldVar != null");
+            DebugCheck.NotNull(oldVar);
             Debug.Assert(m_vars.Contains(oldVar));
             var v = new ParameterVar(NewVarId(), generateReplacementType(oldVar.Type), oldVar.ParameterName);
             m_parameterMap[oldVar.ParameterName] = v;
@@ -1109,7 +1110,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns> </returns>
         internal Node CreateVarDefNode(Node definingExpr, out Var computedVar)
         {
-            Debug.Assert(definingExpr.Op != null);
+            DebugCheck.NotNull(definingExpr.Op);
             var scalarOp = definingExpr.Op as ScalarOp;
             Debug.Assert(scalarOp != null);
             computedVar = CreateComputedVar(scalarOp.Type);

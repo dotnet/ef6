@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.CodeDom.Compiler;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -43,13 +44,13 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal static void ExtractNamespaceAndName(string qualifiedTypeName, out string namespaceName, out string name)
         {
-            Debug.Assert(!string.IsNullOrEmpty(qualifiedTypeName), "qualifiedTypeName parameter is null");
+            DebugCheck.NotEmpty(qualifiedTypeName);
             GetBeforeAndAfterLastPeriod(qualifiedTypeName, out namespaceName, out name);
         }
 
         internal static string ExtractTypeName(string qualifiedTypeName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(qualifiedTypeName), "qualifiedTypeName parameter is null or empty");
+            DebugCheck.NotEmpty(qualifiedTypeName);
             return GetEverythingAfterLastPeriod(qualifiedTypeName);
         }
 
@@ -97,8 +98,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> </returns>
         public static bool GetString(Schema schema, XmlReader reader, out string value)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
 
             if (reader.SchemaInfo.Validity
                 == XmlSchemaValidity.Invalid)
@@ -138,9 +139,9 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         internal static bool ValidateDottedName(Schema schema, XmlReader reader, string name)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
-            Debug.Assert(!string.IsNullOrEmpty(name), "name parameter is null or empty");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
+            DebugCheck.NotEmpty(name);
             Debug.Assert(
                 reader.SchemaInfo.Validity != XmlSchemaValidity.Invalid, "This method should not be called when the schema is invalid");
 
@@ -170,8 +171,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> </returns>
         public static bool GetUndottedName(Schema schema, XmlReader reader, out string name)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
 
             if (reader.SchemaInfo.Validity
                 == XmlSchemaValidity.Invalid)
@@ -234,8 +235,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> </returns>
         public static bool GetBool(Schema schema, XmlReader reader, out bool value)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
 
             if (reader.SchemaInfo.Validity
                 == XmlSchemaValidity.Invalid)
@@ -265,8 +266,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public static bool GetInt(Schema schema, XmlReader reader, out int value)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
 
             if (reader.SchemaInfo.Validity
                 == XmlSchemaValidity.Invalid)
@@ -293,8 +294,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public static bool GetByte(Schema schema, XmlReader reader, out byte value)
         {
-            Debug.Assert(schema != null, "schema parameter is null");
-            Debug.Assert(reader != null, "reader parameter is null");
+            DebugCheck.NotNull(schema);
+            DebugCheck.NotNull(reader);
 
             if (reader.SchemaInfo.Validity
                 == XmlSchemaValidity.Invalid)

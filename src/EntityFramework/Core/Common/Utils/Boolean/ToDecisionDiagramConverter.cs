@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -14,13 +14,13 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         private ToDecisionDiagramConverter(ConversionContext<T_Identifier> context)
         {
-            Debug.Assert(null != context, "must provide a context");
+            DebugCheck.NotNull(context);
             _context = context;
         }
 
         internal static Vertex TranslateToRobdd(BoolExpr<T_Identifier> expr, ConversionContext<T_Identifier> context)
         {
-            Debug.Assert(null != expr, "must provide an expression");
+            DebugCheck.NotNull(expr);
             var converter =
                 new ToDecisionDiagramConverter<T_Identifier>(context);
             return expr.Accept(converter);

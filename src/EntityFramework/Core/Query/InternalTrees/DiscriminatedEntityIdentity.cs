@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Text;
 
@@ -34,8 +34,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             SimpleColumnMap[] keyColumns)
             : base(keyColumns)
         {
-            Debug.Assert(entitySetColumn != null, "Must specify a column map to identify the entity set");
-            Debug.Assert(entitySetMap != null, "Must specify a dictionary to look up entitysets");
+            DebugCheck.NotNull(entitySetColumn);
+            DebugCheck.NotNull(entitySetMap);
             m_entitySetColumn = entitySetColumn;
             m_entitySetMap = entitySetMap;
         }

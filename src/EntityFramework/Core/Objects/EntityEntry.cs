@@ -11,13 +11,11 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class EntityEntry : ObjectStateEntry
@@ -215,7 +213,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "SetModifiedProperty");
 
@@ -289,7 +287,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "RejectPropertyChanges");
 
@@ -1582,7 +1580,7 @@ namespace System.Data.Entity.Core.Objects
             string entityMemberName, object complexObject, string complexObjectMemberName,
             out StateManagerTypeMetadata typeMetadata, out string changingMemberName, out object changingObject)
         {
-            DebugCheck.NotNull(entityMemberName);
+            Check.NotNull(entityMemberName, "entityMemberName");
 
             typeMetadata = null;
             changingMemberName = null;
@@ -1877,7 +1875,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DetectChangesInProperty(
                 ValidateAndGetOrdinalForProperty(propertyName, "IsPropertyChanged"),
@@ -3472,8 +3470,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModified(State.ToString()));
             }
 
-            if (WrappedEntity.IdentityType
-                != wrappedCurrentEntity.IdentityType)
+            if (WrappedEntity.IdentityType != wrappedCurrentEntity.IdentityType)
             {
                 throw new ArgumentException(
                     Strings.ObjectContext_EntitiesHaveDifferentType(
@@ -3503,8 +3500,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(State.ToString()));
             }
 
-            if (WrappedEntity.IdentityType
-                != wrappedOriginalEntity.IdentityType)
+            if (WrappedEntity.IdentityType != wrappedOriginalEntity.IdentityType)
             {
                 throw new ArgumentException(
                     Strings.ObjectContext_EntitiesHaveDifferentType(

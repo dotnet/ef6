@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -15,8 +16,8 @@ namespace System.Data.Entity.Core.Objects
 
         internal RelationshipWrapper(AssociationSet extent, EntityKey key)
         {
-            Debug.Assert(null != extent, "null RelationshipWrapper");
-            Debug.Assert(null != (object)key, "null key");
+            DebugCheck.NotNull(extent);
+            DebugCheck.NotNull((object)key);
 
             AssociationSet = extent;
             Key0 = key;
@@ -25,9 +26,9 @@ namespace System.Data.Entity.Core.Objects
 
         internal RelationshipWrapper(RelationshipWrapper wrapper, int ordinal, EntityKey key)
         {
-            Debug.Assert(null != wrapper, "null RelationshipWrapper");
+            DebugCheck.NotNull(wrapper);
             Debug.Assert((uint)ordinal <= 1u, "ordinal out of range");
-            Debug.Assert(null != (object)key, "null key2");
+            DebugCheck.NotNull((object)key);
 
             AssociationSet = wrapper.AssociationSet;
             Key0 = (0 == ordinal) ? key : wrapper.Key0;
@@ -48,9 +49,9 @@ namespace System.Data.Entity.Core.Objects
             string role0, EntityKey key0,
             string role1, EntityKey key1)
         {
-            Debug.Assert(null != extent, "null AssociationSet");
-            Debug.Assert(null != (object)key0, "null key0");
-            Debug.Assert(null != (object)key1, "null key1");
+            DebugCheck.NotNull(extent);
+            DebugCheck.NotNull((object)key0);
+            DebugCheck.NotNull((object)key1);
 
             AssociationSet = extent;
             Debug.Assert(extent.ElementType.AssociationEndMembers.Count == 2, "only 2 ends are supported");

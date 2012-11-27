@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal PhysicalProjectOp(VarList outputVars, SimpleCollectionColumnMap columnMap)
             : this()
         {
-            Debug.Assert(null != columnMap, "null columnMap?");
+            DebugCheck.NotNull(columnMap);
             m_outputVars = outputVars;
             m_columnMap = columnMap;
         }

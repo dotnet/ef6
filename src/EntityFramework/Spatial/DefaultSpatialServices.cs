@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     [Serializable]
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Spatial
 
         private static ReadOnlySpatialValues CheckCompatible(DbGeography geographyValue)
         {
-            Debug.Assert(geographyValue != null, "Validate geographyValue is non-null before calling CheckCompatible");
+            DebugCheck.NotNull(geographyValue);
             if (geographyValue != null)
             {
                 var expectedValue = geographyValue.ProviderValue as ReadOnlySpatialValues;
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Spatial
 
         private static ReadOnlySpatialValues CheckCompatible(DbGeometry geometryValue)
         {
-            Debug.Assert(geometryValue != null, "Validate geometryValue is non-null before calling CheckCompatible");
+            DebugCheck.NotNull(geometryValue);
             if (geometryValue != null)
             {
                 var expectedValue = geometryValue.ProviderValue as ReadOnlySpatialValues;
@@ -103,21 +103,21 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
-            providerValue.CheckNull("providerValue");
+            Check.NotNull(providerValue, "providerValue");
             var expectedValue = CheckProviderValue(providerValue);
             return CreateGeography(this, expectedValue);
         }
 
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
-            wellKnownValue.CheckNull("wellKnownValue");
+            Check.NotNull(wellKnownValue, "wellKnownValue");
             return new ReadOnlySpatialValues(
                 wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
         }
 
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
             var backingValue = CheckCompatible(geographyValue);
             return new DbGeographyWellKnownValue
                        {
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromBinary(byte[] geographyBinary)
         {
-            geographyBinary.CheckNull("geographyBinary");
+            Check.NotNull(geographyBinary, "geographyBinary");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
             return CreateGeography(this, backingValue);
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromBinary(byte[] geographyBinary, int spatialReferenceSystemId)
         {
-            geographyBinary.CheckNull("geographyBinary");
+            Check.NotNull(geographyBinary, "geographyBinary");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: null, binaryValue: geographyBinary, gmlValue: null);
             return CreateGeography(this, backingValue);
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromText(string geographyText)
         {
-            geographyText.CheckNull("geographyText");
+            Check.NotNull(geographyText, "geographyText");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeography.DefaultCoordinateSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
             return CreateGeography(this, backingValue);
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromText(string geographyText, int spatialReferenceSystemId)
         {
-            geographyText.CheckNull("geographyText");
+            Check.NotNull(geographyText, "geographyText");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: geographyText, binaryValue: null, gmlValue: null);
             return CreateGeography(this, backingValue);
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromGml(string geographyMarkup)
         {
-            geographyMarkup.CheckNull("geographyMarkup");
+            Check.NotNull(geographyMarkup, "geographyMarkup");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeography.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
             return CreateGeography(this, backingValue);
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeography GeographyFromGml(string geographyMarkup, int spatialReferenceSystemId)
         {
-            geographyMarkup.CheckNull("geographyMarkup");
+            Check.NotNull(geographyMarkup, "geographyMarkup");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geographyMarkup);
             return CreateGeography(this, backingValue);
@@ -279,7 +279,7 @@ namespace System.Data.Entity.Spatial
 
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
             var backingValue = CheckCompatible(geographyValue);
             return backingValue.CoordinateSystemId;
         }
@@ -305,21 +305,21 @@ namespace System.Data.Entity.Spatial
 
         public override string AsText(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
             var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.Text;
         }
 
         public override byte[] AsBinary(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
             var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.CloneBinary();
         }
 
         public override string AsGml(DbGeography geographyValue)
         {
-            geographyValue.CheckNull("geographyValue");
+            Check.NotNull(geographyValue, "geographyValue");
             var expectedValue = CheckCompatible(geographyValue);
             return expectedValue.GML;
         }
@@ -470,14 +470,14 @@ namespace System.Data.Entity.Spatial
 
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
-            wellKnownValue.CheckNull("wellKnownValue");
+            Check.NotNull(wellKnownValue, "wellKnownValue");
             return new ReadOnlySpatialValues(
                 wellKnownValue.CoordinateSystemId, wellKnownValue.WellKnownText, wellKnownValue.WellKnownBinary, gmlValue: null);
         }
 
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var backingValue = CheckCompatible(geometryValue);
             return new DbGeometryWellKnownValue
                        {
@@ -489,7 +489,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
-            providerValue.CheckNull("providerValue");
+            Check.NotNull(providerValue, "providerValue");
             var expectedValue = CheckProviderValue(providerValue);
             return CreateGeometry(this, expectedValue);
         }
@@ -498,7 +498,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromBinary(byte[] geometryBinary)
         {
-            geometryBinary.CheckNull("geometryBinary");
+            Check.NotNull(geometryBinary, "geometryBinary");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
             return CreateGeometry(this, backingValue);
@@ -506,7 +506,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromBinary(byte[] geometryBinary, int spatialReferenceSystemId)
         {
-            geometryBinary.CheckNull("geometryBinary");
+            Check.NotNull(geometryBinary, "geometryBinary");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: null, binaryValue: geometryBinary, gmlValue: null);
             return CreateGeometry(this, backingValue);
@@ -562,7 +562,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromText(string geometryText)
         {
-            geometryText.CheckNull("geometryText");
+            Check.NotNull(geometryText, "geometryText");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeometry.DefaultCoordinateSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
             return CreateGeometry(this, backingValue);
@@ -570,7 +570,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromText(string geometryText, int spatialReferenceSystemId)
         {
-            geometryText.CheckNull("geometryText");
+            Check.NotNull(geometryText, "geometryText");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: geometryText, binaryValue: null, gmlValue: null);
             return CreateGeometry(this, backingValue);
@@ -626,7 +626,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromGml(string geometryMarkup)
         {
-            geometryMarkup.CheckNull("geometryMarkup");
+            Check.NotNull(geometryMarkup, "geometryMarkup");
             var backingValue = new ReadOnlySpatialValues(
                 DbGeometry.DefaultCoordinateSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
             return CreateGeometry(this, backingValue);
@@ -634,7 +634,7 @@ namespace System.Data.Entity.Spatial
 
         public override DbGeometry GeometryFromGml(string geometryMarkup, int spatialReferenceSystemId)
         {
-            geometryMarkup.CheckNull("geometryMarkup");
+            Check.NotNull(geometryMarkup, "geometryMarkup");
             var backingValue = new ReadOnlySpatialValues(
                 spatialReferenceSystemId, textValue: null, binaryValue: null, gmlValue: geometryMarkup);
             return CreateGeometry(this, backingValue);
@@ -646,7 +646,7 @@ namespace System.Data.Entity.Spatial
 
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var backingValue = CheckCompatible(geometryValue);
             return backingValue.CoordinateSystemId;
         }
@@ -692,21 +692,21 @@ namespace System.Data.Entity.Spatial
 
         public override string AsText(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.Text;
         }
 
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.CloneBinary();
         }
 
         public override string AsGml(DbGeometry geometryValue)
         {
-            geometryValue.CheckNull("geometryValue");
+            Check.NotNull(geometryValue, "geometryValue");
             var expectedValue = CheckCompatible(geometryValue);
             return expectedValue.GML;
         }

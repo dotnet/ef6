@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -81,7 +82,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="member"> The member to add </param>
         public void AddMember(EdmMember member)
         {
-            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Check.NotNull(member, "member");
             Util.ThrowIfReadOnly(this);
             Debug.Assert(
                 DataSpace == member.TypeUsage.EdmType.DataSpace || BuiltInTypeKind == BuiltInTypeKind.RowType,
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public virtual void RemoveMember(EdmMember member)
         {
-            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Check.NotNull(member, "member");
             Util.ThrowIfReadOnly(this);
 
             _members.Remove(member);

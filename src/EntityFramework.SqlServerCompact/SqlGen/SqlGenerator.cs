@@ -3897,7 +3897,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <returns> </returns>
         internal static string QuoteIdentifier(string name)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name));
+            DebugCheck.NotEmpty(name);
             // We assume that the names are not quoted to begin with.
             return "[" + name.Replace("]", "]]") + "]";
         }

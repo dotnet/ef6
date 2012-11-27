@@ -19,8 +19,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbLambdaExpression(TypeUsage resultType, DbLambda lambda, DbExpressionList args)
             : base(DbExpressionKind.Lambda, resultType)
         {
-            Debug.Assert(lambda != null, "DbLambdaExpression lambda cannot be null");
-            Debug.Assert(args != null, "DbLambdaExpression arguments cannot be null");
+            DebugCheck.NotNull(lambda);
+            DebugCheck.NotNull(args);
             Debug.Assert(
                 ReferenceEquals(resultType, lambda.Body.ResultType), "DbLambdaExpression result type must be Lambda body result type");
             Debug.Assert(lambda.Variables.Count == args.Count, "DbLambdaExpression argument count does not match Lambda parameter count");

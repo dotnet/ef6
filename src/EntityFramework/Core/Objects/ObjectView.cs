@@ -4,8 +4,8 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
     using System.ComponentModel;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -272,7 +272,7 @@ namespace System.Data.Entity.Core.Objects
 
         int IList.Add(object value)
         {
-            DbHelpers.ThrowIfNull(value, "value");
+            Check.NotNull(value, "value");
 
             EnsureWritableList();
 
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Core.Objects
 
         void IList.Remove(object value)
         {
-            DbHelpers.ThrowIfNull(value, "value");
+            Check.NotNull(value, "value");
 
             EnsureWritableList();
 

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -42,8 +43,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DbProviderManifest providerManifest)
             : base(name, namespaceName, dataSpace)
         {
-            EntityUtil.GenericCheckArgumentNull(baseType, "baseType");
-            EntityUtil.GenericCheckArgumentNull(providerManifest, "providerManifest");
+            Check.NotNull(baseType, "baseType");
+            Check.NotNull(providerManifest, "providerManifest");
 
             BaseType = baseType;
 
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Type clrType,
             PrimitiveType baseType,
             DbProviderManifest providerManifest)
-            : this(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace,
+            : this(Check.NotNull(clrType, "clrType").Name, clrType.Namespace,
                 DataSpace.OSpace, baseType, providerManifest)
         {
             Debug.Assert(clrType == ClrEquivalentType, "not equivalent to ClrEquivalentType");
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             set
             {
-                Debug.Assert(value != null, "This primitive type should have been added to a manifest, which should have set this");
+                DebugCheck.NotNull(value);
                 _providerManifest = value;
             }
         }

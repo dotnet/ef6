@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Linq;
 
     internal sealed class ParameterRetriever : BasicCommandTreeVisitor
@@ -19,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         internal static ReadOnlyCollection<DbParameterReferenceExpression> GetParameters(DbCommandTree tree)
         {
-            Debug.Assert(tree != null, "Ensure command tree is non-null before calling ParamterRetriever.GetParameters");
+            DebugCheck.NotNull(tree);
 
             var retriever = new ParameterRetriever();
             retriever.VisitCommandTree(tree);

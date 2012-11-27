@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static void ParseFunctionImportCommandText(
             string commandText, string defaultContainerName, out string containerName, out string functionImportName)
         {
-            Debug.Assert(null != commandText);
+            DebugCheck.NotNull(commandText);
 
             // Split the string
             var nameParts = commandText.Split('.');
@@ -98,8 +99,8 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static void SetStoreProviderCommandState(
             EntityCommand entityCommand, EntityTransaction entityTransaction, DbCommand storeProviderCommand)
         {
-            Debug.Assert(null != entityCommand);
-            Debug.Assert(null != storeProviderCommand);
+            DebugCheck.NotNull(entityCommand);
+            DebugCheck.NotNull(storeProviderCommand);
 
             storeProviderCommand.CommandTimeout = entityCommand.CommandTimeout;
             storeProviderCommand.Connection = (entityCommand.Connection).StoreConnection;
@@ -117,9 +118,9 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static void SetEntityParameterValues(
             EntityCommand entityCommand, DbCommand storeProviderCommand, EntityConnection connection)
         {
-            Debug.Assert(null != entityCommand);
-            Debug.Assert(null != storeProviderCommand);
-            Debug.Assert(null != connection);
+            DebugCheck.NotNull(entityCommand);
+            DebugCheck.NotNull(storeProviderCommand);
+            DebugCheck.NotNull(connection);
 
             foreach (DbParameter storeParameter in storeProviderCommand.Parameters)
             {
@@ -165,7 +166,10 @@ namespace System.Data.Entity.Core.Common.Utils
         // requires: all arguments must be given
         internal static EdmFunction FindFunctionImport(MetadataWorkspace workspace, string containerName, string functionImportName)
         {
-            Debug.Assert(null != workspace && null != containerName && null != functionImportName);
+            DebugCheck.NotNull(workspace);
+            DebugCheck.NotNull(containerName);
+            DebugCheck.NotNull(functionImportName);
+
             // find entity container
             EntityContainer entityContainer;
             if (!workspace.TryGetEntityContainer(containerName, DataSpace.CSpace, out entityContainer))

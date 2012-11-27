@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
+
     /// <summary>
     ///     This class encapsulates the error information for a generic EDM error.
     /// </summary>
@@ -18,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="severity"> The severity of the error. </param>
         internal EdmError(string message)
         {
-            EntityUtil.CheckStringArgument(message, "message");
+            Check.NotEmpty(message, "message");
             _message = message;
         }
 

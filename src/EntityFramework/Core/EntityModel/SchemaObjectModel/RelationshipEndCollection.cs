@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="end"> the end to add </param>
         public void Add(IRelationshipEnd end)
         {
-            Debug.Assert(end != null, "end parameter is null");
+            DebugCheck.NotNull(end);
 
             var endElement = end as SchemaElement;
             Debug.Assert(endElement != null, "end is not a SchemaElement");
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> true if item was in list </returns>
         public bool Remove(IRelationshipEnd end)
         {
-            Debug.Assert(end != null, "end parameter is null");
+            DebugCheck.NotNull(end);
 
             if (!IsEndValid(end))
             {
@@ -115,7 +116,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> true if the end is in the collection </returns>
         public bool Contains(IRelationshipEnd end)
         {
-            Debug.Assert(end != null, "end parameter is null");
+            DebugCheck.NotNull(end);
 
             return Contains(end.Name);
         }
@@ -257,8 +258,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             /// <param name="keysInDefOrder"> the keys to the real data in inserted order </param>
             public Enumerator(Dictionary<string, IRelationshipEnd> data, List<string> keysInDefOrder)
             {
-                Debug.Assert(data != null);
-                Debug.Assert(keysInDefOrder != null);
+                DebugCheck.NotNull(data);
+                DebugCheck.NotNull(keysInDefOrder);
                 _Enumerator = keysInDefOrder.GetEnumerator();
                 _Data = data;
             }

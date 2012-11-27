@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     internal class TermCounter<T_Identifier> : Visitor<T_Identifier, int>
     {
@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal static int CountTerms(BoolExpr<T_Identifier> expression)
         {
-            Debug.Assert(null != expression);
+            DebugCheck.NotNull(expression);
             return expression.Accept(_instance);
         }
 

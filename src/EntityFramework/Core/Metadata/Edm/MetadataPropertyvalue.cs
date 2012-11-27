@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         internal MetadataPropertyValue(PropertyInfo propertyInfo, MetadataItem item)
         {
-            Debug.Assert(null != propertyInfo);
-            Debug.Assert(null != item);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(item);
             _propertyInfo = propertyInfo;
             _item = item;
         }

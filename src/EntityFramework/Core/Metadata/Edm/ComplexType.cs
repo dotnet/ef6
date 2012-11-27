@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -92,12 +93,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="clrType"> The CLR type to construct from </param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
-            : base(EntityUtil.GenericCheckArgumentNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty,
+            : base(Check.NotNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty,
                 DataSpace.OSpace)
         {
-            Debug.Assert(
-                !String.IsNullOrEmpty(cspaceNamespaceName) &&
-                !String.IsNullOrEmpty(cspaceTypeName), "Mapping information must never be null");
+            DebugCheck.NotEmpty(cspaceNamespaceName);
+            DebugCheck.NotEmpty(cspaceTypeName);
 
             _type = clrType;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;

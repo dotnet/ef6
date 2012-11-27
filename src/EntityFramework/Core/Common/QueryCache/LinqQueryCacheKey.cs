@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     using System.Data.Entity.Core.Objects;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an ELinq-based ObjectQuery Cache key context
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             bool useCSharpNullComparisonBehavior,
             Type resultType)
         {
-            Debug.Assert(null != expressionKey, "expressionKey must not be null");
+            DebugCheck.NotNull(expressionKey);
 
             _expressionKey = expressionKey;
             _parameterCount = parameterCount;
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </summary>
         public override bool Equals(object otherObject)
         {
-            Debug.Assert(null != otherObject, "otherObject must not be null");
+            DebugCheck.NotNull(otherObject);
             if (typeof(LinqQueryCacheKey) != otherObject.GetType())
             {
                 return false;

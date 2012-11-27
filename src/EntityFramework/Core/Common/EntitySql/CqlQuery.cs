@@ -157,11 +157,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <seealso cref="ParserOptions" />
         private static Node Parse(string commandText, ParserOptions parserOptions)
         {
-            Node astExpr = null;
-
-            //
-            // commandText and parserOptions are validated inside of CqlParser
-            //
+            // The common practice is to make the null check at the public surface, 
+            // however this method is a convergence zone from multiple public entry points and it makes sense to
+            // check for null once, here.
+            Check.NotEmpty(commandText, "commandText");
 
             //
             // Create Parser
@@ -171,12 +170,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Invoke parser
             //
-            astExpr = cqlParser.Parse(commandText);
+            var astExpr = cqlParser.Parse(commandText);
 
             if (null == astExpr)
             {
-                var errorMessage = Strings.InvalidEmptyQuery;
-                throw EntitySqlException.Create(commandText, errorMessage, 0, null, false, null);
+                throw EntitySqlException.Create(commandText, Strings.InvalidEmptyQuery, 0, null, false, null);
             }
 
             return astExpr;

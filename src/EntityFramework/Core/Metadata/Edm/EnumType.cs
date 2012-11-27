@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EnumType(string name, string namespaceName, PrimitiveType underlyingType, bool isFlags, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
-            Debug.Assert(underlyingType != null, "underlyingType != null");
+            DebugCheck.NotNull(underlyingType);
             Debug.Assert(Helper.IsSupportedEnumUnderlyingType(underlyingType.PrimitiveTypeKind), "Unsupported underlying type for enum.");
             Debug.Assert(dataSpace == DataSpace.CSpace || dataSpace == DataSpace.OSpace, "Enums can be only defined in CSpace or OSpace.");
 
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             :
                 base(clrType.Name, clrType.Namespace ?? string.Empty, DataSpace.OSpace)
         {
-            Debug.Assert(clrType != null, "clrType != null");
+            DebugCheck.NotNull(clrType);
             Debug.Assert(clrType.IsEnum, "enum type expected");
 
             ClrProviderManifest.Instance.TryGetPrimitiveType(clrType.GetEnumUnderlyingType(), out _underlyingType);
@@ -160,7 +161,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="enumMember"> Enumeration member to add to the member collection. </param>
         internal void AddMember(EnumMember enumMember)
         {
-            Debug.Assert(enumMember != null, "enumMember != null");
+            DebugCheck.NotNull(enumMember);
             Debug.Assert(
                 Helper.IsEnumMemberValueInRange(
                     UnderlyingType.PrimitiveTypeKind, Convert.ToInt64(enumMember.Value, CultureInfo.InvariantCulture)));

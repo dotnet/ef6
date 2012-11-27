@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a constraint of the form:
@@ -23,7 +23,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="range"> Range of constraint. </param>
         internal DomainConstraint(DomainVariable<T_Variable, T_Element> variable, Set<T_Element> range)
         {
-            Debug.Assert(null != variable && null != range);
+            DebugCheck.NotNull(variable);
+            DebugCheck.NotNull(range);
+
             _variable = variable;
             _range = range.AsReadOnly();
             _hashCode = _variable.GetHashCode() ^ _range.GetElementsHashCode();

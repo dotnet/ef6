@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbCrossJoinExpression(TypeUsage collectionOfRowResultType, ReadOnlyCollection<DbExpressionBinding> inputs)
             : base(DbExpressionKind.CrossJoin, collectionOfRowResultType)
         {
-            Debug.Assert(inputs != null, "DbCrossJoin inputs cannot be null");
+            DebugCheck.NotNull(inputs);
             Debug.Assert(inputs.Count >= 2, "DbCrossJoin requires at least two inputs");
 
             _inputs = inputs;

@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <returns> A new array containing the specified argument as the first element and the specified successive elements </returns>
         internal static TElement[] Prepend<TElement>(TElement[] args, TElement arg)
         {
-            Debug.Assert(args != null, "Ensure 'args' is non-null before calling Prepend");
+            DebugCheck.NotNull(args);
 
             var retVal = new TElement[args.Length + 1];
             retVal[0] = arg;

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandlePropertyElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var property = new RowTypePropertyElement(this);
             property.Parse(reader);

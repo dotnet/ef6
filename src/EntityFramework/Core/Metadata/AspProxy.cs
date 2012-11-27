@@ -118,7 +118,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> A fully-qualified path </returns>
         internal string MapWebPath(string path)
         {
-            Debug.Assert(path != null, "path == null");
+            DebugCheck.NotNull(path);
 
             path = PrivateMapWebPath(path);
             if (path == null)
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private string PrivateMapWebPath(string path)
         {
-            Debug.Assert(!string.IsNullOrEmpty(path));
+            DebugCheck.NotEmpty(path);
             Debug.Assert(path.StartsWith(EdmConstants.WebHomeSymbol, StringComparison.Ordinal));
 
             InitializeWebAssembly();

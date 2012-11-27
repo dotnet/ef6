@@ -69,8 +69,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EdmProperty(string name, TypeUsage typeUsage)
             : base(name, typeUsage)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(typeUsage, "typeUsage");
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, Type entityDeclaringType)
             : this(name, typeUsage)
         {
-            Debug.Assert(propertyInfo != null);
-            Debug.Assert(entityDeclaringType != null);
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(entityDeclaringType);
             Debug.Assert(name == propertyInfo.Name);
 
             _propertyInfo = propertyInfo;
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _memberGetter; }
             set
             {
-                Debug.Assert(null != value, "clearing ValueGetter");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberGetter, value, null);
             }
@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _memberSetter; }
             set
             {
-                Debug.Assert(null != value, "clearing ValueSetter");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberSetter, value, null);
             }

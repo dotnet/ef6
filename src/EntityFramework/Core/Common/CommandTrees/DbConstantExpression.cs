@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbConstantExpression(TypeUsage resultType, object value)
             : base(DbExpressionKind.Constant, resultType)
         {
-            Debug.Assert(value != null, "DbConstantExpression value cannot be null");
+            DebugCheck.NotNull(value);
             Debug.Assert(TypeSemantics.IsScalarType(resultType), "DbConstantExpression must have a primitive or enum value");
             Debug.Assert(
                 !value.GetType().IsEnum || TypeSemantics.IsEnumerationType(resultType),

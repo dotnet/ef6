@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -24,11 +25,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal ClrEnumType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
             : base(clrType)
         {
-            Debug.Assert(clrType != null, "clrType != null");
+            DebugCheck.NotNull(clrType);
+            DebugCheck.NotEmpty(cspaceNamespaceName);
+            DebugCheck.NotEmpty(cspaceTypeName);
             Debug.Assert(clrType.IsEnum, "enum type expected");
-            Debug.Assert(
-                !String.IsNullOrEmpty(cspaceNamespaceName) && !String.IsNullOrEmpty(cspaceTypeName),
-                "Mapping information must never be null");
 
             _type = clrType;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;

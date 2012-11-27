@@ -22,14 +22,6 @@ namespace System.Data.Entity.SqlServer.Resources
         }
 
         /// <summary>
-        ///     A string like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static string PreconditionFailed(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.PreconditionFailed, p0, p1);
-        }
-
-        /// <summary>
         ///     A string like "The specified DbGeography value could not be converted to a SQL Server compatible value."
         /// </summary>
         internal static string SqlProvider_GeographyValueNotSqlCompatible
@@ -381,22 +373,6 @@ namespace System.Data.Entity.SqlServer.Resources
         }
 
         /// <summary>
-        ///     ArgumentException with message like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static Exception PreconditionFailed(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PreconditionFailed(p0, p1));
-        }
-
-        /// <summary>
-        ///     The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
-        /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
-
-        /// <summary>
         ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -429,7 +405,6 @@ namespace System.Data.Entity.SqlServer.Resources
     internal sealed class EntityRes
     {
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
-        internal const string PreconditionFailed = "PreconditionFailed";
         internal const string SqlProvider_GeographyValueNotSqlCompatible = "SqlProvider_GeographyValueNotSqlCompatible";
         internal const string SqlProvider_GeometryValueNotSqlCompatible = "SqlProvider_GeometryValueNotSqlCompatible";
         internal const string ProviderReturnedNullForGetDbInformation = "ProviderReturnedNullForGetDbInformation";

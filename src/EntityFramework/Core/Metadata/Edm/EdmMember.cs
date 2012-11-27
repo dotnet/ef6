@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="memberTypeUsage"> type information containing info about member's type and its facet </param>
         internal EdmMember(string name, TypeUsage memberTypeUsage)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            EntityUtil.GenericCheckArgumentNull(memberTypeUsage, "memberTypeUsage");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(memberTypeUsage, "memberTypeUsage");
 
             _name = name;
             _typeUsage = memberTypeUsage;

@@ -403,7 +403,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private static string GenerateFunctionSql(DbFunctionCommandTree tree, out CommandType commandType)
         {
-            Debug.Assert(tree.EdmFunction != null, "DbFunctionCommandTree function cannot be null");
+            DebugCheck.NotNull(tree.EdmFunction);
 
             var function = tree.EdmFunction;
 
@@ -458,7 +458,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns> The string representing the SQL to be executed. </returns>
         private string GenerateSql(DbQueryCommandTree tree, out HashSet<string> paramsToForceNonUnicode)
         {
-            Debug.Assert(tree.Query != null, "DbQueryCommandTree Query cannot be null");
+            DebugCheck.NotNull(tree.Query);
 
             var targetTree = tree;
 
@@ -4167,7 +4167,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns> </returns>
         internal static string QuoteIdentifier(string name)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name));
+            DebugCheck.NotEmpty(name);
             // We assume that the names are not quoted to begin with.
             return "[" + name.Replace("]", "]]") + "]";
         }
@@ -4184,27 +4184,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     This is called from
-        ///     <see
-        ///         cref="GenerateSql(DbQueryCommandTree, out Dictionary
-        ///                             
-        ///                             
-        ///     <string, bool>
-        ///         )"/> and nodes which require a
-        ///         select statement as an argument e.g.
-        ///         <see cref="Visit(DbIsEmptyExpression)" />
-        ///         ,
-        ///         <see cref="Visit(DbUnionAllExpression)" />
-        ///         .
-        ///         SqlGenerator needs its child to have a proper alias if the child is
-        ///         just an extent or a join.
-        ///         The normal relational nodes result in complete valid SQL statements.
-        ///         For the rest, we need to treat them as there was a dummy
-        ///         <code>-- originally {expression}
+        ///     This is called from <see cref="GenerateSql(DbQueryCommandTree, out HashSet{string})" />
+        ///     and nodes which require a select statement as an argument e.g. <see cref="Visit(DbIsEmptyExpression)" />,
+        ///     <see cref="Visit(DbUnionAllExpression)" />.
+        ///     SqlGenerator needs its child to have a proper alias if the child is
+        ///     just an extent or a join.
+        ///     The normal relational nodes result in complete valid SQL statements.
+        ///     For the rest, we need to treat them as there was a dummy
+        ///     <code>-- originally {expression}
         ///                                     -- change that to
         ///                                     SELECT *
         ///                                     FROM {expression} as c</code>
-        ///         DbLimitExpression needs to start the statement but not add the default columns
+        ///     DbLimitExpression needs to start the statement but not add the default columns
         /// </summary>
         /// <param name="e"> </param>
         /// <param name="addDefaultColumns"> </param>

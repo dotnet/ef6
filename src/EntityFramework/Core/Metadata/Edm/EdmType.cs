@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -35,8 +36,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             string namespaceName,
             DataSpace dataSpace)
         {
-            EntityUtil.GenericCheckArgumentNull(name, "name");
-            EntityUtil.GenericCheckArgumentNull(namespaceName, "namespaceName");
+            Check.NotNull(name, "name");
+            Check.NotNull(namespaceName, "namespaceName");
 
             // Initialize the item attributes
             Initialize(
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _name; }
             internal set
             {
-                Debug.Assert(value != null, "The name should never be set to null");
+                DebugCheck.NotNull(value);
                 _name = value;
             }
         }
@@ -100,7 +101,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _namespace; }
             internal set
             {
-                Debug.Assert(value != null, "Namespace should never be set to null");
+                DebugCheck.NotNull(value);
                 _namespace = value;
             }
         }

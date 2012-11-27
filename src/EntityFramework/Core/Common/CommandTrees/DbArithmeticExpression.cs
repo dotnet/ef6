@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 "Invalid DbExpressionKind used in DbArithmeticExpression: " + Enum.GetName(typeof(DbExpressionKind), kind)
                 );
 
-            Debug.Assert(args != null, "DbArithmeticExpression arguments cannot be null");
+            DebugCheck.NotNull(args);
 
             Debug.Assert(
                 (DbExpressionKind.UnaryMinus == kind && 1 == args.Count) ||

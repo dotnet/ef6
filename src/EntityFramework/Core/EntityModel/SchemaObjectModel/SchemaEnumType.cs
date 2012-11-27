@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -87,7 +88,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </returns>
         protected override bool HandleElement(XmlReader reader)
         {
-            Debug.Assert(reader != null, "reader != null");
+            DebugCheck.NotNull(reader);
 
             if (!base.HandleElement(reader))
             {
@@ -125,7 +126,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <c>false</c>
         protected override bool HandleAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null, "reader != null");
+            DebugCheck.NotNull(reader);
 
             if (!base.HandleAttribute(reader))
             {
@@ -152,7 +153,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> XmlReader positioned on the Member element. </param>
         private void HandleMemberElement(XmlReader reader)
         {
-            Debug.Assert(reader != null, "reader != null");
+            DebugCheck.NotNull(reader);
 
             var enumMember = new SchemaEnumMember(this);
             enumMember.Parse(reader);

@@ -516,7 +516,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private static CompositeKey ExtractKey(
                 PropagatorResult change, ReadOnlyCollection<DbExpression> keySelectors)
             {
-                Debug.Assert(null != change && null != keySelectors);
+                DebugCheck.NotNull(change);
+                DebugCheck.NotNull(keySelectors);
+
                 var keyValues = new PropagatorResult[keySelectors.Count];
                 for (var i = 0; i < keySelectors.Count; i++)
                 {

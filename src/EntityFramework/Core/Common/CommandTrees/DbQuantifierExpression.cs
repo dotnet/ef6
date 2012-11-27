@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DbExpressionKind kind, TypeUsage booleanResultType, DbExpressionBinding input, DbExpression predicate)
             : base(kind, booleanResultType)
         {
-            Debug.Assert(input != null, "DbQuantifierExpression input cannot be null");
-            Debug.Assert(predicate != null, "DbQuantifierExpression predicate cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(predicate);
             Debug.Assert(
                 TypeSemantics.IsPrimitiveType(booleanResultType, PrimitiveTypeKind.Boolean),
                 "DbQuantifierExpression must have a Boolean result type");

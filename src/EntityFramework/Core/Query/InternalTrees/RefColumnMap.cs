@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             EntityIdentity entityIdentity)
             : base(type, name)
         {
-            Debug.Assert(entityIdentity != null, "Must specify entity identity information");
+            DebugCheck.NotNull(entityIdentity);
             m_entityIdentity = entityIdentity;
         }
 

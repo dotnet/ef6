@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an utility for creating anonymous IDisposable implementations.
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal Disposer(Action action)
         {
-            Debug.Assert(action != null, "action != null");
+            DebugCheck.NotNull(action);
             _action = action;
         }
 

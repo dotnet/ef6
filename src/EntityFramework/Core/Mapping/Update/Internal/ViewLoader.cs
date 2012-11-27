@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal ViewLoader(StorageMappingItemCollection mappingCollection)
         {
-            Debug.Assert(null != mappingCollection, "mapping collection required");
+            DebugCheck.NotNull(mappingCollection);
             m_mappingCollection = mappingCollection;
         }
 

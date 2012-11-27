@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -29,8 +30,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EnumMember(string name, object value)
             : base(MetadataFlags.Readonly)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            Debug.Assert(value != null, "value != null");
+            Check.NotEmpty(name, "name");
+            DebugCheck.NotNull(value);
             Debug.Assert(
                 value is SByte || value is Byte || value is Int16 || value is Int32 || value is Int64,
                 "Unsupported type of enum member value.");

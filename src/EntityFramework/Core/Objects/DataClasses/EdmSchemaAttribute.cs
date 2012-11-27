@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -25,10 +26,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         public EdmSchemaAttribute(string assemblyGuid)
         {
-            if (null == assemblyGuid)
-            {
-                throw new ArgumentNullException("assemblyGuid");
-            }
+            Check.NotNull(assemblyGuid, "assemblyGuid");
         }
     }
 }

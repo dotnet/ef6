@@ -425,7 +425,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal ExpressionResolution ResolveSimpleName(string name, bool leftHandSideOfMemberAccess, ErrorContext errCtx)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name), "name must not be null or empty");
+            DebugCheck.NotEmpty(name);
 
             //
             // Try resolving as a scope entry.
@@ -575,7 +575,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private bool TryResolveAsPropertyAccess(DbExpression valueExpr, string name, out DbExpression propertyExpr)
         {
-            Debug.Assert(valueExpr != null, "valueExpr != null");
+            DebugCheck.NotNull(valueExpr);
 
             propertyExpr = null;
 
@@ -601,7 +601,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private bool TryResolveAsRefPropertyAccess(DbExpression valueExpr, string name, ErrorContext errCtx, out DbExpression propertyExpr)
         {
-            Debug.Assert(valueExpr != null, "valueExpr != null");
+            DebugCheck.NotNull(valueExpr);
 
             propertyExpr = null;
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Xml;
 
@@ -123,7 +124,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleDefiningQueryElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var query = new EntityContainerEntitySetDefiningQuery(this);
             query.Parse(reader);
@@ -151,7 +152,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleEntityTypeAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var value = HandleDottedNameAttribute(reader, _unresolvedEntityTypeName);
             if (value.Succeeded)
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(
                 Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             _schema = reader.Value;
         }
@@ -181,7 +182,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(
                 Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             _table = reader.Value;
         }

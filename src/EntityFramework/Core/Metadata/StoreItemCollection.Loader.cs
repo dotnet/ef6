@@ -199,8 +199,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private static void AddProviderIncompatibleError(
                 ProviderIncompatibleException provEx, Action<string, ErrorCode, EdmSchemaErrorSeverity> addError)
             {
-                Debug.Assert(provEx != null);
-                Debug.Assert(addError != null);
+                DebugCheck.NotNull(provEx);
+                DebugCheck.NotNull(addError);
 
                 var message = new StringBuilder(provEx.Message);
                 if (provEx.InnerException != null

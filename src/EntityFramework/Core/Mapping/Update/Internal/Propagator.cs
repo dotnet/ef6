@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     <para> Comments assume there is a map between the CDM and store. Other maps are possible, but for simplicity, we discuss the 'from' portion of the map as the C-Space and the 'to' portion of the map as the S-Space. </para>
@@ -227,7 +226,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             DebugCheck.NotNull(node);
 
-            Debug.Assert(null != node.Projection, "CQT validates DbProjectExpression.Projection property");
+            DebugCheck.NotNull(node.Projection);
 
             var projection = node.Projection as DbNewInstanceExpression;
 

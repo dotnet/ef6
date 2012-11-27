@@ -760,7 +760,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         private UpdateException DependencyOrderingError(IEnumerable<UpdateCommand> remainder)
         {
-            Debug.Assert(null != remainder && remainder.Count() > 0, "must provide non-empty remainder");
+            DebugCheck.NotNull(remainder);
+            Debug.Assert(remainder.Count() > 0, "must provide non-empty remainder");
 
             var stateEntries = new HashSet<IEntityStateEntry>();
 
@@ -1019,7 +1020,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private void ValidateRecord(EntitySetBase extent, IExtendedDataRecord record)
         {
-            Debug.Assert(null != extent, "must be verified by caller");
+            DebugCheck.NotNull(extent);
 
             DataRecordInfo recordInfo;
             if ((null == record)
@@ -1068,7 +1069,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private void LoadStateEntry(IEntityStateEntry stateEntry)
         {
-            Debug.Assert(null != stateEntry, "state entry must exist");
+            DebugCheck.NotNull(stateEntry);
 
             // make sure the state entry doesn't contain invalid data and register it with the
             // update pipeline
@@ -1561,7 +1562,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 /// </summary>
                 internal void AddToEquivalenceSet(DirectionalRelationship other)
                 {
-                    Debug.Assert(null != other, "other must not be null");
+                    DebugCheck.NotNull(other);
                     Debug.Assert(Equals(other), "other must be another instance of the same relationship target");
                     Debug.Assert(
                         ReferenceEquals(other._equivalenceSetLinkedListNext, other), "other must not be part of an equivalence set yet");

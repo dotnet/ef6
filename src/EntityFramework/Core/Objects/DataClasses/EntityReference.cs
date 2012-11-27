@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -460,8 +461,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal void UpdateForeignKeyValues(
             IEntityWrapper dependentEntity, IEntityWrapper principalEntity, Dictionary<int, object> changedFKs, bool forceChange)
         {
-            Debug.Assert(dependentEntity.Entity != null, "dependentEntity.Entity == null");
-            Debug.Assert(principalEntity.Entity != null, "principalEntity.Entity == null");
+            DebugCheck.NotNull(dependentEntity.Entity);
+            DebugCheck.NotNull(principalEntity.Entity);
             Debug.Assert(IsForeignKey, "cannot update foreign key values if the relationship is not a FK");
             var constraint = ((AssociationType)RelationMetadata).ReferentialConstraints[0];
             Debug.Assert(constraint != null, "null constraint");
@@ -567,8 +568,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="principalEntity"> The key from which key values will be obtained </param>
         internal void UpdateForeignKeyValues(IEntityWrapper dependentEntity, EntityKey principalKey)
         {
-            Debug.Assert(dependentEntity.Entity != null, "dependentEntity.Entity == null");
-            Debug.Assert(principalKey != null, "principalKey == null");
+            DebugCheck.NotNull(dependentEntity.Entity);
+            DebugCheck.NotNull(principalKey);
             Debug.Assert(!principalKey.IsTemporary, "Cannot update from a temp key");
             Debug.Assert(IsForeignKey, "cannot update foreign key values if the relationship is not a FK");
             var constraint = ((AssociationType)RelationMetadata).ReferentialConstraints[0];

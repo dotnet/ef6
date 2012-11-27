@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> A new ObjectParameter instance with the same field values as the specified ObjectParameter </returns>
         private ObjectParameter(ObjectParameter template)
         {
-            Debug.Assert(template != null, "Template ObjectParameter cannot be null");
+            DebugCheck.NotNull(template);
 
             _name = template._name;
             _type = template._type;

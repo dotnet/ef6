@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public IEntityWrapper HandleEntityNoTracking<TEntity>(IEntityWrapper wrappedEntity)
         {
-            Debug.Assert(null != wrappedEntity, "wrapped entity is null");
+            DebugCheck.NotNull(wrappedEntity);
             RegisterMaterializedEntityForEvent(wrappedEntity);
             return wrappedEntity;
         }
@@ -129,8 +129,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             Debug.Assert(MergeOption.NoTracking != MergeOption, "no need to HandleEntity if there's no tracking");
             Debug.Assert(MergeOption.AppendOnly != MergeOption, "use HandleEntityAppendOnly instead...");
-            Debug.Assert(null != wrappedEntity, "wrapped entity is null");
-            Debug.Assert(null != wrappedEntity.Entity, "if HandleEntity is called, there must be an entity");
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
 
             var result = wrappedEntity;
 
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Func<Shaper, IEntityWrapper> constructEntityDelegate, EntityKey entityKey, EntitySet entitySet)
         {
             Debug.Assert(MergeOption == MergeOption.AppendOnly, "only use HandleEntityAppendOnly when MergeOption is AppendOnly");
-            Debug.Assert(null != constructEntityDelegate, "must provide delegate to construct the entity");
+            DebugCheck.NotNull(constructEntityDelegate);
 
             IEntityWrapper result;
 
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         public IEntityWrapper HandleFullSpanCollection<T_SourceEntity, T_TargetEntity>(
             IEntityWrapper wrappedEntity, Coordinator<T_TargetEntity> coordinator, AssociationEndMember targetMember)
         {
-            Debug.Assert(null != wrappedEntity, "wrapped entity is null");
+            DebugCheck.NotNull(wrappedEntity);
             if (null != wrappedEntity.Entity)
             {
                 coordinator.RegisterCloseHandler((state, spannedEntities) => FullSpanAction(wrappedEntity, spannedEntities, targetMember));
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         public IEntityWrapper HandleFullSpanElement<T_SourceEntity, T_TargetEntity>(
             IEntityWrapper wrappedSource, IEntityWrapper wrappedSpannedEntity, AssociationEndMember targetMember)
         {
-            Debug.Assert(null != wrappedSource, "wrapped entity is null");
+            DebugCheck.NotNull(wrappedSource);
             if (wrappedSource.Entity == null)
             {
                 return wrappedSource;
@@ -290,7 +290,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 return wrappedEntity;
             }
-            Debug.Assert(targetMember != null);
+            DebugCheck.NotNull(targetMember);
             Debug.Assert(
                 targetMember.RelationshipMultiplicity == RelationshipMultiplicity.One ||
                 targetMember.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne);
@@ -516,7 +516,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         private void SetIsLoadedForSpan(RelatedEnd relatedEnd, bool forceToTrue)
         {
-            Debug.Assert(relatedEnd != null, "RelatedEnd should not be null");
+            DebugCheck.NotNull(relatedEnd);
 
             // We can now say this related end is "Loaded" 
             // The cases where we should set this to true are:
@@ -548,7 +548,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         public IEntityWrapper HandleIEntityWithKey<TEntity>(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
-            Debug.Assert(null != wrappedEntity, "wrapped entity is null");
+            DebugCheck.NotNull(wrappedEntity);
             return HandleEntity<TEntity>(wrappedEntity, wrappedEntity.EntityKey, entitySet);
         }
 
@@ -723,8 +723,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         private void CheckClearedEntryOnSpan(EntityKey sourceKey, AssociationEndMember targetMember)
         {
-            Debug.Assert(null != (object)sourceKey);
-            Debug.Assert(targetMember != null);
+            DebugCheck.NotNull((object)sourceKey);
+            DebugCheck.NotNull(targetMember);
             Debug.Assert(Context != null);
 
             var sourceMember = MetadataHelper.GetOtherAssociationEnd(targetMember);
@@ -751,7 +751,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private void FullSpanAction<T_TargetEntity>(
             IEntityWrapper wrappedSource, IList<T_TargetEntity> spannedEntities, AssociationEndMember targetMember)
         {
-            Debug.Assert(null != wrappedSource, "wrapped entity is null");
+            DebugCheck.NotNull(wrappedSource);
 
             if (wrappedSource.Entity != null)
             {
@@ -775,10 +775,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         private void UpdateEntry<TEntity>(IEntityWrapper wrappedEntity, EntityEntry existingEntry)
         {
-            Debug.Assert(null != wrappedEntity, "wrapped entity is null");
-            Debug.Assert(null != wrappedEntity.Entity, "null entity");
-            Debug.Assert(null != existingEntry, "null ObjectStateEntry");
-            Debug.Assert(null != existingEntry.Entity, "ObjectStateEntry without Entity");
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotNull(wrappedEntity.Entity);
+            DebugCheck.NotNull(existingEntry);
+            DebugCheck.NotNull(existingEntry.Entity);
 
             var clrType = typeof(TEntity);
             if (clrType != existingEntry.WrappedEntity.IdentityType)

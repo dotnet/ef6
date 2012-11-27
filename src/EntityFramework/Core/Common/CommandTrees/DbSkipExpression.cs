@@ -21,9 +21,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TypeUsage resultType, DbExpressionBinding input, ReadOnlyCollection<DbSortClause> sortOrder, DbExpression count)
             : base(DbExpressionKind.Skip, resultType)
         {
-            Debug.Assert(input != null, "DbSkipExpression input cannot be null");
-            Debug.Assert(sortOrder != null, "DbSkipExpression sort order cannot be null");
-            Debug.Assert(count != null, "DbSkipExpression count cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(sortOrder);
+            DebugCheck.NotNull(count);
             Debug.Assert(TypeSemantics.IsCollectionType(resultType), "DbSkipExpression requires a collection result type");
 
             _input = input;

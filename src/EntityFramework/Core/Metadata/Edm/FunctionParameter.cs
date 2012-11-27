@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
+
     /// <summary>
     ///     Class representing a function parameter
     /// </summary>
@@ -19,8 +21,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal FunctionParameter(string name, TypeUsage typeUsage, ParameterMode parameterMode)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(typeUsage, "typeUsage");
             _name = name;
             _typeUsage = typeUsage;
             SetParameterMode(parameterMode);

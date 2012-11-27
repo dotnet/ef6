@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Creates a cell with the C and S queries 
         private Cell(CellQuery cQuery, CellQuery sQuery, CellLabel label, int cellNumber)
         {
-            Debug.Assert(label != null, "Cell lacks label");
+            DebugCheck.NotNull(label);
             m_cQuery = cQuery;
             m_sQuery = sQuery;
             m_label = label;

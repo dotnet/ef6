@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -155,7 +156,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             get { return _storeFunctionName; }
             internal set
             {
-                Debug.Assert(value != null, "StoreFunctionName should never be set null value");
+                DebugCheck.NotNull(value);
                 _storeFunctionName = value;
             }
         }
@@ -581,7 +582,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         {
             Debug.Assert(
                 Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             _schema = reader.Value;
         }
@@ -592,7 +593,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Version attribute </param>
         private void HandleAggregateAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var isAggregate = false;
             HandleBoolAttribute(reader, ref isAggregate);
             IsAggregate = isAggregate;
@@ -604,7 +605,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleBuiltInAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var isBuiltIn = false;
             HandleBoolAttribute(reader, ref isBuiltIn);
             IsBuiltIn = isBuiltIn;
@@ -616,7 +617,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Alias attribute </param>
         private void HandleStoreFunctionNameAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var value = reader.Value;
             if (!String.IsNullOrEmpty(value))
             {
@@ -631,7 +632,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleNiladicFunctionAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var isNiladicFunction = false;
             HandleBoolAttribute(reader, ref isNiladicFunction);
             IsNiladicFunction = isNiladicFunction;
@@ -643,7 +644,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleIsComposableAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var isComposable = true;
             HandleBoolAttribute(reader, ref isComposable);
             IsComposable = isComposable;
@@ -651,7 +652,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleCommandTextFunctionElment(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var commandText = new FunctionCommandText(this);
             commandText.Parse(reader);
@@ -660,7 +661,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected virtual void HandleReturnTypeAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             Debug.Assert(UnresolvedReturnType == null);
 
             string type;
@@ -699,7 +700,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Parameter Element </param>
         protected void HandleParameterElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var parameter = new Parameter(this);
 
@@ -714,7 +715,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at ReturnType element </param>
         protected void HandleReturnTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var returnType = new ReturnType(this);
 
@@ -733,7 +734,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> </param>
         private void HandleParameterTypeSemanticsAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var value = reader.Value;
 

@@ -200,8 +200,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static int AddToDictionary(CollectionData collectionData, string identity, int index, bool updateIfFound)
         {
-            Debug.Assert(collectionData != null && collectionData.IdentityDictionary != null, "the identity dictionary is null");
-            Debug.Assert(!String.IsNullOrEmpty(identity), "empty identity");
+            DebugCheck.NotNull(collectionData);
+            DebugCheck.NotNull(collectionData.IdentityDictionary);
+            DebugCheck.NotEmpty(identity);
+
             int[] inexact = null;
             OrderedIndex orderIndex;
             var exactIndex = index;
@@ -462,7 +464,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if identity argument passed in is empty string</exception>
         public virtual bool ContainsIdentity(string identity)
         {
-            EntityUtil.CheckStringArgument(identity, "identity");
+            Check.NotEmpty(identity, "identity");
             return (0 <= IndexOf(_collectionData, identity, false));
         }
 
@@ -476,7 +478,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if ignoreCase and an exact match does not exist, but has multiple inexact matches</exception>
         private static int IndexOf(CollectionData collectionData, string identity, bool ignoreCase)
         {
-            Debug.Assert(null != identity, "null identity");
+            DebugCheck.NotNull(identity);
 
             var index = -1;
             if (null != collectionData.IdentityDictionary)
@@ -576,7 +578,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the array argument passed in with respect to the arrayIndex passed in not big enough to hold the MetadataCollection being copied</exception>
         public virtual void CopyTo(T[] array, int arrayIndex)
         {
-            EntityUtil.GenericCheckArgumentNull(array, "array");
+            Check.NotNull(array, "array");
 
             if (arrayIndex < 0)
             {
@@ -655,7 +657,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> item else null </returns>
         private T InternalTryGetValue(string identity, bool ignoreCase)
         {
-            var index = IndexOf(_collectionData, EntityUtil.GenericCheckArgumentNull(identity, "identity"), ignoreCase);
+            var index = IndexOf(_collectionData, Check.NotNull(identity, "identity"), ignoreCase);
             Debug.Assert(
                 (index < 0) ||
                 (ignoreCase && String.Equals(_collectionData.OrderedList[index].Identity, identity, StringComparison.OrdinalIgnoreCase)) ||

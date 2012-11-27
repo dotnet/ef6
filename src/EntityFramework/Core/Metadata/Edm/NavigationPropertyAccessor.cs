@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Threading;
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _memberGetter; }
             set
             {
-                Debug.Assert(null != value, "clearing ValueGetter");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberGetter, value, null);
             }
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _memberSetter; }
             set
             {
-                Debug.Assert(null != value, "clearing ValueSetter");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _memberSetter, value, null);
             }
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _collectionAdd; }
             set
             {
-                Debug.Assert(null != value, "clearing CollectionAdd");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _collectionAdd, value, null);
             }
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _collectionRemove; }
             set
             {
-                Debug.Assert(null != value, "clearing CollectionRemove");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _collectionRemove, value, null);
             }
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _collectionCreate; }
             set
             {
-                Debug.Assert(null != value, "clearing CollectionCreate");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _collectionCreate, value, null);
             }

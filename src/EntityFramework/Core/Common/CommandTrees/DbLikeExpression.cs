@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbLikeExpression(TypeUsage booleanResultType, DbExpression input, DbExpression pattern, DbExpression escape)
             : base(DbExpressionKind.Like, booleanResultType)
         {
-            Debug.Assert(input != null, "DbLikeExpression argument cannot be null");
-            Debug.Assert(pattern != null, "DbLikeExpression pattern cannot be null");
-            Debug.Assert(escape != null, "DbLikeExpression escape cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(pattern);
+            DebugCheck.NotNull(escape);
             Debug.Assert(
                 TypeSemantics.IsPrimitiveType(input.ResultType, PrimitiveTypeKind.String),
                 "DbLikeExpression argument must have a string result type");

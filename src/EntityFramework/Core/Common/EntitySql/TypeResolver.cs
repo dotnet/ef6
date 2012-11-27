@@ -119,8 +119,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal void DeclareInlineFunction(string name, InlineFunctionInfo functionInfo)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name), "name must not be null or empty");
-            Debug.Assert(functionInfo != null, "functionInfo != null");
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(functionInfo);
 
             List<InlineFunctionInfo> overloads;
             if (!_functionDefinitions.TryGetValue(name, out overloads))
@@ -194,7 +194,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal MetadataMember ResolveMetadataMemberName(string[] name, ErrorContext errCtx)
         {
-            Debug.Assert(name != null && name.Length > 0, "name must not be empty");
+            DebugCheck.NotNull(name);
+            Debug.Assert(name.Length > 0, "name must not be empty");
 
             MetadataMember metadataMember;
             if (name.Length == 1)
@@ -269,7 +270,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         internal MetadataMember ResolveUnqualifiedName(string name, bool partOfQualifiedName, ErrorContext errCtx)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name), "name must not be empty");
+            DebugCheck.NotEmpty(name);
 
             //
             // In the case of Name1.Name2...NameN and if backward compatibility mode is on, then resolve Name1 as namespace only, ignore any other possible resolutions.
@@ -482,7 +483,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal static string GetFullName(params string[] names)
         {
-            Debug.Assert(names != null && names.Length > 0, "names must not be null or empty");
+            DebugCheck.NotNull(names);
+            Debug.Assert(names.Length > 0, "names must not be null or empty");
+
             return String.Join(".", names);
         }
     }

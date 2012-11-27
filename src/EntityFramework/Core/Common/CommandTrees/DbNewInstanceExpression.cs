@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbNewInstanceExpression(TypeUsage type, DbExpressionList args)
             : base(DbExpressionKind.NewInstance, type)
         {
-            Debug.Assert(args != null, "DbNewInstanceExpression arguments cannot be null");
+            DebugCheck.NotNull(args);
             Debug.Assert(
                 args.Count > 0 || TypeSemantics.IsCollectionType(type),
                 "DbNewInstanceExpression requires at least one argument when not creating an empty collection");
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Debug.Assert(
                 TypeSemantics.IsEntityType(resultType), "An entity type is required to create a NewEntityWithRelationships expression");
-            Debug.Assert(relationships != null, "Related entity ref collection cannot be null");
+            DebugCheck.NotNull(relationships);
 
             _relatedEntityRefs = (relationships.Count > 0 ? relationships : null);
         }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleTypeAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))

@@ -121,10 +121,6 @@
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
-  <data name="PreconditionFailed" xml:space="preserve">
-    <value>The precondition '{0}' failed. {1}</value>
-    <comment>## ExceptionType=ArgumentException</comment>
-  </data>
   <data name="SqlProvider_GeographyValueNotSqlCompatible" xml:space="preserve">
     <value>The specified DbGeography value could not be converted to a SQL Server compatible value.</value>
   </data>

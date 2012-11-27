@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Type proxyType, ClrEntityType ospaceEntityType, DynamicMethod initializeCollections, List<PropertyInfo> baseGetters,
             List<PropertyInfo> baseSetters)
         {
-            Debug.Assert(proxyType != null, "proxyType must be non-null");
+            DebugCheck.NotNull(proxyType);
 
             _proxyType = proxyType;
             _entityType = ospaceEntityType;
@@ -197,8 +198,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns> The supplied entity wrapper. This is done so that this method can be more easily composed within lambda expressions (such as in the materializer). </returns>
         internal IEntityWrapper SetEntityWrapper(IEntityWrapper wrapper)
         {
-            Debug.Assert(wrapper != null, "wrapper must be non-null");
-            Debug.Assert(wrapper.Entity != null, "proxy must be non-null");
+            DebugCheck.NotNull(wrapper);
+            DebugCheck.NotNull(wrapper.Entity);
             return Proxy_SetEntityWrapper(wrapper.Entity, wrapper) as IEntityWrapper;
         }
 

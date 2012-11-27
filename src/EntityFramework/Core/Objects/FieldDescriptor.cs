@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override object GetValue(object item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override void SetValue(object item, object value)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {

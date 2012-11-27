@@ -63,8 +63,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="typeMapping"> </param>
         internal StorageMappingFragment(EntitySet tableExtent, StorageTypeMapping typeMapping, bool distinctFlag)
         {
-            Debug.Assert(tableExtent != null, "Table should not be null when constructing a Mapping Fragment");
-            Debug.Assert(typeMapping != null, "TypeMapping should not be null when constructing a Mapping Fragment");
+            DebugCheck.NotNull(tableExtent);
+            DebugCheck.NotNull(typeMapping);
 
             m_tableExtent = tableExtent;
             m_typeMapping = typeMapping;

@@ -8,12 +8,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     /// <summary>
     ///     Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships,
-    ///     and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those iterfaces.
+    ///     and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those interfaces.
     ///     This improves the speed and memory utilization for the standard code-gen cases in materialization.
     /// </summary>
     /// <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal sealed class LightweightEntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
-        where TEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+        where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
     {
         private readonly TEntity _entity;
 

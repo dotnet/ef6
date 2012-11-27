@@ -95,8 +95,8 @@ namespace System.Data.Entity.Core.Mapping
             XmlReader reader, StorageMappingItemCollection storageMappingItemCollection, string fileName,
             Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>> scalarMemberMappings)
         {
-            Debug.Assert(storageMappingItemCollection != null);
-            Debug.Assert(scalarMemberMappings != null);
+            DebugCheck.NotNull(storageMappingItemCollection);
+            DebugCheck.NotNull(scalarMemberMappings);
 
             m_storageMappingItemCollection = storageMappingItemCollection;
             m_alias = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -2144,9 +2144,9 @@ namespace System.Data.Entity.Core.Mapping
             Collection<FunctionImportReturnTypePropertyMapping> columnRenameMappings,
             List<FunctionImportEntityTypeMappingCondition> conditions)
         {
-            Debug.Assert(null != columnRenameMappings, "columnRenameMappings cannot be null");
-            Debug.Assert(null != nav, "nav cannot be null");
-            Debug.Assert(null != currentTypes, "currentTypes cannot be null");
+            DebugCheck.NotNull(columnRenameMappings);
+            DebugCheck.NotNull(nav);
+            DebugCheck.NotNull(currentTypes);
 
             var lineInfo = (IXmlLineInfo)(nav.Clone());
 
@@ -3952,7 +3952,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private static string GetFacetsForDisplay(TypeUsage typeUsage)
         {
-            Debug.Assert(typeUsage != null);
+            DebugCheck.NotNull(typeUsage);
 
             var facets = typeUsage.Facets;
             if (facets == null
@@ -4759,7 +4759,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </returns>
         private static TypeUsage ResolveTypeUsageForEnums(TypeUsage typeUsage)
         {
-            Debug.Assert(typeUsage != null, "typeUsage != null");
+            DebugCheck.NotNull(typeUsage);
 
             return Helper.IsEnumType(typeUsage.EdmType)
                        ? TypeUsage.Create(Helper.GetUnderlyingEdmTypeForEnumType(typeUsage.EdmType), typeUsage.Facets)

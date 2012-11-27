@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Public Entity SQL Parser class.
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal EntitySqlParser(Perspective perspective)
         {
-            Debug.Assert(null != perspective, "null perspective?");
+            DebugCheck.NotNull(perspective);
             _perspective = perspective;
         }
 

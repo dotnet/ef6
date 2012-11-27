@@ -515,8 +515,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 objectSpaceType == null || objectSpaceType is StructuralType || objectSpaceType is EnumType,
                 "Only enum or structural type expected");
 
-            if (objectSpaceType.DataSpace
-                != DataSpace.OSpace)
+            if (objectSpaceType.DataSpace != DataSpace.OSpace)
             {
                 throw new ArgumentException(Strings.ArgumentMustBeOSpaceType, "objectSpaceType");
             }

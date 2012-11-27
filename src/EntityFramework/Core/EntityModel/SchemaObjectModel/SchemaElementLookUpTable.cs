@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public AddErrorKind TryAdd(T type)
         {
-            Debug.Assert(type != null, "type parameter is null");
+            DebugCheck.NotNull(type);
 
             if (String.IsNullOrEmpty(type.Identity))
             {
@@ -121,8 +122,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         public void Add(T type, bool doNotAddErrorForEmptyName, Func<object, string> duplicateKeyErrorFormat)
         {
-            Debug.Assert(type != null, "type parameter is null");
-            Debug.Assert(null != duplicateKeyErrorFormat, "duplicateKeyErrorFormat cannot be null");
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(duplicateKeyErrorFormat);
 
             var error = TryAdd(type);
 
@@ -171,7 +172,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> </returns>
         private static string KeyFromName(string unnormalizedKey)
         {
-            Debug.Assert(!String.IsNullOrEmpty(unnormalizedKey), "unnormalizedKey parameter is null or empty");
+            DebugCheck.NotEmpty(unnormalizedKey);
 
             return unnormalizedKey;
         }

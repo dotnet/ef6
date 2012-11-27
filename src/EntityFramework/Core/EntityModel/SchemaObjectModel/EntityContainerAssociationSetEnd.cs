@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> The appropriate relationship end </returns>
         private IRelationshipEnd InferRelationshipEnd(EntityContainerEntitySet set)
         {
-            Debug.Assert(set != null, "set parameter is null");
+            DebugCheck.NotNull(set);
 
             if (ParentElement.Relationship == null)
             {

@@ -417,7 +417,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             internal ServerGenSimpleValue(PropagatorFlags flags, object value, CurrentValueRecord record, int recordOrdinal)
                 : base(flags, value)
             {
-                Debug.Assert(null != record);
+                DebugCheck.NotNull(record);
 
                 m_record = record;
                 m_recordOrdinal = recordOrdinal;
@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             internal KeyValue(PropagatorFlags flags, object value, IEntityStateEntry stateEntry, int identifier, KeyValue next)
                 : base(flags, value)
             {
-                Debug.Assert(null != stateEntry);
+                DebugCheck.NotNull(stateEntry);
 
                 m_stateEntry = stateEntry;
                 m_identifier = identifier;
@@ -609,8 +609,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             internal StructuralValue(PropagatorResult[] values, StructuralType structuralType)
             {
-                Debug.Assert(null != structuralType);
-                Debug.Assert(null != values);
+                DebugCheck.NotNull(structuralType);
+                DebugCheck.NotNull(values);
                 Debug.Assert(values.Length == TypeHelpers.GetAllStructuralMembers(structuralType).Count);
 
                 m_values = values;

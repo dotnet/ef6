@@ -4,7 +4,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
 {
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Xml;
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Edm.Serialization.Xml.Internal.Msl
 
         private void WriteEntityContainerMappingElement(StorageEntityContainerMapping containerMapping)
         {
-            Debug.Assert(containerMapping != null, "containerMapping cannot be null");
+            DebugCheck.NotNull(containerMapping);
 
             _xmlWriter.WriteStartElement(StorageMslConstructs.EntityContainerMappingElement);
             _xmlWriter.WriteAttributeString(StorageMslConstructs.StorageEntityContainerAttribute, _dbSchemaName);

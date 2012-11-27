@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns> true if the output entry was already found; false if it had to be added. </returns>
         internal bool TryLookupAndAdd(QueryCacheEntry inQueryCacheEntry, out QueryCacheEntry outQueryCacheEntry)
         {
-            Debug.Assert(null != inQueryCacheEntry, "qEntry must not be null");
+            DebugCheck.NotNull(inQueryCacheEntry);
 
             outQueryCacheEntry = null;
 
@@ -155,7 +156,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         internal bool TryCacheLookup<TK, TE>(TK key, out TE value)
             where TK : QueryCacheKey
         {
-            Debug.Assert(null != key, "key must not be null");
+            DebugCheck.NotNull(key);
 
             value = default(TE);
 
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns> true if cache hit, false if cache miss </returns>
         private bool TryInternalCacheLookup(QueryCacheKey queryCacheKey, out QueryCacheEntry queryCacheEntry)
         {
-            Debug.Assert(null != queryCacheKey, "queryCacheKey must not be null");
+            DebugCheck.NotNull(queryCacheKey);
 
             queryCacheEntry = null;
 

@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.EntitySql.AST;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     internal sealed class FunctionAggregateInfo : GroupAggregateInfo
     {
@@ -12,12 +12,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             MethodExpr methodExpr, ErrorContext errCtx, GroupAggregateInfo containingAggregate, ScopeRegion definingScopeRegion)
             : base(GroupAggregateKind.Function, methodExpr, errCtx, containingAggregate, definingScopeRegion)
         {
-            Debug.Assert(methodExpr != null, "methodExpr != null");
+            DebugCheck.NotNull(methodExpr);
         }
 
         internal void AttachToAstNode(string aggregateName, DbAggregate aggregateDefinition)
         {
-            Debug.Assert(aggregateDefinition != null, "aggregateDefinition != null");
+            DebugCheck.NotNull(aggregateDefinition);
             base.AttachToAstNode(aggregateName, aggregateDefinition.ResultType);
             AggregateDefinition = aggregateDefinition;
         }

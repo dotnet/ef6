@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -95,8 +96,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if subType is equal to or a sub-type of superType, false otherwise </returns>
         internal static bool IsSubTypeOf(TypeUsage subType, TypeUsage superType)
         {
-            Debug.Assert(subType != null, "subType must not be NULL");
-            Debug.Assert(superType != null, "superType must not be NULL");
+            DebugCheck.NotNull(subType);
+            DebugCheck.NotNull(superType);
 
             if (subType.EdmEquals(superType))
             {
@@ -131,8 +132,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if fromType is promotable to toType, false otherwise </returns>
         internal static bool IsPromotableTo(TypeUsage fromType, TypeUsage toType)
         {
-            Debug.Assert(fromType != null, "fromType must not be NULL");
-            Debug.Assert(toType != null, "toType must not be NULL");
+            DebugCheck.NotNull(fromType);
+            DebugCheck.NotNull(toType);
 
             if (toType.EdmType.EdmEquals(fromType.EdmType))
             {
@@ -222,8 +223,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </remarks>
         internal static bool IsCastAllowed(TypeUsage fromType, TypeUsage toType)
         {
-            Debug.Assert(fromType != null, "fromType != null");
-            Debug.Assert(toType != null, "toType != null");
+            DebugCheck.NotNull(fromType);
+            DebugCheck.NotNull(toType);
 
             return
                 (Helper.IsPrimitiveType(fromType.EdmType) && Helper.IsPrimitiveType(toType.EdmType)) ||
@@ -241,8 +242,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if a common super type between type1 and type2 exists and out commonType represents the common super type. false otherwise along with commonType as null </returns>
         internal static bool TryGetCommonType(TypeUsage type1, TypeUsage type2, out TypeUsage commonType)
         {
-            Debug.Assert(type1 != null, "type1 must not be NULL");
-            Debug.Assert(type2 != null, "type2 must not be NULL");
+            DebugCheck.NotNull(type1);
+            DebugCheck.NotNull(type2);
 
             commonType = null;
 
@@ -389,7 +390,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal static bool IsEnumerationType(TypeUsage type)
         {
-            Debug.Assert(type != null, "type != null");
+            DebugCheck.NotNull(type);
 
             return Helper.IsEnumType(type.EdmType);
         }
@@ -415,7 +416,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         internal static bool IsScalarType(EdmType type)
         {
-            Debug.Assert(type != null, "type != null");
+            DebugCheck.NotNull(type);
 
             return Helper.IsPrimitiveType(type) || Helper.IsEnumType(type);
         }
@@ -693,7 +694,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal static bool IsOrderComparable(TypeUsage type)
         {
-            Debug.Assert(null != type, "type must not be null");
+            DebugCheck.NotNull(type);
             return IsOrderComparable(type.EdmType);
         }
 
@@ -744,9 +745,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool IsPrimitiveTypeSubTypeOf(TypeUsage fromType, TypeUsage toType)
         {
-            Debug.Assert(fromType != null, "fromType must not be null");
+            DebugCheck.NotNull(fromType);
             Debug.Assert(Helper.IsPrimitiveType(fromType.EdmType), "fromType must be primitive type");
-            Debug.Assert(toType != null, "toType must not be null");
+            DebugCheck.NotNull(toType);
             Debug.Assert(Helper.IsPrimitiveType(toType.EdmType), "toType must be primitive type");
 
             if (!IsSubTypeOf((PrimitiveType)fromType.EdmType, (PrimitiveType)toType.EdmType))
@@ -776,7 +777,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool IsPromotableTo(RowType fromRowType, RowType toRowType)
         {
-            Debug.Assert(fromRowType != null && toRowType != null);
+            DebugCheck.NotNull(fromRowType);
+            DebugCheck.NotNull(toRowType);
 
             if (fromRowType.Properties.Count
                 != toRowType.Properties.Count)
@@ -797,9 +799,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool IsPrimitiveTypePromotableTo(TypeUsage fromType, TypeUsage toType)
         {
-            Debug.Assert(fromType != null, "fromType must not be null");
+            DebugCheck.NotNull(fromType);
             Debug.Assert(Helper.IsPrimitiveType(fromType.EdmType), "fromType must be primitive type");
-            Debug.Assert(toType != null, "toType must not be null");
+            DebugCheck.NotNull(toType);
             Debug.Assert(Helper.IsPrimitiveType(toType.EdmType), "toType must be primitive type");
 
             if (!IsSubTypeOf((PrimitiveType)fromType.EdmType, (PrimitiveType)toType.EdmType))
@@ -812,7 +814,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool TryGetCommonType(EdmType edmType1, EdmType edmType2, out EdmType commonEdmType)
         {
-            Debug.Assert(edmType1 != null && edmType2 != null);
+            DebugCheck.NotNull(edmType1);
+            DebugCheck.NotNull(edmType2);
 
             if (edmType2 == edmType1)
             {
@@ -873,9 +876,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool TryGetCommonPrimitiveType(TypeUsage type1, TypeUsage type2, out TypeUsage commonType)
         {
-            Debug.Assert(type1 != null, "type1 must not be null");
+            DebugCheck.NotNull(type1);
             Debug.Assert(Helper.IsPrimitiveType(type1.EdmType), "type1 must be primitive type");
-            Debug.Assert(type2 != null, "type2 must not be null");
+            DebugCheck.NotNull(type2);
             Debug.Assert(Helper.IsPrimitiveType(type2.EdmType), "type2 must be primitive type");
 
             commonType = null;
@@ -945,7 +948,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool TryGetCommonType(RefType refType1, RefType reftype2, out EdmType commonType)
         {
-            Debug.Assert(refType1.ElementType != null && reftype2.ElementType != null);
+            DebugCheck.NotNull(refType1.ElementType);
+            DebugCheck.NotNull(reftype2.ElementType);
 
             if (!TryGetCommonType(refType1.ElementType, reftype2.ElementType, out commonType))
             {
@@ -1057,7 +1061,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool CompareTypes(TypeUsage fromType, TypeUsage toType, bool equivalenceOnly)
         {
-            Debug.Assert(fromType != null && toType != null);
+            DebugCheck.NotNull(fromType);
+            DebugCheck.NotNull(toType);
 
             // If the type usages are the same reference, they are equal.
             if (ReferenceEquals(fromType, toType))

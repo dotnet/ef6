@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if typeUsage argument is null</exception>
         internal MetadataProperty(string name, TypeUsage typeUsage, object value)
         {
-            EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
+            Check.NotNull(typeUsage, "typeUsage");
 
             _name = name;
             _value = value;
