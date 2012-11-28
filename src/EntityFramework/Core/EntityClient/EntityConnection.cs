@@ -289,20 +289,19 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 try
                 {
-                    if (StoreConnection == null)
-                    {
-                        return _entityClientConnectionState;
-                    }
-                    else
+                    if (StoreConnection != null)
                     {
                         ConnectionState storeConnectionState = StoreConnection.State;
                         if (storeConnectionState != _entityClientConnectionState)
                         {
+                            ConnectionState originalState = _entityClientConnectionState;
                             _entityClientConnectionState = storeConnectionState;
+                            OnStateChange(new StateChangeEventArgs(originalState, _entityClientConnectionState));
                         }
 
-                        return _entityClientConnectionState;
                     }
+
+                    return _entityClientConnectionState;
                 }
                 catch (Exception e)
                 {

@@ -2189,14 +2189,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The connection was not closed."
-        /// </summary>
-        internal static string EntityClient_CannotReopenConnection
-        {
-            get { return EntityRes.GetString(EntityRes.EntityClient_CannotReopenConnection); }
-        }
-
-        /// <summary>
         ///     A string like "The connection is not open."
         /// </summary>
         internal static string EntityClient_ConnectionNotOpen
@@ -15546,7 +15538,6 @@ namespace System.Data.Entity.Resources
         internal const string EntityClient_KeywordNotSupported = "EntityClient_KeywordNotSupported";
         internal const string EntityClient_NoCommandText = "EntityClient_NoCommandText";
         internal const string EntityClient_ConnectionStringNeededBeforeOperation = "EntityClient_ConnectionStringNeededBeforeOperation";
-        internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
         internal const string EntityClient_ConnectionNotOpen = "EntityClient_ConnectionNotOpen";
         internal const string EntityClient_DuplicateParameterNames = "EntityClient_DuplicateParameterNames";
         internal const string EntityClient_NoConnectionForCommand = "EntityClient_NoConnectionForCommand";

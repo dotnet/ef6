@@ -1089,9 +1089,6 @@
   <data name="EntityClient_ConnectionStringNeededBeforeOperation" xml:space="preserve">
     <value>A connection string must be set on the connection before you attempt this operation.</value>
   </data>
-  <data name="EntityClient_CannotReopenConnection" xml:space="preserve">
-    <value>The connection was not closed.</value>
-  </data>
   <data name="EntityClient_ConnectionNotOpen" xml:space="preserve">
     <value>The connection is not open.</value>
   </data>
