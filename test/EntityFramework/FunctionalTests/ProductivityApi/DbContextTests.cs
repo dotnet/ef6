@@ -3515,8 +3515,9 @@ namespace ProductivityApiTests
                 dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
                 entityConnectionTracker.VerifyNoConnectionEventsWereFired();
 
-                // look at the EntityConnection's State
+                // look at the EntityConnection's State (side-effect is we fire an event)
                 state = entityConnection.State;
+                Assert.Equal(ConnectionState.Open, state);
 
                 // now the open event should have been fired on both connections
                 dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
@@ -3528,8 +3529,9 @@ namespace ProductivityApiTests
                 dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
                 entityConnectionTracker.VerifyConnectionOpenedEventWasFired();
 
-                // look at the EntityConnection's State
+                // look at the EntityConnection's State (side-effect is we fire an event)
                 state = entityConnection.State;
+                Assert.Equal(ConnectionState.Closed, state);
 
                 // now the close events should have been fired on both connections
                 dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
