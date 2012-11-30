@@ -13374,7 +13374,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported."
+        /// A string like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static string ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
@@ -14973,7 +14973,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported."
+        /// InvalidOperationException with message like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static Exception ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
