@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -25,10 +26,7 @@ namespace System.Data.Entity.Core.Common
             {
                 throw new ArgumentOutOfRangeException("ordinal");
             }
-            if (null == fieldType)
-            {
-                throw new ArgumentNullException("fieldType");
-            }
+            Check.NotNull(fieldType, "fieldType");
 
             _fieldType = fieldType;
             _ordinal = ordinal;

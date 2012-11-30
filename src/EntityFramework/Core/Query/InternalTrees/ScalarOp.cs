@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     All scalars fall into this category
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal ScalarOp(OpType opType, TypeUsage type)
             : this(opType)
         {
-            Debug.Assert(type != null, "No type specified for ScalarOp");
+            DebugCheck.NotNull(type);
             m_type = type;
         }
 

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     using System.Data.Entity.Core.Objects;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents an Entity-SQL-based ObjectQuery Cache key context
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             MergeOption mergeOption,
             Type resultType)
         {
-            Debug.Assert(null != eSqlStatement, "eSqlStatement must not be null");
+            DebugCheck.NotNull(eSqlStatement);
 
             _defaultContainer = defaultContainerName;
             _eSqlStatement = eSqlStatement;
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns> </returns>
         public override bool Equals(object otherObject)
         {
-            Debug.Assert(null != otherObject, "otherObject must not be null");
+            DebugCheck.NotNull(otherObject);
             if (typeof(EntitySqlQueryCacheKey) != otherObject.GetType())
             {
                 return false;

@@ -826,7 +826,7 @@ namespace System.Data.Entity.SqlServer
         private static void GetOrGenerateDatabaseNameAndGetFileNames(
             SqlConnection sqlConnection, out string databaseName, out string dataFileName, out string logFileName)
         {
-            Debug.Assert(sqlConnection != null);
+            DebugCheck.NotNull(sqlConnection);
 
             var connectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
 
@@ -1089,7 +1089,7 @@ namespace System.Data.Entity.SqlServer
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static SqlCommand CreateCommand(SqlConnection sqlConnection, string commandText, int? commandTimeout)
         {
-            Debug.Assert(sqlConnection != null);
+            DebugCheck.NotNull(sqlConnection);
             if (string.IsNullOrEmpty(commandText))
             {
                 // SqlCommand will complain if the command text is empty

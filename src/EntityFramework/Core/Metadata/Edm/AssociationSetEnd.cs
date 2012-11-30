@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Utilities;
+
     /// <summary>
     ///     Class representing a AssociationSet End
     /// </summary>
@@ -16,9 +18,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if either the role,entitySet, parentSet or endMember arguments are null</exception>
         internal AssociationSetEnd(EntitySet entitySet, AssociationSet parentSet, AssociationEndMember endMember)
         {
-            _entitySet = EntityUtil.GenericCheckArgumentNull(entitySet, "entitySet");
-            _parentSet = EntityUtil.GenericCheckArgumentNull(parentSet, "parentSet");
-            _endMember = EntityUtil.GenericCheckArgumentNull(endMember, "endMember");
+            _entitySet = Check.NotNull(entitySet, "entitySet");
+            _parentSet = Check.NotNull(parentSet, "parentSet");
+            _endMember = Check.NotNull(endMember, "endMember");
         }
 
         private readonly EntitySet _entitySet;

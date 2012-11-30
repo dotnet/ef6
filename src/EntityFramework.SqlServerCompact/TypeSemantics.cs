@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
 
     internal static class TypeSemantics
@@ -75,8 +76,9 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // requires: typeUsage wraps a primitive type
         internal static PrimitiveTypeKind GetPrimitiveTypeKind(TypeUsage typeUsage)
         {
-            Debug.Assert(
-                null != typeUsage && null != typeUsage.EdmType && typeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
+            DebugCheck.NotNull(typeUsage);
+            DebugCheck.NotNull(typeUsage.EdmType);
+            Debug.Assert(typeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType);
 
             var primitiveType = (PrimitiveType)typeUsage.EdmType;
 

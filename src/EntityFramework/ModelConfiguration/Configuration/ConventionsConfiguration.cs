@@ -73,22 +73,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
-        /// </summary>
-        /// <param name="entityConventionConfigurationAction">
-        ///     An action that performs configuration against an
-        ///     <see
-        ///         cref="EntityConventionConfiguration" />
-        ///     .
-        /// </param>
-        public void Add(Action<EntityConventionConfiguration> entityConventionConfigurationAction)
-        {
-            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
-
-            Add(CreateConvention(entityConventionConfigurationAction));
-        }
-
-        /// <summary>
         ///     Enables a convention for the <see cref="DbModelBuilder" />. This convention
         ///     will run after the one specified.
         /// </summary>
@@ -108,27 +92,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             _conventions.Insert(index + 1, newConvention);
-        }
-
-        /// <summary>
-        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
-        ///     This convention will run after the one specified.
-        /// </summary>
-        /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
-        /// <param name="entityConventionConfigurationAction">
-        ///     An action that performs configuration against an
-        ///     <see
-        ///         cref="EntityConventionConfiguration" />
-        ///     .
-        /// </param>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        public void AddAfter<TExistingConvention>(
-            Action<EntityConventionConfiguration> entityConventionConfigurationAction)
-            where TExistingConvention : IConvention
-        {
-            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
-
-            AddAfter<TExistingConvention>(CreateConvention(entityConventionConfigurationAction));
         }
 
         /// <summary>
@@ -153,27 +116,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _conventions.Insert(index, newConvention);
         }
 
-        /// <summary>
-        ///     Creates and enables a lightweight convention for the <see cref="DbModelBuilder" />.
-        ///     This convention will run before the one specified.
-        /// </summary>
-        /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
-        /// <param name="entityConventionConfigurationAction">
-        ///     An action that performs configuration against an
-        ///     <see
-        ///         cref="EntityConventionConfiguration" />
-        ///     .
-        /// </param>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        public void AddBefore<TExistingConvention>(
-            Action<EntityConventionConfiguration> entityConventionConfigurationAction)
-            where TExistingConvention : IConvention
-        {
-            Check.NotNull(entityConventionConfigurationAction, "entityConventionConfigurationAction");
-
-            AddBefore<TExistingConvention>(CreateConvention(entityConventionConfigurationAction));
-        }
-
         private int IndexOf<TConvention>()
         {
             var index = 0;
@@ -190,17 +132,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             return -1;
-        }
-
-        private static LightweightConvention CreateConvention(
-            Action<EntityConventionConfiguration> entityConventionConfigurationAction)
-        {
-            DebugCheck.NotNull(entityConventionConfigurationAction);
-
-            var entityConventionConfiguration = new EntityConventionConfiguration();
-            entityConventionConfigurationAction(entityConventionConfiguration);
-
-            return new LightweightConvention(entityConventionConfiguration);
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Xml;
 
@@ -135,7 +136,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleDefiningExpressionElment(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var commandText = new FunctionCommandText(this);
             commandText.Parse(reader);

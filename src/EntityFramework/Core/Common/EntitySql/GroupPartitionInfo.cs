@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.EntitySql.AST;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     internal sealed class GroupPartitionInfo : GroupAggregateInfo
     {
@@ -13,12 +13,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             ScopeRegion definingScopeRegion)
             : base(GroupAggregateKind.Partition, groupPartitionExpr, errCtx, containingAggregate, definingScopeRegion)
         {
-            Debug.Assert(groupPartitionExpr != null, "groupPartitionExpr != null");
+            DebugCheck.NotNull(groupPartitionExpr);
         }
 
         internal void AttachToAstNode(string aggregateName, DbExpression aggregateDefinition)
         {
-            Debug.Assert(aggregateDefinition != null, "aggregateDefinition != null");
+            DebugCheck.NotNull(aggregateDefinition);
             base.AttachToAstNode(aggregateName, aggregateDefinition.ResultType);
             AggregateDefinition = aggregateDefinition;
         }

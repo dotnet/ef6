@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static ObjectParameterCollection MergeParameters(
             ObjectContext context, ObjectParameterCollection sourceQueryParams, ObjectParameter[] builderMethodParams)
         {
-            Debug.Assert(builderMethodParams != null, "params array argument should not be null");
+            DebugCheck.NotNull(builderMethodParams);
             if (sourceQueryParams == null
                 && builderMethodParams.Length == 0)
             {
@@ -166,8 +166,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static ObjectQueryState BuildSetOp(ObjectQueryState leftQuery, ObjectQueryState rightQuery, Span newSpan, string setOp)
         {
             // Assert that the arguments aren't null (should have been verified by ObjectQuery)
-            Debug.Assert(leftQuery != null, "Left query is null?");
-            Debug.Assert(rightQuery != null, "Right query is null?");
+            DebugCheck.NotNull(leftQuery);
+            DebugCheck.NotNull(rightQuery);
             Debug.Assert(
                 leftQuery.ElementType.Equals(rightQuery.ElementType),
                 "Incompatible element types in arguments to Except<T>/Intersect<T>/Union<T>/UnionAll<T>?");
@@ -217,8 +217,8 @@ FROM (
         private static ObjectQueryState BuildSelectOrSelectValue(
             ObjectQueryState query, string alias, string projection, ObjectParameter[] parameters, string projectOp, Type elementType)
         {
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(alias), "Invalid alias");
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(projection), "Invalid projection");
+            DebugCheck.NotEmpty(alias);
+            DebugCheck.NotEmpty(projection);
 
             var queryText = GetCommandText(query);
 
@@ -251,8 +251,8 @@ FROM (
             ObjectQueryState query, string alias, string predicateOrKeys, ObjectParameter[] parameters, string op, string skipCount,
             bool allowsLimit)
         {
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(alias), "Invalid alias");
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(predicateOrKeys), "Invalid predicate/keys");
+            DebugCheck.NotEmpty(alias);
+            DebugCheck.NotEmpty(predicateOrKeys);
             Debug.Assert(null == skipCount || op == _orderByOp, "Skip clause used with WHERE operator?");
 
             var queryText = GetCommandText(query);
@@ -352,9 +352,9 @@ GROUP BY
         internal static ObjectQueryState GroupBy(
             ObjectQueryState query, string alias, string keys, string projection, ObjectParameter[] parameters)
         {
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(alias), "Invalid alias");
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(alias), "Invalid keys");
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(projection), "Invalid projection");
+            DebugCheck.NotEmpty(alias);
+            DebugCheck.NotEmpty(keys);
+            DebugCheck.NotEmpty(projection);
 
             var queryText = GetCommandText(query);
 
@@ -503,7 +503,8 @@ SKIP
 
         internal static ObjectQueryState Skip(ObjectQueryState query, string alias, string keys, string count, ObjectParameter[] parameters)
         {
-            Debug.Assert(!StringUtil.IsNullOrEmptyOrWhiteSpace(count), "Invalid skip count");
+            DebugCheck.NotEmpty(count);
+
             return BuildOrderByOrWhere(query, alias, keys, parameters, _orderByOp, count, true);
         }
 

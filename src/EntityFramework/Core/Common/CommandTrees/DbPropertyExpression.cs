@@ -23,8 +23,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbPropertyExpression(TypeUsage resultType, EdmMember property, DbExpression instance)
             : base(DbExpressionKind.Property, resultType)
         {
-            Debug.Assert(property != null, "DbPropertyExpression property cannot be null");
-            Debug.Assert(instance != null, "DbPropertyExpression instance cannot be null");
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(instance);
             Debug.Assert(
                 Helper.IsEdmProperty(property) ||
                 Helper.IsRelationshipEndMember(property) ||

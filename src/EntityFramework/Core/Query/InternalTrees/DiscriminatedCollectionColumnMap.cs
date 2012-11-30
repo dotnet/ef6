@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -36,8 +37,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             object discriminatorValue)
             : base(type, name, elementMap, keys, foreignKeys)
         {
-            Debug.Assert(discriminator != null, "Must specify a column map for the collection discriminator");
-            Debug.Assert(discriminatorValue != null, "Must specify a discriminator value");
+            DebugCheck.NotNull(discriminator);
+            DebugCheck.NotNull(discriminatorValue);
             m_discriminator = discriminator;
             m_discriminatorValue = discriminatorValue;
         }

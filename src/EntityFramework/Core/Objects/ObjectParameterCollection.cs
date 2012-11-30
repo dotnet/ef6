@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Text;
@@ -140,7 +139,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentOutOfRangeException">If the type of the specified parameter is invalid.</exception>
         public void Add(ObjectParameter item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             CheckUnlocked();
 
@@ -191,7 +190,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Contains(ObjectParameter item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             return _parameters.Contains(item);
         }
@@ -251,7 +250,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
         public bool Remove(ObjectParameter item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             CheckUnlocked();
 

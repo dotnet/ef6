@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Xml;
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> The XmlReader positioned at the EndElement. </param>
         private void HandleEndElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var end = new EntityContainerAssociationSetEnd(this);
             end.Parse(reader);
@@ -153,7 +154,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="entitySet"> The entitySet to associate with the relationship end. </param>
         protected override void AddEnd(IRelationshipEnd relationshipEnd, EntityContainerEntitySet entitySet)
         {
-            Debug.Assert(relationshipEnd != null);
+            DebugCheck.NotNull(relationshipEnd);
             Debug.Assert(!_relationshipEnds.ContainsKey(relationshipEnd.Name));
             // we expect set to be null sometimes
 

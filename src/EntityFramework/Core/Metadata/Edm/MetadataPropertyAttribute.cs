@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Attribute used to mark up properties that should appear in the MetadataItem.MetadataProperties collection
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="isCollectionType"> Sets IsCollectionType property </param>
         private MetadataPropertyAttribute(EdmType type, bool isCollectionType)
         {
-            Debug.Assert(null != type);
+            DebugCheck.NotNull(type);
             _type = type;
             _isCollectionType = isCollectionType;
         }

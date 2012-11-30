@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Precision element </param>
         private void HandlePrecisionElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.PrecisionFacetName);
             facetDescription.Parse(reader);
 
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Scale element </param>
         private void HandleScaleElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new ByteFacetDescriptionElement(this, DbProviderManifest.ScaleFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at MaxLength element </param>
         private void HandleMaxLengthElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new IntegerFacetDescriptionElement(this, DbProviderManifest.MaxLengthFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Unicode element </param>
         private void HandleUnicodeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.UnicodeFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at FixedLength element </param>
         private void HandleFixedLengthElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.FixedLengthFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at SRID element </param>
         private void HandleSridElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new SridFacetDescriptionElement(this, DbProviderManifest.SridFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at SRID element </param>
         private void HandleIsStrictElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var facetDescription = new BooleanFacetDescriptionElement(this, DbProviderManifest.IsStrictFacetName);
             facetDescription.Parse(reader);
             _facetDescriptions.Add(facetDescription);
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Version attribute </param>
         private void HandlePrimitiveTypeKindAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var value = reader.Value;
             try
             {

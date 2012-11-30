@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -145,7 +146,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns> </returns>
         private ObjectMemberMapping GetMemberMap(string propertyName, bool ignoreCase)
         {
-            EntityUtil.CheckStringArgument(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
             ObjectMemberMapping memberMapping = null;
 
             if (!ignoreCase)

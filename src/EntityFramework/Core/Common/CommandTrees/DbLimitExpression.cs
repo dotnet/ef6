@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbLimitExpression(TypeUsage resultType, DbExpression argument, DbExpression limit, bool withTies)
             : base(DbExpressionKind.Limit, resultType)
         {
-            Debug.Assert(argument != null, "DbLimitExpression argument cannot be null");
-            Debug.Assert(limit != null, "DbLimitExpression limit cannot be null");
+            DebugCheck.NotNull(argument);
+            DebugCheck.NotNull(limit);
             Debug.Assert(
                 ReferenceEquals(resultType, argument.ResultType), "DbLimitExpression result type must be the result type of the argument");
 

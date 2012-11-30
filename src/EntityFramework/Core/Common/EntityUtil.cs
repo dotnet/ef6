@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlTypes;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core
         /// <returns> Quoted string </returns>
         internal static string QuoteIdentifier(string identifier)
         {
-            Debug.Assert(identifier != null, "identifier should not be null");
+            DebugCheck.NotNull(identifier);
             return "[" + identifier.Replace("]", "]]") + "]";
         }
 
@@ -375,8 +375,8 @@ namespace System.Data.Entity.Core
 
         internal static InvalidOperationException ValueInvalidCast(Type valueType, Type destinationType)
         {
-            Debug.Assert(null != valueType, "null valueType");
-            Debug.Assert(null != destinationType, "null destinationType");
+            DebugCheck.NotNull(valueType);
+            DebugCheck.NotNull(destinationType);
             if (destinationType.IsValueType
                 && destinationType.IsGenericType
                 && (typeof(Nullable<>) == destinationType.GetGenericTypeDefinition()))
@@ -465,9 +465,9 @@ namespace System.Data.Entity.Core
 
         internal static void ValidateEntitySetInKey(EntityKey key, EntitySet entitySet, string argument)
         {
-            Debug.Assert(null != (object)key, "Null entity key");
-            Debug.Assert(null != entitySet, "Null entity set");
-            Debug.Assert(null != entitySet.EntityContainer, "Null entity container in the entity set");
+            DebugCheck.NotNull((object)key);
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(entitySet.EntityContainer);
 
             var containerName1 = key.EntityContainerName;
             var setName1 = key.EntitySetName;
@@ -548,21 +548,12 @@ namespace System.Data.Entity.Core
 
         internal static T CheckArgumentOutOfRange<T>(T[] values, int index, string parameterName)
         {
-            Debug.Assert(null != values, "null values"); // use a different method if values can be null
+            DebugCheck.NotNull(values);
             if (unchecked((uint)values.Length <= (uint)index))
             {
                 throw new ArgumentOutOfRangeException(parameterName);
             }
             return values[index];
-        }
-
-        internal static T CheckArgumentNull<T>(T value, string parameterName) where T : class
-        {
-            if (null == value)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
-            return value;
         }
 
         internal static IEnumerable<T> CheckArgumentContainsNull<T>(ref IEnumerable<T> enumerableArgument, string argumentName)
@@ -609,24 +600,6 @@ namespace System.Data.Entity.Core
             // expensive way, but we don't know if the enumeration is rewindable so...
             enumerable = new List<T>(enumerable);
             return enumerable as ICollection<T>;
-        }
-
-        internal static T GenericCheckArgumentNull<T>(T value, string parameterName) where T : class
-        {
-            return CheckArgumentNull(value, parameterName);
-        }
-
-        // Invalid string argument
-        internal static void CheckStringArgument(string value, string parameterName)
-        {
-            // Throw ArgumentNullException when string is null
-            CheckArgumentNull(value, parameterName);
-
-            // Throw ArgumentException when string is empty
-            if (value.Length == 0)
-            {
-                throw new ArgumentException(Strings.InvalidStringArgument(parameterName), parameterName);
-            }
         }
 
         internal static bool IsNull(object value)
@@ -690,7 +663,6 @@ namespace System.Data.Entity.Core
         [ResourceConsumption(ResourceScope.Machine)]
         internal static string GetFullPath(string filename)
         {
-            // MDAC 77686
             return Path.GetFullPath(filename);
         }
     }

@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="values"> Key values. </param>
         internal CompositeKey(PropagatorResult[] constants)
         {
-            Debug.Assert(null != constants, "key values must be given");
+            DebugCheck.NotNull(constants);
 
             KeyComponents = constants;
         }
@@ -43,7 +43,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Merged key. </returns>
         internal CompositeKey Merge(KeyManager keyManager, CompositeKey other)
         {
-            Debug.Assert(null != other && other.KeyComponents.Length == KeyComponents.Length, "expected a compatible CompositeKey");
+            DebugCheck.NotNull(other);
+            Debug.Assert(other.KeyComponents.Length == KeyComponents.Length, "expected a compatible CompositeKey");
+
             var mergedKeyValues = new PropagatorResult[KeyComponents.Length];
             for (var i = 0; i < KeyComponents.Length; i++)
             {

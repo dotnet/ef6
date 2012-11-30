@@ -13,18 +13,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    // Detached - nothing
-
-    // Added - _entity & _currentValues only for shadowState
-
-    // Unchanged - _entity & _currentValues only for shadowState
-    // Unchanged -> Deleted - _entity & _currentValues only for shadowState
-
-    // Modified - _currentValues & _modifiedFields + _originalValues only on change
-    // Modified -> Deleted - _currentValues & _modifiedFields + _originalValues only on change
-
     /// <summary>
-    ///     Represets either a entity, entity stub or relationship
+    ///     Represents either a entity, entity stub or relationship
     /// </summary>
     public abstract class ObjectStateEntry : IEntityStateEntry, IEntityChangeTracker
     {

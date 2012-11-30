@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -19,8 +20,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal DbAggregate(TypeUsage resultType, DbExpressionList arguments)
         {
-            Debug.Assert(resultType != null, "DbAggregate.ResultType cannot be null");
-            Debug.Assert(arguments != null, "DbAggregate.Arguments cannot be null");
+            DebugCheck.NotNull(resultType);
+            DebugCheck.NotNull(arguments);
             Debug.Assert(arguments.Count == 1, "DbAggregate requires a single argument");
 
             _type = resultType;

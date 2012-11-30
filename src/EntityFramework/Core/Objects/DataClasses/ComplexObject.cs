@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -31,8 +32,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             StructuralObject parent,
             string parentPropertyName)
         {
-            Debug.Assert(null != parent, "Attempt to attach to a null parent");
-            Debug.Assert(null != parentPropertyName, "Must provide parentPropertyName in order to attach");
+            DebugCheck.NotNull(parent);
+            DebugCheck.NotNull(parentPropertyName);
 
             if (_parent != null)
             {
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected override sealed void ReportPropertyChanging(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             base.ReportPropertyChanging(property);
 
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected override sealed void ReportPropertyChanged(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             // Since we are a ComplexObject, all changes (scalar or complex) are considered complex property changes
             ReportComplexPropertyChanged(null, this, property);
@@ -109,8 +110,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // entityMemberName is unused here because we just keep passing the current parent name up the hierarchy
             // This value is only used in the EntityObject override of this method
 
-            Debug.Assert(complexObject != null, "invalid complexObject");
-            Debug.Assert(!String.IsNullOrEmpty(complexMemberName), "invalid complexMemberName");
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexMemberName);
 
             if (null != _parent)
             {
@@ -130,8 +131,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // entityMemberName is unused here because we just keep passing the current parent name up the hierarchy
             // This value is only used in the EntityObject override of this method
 
-            Debug.Assert(complexObject != null, "invalid complexObject");
-            Debug.Assert(!String.IsNullOrEmpty(complexMemberName), "invalid complexMemberName");
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexMemberName);
 
             if (null != _parent)
             {

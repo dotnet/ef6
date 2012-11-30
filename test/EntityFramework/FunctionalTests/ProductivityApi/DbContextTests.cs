@@ -3393,8 +3393,11 @@ namespace ProductivityApiTests
 
                 Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
+                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
+
                 var query = from p in context.Products
-                             select p.Name;
+                            select p.Name;
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -3407,6 +3410,10 @@ namespace ProductivityApiTests
                 entityConnection.StoreConnection.Close();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+                    
+                // verify that the open and close events have been fired once and only once on both EntityConnection and underlying DbConnection
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
 
                 // check that we throw when we attempt to use the implicitly-opened entityConnection with closed underlying store connection
                 Exception e = Assert.Throws<InvalidOperationException>(() =>
@@ -3418,6 +3425,10 @@ namespace ProductivityApiTests
                 enumerator.Dispose();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+
+                // verify that the open and close events are not fired again by the second MoveNext() above
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
 
                 // prove that can still re-use the connection even after the above
                 Assert.True(context.Products.Count() > 0); // this will check that the query will still execute
@@ -3437,6 +3448,9 @@ namespace ProductivityApiTests
 
                 Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
+                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
+
                 var query = from p in context.Products
                             select p.Name;
 
@@ -3451,6 +3465,10 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
+                // verify that the open and close events have been fired once and only once on both EntityConnection and underlying DbConnection
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+
                 // check that we throw when we attempt to use the implicitly-opened entityConnection
                 Exception e = Assert.Throws<InvalidOperationException>(() =>
                 {
@@ -3462,12 +3480,62 @@ namespace ProductivityApiTests
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
+                // verify that the open and close events are not fired again by the second MoveNext() above
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+
                 // prove that can still re-use the connection even after the above
                 Assert.True(context.Products.Count() > 0); // this will check that the query will still execute
 
                 // and show that the entity connection and the store connection are once again closed
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
+            }
+        }
+
+        [Fact]
+        public void EntityConnection_StateChangeEvents_are_fired_when_state_changes()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+
+                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
+                ConnectionState state = ConnectionState.Closed;
+
+                // verify that the open and close events have not been fired yet
+                dbConnectionTracker.VerifyNoConnectionEventsWereFired();
+                entityConnectionTracker.VerifyNoConnectionEventsWereFired();
+
+                DbConnection storeConnection = entityConnection.StoreConnection;
+                storeConnection.Open();
+
+                // verify the open event has been fired on the store connection but not yet on the EntityConnection
+                dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
+                entityConnectionTracker.VerifyNoConnectionEventsWereFired();
+
+                // look at the EntityConnection's State (side-effect is we fire an event)
+                state = entityConnection.State;
+                Assert.Equal(ConnectionState.Open, state);
+
+                // now the open event should have been fired on both connections
+                dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
+                entityConnectionTracker.VerifyConnectionOpenedEventWasFired();
+
+                storeConnection.Close();
+
+                // verify the close event has been fired on the store connection but not yet on the EntityConnection
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenedEventWasFired();
+
+                // look at the EntityConnection's State (side-effect is we fire an event)
+                state = entityConnection.State;
+                Assert.Equal(ConnectionState.Closed, state);
+
+                // now the close events should have been fired on both connections
+                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
+                entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
             }
         }
         #endregion

@@ -38,8 +38,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentNullException">Thrown if the name or entityType argument is null</exception>
         internal EntitySetBase(string name, string schema, string table, string definingQuery, EntityTypeBase entityType)
         {
-            EntityUtil.GenericCheckArgumentNull(entityType, "entityType");
-            EntityUtil.CheckStringArgument(name, "name");
+            Check.NotNull(entityType, "entityType");
+            Check.NotEmpty(name, "name");
             // SQLBU 480236: catalogName, schemaName & tableName are allowed to be null, empty & non-empty
 
             _name = name;
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _elementType; }
             internal set
             {
-                EntityUtil.GenericCheckArgumentNull(value, "value");
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _elementType = value;

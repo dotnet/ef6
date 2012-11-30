@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Reflection;
 
     /// <summary>
@@ -54,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <param name="clrType"> Type </param>
             internal ItemTypeInformation(Type clrType)
             {
-                Debug.Assert(null != clrType);
+                DebugCheck.NotNull(clrType);
 
                 _itemProperties = GetItemProperties(clrType);
             }
@@ -100,8 +99,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// <param name="attribute"> Attribute for the property. </param>
             internal ItemPropertyInfo(PropertyInfo propertyInfo, MetadataPropertyAttribute attribute)
             {
-                Debug.Assert(null != propertyInfo);
-                Debug.Assert(null != attribute);
+                DebugCheck.NotNull(propertyInfo);
+                DebugCheck.NotNull(attribute);
 
                 _propertyInfo = propertyInfo;
                 _attribute = attribute;

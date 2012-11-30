@@ -19,39 +19,6 @@ namespace System.Data.Entity.Internal
     /// </summary>
     internal static class DbHelpers
     {
-        #region Null/empty/type checking
-
-        /// <summary>
-        ///     Checks whether the given value is null and throws ArgumentNullException if it is.
-        ///     This method should only be used in places where Code Contracts are compiled out in the
-        ///     release build but we still need public surface null-checking, such as where a public
-        ///     abstract class is implemented by an internal concrete class.
-        /// </summary>
-        public static void ThrowIfNull<T>(T value, string parameterName) where T : class
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
-        }
-
-        /// <summary>
-        ///     Checks whether the given string is null, empty, or just whitespace, and throws appropriately
-        ///     if the check fails.
-        ///     This method should only be used in places where Code Contracts are compiled out in the
-        ///     release build but we still need public surface checking, such as where a public
-        ///     abstract class is implemented by an internal concrete class.
-        /// </summary>
-        public static void ThrowIfNullOrWhitespace(string value, string parameterName)
-        {
-            if (String.IsNullOrWhiteSpace(value))
-            {
-                throw Error.ArgumentIsNullOrWhitespace(parameterName);
-            }
-        }
-
-        #endregion
-
         #region Binary key values
 
         /// <summary>

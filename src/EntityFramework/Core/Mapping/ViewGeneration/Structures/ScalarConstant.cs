@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Text;
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// </summary>
         internal ScalarConstant(object value)
         {
-            Debug.Assert(value != null, "Scalar const value must not be null.");
+            DebugCheck.NotNull(value);
             m_scalar = value;
         }
 
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
         {
-            Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
+            DebugCheck.NotNull(outputMember.LeafEdmMember);
             var modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
             var modelType = modelTypeUsage.EdmType;
 
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
         {
-            Debug.Assert(outputMember.LeafEdmMember != null, "Constant can't correspond to an empty member path.");
+            DebugCheck.NotNull(outputMember.LeafEdmMember);
             var modelTypeUsage = Helper.GetModelTypeUsage(outputMember.LeafEdmMember);
             return modelTypeUsage.Constant(m_scalar);
         }

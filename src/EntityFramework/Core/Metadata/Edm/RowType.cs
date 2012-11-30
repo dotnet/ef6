@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -105,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="property"> The property to add </param>
         private void AddProperty(EdmProperty property)
         {
-            EntityUtil.GenericCheckArgumentNull(property, "property");
+            Check.NotNull(property, "property");
             AddMember(property);
         }
 

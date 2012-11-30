@@ -115,6 +115,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbExpressionBinding Bind(this DbExpression input)
         {
+            Check.NotNull(input, "input");
+
             return input.BindAs(_bindingAliases.Next());
         }
 
@@ -136,6 +138,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbExpressionBinding BindAs(this DbExpression input, string varName)
         {
+            Check.NotNull(input, "input");
+            Check.NotNull(varName, "varName");
+
             var elementType = ArgumentValidation.ValidateBindAs(input, varName);
             var inputRef = new DbVariableReferenceExpression(elementType, varName);
             return new DbExpressionBinding(input, inputRef);
@@ -156,6 +161,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbGroupExpressionBinding GroupBind(this DbExpression input)
         {
+            Check.NotNull(input, "input");
+
             var alias = _bindingAliases.Next();
             return input.GroupBindAs(alias, string.Format(CultureInfo.InvariantCulture, "Group{0}", alias));
         }
@@ -181,6 +188,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbGroupExpressionBinding GroupBindAs(this DbExpression input, string varName, string groupVarName)
         {
+            Check.NotNull(input, "input");
+            Check.NotNull(varName, "varName");
+            Check.NotNull(groupVarName, "groupVarName");
+
             var elementType = ArgumentValidation.ValidateGroupBindAs(input, varName, groupVarName);
             var inputRef = new DbVariableReferenceExpression(elementType, varName);
             var groupRef = new DbVariableReferenceExpression(elementType, groupVarName);
@@ -214,6 +225,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFunctionAggregate Aggregate(this EdmFunction function, DbExpression argument)
         {
+            Check.NotNull(function, "function");
+            Check.NotNull(argument, "argument");
+
             return CreateFunctionAggregate(function, argument, false);
         }
 
@@ -240,12 +254,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, DbExpression argument)
         {
+            Check.NotNull(function, "function");
+            Check.NotNull(argument, "argument");
+
             return CreateFunctionAggregate(function, argument, true);
         }
 
         private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, DbExpression argument, bool isDistinct)
         {
-            Check.NotNull(argument, "argument");
             var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, new[] { argument });
             var resultType = function.ReturnParameter.TypeUsage;
             return new DbFunctionAggregate(resultType, funcArgs, function, isDistinct);
@@ -263,7 +279,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /*ENABLE_ELEMENT_SELECTOR(*/
         internal /*)*/ static DbGroupAggregate GroupAggregate(DbExpression argument)
         {
-            var arguments = ArgumentValidation.ValidateGroupAggregate(argument);
+            Check.NotNull(argument, "argument");
+
+            var arguments = new DbExpressionList(new[] { argument }); ;
             var resultType = TypeHelpers.CreateCollectionTypeUsage(argument.ResultType);
             return new DbGroupAggregate(resultType, arguments);
         }
@@ -292,6 +310,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLambda Lambda(DbExpression body, IEnumerable<DbVariableReferenceExpression> variables)
         {
+            Check.NotNull(body, "body");
+
             return CreateLambda(body, variables);
         }
 
@@ -319,13 +339,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLambda Lambda(DbExpression body, params DbVariableReferenceExpression[] variables)
         {
+            Check.NotNull(body, "body");
+
             return CreateLambda(body, variables);
         }
 
         private static DbLambda CreateLambda(DbExpression body, IEnumerable<DbVariableReferenceExpression> variables)
         {
-            Check.NotNull(body, "body");
-
             var validVars = ArgumentValidation.ValidateLambda(variables);
             return new DbLambda(validVars, body);
         }
@@ -345,6 +365,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortClause ToSortClause(this DbExpression key)
         {
+            Check.NotNull(key, "key");
+
             ArgumentValidation.ValidateSortClause(key);
             return new DbSortClause(key, true, String.Empty);
         }
@@ -364,6 +386,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortClause ToSortClauseDescending(this DbExpression key)
         {
+            Check.NotNull(key, "key");
+
             ArgumentValidation.ValidateSortClause(key);
             return new DbSortClause(key, false, String.Empty);
         }
@@ -388,6 +412,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortClause ToSortClause(this DbExpression key, string collation)
         {
+            Check.NotNull(key, "key");
+            Check.NotNull(collation, "collation");
+
             ArgumentValidation.ValidateSortClause(key, collation);
             return new DbSortClause(key, true, collation);
         }
@@ -412,6 +439,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortClause ToSortClauseDescending(this DbExpression key, string collation)
         {
+            Check.NotNull(key, "key");
+            Check.NotNull(collation, "collation");
+
             ArgumentValidation.ValidateSortClause(key, collation);
             return new DbSortClause(key, false, collation);
         }
@@ -491,6 +521,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbApplyExpression CrossApply(this DbExpressionBinding input, DbExpressionBinding apply)
         {
+            Check.NotNull(input, "input");
+            Check.NotNull(apply, "apply");
+
             var resultType = ArgumentValidation.ValidateApply(input, apply);
             return new DbApplyExpression(DbExpressionKind.CrossApply, resultType, input, apply);
         }
@@ -516,6 +549,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbApplyExpression OuterApply(this DbExpressionBinding input, DbExpressionBinding apply)
         {
+            Check.NotNull(input, "input");
+            Check.NotNull(apply, "apply");
+
             var resultType = ArgumentValidation.ValidateApply(input, apply);
             return new DbApplyExpression(DbExpressionKind.OuterApply, resultType, input, apply);
         }
@@ -537,6 +573,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbCrossJoinExpression CrossJoin(IEnumerable<DbExpressionBinding> inputs)
         {
+            Check.NotNull(inputs, "inputs");
+
             TypeUsage resultType;
             var validInputs = ArgumentValidation.ValidateCrossJoin(inputs, out resultType);
             return new DbCrossJoinExpression(resultType, validInputs);
@@ -570,6 +608,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbJoinExpression InnerJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             var resultType = ArgumentValidation.ValidateJoin(left, right, joinCondition);
             return new DbJoinExpression(DbExpressionKind.InnerJoin, resultType, left, right, joinCondition);
         }
@@ -602,6 +644,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbJoinExpression LeftOuterJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             var resultType = ArgumentValidation.ValidateJoin(left, right, joinCondition);
             return new DbJoinExpression(DbExpressionKind.LeftOuterJoin, resultType, left, right, joinCondition);
         }
@@ -634,6 +680,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbJoinExpression FullOuterJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             var resultType = ArgumentValidation.ValidateJoin(left, right, joinCondition);
             return new DbJoinExpression(DbExpressionKind.FullOuterJoin, resultType, left, right, joinCondition);
         }
@@ -656,6 +706,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFilterExpression Filter(this DbExpressionBinding input, DbExpression predicate)
         {
+            Check.NotNull(input, "input");
+            Check.NotNull(predicate, "predicate");
+
             var resultType = ArgumentValidation.ValidateFilter(input, predicate);
             return new DbFilterExpression(resultType, input, predicate);
         }
@@ -758,8 +811,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSkipExpression Skip(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder, DbExpression count)
         {
-            Check.NotNull(count, "count");
             Check.NotNull(input, "input");
+            Check.NotNull(count, "count");
 
             var validSortOrder = ArgumentValidation.ValidateSkip(sortOrder, count);
             return new DbSkipExpression(input.Expression.ResultType, input, validSortOrder, count);
@@ -840,6 +893,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbNullExpression Null(this TypeUsage nullType)
         {
+            Check.NotNull(nullType, "nullType");
+
             ArgumentValidation.ValidateNull(nullType);
             return new DbNullExpression(nullType);
         }
@@ -877,6 +932,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbConstantExpression Constant(object value)
         {
+            Check.NotNull(value, "value");
+
             var constantType = ArgumentValidation.ValidateConstant(value);
             return new DbConstantExpression(constantType, value);
         }
@@ -906,7 +963,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbConstantExpression Constant(this TypeUsage constantType, object value)
         {
+            Check.NotNull(constantType, "constantType");
+            Check.NotNull(value, "value");
             ArgumentValidation.ValidateConstant(constantType, value);
+
             return new DbConstantExpression(constantType, value);
         }
 
@@ -923,6 +983,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </returns>
         public static DbParameterReferenceExpression Parameter(this TypeUsage type, string name)
         {
+            Check.NotNull(type, "type");
+            Check.NotNull(name, "name");
+
             ArgumentValidation.ValidateParameter(type, name);
             return new DbParameterReferenceExpression(type, name);
         }
@@ -940,6 +1003,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </returns>
         public static DbVariableReferenceExpression Variable(this TypeUsage type, string name)
         {
+            Check.NotNull(type, "type");
+            Check.NotNull(name, "name");
+
             ArgumentValidation.ValidateVariable(type, name);
             return new DbVariableReferenceExpression(type, name);
         }
@@ -955,6 +1021,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbScanExpression Scan(this EntitySetBase targetSet)
         {
+            Check.NotNull(targetSet, "targetSet");
+
             var resultType = ArgumentValidation.ValidateScan(targetSet);
             return new DbScanExpression(resultType, targetSet);
         }
@@ -983,6 +1051,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbAndExpression And(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateAnd(left, right);
             return new DbAndExpression(resultType, left, right);
         }
@@ -1007,6 +1078,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbOrExpression Or(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateOr(left, right);
             return new DbOrExpression(resultType, left, right);
         }
@@ -1026,6 +1100,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbNotExpression Not(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var resultType = ArgumentValidation.ValidateNot(argument);
             return new DbNotExpression(resultType, argument);
         }
@@ -1062,6 +1138,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression Divide(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateArithmetic(DbExpressionKind.Divide, left, right);
         }
 
@@ -1086,6 +1165,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression Minus(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateArithmetic(DbExpressionKind.Minus, left, right);
         }
 
@@ -1110,6 +1192,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression Modulo(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateArithmetic(DbExpressionKind.Modulo, left, right);
         }
 
@@ -1134,6 +1219,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression Multiply(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateArithmetic(DbExpressionKind.Multiply, left, right);
         }
 
@@ -1158,6 +1246,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression Plus(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateArithmetic(DbExpressionKind.Plus, left, right);
         }
 
@@ -1177,8 +1268,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbArithmeticExpression UnaryMinus(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             TypeUsage resultType;
-            var args = ArgumentValidation.ValidateArithmetic(argument, out resultType);
+            var args = ArgumentValidation.ValidateUnaryMinus(argument, out resultType);
             return new DbArithmeticExpression(DbExpressionKind.UnaryMinus, resultType, args);
         }
 
@@ -1207,6 +1300,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static DbComparisonExpression CreateComparison(DbExpressionKind kind, DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateComparison(kind, left, right);
             return new DbComparisonExpression(kind, resultType, left, right);
         }
@@ -1232,6 +1328,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression Equal(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.Equals, left, right);
         }
 
@@ -1256,6 +1355,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression NotEqual(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.NotEquals, left, right);
         }
 
@@ -1280,6 +1382,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression GreaterThan(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.GreaterThan, left, right);
         }
 
@@ -1304,6 +1409,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression LessThan(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.LessThan, left, right);
         }
 
@@ -1328,6 +1436,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression GreaterThanOrEqual(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.GreaterThanOrEquals, left, right);
         }
 
@@ -1352,6 +1463,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbComparisonExpression LessThanOrEqual(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             return CreateComparison(DbExpressionKind.LessThanOrEquals, left, right);
         }
 
@@ -1370,6 +1484,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbIsNullExpression IsNull(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var resultType = ArgumentValidation.ValidateIsNull(argument);
             return new DbIsNullExpression(resultType, argument);
         }
@@ -1394,6 +1510,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLikeExpression Like(this DbExpression argument, DbExpression pattern)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(pattern, "pattern");
+
             var resultType = ArgumentValidation.ValidateLike(argument, pattern);
             DbExpression escape = pattern.ResultType.Null();
             return new DbLikeExpression(resultType, argument, pattern, escape);
@@ -1424,6 +1543,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLikeExpression Like(this DbExpression argument, DbExpression pattern, DbExpression escape)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(pattern, "pattern");
+            Check.NotNull(escape, "escape");
+
             var resultType = ArgumentValidation.ValidateLike(argument, pattern, escape);
             return new DbLikeExpression(resultType, argument, pattern, escape);
         }
@@ -1447,6 +1570,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <exception cref="ArgumentException">The specified cast is not valid.</exception>
         public static DbCastExpression CastTo(this DbExpression argument, TypeUsage toType)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(toType, "toType");
+
             ArgumentValidation.ValidateCastTo(argument, toType);
             return new DbCastExpression(toType, argument);
         }
@@ -1475,6 +1601,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbTreatExpression TreatAs(this DbExpression argument, TypeUsage treatType)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(treatType, "treatType");
+
             ArgumentValidation.ValidateTreatAs(argument, treatType);
             return new DbTreatExpression(treatType, argument);
         }
@@ -1513,6 +1642,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbOfTypeExpression OfType(this DbExpression argument, TypeUsage type)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(type, "type");
+
             var collectionOfTypeResultType = ArgumentValidation.ValidateOfType(argument, type);
             return new DbOfTypeExpression(DbExpressionKind.OfType, collectionOfTypeResultType, argument, type);
         }
@@ -1551,6 +1683,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbOfTypeExpression OfTypeOnly(this DbExpression argument, TypeUsage type)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(type, "type");
+
             var collectionOfTypeResultType = ArgumentValidation.ValidateOfType(argument, type);
             return new DbOfTypeExpression(DbExpressionKind.OfTypeOnly, collectionOfTypeResultType, argument, type);
         }
@@ -1579,6 +1714,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbIsOfExpression IsOf(this DbExpression argument, TypeUsage type)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(type, "type");
+
             var booleanResultType = ArgumentValidation.ValidateIsOf(argument, type);
             return new DbIsOfExpression(DbExpressionKind.IsOf, booleanResultType, argument, type);
         }
@@ -1607,6 +1745,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbIsOfExpression IsOfOnly(this DbExpression argument, TypeUsage type)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(type, "type");
+
             var booleanResultType = ArgumentValidation.ValidateIsOf(argument, type);
             return new DbIsOfExpression(DbExpressionKind.IsOfOnly, booleanResultType, argument, type);
         }
@@ -1633,6 +1774,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
         public static DbDerefExpression Deref(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var entityResultType = ArgumentValidation.ValidateDeref(argument);
             return new DbDerefExpression(entityResultType, argument);
         }
@@ -1652,6 +1795,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbEntityRefExpression GetEntityRef(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var refResultType = ArgumentValidation.ValidateGetEntityRef(argument);
             return new DbEntityRefExpression(refResultType, argument);
         }
@@ -1682,6 +1827,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, IEnumerable<DbExpression> keyValues)
         {
+            Check.NotNull(entitySet, "entitySet");
+
             return CreateRefExpression(entitySet, keyValues);
         }
 
@@ -1711,6 +1858,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, params DbExpression[] keyValues)
         {
+            Check.NotNull(entitySet, "entitySet");
+
             return CreateRefExpression(entitySet, keyValues);
         }
 
@@ -1749,6 +1898,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, EntityType entityType, IEnumerable<DbExpression> keyValues)
         {
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(entityType, "entityType");
+
             return CreateRefExpression(entitySet, entityType, keyValues);
         }
 
@@ -1787,18 +1939,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, EntityType entityType, params DbExpression[] keyValues)
         {
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(entityType, "entityType");
+
             return CreateRefExpression(entitySet, entityType, keyValues);
         }
 
         private static DbRefExpression CreateRefExpression(EntitySet entitySet, IEnumerable<DbExpression> keyValues)
         {
             DbExpression keyConstructor;
-            var refResultType = ArgumentValidation.ValidateCreateRef(entitySet, keyValues, out keyConstructor);
+            var refResultType = ArgumentValidation.ValidateCreateRef(entitySet, entitySet.ElementType, keyValues, out keyConstructor);
             return new DbRefExpression(refResultType, entitySet, keyConstructor);
         }
 
         private static DbRefExpression CreateRefExpression(EntitySet entitySet, EntityType entityType, IEnumerable<DbExpression> keyValues)
         {
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(entityType, "entityType");
+
             DbExpression keyConstructor;
             var refResultType = ArgumentValidation.ValidateCreateRef(entitySet, entityType, keyValues, out keyConstructor);
             return new DbRefExpression(refResultType, entitySet, keyConstructor);
@@ -1831,7 +1989,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbRefExpression RefFromKey(this EntitySet entitySet, DbExpression keyRow)
         {
-            var refResultType = ArgumentValidation.ValidateRefFromKey(entitySet, keyRow);
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(keyRow, "keyRow");
+
+            var refResultType = ArgumentValidation.ValidateRefFromKey(entitySet, keyRow, entitySet.ElementType);
             return new DbRefExpression(refResultType, entitySet, keyRow);
         }
 
@@ -1868,6 +2029,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbRefExpression RefFromKey(this EntitySet entitySet, DbExpression keyRow, EntityType entityType)
         {
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(keyRow, "keyRow");
+            Check.NotNull(entityType, "entityType");
+
             var refResultType = ArgumentValidation.ValidateRefFromKey(entitySet, keyRow, entityType);
             return new DbRefExpression(refResultType, entitySet, keyRow);
         }
@@ -1887,6 +2052,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbRefKeyExpression GetRefKey(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var rowResultType = ArgumentValidation.ValidateGetRefKey(argument);
             return new DbRefKeyExpression(rowResultType, argument);
         }
@@ -1925,6 +2092,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbRelationshipNavigationExpression Navigate(
             this DbExpression navigateFrom, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
         {
+            Check.NotNull(navigateFrom, "navigateFrom");
+            Check.NotNull(fromEnd, "fromEnd");
+            Check.NotNull(toEnd, "toEnd");
+
             RelationshipType relType;
             var resultType = ArgumentValidation.ValidateNavigate(
                 navigateFrom, fromEnd, toEnd, out relType, allowAllRelationshipsInSameTypeHierarchy: false);
@@ -1976,6 +2147,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbRelationshipNavigationExpression Navigate(
             this RelationshipType type, string fromEndName, string toEndName, DbExpression navigateFrom)
         {
+            Check.NotNull(type, "type");
+            Check.NotNull(fromEndName, "fromEndName");
+            Check.NotNull(toEndName, "toEndName");
+            Check.NotNull(navigateFrom, "navigateFrom");
+
             RelationshipEndMember fromEnd;
             RelationshipEndMember toEnd;
             var resultType = ArgumentValidation.ValidateNavigate(navigateFrom, type, fromEndName, toEndName, out fromEnd, out toEnd);
@@ -2001,6 +2177,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbDistinctExpression Distinct(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var resultType = ArgumentValidation.ValidateDistinct(argument);
             return new DbDistinctExpression(resultType, argument);
         }
@@ -2020,6 +2198,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbElementExpression Element(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var resultType = ArgumentValidation.ValidateElement(argument);
             return new DbElementExpression(resultType, argument);
         }
@@ -2039,6 +2219,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbIsEmptyExpression IsEmpty(this DbExpression argument)
         {
+            Check.NotNull(argument, "argument");
+
             var booleanResultType = ArgumentValidation.ValidateIsEmpty(argument);
             return new DbIsEmptyExpression(booleanResultType, argument);
         }
@@ -2064,6 +2246,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbExceptExpression Except(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateExcept(left, right);
             return new DbExceptExpression(resultType, left, right);
         }
@@ -2089,6 +2274,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbIntersectExpression Intersect(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateIntersect(left, right);
             return new DbIntersectExpression(resultType, left, right);
         }
@@ -2114,6 +2302,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbUnionAllExpression UnionAll(this DbExpression left, DbExpression right)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+
             var resultType = ArgumentValidation.ValidateUnionAll(left, right);
             return new DbUnionAllExpression(resultType, left, right);
         }
@@ -2140,6 +2331,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLimitExpression Limit(this DbExpression argument, DbExpression count)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(count, "count");
+
             var resultType = ArgumentValidation.ValidateLimit(argument, count);
             return new DbLimitExpression(resultType, argument, count, false);
         }
@@ -2180,6 +2374,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbCaseExpression Case(
             IEnumerable<DbExpression> whenExpressions, IEnumerable<DbExpression> thenExpressions, DbExpression elseExpression)
         {
+            Check.NotNull(whenExpressions, "whenExpressions");
+            Check.NotNull(thenExpressions, "thenExpressions");
+            Check.NotNull(elseExpression, "elseExpression");
+
             DbExpressionList validWhens;
             DbExpressionList validThens;
             var resultType = ArgumentValidation.ValidateCase(
@@ -2212,6 +2410,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFunctionExpression Invoke(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
+            Check.NotNull(function, "function");
+
             return InvokeFunction(function, arguments);
         }
 
@@ -2240,6 +2440,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFunctionExpression Invoke(this EdmFunction function, params DbExpression[] arguments)
         {
+            Check.NotNull(function, "function");
+
             return InvokeFunction(function, arguments);
         }
 
@@ -2277,6 +2479,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLambdaExpression Invoke(this DbLambda lambda, IEnumerable<DbExpression> arguments)
         {
+            Check.NotNull(lambda, "lambda");
+            Check.NotNull(arguments, "arguments");
+
             return InvokeLambda(lambda, arguments);
         }
 
@@ -2307,6 +2512,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLambdaExpression Invoke(this DbLambda lambda, params DbExpression[] arguments)
         {
+            Check.NotNull(lambda, "lambda");
+            Check.NotNull(arguments, "arguments");
+
             return InvokeLambda(lambda, arguments);
         }
 
@@ -2353,6 +2561,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbNewInstanceExpression New(this TypeUsage instanceType, IEnumerable<DbExpression> arguments)
         {
+            Check.NotNull(instanceType, "instanceType");
+
             return NewInstance(instanceType, arguments);
         }
 
@@ -2392,6 +2602,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbNewInstanceExpression New(this TypeUsage instanceType, params DbExpression[] arguments)
         {
+            Check.NotNull(instanceType, "instanceType");
+
             return NewInstance(instanceType, arguments);
         }
 
@@ -2462,6 +2674,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbNewInstanceExpression NewEmptyCollection(this TypeUsage collectionType)
         {
+            Check.NotNull(collectionType, "collectionType");
+
             DbExpressionList validElements;
             var validResultType = ArgumentValidation.ValidateNewEmptyCollection(collectionType, out validElements);
             return new DbNewInstanceExpression(validResultType, validElements);
@@ -2503,6 +2717,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, EdmProperty propertyMetadata)
         {
+            Check.NotNull(instance, "instance");
+            Check.NotNull(propertyMetadata, "propertyMetadata");
+
             return PropertyFromMember(instance, propertyMetadata, "propertyMetadata");
         }
 
@@ -2521,6 +2738,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, NavigationProperty navigationProperty)
         {
+            Check.NotNull(instance, "instance");
+            Check.NotNull(navigationProperty, "navigationProperty");
+
             return PropertyFromMember(instance, navigationProperty, "navigationProperty");
         }
 
@@ -2539,6 +2759,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, RelationshipEndMember relationshipEnd)
         {
+            Check.NotNull(instance, "instance");
+            Check.NotNull(relationshipEnd, "relationshipEnd");
+
             return PropertyFromMember(instance, relationshipEnd, "relationshipEnd");
         }
 
@@ -2572,6 +2795,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static DbPropertyExpression PropertyByName(DbExpression instance, string propertyName, bool ignoreCase)
         {
+            Check.NotNull(instance, "instance");
+            Check.NotNull(propertyName, "propertyName");
+
             EdmMember property;
             var resultType = ArgumentValidation.ValidateProperty(instance, propertyName, ignoreCase, out property);
             return new DbPropertyExpression(resultType, property, instance);
@@ -2583,7 +2809,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static string ExtractAlias(MethodInfo method)
         {
-            Debug.Assert(method != null, "Ensure method is non-null before calling ExtractAlias");
+            DebugCheck.NotNull(method);
             var aliases = ExtractAliases(method);
             Debug.Assert(aliases.Length > 0, "Incompatible method: at least one parameter is required");
             return aliases[0];
@@ -2591,7 +2817,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         internal static string[] ExtractAliases(MethodInfo method)
         {
-            Debug.Assert(method != null, "Ensure method is non-null before calling ExtractAlias");
+            DebugCheck.NotNull(method);
             var methodParams = method.GetParameters();
             int start;
             int paramCount;
@@ -2634,10 +2860,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             DbExpression left, DbExpression right,
             Func<DbExpression, DbExpression, DbExpression> argument, out DbExpression argumentExp)
         {
-            DebugCheck.NotNull(left);
-            DebugCheck.NotNull(right);
-            DebugCheck.NotNull(argument);
-
             var aliases = ExtractAliases(argument.Method);
             var leftBinding = left.BindAs(aliases[0]);
             var rightBinding = right.BindAs(aliases[1]);
@@ -2649,7 +2871,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         private static bool TryGetAnonymousTypeValues<TInstance, TRequired>(
             object instance, out List<KeyValuePair<string, TRequired>> values)
         {
-            Debug.Assert(instance != null, "Ensure instance is non-null before calling TryGetAnonymousTypeValues");
+            DebugCheck.NotNull(instance);
 
             // The following heuristic is used to approximate whether or not TInstance is an anonymous type:
             // - Derived directly from System.Object
@@ -2791,6 +3013,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbQuantifierExpression All(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
+
             DbExpression predicateExp;
             var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.All(predicateExp);
@@ -2864,6 +3089,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbQuantifierExpression Any(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
+
             DbExpression predicateExp;
             var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.Any(predicateExp);
@@ -2903,6 +3131,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression CrossApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(apply, "apply");
+
             return CreateApply(source, apply, DbExpressionBuilder.CrossApply);
         }
 
@@ -2940,6 +3171,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression OuterApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(apply, "apply");
+
             return CreateApply(source, apply, DbExpressionBuilder.OuterApply);
         }
 
@@ -2984,6 +3218,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbJoinExpression FullOuterJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             DbExpression condExp;
             var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].FullOuterJoin(inputs[1], condExp);
@@ -3030,6 +3268,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbJoinExpression InnerJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             DbExpression condExp;
             var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].InnerJoin(inputs[1], condExp);
@@ -3076,6 +3318,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbJoinExpression LeftOuterJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
+            Check.NotNull(left, "left");
+            Check.NotNull(right, "right");
+            Check.NotNull(joinCondition, "joinCondition");
+
             DbExpression condExp;
             var inputs = ConvertToBinding(left, right, joinCondition, out condExp);
             return inputs[0].LeftOuterJoin(inputs[1], condExp);
@@ -3133,6 +3379,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             this DbExpression outer, DbExpression inner, Func<DbExpression, DbExpression> outerKey,
             Func<DbExpression, DbExpression> innerKey)
         {
+            Check.NotNull(outer, "outer");
+            Check.NotNull(inner, "inner");
+            Check.NotNull(outerKey, "outerKey");
+            Check.NotNull(innerKey, "innerKey");
+
             DbExpression leftOperand;
             var leftBinding = ConvertToBinding(outer, outerKey, out leftOperand);
 
@@ -3275,6 +3526,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
             var sortClause = keyExpression.ToSortClause();
@@ -3317,6 +3571,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
             var sortClause = keyExpression.ToSortClause(collation);
@@ -3352,6 +3609,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression OrderByDescending(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
             var sortClause = keyExpression.ToSortClauseDescending();
@@ -3395,6 +3655,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbSortExpression OrderByDescending(
             this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             DbExpression keyExpression;
             var input = ConvertToBinding(source, sortKey, out keyExpression);
             var sortClause = keyExpression.ToSortClauseDescending(collation);
@@ -3441,7 +3704,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </remarks>
         public static DbProjectExpression Select<TProjection>(this DbExpression source, Func<DbExpression, TProjection> projection)
         {
+            Check.NotNull(source, "source");
             Check.NotNull(projection, "projection");
+
             TProjection intermediateProjection;
             var input = ConvertToBinding(source, projection, out intermediateProjection);
             var projectionExp = ResolveToExpression(intermediateProjection);
@@ -3488,6 +3753,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbProjectExpression SelectMany(this DbExpression source, Func<DbExpression, DbExpression> apply)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(apply, "apply");
+
             DbExpression functorResult;
             var inputBinding = ConvertToBinding(source, apply, out functorResult);
 
@@ -3565,6 +3833,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbProjectExpression SelectMany<TSelector>(
             this DbExpression source, Func<DbExpression, DbExpression> apply, Func<DbExpression, DbExpression, TSelector> selector)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(apply, "apply");
             Check.NotNull(selector, "selector");
 
             DbExpression functorResult;
@@ -3633,14 +3903,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbLimitExpression Take(this DbExpression argument, DbExpression count)
         {
+            Check.NotNull(argument, "argument");
+            Check.NotNull(count, "count");
+
             return argument.Limit(count);
         }
 
         private static DbSortExpression CreateThenBy(
             DbSortExpression source, Func<DbExpression, DbExpression> sortKey, bool ascending, string collation, bool useCollation)
         {
-            DebugCheck.NotNull(source);
-            DebugCheck.NotNull(sortKey);
             var sortKeyResult = sortKey(source.Input.Variable);
             DbSortClause sortClause;
             if (useCollation)
@@ -3689,6 +3960,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression ThenBy(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             return CreateThenBy(source, sortKey, true, null, false);
         }
 
@@ -3729,6 +4003,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression ThenBy(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             return CreateThenBy(source, sortKey, true, collation, true);
         }
 
@@ -3762,6 +4039,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbSortExpression ThenByDescending(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             return CreateThenBy(source, sortKey, false, null, false);
         }
 
@@ -3803,6 +4083,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbSortExpression ThenByDescending(
             this DbSortExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(sortKey, "sortKey");
+
             return CreateThenBy(source, sortKey, false, collation, true);
         }
 
@@ -3830,6 +4113,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// </exception>
         public static DbFilterExpression Where(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
+            Check.NotNull(source, "source");
+            Check.NotNull(predicate, "predicate");
+
             DbExpression predicateExp;
             var input = ConvertToBinding(source, predicate, out predicateExp);
             return input.Filter(predicateExp);
@@ -4089,6 +4375,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         internal static DbPropertyExpression CreatePropertyExpressionFromMember(DbExpression instance, EdmMember member)
         {
+            DebugCheck.NotNull(instance);
+            DebugCheck.NotNull(member);
+
             return PropertyFromMember(instance, member, "member");
         }
 

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
@@ -26,8 +26,8 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectSet(EntitySet entitySet, ObjectContext context)
             : base(entitySet, context, MergeOption.AppendOnly)
         {
-            Debug.Assert(entitySet != null, "ObjectSet constructor requires a non-null EntitySet");
-            Debug.Assert(context != null, "ObjectSet constructor requires a non-null ObjectContext");
+            DebugCheck.NotNull(entitySet);
+            DebugCheck.NotNull(context);
             _entitySet = entitySet;
         }
 

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -418,7 +419,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         private static byte[] ConvertBinaryLiteralValue(string binaryLiteralValue)
         {
-            Debug.Assert(null != binaryLiteralValue, "binaryStringLiteral must not be null");
+            DebugCheck.NotNull(binaryLiteralValue);
 
             if (String.IsNullOrEmpty(binaryLiteralValue))
             {

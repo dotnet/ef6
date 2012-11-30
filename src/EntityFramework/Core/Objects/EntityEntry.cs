@@ -11,13 +11,11 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class EntityEntry : ObjectStateEntry
@@ -215,7 +213,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "SetModifiedProperty");
 
@@ -289,7 +287,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             var ordinal = ValidateAndGetOrdinalForProperty(propertyName, "RejectPropertyChanges");
 
@@ -1146,8 +1144,6 @@ namespace System.Data.Entity.Core.Objects
                     if (memberMetadata.IsComplex
                         && oldValue != null)
                     {
-                        // devnote: Not using GetCurrentEntityValue here because change tracking can only be done on OSpace members,
-                        //          so we don't need to worry about shadow state, and we don't want a CSpace representation of complex objects
                         newValue = memberMetadata.GetValue(changingObject);
 
                         ExpandComplexTypeAndAddValues(memberMetadata, oldValue, newValue, false);
@@ -1384,45 +1380,41 @@ namespace System.Data.Entity.Core.Objects
             var member = metadata.Member(ordinal);
             Debug.Assert(null != member, "didn't throw ArgumentOutOfRangeException");
 
-            if (!metadata.IsMemberPartofShadowState(ordinal))
-            {
-                // if it is not shadow state
-                retValue = member.GetValue(userObject);
+            retValue = member.GetValue(userObject);
 
-                // Wrap the value in a record if it is a non-null complex type
-                if (member.IsComplex
-                    && retValue != null)
+            // Wrap the value in a record if it is a non-null complex type
+            if (member.IsComplex
+                && retValue != null)
+            {
+                // need to get the new StateManagerTypeMetadata for nested /complext member
+                switch (updatableRecord)
                 {
-                    // need to get the new StateManagerTypeMetadata for nested /complext member
-                    switch (updatableRecord)
-                    {
-                        case ObjectStateValueRecord.OriginalReadonly:
-                            retValue = new ObjectStateEntryDbDataRecord(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.CurrentUpdatable:
-                            retValue = new ObjectStateEntryDbUpdatableDataRecord(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.OriginalUpdatableInternal:
-                            retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Internal(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.OriginalUpdatablePublic:
-                            retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Public(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue,
-                                parentEntityPropertyIndex);
-                            break;
-                        default:
-                            Debug.Assert(false, "shouldn't happen");
-                            break;
-                    }
-                    // we need to pass the top level ordinal
+                    case ObjectStateValueRecord.OriginalReadonly:
+                        retValue = new ObjectStateEntryDbDataRecord(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.CurrentUpdatable:
+                        retValue = new ObjectStateEntryDbUpdatableDataRecord(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.OriginalUpdatableInternal:
+                        retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Internal(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.OriginalUpdatablePublic:
+                        retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Public(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue,
+                            parentEntityPropertyIndex);
+                        break;
+                    default:
+                        Debug.Assert(false, "shouldn't happen");
+                        break;
                 }
+                // we need to pass the top level ordinal
             }
             return retValue ?? DBNull.Value;
         }
@@ -1439,7 +1431,7 @@ namespace System.Data.Entity.Core.Objects
             object retValue = null;
             if (null != _originalValues)
             {
-                foreach (var cachevalue in _originalValues) // this should include also shadow state
+                foreach (var cachevalue in _originalValues)
                 {
                     if (cachevalue.userObject == instance
                         && cachevalue.memberMetadata == metadata)
@@ -1582,7 +1574,7 @@ namespace System.Data.Entity.Core.Objects
             string entityMemberName, object complexObject, string complexObjectMemberName,
             out StateManagerTypeMetadata typeMetadata, out string changingMemberName, out object changingObject)
         {
-            DebugCheck.NotNull(entityMemberName);
+            Check.NotNull(entityMemberName, "entityMemberName");
 
             typeMetadata = null;
             changingMemberName = null;
@@ -1877,7 +1869,7 @@ namespace System.Data.Entity.Core.Objects
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on ObjectStateEntry.
             // Using a CodeContractsFor class doesn't work in this case.
-            DbHelpers.ThrowIfNullOrWhitespace(propertyName, "propertyName");
+            Check.NotEmpty(propertyName, "propertyName");
 
             return DetectChangesInProperty(
                 ValidateAndGetOrdinalForProperty(propertyName, "IsPropertyChanged"),
@@ -3472,8 +3464,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModified(State.ToString()));
             }
 
-            if (WrappedEntity.IdentityType
-                != wrappedCurrentEntity.IdentityType)
+            if (WrappedEntity.IdentityType != wrappedCurrentEntity.IdentityType)
             {
                 throw new ArgumentException(
                     Strings.ObjectContext_EntitiesHaveDifferentType(
@@ -3503,8 +3494,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(State.ToString()));
             }
 
-            if (WrappedEntity.IdentityType
-                != wrappedOriginalEntity.IdentityType)
+            if (WrappedEntity.IdentityType != wrappedOriginalEntity.IdentityType)
             {
                 throw new ArgumentException(
                     Strings.ObjectContext_EntitiesHaveDifferentType(

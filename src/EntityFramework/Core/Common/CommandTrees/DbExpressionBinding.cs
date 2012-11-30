@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Describes a binding for an expression. Conceptually similar to a foreach loop
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal DbExpressionBinding(DbExpression input, DbVariableReferenceExpression varRef)
         {
-            Debug.Assert(input != null, "DbExpressionBinding input cannot be null");
-            Debug.Assert(varRef != null, "DbExpressionBinding variable cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(varRef);
 
             _expr = input;
             _varRef = varRef;

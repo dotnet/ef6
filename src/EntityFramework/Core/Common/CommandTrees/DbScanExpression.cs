@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Represents a 'scan' of all elements of a given entity set.
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbScanExpression(TypeUsage collectionOfEntityType, EntitySetBase entitySet)
             : base(DbExpressionKind.Scan, collectionOfEntityType)
         {
-            Debug.Assert(entitySet != null, "DbScanExpression entity set cannot be null");
+            DebugCheck.NotNull(entitySet);
 
             _targetSet = entitySet;
         }

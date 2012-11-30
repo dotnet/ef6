@@ -718,7 +718,7 @@ namespace System.Data.Entity.Core
         internal KeyValuePair<string, DbExpression>[] GetKeyValueExpressions(EntitySet entitySet)
         {
             Debug.Assert(!IsTemporary, "GetKeyValueExpressions doesn't make sense for temporary keys - they have no values.");
-            Debug.Assert(entitySet != null, "GetEntitySet should not return null.");
+            DebugCheck.NotNull(entitySet);
             Debug.Assert(entitySet.Name == _entitySetName, "EntitySet returned from GetEntitySet has incorrect name.");
             var numKeyMembers = 0;
             if (!IsTemporary)
@@ -1087,9 +1087,9 @@ namespace System.Data.Entity.Core
         private static void ValidateTypeOfKeyValue(
             MetadataWorkspace workspace, EdmMember keyMember, object keyValue, bool isArgumentException, string argumentName)
         {
-            Debug.Assert(workspace != null, "workspace != null");
-            Debug.Assert(keyMember != null, "keyMember != null");
-            Debug.Assert(keyValue != null, "keyValue != null");
+            DebugCheck.NotNull(workspace);
+            DebugCheck.NotNull(keyMember);
+            DebugCheck.NotNull(keyValue);
             Debug.Assert(Helper.IsScalarType(keyMember.TypeUsage.EdmType), "key member must be of a scalar type");
 
             var keyMemberEdmType = keyMember.TypeUsage.EdmType;

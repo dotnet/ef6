@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class StateManagerTypeMetadata
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal StateManagerTypeMetadata(EdmType edmType, ObjectTypeMapping mapping)
         {
-            Debug.Assert(null != edmType, "null EdmType");
+            DebugCheck.NotNull(edmType);
             Debug.Assert(
                 Helper.IsEntityType(edmType) ||
                 Helper.IsComplexType(edmType),
@@ -121,18 +122,6 @@ namespace System.Data.Entity.Core.Objects
                 ordinal = -1;
             }
             return ordinal;
-        }
-
-        internal bool IsMemberPartofShadowState(int ordinal)
-        {
-            // FUTURE_FEATURE:  When we add support for shadow state, fix this method.
-            // The assert is okay for now because it's impossible for users to configure 
-            // the system such that shadow state properties exist.
-            Debug.Assert(
-                Member(ordinal) != null,
-                "The only case where Member(ordinal) can be null is if the property is in shadow state.  " +
-                "When shadow state support is added, this assert should never fire.");
-            return (null == Member(ordinal).ClrMetadata);
         }
     }
 }

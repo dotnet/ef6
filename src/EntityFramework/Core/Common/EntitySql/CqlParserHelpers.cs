@@ -45,15 +45,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns> Abstract Syntax Tree </returns>
         internal Node Parse(string query)
         {
-            // The common practice is to make the null check at the public surface, 
-            // however this method is a convergence zone from multiple public entry points and it makes sense to
-            // check for null once, here.
-            DebugCheck.NotNull(query);
-            if (String.IsNullOrEmpty(query)
-                || query.Trim().Length == 0)
-            {
-                throw new ArgumentException(Strings.InvalidEmptyQueryTextArgument);
-            }
+            DebugCheck.NotEmpty(query);
 
             _query = query;
             _parsedTree = null;

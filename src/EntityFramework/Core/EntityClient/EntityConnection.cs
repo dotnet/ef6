@@ -127,8 +127,7 @@ namespace System.Data.Entity.Core.EntityClient
                         Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
                 }
 
-                if (connection.State
-                    != ConnectionState.Closed)
+                if (connection.State != ConnectionState.Closed)
                 {
                     throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
                 }
@@ -148,6 +147,9 @@ namespace System.Data.Entity.Core.EntityClient
 
             _metadataWorkspace = workspace;
             _storeConnection = connection;
+            // Note: as a design decision we decided _not_ to subscribe to state change events on the underlying DbConnection, but
+            // rather to ensure that the EntityConnection State is updated to the same as the underlying DbConnection's State
+            // whenever you ask for it
         }
 
         /// <summary>

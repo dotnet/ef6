@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     internal struct EntitySetQualifiedType : IEqualityComparer<EntitySetQualifiedType>
@@ -16,10 +16,10 @@ namespace System.Data.Entity.Core.Objects
 
         internal EntitySetQualifiedType(Type type, EntitySet set)
         {
-            Debug.Assert(null != type, "null Type");
-            Debug.Assert(null != set, "null EntitySet");
-            Debug.Assert(null != set.EntityContainer, "null EntityContainer");
-            Debug.Assert(null != set.EntityContainer.Name, "null EntityContainer.Name");
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(set);
+            DebugCheck.NotNull(set.EntityContainer);
+            DebugCheck.NotNull(set.EntityContainer.Name);
             ClrType = EntityUtil.GetEntityIdentityType(type);
             EntitySet = set;
         }

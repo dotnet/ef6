@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Xml;
@@ -185,7 +186,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="newMember"> the member being added </param>
         protected void AddMember(SchemaElement newMember)
         {
-            Debug.Assert(newMember != null, "newMember parameter is null");
+            DebugCheck.NotNull(newMember);
 
             if (string.IsNullOrEmpty(newMember.Name))
             {

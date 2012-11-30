@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -601,7 +600,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <returns> </returns>
         public override int GetValues(object[] values)
         {
-            DbHelpers.ThrowIfNull(values, "values");
+            Check.NotNull(values, "values");
 
             var copy = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < copy; ++i)

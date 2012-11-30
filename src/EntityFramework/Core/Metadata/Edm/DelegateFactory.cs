@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     ///     CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
     /// </summary>
-    internal static class LightweightCodeGenerator
+    internal static class DelegateFactory
     {
         private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetMethod(
             "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> Parameterless constructor for the specified type. </returns>
         internal static ConstructorInfo GetConstructorForType(Type type)
         {
-            Debug.Assert(type != null);
+            DebugCheck.NotNull(type);
             var ci = type.GetConstructor(
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, Type.EmptyTypes,
                 null);
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal static Func<object> CreateConstructor(Type type)
         {
-            Debug.Assert(type != null);
+            DebugCheck.NotNull(type);
 
             GetConstructorForType(type);
 
@@ -187,8 +187,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal static Func<object, object> CreatePropertyGetter(Type entityDeclaringType, PropertyInfo propertyInfo)
         {
-            Debug.Assert(entityDeclaringType != null);
-            Debug.Assert(propertyInfo != null);
+            DebugCheck.NotNull(entityDeclaringType);
+            DebugCheck.NotNull(propertyInfo);
 
             var getter = propertyInfo.GetGetMethod(nonPublic: true);
 
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal static void ValidateSetterProperty(PropertyInfo propertyInfo)
         {
-            Debug.Assert(propertyInfo != null);
+            DebugCheck.NotNull(propertyInfo);
 
             var setterMethodInfo = propertyInfo.GetSetMethod(nonPublic: true);
 
@@ -359,14 +359,14 @@ namespace System.Data.Entity.Core.Objects
             var sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(targetEntityType, targetMember, sourceMember);
             var targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
 
-            var genericCreateRelatedEndMethod = typeof(LightweightCodeGenerator).GetMethod(
+            var genericCreateRelatedEndMethod = typeof(DelegateFactory).GetMethod(
                 "CreateGetRelatedEndMethod", BindingFlags.NonPublic | BindingFlags.Static, null,
                 new[]
                     {
                         typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor),
                         typeof(NavigationPropertyAccessor)
                     }, null);
-            Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method LightweightCodeGenerator.CreateGetRelatedEndMethod");
+            Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method DelegateFactory.CreateGetRelatedEndMethod");
 
             var createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);
             var getRelatedEndDelegate = createRelatedEndMethod.Invoke(

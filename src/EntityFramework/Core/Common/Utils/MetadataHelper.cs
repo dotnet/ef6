@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -192,7 +193,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: determine the entity type for an association end member
         internal static EntityType GetEntityTypeForEnd(AssociationEndMember end)
         {
-            Debug.Assert(null != end);
+            DebugCheck.NotNull(end);
             Debug.Assert(
                 end.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RefType,
                 "type of association end member must be ref");
@@ -250,8 +251,8 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: determines whether the given association end can be referenced by an entity of the given type
         internal static bool IsAssociationValidForEntityType(AssociationSetEnd toEnd, EntityType type)
         {
-            Debug.Assert(null != toEnd);
-            Debug.Assert(null != type);
+            DebugCheck.NotNull(toEnd);
+            DebugCheck.NotNull(type);
 
             // get the opposite end which includes the relevant type information
             var fromEnd = GetOppositeEnd(toEnd);
@@ -263,7 +264,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: returns the opposite end in the association
         internal static AssociationSetEnd GetOppositeEnd(AssociationSetEnd end)
         {
-            Debug.Assert(null != end);
+            DebugCheck.NotNull(end);
             // there must be exactly one ("Single") other end that isn't ("Filter") this end
             var otherEnd = end.ParentAssociationSet.AssociationSetEnds.Where(
                 e => !e.EdmEquals(end)).Single();
@@ -274,7 +275,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Returns true if the given function is composable.
         internal static bool IsComposable(EdmFunction function)
         {
-            Debug.Assert(function != null);
+            DebugCheck.NotNull(function);
             MetadataProperty isComposableProperty;
             if (function.MetadataProperties.TryGetValue("IsComposableAttribute", false, out isComposableProperty))
             {
@@ -290,7 +291,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // effects: Returns true if member is nullable
         internal static bool IsMemberNullable(EdmMember member)
         {
-            Debug.Assert(member != null);
+            DebugCheck.NotNull(member);
             Debug.Assert(Helper.IsEdmProperty(member) || Helper.IsAssociationEndMember(member));
             if (Helper.IsEdmProperty(member))
             {
@@ -567,8 +568,8 @@ namespace System.Data.Entity.Core.Common.Utils
         // and entitySet2. If none is found, returns an empty set
         internal static List<AssociationSet> GetAssociationsForEntitySets(EntitySet entitySet1, EntitySet entitySet2)
         {
-            Debug.Assert(entitySet1 != null);
-            Debug.Assert(entitySet2 != null);
+            DebugCheck.NotNull(entitySet1);
+            DebugCheck.NotNull(entitySet2);
             Debug.Assert(
                 entitySet1.EntityContainer == entitySet2.EntityContainer, "EntityContainer must be the same for both the entity sets");
 
@@ -629,7 +630,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // and other entitySets. If none is found, returns an empty set
         internal static List<AssociationSet> GetAssociationsForEntitySet(EntitySetBase entitySet)
         {
-            Debug.Assert(entitySet != null);
+            DebugCheck.NotNull(entitySet);
 
             var result = new List<AssociationSet>();
 

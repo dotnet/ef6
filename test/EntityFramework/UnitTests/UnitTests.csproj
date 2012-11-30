@@ -169,7 +169,7 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
-    <Compile Include="Core\Objects\LightweightCodeGeneratorTests.cs" />
+    <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />
     <Compile Include="Core\Metadata\Edm\ReferentialConstraintTests.cs" />
@@ -229,10 +229,15 @@
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationTests.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\LightweightConventionTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionWithHavingTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />

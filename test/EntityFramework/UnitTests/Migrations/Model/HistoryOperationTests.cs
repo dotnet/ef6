@@ -21,7 +21,7 @@ namespace System.Data.Entity.Migrations.Model
         public void Ctor_should_validate_preconditions()
         {
             Assert.Equal(
-                Error.ArgumentNull("commands").Message,
+                new ArgumentNullException("commands").Message,
                 Assert.Throws<ArgumentNullException>(() => new HistoryOperation(null)).Message);
         }
     }

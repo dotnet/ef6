@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq.Expressions;
@@ -78,11 +77,7 @@ namespace System.Data.Entity.Core.Objects
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
             : base(elementType, context, parameters, span)
         {
-            DebugCheck.NotNull(commandText);
-            if (string.IsNullOrEmpty(commandText))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_InvalidEmptyQuery, "commandText");
-            }
+            Check.NotEmpty(commandText, "commandText");
 
             _queryText = commandText;
             _queryExpression = expression;

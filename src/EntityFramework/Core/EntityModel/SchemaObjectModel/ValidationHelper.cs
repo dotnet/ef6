@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -19,8 +20,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="typeUsageBuilder"> TypeUsageBuilder for the current element. Must not be null. </param>
         internal static void ValidateFacets(SchemaElement element, SchemaType type, TypeUsageBuilder typeUsageBuilder)
         {
-            Debug.Assert(element != null);
-            Debug.Assert(typeUsageBuilder != null);
+            DebugCheck.NotNull(element);
+            DebugCheck.NotNull(typeUsageBuilder);
 
             if (type != null)
             {
@@ -62,7 +63,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </remarks>
         internal static void ValidateTypeDeclaration(SchemaElement element, SchemaType type, SchemaElement typeSubElement)
         {
-            Debug.Assert(element != null);
+            DebugCheck.NotNull(element);
 
             if (type == null
                 && typeSubElement == null)
@@ -87,7 +88,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="type"> Resolved type (from declaration on the element). Possibly null. </param>
         internal static void ValidateRefType(SchemaElement element, SchemaType type)
         {
-            Debug.Assert(element != null);
+            DebugCheck.NotNull(element);
 
             if (type != null
                 && !(type is SchemaEntityType))

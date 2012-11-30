@@ -705,7 +705,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal override void RetrieveReferentialConstraintProperties(
             Dictionary<string, KeyValuePair<object, IntBox>> properties, HashSet<object> visited)
         {
-            Debug.Assert(properties != null);
+            DebugCheck.NotNull(properties);
 
             if (_wrappedCachedValue.Entity != null)
             {

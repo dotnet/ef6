@@ -9,22 +9,22 @@ namespace System.Data.Entity.Core.Objects
     using Moq.Protected;
     using Xunit;
 
-    public class LightweightCodeGeneratorTests
+    public class DelegateFactoryTests
     {
         public class CreateConstructor
         {
             [Fact]
             public void CreateConstructor_creates_constructor_delegates_for_reference_types_with_parameterless_contructors()
             {
-                Assert.IsType<object>(LightweightCodeGenerator.CreateConstructor(typeof(object))());
-                Assert.IsType<DbContext>(LightweightCodeGenerator.CreateConstructor(typeof(DbContext))());
-                Assert.IsType<PrivateNestedClass>(LightweightCodeGenerator.CreateConstructor(typeof(PrivateNestedClass))());
-                Assert.IsType<InternalClass>(LightweightCodeGenerator.CreateConstructor(typeof(InternalClass))());
+                Assert.IsType<object>(DelegateFactory.CreateConstructor(typeof(object))());
+                Assert.IsType<DbContext>(DelegateFactory.CreateConstructor(typeof(DbContext))());
+                Assert.IsType<PrivateNestedClass>(DelegateFactory.CreateConstructor(typeof(PrivateNestedClass))());
+                Assert.IsType<InternalClass>(DelegateFactory.CreateConstructor(typeof(InternalClass))());
 
                 var anonType = new
                                    {
                                    }.GetType();
-                Assert.IsType(anonType, LightweightCodeGenerator.CreateConstructor(anonType)());
+                Assert.IsType(anonType, DelegateFactory.CreateConstructor(anonType)());
             }
 
             [Fact]
@@ -32,11 +32,11 @@ namespace System.Data.Entity.Core.Objects
             {
                 Assert.Equal(
                     Strings.CodeGen_ConstructorNoParameterless(typeof(int).FullName),
-                    Assert.Throws<InvalidOperationException>(() => LightweightCodeGenerator.CreateConstructor(typeof(int))).Message);
+                    Assert.Throws<InvalidOperationException>(() => DelegateFactory.CreateConstructor(typeof(int))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_ConstructorNoParameterless(typeof(DateTime).FullName),
-                    Assert.Throws<InvalidOperationException>(() => LightweightCodeGenerator.CreateConstructor(typeof(DateTime))).Message);
+                    Assert.Throws<InvalidOperationException>(() => DelegateFactory.CreateConstructor(typeof(DateTime))).Message);
             }
         }
 
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new PublicClass2();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreateNavigationPropertySetter(
+                DelegateFactory.CreateNavigationPropertySetter(
                     typeof(PublicClass1), typeof(PublicClass1).GetProperty("PublicNavProperty"))(entity, target);
 
                 Assert.Same(target, entity.PublicNavProperty);
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new PublicClass2d();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreateNavigationPropertySetter(
+                DelegateFactory.CreateNavigationPropertySetter(
                     typeof(PublicClass1), typeof(PublicClass1).GetProperty("PublicNavProperty"))(entity, target);
 
                 Assert.Same(target, entity.PublicNavProperty);
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new InternalClass();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreateNavigationPropertySetter(
+                DelegateFactory.CreateNavigationPropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("InternalNavProperty", BindingFlags.Instance | BindingFlags.NonPublic))(entity, target);
 
@@ -85,19 +85,19 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(
                     Strings.CodeGen_PropertyIsStatic,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreateNavigationPropertySetter(
+                        () => DelegateFactory.CreateNavigationPropertySetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("StaticProp"))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyDeclaringTypeIsValueType,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreateNavigationPropertySetter(
+                        () => DelegateFactory.CreateNavigationPropertySetter(
                             typeof(ValueType), typeof(ValueType).GetProperty("ValueTypeProp"))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyNoSetter,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreateNavigationPropertySetter(
+                        () => DelegateFactory.CreateNavigationPropertySetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("NoSetterProp"))).Message);
             }
         }
@@ -110,25 +110,25 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(
                     Strings.CodeGen_PropertyNoGetter,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertyGetter(
+                        () => DelegateFactory.CreatePropertyGetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("NoGetterProp"))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyIsStatic,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertyGetter(
+                        () => DelegateFactory.CreatePropertyGetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("StaticProp"))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyDeclaringTypeIsValueType,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertyGetter(
+                        () => DelegateFactory.CreatePropertyGetter(
                             typeof(ValueType), typeof(ValueType).GetProperty("ValueTypeProp"))).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyIsIndexed,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertyGetter(
+                        () => DelegateFactory.CreatePropertyGetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperties().First(p => p.GetIndexParameters().Any()))).Message);
             }
 
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(
                     Strings.CodeGen_PropertyUnsupportedType,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertyGetter(new MockType(), property.Object)).Message);
+                        () => DelegateFactory.CreatePropertyGetter(new MockType(), property.Object)).Message);
             }
 
             [Fact]
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Objects
 
                 Assert.Same(
                     target,
-                    LightweightCodeGenerator.CreatePropertyGetter(
+                    DelegateFactory.CreatePropertyGetter(
                         typeof(PublicClass1),
                         typeof(PublicClass1).GetProperty("PublicNavProperty"))(
                             new PublicClass1
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Objects
 
                 Assert.Same(
                     target,
-                    LightweightCodeGenerator.CreatePropertyGetter(
+                    DelegateFactory.CreatePropertyGetter(
                         typeof(PublicClass1),
                         typeof(PublicClass1).GetProperty("InternalNavProperty", BindingFlags.NonPublic | BindingFlags.Instance))(
                             new PublicClass1
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 Assert.Equal(
                     1,
-                    LightweightCodeGenerator.CreatePropertyGetter(
+                    DelegateFactory.CreatePropertyGetter(
                         typeof(PublicClass1),
                         typeof(PublicClass1).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance))(
                             new PublicClass1
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 Assert.Equal(
                     1,
-                    LightweightCodeGenerator.CreatePropertyGetter(
+                    DelegateFactory.CreatePropertyGetter(
                         typeof(PublicClass1),
                         typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance))(
                             new PublicClass1
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Objects
             public void CreatePropertyGetter_creates_getter_delegate_for_Nullable_property_that_returns_null_if_the_Nullable_as_no_value()
             {
                 Assert.Null(
-                    LightweightCodeGenerator.CreatePropertyGetter(
+                    DelegateFactory.CreatePropertyGetter(
                         typeof(PublicClass1),
                         typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance))(
                             new PublicClass1
@@ -231,25 +231,25 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(
                     Strings.CodeGen_PropertyNoSetter,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertySetter(
+                        () => DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("NoSetterProp"), true)).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyIsStatic,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertySetter(
+                        () => DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperty("StaticProp"), true)).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyDeclaringTypeIsValueType,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertySetter(
+                        () => DelegateFactory.CreatePropertySetter(
                             typeof(ValueType), typeof(ValueType).GetProperty("ValueTypeProp"), true)).Message);
 
                 Assert.Equal(
                     Strings.CodeGen_PropertyIsIndexed,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertySetter(
+                        () => DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1), typeof(PublicClass1).GetProperties().First(p => p.GetIndexParameters().Any()), true)).
                         Message);
             }
@@ -268,7 +268,7 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(
                     Strings.CodeGen_PropertyUnsupportedType,
                     Assert.Throws<InvalidOperationException>(
-                        () => LightweightCodeGenerator.CreatePropertySetter(new MockType(), property.Object, true)).Message);
+                        () => DelegateFactory.CreatePropertySetter(new MockType(), property.Object, true)).Message);
             }
 
             [Fact]
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new InternalClass();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("InternalNavProperty", BindingFlags.Instance | BindingFlags.NonPublic),
                     allowNull: true)(entity, target);
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new PublicClass2();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("PublicNavProperty"),
                     allowNull: true)(entity, target);
@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Objects
                 var target = new PublicClass2d();
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("PublicNavProperty"),
                     allowNull: true)(entity, target);
@@ -318,7 +318,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("PublicNavProperty"),
                     allowNull: true)(entity, null);
@@ -337,7 +337,7 @@ namespace System.Data.Entity.Core.Objects
                         "null"),
                     Assert.Throws<ConstraintException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("PublicNavProperty"),
                             allowNull: false)(new PublicClass1(), null)).Message);
@@ -354,7 +354,7 @@ namespace System.Data.Entity.Core.Objects
                         typeof(InternalClass).Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("PublicNavProperty"),
                             allowNull: true)(new PublicClass1(), new InternalClass())).Message);
@@ -365,7 +365,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                     allowNull: false)(entity, 7);
@@ -384,7 +384,7 @@ namespace System.Data.Entity.Core.Objects
                         "null"),
                     Assert.Throws<ConstraintException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: false)(new PublicClass1(), null)).Message);
@@ -401,7 +401,7 @@ namespace System.Data.Entity.Core.Objects
                         "null"),
                     Assert.Throws<ConstraintException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: true)(new PublicClass1(), null)).Message);
@@ -418,7 +418,7 @@ namespace System.Data.Entity.Core.Objects
                         typeof(DateTime).Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: false)(new PublicClass1(), new DateTime())).Message);
@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                     allowNull: true)(entity, 7);
@@ -442,7 +442,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entity = new PublicClass1();
 
-                LightweightCodeGenerator.CreatePropertySetter(
+                DelegateFactory.CreatePropertySetter(
                     typeof(PublicClass1),
                     typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                     allowNull: true)(entity, null);
@@ -461,7 +461,7 @@ namespace System.Data.Entity.Core.Objects
                         "null"),
                     Assert.Throws<ConstraintException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: false)(new PublicClass1(), null)).Message);
@@ -478,7 +478,7 @@ namespace System.Data.Entity.Core.Objects
                         typeof(DateTime).Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
-                        LightweightCodeGenerator.CreatePropertySetter(
+                        DelegateFactory.CreatePropertySetter(
                             typeof(PublicClass1),
                             typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: true)(new PublicClass1(), new DateTime())).Message);

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -35,8 +36,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             IEnumerable<Constant> possibleDiscreteValues)
         {
             // Note that the values can contain both null and not null
-            Debug.Assert(values != null);
-            Debug.Assert(possibleDiscreteValues != null);
+            DebugCheck.NotNull(values);
+            DebugCheck.NotNull(possibleDiscreteValues);
             // Determine the possibleValues first and then create the negatedConstant
             m_possibleValues = DeterminePossibleValues(values, possibleDiscreteValues);
 

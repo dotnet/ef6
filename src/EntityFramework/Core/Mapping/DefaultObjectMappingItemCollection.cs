@@ -231,7 +231,9 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="clrType"> </param>
         private Map GetDefaultMapping(EdmType cdmType, EdmType clrType)
         {
-            Debug.Assert((cdmType != null) && (clrType != null));
+            DebugCheck.NotNull(cdmType);
+            DebugCheck.NotNull(clrType);
+
             return LoadObjectMapping(cdmType, clrType, this);
         }
 
@@ -461,7 +463,8 @@ namespace System.Data.Entity.Core.Mapping
             EdmType edmType, EdmType objectType, DefaultObjectMappingItemCollection ocItemCollection,
             Dictionary<string, ObjectTypeMapping> typeMappings)
         {
-            Debug.Assert((edmType != null) && (objectType != null));
+            DebugCheck.NotNull(edmType);
+            DebugCheck.NotNull(objectType);
 
             if (Helper.IsEnumType(edmType)
                 ^ Helper.IsEnumType(objectType))
@@ -718,11 +721,11 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="objectEnumType"> OSpace enum type. </param>
         private static void ValidateEnumTypeMapping(EnumType edmEnumType, EnumType objectEnumType)
         {
-            Debug.Assert(edmEnumType != null, "edmEnumType != null");
+            DebugCheck.NotNull(edmEnumType);
             Debug.Assert(Helper.IsPrimitiveType(edmEnumType.UnderlyingType));
             Debug.Assert(Helper.IsSupportedEnumUnderlyingType(edmEnumType.UnderlyingType.PrimitiveTypeKind));
 
-            Debug.Assert(objectEnumType != null, "objectEnumType != null");
+            DebugCheck.NotNull(objectEnumType);
             Debug.Assert(Helper.IsPrimitiveType(objectEnumType.UnderlyingType));
             Debug.Assert(Helper.IsSupportedEnumUnderlyingType(objectEnumType.UnderlyingType.PrimitiveTypeKind));
 

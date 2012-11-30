@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -53,8 +54,8 @@ namespace System.Data.Entity.Spatial
         /// </exception>
         protected static DbGeography CreateGeography(DbSpatialServices spatialServices, object providerValue)
         {
-            spatialServices.CheckNull("spatialServices");
-            providerValue.CheckNull("providerValue");
+            Check.NotNull(spatialServices, "spatialServices");
+            Check.NotNull(providerValue, "providerValue");
             return new DbGeography(spatialServices, providerValue);
         }
 
@@ -1220,8 +1221,8 @@ namespace System.Data.Entity.Spatial
         /// </exception>
         protected static DbGeometry CreateGeometry(DbSpatialServices spatialServices, object providerValue)
         {
-            spatialServices.CheckNull("spatialServices");
-            providerValue.CheckNull("providerValue");
+            Check.NotNull(spatialServices, "spatialServices");
+            Check.NotNull(providerValue, "providerValue");
             return new DbGeometry(spatialServices, providerValue);
         }
 

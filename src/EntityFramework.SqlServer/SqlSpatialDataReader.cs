@@ -6,7 +6,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlTypes;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -111,7 +110,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> </returns>
         private static Func<BinaryReader, object> CreateBinaryReadDelegate(Type spatialType)
         {
-            Debug.Assert(spatialType != null, "Ensure spatialType is non-null before calling CreateBinaryReadDelegate");
+            DebugCheck.NotNull(spatialType);
 
             var readerParam = Expression.Parameter(typeof(BinaryReader));
             var binarySerializable = Expression.Variable(spatialType);

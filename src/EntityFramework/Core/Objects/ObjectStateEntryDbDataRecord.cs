@@ -264,10 +264,8 @@ namespace System.Data.Entity.Core.Objects
 
         public override int GetValues(object[] values)
         {
-            if (values == null)
-            {
-                throw new ArgumentNullException("values");
-            }
+            Check.NotNull(values, "values");
+
             var minValue = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < minValue; i++)
             {

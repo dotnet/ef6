@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbCaseExpression(TypeUsage commonResultType, DbExpressionList whens, DbExpressionList thens, DbExpression elseExpr)
             : base(DbExpressionKind.Case, commonResultType)
         {
-            Debug.Assert(whens != null, "DbCaseExpression whens cannot be null");
-            Debug.Assert(thens != null, "DbCaseExpression thens cannot be null");
-            Debug.Assert(elseExpr != null, "DbCaseExpression else cannot be null");
+            DebugCheck.NotNull(whens);
+            DebugCheck.NotNull(thens);
+            DebugCheck.NotNull(elseExpr);
             Debug.Assert(whens.Count == thens.Count, "DbCaseExpression whens count must match thens count");
 
             _when = whens;

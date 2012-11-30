@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -14,7 +15,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal InlineFunctionGroup(string name, IList<InlineFunctionInfo> functionMetadata)
             : base(MetadataMemberClass.InlineFunctionGroup, name)
         {
-            Debug.Assert(functionMetadata != null && functionMetadata.Count > 0, "FunctionMetadata must not be null or empty");
+            DebugCheck.NotNull(functionMetadata);
+            Debug.Assert(functionMetadata.Count > 0, "FunctionMetadata must not be null or empty");
+
             FunctionMetadata = functionMetadata;
         }
 

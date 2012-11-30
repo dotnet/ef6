@@ -91,16 +91,14 @@ namespace System.Data.Entity.Core.Common.Internal
                                 parsedNames[stringCount] = string.Empty;
                                 IncrementStringCount(parsedNames, ref stringCount);
                             }
-                            else if (-1
-                                     != (quoteIndex = leftQuote.IndexOf(testchar)))
+                            else if (-1 != (quoteIndex = leftQuote.IndexOf(testchar)))
                             {
                                 // If we are a left quote                                                                                                                          
                                 rightQuoteChar = rightQuote[quoteIndex]; // record the corresponding right quote for the left quote
                                 sb.Length = 0;
                                 state = MPIState.MPI_ParseQuote;
                             }
-                            else if (-1
-                                     != rightQuote.IndexOf(testchar))
+                            else if (-1 != rightQuote.IndexOf(testchar))
                             {
                                 // If we shouldn't see a right quote
                                 throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
@@ -123,13 +121,11 @@ namespace System.Data.Entity.Core.Common.Internal
                                 state = MPIState.MPI_Value;
                             }
                             else // Quotes are not valid inside a non-quoted name
-                                if (-1
-                                    != rightQuote.IndexOf(testchar))
+                                if (-1 != rightQuote.IndexOf(testchar))
                                 {
                                     throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }
-                                else if (-1
-                                         != leftQuote.IndexOf(testchar))
+                                else if (-1 != leftQuote.IndexOf(testchar))
                                 {
                                     throw new ArgumentException(Strings.ADP_InvalidMultipartNameDelimiterUsage, "path");
                                 }

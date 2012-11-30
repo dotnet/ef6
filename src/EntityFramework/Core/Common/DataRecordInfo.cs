@@ -39,18 +39,15 @@ namespace System.Data.Entity.Core.Common
                 foreach (var member in memberInfo)
                 {
                     if ((null != member)
-                        &&
-                        (0 <= members.IndexOf(member))
-                        &&
-                        ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind)
-                         || // for ComplexType, EntityType; BuiltTypeKind.NaviationProperty not allowed
-                         (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind))) // for AssociationType
+                        && (0 <= members.IndexOf(member))
+                        && ((BuiltInTypeKind.EdmProperty == member.BuiltInTypeKind)
+                            || // for ComplexType, EntityType; BuiltTypeKind.NaviationProperty not allowed
+                            (BuiltInTypeKind.AssociationEndMember == member.BuiltInTypeKind))) // for AssociationType
                     {
                         // each memberInfo must be non-null and be part of Properties or AssociationEndMembers
                         //validate that EdmMembers are from the same type or base type of the passed in metadata.
                         if ((member.DeclaringType != metadata.EdmType)
-                            &&
-                            !member.DeclaringType.IsBaseTypeOf(metadata.EdmType))
+                            && !member.DeclaringType.IsBaseTypeOf(metadata.EdmType))
                         {
                             throw new ArgumentException(Strings.EdmMembersDefiningTypeDoNotAgreeWithMetadataType);
                         }
@@ -66,8 +63,7 @@ namespace System.Data.Entity.Core.Common
 
             // expecting structural types to have something at least 1 property
             // (((null == structural) && (0 == fieldList.Count)) || ((null != structural) && (0 < fieldList.Count)))
-            if (Helper.IsStructuralType(metadata.EdmType)
-                == (0 < fieldList.Count))
+            if (Helper.IsStructuralType(metadata.EdmType) == (0 < fieldList.Count))
             {
                 _fieldMetadata = new ReadOnlyCollection<FieldMetadata>(fieldList);
                 _metadata = metadata;
@@ -83,7 +79,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         internal DataRecordInfo(TypeUsage metadata)
         {
-            Debug.Assert(null != metadata, "invalid attempt to instantiate DataRecordInfo with null metadata information");
+            DebugCheck.NotNull(metadata);
 
             var structuralMembers = TypeHelpers.GetAllStructuralMembers(metadata);
             var fieldList = new FieldMetadata[structuralMembers.Count];

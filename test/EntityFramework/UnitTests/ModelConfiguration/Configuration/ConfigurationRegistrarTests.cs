@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Add_entity_configuration_should_validate_preconditions()
         {
             Assert.Equal(
-                Error.ArgumentNull("entityTypeConfiguration").Message,
+                new ArgumentNullException("entityTypeConfiguration").Message,
                 Assert.Throws<ArgumentNullException>(
                     () => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as EntityTypeConfiguration<object>)).Message);
         }
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         public void Add_complex_type_should_validate_preconditions()
         {
             Assert.Equal(
-                Error.ArgumentNull("complexTypeConfiguration").Message,
+                new ArgumentNullException("complexTypeConfiguration").Message,
                 Assert.Throws<ArgumentNullException>(
                     () => new ConfigurationRegistrar(new ModelConfiguration()).Add(null as ComplexTypeConfiguration<object>)).Message);
         }

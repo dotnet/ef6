@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// </returns>
         internal ObjectQueryExecutionPlan SetExecutionPlan(ObjectQueryExecutionPlan newPlan, bool useCSharpNullComparisonBehavior)
         {
-            Debug.Assert(newPlan != null, "New plan cannot be null");
+            DebugCheck.NotNull(newPlan);
 
             var planKey = GenerateLocalCacheKey(newPlan.MergeOption, useCSharpNullComparisonBehavior);
             // Get the value if it is there. If not, add it and get it.

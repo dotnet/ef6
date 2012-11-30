@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected override void Visit(StorageEntityContainerMapping storageEntityContainerMapping)
         {
-            Debug.Assert(storageEntityContainerMapping != null, "storageEntityContainerMapping cannot be null!");
+            DebugCheck.NotNull(storageEntityContainerMapping);
 
             // at the entry point of visitor, we setup the versions
             Debug.Assert(
@@ -831,7 +832,7 @@ namespace System.Data.Entity.Core.Mapping
 
         internal static string GetMappingClosureHash(double mappingVersion, StorageEntityContainerMapping storageEntityContainerMapping)
         {
-            Debug.Assert(storageEntityContainerMapping != null, "storageEntityContainerMapping is null!");
+            DebugCheck.NotNull(storageEntityContainerMapping);
 
             var visitor = new MetadataMappingHasherVisitor(mappingVersion);
             visitor.Visit(storageEntityContainerMapping);

@@ -12,7 +12,6 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -548,7 +547,7 @@ namespace System.Data.Entity.Internal.Linq
 
         private void InitializeUnderlyingTypes(EntitySetTypePair pair)
         {
-            Debug.Assert(pair != null);
+            DebugCheck.NotNull(pair);
 
             _entitySet = pair.EntitySet;
             _baseType = pair.BaseType;

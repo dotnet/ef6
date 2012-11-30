@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="item"> The item whose readonly is being tested </param>
         internal static void ThrowIfReadOnly(MetadataItem item)
         {
-            Debug.Assert(item != null, "The given item is null");
+            DebugCheck.NotNull(item);
             if (item.IsReadOnly)
             {
                 throw new InvalidOperationException(Strings.OperationOnReadOnlyItem);
@@ -32,8 +33,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Conditional("DEBUG")]
         internal static void AssertItemHasIdentity(MetadataItem item, string argumentName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(item.Identity), "Item has empty identity.");
-            EntityUtil.GenericCheckArgumentNull(item, argumentName);
+            DebugCheck.NotEmpty(item.Identity);
+            Check.NotNull(item, argumentName);
         }
     }
 }

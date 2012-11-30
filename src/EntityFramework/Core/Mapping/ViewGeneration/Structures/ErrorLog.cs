@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 ViewGenErrorCode errorCode, string message,
                 IEnumerable<LeftCellWrapper> wrappers, string debugMessage)
             {
-                Debug.Assert(wrappers != null);
+                DebugCheck.NotNull(wrappers);
                 var cells = LeftCellWrapper.GetInputCellsForWrappers(wrappers);
                 Init(errorCode, message, cells, debugMessage);
             }

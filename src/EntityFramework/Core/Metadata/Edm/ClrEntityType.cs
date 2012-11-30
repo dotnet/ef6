@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -31,12 +32,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type"> The CLR type to construct from </param>
         internal ClrEntityType(Type type, string cspaceNamespaceName, string cspaceTypeName)
-            : base(EntityUtil.GenericCheckArgumentNull(type, "type").Name, type.Namespace ?? string.Empty,
+            : base(Check.NotNull(type, "type").Name, type.Namespace ?? string.Empty,
                 DataSpace.OSpace)
         {
-            Debug.Assert(
-                !String.IsNullOrEmpty(cspaceNamespaceName) &&
-                !String.IsNullOrEmpty(cspaceTypeName), "Mapping information must never be null");
+            DebugCheck.NotEmpty(cspaceNamespaceName);
+            DebugCheck.NotEmpty(cspaceTypeName);
 
             _type = type;
             _cspaceNamespaceName = cspaceNamespaceName;

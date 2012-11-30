@@ -512,7 +512,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal static Expression Emit_Reader_IsDBNull(ColumnMap columnMap)
         {
-            // CONSIDER: I don't care for the derefing columnMap.  Find an alternative.
             var result = Emit_Reader_IsDBNull(((ScalarColumnMap)columnMap).ColumnPos);
             return result;
         }

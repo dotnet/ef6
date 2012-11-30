@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     An implementation of IEqualityComparer&lt;object&gt; that compares byte[] instances by value, and
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static int ComputeBinaryHashCode(byte[] bytes)
         {
-            Debug.Assert(bytes != null, "Byte array cannot be null");
+            DebugCheck.NotNull(bytes);
             var hashCode = 0;
             for (int i = 0, n = Math.Min(bytes.Length, 7); i < n; i++)
             {
@@ -73,7 +73,8 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static bool CompareBinaryValues(byte[] first, byte[] second)
         {
-            Debug.Assert(first != null && second != null, "Arguments cannot be null");
+            DebugCheck.NotNull(first);
+            DebugCheck.NotNull(second);
 
             if (first.Length
                 != second.Length)

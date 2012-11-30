@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     A PatternMatchRule allows for a pattern to be specified to identify interesting
@@ -26,8 +26,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal PatternMatchRule(Node pattern, ProcessNodeDelegate processDelegate)
             : base(pattern.Op.OpType, processDelegate)
         {
-            Debug.Assert(pattern != null, "null pattern");
-            Debug.Assert(pattern.Op != null, "null pattern Op");
+            DebugCheck.NotNull(pattern);
+            DebugCheck.NotNull(pattern.Op);
             m_pattern = pattern;
         }
 

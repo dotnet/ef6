@@ -5,6 +5,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class EdmModelValidationContext
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Edm.Validation.Internal.EdmModel
 
         public void Validate(EdmModel root)
         {
-            Debug.Assert(root != null);
+            DebugCheck.NotNull(root);
 
             ModelParentMap = new EdmModelParentMap(root);
             ModelParentMap.Compute();

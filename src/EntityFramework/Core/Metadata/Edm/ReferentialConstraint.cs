@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     This class describes referential constraint on the relationships
@@ -23,14 +24,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<EdmProperty> fromProperties,
             IEnumerable<EdmProperty> toProperties)
         {
-            _fromRole = EntityUtil.GenericCheckArgumentNull(fromRole, "fromRole");
-            _toRole = EntityUtil.GenericCheckArgumentNull(toRole, "toRole");
+            _fromRole = Check.NotNull(fromRole, "fromRole");
+            _toRole = Check.NotNull(toRole, "toRole");
             _fromProperties = new ReadOnlyMetadataCollection<EdmProperty>(
                 new MetadataCollection<EdmProperty>(
-                    EntityUtil.GenericCheckArgumentNull(fromProperties, "fromProperties")));
+                    Check.NotNull(fromProperties, "fromProperties")));
             _toProperties = new ReadOnlyMetadataCollection<EdmProperty>(
                 new MetadataCollection<EdmProperty>(
-                    EntityUtil.GenericCheckArgumentNull(toProperties, "toProperties")));
+                    Check.NotNull(toProperties, "toProperties")));
         }
 
         private readonly RelationshipEndMember _fromRole;

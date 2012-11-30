@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Represents the navigation of a (composition or association) relationship given the 'from' role, the 'to' role and an instance of the from role
@@ -24,10 +23,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DbExpression navigateFrom)
             : base(DbExpressionKind.RelationshipNavigation, resultType)
         {
-            Debug.Assert(relType != null, "DbRelationshipNavigationExpression relationship type cannot be null");
-            Debug.Assert(fromEnd != null, "DbRelationshipNavigationExpression 'from' end cannot be null");
-            Debug.Assert(toEnd != null, "DbRelationshipNavigationExpression 'to' end cannot be null");
-            Debug.Assert(navigateFrom != null, "DbRelationshipNavigationExpression navigation source cannot be null");
+            DebugCheck.NotNull(relType);
+            DebugCheck.NotNull(fromEnd);
+            DebugCheck.NotNull(toEnd);
+            DebugCheck.NotNull(navigateFrom);
 
             _relation = relType;
             _fromRole = fromEnd;

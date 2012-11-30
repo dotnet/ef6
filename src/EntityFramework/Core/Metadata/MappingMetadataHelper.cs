@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static IEnumerable<StorageTypeMapping> GetMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType)
         {
-            Debug.Assert(entityType != null, "EntityType parameter should not be null.");
+            DebugCheck.NotNull(entityType);
             var containerMapping = GetEntityContainerMap(mappingCollection, container);
             var extentMap = containerMapping.GetSetMapping(entitySet.Name);
 

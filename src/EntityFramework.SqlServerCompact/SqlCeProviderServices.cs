@@ -155,8 +155,8 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
-            ADP1.CheckArgumentNull(connection, "connection");
-            ADP1.CheckArgumentNull(storeItemCollection, "storeItemCollection");
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
 
             // Validate that connection is a SqlCeConnection.
             ValidateConnection(connection);
@@ -318,8 +318,8 @@ namespace System.Data.Entity.SqlServerCompact
             // type checks need to be done using RemoteProviderHelper class.
             //
 
-            ADP1.CheckArgumentNull(providerManifest, "providerManifest");
-            ADP1.CheckArgumentNull(commandTree, "commandTree");
+            Check.NotNull(providerManifest, "providerManifest");
+            Check.NotNull(commandTree, "commandTree");
 
             if (commandTree is DbFunctionCommandTree)
             {
@@ -441,7 +441,7 @@ namespace System.Data.Entity.SqlServerCompact
             var rdpSqlCeParameter = Type.GetType(RemoteProvider.SqlCeParameter);
             // No other parameter type is supported.
             //
-            Debug.Assert(null != type, "no type mapping?");
+            DebugCheck.NotNull(type);
 
             int? size;
             byte? precision;

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -128,7 +129,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal static bool TryGetProxyWrapper(object instance, out IEntityWrapper wrapper)
         {
-            Debug.Assert(instance != null, "the instance should not be null");
+            DebugCheck.NotNull(instance);
             wrapper = null;
             EntityProxyTypeInfo proxyTypeInfo;
             if (IsProxyType(instance.GetType())
@@ -147,7 +148,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns> A non-null EntityProxyTypeInfo instance that contains information about the type of proxy for the specified O-Space EntityType; or null if no proxy can be created for the specified type. </returns>
         internal static EntityProxyTypeInfo GetProxyType(ClrEntityType ospaceEntityType)
         {
-            Debug.Assert(ospaceEntityType != null, "ospaceEntityType must be non-null");
+            DebugCheck.NotNull(ospaceEntityType);
             Debug.Assert(ospaceEntityType.DataSpace == DataSpace.OSpace, "ospaceEntityType.DataSpace must be OSpace");
 
             EntityProxyTypeInfo proxyTypeInfo = null;
@@ -202,7 +203,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="ospaceEntityType"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
         internal static void TryCreateProxyTypes(IEnumerable<EntityType> ospaceEntityTypes)
         {
-            Debug.Assert(ospaceEntityTypes != null, "ospaceEntityTypes must be non-null");
+            DebugCheck.NotNull(ospaceEntityTypes);
 
             // Acquire an upgradeable read lock for the duration of the enumeration so that:
             // 1. Other readers aren't blocked while existence checks are performed.
@@ -266,7 +267,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns> True if the type is a known proxy type; otherwise false. </returns>
         internal static bool IsProxyType(Type type)
         {
-            Debug.Assert(type != null, "type is null, was this intended?");
+            DebugCheck.NotNull(type);
             return type != null && _proxyRuntimeAssemblies.Contains(type.Assembly);
         }
 
@@ -295,7 +296,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public virtual Func<object, object> CreateBaseGetter(Type declaringType, PropertyInfo propertyInfo)
         {
-            Debug.Assert(propertyInfo != null, "Null propertyInfo");
+            DebugCheck.NotNull(propertyInfo);
 
             var Object_Parameter = Expression.Parameter(typeof(object), "instance");
             var nonProxyGetter = Expression.Lambda<Func<object, object>>(
@@ -335,9 +336,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public virtual Action<object, object> CreateBaseSetter(Type declaringType, PropertyInfo propertyInfo)
         {
-            Debug.Assert(propertyInfo != null, "Null propertyInfo");
+            DebugCheck.NotNull(propertyInfo);
 
-            var nonProxySetter = LightweightCodeGenerator.CreateNavigationPropertySetter(declaringType, propertyInfo);
+            var nonProxySetter = DelegateFactory.CreateNavigationPropertySetter(declaringType, propertyInfo);
 
             var propertyName = propertyInfo.Name;
             return (entity, value) =>
@@ -587,13 +588,13 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal static bool CanProxyGetter(PropertyInfo clrProperty)
         {
-            Debug.Assert(clrProperty != null, "clrProperty should have a value");
+            DebugCheck.NotNull(clrProperty);
             return CanProxyMethod(clrProperty.GetGetMethod(true));
         }
 
         internal static bool CanProxySetter(PropertyInfo clrProperty)
         {
-            Debug.Assert(clrProperty != null, "clrProperty should have a value");
+            DebugCheck.NotNull(clrProperty);
             return CanProxyMethod(clrProperty.GetSetMethod(true));
         }
 

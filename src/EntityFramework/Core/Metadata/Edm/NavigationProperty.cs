@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -22,8 +23,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal NavigationProperty(string name, TypeUsage typeUsage)
             : base(name, typeUsage)
         {
-            EntityUtil.CheckStringArgument(name, "name");
-            EntityUtil.GenericCheckArgumentNull(typeUsage, "typeUsage");
+            Check.NotEmpty(name, "name");
+            Check.NotNull(typeUsage, "typeUsage");
 
             _accessor = new NavigationPropertyAccessor(name);
         }

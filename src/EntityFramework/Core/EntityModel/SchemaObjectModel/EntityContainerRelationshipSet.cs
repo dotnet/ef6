@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Xml;
 
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
             get { return _relationship; }
             set
             {
-                Debug.Assert(value != null, "relationship can never be set to null");
+                DebugCheck.NotNull(value);
                 _relationship = value;
             }
         }
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> An XmlReader positioned at the Association attribute. </param>
         protected void HandleRelationshipTypeNameAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var value = HandleDottedNameAttribute(reader, _unresolvedRelationshipTypeName);
             if (value.Succeeded)
             {
@@ -167,7 +168,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> Null is none could be found, or the EntityContainerProperty that is the valid extent </returns>
         private EntityContainerEntitySet InferEntitySet(IRelationshipEnd relationshipEnd)
         {
-            Debug.Assert(relationshipEnd != null, "relationshipEnd parameter is null");
+            DebugCheck.NotNull(relationshipEnd);
 
             var possibleExtents = new List<EntityContainerEntitySet>();
             foreach (var set in ParentElement.EntitySets)

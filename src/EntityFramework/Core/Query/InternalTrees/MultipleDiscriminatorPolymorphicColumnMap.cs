@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text;
@@ -30,9 +31,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             Func<object[], EntityType> discriminate)
             : base(type, name, baseTypeColumns)
         {
-            Debug.Assert(typeDiscriminators != null, "Must specify type discriminator columns");
-            Debug.Assert(typeChoices != null, "No type choices for polymorphic column");
-            Debug.Assert(discriminate != null, "Must specify discriminate");
+            DebugCheck.NotNull(typeDiscriminators);
+            DebugCheck.NotNull(typeChoices);
+            DebugCheck.NotNull(discriminate);
 
             m_typeDiscriminators = typeDiscriminators;
             m_typeChoices = typeChoices;

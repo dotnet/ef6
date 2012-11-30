@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Summary description for SchemaElementLookUpTableEnumerator.
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="keysInOrder"> </param>
         public SchemaElementLookUpTableEnumerator(Dictionary<string, S> data, List<string> keysInOrder)
         {
-            Debug.Assert(data != null, "data parameter is null");
-            Debug.Assert(keysInOrder != null, "keysInOrder parameter is null");
+            DebugCheck.NotNull(data);
+            DebugCheck.NotNull(keysInOrder);
 
             _data = data;
             _enumerator = keysInOrder.GetEnumerator();

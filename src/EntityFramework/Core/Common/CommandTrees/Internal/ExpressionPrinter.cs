@@ -26,8 +26,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             )]
         internal string Print(DbDeleteCommandTree tree)
         {
-            // Predicate should not be null since DbDeleteCommandTree initializes it to DbConstantExpression(true)
-            Debug.Assert(tree != null && tree.Predicate != null, "Invalid DbDeleteCommandTree");
+            DebugCheck.NotNull(tree);
+            DebugCheck.NotNull(tree.Predicate);
 
             TreeNode targetNode;
             if (tree.Target != null)
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             )]
         internal string Print(DbFunctionCommandTree tree)
         {
-            Debug.Assert(tree != null, "Null DbFunctionCommandTree");
+            DebugCheck.NotNull(tree);
 
             var funcNode = new TreeNode("EdmFunction");
             if (tree.EdmFunction != null)
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             )]
         internal string Print(DbInsertCommandTree tree)
         {
-            Debug.Assert(tree != null, "Null DbInsertCommandTree");
+            DebugCheck.NotNull(tree);
 
             TreeNode targetNode = null;
             if (tree.Target != null)
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             )]
         internal string Print(DbQueryCommandTree tree)
         {
-            Debug.Assert(tree != null, "Null DbQueryCommandTree");
+            DebugCheck.NotNull(tree);
 
             var queryNode = new TreeNode("Query");
             if (tree.Query != null)

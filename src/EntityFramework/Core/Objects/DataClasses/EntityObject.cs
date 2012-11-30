@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.ComponentModel;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
@@ -187,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected override sealed void ReportPropertyChanging(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             Debug.Assert(
                 EntityChangeTracker != null,
@@ -207,7 +208,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         protected override sealed void ReportPropertyChanged(
             string property)
         {
-            EntityUtil.CheckStringArgument(property, "property");
+            Check.NotEmpty(property, "property");
 
             Debug.Assert(
                 EntityChangeTracker != null,
@@ -237,8 +238,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal override sealed void ReportComplexPropertyChanging(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
-            Debug.Assert(complexObject != null, "invalid complexObject");
-            Debug.Assert(!String.IsNullOrEmpty(complexMemberName), "invalid complexMemberName");
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexMemberName);
 
             EntityChangeTracker.EntityComplexMemberChanging(entityMemberName, complexObject, complexMemberName);
         }
@@ -254,8 +255,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal override sealed void ReportComplexPropertyChanged(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
-            Debug.Assert(complexObject != null, "invalid complexObject");
-            Debug.Assert(!String.IsNullOrEmpty(complexMemberName), "invalid complexMemberName");
+            DebugCheck.NotNull(complexObject);
+            DebugCheck.NotEmpty(complexMemberName);
 
             EntityChangeTracker.EntityComplexMemberChanged(entityMemberName, complexObject, complexMemberName);
         }

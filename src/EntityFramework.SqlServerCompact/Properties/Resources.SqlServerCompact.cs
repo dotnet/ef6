@@ -23,14 +23,6 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         }
 
         /// <summary>
-        ///     A string like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static string PreconditionFailed(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.PreconditionFailed, p0, p1);
-        }
-
-        /// <summary>
         ///     A string like "Records were updated, but the values were not retrieved back. See internal error for more details."
         /// </summary>
         internal static string ADP_CanNotRetrieveServerGeneratedKey
@@ -382,22 +374,6 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         }
 
         /// <summary>
-        ///     ArgumentException with message like "The precondition '{0}' failed. {1}"
-        /// </summary>
-        internal static Exception PreconditionFailed(object p0, object p1)
-        {
-            return new ArgumentException(Strings.PreconditionFailed(p0, p1));
-        }
-
-        /// <summary>
-        ///     The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
-        /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
-
-        /// <summary>
         ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -430,7 +406,6 @@ namespace System.Data.Entity.SqlServerCompact.Resources
     internal sealed class EntityRes
     {
         internal const string ArgumentIsNullOrWhitespace = "ArgumentIsNullOrWhitespace";
-        internal const string PreconditionFailed = "PreconditionFailed";
         internal const string ADP_CanNotRetrieveServerGeneratedKey = "ADP_CanNotRetrieveServerGeneratedKey";
         internal const string ADP_InvalidCommandTimeOut = "ADP_InvalidCommandTimeOut";
         internal const string ADP_InvalidCommandType = "ADP_InvalidCommandType";
@@ -479,8 +454,7 @@ namespace System.Data.Entity.SqlServerCompact.Resources
 
         private EntityRes()
         {
-            resources = new ResourceManager(
-                "System.Data.Entity.SqlServer.Properties.Resources.SqlServerCompact", typeof(Check).Assembly);
+            resources = new ResourceManager("System.Data.Entity.SqlServer.Properties.Resources.SqlServerCompact", typeof(Check).Assembly);
         }
 
         private static EntityRes GetLoader()

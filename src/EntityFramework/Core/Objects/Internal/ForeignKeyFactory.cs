@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns> EntityKey marked as a conceptual null with the FK values from the original key </returns>
         public static EntityKey CreateConceptualNullKey(EntityKey originalKey)
         {
-            Debug.Assert(originalKey != null, "Original key can not be null");
+            DebugCheck.NotNull(originalKey);
 
             //Conceptual nulls have special entity set name and a copy of the previous values
             var nullKey = new EntityKey(s_NullForeignKey, originalKey.EntityKeyValues);

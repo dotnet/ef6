@@ -104,14 +104,6 @@ namespace <#= outputNamespace #>.Resources
 <#
         }#>
         /// <summary>
-        /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
-        /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
-        
-        /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -157,7 +149,7 @@ namespace <#= outputNamespace #>.Resources
 
         private EntityRes()
         {
-            resources = new ResourceManager("System.Data.Entity.SqlServer.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.SqlServerCompact.Utilities.RuntimeFailureMethods).Assembly);
+            resources = new ResourceManager("System.Data.Entity.SqlServer.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.SqlServerCompact.Utilities.Check).Assembly);
         }
         
         private static EntityRes GetLoader()

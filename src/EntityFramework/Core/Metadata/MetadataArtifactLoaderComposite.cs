@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="children"> A list of collections to aggregate </param>
         public MetadataArtifactLoaderComposite(List<MetadataArtifactLoader> children)
         {
-            Debug.Assert(children != null);
+            DebugCheck.NotNull(children);
             _children = new List<MetadataArtifactLoader>(children).AsReadOnly();
         }
 

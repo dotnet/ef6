@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </param>
         internal ObjectSpanRewriter(DbCommandTree tree, DbExpression toRewrite, AliasGenerator aliasGenerator)
         {
-            Debug.Assert(toRewrite != null, "Expression to rewrite cannot be null");
+            DebugCheck.NotNull(toRewrite);
 
             _toRewrite = toRewrite;
             _tree = tree;
@@ -740,8 +740,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             public NavigationInfo(
                 DbRelationshipNavigationExpression originalNavigation, DbRelationshipNavigationExpression rewrittenNavigation)
             {
-                Debug.Assert(originalNavigation != null, "originalNavigation cannot be null");
-                Debug.Assert(rewrittenNavigation != null, "rewrittenNavigation cannot be null");
+                DebugCheck.NotNull(originalNavigation);
+                DebugCheck.NotNull(rewrittenNavigation);
 
                 _sourceEnd = (AssociationEndMember)originalNavigation.NavigateFrom;
                 _sourceRef = (DbVariableReferenceExpression)rewrittenNavigation.NavigationSource;

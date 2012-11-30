@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Class representing a collection of entity set objects
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal EntitySetBaseCollection(EntityContainer entityContainer, IEnumerable<EntitySetBase> items)
             : base(items)
         {
-            EntityUtil.GenericCheckArgumentNull(entityContainer, "entityContainer");
+            Check.NotNull(entityContainer, "entityContainer");
             _entityContainer = entityContainer;
         }
 
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the EntitySetCollection already contains an EntitySet with the same identity</exception>
         public override void Add(EntitySetBase item)
         {
-            EntityUtil.GenericCheckArgumentNull(item, "item");
+            Check.NotNull(item, "item");
             // Check to make sure the given entity set is not associated with another type
             ThrowIfItHasEntityContainer(item, "item");
             base.Add(item);
@@ -91,7 +92,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="argumentName"> The name of the argument from the caller </param>
         private static void ThrowIfItHasEntityContainer(EntitySetBase entitySet, string argumentName)
         {
-            EntityUtil.GenericCheckArgumentNull(entitySet, argumentName);
+            Check.NotNull(entitySet, argumentName);
             if (entitySet.EntityContainer != null)
             {
                 throw new ArgumentException(Strings.EntitySetInAnotherContainer, argumentName);

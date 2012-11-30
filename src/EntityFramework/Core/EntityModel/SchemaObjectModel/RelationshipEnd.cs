@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> reader positioned at Type attribute </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             string type;
             if (!Utils.GetDottedName(Schema, reader, out type))
@@ -198,7 +198,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> reader positioned at Type attribute </param>
         private void HandleMultiplicityAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             RelationshipMultiplicity multiplicity;
             if (!TryParseMultiplicity(reader.Value, out multiplicity))
             {
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="operation"> the kind of operation being handled </param>
         private void HandleOnOperationElement(XmlReader reader, Operation operation)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             foreach (var other in Operations)
             {

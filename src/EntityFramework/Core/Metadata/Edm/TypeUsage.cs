@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private TypeUsage(EdmType edmType)
             : base(MetadataFlags.Readonly)
         {
-            EntityUtil.GenericCheckArgumentNull(edmType, "edmType");
+            Check.NotNull(edmType, "edmType");
 
             _edmType = edmType;
 
@@ -129,8 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.String)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.String)
             {
                 throw new ArgumentException(Strings.NotStringTypeForTypeUsage);
             }
@@ -164,8 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.String)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.String)
             {
                 throw new ArgumentException(Strings.NotStringTypeForTypeUsage);
             }
@@ -195,8 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.Binary)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Binary)
             {
                 throw new ArgumentException(Strings.NotBinaryTypeForTypeUsage);
             }
@@ -225,8 +222,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.Binary)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Binary)
             {
                 throw new ArgumentException(Strings.NotBinaryTypeForTypeUsage);
             }
@@ -253,8 +249,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.DateTime)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.DateTime)
             {
                 throw new ArgumentException(Strings.NotDateTimeTypeForTypeUsage);
             }
@@ -280,8 +275,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.DateTimeOffset)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.DateTimeOffset)
             {
                 throw new ArgumentException(Strings.NotDateTimeOffsetTypeForTypeUsage);
             }
@@ -308,8 +302,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.Time)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Time)
             {
                 throw new ArgumentException(Strings.NotTimeTypeForTypeUsage);
             }
@@ -337,8 +330,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.Decimal)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
             {
                 throw new ArgumentException(Strings.NotDecimalTypeForTypeUsage);
             }
@@ -363,8 +355,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(primitiveType, "primitiveType");
 
-            if (primitiveType.PrimitiveTypeKind
-                != PrimitiveTypeKind.Decimal)
+            if (primitiveType.PrimitiveTypeKind != PrimitiveTypeKind.Decimal)
             {
                 throw new ArgumentException(Strings.NotDecimalTypeForTypeUsage);
             }

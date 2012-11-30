@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="identifier"> Identifier/tag for this term. </param>
         internal TermExpr(IEqualityComparer<T_Identifier> comparer, T_Identifier identifier)
         {
-            Debug.Assert(null != identifier);
+            DebugCheck.NotNull((object)identifier);
             _identifier = identifier;
             if (null == comparer)
             {

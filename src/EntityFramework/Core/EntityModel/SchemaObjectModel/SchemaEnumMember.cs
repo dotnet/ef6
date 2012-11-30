@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Xml;
 
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             set
             {
-                Debug.Assert(value != null, "value != null");
+                DebugCheck.NotNull(value);
 
                 _value = value;
             }
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <c>false</c>
         protected override bool HandleAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null, "reader != null");
+            DebugCheck.NotNull(reader);
 
             var handled = base.HandleAttribute(reader);
             if (!handled
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> XmlReader positioned on the Member Value attribute. </param>
         private void HandleValueAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null, "reader != null");
+            DebugCheck.NotNull(reader);
 
             // xsd validation will report an error if the value is not a valid xs:long number. If the number is valid
             // xs:long number then long.TryParse will succeed.

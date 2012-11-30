@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Abstract base class representing entity identity. Used by both
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="keyColumns"> </param>
         internal EntityIdentity(SimpleColumnMap[] keyColumns)
         {
-            Debug.Assert(keyColumns != null, "Must specify column maps for key columns");
+            DebugCheck.NotNull(keyColumns);
             m_keys = keyColumns;
         }
 

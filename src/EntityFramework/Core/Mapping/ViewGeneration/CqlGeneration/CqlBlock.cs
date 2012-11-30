@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -264,8 +265,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         {
             internal JoinTreeContext(IList<string> parentQualifiers, string leafQualifier)
             {
-                Debug.Assert(parentQualifiers != null, "parentQualifiers != null");
-                Debug.Assert(leafQualifier != null, "leafQualifier != null");
+                DebugCheck.NotNull(parentQualifiers);
+                DebugCheck.NotNull(leafQualifier);
 
                 m_parentQualifiers = parentQualifiers;
                 m_indexInParentQualifiers = parentQualifiers.Count;

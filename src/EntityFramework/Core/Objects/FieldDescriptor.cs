@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override object GetValue(object item)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                propertyValue = LightweightCodeGenerator.GetValue(_property, item);
+                propertyValue = DelegateFactory.GetValue(_property, item);
             }
 
             return propertyValue;
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects
 
         public override void SetValue(object item, object value)
         {
-            DbHelpers.ThrowIfNull(item, "item");
+            Check.NotNull(item, "item");
 
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Objects
             }
             if (!_isReadOnly)
             {
-                LightweightCodeGenerator.SetValue(_property, item, value);
+                DelegateFactory.SetValue(_property, item, value);
             } // if not entity it must be readonly
             else
             {

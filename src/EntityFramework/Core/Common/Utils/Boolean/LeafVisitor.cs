@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal static List<TermExpr<T_Identifier>> GetTerms(BoolExpr<T_Identifier> expression)
         {
-            Debug.Assert(null != expression, "expression must be given");
+            DebugCheck.NotNull(expression);
             var visitor = new LeafVisitor<T_Identifier>();
             expression.Accept(visitor);
             return visitor._terms;

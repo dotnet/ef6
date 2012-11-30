@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -288,7 +289,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal void RegisterKeyValueForAddedEntity(IEntityStateEntry addedEntry)
         {
-            Debug.Assert(null != addedEntry);
+            DebugCheck.NotNull(addedEntry);
             Debug.Assert(!addedEntry.IsRelationship);
             Debug.Assert(!addedEntry.IsKeyEntry);
             Debug.Assert(addedEntry.EntityKey.IsTemporary);

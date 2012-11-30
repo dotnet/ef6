@@ -54,8 +54,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal StoreItemCollection(DbProviderFactory factory, DbProviderManifest manifest, string providerManifestToken)
             : base(DataSpace.SSpace)
         {
-            Debug.Assert(factory != null, "factory is null");
-            Debug.Assert(manifest != null, "manifest is null");
+            DebugCheck.NotNull(factory);
+            DebugCheck.NotNull(manifest);
 
             _providerFactory = factory;
             _providerManifest = manifest;

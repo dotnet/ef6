@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="sr"> initialized SemanticResolver instance for a given typespace/edmType system </param>
         internal SemanticAnalyzer(SemanticResolver sr)
         {
-            Debug.Assert(sr != null, "sr must not be null");
+            DebugCheck.NotNull(sr);
             _sr = sr;
         }
 
@@ -216,7 +217,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <returns> </returns>
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
-            Debug.Assert(astStatement != null, "astStatement must not be null");
+            DebugCheck.NotNull(astStatement);
 
             StatementConverter statementConverter;
             if (astStatement is QueryStatement)
@@ -244,7 +245,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
-            Debug.Assert(astStatement != null, "astStatement must not be null");
+            DebugCheck.NotNull(astStatement);
 
             List<FunctionDefinition> functionDefs;
             var converted = ConvertQueryStatementToDbExpression(astStatement, sr, out functionDefs);
@@ -273,7 +274,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static DbExpression ConvertQueryStatementToDbExpression(
             Statement astStatement, SemanticResolver sr, out List<FunctionDefinition> functionDefs)
         {
-            Debug.Assert(astStatement != null, "astStatement must not be null");
+            DebugCheck.NotNull(astStatement);
 
             var queryStatement = astStatement as QueryStatement;
 
@@ -1324,7 +1325,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             SemanticResolver sr,
             out DbExpression converted)
         {
-            Debug.Assert(argTypes != null, "argTypes != null");
+            DebugCheck.NotNull(argTypes);
 
             converted = null;
 
@@ -2582,7 +2583,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         private static TypeUsage ConvertTypeName(Node typeName, SemanticResolver sr)
         {
-            Debug.Assert(typeName != null, "typeName != null");
+            DebugCheck.NotNull(typeName);
 
             string[] name = null;
             NodeList<Node> typeSpecArgs = null;
@@ -2659,7 +2660,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static TypeUsage ConvertTypeSpecArgs(TypeUsage parameterizedType, NodeList<Node> typeSpecArgs, ErrorContext errCtx)
         {
-            Debug.Assert(typeSpecArgs != null && typeSpecArgs.Count > 0, "typeSpecArgs must be null or a non-empty list");
+            DebugCheck.NotNull(typeSpecArgs);
+            Debug.Assert(typeSpecArgs.Count > 0, "typeSpecArgs must be null or a non-empty list");
 
             //
             // Type arguments must be literals.
@@ -2761,7 +2763,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static TypeUsage ConvertTypeDefinition(Node typeDefinitionExpr, SemanticResolver sr)
         {
-            Debug.Assert(typeDefinitionExpr != null, "typeDefinitionExpr != null");
+            DebugCheck.NotNull(typeDefinitionExpr);
 
             TypeUsage converted = null;
 
@@ -3684,7 +3686,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private static DbExpressionBinding ProcessWhereHavingClausePredicate(
             DbExpressionBinding source, Node predicate, ErrorContext errCtx, string bindingNameTemplate, SemanticResolver sr)
         {
-            Debug.Assert(predicate != null, "predicate != null");
+            DebugCheck.NotNull(predicate);
 
             DbExpressionBinding whereBinding = null;
 

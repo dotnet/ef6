@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
         private ByValueComparer(IComparer comparer)
         {
-            Debug.Assert(comparer != null, "Non-ByValue comparer cannot be null");
+            DebugCheck.NotNull(comparer);
             nonByValueComparer = comparer;
         }
 

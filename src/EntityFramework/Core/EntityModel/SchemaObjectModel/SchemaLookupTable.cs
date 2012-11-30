@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="refSchema"> the ReferenceSchema to add </param>
         public void Add(UsingElement usingElement)
         {
-            Debug.Assert(usingElement != null, "usingElement parameter is null");
+            DebugCheck.NotNull(usingElement);
 
             var newNamespace = usingElement.NamespaceName;
             var newAlias = usingElement.Alias;
@@ -84,7 +85,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// </summary>
         public bool TryResolveAlias(string alias, out string namespaceName)
         {
-            Debug.Assert(!String.IsNullOrEmpty(alias), "alias must never be null");
+            DebugCheck.NotEmpty(alias);
 
             // Check if there is an alias defined with this name
             return _aliasToNamespaceMap.TryGetValue(alias, out namespaceName);

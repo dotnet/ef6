@@ -189,33 +189,6 @@ namespace System.Data.Entity.Core.Common.Utils
 
         #region Some Helper routines
 
-        /// <summary>
-        ///     This private static method checks a string to make sure that it is not empty.
-        ///     Comparing with String.Empty is not sufficient since a string with nothing
-        ///     but white space isn't considered "empty" by that rationale.
-        /// </summary>
-        internal static bool IsNullOrEmptyOrWhiteSpace(string value)
-        {
-            return IsNullOrEmptyOrWhiteSpace(value, 0);
-        }
-
-        internal static bool IsNullOrEmptyOrWhiteSpace(string value, int offset)
-        {
-            // don't use Trim(), which will copy the string, which may be large, just to test for emptyness
-            //return String.IsNullOrEmpty(value) || String.IsNullOrEmpty(value.Trim());
-            if (null != value)
-            {
-                for (var i = offset; i < value.Length; ++i)
-                {
-                    if (!Char.IsWhiteSpace(value[i]))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         internal static string FormatInvariant(string format, params object[] args)
         {
             Debug.Assert(args.Length > 0, "Formatting utilities must be called with at least one argument");

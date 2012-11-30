@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Objects.DataClasses;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Threading;
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _getRelatedEndMethod; }
             set
             {
-                Debug.Assert(null != value, "clearing GetRelatedEndMethod");
+                DebugCheck.NotNull(value);
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _getRelatedEndMethod, value, null);
             }

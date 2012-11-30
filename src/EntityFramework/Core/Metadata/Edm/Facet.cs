@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Facet(FacetDescription facetDescription, object value)
             : base(MetadataFlags.Readonly)
         {
-            EntityUtil.GenericCheckArgumentNull(facetDescription, "facetDescription");
+            Check.NotNull(facetDescription, "facetDescription");
 
             _facetDescription = facetDescription;
             _value = value;

@@ -443,7 +443,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     var edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
 
-                    LightweightCodeGenerator.ValidateSetterProperty(edmProperty.PropertyInfo);
+                    DelegateFactory.ValidateSetterProperty(edmProperty.PropertyInfo);
                     var propertyAccessor = edmProperty.PropertyInfo.GetSetMethod(nonPublic: true);
                     var propertyType = edmProperty.PropertyInfo.PropertyType;
 
@@ -1417,7 +1417,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 ConstructorInfo result = null;
                 if (!type.IsAbstract)
                 {
-                    result = LightweightCodeGenerator.GetConstructorForType(type);
+                    result = DelegateFactory.GetConstructorForType(type);
 
                     // remember security requirements for this constructor
                     if (!IsPublic(result))

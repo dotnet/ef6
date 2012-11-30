@@ -364,8 +364,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 StringBuilder commandText, DbModificationCommandTree commandTree,
                 bool preserveMemberValues, bool isLocalProvider)
             {
-                Debug.Assert(null != commandText);
-                Debug.Assert(null != commandTree);
+                DebugCheck.NotNull(commandText);
+                DebugCheck.NotNull(commandTree);
                 _commandText = commandText;
                 _commandTree = commandTree;
                 _parameters = new List<DbParameter>();

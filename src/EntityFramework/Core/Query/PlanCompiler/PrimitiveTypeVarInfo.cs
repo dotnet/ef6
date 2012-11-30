@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents information about a primitive typed Var and how it can be replaced.
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </param>
         internal PrimitiveTypeVarInfo(Var newVar)
         {
-            Debug.Assert(newVar != null, "newVar != null");
+            DebugCheck.NotNull(newVar);
             m_newVars = new List<Var>
                             {
                                 newVar

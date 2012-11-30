@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
@@ -474,9 +475,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
+                    DebugCheck.NotNull(call);
+                    DebugCheck.NotNull(call.Object);
+                    DebugCheck.NotNull(call.Arguments);
+
                     Debug.Assert(
-                        call.Object != null && call.Arguments.Count == 1 && call.Arguments[0] != null
+                        call.Arguments.Count == 1 && call.Arguments[0] != null
                         && call.Arguments[0].Type.Equals(typeof(string)), "Invalid Include arguments?");
+
                     var queryExpression = parent.TranslateExpression(call.Object);
                     Span span;
                     if (!parent.TryGetSpan(queryExpression, out span))
@@ -515,8 +521,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
+                    DebugCheck.NotNull(call);
+                    DebugCheck.NotNull(call.Object);
+                    DebugCheck.NotNull(call.Arguments);
+
                     Debug.Assert(
-                        call.Object != null && call.Arguments.Count == 1 && call.Arguments[0] != null
+                        call.Arguments.Count == 1 && call.Arguments[0] != null
                         && call.Arguments[0].Type.Equals(typeof(MergeOption)), "Invalid MergeAs arguments?");
 
                     // Note that the MergeOption must be inspected and applied BEFORE visiting the argument,
@@ -556,12 +566,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
+                    DebugCheck.NotNull(call);
+                    DebugCheck.NotNull(call.Object);
+                    DebugCheck.NotNull(call.Arguments);
+
                     Debug.Assert(
-                        call.Object != null && call.Arguments.Count == 1 && call.Arguments[0] != null
+                        call.Arguments.Count == 1 && call.Arguments[0] != null
                         && call.Arguments[0].Type.Equals(typeof(Span)), "Invalid IncludeSpan arguments?");
                     Debug.Assert(
                         call.Arguments[0].NodeType == ExpressionType.Constant,
                         "Whenever an IncludeSpan MethodCall is inlined, the argument must be a constant");
+
                     var span = (Span)((ConstantExpression)call.Arguments[0]).Value;
                     var inputQuery = RemoveConvertToObjectQuery(call.Object);
                     var queryExpression = parent.TranslateExpression(inputQuery);
@@ -2101,8 +2116,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 protected virtual TypeUsage GetReturnType(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    Debug.Assert(parent != null, "parent != null");
-                    Debug.Assert(call != null, "call != null");
+                    DebugCheck.NotNull(parent);
+                    DebugCheck.NotNull(call);
 
                     return parent.GetValueLayerType(call.Type);
                 }
@@ -2180,8 +2195,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 protected override TypeUsage GetReturnType(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    Debug.Assert(parent != null, "parent != null");
-                    Debug.Assert(call != null, "call != null");
+                    DebugCheck.NotNull(parent);
+                    DebugCheck.NotNull(call);
 
                     var returnType = base.GetReturnType(parent, call);
 
@@ -2224,8 +2239,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 protected override TypeUsage GetReturnType(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    Debug.Assert(parent != null, "parent != null");
-                    Debug.Assert(call != null, "call != null");
+                    DebugCheck.NotNull(parent);
+                    DebugCheck.NotNull(call);
 
                     var returnType = base.GetReturnType(parent, call);
 

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         internal Literal(TermExpr<T_Identifier> term, bool isTermPositive)
             : base(isTermPositive ? term : (BoolExpr<T_Identifier>)new NotExpr<T_Identifier>(term))
         {
-            Debug.Assert(null != term);
+            DebugCheck.NotNull(term);
             _term = term;
             _isTermPositive = isTermPositive;
         }

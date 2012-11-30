@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     internal sealed class KnownAssemblyEntry
     {
@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal KnownAssemblyEntry(AssemblyCacheEntry cacheEntry, bool seenWithEdmItemCollection)
         {
-            Debug.Assert(cacheEntry != null, "Found a null cacheEntry");
+            DebugCheck.NotNull(cacheEntry);
             _cacheEntry = cacheEntry;
             ReferencedAssembliesAreLoaded = false;
             SeenWithEdmItemCollection = seenWithEdmItemCollection;

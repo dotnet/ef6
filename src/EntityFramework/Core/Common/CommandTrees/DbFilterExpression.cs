@@ -17,8 +17,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbFilterExpression(TypeUsage resultType, DbExpressionBinding input, DbExpression predicate)
             : base(DbExpressionKind.Filter, resultType)
         {
-            Debug.Assert(input != null, "DbFilterExpression input cannot be null");
-            Debug.Assert(predicate != null, "DbBFilterExpression predicate cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(predicate);
             Debug.Assert(
                 TypeSemantics.IsPrimitiveType(predicate.ResultType, PrimitiveTypeKind.Boolean),
                 "DbFilterExpression predicate must have a Boolean result type");

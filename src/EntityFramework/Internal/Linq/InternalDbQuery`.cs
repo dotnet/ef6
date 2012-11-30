@@ -54,7 +54,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             // We need this because the Code Contract gets compiled out in the release build even though
             // this method is effectively on the public surface because it overrides the abstract method on DbSet.
-            DbHelpers.ThrowIfNullOrWhitespace(path, "path");
+            Check.NotEmpty(path, "path");
 
             return new InternalDbQuery<TElement>(_internalQuery.Include(path));
         }

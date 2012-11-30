@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         protected DbExpressionRebinder(MetadataWorkspace targetWorkspace)
         {
-            Debug.Assert(targetWorkspace != null, "Metadata workspace is null");
+            DebugCheck.NotNull(targetWorkspace);
             _metadata = targetWorkspace;
             _perspective = new ModelPerspective(targetWorkspace);
         }
@@ -161,8 +161,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             else
             {
                 if (!_metadata.TryGetType(type.Name, type.NamespaceName, type.DataSpace, out retType)
-                    ||
-                    null == retType)
+                    || null == retType)
                 {
                     throw new ArgumentException(Strings.Cqt_Copier_TypeNotFound(TypeHelpers.GetFullName(type.NamespaceName, type.Name)));
                 }

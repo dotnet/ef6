@@ -138,7 +138,6 @@
     <Compile Include="SqlVersion.cs" />
     <Compile Include="Utilities\PrimitiveTypeExtensions.cs" />
     <Compile Include="Utilities\SqlDataReaderWrapper.cs" />
-    <Compile Include="Utilities\Throw.cs" />
     <Compile Include="Utilities\TypeUsageExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

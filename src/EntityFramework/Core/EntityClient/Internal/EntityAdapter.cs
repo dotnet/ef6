@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <returns> true if cache contains changes entries; false otherwise </returns>
         private static bool IsStateManagerDirty(IEntityStateManager entityCache)
         {
-            Debug.Assert(null != entityCache);
+            DebugCheck.NotNull(entityCache);
 
             // this call to GetCacheEntries is constant time (the ObjectStateManager implementation
             // maintains an explicit list of entries in each state)

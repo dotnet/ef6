@@ -19,8 +19,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbSortExpression(TypeUsage resultType, DbExpressionBinding input, ReadOnlyCollection<DbSortClause> sortOrder)
             : base(DbExpressionKind.Sort, resultType)
         {
-            Debug.Assert(input != null, "DbSortExpression input cannot be null");
-            Debug.Assert(sortOrder != null, "DbSortExpression sort order cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(sortOrder);
             Debug.Assert(TypeSemantics.IsCollectionType(resultType), "DbSkipExpression requires a collection result type");
 
             _input = input;

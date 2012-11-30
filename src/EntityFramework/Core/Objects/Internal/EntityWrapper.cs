@@ -12,9 +12,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     ///     all of our standard interfaces: IEntityWithKey, IEntityWithRelationships, and IEntityWithChangeTracker, and
     ///     are not proxies.
     ///     Different strategies for dealing with these entities are defined by strategy objects that are set into the
-    ///     wrapper at constructionn time.
+    ///     wrapper at construction time.
     /// </summary>
     internal abstract class EntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
+        where TEntity : class
     {
         private readonly TEntity _entity;
         private readonly IPropertyAccessorStrategy _propertyStrategy;

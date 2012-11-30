@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -146,11 +147,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="path"> The path to span </param>
         public void Include(string path)
         {
-            EntityUtil.CheckStringArgument(path, "path");
-            if (path.Trim().Length == 0)
-            {
-                throw new ArgumentException(Strings.ObjectQuery_Span_WhiteSpacePath, "path");
-            }
+            Check.NotEmpty(path, "path");
 
             var spanPath = new SpanPath(ParsePath(path));
             AddSpanPath(spanPath);

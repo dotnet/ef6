@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Utilities
 {
+    using System.Linq;
     using Xunit;
 
     public class IEnumerableExtensionsTests
@@ -23,6 +24,16 @@ namespace System.Data.Entity.Utilities
             Assert.Equal("1-2-3", new[] { 1, 2, 3 }.Join(separator: "-"));
             Assert.Equal("s, s, s", new[] { 1, 2, 3 }.Join(i => "s"));
             Assert.Equal("s, s", new[] { "1", null, "3" }.Join(i => "s"));
+        }
+
+        [Fact]
+        public void Append_adds_item_to_end_of_sequence()
+        {
+            var result = new[] { 1, 2 }.Append(3);
+
+            Assert.Equal(3, result.Count());
+            Assert.Equal(1, result.First());
+            Assert.Equal(3, result.Last());
         }
     }
 }

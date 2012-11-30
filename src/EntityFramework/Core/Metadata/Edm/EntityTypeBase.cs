@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -87,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">If the EntityType instance is in ReadOnly state</exception>
         public void AddKeyMember(EdmMember member)
         {
-            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Check.NotNull(member, "member");
             Util.ThrowIfReadOnly(this);
             Debug.Assert(
                 BaseType == null || ((EntityTypeBase)BaseType).KeyMembers.Count == 0,
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public override void RemoveMember(EdmMember member)
         {
-            EntityUtil.GenericCheckArgumentNull(member, "member");
+            Check.NotNull(member, "member");
             Util.ThrowIfReadOnly(this);
 
             if (_keyMembers.Contains(member))

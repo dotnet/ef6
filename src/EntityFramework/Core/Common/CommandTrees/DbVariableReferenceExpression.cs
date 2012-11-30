@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Represents a reference to a variable that is currently in scope.
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbVariableReferenceExpression(TypeUsage type, string name)
             : base(DbExpressionKind.VariableReference, type)
         {
-            Debug.Assert(name != null, "DbVariableReferenceExpression Name cannot be null");
+            DebugCheck.NotNull(name);
 
             _name = name;
         }

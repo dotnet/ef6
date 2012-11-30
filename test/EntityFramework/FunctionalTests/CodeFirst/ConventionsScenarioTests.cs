@@ -87,8 +87,9 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<LightweightEntity>();
-            modelBuilder.Conventions.Add(
-                entities => entities.Where(t => t == typeof(LightweightEntity)).Configure(e => e.ToTable("TheTable")));
+            modelBuilder.Entities()
+                .Where(t => t == typeof(LightweightEntity))
+                .Configure(e => e.ToTable("TheTable"));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -102,9 +103,8 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
-            modelBuilder.Conventions.Add(
-                entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                                .Configure(p => p.HasMaxLength(256)));
+            modelBuilder.Properties<string>()
+                .Configure(p => p.HasMaxLength(256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -128,9 +128,8 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<LightweightEntity>();
-            modelBuilder.Conventions.Add(
-                entities => entities.Properties().Where(p => p.PropertyType == typeof(string))
-                                .Configure(p => p.HasMaxLength(256)));
+            modelBuilder.Properties<string>()
+                .Configure(p => p.HasMaxLength(256));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 

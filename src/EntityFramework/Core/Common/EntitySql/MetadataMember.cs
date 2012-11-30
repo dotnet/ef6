@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         protected MetadataMember(MetadataMemberClass @class, string name)
             : base(ExpressionResolutionClass.MetadataMember)
         {
-            Debug.Assert(!String.IsNullOrEmpty(name), "name must not be empty");
+            DebugCheck.NotEmpty(name);
 
             MetadataMemberClass = @class;
             Name = name;
@@ -54,13 +54,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             bool IEqualityComparer<MetadataMember>.Equals(MetadataMember x, MetadataMember y)
             {
-                Debug.Assert(x != null && y != null, "metadata members must not be null");
+                DebugCheck.NotNull(x);
+                DebugCheck.NotNull(y);
+
                 return _stringComparer.Equals(x.Name, y.Name);
             }
 
             int IEqualityComparer<MetadataMember>.GetHashCode(MetadataMember obj)
             {
-                Debug.Assert(obj != null, "metadata member must not be null");
+                DebugCheck.NotNull(obj);
                 return _stringComparer.GetHashCode(obj.Name);
             }
         }

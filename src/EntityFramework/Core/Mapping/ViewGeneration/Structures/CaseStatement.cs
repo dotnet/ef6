@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal void AddWhenThen(BoolExpression condition, ProjectedSlot value)
         {
             Debug.Assert(!m_simplified, "Attempt to modify a simplified case statement");
-            Debug.Assert(value != null);
+            DebugCheck.NotNull(value);
 
             condition.ExpensiveSimplify();
             m_clauses.Add(new WhenThen(condition, value));

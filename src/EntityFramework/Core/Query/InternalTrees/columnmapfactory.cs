@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -138,9 +139,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal virtual CollectionColumnMap CreateColumnMapFromReaderAndClrType(
             DbDataReader reader, Type type, MetadataWorkspace workspace)
         {
-            Debug.Assert(null != reader);
-            Debug.Assert(null != type);
-            Debug.Assert(null != workspace);
+            DebugCheck.NotNull(reader);
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(workspace);
 
             // we require a default constructor
             var constructor = type.GetConstructor(
@@ -164,12 +165,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 int ordinal;
 
                 if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal)
-                    &&
-                    workspace.TryDetermineCSpaceModelType(propType, out modelType)
-                    &&
-                    (Helper.IsScalarType(modelType))
-                    &&
-                    prop.CanWrite
+                    && workspace.TryDetermineCSpaceModelType(propType, out modelType)
+                    && (Helper.IsScalarType(modelType))
+                    && prop.CanWrite
                     && prop.GetIndexParameters().Length == 0
                     && null != prop.GetSetMethod(nonPublic: true))
                 {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     AST node for an aliased expression.
@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal AliasedExpr(Node expr, Identifier alias)
         {
-            Debug.Assert(expr != null, "expr != null");
-            Debug.Assert(alias != null, "alias != null");
+            DebugCheck.NotNull(expr);
+            DebugCheck.NotNull(alias);
 
             if (String.IsNullOrEmpty(alias.Name))
             {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// </summary>
         internal AliasedExpr(Node expr)
         {
-            Debug.Assert(expr != null, "expr != null");
+            DebugCheck.NotNull(expr);
 
             _expr = expr;
         }

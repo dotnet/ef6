@@ -174,10 +174,7 @@ namespace System.Data.Entity.Core.Objects
             ColumnMapFactory columnMapFactory = null,
             IDbCommandInterceptor commandInterceptor = null)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException("connection");
-            }
+            Check.NotNull(connection, "connection");
 
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
@@ -849,7 +846,7 @@ namespace System.Data.Entity.Core.Objects
         // RelationshipManager while loading the RelatedEnd.
         internal static string ParsePropertySelectorExpression<TEntity>(Expression<Func<TEntity, object>> selector, out bool removedConvert)
         {
-            DebugCheck.NotNull(selector);
+            Check.NotNull(selector, "selector");
 
             // We used to throw an ArgumentException if the expression contained a Convert.  Now we remove the convert,
             // but if we still need to throw, then we should still throw an ArgumentException to avoid a breaking change.
@@ -857,8 +854,7 @@ namespace System.Data.Entity.Core.Objects
             removedConvert = false;
             var body = selector.Body;
             while (body.NodeType == ExpressionType.Convert
-                   ||
-                   body.NodeType == ExpressionType.ConvertChecked)
+                   || body.NodeType == ExpressionType.ConvertChecked)
             {
                 removedConvert = true;
                 body = ((UnaryExpression)body).Operand;
@@ -866,10 +862,8 @@ namespace System.Data.Entity.Core.Objects
 
             var bodyAsMember = body as MemberExpression;
             if (bodyAsMember == null
-                ||
-                !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
-                ||
-                bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
+                || !bodyAsMember.Member.DeclaringType.IsAssignableFrom(typeof(TEntity))
+                || bodyAsMember.Expression.NodeType != ExpressionType.Parameter)
             {
                 throw new ArgumentException(Strings.ObjectContext_SelectorExpressionMustBeMemberAccess);
             }
@@ -889,7 +883,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual void ApplyPropertyChanges(string entitySetName, object changed)
         {
             Check.NotNull(changed, "changed");
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             ApplyCurrentValues(entitySetName, changed);
         }
@@ -902,7 +896,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
         {
             Check.NotNull(currentEntity, "currentEntity");
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this);
 
@@ -952,7 +946,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(originalEntity, "originalEntity");
 
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
             var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this);
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
@@ -1253,7 +1247,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(entity, "entity");
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
@@ -1862,7 +1856,7 @@ namespace System.Data.Entity.Core.Objects
         [ResourceConsumption(ResourceScope.Machine)] //For EntityConnection constructor. But the paths are not created in this method.
         private static EntityConnection CreateEntityConnection(string connectionString)
         {
-            EntityUtil.CheckStringArgument(connectionString, "connectionString");
+            Check.NotEmpty(connectionString, "connectionString");
 
             // create the connection
             var connection = new EntityConnection(connectionString);
@@ -2088,7 +2082,7 @@ namespace System.Data.Entity.Core.Objects
         {
             entityset = null;
             container = null;
-            EntityUtil.CheckStringArgument(qualifiedName, parameterName);
+            Check.NotEmpty(qualifiedName, parameterName);
 
             var result = qualifiedName.Split('.');
             if (result.Length > 2)
@@ -2116,10 +2110,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             if (context != null
-                &&
-                String.IsNullOrEmpty(container)
-                &&
-                context.Perspective.GetDefaultContainer() == null)
+                && String.IsNullOrEmpty(container)
+                && context.Perspective.GetDefaultContainer() == null)
             {
                 throw new ArgumentException(Strings.ObjectContext_ContainerQualifiedEntitySetNameRequired, parameterName);
             }
@@ -2282,7 +2274,7 @@ namespace System.Data.Entity.Core.Objects
         {
             // refreshMode and collection should already be validated prior to this call -- collection can be empty in one Refresh overload
             // but not in the other, so we need to do that check before we get to this common method
-            Debug.Assert(collection != null, "collection may not contain any entities but should never be null");
+            DebugCheck.NotNull(collection);
 
             var openedConnection = false;
 
@@ -3007,7 +2999,7 @@ namespace System.Data.Entity.Core.Objects
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
-            EntityUtil.CheckStringArgument(functionName, "function");
+            Check.NotEmpty(functionName, "function");
 
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -3039,7 +3031,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
-            EntityUtil.CheckStringArgument(functionName, "function");
+            Check.NotEmpty(functionName, "function");
 
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
@@ -3110,7 +3102,9 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<TElement> CreateFunctionObjectResult<TElement>(
             EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes, MergeOption mergeOption)
         {
-            Debug.Assert(edmTypes != null && edmTypes.Length > 0);
+            DebugCheck.NotNull(edmTypes);
+            Debug.Assert(edmTypes.Length > 0);
+
             EnsureConnection();
 
             var commandDefinition = entityCommand.GetCommandDefinition();
@@ -3426,7 +3420,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                instance = LightweightCodeGenerator.GetConstructorDelegateForType(entityType)() as T;
+                instance = DelegateFactory.GetConstructorDelegateForType(entityType)() as T;
             }
 
             return instance;
@@ -3527,7 +3521,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
             return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, mergeOption, parameters);
         }
 
@@ -3652,7 +3646,7 @@ namespace System.Data.Entity.Core.Objects
             string commandText,
             string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
         {
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             return ExecuteStoreQueryInternalAsync<TElement>(
                 commandText, entitySetName, MergeOption.AppendOnly, cancellationToken, parameters);
@@ -3736,7 +3730,7 @@ namespace System.Data.Entity.Core.Objects
             Justification = "Generic parameters are required for strong-typing of the return type.")]
         public virtual ObjectResult<TEntity> Translate<TEntity>(DbDataReader reader, string entitySetName, MergeOption mergeOption)
         {
-            EntityUtil.CheckStringArgument(entitySetName, "entitySetName");
+            Check.NotEmpty(entitySetName, "entitySetName");
 
             // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded

@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal EntityContainer(string name, DataSpace dataSpace)
         {
-            EntityUtil.CheckStringArgument(name, "name");
+            Check.NotEmpty(name, "name");
 
             _name = name;
             DataSpace = dataSpace;
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal void AddFunctionImport(EdmFunction function)
         {
-            Debug.Assert(function != null, "function != null");
+            DebugCheck.NotNull(function);
             Debug.Assert(function.IsFunctionImport, "function.IsFunctionImport");
             _functionImports.Source.Add(function);
         }

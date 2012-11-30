@@ -134,8 +134,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             DebugCheck.NotNull(argument);
 
-            Debug.Assert(map != null, "Set EnumerableValidator.ConvertElement before calling validate");
-            Debug.Assert(collect != null, "Set EnumerableValidator.CreateResult before calling validate");
+            DebugCheck.NotNull(map);
+            DebugCheck.NotNull(collect);
 
             var checkNull = (default(TElementIn) == null);
             var checkCount = (expectedElementCount != -1);

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal EntityProxyMemberInfo(EdmMember member, int propertyIndex)
         {
-            Debug.Assert(member != null, "member must be non-null");
+            DebugCheck.NotNull(member);
             Debug.Assert(propertyIndex > -1, "propertyIndex must be non-negative");
 
             _member = member;

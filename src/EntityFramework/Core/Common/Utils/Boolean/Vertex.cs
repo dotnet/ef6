@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         [Conditional("DEBUG")]
         private static void AssertConstructorArgumentsValid(int variable, Vertex[] children)
         {
-            Debug.Assert(null != children, "internal vertices must define children");
+            DebugCheck.NotNull(children);
             Debug.Assert(2 <= children.Length, "internal vertices must have at least two children");
             Debug.Assert(0 < variable, "internal vertices must have 0 < variable");
             foreach (var child in children)

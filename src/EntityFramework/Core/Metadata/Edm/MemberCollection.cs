@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Class representing a collection of member objects
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public MemberCollection(StructuralType declaringType, IEnumerable<EdmMember> items)
             : base(items)
         {
-            Debug.Assert(declaringType != null, "This member collection must belong to a declaring type");
+            DebugCheck.NotNull(declaringType);
             _declaringType = declaringType;
         }
 
@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private void ValidateMemberForAdd(EdmMember member, string argumentName)
         {
             // Check to make sure the given member is not associated with another type
-            EntityUtil.GenericCheckArgumentNull(member, argumentName);
+            Check.NotNull(member, argumentName);
 
             // Validate the item with the declaring type. 
             _declaringType.ValidateMemberForAdd(member);

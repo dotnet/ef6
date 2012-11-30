@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -69,7 +70,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         private static BoolExpr<T_Identifier> ChooseCandidate(params BoolExpr<T_Identifier>[] candidates)
         {
-            Debug.Assert(null != candidates && 1 < candidates.Length, "must be at least one to pick");
+            DebugCheck.NotNull(candidates);
+            Debug.Assert(1 < candidates.Length, "must be at least one to pick");
 
             var resultUniqueTermCount = default(int);
             var resultTermCount = default(int);

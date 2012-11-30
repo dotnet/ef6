@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal class ObjectFullSpanRewriter : ObjectSpanRewriter
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal ObjectFullSpanRewriter(DbCommandTree tree, DbExpression toRewrite, Span span, AliasGenerator aliasGenerator)
             : base(tree, toRewrite, aliasGenerator)
         {
-            Debug.Assert(span != null, "Span cannot be null");
+            DebugCheck.NotNull(span);
             Debug.Assert(span.SpanList.Count > 0, "At least one span path is required");
 
             // Retrieve the effective 'T' of the ObjectQuery<T> that produced

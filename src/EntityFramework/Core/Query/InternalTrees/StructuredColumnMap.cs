@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Text;
 
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal StructuredColumnMap(TypeUsage type, string name, ColumnMap[] properties)
             : base(type, name)
         {
-            Debug.Assert(properties != null, "No properties (gasp!) for a structured type");
+            DebugCheck.NotNull(properties);
             m_properties = properties;
         }
 

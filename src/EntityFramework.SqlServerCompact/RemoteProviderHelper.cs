@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
@@ -86,7 +87,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// </summary>
         private static string ConstructFullAssemblyName(string assemblyName)
         {
-            Debug.Assert(null != assemblyName);
+            DebugCheck.NotNull(assemblyName);
 
             //we'll use the name to construct full assembly name. If what we got ends with
             //.DLL , we should get rid of it, as file extension is not part of assembly name

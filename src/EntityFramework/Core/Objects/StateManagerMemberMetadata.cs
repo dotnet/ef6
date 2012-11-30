@@ -5,20 +5,20 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class StateManagerMemberMetadata
     {
-        private readonly EdmProperty _clrProperty; // may be null if shadowState
+        private readonly EdmProperty _clrProperty;
         private readonly EdmProperty _edmProperty;
         private readonly bool _isPartOfKey;
         private readonly bool _isComplexType;
 
         internal StateManagerMemberMetadata(ObjectPropertyMapping memberMap, EdmProperty memberMetadata, bool isPartOfKey)
         {
-            // if memberMap is null, then this is a shadowstate
-            Debug.Assert(null != memberMap, "shadowstate not supported");
-            Debug.Assert(null != memberMetadata, "CSpace should never be null");
+            DebugCheck.NotNull(memberMap);
+            DebugCheck.NotNull(memberMetadata);
             _clrProperty = memberMap.ClrProperty;
             _edmProperty = memberMetadata;
             _isPartOfKey = isPartOfKey;
@@ -35,13 +35,8 @@ namespace System.Data.Entity.Core.Objects
         {
             get
             {
-                Debug.Assert(null != _clrProperty, "shadowstate not supported");
+                Debug.Assert(null != _clrProperty);
                 return _clrProperty.TypeUsage.EdmType.ClrType;
-                //return ((null != _clrProperty)
-                //    ? _clrProperty.TypeUsage.EdmType.ClrType
-                //    : (Helper.IsComplexType(_edmProperty)
-                //        ? typeof(DbDataRecord)
-                //        : ((PrimitiveType)_edmProperty.TypeUsage.EdmType).ClrEquivalentType));
             }
         }
 
@@ -59,7 +54,7 @@ namespace System.Data.Entity.Core.Objects
         {
             get
             {
-                Debug.Assert(null != _clrProperty, "shadowstate not supported");
+                Debug.Assert(null != _clrProperty);
                 return _clrProperty;
             }
         }
@@ -71,14 +66,14 @@ namespace System.Data.Entity.Core.Objects
 
         public object GetValue(object userObject) // wrapp it in cacheentry
         {
-            Debug.Assert(null != _clrProperty, "shadowstate not supported");
-            var dataObject = LightweightCodeGenerator.GetValue(_clrProperty, userObject);
+            Debug.Assert(null != _clrProperty);
+            var dataObject = DelegateFactory.GetValue(_clrProperty, userObject);
             return dataObject;
         }
 
         public void SetValue(object userObject, object value) // if record , unwrapp to object, use materializer in cacheentry
         {
-            Debug.Assert(null != _clrProperty, "shadowstate not supported");
+            Debug.Assert(null != _clrProperty);
             if (DBNull.Value == value)
             {
                 value = null;
@@ -87,7 +82,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(CLayerName));
             }
-            LightweightCodeGenerator.SetValue(_clrProperty, userObject, value);
+            DelegateFactory.SetValue(_clrProperty, userObject, value);
         }
     }
 }

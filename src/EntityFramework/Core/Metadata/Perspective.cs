@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetMember(StructuralType type, String memberName, bool ignoreCase, out EdmMember outMember)
         {
             DebugCheck.NotNull(type);
-            EntityUtil.CheckStringArgument(memberName, "memberName");
+            Check.NotEmpty(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
         }
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetEnumMember(EnumType type, String memberName, bool ignoreCase, out EnumMember outMember)
         {
             DebugCheck.NotNull(type);
-            EntityUtil.CheckStringArgument(memberName, "memberName");
+            Check.NotEmpty(memberName, "memberName");
             outMember = null;
             return type.Members.TryGetValue(memberName, ignoreCase, out outMember);
         }
@@ -138,8 +138,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool TryGetFunctionByName(
             string namespaceName, string functionName, bool ignoreCase, out IList<EdmFunction> functionOverloads)
         {
-            EntityUtil.CheckStringArgument(namespaceName, "namespaceName");
-            EntityUtil.CheckStringArgument(functionName, "functionName");
+            Check.NotEmpty(namespaceName, "namespaceName");
+            Check.NotEmpty(functionName, "functionName");
 
             var fullName = namespaceName + "." + functionName;
 

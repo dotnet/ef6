@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Mapping
         internal StorageScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
             : base(member)
         {
-            Debug.Assert(columnMember != null);
+            DebugCheck.NotNull(columnMember);
             Debug.Assert(
                 Helper.IsScalarType(member.TypeUsage.EdmType),
                 "StorageScalarPropertyMapping must only map primitive or enum types");

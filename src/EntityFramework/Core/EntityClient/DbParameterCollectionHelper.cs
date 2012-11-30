@@ -237,8 +237,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 RemoveIndex(index);
             }
-            else if (this
-                     != ((EntityParameter)value).CompareExchangeParent(null, this))
+            else if (this != ((EntityParameter)value).CompareExchangeParent(null, this))
             {
                 throw new ArgumentException(Strings.EntityParameterCollectionRemoveInvalidObject);
             }
@@ -299,10 +298,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         private void Validate(int index, object value)
         {
-            if (null == value)
-            {
-                throw new ArgumentNullException("value", Strings.EntityParameterNull);
-            }
+            Check.NotNull(value, "value");
 
             var entityParameter = (EntityParameter)value;
             var parent = entityParameter.CompareExchangeParent(this, null);
@@ -335,11 +331,9 @@ namespace System.Data.Entity.Core.EntityClient
 
         private static void ValidateType(object value)
         {
-            if (null == value)
-            {
-                throw new ArgumentNullException("value", Strings.EntityParameterNull);
-            }
-            else if (!_itemType.IsInstanceOfType(value))
+            Check.NotNull(value, "value");
+
+            if (!_itemType.IsInstanceOfType(value))
             {
                 throw new InvalidCastException(Strings.InvalidEntityParameterType(value.GetType().Name));
             }

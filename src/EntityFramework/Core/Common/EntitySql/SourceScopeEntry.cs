@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -177,7 +178,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         internal void RollbackAdjustmentToGroupVar(DbVariableReferenceExpression pregroupParentVarRef)
         {
-            Debug.Assert(_groupVarBasedExpression != null, "_groupVarBasedExpression != null");
+            DebugCheck.NotNull(_groupVarBasedExpression);
 
             _groupVarBasedExpression = null;
             _groupAggBasedExpression = null;

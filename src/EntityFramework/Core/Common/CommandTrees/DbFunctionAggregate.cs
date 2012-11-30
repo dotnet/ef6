@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     The aggregate type that corresponds to the invocation of an aggregate function.
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbFunctionAggregate(TypeUsage resultType, DbExpressionList arguments, EdmFunction function, bool isDistinct)
             : base(resultType, arguments)
         {
-            Debug.Assert(function != null, "DbFunctionAggregate.Function cannot be null");
+            DebugCheck.NotNull(function);
 
             _aggregateFunction = function;
             _distinct = isDistinct;

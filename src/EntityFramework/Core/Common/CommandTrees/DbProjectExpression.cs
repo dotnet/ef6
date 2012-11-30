@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Represents the projection of a given set of values over the specified input set.
@@ -17,8 +16,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbProjectExpression(TypeUsage resultType, DbExpressionBinding input, DbExpression projection)
             : base(DbExpressionKind.Project, resultType)
         {
-            Debug.Assert(input != null, "DbProjectExpression input cannot be null");
-            Debug.Assert(projection != null, "DbProjectExpression projection cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(projection);
 
             _input = input;
             _projection = projection;

@@ -244,14 +244,6 @@
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
-  <data name="ArgumentPropertyIsNull" xml:space="preserve">
-    <value>The argument property '{0}' cannot be null.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
-  </data>
-  <data name="PreconditionFailed" xml:space="preserve">
-    <value>The precondition '{0}' failed. {1}</value>
-    <comment>## ExceptionType=ArgumentException</comment>
-  </data>
   <data name="EntityTypeConfigurationMismatch" xml:space="preserve">
     <value>The type '{0}' has already been configured as a complex type. It cannot be reconfigured as an entity type.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
@@ -4223,10 +4215,7 @@
   <data name="Cqt_Binding_CollectionRequired" xml:space="preserve">
     <value>DbExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
-  <data name="Cqt_Binding_VariableNameNotValid" xml:space="preserve">
-    <value>The specified variable name is not valid. Variable names cannot be empty.</value>
-  </data>
-  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
+s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
     <value>DbGroupExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
   <data name="Cqt_GroupBinding_GroupVariableNameNotValid" xml:space="preserve">
@@ -4552,9 +4541,6 @@
   </data>
   <data name="EntityParameterContainedByAnotherCollection" xml:space="preserve">
     <value>The EntityParameter is already contained by another EntityParameterCollection.</value>
-  </data>
-  <data name="EntityParameterNull" xml:space="preserve">
-    <value>The EntityParameterCollection only accepts non-null EntityParameter type objects.</value>
   </data>
   <data name="EntityParameterCollectionRemoveInvalidObject" xml:space="preserve">
     <value>Attempted to remove an EntityParameter that is not contained by this EntityParameterCollection.</value>
@@ -5072,24 +5058,6 @@
   <data name="SpatialWithUseStrongSpatialTypesFalse" xml:space="preserve">
     <value>Currently, spatial types are only supported when used in CSDL files that have the UseStrongSpatialTypes annotation with a false value on their root Schema element.</value>
   </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidProjectionList" xml:space="preserve">
-    <value>You must specify a valid projection list.</value>
-  </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidSortKeyList" xml:space="preserve">
-    <value>You must specify a valid key list for sorting the results.</value>
-  </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidGroupKeyList" xml:space="preserve">
-    <value>You must specify a valid key list for grouping the results.</value>
-  </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidSkipCount" xml:space="preserve">
-    <value>You must specify a valid skip count.</value>
-  </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidTopCount" xml:space="preserve">
-    <value>You must specify a valid result count.</value>
-  </data>
-  <data name="ObjectQuery_QueryBuilder_InvalidFilterPredicate" xml:space="preserve">
-    <value>You must specify a valid predicate for filtering the results.</value>
-  </data>
   <data name="ObjectQuery_QueryBuilder_InvalidResultType" xml:space="preserve">
     <value>'{0}' is not a valid type for type filtering operations. Type filtering is only valid on entity types and complex types.</value>
   </data>
@@ -5098,9 +5066,6 @@
   </data>
   <data name="ObjectQuery_QueryBuilder_NotSupportedLinqSource" xml:space="preserve">
     <value>Query builder methods are not supported for LINQ to Entities queries. For more information, see the Entity Framework documentation.</value>
-  </data>
-  <data name="ObjectQuery_InvalidEmptyQuery" xml:space="preserve">
-    <value>The command text for an ObjectQuery instance cannot be empty.</value>
   </data>
   <data name="ObjectQuery_InvalidConnection" xml:space="preserve">
     <value>A connection must be specified before the query can be executed.</value>
@@ -5215,9 +5180,6 @@
   </data>
   <data name="ObjectQuery_Span_SpanPathSyntaxError" xml:space="preserve">
     <value>There was an error parsing the Include path. An empty navigation property was found.</value>
-  </data>
-  <data name="ObjectQuery_Span_WhiteSpacePath" xml:space="preserve">
-    <value>The path consists only of white space.</value>
   </data>
   <data name="EntityProxyTypeInfo_ProxyHasWrongWrapper" xml:space="preserve">
     <value>The entity wrapper stored in the proxy does not reference the same proxy.</value>
@@ -5362,5 +5324,9 @@
   </data>
   <data name="DbMigrationsConfiguration_ContextType" xml:space="preserve">
     <value>The type '{0}' does not inherit from DbContext. The DbMigrationsConfiguration.ContextType property must be set to a type that inherits from DbContext.</value>
+  </data>
+  <data name="ModelBuilder_PropertyFilterTypeMustBePrimitive" xml:space="preserve">
+    <value>The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -56,9 +57,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             internal EntitySetTranslator(StorageEntitySetMapping setMapping)
             {
-                Debug.Assert(
-                    null != setMapping && null != setMapping.ModificationFunctionMappings &&
-                    0 < setMapping.ModificationFunctionMappings.Count, "set mapping must exist and must specify function mappings");
+                DebugCheck.NotNull(setMapping);
+                DebugCheck.NotNull(setMapping.ModificationFunctionMappings);
+
+                Debug.Assert(0 < setMapping.ModificationFunctionMappings.Count, "set mapping must exist and must specify function mappings");
                 m_typeMappings = new Dictionary<EntityType, StorageEntityTypeModificationFunctionMapping>();
                 foreach (var typeMapping in setMapping.ModificationFunctionMappings)
                 {

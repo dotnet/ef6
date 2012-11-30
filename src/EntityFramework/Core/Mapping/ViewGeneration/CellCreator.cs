@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -185,8 +186,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private bool TryCreateAdditionalCellWithCondition(
             Cell originalCell, MemberPath memberToExpand, bool conditionValue, ViewTarget viewTarget, out Cell result)
         {
-            Debug.Assert(originalCell != null);
-            Debug.Assert(memberToExpand != null);
+            DebugCheck.NotNull(originalCell);
+            DebugCheck.NotNull(memberToExpand);
             result = null;
 
             //Create required structures

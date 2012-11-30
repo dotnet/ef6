@@ -28,7 +28,9 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal MaterializedDataRecord(MetadataWorkspace workspace, TypeUsage edmUsage, object[] values)
         {
-            Debug.Assert(null != edmUsage && null != values, "null recordType or values");
+            DebugCheck.NotNull(edmUsage);
+            DebugCheck.NotNull(values);
+
             _workspace = workspace;
             _edmUsage = edmUsage;
 #if DEBUG
@@ -414,10 +416,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public override int GetValues(object[] values)
         {
-            if (null == values)
-            {
-                throw new ArgumentNullException("values");
-            }
+            Check.NotNull(values, "values");
 
             var copyLen = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < copyLen; ++i)

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal FilteredReadOnlyMetadataCollection(ReadOnlyMetadataCollection<TBase> collection, Predicate<TBase> predicate)
             : base(FilterCollection(collection, predicate))
         {
-            Debug.Assert(collection != null);
+            DebugCheck.NotNull(collection);
             Debug.Assert(
                 collection.IsReadOnly, "wrappers should only be created once loading is over, and this collection is still loading");
             _source = collection;

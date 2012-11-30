@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -437,7 +438,7 @@ namespace System.Data.Entity.Core.Common
         /// </remarks>
         internal static TypeUsage GetPrimitiveTypeUsageForScalar(TypeUsage scalarType)
         {
-            Debug.Assert(scalarType != null, "scalarType != null");
+            DebugCheck.NotNull(scalarType);
             Debug.Assert(TypeSemantics.IsScalarType(scalarType), "Primitive or enum type expected.");
 
             return TypeSemantics.IsEnumerationType(scalarType)
@@ -452,7 +453,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns> Type usage for the underlying enum type. </returns>
         internal static TypeUsage CreateEnumUnderlyingTypeUsage(TypeUsage enumTypeUsage)
         {
-            Debug.Assert(enumTypeUsage != null, "enumTypeUsage != null");
+            DebugCheck.NotNull(enumTypeUsage);
             Debug.Assert(TypeSemantics.IsEnumerationType(enumTypeUsage), "enumTypeUsage is not an enumerated type");
 
             return TypeUsage.Create(Helper.GetUnderlyingEdmTypeForEnumType(enumTypeUsage.EdmType), enumTypeUsage.Facets);
@@ -465,7 +466,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns> Type usage for the spatial union type of the correct topology. </returns>
         internal static TypeUsage CreateSpatialUnionTypeUsage(TypeUsage spatialTypeUsage)
         {
-            Debug.Assert(spatialTypeUsage != null, "spatialTypeUsage != null");
+            DebugCheck.NotNull(spatialTypeUsage);
             Debug.Assert(TypeSemantics.IsStrongSpatialType(spatialTypeUsage), "spatialTypeUsage is not a strong spatial type");
             return TypeUsage.Create(Helper.GetSpatialNormalizedPrimitiveType(spatialTypeUsage.EdmType), spatialTypeUsage.Facets);
         }
@@ -486,7 +487,7 @@ namespace System.Data.Entity.Core.Common
 
         internal static IBaseList<EdmMember> GetAllStructuralMembers(EdmType edmType)
         {
-            Debug.Assert(edmType != null);
+            DebugCheck.NotNull(edmType);
             switch (edmType.BuiltInTypeKind)
             {
                 case BuiltInTypeKind.AssociationType:

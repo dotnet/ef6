@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Common.QueryCache
 {
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     internal sealed class CompiledQueryCacheKey : QueryCacheKey
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <returns> </returns>
         public override bool Equals(object compareTo)
         {
-            Debug.Assert(compareTo != null, "Comparison key should not be null");
+            DebugCheck.NotNull(compareTo);
             if (typeof(CompiledQueryCacheKey) != compareTo.GetType())
             {
                 return false;

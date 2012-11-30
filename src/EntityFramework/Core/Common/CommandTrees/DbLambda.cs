@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal DbLambda(ReadOnlyVariables variables, DbExpression bodyExp)
         {
-            Debug.Assert(variables != null, "DbLambda.Variables cannot be null");
-            Debug.Assert(bodyExp != null, "DbLambda.Body cannot be null");
+            DebugCheck.NotNull(variables);
+            DebugCheck.NotNull(bodyExp);
 
             _variables = variables;
             _body = bodyExp;
@@ -1370,7 +1370,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         private static DbVariableReferenceExpression[] CreateVariables(MethodInfo lambdaMethod, params TypeUsage[] argumentTypes)
         {
-            Debug.Assert(lambdaMethod != null, "Lambda function method must not be null");
+            DebugCheck.NotNull(lambdaMethod);
             var paramNames = DbExpressionBuilder.ExtractAliases(lambdaMethod);
 
             Debug.Assert(paramNames.Length == argumentTypes.Length, "Lambda function method parameter count does not match argument count");

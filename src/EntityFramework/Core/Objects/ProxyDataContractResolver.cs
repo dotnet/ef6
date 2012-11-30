@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects
 {
-    using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Runtime.Serialization;
     using System.Xml;
 
@@ -16,10 +16,10 @@ namespace System.Data.Entity.Core.Objects
 
         public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
         {
-            DbHelpers.ThrowIfNullOrWhitespace(typeName, "typeName");
-            DbHelpers.ThrowIfNullOrWhitespace(typeNamespace, "typeNamespace");
-            DbHelpers.ThrowIfNull(declaredType, "declaredType");
-            DbHelpers.ThrowIfNull(knownTypeResolver, "knownTypeResolver");
+            Check.NotEmpty(typeName, "typeName");
+            Check.NotEmpty(typeNamespace, "typeNamespace");
+            Check.NotNull(declaredType, "declaredType");
+            Check.NotNull(knownTypeResolver, "knownTypeResolver");
 
             return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
         }
@@ -28,9 +28,9 @@ namespace System.Data.Entity.Core.Objects
             Type type, Type declaredType, DataContractResolver knownTypeResolver, out XmlDictionaryString typeName,
             out XmlDictionaryString typeNamespace)
         {
-            DbHelpers.ThrowIfNull(type, "type");
-            DbHelpers.ThrowIfNull(declaredType, "declaredType");
-            DbHelpers.ThrowIfNull(knownTypeResolver, "knownTypeResolver");
+            Check.NotNull(type, "type");
+            Check.NotNull(declaredType, "declaredType");
+            Check.NotNull(knownTypeResolver, "knownTypeResolver");
 
             var nonProxyType = ObjectContext.GetObjectType(type);
             if (nonProxyType != type)

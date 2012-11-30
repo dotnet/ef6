@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -189,8 +188,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         internal static bool IsValidParameterName(string name)
         {
-            return (!StringUtil.IsNullOrEmptyOrWhiteSpace(name) &&
-                    _paramNameRegex.IsMatch(name));
+            return (!string.IsNullOrWhiteSpace(name)
+                    && _paramNameRegex.IsMatch(name));
         }
 
         private static readonly Regex _paramNameRegex = new Regex("^([A-Za-z])([A-Za-z0-9_])*$");

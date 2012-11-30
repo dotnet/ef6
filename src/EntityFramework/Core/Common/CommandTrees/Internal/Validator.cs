@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         internal void ValidateExpression(DbExpression expression, string argumentName)
         {
-            Debug.Assert(expression != null, "Ensure expression is non-null before calling ValidateExpression");
+            DebugCheck.NotNull(expression);
             expressionArgumentName = argumentName;
             VisitExpression(expression);
             expressionArgumentName = null;

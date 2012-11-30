@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DbExpression condition)
             : base(joinKind, collectionOfRowResultType)
         {
-            Debug.Assert(left != null, "DbJoinExpression left cannot be null");
-            Debug.Assert(right != null, "DbJoinExpression right cannot be null");
-            Debug.Assert(condition != null, "DbJoinExpression condition cannot be null");
+            DebugCheck.NotNull(left);
+            DebugCheck.NotNull(right);
+            DebugCheck.NotNull(condition);
             Debug.Assert(
                 DbExpressionKind.InnerJoin == joinKind ||
                 DbExpressionKind.LeftOuterJoin == joinKind ||

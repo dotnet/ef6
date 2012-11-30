@@ -80,38 +80,6 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        ///     A string like "Edit the generated Configuration class to specify the context to enable migrations for."
-        /// </summary>
-        internal static string EnableMigrations_ManuallyEnterContext
-        {
-            get { return EntityRes.GetString(EntityRes.EnableMigrations_ManuallyEnterContext); }
-        }
-
-        /// <summary>
-        ///     A string like "No classes deriving from DbContext found in the current project."
-        /// </summary>
-        internal static string EnableMigrations_NoContexts
-        {
-            get { return EntityRes.GetString(EntityRes.EnableMigrations_NoContexts); }
-        }
-
-        /// <summary>
-        ///     A string like "More than one class deriving from DbContext found in the current project."
-        /// </summary>
-        internal static string EnableMigrations_MultipleContexts
-        {
-            get { return EntityRes.GetString(EntityRes.EnableMigrations_MultipleContexts); }
-        }
-
-        /// <summary>
-        ///     A string like "Error while searching for context type (specify -Verbose to see exception details)."
-        /// </summary>
-        internal static string EnableMigrations_ErrorFindingContexts
-        {
-            get { return EntityRes.GetString(EntityRes.EnableMigrations_ErrorFindingContexts); }
-        }
-
-        /// <summary>
         ///     A string like "Code First Migrations enabled for project {0}."
         /// </summary>
         internal static string EnableMigrations_Success(object p0)
@@ -207,14 +175,6 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        ///     The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
-        /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
-
-        /// <summary>
         ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -254,10 +214,6 @@ namespace System.Data.Entity.Migrations.Resources
         internal const string SnapshotBehindWarning = "SnapshotBehindWarning";
         internal const string MigrationsPendingException = "MigrationsPendingException";
         internal const string AutomaticMigrationDisabledInfo = "AutomaticMigrationDisabledInfo";
-        internal const string EnableMigrations_ManuallyEnterContext = "EnableMigrations_ManuallyEnterContext";
-        internal const string EnableMigrations_NoContexts = "EnableMigrations_NoContexts";
-        internal const string EnableMigrations_MultipleContexts = "EnableMigrations_MultipleContexts";
-        internal const string EnableMigrations_ErrorFindingContexts = "EnableMigrations_ErrorFindingContexts";
         internal const string EnableMigrations_Success = "EnableMigrations_Success";
         internal const string EnableMigrations_BeginInitialScaffold = "EnableMigrations_BeginInitialScaffold";
         internal const string EnableMigrations_InitialScaffold = "EnableMigrations_InitialScaffold";

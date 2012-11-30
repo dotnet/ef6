@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
@@ -242,7 +241,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> A new ObjectQuery that includes the specified span path </returns>
         public ObjectQuery<T> Include(string path)
         {
-            EntityUtil.CheckStringArgument(path, "path");
+            Check.NotEmpty(path, "path");
             return new ObjectQuery<T>(QueryState.Include(this, path));
         }
 
@@ -296,19 +295,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> a new ObjectQuery instance. </returns>
         public ObjectQuery<DbDataRecord> GroupBy(string keys, string projection, params ObjectParameter[] parameters)
         {
-            Check.NotNull(keys, "keys");
-            Check.NotNull(projection, "projection");
+            Check.NotEmpty(keys, "keys");
+            Check.NotEmpty(projection, "projection");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidGroupKeyList, "keys");
-            }
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
-            }
 
             return new ObjectQuery<DbDataRecord>(EntitySqlQueryBuilder.GroupBy(QueryState, Name, keys, projection, parameters));
         }
@@ -381,13 +370,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the sort key command text is empty.</exception>
         public ObjectQuery<T> OrderBy(string keys, params ObjectParameter[] parameters)
         {
-            Check.NotNull(keys, "keys");
+            Check.NotEmpty(keys, "keys");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
-            }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.OrderBy(QueryState, Name, keys, parameters));
         }
@@ -403,13 +387,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<DbDataRecord> Select(string projection, params ObjectParameter[] parameters)
         {
-            Check.NotNull(projection, "projection");
+            Check.NotEmpty(projection, "projection");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
-            }
 
             return new ObjectQuery<DbDataRecord>(EntitySqlQueryBuilder.Select(QueryState, Name, projection, parameters));
         }
@@ -425,13 +404,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
         public ObjectQuery<TResultType> SelectValue<TResultType>(string projection, params ObjectParameter[] parameters)
         {
-            Check.NotNull(projection, "projection");
+            Check.NotEmpty(projection, "projection");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(projection))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidProjectionList, "projection");
-            }
 
             // SQLPUDT 484974: Make sure TResultType is loaded.
             QueryState.ObjectContext.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResultType), Assembly.GetCallingAssembly());
@@ -454,19 +428,9 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the sort key or skip count command text is empty.</exception>
         public ObjectQuery<T> Skip(string keys, string count, params ObjectParameter[] parameters)
         {
-            Check.NotNull(keys, "keys");
-            Check.NotNull(count, "count");
+            Check.NotEmpty(keys, "keys");
+            Check.NotEmpty(count, "count");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(keys))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSortKeyList, "keys");
-            }
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(count))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidSkipCount, "count");
-            }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Skip(QueryState, Name, keys, count, parameters));
         }
@@ -482,12 +446,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the top count command text is empty.</exception>
         public ObjectQuery<T> Top(string count, params ObjectParameter[] parameters)
         {
-            Check.NotNull(count, "count");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(count))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidTopCount, "count");
-            }
+            Check.NotEmpty(count, "count");
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Top(QueryState, Name, count, parameters));
         }
@@ -538,13 +497,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="ArgumentException">If the filter predicate command text is empty.</exception>
         public ObjectQuery<T> Where(string predicate, params ObjectParameter[] parameters)
         {
-            Check.NotNull(predicate, "predicate");
+            Check.NotEmpty(predicate, "predicate");
             Check.NotNull(parameters, "parameters");
-
-            if (StringUtil.IsNullOrEmptyOrWhiteSpace(predicate))
-            {
-                throw new ArgumentException(Strings.ObjectQuery_QueryBuilder_InvalidFilterPredicate, "predicate");
-            }
 
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Where(QueryState, Name, predicate, parameters));
         }

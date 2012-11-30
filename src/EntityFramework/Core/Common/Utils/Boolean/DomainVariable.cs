@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Represents a variable with finite domain, e.g., c in {1, 2, 3}
@@ -25,7 +25,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <param name="identifierComparer"> Comparer of identifier </param>
         internal DomainVariable(T_Variable identifier, Set<T_Element> domain, IEqualityComparer<T_Variable> identifierComparer)
         {
-            Debug.Assert(null != identifier && null != domain);
+            DebugCheck.NotNull((object)identifier);
+            DebugCheck.NotNull(domain);
+
             _identifier = identifier;
             _domain = domain.AsReadOnly();
             _identifierComparer = identifierComparer ?? EqualityComparer<T_Variable>.Default;

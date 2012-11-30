@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -14,7 +15,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         public TileBinaryOperator(Tile<T_Query> arg1, Tile<T_Query> arg2, TileOpKind opKind, T_Query query)
             : base(opKind, query)
         {
-            Debug.Assert(arg1 != null && arg2 != null);
+            DebugCheck.NotNull(arg1);
+            DebugCheck.NotNull(arg2);
+
             m_arg1 = arg1;
             m_arg2 = arg2;
         }

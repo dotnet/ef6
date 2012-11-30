@@ -710,8 +710,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="clrProperty"> Property to resolve. </param>
         private void ResolveEnumTypeProperty(StructuralType declaringType, PropertyInfo clrProperty)
         {
-            Debug.Assert(declaringType != null, "type != null");
-            Debug.Assert(clrProperty != null, "clrProperty != null");
+            DebugCheck.NotNull(declaringType);
+            DebugCheck.NotNull(clrProperty);
             Debug.Assert(
                 (Nullable.GetUnderlyingType(clrProperty.PropertyType) ?? clrProperty.PropertyType).IsEnum,
                 "This method should be called for enums only");

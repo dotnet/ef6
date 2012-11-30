@@ -24,8 +24,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal DbFunctionExpression(TypeUsage resultType, EdmFunction function, DbExpressionList arguments)
             : base(DbExpressionKind.Function, resultType)
         {
-            Debug.Assert(function != null, "DbFunctionExpression function cannot be null");
-            Debug.Assert(arguments != null, "DbFunctionExpression arguments cannot be null");
+            DebugCheck.NotNull(function);
+            DebugCheck.NotNull(arguments);
             Debug.Assert(
                 ReferenceEquals(resultType, function.ReturnParameter.TypeUsage),
                 "DbFunctionExpression result type must be function return type");

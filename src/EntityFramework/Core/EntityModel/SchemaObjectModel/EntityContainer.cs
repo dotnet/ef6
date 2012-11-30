@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Xml;
@@ -170,7 +171,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleEntitySetElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var set = new EntityContainerEntitySet(this);
             set.Parse(reader);
             Members.Add(set, true, Strings.DuplicateEntityContainerMemberName);
@@ -178,7 +179,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleAssociationSetElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
             var set = new EntityContainerAssociationSet(this);
             set.Parse(reader);
             Members.Add(set, true, Strings.DuplicateEntityContainerMemberName);
@@ -186,7 +187,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleFunctionImport(XmlReader reader)
         {
-            Debug.Assert(null != reader);
+            DebugCheck.NotNull(reader);
             var functionImport = new FunctionImportElement(this);
             functionImport.Parse(reader);
             Members.Add(functionImport, true, Strings.DuplicateEntityContainerMemberName);

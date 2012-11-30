@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     internal class CustomAssemblyResolver : MetadataArtifactAssemblyResolver
@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal CustomAssemblyResolver(
             Func<IEnumerable<Assembly>> wildcardAssemblyEnumerator, Func<AssemblyName, Assembly> referenceResolver)
         {
-            Debug.Assert(wildcardAssemblyEnumerator != null);
-            Debug.Assert(referenceResolver != null);
+            DebugCheck.NotNull(wildcardAssemblyEnumerator);
+            DebugCheck.NotNull(referenceResolver);
             _wildcardAssemblyEnumerator = wildcardAssemblyEnumerator;
             _referenceResolver = referenceResolver;
         }

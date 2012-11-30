@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
+    using System.Data.Entity.Utilities;
     using System.Xml;
 
     /// <summary>
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> reader positioned at Action attribute </param>
         private void HandleActionAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var relationshipKind = ParentElement.ParentElement.RelationshipKind;
 

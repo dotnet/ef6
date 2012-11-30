@@ -5,6 +5,7 @@ namespace ProductivityApiUnitTests
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -66,16 +67,16 @@ namespace ProductivityApiUnitTests
         public void PropertyConstraintException_string_and_property_name_constructor_throws_if_passed_null_property_name()
         {
             Assert.Equal(
-                "propertyName",
-                Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", (string)null)).ParamName);
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => new PropertyConstraintException("Message", (string)null)).Message);
         }
 
         [Fact]
         public void PropertyConstraintException_string_property_name_and_inner_exception_constructor_throws_if_passed_null_property_name()
         {
             Assert.Equal(
-                "propertyName",
-                Assert.Throws<ArgumentNullException>(() => new PropertyConstraintException("Message", null, new Exception())).ParamName);
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(() => new PropertyConstraintException("Message", null, new Exception())).Message);
         }
 
         #endregion

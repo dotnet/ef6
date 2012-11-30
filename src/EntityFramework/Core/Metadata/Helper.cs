@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // effects: Returns true iff firstType is assignable from secondType
         internal static bool IsAssignableFrom(EdmType firstType, EdmType secondType)
         {
-            Debug.Assert(firstType != null, "firstType should not be not null");
+            DebugCheck.NotNull(firstType);
             if (secondType == null)
             {
                 return false;
@@ -110,7 +111,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // when othertype is same as the current type, return false.
         internal static bool IsSubtypeOf(EdmType firstType, EdmType secondType)
         {
-            Debug.Assert(firstType != null, "firstType should not be not null");
+            DebugCheck.NotNull(firstType);
             if (secondType == null)
             {
                 return false;
@@ -180,7 +181,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal static String GetCommaDelimitedString(IEnumerable<string> stringList)
         {
-            Debug.Assert(stringList != null, "Expecting a non null list");
+            DebugCheck.NotNull(stringList);
             var sb = new StringBuilder();
             var first = true;
             foreach (var part in stringList)
@@ -216,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static void DisposeXmlReaders(IEnumerable<XmlReader> xmlReaders)
         {
-            Debug.Assert(xmlReaders != null);
+            DebugCheck.NotNull(xmlReaders);
 
             foreach (var xmlReader in xmlReaders)
             {
@@ -329,10 +330,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static string GetFileNameFromUri(Uri uri)
         {
-            if (uri == null)
-            {
-                throw new ArgumentNullException("uri");
-            }
+            Check.NotNull(uri, "uri");
+
             if (uri.IsFile)
             {
                 return uri.LocalPath;
@@ -348,7 +347,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsEnumType(EdmType edmType)
         {
-            Debug.Assert(edmType != null, "edmType != null");
+            DebugCheck.NotNull(edmType);
             return BuiltInTypeKind.EnumType == edmType.BuiltInTypeKind;
         }
 
@@ -562,7 +561,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </remarks>
         internal static PrimitiveType AsPrimitive(EdmType type)
         {
-            Debug.Assert(type != null, "type != null");
+            DebugCheck.NotNull(type);
             Debug.Assert(IsScalarType(type), "This method must not be called for types that are neither primitive nor enums.");
 
             return IsEnumType(type)
@@ -579,7 +578,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         internal static PrimitiveType GetUnderlyingEdmTypeForEnumType(EdmType type)
         {
-            Debug.Assert(type != null, "type != null");
+            DebugCheck.NotNull(type);
             Debug.Assert(IsEnumType(type), "This method can be called only for enums.");
 
             return ((EnumType)type).UnderlyingType;
@@ -587,7 +586,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static PrimitiveType GetSpatialNormalizedPrimitiveType(EdmType type)
         {
-            Debug.Assert(type != null, "type != null");
+            DebugCheck.NotNull(type);
             Debug.Assert(IsPrimitiveType(type), "This method can be called only for enums.");
             var primitiveType = (PrimitiveType)type;
 

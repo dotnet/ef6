@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
 
@@ -110,7 +109,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
             internal Result(Func<TResult> createValueDelegate)
             {
-                Debug.Assert(null != createValueDelegate, "delegate must be given");
+                DebugCheck.NotNull(createValueDelegate);
                 _delegate = createValueDelegate;
             }
 

@@ -25,9 +25,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             ReadOnlyCollection<DbAggregate> aggregates)
             : base(DbExpressionKind.GroupBy, collectionOfRowResultType)
         {
-            Debug.Assert(input != null, "DbGroupExpression input cannot be null");
-            Debug.Assert(groupKeys != null, "DbGroupExpression keys cannot be null");
-            Debug.Assert(aggregates != null, "DbGroupExpression aggregates cannot be null");
+            DebugCheck.NotNull(input);
+            DebugCheck.NotNull(groupKeys);
+            DebugCheck.NotNull(aggregates);
             Debug.Assert(groupKeys.Count > 0 || aggregates.Count > 0, "At least one key or aggregate is required");
 
             _input = input;

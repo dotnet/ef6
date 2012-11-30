@@ -124,8 +124,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static Expression EnsureType(Expression expression, Type requiredType)
         {
-            Debug.Assert(null != expression, "expression required");
-            Debug.Assert(null != requiredType, "requiredType");
+            DebugCheck.NotNull(expression);
+            DebugCheck.NotNull(requiredType);
             if (expression.Type != requiredType)
             {
                 expression = Expression.Convert(expression, requiredType);

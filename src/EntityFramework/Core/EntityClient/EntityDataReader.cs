@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -37,7 +37,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         internal EntityDataReader(EntityCommand command, DbDataReader storeDataReader, CommandBehavior behavior)
         {
-            Debug.Assert(command != null && storeDataReader != null);
+            DebugCheck.NotNull(command);
+            DebugCheck.NotNull(storeDataReader);
 
             _command = command;
             _storeDataReader = storeDataReader;
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                DbHelpers.ThrowIfNull(name, "name");
+                Check.NotNull(name, "name");
                 return _storeDataReader[name];
             }
         }
@@ -360,7 +361,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> The ordinal of the column </returns>
         public override int GetOrdinal(string name)
         {
-            DbHelpers.ThrowIfNull(name, "name");
+            Check.NotNull(name, "name");
 
             return _storeDataReader.GetOrdinal(name);
         }

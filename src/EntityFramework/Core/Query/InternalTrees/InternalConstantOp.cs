@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -15,7 +16,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal InternalConstantOp(TypeUsage type, object value)
             : base(OpType.InternalConstant, type, value)
         {
-            Debug.Assert(value != null, "InternalConstantOp with a null value?");
+            DebugCheck.NotNull(value);
         }
 
         private InternalConstantOp()

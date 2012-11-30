@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
 
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal static string CombineErrorMessage(IEnumerable<EdmSchemaError> errors)
         {
-            Debug.Assert(errors != null);
+            DebugCheck.NotNull(errors);
             var sb = new StringBuilder(Environment.NewLine);
             var count = 0;
             foreach (var error in errors)
@@ -186,8 +187,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </remarks>
         private static bool ValidateScalarTypesAreCompatible(TypeUsage cspaceType, TypeUsage storeType)
         {
-            Debug.Assert(cspaceType != null, "cspaceType != null");
-            Debug.Assert(storeType != null, "storeType != null");
+            DebugCheck.NotNull(cspaceType);
+            DebugCheck.NotNull(storeType);
             Debug.Assert(cspaceType.EdmType.DataSpace == DataSpace.CSpace, "cspace property must have a cspace type");
             Debug.Assert(storeType.EdmType.DataSpace == DataSpace.CSpace, "storeType type usage must have a sspace type");
             Debug.Assert(

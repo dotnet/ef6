@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         public Schema(SchemaManager schemaManager)
             : base(null)
         {
-            Debug.Assert(schemaManager != null, "SchemaManager parameter should never be null");
+            DebugCheck.NotNull(schemaManager);
             _schemaManager = schemaManager;
             _errors = new List<EdmSchemaError>();
         }
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> list of errors </returns>
         private IList<EdmSchemaError> InternalParse(XmlReader sourceReader, string sourceLocation)
         {
-            Debug.Assert(sourceReader != null, "sourceReader parameter is null");
+            DebugCheck.NotNull(sourceReader);
 
             // these need to be set before any calls to AddError are made.
             Schema = this;
@@ -294,7 +295,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="e"> information about the validation error </param>
         internal void OnSchemaValidationEvent(object sender, ValidationEventArgs e)
         {
-            Debug.Assert(e != null);
+            DebugCheck.NotNull(e);
             var reader = sender as XmlReader;
             if (reader != null
                 && !IsValidateableXmlNamespace(reader.NamespaceURI, reader.NodeType == XmlNodeType.Attribute))
@@ -785,8 +786,8 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <returns> false if there was an error </returns>
         internal bool ResolveTypeName(SchemaElement usingElement, string typeName, out SchemaType type)
         {
-            Debug.Assert(usingElement != null);
-            Debug.Assert(typeName != null);
+            DebugCheck.NotNull(usingElement);
+            DebugCheck.NotNull(typeName);
 
             type = null;
 
@@ -908,7 +909,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleNamespaceAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var returnValue = HandleDottedNameAttribute(reader, Namespace);
             if (!returnValue.Succeeded)
@@ -925,7 +926,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Alias attribute </param>
         private void HandleAliasAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             Alias = HandleUndottedNameAttribute(reader, Alias);
         }
@@ -936,7 +937,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Provider attribute </param>
         private void HandleProviderAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var provider = reader.Value;
             _schemaManager.ProviderNotification(
@@ -950,7 +951,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at ProviderManifestToken attribute </param>
         private void HandleProviderManifestTokenAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var providerManifestToken = reader.Value;
             _schemaManager.ProviderManifestTokenNotification(
@@ -960,7 +961,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleUseStrongSpatialTypesAnnotation(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var isStrict = false;
             if (HandleBoolAttribute(reader, ref isStrict))
@@ -986,7 +987,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> Source xml reader currently positioned on the EnumType element. </param>
         private void HandleEnumTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var enumType = new SchemaEnumType(this);
             enumType.Parse(reader);
@@ -1000,7 +1001,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at top level element </param>
         private void HandleTopLevelSchemaElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             try
             {
@@ -1019,7 +1020,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleEntityTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var itemType = new SchemaEntityType(this);
 
@@ -1034,7 +1035,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleTypeInformationElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var type = new TypeElement(this);
 
@@ -1049,7 +1050,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleFunctionElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var function = new Function(this);
 
@@ -1060,7 +1061,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         private void HandleModelFunctionElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var function = new ModelFunction(this);
 
@@ -1075,7 +1076,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at Association element </param>
         private void HandleAssociationElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var relationship = new Relationship(this, RelationshipKind.Association);
 
@@ -1090,7 +1091,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at InlineType element </param>
         private void HandleInlineTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var complexType = new SchemaComplexType(this);
 
@@ -1105,7 +1106,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
         /// <param name="reader"> xml reader currently positioned at EntityContainer element </param>
         private void HandleEntityContainerTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var type = new EntityContainer(this);
             type.Parse(reader);
@@ -1251,7 +1252,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
             private static Stream GetResourceStream(string resourceName)
             {
-                Debug.Assert(resourceName != null, "resourceName cannot be null");
+                DebugCheck.NotNull(resourceName);
 
                 Stream resourceStream = null;
                 var executingAssembly = Assembly.GetExecutingAssembly();

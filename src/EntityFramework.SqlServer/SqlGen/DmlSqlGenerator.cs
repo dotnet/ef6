@@ -477,8 +477,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 StringBuilder commandText, DbModificationCommandTree commandTree,
                 bool preserveMemberValues, SqlVersion version)
             {
-                Debug.Assert(null != commandText);
-                Debug.Assert(null != commandTree);
+                DebugCheck.NotNull(commandText);
+                DebugCheck.NotNull(commandTree);
                 _commandText = commandText;
                 _commandTree = commandTree;
                 _version = version;

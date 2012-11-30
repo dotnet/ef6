@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
 
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal EntityColumnMap(TypeUsage type, string name, ColumnMap[] properties, EntityIdentity entityIdentity)
             : base(type, name, properties)
         {
-            Debug.Assert(entityIdentity != null, "Must specify an entity identity");
+            DebugCheck.NotNull(entityIdentity);
             m_entityIdentity = entityIdentity;
         }
 

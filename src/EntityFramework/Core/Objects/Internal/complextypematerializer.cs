@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using Util = System.Data.Entity.Core.Common.Internal.Materialization.Util;
 
@@ -27,10 +28,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal object CreateComplex(IExtendedDataRecord record, DataRecordInfo recordInfo, object result)
         {
-            Debug.Assert(null != record, "null IExtendedDataRecord");
-            Debug.Assert(null != recordInfo, "null DataRecordInfo");
-            Debug.Assert(null != recordInfo.RecordType, "null TypeUsage");
-            Debug.Assert(null != recordInfo.RecordType.EdmType, "null EdmType");
+            DebugCheck.NotNull(record);
+            DebugCheck.NotNull(recordInfo);
+            DebugCheck.NotNull(recordInfo.RecordType);
+            DebugCheck.NotNull(recordInfo.RecordType.EdmType);
 
             Debug.Assert(
                 Helper.IsEntityType(recordInfo.RecordType.EdmType) ||
@@ -48,9 +49,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private void SetProperties(IExtendedDataRecord record, object result, PlanEdmProperty[] properties)
         {
-            Debug.Assert(null != record, "null IExtendedDataRecord");
-            Debug.Assert(null != result, "null object");
-            Debug.Assert(null != properties, "null object");
+            DebugCheck.NotNull(record);
+            DebugCheck.NotNull(result);
+            DebugCheck.NotNull(properties);
 
             for (var i = 0; i < properties.Length; ++i)
             {
@@ -91,8 +92,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private Plan GetPlan(DataRecordInfo recordInfo)
         {
-            Debug.Assert(null != recordInfo, "null DataRecordInfo");
-            Debug.Assert(null != recordInfo.RecordType, "null TypeUsage");
+            DebugCheck.NotNull(recordInfo);
+            DebugCheck.NotNull(recordInfo.RecordType);
 
             var plans = _lastPlans ?? (_lastPlans = new Plan[MaxPlanCount]);
 
@@ -136,12 +137,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             internal Plan(TypeUsage key, ObjectTypeMapping mapping, ReadOnlyCollection<FieldMetadata> fields)
             {
-                Debug.Assert(null != mapping, "null ObjectTypeMapping");
-                Debug.Assert(null != fields, "null FieldMetadata");
+                DebugCheck.NotNull(mapping);
+                DebugCheck.NotNull(fields);
 
                 Key = key;
                 Debug.Assert(!Helper.IsEntityType(mapping.ClrType), "Expecting complex type");
-                ClrType = LightweightCodeGenerator.GetConstructorDelegateForType((ClrComplexType)mapping.ClrType);
+                ClrType = DelegateFactory.GetConstructorDelegateForType((ClrComplexType)mapping.ClrType);
                 Properties = new PlanEdmProperty[fields.Count];
 
                 var lastOrdinal = -1;
@@ -168,13 +169,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             internal PlanEdmProperty(int ordinal, EdmProperty property)
             {
                 Debug.Assert(0 <= ordinal, "negative ordinal");
-                Debug.Assert(null != property, "unsupported shadow state");
+                DebugCheck.NotNull(property);
 
                 Ordinal = ordinal;
                 GetExistingComplex = Helper.IsComplexType(property.TypeUsage.EdmType)
-                                         ? LightweightCodeGenerator.GetGetterDelegateForProperty(property)
+                                         ? DelegateFactory.GetGetterDelegateForProperty(property)
                                          : null;
-                ClrProperty = LightweightCodeGenerator.GetSetterDelegateForProperty(property);
+                ClrProperty = DelegateFactory.GetSetterDelegateForProperty(property);
             }
         }
     }

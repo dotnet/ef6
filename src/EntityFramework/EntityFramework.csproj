@@ -354,10 +354,17 @@
     <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
     <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfiguration.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\LightweightConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionBase.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionWithHaving.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionBase.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHaving.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
@@ -788,7 +795,7 @@
     <Compile Include="Core\Metadata\Edm\FunctionParameter.cs" />
     <Compile Include="Core\Metadata\Edm\GlobalItem.cs" />
     <Compile Include="Core\Metadata\Edm\ItemCollection.cs" />
-    <Compile Include="Core\Metadata\Edm\LightweightCodeGenerator.cs" />
+    <Compile Include="Core\Metadata\Edm\DelegateFactory.cs" />
     <Compile Include="Core\Metadata\Edm\MemberCollection.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollection.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItem.cs" />
@@ -1334,7 +1341,6 @@
     <Compile Include="Spatial\DbSpatialDataReader.cs" />
     <Compile Include="Spatial\DbSpatialServices.cs" />
     <Compile Include="Spatial\DefaultSpatialServices.cs" />
-    <Compile Include="Spatial\ExtensionMethods.cs" />
     <Compile Include="Spatial\SpatialHelpers.cs" />
     <None Include="Properties\Resources.Migrate.cs">
       <DependentUpon>Resources.Migrate.tt</DependentUpon>

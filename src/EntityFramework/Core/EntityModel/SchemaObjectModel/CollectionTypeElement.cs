@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleElementTypeAttribute(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             string type;
             if (!Utils.GetString(Schema, reader, out type))
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleCollectionTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var subElement = new CollectionTypeElement(this);
             subElement.Parse(reader);
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleReferenceTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var subElement = new ReferenceTypeElement(this);
             subElement.Parse(reader);
@@ -112,7 +113,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleTypeRefElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var subElement = new TypeRefElement(this);
             subElement.Parse(reader);
@@ -121,7 +122,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
 
         protected void HandleRowTypeElement(XmlReader reader)
         {
-            Debug.Assert(reader != null);
+            DebugCheck.NotNull(reader);
 
             var subElement = new RowTypeElement(this);
             subElement.Parse(reader);

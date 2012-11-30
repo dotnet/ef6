@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -174,7 +173,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                DbHelpers.ThrowIfNull(keyword, "keyword");
+                Check.NotNull(keyword, "keyword");
 
                 // Just access the properties to get the value since the fields, which the properties will be accessing, will
                 // have already been set when the connection string is set
@@ -199,7 +198,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
             set
             {
-                DbHelpers.ThrowIfNull(keyword, "keyword");
+                Check.NotNull(keyword, "keyword");
 
                 // If a null value is set, just remove the parameter and return
                 if (value == null)
@@ -259,7 +258,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> True if this connections string builder contains the specific key </returns>
         public override bool ContainsKey(string keyword)
         {
-            DbHelpers.ThrowIfNull(keyword, "keyword");
+            Check.NotNull(keyword, "keyword");
 
             foreach (var validKeyword in _validKeywords)
             {
