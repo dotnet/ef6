@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     ///     CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
     /// </summary>
-    internal static class LightweightCodeGenerator
+    internal static class DelegateFactory
     {
         private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetMethod(
             "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
@@ -359,14 +359,14 @@ namespace System.Data.Entity.Core.Objects
             var sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(targetEntityType, targetMember, sourceMember);
             var targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
 
-            var genericCreateRelatedEndMethod = typeof(LightweightCodeGenerator).GetMethod(
+            var genericCreateRelatedEndMethod = typeof(DelegateFactory).GetMethod(
                 "CreateGetRelatedEndMethod", BindingFlags.NonPublic | BindingFlags.Static, null,
                 new[]
                     {
                         typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor),
                         typeof(NavigationPropertyAccessor)
                     }, null);
-            Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method LightweightCodeGenerator.CreateGetRelatedEndMethod");
+            Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method DelegateFactory.CreateGetRelatedEndMethod");
 
             var createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);
             var getRelatedEndDelegate = createRelatedEndMethod.Invoke(

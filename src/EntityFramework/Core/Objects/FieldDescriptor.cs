@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                propertyValue = LightweightCodeGenerator.GetValue(_property, item);
+                propertyValue = DelegateFactory.GetValue(_property, item);
             }
 
             return propertyValue;
@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Objects
             }
             if (!_isReadOnly)
             {
-                LightweightCodeGenerator.SetValue(_property, item, value);
+                DelegateFactory.SetValue(_property, item, value);
             } // if not entity it must be readonly
             else
             {

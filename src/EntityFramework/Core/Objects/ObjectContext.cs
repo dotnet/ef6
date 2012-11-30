@@ -3420,7 +3420,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                instance = LightweightCodeGenerator.GetConstructorDelegateForType(entityType)() as T;
+                instance = DelegateFactory.GetConstructorDelegateForType(entityType)() as T;
             }
 
             return instance;

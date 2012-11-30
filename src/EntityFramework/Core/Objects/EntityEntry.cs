@@ -1144,8 +1144,6 @@ namespace System.Data.Entity.Core.Objects
                     if (memberMetadata.IsComplex
                         && oldValue != null)
                     {
-                        // devnote: Not using GetCurrentEntityValue here because change tracking can only be done on OSpace members,
-                        //          so we don't need to worry about shadow state, and we don't want a CSpace representation of complex objects
                         newValue = memberMetadata.GetValue(changingObject);
 
                         ExpandComplexTypeAndAddValues(memberMetadata, oldValue, newValue, false);
@@ -1382,45 +1380,41 @@ namespace System.Data.Entity.Core.Objects
             var member = metadata.Member(ordinal);
             Debug.Assert(null != member, "didn't throw ArgumentOutOfRangeException");
 
-            if (!metadata.IsMemberPartofShadowState(ordinal))
-            {
-                // if it is not shadow state
-                retValue = member.GetValue(userObject);
+            retValue = member.GetValue(userObject);
 
-                // Wrap the value in a record if it is a non-null complex type
-                if (member.IsComplex
-                    && retValue != null)
+            // Wrap the value in a record if it is a non-null complex type
+            if (member.IsComplex
+                && retValue != null)
+            {
+                // need to get the new StateManagerTypeMetadata for nested /complext member
+                switch (updatableRecord)
                 {
-                    // need to get the new StateManagerTypeMetadata for nested /complext member
-                    switch (updatableRecord)
-                    {
-                        case ObjectStateValueRecord.OriginalReadonly:
-                            retValue = new ObjectStateEntryDbDataRecord(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.CurrentUpdatable:
-                            retValue = new ObjectStateEntryDbUpdatableDataRecord(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.OriginalUpdatableInternal:
-                            retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Internal(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
-                            break;
-                        case ObjectStateValueRecord.OriginalUpdatablePublic:
-                            retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Public(
-                                this,
-                                _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue,
-                                parentEntityPropertyIndex);
-                            break;
-                        default:
-                            Debug.Assert(false, "shouldn't happen");
-                            break;
-                    }
-                    // we need to pass the top level ordinal
+                    case ObjectStateValueRecord.OriginalReadonly:
+                        retValue = new ObjectStateEntryDbDataRecord(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.CurrentUpdatable:
+                        retValue = new ObjectStateEntryDbUpdatableDataRecord(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.OriginalUpdatableInternal:
+                        retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Internal(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue);
+                        break;
+                    case ObjectStateValueRecord.OriginalUpdatablePublic:
+                        retValue = new ObjectStateEntryOriginalDbUpdatableDataRecord_Public(
+                            this,
+                            _cache.GetOrAddStateManagerTypeMetadata(member.CdmMetadata.TypeUsage.EdmType), retValue,
+                            parentEntityPropertyIndex);
+                        break;
+                    default:
+                        Debug.Assert(false, "shouldn't happen");
+                        break;
                 }
+                // we need to pass the top level ordinal
             }
             return retValue ?? DBNull.Value;
         }
@@ -1437,7 +1431,7 @@ namespace System.Data.Entity.Core.Objects
             object retValue = null;
             if (null != _originalValues)
             {
-                foreach (var cachevalue in _originalValues) // this should include also shadow state
+                foreach (var cachevalue in _originalValues)
                 {
                     if (cachevalue.userObject == instance
                         && cachevalue.memberMetadata == metadata)

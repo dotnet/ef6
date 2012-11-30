@@ -795,7 +795,7 @@
     <Compile Include="Core\Metadata\Edm\FunctionParameter.cs" />
     <Compile Include="Core\Metadata\Edm\GlobalItem.cs" />
     <Compile Include="Core\Metadata\Edm\ItemCollection.cs" />
-    <Compile Include="Core\Metadata\Edm\LightweightCodeGenerator.cs" />
+    <Compile Include="Core\Metadata\Edm\DelegateFactory.cs" />
     <Compile Include="Core\Metadata\Edm\MemberCollection.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollection.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItem.cs" />

@@ -338,7 +338,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             DebugCheck.NotNull(propertyInfo);
 
-            var nonProxySetter = LightweightCodeGenerator.CreateNavigationPropertySetter(declaringType, propertyInfo);
+            var nonProxySetter = DelegateFactory.CreateNavigationPropertySetter(declaringType, propertyInfo);
 
             var propertyName = propertyInfo.Name;
             return (entity, value) =>

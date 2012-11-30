@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 Key = key;
                 Debug.Assert(!Helper.IsEntityType(mapping.ClrType), "Expecting complex type");
-                ClrType = LightweightCodeGenerator.GetConstructorDelegateForType((ClrComplexType)mapping.ClrType);
+                ClrType = DelegateFactory.GetConstructorDelegateForType((ClrComplexType)mapping.ClrType);
                 Properties = new PlanEdmProperty[fields.Count];
 
                 var lastOrdinal = -1;
@@ -173,9 +173,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 Ordinal = ordinal;
                 GetExistingComplex = Helper.IsComplexType(property.TypeUsage.EdmType)
-                                         ? LightweightCodeGenerator.GetGetterDelegateForProperty(property)
+                                         ? DelegateFactory.GetGetterDelegateForProperty(property)
                                          : null;
-                ClrProperty = LightweightCodeGenerator.GetSetterDelegateForProperty(property);
+                ClrProperty = DelegateFactory.GetSetterDelegateForProperty(property);
             }
         }
     }

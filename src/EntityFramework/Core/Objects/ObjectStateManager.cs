@@ -252,7 +252,6 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(wrappedObject.Entity);
             DebugCheck.NotNull(wrappedObject.Context);
             DebugCheck.NotNull(entitySet);
-            // shadowValues is allowed to be null
             DebugCheck.NotNull(argumentName);
 
             var entityKey = passedKey;
@@ -594,7 +593,6 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(keyEntry);
             DebugCheck.NotNull(wrappedEntity);
-            // shadowValues is allowed to be null
 
             // Future Enhancement: Fixup already has this information, don't rediscover it
             var typeMetadata = GetOrAddStateManagerTypeMetadata(wrappedEntity.IdentityType, (EntitySet)keyEntry.EntitySet);

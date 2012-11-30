@@ -537,7 +537,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             else if (VerifyRelationship(relationship, sourceEnd.Name, throwOnError))
             {
                 // Call a dynamic method that will call either GetRelatedCollection<T, T> or GetRelatedReference<T, T> for this relationship
-                result = LightweightCodeGenerator.GetRelatedEnd(this, sourceEnd, targetEnd, existingRelatedEnd);
+                result = DelegateFactory.GetRelatedEnd(this, sourceEnd, targetEnd, existingRelatedEnd);
             }
             return result;
         }

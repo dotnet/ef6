@@ -501,7 +501,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 }
                 if (createRelatedEnd)
                 {
-                    relatedEnd = LightweightCodeGenerator.GetRelatedEnd(wrappedEntity.RelationshipManager, sourceEnd, targetEnd, null);
+                    relatedEnd = DelegateFactory.GetRelatedEnd(wrappedEntity.RelationshipManager, sourceEnd, targetEnd, null);
                     return true;
                 }
             }
