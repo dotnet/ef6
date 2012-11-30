@@ -198,5 +198,15 @@ namespace System.Data.Entity.Utilities
 
             return (T)Activator.CreateInstance(type);
         }
+
+        public static bool IsValidEdmScalarType(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            type.TryUnwrapNullableType(out type);
+
+            PrimitiveType _;
+            return type.IsPrimitiveType(out _) || type.IsEnum;
+        }
     }
 }

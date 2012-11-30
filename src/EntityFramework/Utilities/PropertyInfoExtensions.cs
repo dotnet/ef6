@@ -44,12 +44,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            var propertyType = propertyInfo.PropertyType;
-
-            propertyType.TryUnwrapNullableType(out propertyType);
-
-            PrimitiveType _;
-            return propertyType.IsPrimitiveType(out _) || propertyType.IsEnum;
+            return propertyInfo.PropertyType.IsValidEdmScalarType();
         }
 
         public static EdmProperty AsEdmPrimitiveProperty(this PropertyInfo propertyInfo)

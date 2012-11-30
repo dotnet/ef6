@@ -270,8 +270,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public PropertyConventionConfiguration Properties<T>()
         {
-            PrimitiveType primitiveType;
-            if (!typeof(T).IsPrimitiveType(out primitiveType))
+            if (!typeof(T).IsValidEdmScalarType())
             {
                 throw Error.ModelBuilder_PropertyFilterTypeMustBePrimitive(typeof(T));
             }

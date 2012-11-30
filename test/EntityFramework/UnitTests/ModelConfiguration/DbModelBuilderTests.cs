@@ -947,6 +947,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             modelBuilder.Properties<DbGeography>();
             modelBuilder.Properties<DbGeometry>();
             modelBuilder.Properties<string>();
+            modelBuilder.Properties<DateTimeKind>();
 
             var ex = Assert.Throws<InvalidOperationException>(
                 () => modelBuilder.Properties<object>());
