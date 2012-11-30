@@ -235,6 +235,19 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Begins configuration of a lightweight convention that applies to all entities of
+        ///     the specified type in the model. This method does not register entity types as
+        ///     part of the model.
+        /// </summary>
+        /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
+        /// <returns> A configuration object for the convention. </returns>
+        public EntityConventionOfTypeConfiguration<T> Entities<T>()
+            where T : class
+        {
+            return new EntityConventionOfTypeConfiguration<T>(_conventionsConfiguration);
+        }
+
+        /// <summary>
         ///     Begins configuration of a lightweight convention that applies to all properties
         ///     in the model.
         /// </summary>

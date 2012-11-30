@@ -4215,7 +4215,7 @@
   <data name="Cqt_Binding_CollectionRequired" xml:space="preserve">
     <value>DbExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
-s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
+  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
     <value>DbGroupExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
   <data name="Cqt_GroupBinding_GroupVariableNameNotValid" xml:space="preserve">
@@ -5330,6 +5330,14 @@ s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
   </data>
   <data name="ModelBuilder_PropertyFilterTypeMustBePrimitive" xml:space="preserve">
     <value>The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="LightweightEntityConfiguration_TypeMismatch" xml:space="preserve">
+    <value>The type '{0}' is invalid. The specified type must derive from '{1}'.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="LightweightEntityConfiguration_NonScalarProperty" xml:space="preserve">
+    <value>The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>

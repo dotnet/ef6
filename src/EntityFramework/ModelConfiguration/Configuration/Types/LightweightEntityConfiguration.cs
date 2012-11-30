@@ -4,6 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -95,6 +98,57 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
+        ///     Configures a property that is defined on this type.
+        /// </summary>
+        /// <param name="name"> The name of the property being configured. </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        /// <remarks>
+        ///     If the property doesn't exist, any configuration will be silently ignored.
+        /// </remarks>
+        public LightweightPropertyConfiguration Property(string name)
+        {
+            Check.NotEmpty(name, "name");
+
+            return Property(_type.GetProperty(name));
+        }
+
+        /// <summary>
+        ///     Configures a property that is defined on this type.
+        /// </summary>
+        /// <param name="propertyInfo"> The property being configured. </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        /// <remarks>
+        ///     If the property doesn't exist, any configuration will be silently ignored.
+        /// </remarks>
+        public LightweightPropertyConfiguration Property(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo == null)
+            {
+                return new MissingPropertyConfiguration();
+            }
+
+            return Property(new PropertyPath(propertyInfo));
+        }
+
+        internal LightweightPropertyConfiguration Property(PropertyPath propertyPath)
+        {
+            DebugCheck.NotNull(propertyPath);
+
+            var propertyInfo = propertyPath.Last();
+
+            if (!propertyInfo.IsValidEdmScalarProperty()
+                || propertyInfo.GetIndexParameters().Any())
+            {
+                throw Error.LightweightEntityConfiguration_NonScalarProperty(propertyPath);
+            }
+
+            var propertyConfiguration = new Lazy<PrimitivePropertyConfiguration>(
+                () => _configuration().Property(propertyPath, OverridableConfigurationParts.None));
+
+            return new LightweightPropertyConfiguration(propertyPath.Single(), () => propertyConfiguration.Value);
+        }
+
+        /// <summary>
         ///     Configures the primary key property for this entity type.
         /// </summary>
         /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
@@ -136,7 +190,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if any
+        ///     Calling this will have no effect once it has been configured or if any
         ///     property does not exist.
         /// </remarks>
         public LightweightEntityConfiguration HasKey(IEnumerable<string> propertyNames)
@@ -158,7 +212,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if any
+        ///     Calling this will have no effect once it has been configured or if any
         ///     property does not exist.
         /// </remarks>
         public LightweightEntityConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)

@@ -13388,6 +13388,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ModelBuilder_PropertyFilterTypeMustBePrimitive, p0);
         }
+
+        /// <summary>
+        /// A string like "The type '{0}' is invalid. The specified type must derive from '{1}'."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_TypeMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_NonScalarProperty(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_NonScalarProperty, p0);
+        }
     } 
 
     /// <summary>
@@ -14986,6 +15002,22 @@ namespace System.Data.Entity.Resources
         internal static Exception ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
             return new InvalidOperationException(Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is invalid. The specified type must derive from '{1}'."
+        /// </summary>
+        internal static Exception LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.LightweightEntityConfiguration_TypeMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
+        /// </summary>
+        internal static Exception LightweightEntityConfiguration_NonScalarProperty(object p0)
+        {
+            return new InvalidOperationException(Strings.LightweightEntityConfiguration_NonScalarProperty(p0));
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16692,6 +16724,8 @@ namespace System.Data.Entity.Resources
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
+        internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
+        internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
         
         static EntityRes loader = null;
         ResourceManager resources;

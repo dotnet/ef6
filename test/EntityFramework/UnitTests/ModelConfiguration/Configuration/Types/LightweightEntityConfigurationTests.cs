@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
@@ -120,6 +121,80 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             config.Ignore("Property1");
 
             Assert.Empty(innerConfig.IgnoredProperties);
+        }
+
+        [Fact]
+        public void Property_evaluates_preconditions()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.Property((string)null));
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("name"), ex.Message);
+        }
+
+        [Fact]
+        public void Property_throws_when_nonscalar()
+        {
+            var type = new MockType()
+                .Property<object>("NonScalar");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => config.Property("NonScalar"));
+
+            Assert.Equal(
+                Strings.LightweightEntityConfiguration_NonScalarProperty("NonScalar"),
+                ex.Message);
+        }
+
+        [Fact]
+        public void Property_throws_when_indexer()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => config.Property("Item"));
+
+            Assert.Equal(
+                Strings.LightweightEntityConfiguration_NonScalarProperty("Item"),
+                ex.Message);
+        }
+
+        [Fact]
+        public void Property_returns_MissingPropertyConfiguration_when_not_exists()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.Property("Property1");
+
+            Assert.IsType<MissingPropertyConfiguration>(result);
+        }
+
+        [Fact]
+        public void Property_returns_configuration()
+        {
+            var type = new MockType()
+                .Property<decimal>("Property1");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            var result = config.Property("Property1");
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("Property1", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
         }
 
         [Fact]
@@ -343,6 +418,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
             Assert.Same(type.Object, config.ClrType);
+        }
+
+        private class LocalEntityType
+        {
+            public int this[int index]
+            {
+                get { return 0; }
+            }
         }
     }
 }

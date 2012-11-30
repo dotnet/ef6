@@ -909,6 +909,12 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         }
 
         [Fact]
+        public void Entities_with_type_returns_configuration_object()
+        {
+            Assert.NotNull(new DbModelBuilder().Entities<object>());
+        }
+
+        [Fact]
         public void Properties_returns_configuration_object()
         {
             Assert.NotNull(new DbModelBuilder().Properties());
@@ -920,7 +926,6 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var decimalProperty = new MockPropertyInfo(typeof(decimal), "Property1");
             var nullableDecimalProperty = new MockPropertyInfo(typeof(decimal?), "Property2");
             var nonDecimalProperty = new MockPropertyInfo(typeof(string), "Property3");
-
 
             var config = new DbModelBuilder().Properties<decimal>();
             Assert.NotNull(config);

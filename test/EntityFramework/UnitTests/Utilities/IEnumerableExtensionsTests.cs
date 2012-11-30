@@ -27,6 +27,16 @@ namespace System.Data.Entity.Utilities
         }
 
         [Fact]
+        public void Prepend_adds_item_to_beginning_of_sequence()
+        {
+            var result = new[] { 2, 3 }.Prepend(1);
+
+            Assert.Equal(3, result.Count());
+            Assert.Equal(1, result.First());
+            Assert.Equal(3, result.Last());
+        }
+
+        [Fact]
         public void Append_adds_item_to_end_of_sequence()
         {
             var result = new[] { 1, 2 }.Append(3);

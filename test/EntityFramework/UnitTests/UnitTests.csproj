@@ -232,11 +232,17 @@
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilterTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionOfTypeConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionOfTypeWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\MissingPropertyConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationOfTTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionOfTypeTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionOfTypeWithHavingTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionWithHavingTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionTests.cs" />
