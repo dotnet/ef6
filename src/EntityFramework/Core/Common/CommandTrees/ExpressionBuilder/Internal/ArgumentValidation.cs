@@ -14,8 +14,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
     using System.Globalization;
     using System.Linq;
 
-// for TypeHelpers
-
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class ArgumentValidation
     {
@@ -77,8 +75,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             PrimitiveTypeKind valueTypeKind;
             var valueIsPrimitive = TypeHelpers.TryGetPrimitiveTypeKind(expression.ResultType, out valueTypeKind);
             if (!valueIsPrimitive
-                ||
-                valueTypeKind != requiredResultType)
+                || valueTypeKind != requiredResultType)
             {
                 if (index != -1)
                 {
@@ -104,11 +101,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var endType = end.TypeUsage;
             if (!TypeSemantics.IsReferenceType(endType))
             {
-                //
                 // The only relation end that is currently allowed to have a non-Reference type is the Child end of
                 // a composition, in which case the end type must be an entity type. 
                 //
-                // Debug.Assert(end.Relation.IsComposition && !end.IsParent && (end.Type is EntityType), "Relation end can only have non-Reference type if it is a Composition child end");
+                //// Debug.Assert(end.Relation.IsComposition && !end.IsParent && (end.Type is EntityType), "Relation end can only have non-Reference type if it is a Composition child end");
 
                 endType = TypeHelpers.CreateReferenceTypeUsage(TypeHelpers.GetEdmType<EntityType>(endType));
             }
@@ -247,23 +243,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateBindAs(DbExpression input, string varName)
         {
-            //
-            // Ensure no argument is null
-            //
-            DebugCheck.NotNull(varName);
-            DebugCheck.NotNull(input);
-
-            //
-            // Ensure Variable name is non-empty
-            //
             if (string.IsNullOrEmpty(varName))
             {
                 throw new ArgumentException(Strings.Cqt_Binding_VariableNameNotValid, "varName");
             }
 
-            //
             // Ensure the DbExpression has a collection result type
-            //
             TypeUsage elementType = null;
             if (!TypeHelpers.TryGetCollectionElementType(input.ResultType, out elementType))
             {
@@ -277,16 +262,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateGroupBindAs(DbExpression input, string varName, string groupVarName)
         {
-            //
-            // Ensure no argument is null
-            //
-            DebugCheck.NotNull(varName);
-            DebugCheck.NotNull(groupVarName);
-            DebugCheck.NotNull(input);
-
-            //
-            // Ensure Variable and Group names are both non-empty
-            //
             if (string.IsNullOrEmpty(varName))
             {
                 throw new ArgumentException(Strings.Cqt_Binding_VariableNameNotValid, "varName");
@@ -297,9 +272,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_GroupBinding_GroupVariableNameNotValid, "groupVarName");
             }
 
-            //
             // Ensure the DbExpression has a collection result type
-            //
             TypeUsage elementType = null;
             if (!TypeHelpers.TryGetCollectionElementType(input.ResultType, out elementType))
             {
@@ -323,9 +296,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static DbExpressionList ValidateFunctionAggregate(EdmFunction function, IEnumerable<DbExpression> args)
         {
-            //
             // Verify that the aggregate function is from the metadata collection and data space of the command tree.
-            //
             CheckFunction(function);
 
             // Verify that the function is actually a valid aggregate function.
@@ -354,16 +325,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             return funcArgs;
         }
 
-        internal static DbExpressionList ValidateGroupAggregate(DbExpression argument)
-        {
-            DebugCheck.NotNull(argument);
-            return new DbExpressionList(new[] { argument });
-        }
-
         internal static void ValidateSortClause(DbExpression key)
         {
-            DebugCheck.NotNull(key);
-
             if (!TypeHelpers.IsValidSortOpKeyType(key.ResultType))
             {
                 throw new ArgumentException(Strings.Cqt_Sort_OrderComparable, "key");
@@ -372,8 +335,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateSortClause(DbExpression key, string collation)
         {
-            DebugCheck.NotNull(collation);
-
             ValidateSortClause(key);
 
             if (StringUtil.IsNullOrEmptyOrWhiteSpace(collation))
@@ -426,20 +387,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateApply(DbExpressionBinding input, DbExpressionBinding apply)
         {
-            DebugCheck.NotNull(input);
-            DebugCheck.NotNull(apply);
-
-            //
             // Duplicate Input and Apply binding names are not allowed
-            //
             if (input.VariableName.Equals(apply.VariableName, StringComparison.Ordinal))
             {
                 throw new ArgumentException(Strings.Cqt_Apply_DuplicateVariableNames);
             }
 
-            //
             // Initialize the result type
-            //
             var recordCols = new List<KeyValuePair<string, TypeUsage>>();
             recordCols.Add(new KeyValuePair<string, TypeUsage>(input.VariableName, input.VariableType));
             recordCols.Add(new KeyValuePair<string, TypeUsage>(apply.VariableName, apply.VariableType));
@@ -450,15 +404,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         internal static ReadOnlyCollection<DbExpressionBinding> ValidateCrossJoin(
             IEnumerable<DbExpressionBinding> inputs, out TypeUsage resultType)
         {
-            //
-            // Ensure that the list of input expression bindings is non-null.
-            //
-            DebugCheck.NotNull(inputs);
-
-            //
             // Validate the input expression bindings and build the column types for the record type
             // that will be the element type of the collection of record type result type of the join.
-            //
             var inputList = new List<DbExpressionBinding>();
             var columns = new List<KeyValuePair<string, TypeUsage>>();
             var bindingNames = new Dictionary<string, int>();
@@ -468,18 +415,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             {
                 var input = inputEnum.Current;
 
-                //
                 // Validate the DbExpressionBinding before accessing its properties
-                //
                 var argumentName = StringUtil.FormatIndex("inputs", iPos);
                 if (input == null)
                 {
                     throw new ArgumentNullException(argumentName);
                 }
 
-                //
                 // Duplicate binding names are not allowed
-                //
                 var nameIndex = -1;
                 if (bindingNames.TryGetValue(input.VariableName, out nameIndex))
                 {
@@ -499,43 +442,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_CrossJoin_AtLeastTwoInputs, "inputs");
             }
 
-            //
             // Initialize the result type
-            //
             resultType = CreateCollectionOfRowResultType(columns);
 
-            //
             // Initialize state
-            //
             return inputList.AsReadOnly();
         }
 
         internal static TypeUsage ValidateJoin(DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
-            DebugCheck.NotNull(joinCondition);
-
-            //
-            // Validate
-            //
-            DebugCheck.NotNull(left);
-            DebugCheck.NotNull(left);
-
-            //
             // Duplicate Left and Right binding names are not allowed
-            //
             if (left.VariableName.Equals(right.VariableName, StringComparison.Ordinal))
             {
                 throw new ArgumentException(Strings.Cqt_Join_DuplicateVariableNames);
             }
 
-            //
             // Validate the JoinCondition)
-            //
             RequireCompatibleType(joinCondition, PrimitiveTypeKind.Boolean, "joinCondition");
 
-            //
             // Initialize the result type
-            //
             var columns = new List<KeyValuePair<string, TypeUsage>>(2);
             columns.Add(new KeyValuePair<string, TypeUsage>(left.VariableName, left.VariableType));
             columns.Add(new KeyValuePair<string, TypeUsage>(right.VariableName, right.VariableType));
@@ -545,9 +470,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateFilter(DbExpressionBinding input, DbExpression predicate)
         {
-            DebugCheck.NotNull(predicate);
-
-            DebugCheck.NotNull(input);
             RequireCompatibleType(predicate, PrimitiveTypeKind.Boolean, "predicate");
             return input.Expression.ResultType;
         }
@@ -557,24 +479,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             IEnumerable<KeyValuePair<string, DbAggregate>> aggregates, out DbExpressionList validKeys,
             out ReadOnlyCollection<DbAggregate> validAggregates)
         {
-            //
             // Track the cumulative set of column names and types, as well as key column names
-            //
             var columns = new List<KeyValuePair<string, TypeUsage>>();
             var keyNames = new HashSet<string>();
 
-            //
             // Validate the grouping keys
-            //
             var keyValidator = CreateValidator(
                 keys, "keys",
                 (keyInfo, index) =>
                     {
                         CheckNamed(keyInfo, "keys", index);
 
-                        //
                         // The result Type of an expression used as a group key must be equality comparable
-                        //
                         if (!TypeHelpers.IsValidGroupKeyType(keyInfo.Value.ResultType))
                         {
                             throw new ArgumentException(Strings.Cqt_GroupBy_KeyNotEqualityComparable(keyInfo.Key));
@@ -598,17 +514,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                     {
                         CheckNamed(aggInfo, "aggregates", idx);
 
-                        //
                         // Is there a grouping key with the same name?
-                        //
                         if (keyNames.Contains(aggInfo.Key))
                         {
                             throw new ArgumentException(Strings.Cqt_GroupBy_AggregateColumnExistsAsGroupColumn(aggInfo.Key));
                         }
 
-                        //
                         // At most one group aggregate can be specified
-                        //
                         if (aggInfo.Value is DbGroupAggregate)
                         {
                             if (hasGroupAggregate)
@@ -630,18 +542,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             aggValidator.GetName = (aggInfo, idx) => aggInfo.Key;
             validAggregates = aggValidator.Validate();
 
-            //
             // Either the Keys or Aggregates may be omitted, but not both
-            //
-            if (0 == validKeys.Count
-                && 0 == validAggregates.Count)
+            if (0 == validKeys.Count && 0 == validAggregates.Count)
             {
                 throw new ArgumentException(Strings.Cqt_GroupBy_AtLeastOneKeyOrAggregate);
             }
 
-            //
             // Create the result type. This is a collection of the record type produced by the group keys and aggregates.
-            //
             return CreateCollectionOfRowResultType(columns);
         }
 
@@ -667,33 +574,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static ReadOnlyCollection<DbSortClause> ValidateSkip(IEnumerable<DbSortClause> sortOrder, DbExpression count)
         {
-            //
-            // Validate the input expression binding and sort keys
-            //
             var sortKeys = ValidateSortArguments(sortOrder);
 
-            //
             // Initialize the Count ExpressionLink. In addition to being non-null and from the same command tree,
             // the Count expression must also have an integer result type.
-            //
             if (!TypeSemantics.IsIntegerNumericType(count.ResultType))
             {
                 throw new ArgumentException(Strings.Cqt_Skip_IntegerRequired, "count");
             }
 
-            //
             // Currently the Count expression is also required to be either a DbConstantExpression or a DbParameterReferenceExpression.
-            //
             if (count.ExpressionKind != DbExpressionKind.Constant
-                &&
-                count.ExpressionKind != DbExpressionKind.ParameterReference)
+                && count.ExpressionKind != DbExpressionKind.ParameterReference)
             {
                 throw new ArgumentException(Strings.Cqt_Skip_ConstantOrParameterRefRequired, "count");
             }
 
-            //
             // For constants, verify the count is non-negative.
-            //
             if (IsConstantNegativeInteger(count))
             {
                 throw new ArgumentException(Strings.Cqt_Skip_NonNegativeCountRequired, "count");
@@ -704,9 +601,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static ReadOnlyCollection<DbSortClause> ValidateSort(IEnumerable<DbSortClause> sortOrder)
         {
-            //
             // Validate the input expression binding and sort keys
-            //
             return ValidateSortArguments(sortOrder);
         }
 
@@ -721,11 +616,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateConstant(object value)
         {
-            DebugCheck.NotNull(value);
-
-            //
             // Check that typeof(value) is actually a valid constant (i.e. primitive) type
-            //
             PrimitiveTypeKind primitiveTypeKind;
             if (!TryGetPrimitiveTypeKind(value.GetType(), out primitiveTypeKind))
             {
@@ -737,17 +628,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateConstant(TypeUsage constantType, object value)
         {
-            //
-            // Basic validation of constant value and constant type (non-null, read-only, etc)
-            //
-            DebugCheck.NotNull(value);
             CheckType(constantType, "constantType");
 
-            //
             // Verify that constantType is a primitive or enum type and that the value is an instance of that type
             // Note that the value is not validated against applicable facets (such as MaxLength for a string value),
             // this is left to the server.
-            //
             EnumType edmEnumType;
             if (TypeHelpers.TryGetEdmType(constantType, out edmEnumType))
             {
@@ -790,8 +675,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateParameter(TypeUsage type, string name)
         {
-            DebugCheck.NotNull(name);
-
             CheckType(type);
 
             if (!DbCommandTree.IsValidParameterName(name))
@@ -808,8 +691,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateVariable(TypeUsage type, string name)
         {
-            DebugCheck.NotNull(name);
-
             CheckType(type);
 
             if (string.IsNullOrEmpty(name))
@@ -848,11 +729,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateNot(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
-            //
             // Argument to Not must have Boolean result type
-            //
             if (!TypeSemantics.IsPrimitiveType(argument.ResultType, PrimitiveTypeKind.Boolean))
             {
                 throw new ArgumentException(Strings.Cqt_Not_BooleanArgumentRequired);
@@ -865,15 +742,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         #region Arithmetic Operators
 
-        internal static DbExpressionList ValidateArithmetic(DbExpression argument, out TypeUsage resultType)
+        internal static DbExpressionList ValidateUnaryMinus(DbExpression argument, out TypeUsage resultType)
         {
-            DebugCheck.NotNull(argument);
             resultType = argument.ResultType;
             if (!TypeSemantics.IsNumericType(resultType))
             {
                 throw new ArgumentException(Strings.Cqt_Arithmetic_NumericCommonType);
             }
-            //If argument to UnaryMinus is an unsigned type, promote return type to next higher, signed type.
+
+            // If argument to UnaryMinus is an unsigned type, promote return type to next higher, signed type.
             if (TypeSemantics.IsUnsignedNumericType(argument.ResultType))
             {
                 TypeUsage closestPromotableType = null;
@@ -908,24 +785,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateComparison(DbExpressionKind kind, DbExpression left, DbExpression right)
         {
-            DebugCheck.NotNull(left);
-            DebugCheck.NotNull(right);
-
-            //
             // A comparison of the specified kind must exist between the left and right arguments
-            //
             var equality = true;
             var order = true;
-            if (DbExpressionKind.GreaterThanOrEquals == kind
-                ||
-                DbExpressionKind.LessThanOrEquals == kind)
+            if (DbExpressionKind.GreaterThanOrEquals == kind 
+                || DbExpressionKind.LessThanOrEquals == kind)
             {
                 equality = TypeSemantics.IsEqualComparableTo(left.ResultType, right.ResultType);
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
-            else if (DbExpressionKind.Equals == kind
-                     ||
-                     DbExpressionKind.NotEquals == kind)
+            else if (DbExpressionKind.Equals == kind 
+                || DbExpressionKind.NotEquals == kind)
             {
                 equality = TypeSemantics.IsEqualComparableTo(left.ResultType, right.ResultType);
             }
@@ -934,8 +804,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
 
-            if (!equality
-                || !order)
+            if (!equality || !order)
             {
                 throw new ArgumentException(Strings.Cqt_Comparison_ComparableRequired);
             }
@@ -952,17 +821,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             DebugCheck.NotNull(argument);
 
-            //
             // The argument cannot be of a collection type
-            //
             if (TypeSemantics.IsCollectionType(argument.ResultType))
             {
                 throw new ArgumentException(Strings.Cqt_IsNull_CollectionNotAllowed);
             }
 
-            //
             // ensure argument type is valid for this operation
-            //
             if (!TypeHelpers.IsValidIsNullOpType(argument.ResultType))
             {
                 if (!allowRowType
@@ -977,9 +842,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateLike(DbExpression argument, DbExpression pattern)
         {
-            DebugCheck.NotNull(argument);
-            DebugCheck.NotNull(pattern);
-
             RequireCompatibleType(argument, PrimitiveTypeKind.String, "argument");
             RequireCompatibleType(pattern, PrimitiveTypeKind.String, "pattern");
 
@@ -988,8 +850,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateLike(DbExpression argument, DbExpression pattern, DbExpression escape)
         {
-            DebugCheck.NotNull(escape);
-
             var resultType = ValidateLike(argument, pattern);
 
             RequireCompatibleType(escape, PrimitiveTypeKind.String, "escape");
@@ -1003,12 +863,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateCastTo(DbExpression argument, TypeUsage toType)
         {
-            DebugCheck.NotNull(argument);
             CheckType(toType, "toType");
 
-            //
             // Verify that the cast is allowed
-            //
             if (!TypeSemantics.IsCastAllowed(argument.ResultType, toType))
             {
                 throw new ArgumentException(Strings.Cqt_Cast_InvalidCast(argument.ResultType.ToString(), toType.ToString()));
@@ -1017,17 +874,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static void ValidateTreatAs(DbExpression argument, TypeUsage asType)
         {
-            DebugCheck.NotNull(argument);
             CheckType(asType, "asType");
 
-            //
             // Verify the type to treat as. Treat-As (NullType) is not allowed.
-            //
             RequirePolymorphicType(asType);
 
-            //
             // Verify that the Treat operation is allowed
-            //
             if (!TypeSemantics.IsValidPolymorphicCast(argument.ResultType, asType))
             {
                 throw new ArgumentException(Strings.Cqt_General_PolymorphicArgRequired(typeof(DbTreatExpression).Name));
@@ -1036,51 +888,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateOfType(DbExpression argument, TypeUsage type)
         {
-            DebugCheck.NotNull(argument);
             CheckType(type, "type");
 
-            //
             // Ensure that the type is non-null and valid - from the same metadata collection and dataspace and the command tree.
             // The type is also not allowed to be NullType.
-            //
             RequirePolymorphicType(type);
 
-            //
             // Ensure that the argument is actually of a collection type.
-            //
             RequireCollectionArgument<DbOfTypeExpression>(argument);
 
-            //
             // Verify that the OfType operation is allowed
-            //
             TypeUsage elementType = null;
             if (!TypeHelpers.TryGetCollectionElementType(argument.ResultType, out elementType)
-                ||
-                !TypeSemantics.IsValidPolymorphicCast(elementType, type))
+                || !TypeSemantics.IsValidPolymorphicCast(elementType, type))
             {
                 throw new ArgumentException(Strings.Cqt_General_PolymorphicArgRequired(typeof(DbOfTypeExpression).Name));
             }
 
-            //
             // The type of this DbExpression is a new collection type based on the requested element type.
-            //
             return CreateCollectionResultType(type);
         }
 
         internal static TypeUsage ValidateIsOf(DbExpression argument, TypeUsage type)
         {
-            DebugCheck.NotNull(argument);
             CheckType(type, "type");
 
-            //
             // Ensure the ofType is non-null, associated with the correct metadata workspace/dataspace,
             // is not NullType, and is polymorphic
-            //
             RequirePolymorphicType(type);
 
-            //
             // Verify that the IsOf operation is allowed
-            //
             if (!TypeSemantics.IsValidPolymorphicCast(argument.ResultType, type))
             {
                 throw new ArgumentException(Strings.Cqt_General_PolymorphicArgRequired(typeof(DbIsOfExpression).Name));
@@ -1095,27 +932,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateDeref(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
-            //
             // Ensure that the operand is actually of a reference type.
-            //
             EntityType entityType;
             if (!TypeHelpers.TryGetRefEntityType(argument.ResultType, out entityType))
             {
                 throw new ArgumentException(Strings.Cqt_DeRef_RefRequired, "argument");
             }
 
-            //
             // Result Type is the element type of the reference type
-            //
             return CreateResultType(entityType);
         }
 
         internal static TypeUsage ValidateGetEntityRef(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
             EntityType entityType = null;
             if (!TypeHelpers.TryGetEdmType(argument.ResultType, out entityType)
                 || null == entityType)
@@ -1127,22 +956,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         internal static TypeUsage ValidateCreateRef(
-            EntitySet entitySet, IEnumerable<DbExpression> keyValues, out DbExpression keyConstructor)
-        {
-            DebugCheck.NotNull(entitySet);
-            return ValidateCreateRef(entitySet, entitySet.ElementType, keyValues, out keyConstructor);
-        }
-
-        internal static TypeUsage ValidateCreateRef(
             EntitySet entitySet, EntityType entityType, IEnumerable<DbExpression> keyValues, out DbExpression keyConstructor)
         {
             CheckEntitySet(entitySet, "entitySet");
             CheckType(entityType, "entityType");
 
-            //
             // Verify that the specified return type of the Ref operation is actually in
             // the same hierarchy as the Entity type of the specified Entity set.
-            //
             if (!TypeSemantics.IsValidPolymorphicCast(entitySet.ElementType, entityType))
             {
                 throw new ArgumentException(Strings.Cqt_Ref_PolymorphicArgRequired);
@@ -1168,29 +988,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             return CreateReferenceResultType(entityType);
         }
 
-        internal static TypeUsage ValidateRefFromKey(EntitySet entitySet, DbExpression keyValues)
-        {
-            DebugCheck.NotNull(entitySet);
-            return ValidateRefFromKey(entitySet, keyValues, entitySet.ElementType);
-        }
-
         internal static TypeUsage ValidateRefFromKey(EntitySet entitySet, DbExpression keyValues, EntityType entityType)
         {
-            DebugCheck.NotNull(keyValues);
-
             CheckEntitySet(entitySet, "entitySet");
             CheckType(entityType);
 
-            //
             // Verify that the specified return type of the Ref operation is actually in
             // the same hierarchy as the Entity type of the specified Entity set.
-            //
             if (!TypeSemantics.IsValidPolymorphicCast(entitySet.ElementType, entityType))
             {
                 throw new ArgumentException(Strings.Cqt_Ref_PolymorphicArgRequired);
             }
 
-            //
             // The Argument DbExpression must construct a set of values of the same types as the Key members of the Entity
             // The names of the columns in the record type constructed by the Argument are not important, only that the
             // number of columns is the same as the number of Key members and that for each Key member the corresponding
@@ -1200,7 +1009,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             // expected type's columns, RequireCompatibleType will therefore enforce the required level of type correctness
             //
             // Set the expected type to be the record type created based on the Key members
-            //
             var keyType = CreateResultType(TypeHelpers.CreateKeyRowType(entitySet.ElementType));
             RequireCompatibleType(keyValues, keyType, "keyValues");
 
@@ -1209,8 +1017,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateGetRefKey(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
             RefType refType = null;
             if (!TypeHelpers.TryGetEdmType(argument.ResultType, out refType)
                 || null == refType)
@@ -1228,18 +1034,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             DbExpression navigateFrom, RelationshipType type, string fromEndName, string toEndName, out RelationshipEndMember fromEnd,
             out RelationshipEndMember toEnd)
         {
-            DebugCheck.NotNull(navigateFrom);
-            DebugCheck.NotNull(fromEndName);
-            DebugCheck.NotNull(toEndName);
-
-            //
             // Ensure that the relation type is non-null and from the same metadata workspace as the command tree
-            //
             CheckType(type);
 
-            //
             // Retrieve the relation end properties with the specified 'from' and 'to' names
-            //
             if (!type.RelationshipEndMembers.TryGetValue(fromEndName, false /*ignoreCase*/, out fromEnd))
             {
                 throw new ArgumentOutOfRangeException(fromEndName, Strings.Cqt_Factory_NoSuchRelationEnd);
@@ -1250,9 +1048,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentOutOfRangeException(toEndName, Strings.Cqt_Factory_NoSuchRelationEnd);
             }
 
-            //
             // Validate the retrieved relation end against the navigation source
-            //
             RequireCompatibleType(navigateFrom, fromEnd, allowAllRelationshipsInSameTypeHierarchy: false);
 
             return CreateResultType(toEnd);
@@ -1264,22 +1060,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             DebugCheck.NotNull(navigateFrom);
 
-            //
             // Validate the relationship ends before use
-            //
             CheckMember(fromEnd, "fromEnd");
             CheckMember(toEnd, "toEnd");
 
             relType = fromEnd.DeclaringType as RelationshipType;
 
-            //
             // Ensure that the relation type is non-null and read-only
-            //
             CheckType(relType);
 
-            //
             // Validate that the 'to' relationship end is defined by the same relationship type as the 'from' end
-            //
             if (!relType.Equals(toEnd.DeclaringType))
             {
                 throw new ArgumentException(Strings.Cqt_Factory_IncompatibleRelationEnds, "toEnd");
@@ -1296,16 +1086,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateDistinct(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
-            //
             // Ensure that the Argument is of a collection type
-            //
             RequireCollectionArgument<DbDistinctExpression>(argument);
 
-            //
             // Ensure that the Distinct operation is valid for the input
-            //
             var inputType = TypeHelpers.GetEdmType<CollectionType>(argument.ResultType);
             if (!TypeHelpers.IsValidDistinctOpType(inputType.TypeUsage))
             {
@@ -1319,24 +1103,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             DebugCheck.NotNull(argument);
 
-            //
             // Ensure that the operand is actually of a collection type.
-            //
             RequireCollectionArgument<DbElementExpression>(argument);
 
-            //
             // Result Type is the element type of the collection type
-            //
             return TypeHelpers.GetEdmType<CollectionType>(argument.ResultType).TypeUsage;
         }
 
         internal static TypeUsage ValidateIsEmpty(DbExpression argument)
         {
-            DebugCheck.NotNull(argument);
-
-            //
             // Ensure that the Argument is of a collection type
-            //
             RequireCollectionArgument<DbIsEmptyExpression>(argument);
 
             return _booleanType;
@@ -1346,9 +1122,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             ValidateBinary(left, right);
 
-            //
             // Ensures the left and right operands are each of a comparable collection type
-            //
             RequireComparableCollectionArguments<DbExceptExpression>(left, right);
 
             return left.ResultType;
@@ -1358,9 +1132,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             ValidateBinary(left, right);
 
-            //
             // Ensures the left and right operands are each of a comparable collection type
-            //
             return RequireComparableCollectionArguments<DbIntersectExpression>(left, right);
         }
 
@@ -1368,45 +1140,31 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             ValidateBinary(left, right);
 
-            //
             // Ensure that the left and right operands are each of a collection type and that a common type exists for those types.
-            //
             return RequireCollectionArguments<DbUnionAllExpression>(left, right);
         }
 
         internal static TypeUsage ValidateLimit(DbExpression argument, DbExpression limit)
         {
-            DebugCheck.NotNull(argument);
-            DebugCheck.NotNull(limit);
-
-            //
             // Initialize the Argument ExpressionLink. In addition to being non-null and from the same command tree,
             // the Argument expression must have a collection result type.
-            //
             RequireCollectionArgument<DbLimitExpression>(argument);
 
-            //
             // Initialize the Limit ExpressionLink. In addition to being non-null and from the same command tree,
             // the Limit expression must also have an integer result type.
-            //
             if (!TypeSemantics.IsIntegerNumericType(limit.ResultType))
             {
                 throw new ArgumentException(Strings.Cqt_Limit_IntegerRequired, "limit");
             }
 
-            //
             // Currently the Limit expression is also required to be either a DbConstantExpression or a DbParameterReferenceExpression.
-            //
             if (limit.ExpressionKind != DbExpressionKind.Constant
-                &&
-                limit.ExpressionKind != DbExpressionKind.ParameterReference)
+                && limit.ExpressionKind != DbExpressionKind.ParameterReference)
             {
                 throw new ArgumentException(Strings.Cqt_Limit_ConstantOrParameterRefRequired, "limit");
             }
 
-            //
             // For constants, verify the limit is non-negative.
-            //
             if (IsConstantNegativeInteger(limit))
             {
                 throw new ArgumentException(Strings.Cqt_Limit_NonNegativeLimitRequired, "limit");
@@ -1423,15 +1181,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             IEnumerable<DbExpression> whenExpressions, IEnumerable<DbExpression> thenExpressions, DbExpression elseExpression,
             out DbExpressionList validWhens, out DbExpressionList validThens)
         {
-            DebugCheck.NotNull(whenExpressions);
-            DebugCheck.NotNull(thenExpressions);
-            DebugCheck.NotNull(elseExpression);
-
-            //
             // All 'When's must produce a Boolean result, and a common (non-null) result type must exist
             // for all 'Thens' and 'Else'. At least one When/Then clause is required and the number of
             // 'When's must equal the number of 'Then's.
-            //
             validWhens = CreateExpressionList(
                 whenExpressions, "whenExpressions",
                 (exp, idx) => { RequireCompatibleType(exp, PrimitiveTypeKind.Boolean, "whenExpressions", idx); }
@@ -1465,32 +1217,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_Case_InvalidResultType);
             }
 
-            //
             // The number of 'When's must equal the number of 'Then's.
-            //
-            if (validWhens.Count
-                != validThens.Count)
+            if (validWhens.Count != validThens.Count)
             {
                 throw new ArgumentException(Strings.Cqt_Case_WhensMustEqualThens);
             }
 
-            //
             // The result type of DbCaseExpression is the common result type
-            //
             return commonResultType;
         }
 
         internal static TypeUsage ValidateFunction(
             EdmFunction function, IEnumerable<DbExpression> arguments, out DbExpressionList validArgs)
         {
-            //
             // Ensure that the function metadata is non-null and from the same metadata workspace and dataspace as the command tree.
             CheckFunction(function);
 
-            //
             // Non-composable functions or non-UDF functions including command text are not permitted in expressions -- they can only be 
             // executed independently
-            //
             if (!function.IsComposableAttribute)
             {
                 throw new ArgumentException(Strings.Cqt_Function_NonComposableInExpression, "function");
@@ -1501,9 +1245,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_Function_CommandTextInExpression, "function");
             }
 
-            //
             // Functions that return void are not allowed
-            //
             if (null == function.ReturnParameter)
             {
                 throw new ArgumentException(Strings.Cqt_Function_VoidResultInvalid, "function");
@@ -1523,9 +1265,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateInvoke(DbLambda lambda, IEnumerable<DbExpression> arguments, out DbExpressionList validArguments)
         {
-            DebugCheck.NotNull(lambda);
-            DebugCheck.NotNull(arguments);
-
             // Each argument must be type-compatible with the corresponding lambda variable for which it supplies the value
             validArguments = null;
             var argValidator = CreateValidator(
@@ -1607,15 +1346,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         internal static TypeUsage ValidateNew(
             TypeUsage instanceType, IEnumerable<DbExpression> arguments, out DbExpressionList validArguments)
         {
-            //
             // Ensure that the type is non-null, valid and not NullType
-            //
             CheckType(instanceType, "instanceType");
 
             CollectionType collectionType = null;
             if (TypeHelpers.TryGetEdmType(instanceType, out collectionType)
-                &&
-                collectionType != null)
+                && collectionType != null)
             {
                 // Collection arguments may have zero count for empty collection construction
                 var elementType = collectionType.TypeUsage;
@@ -1707,14 +1443,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateProperty(DbExpression instance, EdmMember property, string propertyArgumentName)
         {
-            //
             // Validate the member
-            //
             CheckMember(property, propertyArgumentName);
 
-            //
             // Validate the instance
-            //
             if (null == instance)
             {
                 throw new ArgumentException(Strings.Cqt_Property_InstanceRequiredForInstance, "instance");
@@ -1730,32 +1462,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         internal static TypeUsage ValidateProperty(DbExpression instance, string propertyName, bool ignoreCase, out EdmMember foundMember)
         {
-            DebugCheck.NotNull(instance);
-            DebugCheck.NotNull(propertyName);
-
-            //
             // EdmProperty, NavigationProperty and RelationshipEndMember are the only valid members for DbPropertyExpression.
             // Since these all derive from EdmMember they are declared by subtypes of StructuralType,
             // so a non-StructuralType instance is invalid.
-            //
             StructuralType structType;
             if (TypeHelpers.TryGetEdmType(instance.ResultType, out structType))
             {
-                //
                 // Does the type declare a member with the given name?
-                //
                 if (structType.Members.TryGetValue(propertyName, ignoreCase, out foundMember)
                     &&
                     foundMember != null)
                 {
-                    //
                     // If the member is a RelationshipEndMember, call the corresponding overload.
-                    //
                     if (Helper.IsRelationshipEndMember(foundMember)
-                        ||
-                        Helper.IsEdmProperty(foundMember)
-                        ||
-                        Helper.IsNavigationProperty(foundMember))
+                        || Helper.IsEdmProperty(foundMember)
+                        || Helper.IsNavigationProperty(foundMember))
                     {
                         return Helper.GetModelTypeUsage(foundMember);
                     }
@@ -1841,7 +1562,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
         private static void CheckType(TypeUsage type, string varName)
         {
-            DebugCheck.NotNull(type);
             CheckReadOnly(type, varName);
 
             // TypeUsage constructor is responsible for basic validation of EdmType
@@ -1896,7 +1616,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static void CheckFunction(EdmFunction function)
         {
-            DebugCheck.NotNull(function);
             CheckReadOnly(function, "function");
 
             Debug.Assert(function.Name != null, "EdmType constructor allowed null name?");
@@ -1941,15 +1660,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         /// <param name="varName"> The variable name to use if an exception should be thrown </param>
         private static void CheckEntitySet(EntitySetBase entitySet, string varName)
         {
-            DebugCheck.NotNull(entitySet);
             CheckReadOnly(entitySet, varName);
 
             // EntitySetBase constructor is responsible for basic validation of set name and element type
             Debug.Assert(!string.IsNullOrEmpty(entitySet.Name), "EntitySetBase constructor allowed null/empty set name?");
 
-            //
             // Verify the Extent's Container
-            //
             if (null == entitySet.EntityContainer)
             {
                 throw new ArgumentException(Strings.Cqt_Metadata_EntitySetEntityContainerNull, varName);
@@ -1960,9 +1676,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 throw new ArgumentException(Strings.Cqt_Metadata_EntitySetIncorrectSpace, varName);
             }
 
-            //
             // Verify the Extent's Entity Type
-            //
             // EntitySetBase constructor is responsible for basic validation of set name and element type
             Debug.Assert(entitySet.ElementType != null, "EntitySetBase constructor allowed null container?");
 
@@ -2056,18 +1770,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var retType = end.TypeUsage;
             if (!TypeSemantics.IsReferenceType(retType))
             {
-                //
                 // The only relation end that is currently allowed to have a non-Reference type is the Child end of
                 // a composition, in which case the end type must be an entity type. 
                 //
-                //Debug.Assert(end.Relation.IsComposition && !end.IsParent && (end.Type is EntityType), "Relation end can only have non-Reference type if it is a Composition child end");
+                ////Debug.Assert(end.Relation.IsComposition && !end.IsParent && (end.Type is EntityType), "Relation end can only have non-Reference type if it is a Composition child end");
 
                 retType = TypeHelpers.CreateReferenceTypeUsage(TypeHelpers.GetEdmType<EntityType>(retType));
             }
 
-            //
             // If the upper bound is not 1 the result type is a collection of the given type
-            //
             if (RelationshipMultiplicity.Many
                 == end.RelationshipMultiplicity)
             {
