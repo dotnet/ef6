@@ -43,7 +43,7 @@ namespace System.Data.Entity.Migrations
             : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver))
         {
             CodeGenerator = new CSharpMigrationCodeGenerator();
-            ContextKey = GetType().FullName;
+            ContextKey = GetType().ToString();
         }
 
         internal DbMigrationsConfiguration(Lazy<IDbDependencyResolver> resolver)
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Migrations
             {
                 Check.NotEmpty(value, "value");
 
-                _contextKey = value;
+                _contextKey = value.RestrictTo(HistoryContext.ContextKeyMaxLength);
             }
         }
 

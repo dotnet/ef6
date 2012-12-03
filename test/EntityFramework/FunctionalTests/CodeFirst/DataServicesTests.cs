@@ -3,9 +3,7 @@
 namespace FunctionalTests
 {
     using System.Data.Entity;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Services;
@@ -30,15 +28,11 @@ namespace FunctionalTests
         }
     }
 
-    #region Fixtures
-
     public sealed class DataServicesModelBuilder : DbModelBuilder
     {
         internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo)
         {
             var databaseMapping = base.Build(providerInfo).DatabaseMapping;
-
-            //databaseMapping.ShellEdmx();
 
             databaseMapping.AssertValid();
 
@@ -69,6 +63,4 @@ namespace FunctionalTests
     {
         public string Data { get; set; }
     }
-
-    #endregion
 }

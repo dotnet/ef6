@@ -1379,7 +1379,12 @@ namespace System.Data.Entity.Internal
 
         public string ContextKey
         {
-            get { return Owner.GetType().FullName; }
+            get { return OwnerShortTypeName.RestrictTo(HistoryContext.ContextKeyMaxLength); }
+        }
+
+        internal virtual string OwnerShortTypeName
+        {
+            get { return Owner.GetType().ToString(); }
         }
     }
 }

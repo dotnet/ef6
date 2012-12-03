@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Config;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Sql;
+    using DaFunc;
     using Moq;
     using Xunit;
 
@@ -72,6 +73,20 @@ namespace System.Data.Entity.Migrations
 
             Assert.IsType<SqlCeMigrationSqlGenerator>(
                 DbConfiguration.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
+        }
+
+        private class TestMigrationsConfiguration<TContext> : DbMigrationsConfiguration<TContext>
+            where TContext : DbContext
+        {
+        }
+
+        [Fact]
+        public void ContextKey_is_assigned_to_short_full_name_by_default()
+        {
+            var migrationsConfiguration
+                = new TestMigrationsConfiguration<GT<NT, NT>.GenericFuncy<GT<GT<NT, NT>, NT>, NT>>();
+
+            Assert.Equal(migrationsConfiguration.GetType().ToString(), migrationsConfiguration.ContextKey);
         }
     }
 }

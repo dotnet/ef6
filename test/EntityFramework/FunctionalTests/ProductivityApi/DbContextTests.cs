@@ -517,6 +517,8 @@ namespace ProductivityApiTests
         {
             using (var context = new GenericFuncy<string, GT<string, int?>>())
             {
+                context.Database.Delete();
+
                 context.Database.Initialize(force: false);
 
                 Assert.True(context.Database.Exists());
@@ -528,6 +530,8 @@ namespace ProductivityApiTests
         {
             using (var context = new GT<string, int?>.Funcy())
             {
+                context.Database.Delete();
+
                 context.Database.Initialize(force: false);
 
                 Assert.True(context.Database.Exists());
@@ -539,6 +543,8 @@ namespace ProductivityApiTests
         {
             using (var context = new GT<NT, NT>.GenericFuncy<GT<GT<NT, NT>, NT>, NT>())
             {
+                context.Database.Delete();
+
                 context.Database.Initialize(force: false);
 
                 Assert.True(context.Database.Exists());
