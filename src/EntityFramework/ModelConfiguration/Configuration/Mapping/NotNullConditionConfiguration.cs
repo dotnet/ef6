@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private readonly Func<Type, T> _capturingPredicate;
 
         public EntityConventionWithHavingBase(
-           IEnumerable<Func<Type, bool>> predicates,
+            IEnumerable<Func<Type, bool>> predicates,
             Func<Type, T> capturingPredicate)
             : base(predicates)
         {

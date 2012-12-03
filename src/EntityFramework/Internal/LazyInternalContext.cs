@@ -6,13 +6,15 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Edm.Internal;
+    
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -454,13 +456,13 @@ namespace System.Data.Entity.Internal
 
             var modelBuilder = new DbModelBuilder(version);
 
-            var modelNamespace = EdmUtil.StripInvalidCharacters(Owner.GetType().Namespace);
+            var modelNamespace = StripInvalidCharacters(Owner.GetType().Namespace);
             if (!String.IsNullOrWhiteSpace(modelNamespace))
             {
                 modelBuilder.Conventions.Add(new ModelNamespaceConvention(modelNamespace));
             }
 
-            var modelContainer = EdmUtil.StripInvalidCharacters(Owner.GetType().Name);
+            var modelContainer = StripInvalidCharacters(Owner.GetType().Name);
             if (!String.IsNullOrWhiteSpace(modelContainer))
             {
                 modelBuilder.Conventions.Add(new ModelContainerConvention(modelContainer));
@@ -476,6 +478,56 @@ namespace System.Data.Entity.Internal
             }
 
             return modelBuilder;
+        }
+
+        private static string StripInvalidCharacters(string value)
+        {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                // The case where the value is null or whitespace is treated as a special case
+                // of a string with no invalid characters and hence the consistent return type
+                // for other input of this type is to return the empty string.
+                return String.Empty;
+            }
+
+            var builder = new StringBuilder(value.Length);
+            var nextMustBeStartChar = true;
+            foreach (var c in value)
+            {
+                if (c == '.')
+                {
+                    if (!nextMustBeStartChar)
+                    {
+                        builder.Append(c);
+                    }
+                    continue;
+                }
+
+                switch (Char.GetUnicodeCategory(c))
+                {
+                    case UnicodeCategory.UppercaseLetter:
+                    case UnicodeCategory.LowercaseLetter:
+                    case UnicodeCategory.TitlecaseLetter:
+                    case UnicodeCategory.ModifierLetter:
+                    case UnicodeCategory.OtherLetter:
+                    case UnicodeCategory.LetterNumber:
+                        {
+                            nextMustBeStartChar = false;
+                            builder.Append(c);
+                            break;
+                        }
+                    case UnicodeCategory.NonSpacingMark:
+                    case UnicodeCategory.SpacingCombiningMark:
+                    case UnicodeCategory.DecimalDigitNumber:
+                    case UnicodeCategory.ConnectorPunctuation:
+                        if (!nextMustBeStartChar)
+                        {
+                            builder.Append(c);
+                        }
+                        break;
+                }
+            }
+            return builder.ToString();
         }
 
         /// <summary>

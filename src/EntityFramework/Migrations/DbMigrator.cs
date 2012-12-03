@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -761,7 +761,7 @@ namespace System.Data.Entity.Migrations
                         {
                             var schema = createTableOperation.Name.ToDatabaseName().Schema;
 
-                            if (schema != DbDatabaseMetadataExtensions.DefaultSchema)
+                            if (schema != EdmModelExtensions.DefaultSchema)
                             {
                                 throw Error.UnableToMoveHistoryTableWithAuto();
                             }
@@ -960,7 +960,7 @@ namespace System.Data.Entity.Migrations
                 return tableName;
             }
 
-            return DbDatabaseMetadataExtensions.DefaultSchema + "." + tableName;
+            return EdmModelExtensions.DefaultSchema + "." + tableName;
         }
 
         internal override void EnsureDatabaseExists()

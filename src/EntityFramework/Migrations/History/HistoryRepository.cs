@@ -12,7 +12,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Migrations.History
             _contextKey = contextKey;
 
             _schemas
-                = new[] { DbDatabaseMetadataExtensions.DefaultSchema }
+                = new[] { EdmModelExtensions.DefaultSchema }
                     .Concat(schemas ?? Enumerable.Empty<string>())
                     .Distinct();
 

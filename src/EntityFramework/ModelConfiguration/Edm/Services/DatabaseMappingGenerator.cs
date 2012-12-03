@@ -4,8 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Utilities;
     using System.Linq;
 

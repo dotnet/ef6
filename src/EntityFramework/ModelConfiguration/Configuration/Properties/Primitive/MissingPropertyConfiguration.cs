@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
-    using System.Reflection;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
     ///     Dummy class used to ignore the configuration of properties that don't exist.
@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
-        public override LightweightPropertyConfiguration HasDatabaseGeneratedOption(ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption databaseGeneratedOption)
+        public override LightweightPropertyConfiguration HasDatabaseGeneratedOption(DatabaseGeneratedOption databaseGeneratedOption)
         {
             return this;
         }

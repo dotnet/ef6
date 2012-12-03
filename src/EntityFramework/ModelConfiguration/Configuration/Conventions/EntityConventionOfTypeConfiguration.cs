@@ -53,7 +53,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     predicate.
         /// </summary>
         /// <param name="predicate"> A function to test each entity type for a condition. </param>
-        /// <returns> An <see cref="EntityConventionOfTypeConfiguration{T}" /> instance so that multiple calls can be chained. </returns>
+        /// <returns>
+        ///     An <see cref="EntityConventionOfTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         public EntityConventionOfTypeConfiguration<T> Where(Func<Type, bool> predicate)
         {
             Check.NotNull(predicate, "predicate");
@@ -72,7 +74,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     A function to capture a value for each entity type. If the value is null, the
         ///     entity type will be filtered out.
         /// </param>
-        /// <returns> An <see cref="EntityConventionOfTypeWithHavingConfiguration{T, TValue}" /> instance so that multiple calls can be chained. </returns>
+        /// <returns>
+        ///     An <see cref="EntityConventionOfTypeWithHavingConfiguration{T, TValue}" /> instance so that multiple calls can be chained.
+        /// </returns>
         public EntityConventionOfTypeWithHavingConfiguration<T, TValue> Having<TValue>(Func<Type, TValue> capturingPredicate)
             where TValue : class
         {

@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
