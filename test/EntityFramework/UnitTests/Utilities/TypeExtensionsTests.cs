@@ -4,6 +4,7 @@ namespace System.Data.Entity.Utilities
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Objects.DataClasses;
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using System.Reflection;
     using Moq.Protected;
     using Xunit;
@@ -159,6 +161,12 @@ namespace System.Data.Entity.Utilities
                 Assert.Same(typeof(string), typeof(MultipleImplementor<DbContext, string>).TryGetElementType(typeof(IEnumerable<>)));
             }
 
+            public void TryGetElementType_returns_element_type_for_given_class()
+            {
+                Assert.Same(typeof(string), typeof(Collection<string>).TryGetElementType(typeof(Collection<>)));
+                Assert.Same(typeof(int), typeof(List<int>).TryGetElementType(typeof(List<>)));
+            }
+
             [Fact]
             public void TryGetElementType_returns_null_if_type_is_generic_type_definition()
             {
@@ -170,6 +178,13 @@ namespace System.Data.Entity.Utilities
             {
                 Assert.Null(typeof(ICollection<string>).TryGetElementType(typeof(IDatabaseInitializer<>)));
                 Assert.Null(typeof(Random).TryGetElementType(typeof(IDatabaseInitializer<>)));
+            }
+
+            [Fact]
+            public void TryGetElementType_returns_null_if_type_doesnt_implement_class()
+            {
+                Assert.Null(typeof(ICollection<string>).TryGetElementType(typeof(List<>)));
+                Assert.Null(typeof(Random).TryGetElementType(typeof(Collection<>)));
             }
 
             public class MultipleImplementor<TContext, TElement> : IDatabaseInitializer<TContext>, IEnumerable<TElement>
@@ -188,6 +203,36 @@ namespace System.Data.Entity.Utilities
                 {
                     return GetEnumerator();
                 }
+            }
+        }
+
+        public class GetBaseTypes
+        {
+            [Fact]
+            public void GetBaseTypes_return_all_base_types()
+            {
+                Assert.Equal(3, typeof(MultipleHierarchy).GetBaseTypes().Count());
+                Assert.True(typeof(MultipleHierarchy).GetBaseTypes().Contains(typeof(Some)));
+                Assert.True(typeof(MultipleHierarchy).GetBaseTypes().Contains(typeof(Base)));
+                Assert.True(typeof(MultipleHierarchy).GetBaseTypes().Contains(typeof(object)));
+            }
+
+            [Fact]
+            public void GetBaseTypes_return_empty_if_no_base_type_exists()
+            {
+                Assert.False(typeof(object).GetBaseTypes().Any());
+            }
+
+            public class MultipleHierarchy : Some
+            {
+            }
+
+            public class Some : Base
+            {
+            }
+
+            public class Base
+            {
             }
         }
 

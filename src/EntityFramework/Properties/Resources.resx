@@ -5319,6 +5319,9 @@ s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
   <data name="DbSpatialServices_NotDbSpatialServices" xml:space="preserve">
     <value>The 'Instance' member of the Entity Framework spatial provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Spatial.DbSpatialServices'. Entity Framework spatial providers must extend from this class and the 'Instance' member must return the Singleton instance of the spatial provider.</value>
   </data>
+  <data name="CreateConfigurationType_NoParameterlessConstructor" xml:space="preserve">
+    <value>An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly.</value>
+  </data>
   <data name="CollectionEmpty" xml:space="preserve">
     <value>The '{0}' collection used in the call to '{1}' must contain at least one element.</value>
   </data>

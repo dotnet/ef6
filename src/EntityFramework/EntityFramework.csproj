@@ -353,6 +353,9 @@
     <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
     <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivator.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilter.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />

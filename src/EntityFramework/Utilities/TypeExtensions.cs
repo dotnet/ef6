@@ -52,18 +52,18 @@ namespace System.Data.Entity.Utilities
             return true;
         }
 
-        public static Type TryGetElementType(this Type type, Type interfaceType)
+        public static Type TryGetElementType(this Type type, Type interfaceOrBaseType)
         {
             DebugCheck.NotNull(type);
-            DebugCheck.NotNull(interfaceType);
+            DebugCheck.NotNull(interfaceOrBaseType);
 
             if (!type.IsGenericTypeDefinition)
             {
-                var interfaceImpl = type.GetInterfaces()
-                                        .Union(new[] { type })
-                                        .FirstOrDefault(
-                                            t => t.IsGenericType
-                                                 && t.GetGenericTypeDefinition() == interfaceType);
+                var interfaceImpl = (interfaceOrBaseType.IsInterface ? type.GetInterfaces() : type.GetBaseTypes())
+                    .Union(new[] { type })
+                    .FirstOrDefault(
+                        t => t.IsGenericType
+                             && t.GetGenericTypeDefinition() == interfaceOrBaseType);
 
                 if (interfaceImpl != null)
                 {
@@ -72,6 +72,20 @@ namespace System.Data.Entity.Utilities
             }
 
             return null;
+        }
+
+        public static IEnumerable<Type> GetBaseTypes(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            type = type.BaseType;
+
+            while (type != null)
+            {
+                yield return type;
+
+                type = type.BaseType;
+            }
         }
 
         public static Type GetTargetType(this Type type)

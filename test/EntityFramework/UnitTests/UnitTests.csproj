@@ -228,6 +228,9 @@
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilterTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
