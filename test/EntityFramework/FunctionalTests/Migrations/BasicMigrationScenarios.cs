@@ -67,6 +67,28 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
+        public void ScaffoldInitialCreate_should_return_scaffolded_migration_when_db_initialized_and_schema_specified()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v5>();
+
+            var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
+
+            migrator = CreateMigrator<ShopContext_v5>(scaffoldedMigrations: initialCreate, contextKey: typeof(ShopContext_v5).FullName);
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v5>(contextKey: "NewOne");
+
+            var scaffoldedMigration = migrator.ScaffoldInitialCreate("Foo");
+
+            Assert.NotNull(scaffoldedMigration);
+            Assert.NotSame(initialCreate, scaffoldedMigration);
+            Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
+        }
+
+        [MigrationsTheory]
         public void Generate_should_create_custom_migration_step()
         {
             ResetDatabase();
