@@ -13358,6 +13358,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly."
+        /// </summary>
+        internal static string CreateConfigurationType_NoParameterlessConstructor(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CreateConfigurationType_NoParameterlessConstructor, p0);
+        }
+
+        /// <summary>
         /// A string like "The '{0}' collection used in the call to '{1}' must contain at least one element."
         /// </summary>
         internal static string CollectionEmpty(object p0, object p1)
@@ -16680,6 +16688,7 @@ namespace System.Data.Entity.Resources
         internal const string DbSpatialServicesTypeNotFound = "DbSpatialServicesTypeNotFound";
         internal const string DbSpatialServices_InstanceMissing = "DbSpatialServices_InstanceMissing";
         internal const string DbSpatialServices_NotDbSpatialServices = "DbSpatialServices_NotDbSpatialServices";
+        internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
