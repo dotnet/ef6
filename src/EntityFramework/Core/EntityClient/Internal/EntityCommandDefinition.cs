@@ -20,11 +20,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
 #endif
 
     internal class EntityCommandDefinition : DbCommandDefinition

@@ -224,22 +224,19 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
 #endif
 
-        private bool HandleReaderException(Exception e)
+        private void HandleReaderException(Exception e)
         {
-            // check if the reader is closed; if so, throw friendlier exception
-            if (Reader.IsClosed)
-            {
-                const string operation = "Read";
-                throw new InvalidOperationException(Strings.ADP_DataReaderClosed(operation));
-            }
-
             // wrap exception if necessary
             if (e.IsCatchableEntityExceptionType())
             {
+                // check if the reader is closed; if so, throw friendlier exception
+                if (Reader.IsClosed)
+                {
+                    throw new EntityCommandExecutionException((Strings.ADP_DataReaderClosed("Read")), e);
+                }
+
                 throw new EntityCommandExecutionException(Strings.EntityClient_StoreReaderFailed, e);
             }
-
-            return false;
         }
 
         /// <summary>

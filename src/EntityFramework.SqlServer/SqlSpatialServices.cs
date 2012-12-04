@@ -126,13 +126,8 @@ namespace System.Data.Entity.SqlServer
             return SqlTypes.IsSqlGeographyNull(normalizedProviderValue) ? null : CreateGeography(this, normalizedProviderValue);
         }
 
-        // Ensure that provider values are from the expected version of the Sql types assembly.   If they aren't try to 
+        // Ensure that provider values are from the expected version of the Sql types assembly. If they aren't try to 
         // convert them so that they are.
-        // 
-        // Normally when we obtain values from the store, we try to use the appropriate SqlSpatialDataReader.   This will make sure that 
-        // any spatial values are instantiated with the provider type from the appropriate SqlServerTypes assembly.   However, 
-        // in one case (output parameter values) we don't have an opportunity to make this happen.    There we get whatever value 
-        // the underlying SqlDataReader produces which doesn't necessarily produce values from the assembly we expect.
         private object NormalizeProviderValue(object providerValue, Type expectedSpatialType)
         {
             Debug.Assert(expectedSpatialType == SqlTypes.SqlGeographyType || expectedSpatialType == SqlTypes.SqlGeometryType);

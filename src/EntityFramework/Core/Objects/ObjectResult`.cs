@@ -94,22 +94,13 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
-        /// <summary>
-        ///     Performs tasks associated with freeing, releasing, or resetting resources.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            // Technically, calling GC.SuppressFinalize is not required because the class does not
-            // have a finalizer, but it does no harm, protects against the case where a finalizer is added
-            // in the future, and prevents an FxCop warning.
-            GC.SuppressFinalize(this);
-
             var reader = _reader;
             _reader = null;
             _nextResultGenerator = null;
 
-            if (null != reader && _readerOwned)
+            if (reader != null && _readerOwned)
             {
                 reader.Dispose();
                 if (_onReaderDispose != null)

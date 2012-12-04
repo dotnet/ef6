@@ -661,10 +661,8 @@ namespace System.Data.Entity.Internal.Linq
         ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
-        /// <param name="sql"> The SQL quey. </param>
-        /// <param name="asNoTracking">
-        ///     if <c>true</c> then the entities are not tracked, otherwise they are.
-        /// </param>
+        /// <param name="sql"> The SQL query. </param>
+        /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
         public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
@@ -702,10 +700,8 @@ namespace System.Data.Entity.Internal.Linq
         ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
-        /// <param name="sql"> The SQL quey. </param>
-        /// <param name="asNoTracking">
-        ///     if <c>true</c> then the entities are not tracked, otherwise they are.
-        /// </param>
+        /// <param name="sql"> The SQL query. </param>
+        /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
         public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)

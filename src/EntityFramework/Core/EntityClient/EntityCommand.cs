@@ -16,8 +16,10 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
 
     /// <summary>
     ///     Class representing a command for the conceptual layer

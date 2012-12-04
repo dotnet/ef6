@@ -977,10 +977,8 @@ namespace System.Data.Entity.Core.Objects
             }
 
             if (entityEntry.State != EntityState.Modified
-                &&
-                entityEntry.State != EntityState.Unchanged
-                &&
-                entityEntry.State != EntityState.Deleted)
+                && entityEntry.State != EntityState.Unchanged
+                && entityEntry.State != EntityState.Deleted)
             {
                 throw new InvalidOperationException(
                     Strings.ObjectContext_EntityMustBeUnchangedOrModifiedOrDeleted(entityEntry.State.ToString()));
@@ -1224,12 +1222,9 @@ namespace System.Data.Entity.Core.Objects
         private void VerifyContextForAddOrAttach(IEntityWrapper wrappedEntity)
         {
             if (wrappedEntity.Context != null
-                &&
-                wrappedEntity.Context != this
-                &&
-                !wrappedEntity.Context.ObjectStateManager.IsDisposed
-                &&
-                wrappedEntity.MergeOption != MergeOption.NoTracking)
+                && wrappedEntity.Context != this
+                && !wrappedEntity.Context.ObjectStateManager.IsDisposed
+                && wrappedEntity.MergeOption != MergeOption.NoTracking)
             {
                 throw new InvalidOperationException(Strings.Entity_EntityCantHaveMultipleChangeTrackers);
             }
@@ -1453,8 +1448,7 @@ namespace System.Data.Entity.Core.Objects
 
             // Check the connection was opened correctly
             if (Connection.State == ConnectionState.Closed
-                ||
-                Connection.State == ConnectionState.Broken)
+                || Connection.State == ConnectionState.Broken)
             {
                 var message = Strings.EntityClient_ExecutingOnClosedConnection(
                     Connection.State == ConnectionState.Closed
@@ -1468,106 +1462,23 @@ namespace System.Data.Entity.Core.Objects
                 // Make sure the necessary metadata is registered
                 EnsureMetadata();
 
-                #region EnsureContextIsEnlistedInCurrentTransaction
-
-                // The following conditions are no longer valid since Metadata Independence.
-                Debug.Assert(ConnectionState.Open == Connection.State, "Connection must be open.");
-
-                // IF YOU MODIFIED THIS TABLE YOU MUST UPDATE TESTS IN SaveChangesTransactionTests SUITE ACCORDINGLY AS SOME CASES REFER TO NUMBERS IN THIS TABLE
-                //
-                // TABLE OF ACTIONS WE PERFORM HERE:
-                //
-                //  #  lastTransaction     currentTransaction         ConnectionState   WillClose      Action                                  Behavior when no explicit transaction (started with .ElistTransaction())     Behavior with explicit transaction (started with .ElistTransaction())
-                //  1   null                null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
-                //  2   non-null tx1        non-null tx1               Open              No             no-op;                                  the last transaction will be used                                            N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  3   null                non-null                   Closed            Yes            connection.Open();                      Opening connection will automatically enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
-                //  4   null                non-null                   Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  5   non-null            null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
-                //  6   non-null            null                       Closed            Yes            no-op;                                  implicit transaction will be created and used                                N/A - cannot enlist in transaction on a closed connection
-                //  7   non-null tx1        non-null tx2               Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  8   non-null tx1        non-null tx2               Open              Yes            connection.Close(); connection.Open();  Re-opening connection will automatically enlist into Transaction.Current     N/A - only applies to TransactionScope - requires two transactions and CommitableTransaction and TransactionScope cannot be mixed
-                //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatcially enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
-
                 var currentTransaction = Transaction.Current;
 
-                var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
-                                            (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
-
-                if (transactionHasChanged)
-                {
-                    if (!_openedConnection)
-                    {
-                        // We didn't open the connection so, just try to enlist the connection in the current transaction. 
-                        // Note that the connection can already be enlisted in a transaction (since the user opened 
-                        // it s/he could enlist it manually using EntityConnection.EnlistTransaction() method). If the 
-                        // transaction the connection is enlisted in has not completed (e.g. nested transaction) this call 
-                        // will fail (throw). Also currentTransaction can be null here which means that the transaction
-                        // used in the previous operation has completed. In this case we should not enlist the connection
-                        // in "null" transaction as the user might have enlisted in a transaction manually between calls by 
-                        // calling EntityConnection.EnlistTransaction() method. Enlisting with null would in this case mean "unenlist" 
-                        // and would cause an exception (see above). Had the user not enlisted in a transaction between the calls
-                        // enlisting with null would be a no-op - so again no reason to do it. 
-                        if (currentTransaction != null)
+                EnsureContextIsEnlistedInCurrentTransaction(
+                    currentTransaction,
+                    () =>
                         {
-                            Connection.EnlistTransaction(currentTransaction);
-                        }
-                    }
-                    else if (_connectionRequestCount > 1)
-                    {
-                        // We opened the connection. In addition we are here because there are multiple
-                        // active requests going on (read: enumerators that has not been disposed yet) 
-                        // using the same connection. (If there is only one active request e.g. like SaveChanges
-                        // or single enumerator there is no need for any specific transaction handling - either
-                        // we use the implicit ambient transaction (Transaction.Current) if one exists or we 
-                        // will create our own local transaction. Also if there is only one active request
-                        // the user could not enlist it in a transaction using EntityConnection.EnlistTransaction()
-                        // because we opened the connection).
-                        // If there are multiple active requests the user might have "played" with transactions
-                        // after the first transaction. This code tries to deal with this kind of changes.
-
-                        if (null == _lastTransaction)
-                        {
-                            Debug.Assert(currentTransaction != null, "transaction has changed and the lastTransaction was null");
-
-                            // Two cases here: 
-                            // - the previous operation was not run inside a transaction created by the user while this one is - just
-                            //   enlist the connection in the transaction
-                            // - the previous operation ran withing explicit transaction started with EntityConnection.EnlistTransaction()
-                            //   method - try enlisting the connection in the transaction. This may fail however if the transactions 
-                            //   are nested as you cannot enlist the connection in the transaction until the previous transaction has
-                            //   completed.
-                            Connection.EnlistTransaction(currentTransaction);
-                        }
-                        else
-                        {
-                            // We'll close and reopen the connection to get the benefit of automatic transaction enlistment.
-                            // Remarks: We get here only if there is more than one active query (e.g. nested foreach or two subsequent queries or SaveChanges
-                            // inside a for each) and each of these queries are using a different transaction (note that using TransactionScopeOption.Required 
-                            // will not create a new transaction if an ambient transaction already exists - the ambient transaction will be used and we will 
-                            // not end up in this code path). If we get here we are already in a loss-loss situation - we cannot enlist to the second transaction
-                            // as this would cause an exception saying that there is already an active transaction that needs to be committed or rolled back
-                            // before we can enlist the connection to a new transaction. The other option (and this is what we do here) is to close and reopen
-                            // the connection. This will enlist the newly opened connection to the second transaction but will also close the reader being used
-                            // by the first active query. As a result when trying to continue reading results from the first query the user will get an exception
-                            // saying that calling "Read" on a closed data reader is not a valid operation.
-                            Connection.Close();
                             Connection.Open();
                             _openedConnection = true;
                             _connectionRequestCount++;
-                        }
-                    }
-                }
-                else
-                {
-                    // we don't need to do anything, nothing has changed.
-                }
+                            return true;
+                        },
+                    false);
 
                 // If we get here, we have an open connection, either enlisted in the current
                 // transaction (if it's non-null) or unenlisted from all transactions (if the
                 // current transaction is null)
                 _lastTransaction = currentTransaction;
-
-                #endregion
             }
             catch (Exception)
             {
@@ -1618,106 +1529,24 @@ namespace System.Data.Entity.Core.Objects
                 // Make sure the necessary metadata is registered
                 EnsureMetadata();
 
-                #region EnsureContextIsEnlistedInCurrentTransaction
-
-                // The following conditions are no longer valid since Metadata Independence.
-                Debug.Assert(ConnectionState.Open == Connection.State, "Connection must be open.");
-
-                // IF YOU MODIFIED THIS TABLE YOU MUST UPDATE TESTS IN SaveChangesTransactionTests SUITE ACCORDINGLY AS SOME CASES REFER TO NUMBERS IN THIS TABLE
-                //
-                // TABLE OF ACTIONS WE PERFORM HERE:
-                //
-                //  #  lastTransaction     currentTransaction         ConnectionState   WillClose      Action                                  Behavior when no explicit transaction (started with .ElistTransaction())     Behavior with explicit transaction (started with .ElistTransaction())
-                //  1   null                null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
-                //  2   non-null tx1        non-null tx1               Open              No             no-op;                                  the last transaction will be used                                            N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  3   null                non-null                   Closed            Yes            connection.Open();                      Opening connection will automatically enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
-                //  4   null                non-null                   Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  5   non-null            null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
-                //  6   non-null            null                       Closed            Yes            no-op;                                  implicit transaction will be created and used                                N/A - cannot enlist in transaction on a closed connection
-                //  7   non-null tx1        non-null tx2               Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
-                //  8   non-null tx1        non-null tx2               Open              Yes            connection.Close(); connection.Open();  Re-opening connection will automatically enlist into Transaction.Current     N/A - only applies to TransactionScope - requires two transactions and CommitableTransaction and TransactionScope cannot be mixed
-                //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatcially enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
-
                 var currentTransaction = Transaction.Current;
 
-                var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
-                                            (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
-
-                if (transactionHasChanged)
-                {
-                    if (!_openedConnection)
-                    {
-                        // We didn't open the connection so, just try to enlist the connection in the current transaction. 
-                        // Note that the connection can already be enlisted in a transaction (since the user opened 
-                        // it s/he could enlist it manually using EntityConnection.EnlistTransaction() method). If the 
-                        // transaction the connection is enlisted in has not completed (e.g. nested transaction) this call 
-                        // will fail (throw). Also currentTransaction can be null here which means that the transaction
-                        // used in the previous operation has completed. In this case we should not enlist the connection
-                        // in "null" transaction as the user might have enlisted in a transaction manually between calls by 
-                        // calling EntityConnection.EnlistTransaction() method. Enlisting with null would in this case mean "unenlist" 
-                        // and would cause an exception (see above). Had the user not enlisted in a transaction between the calls
-                        // enlisting with null would be a no-op - so again no reason to do it. 
-                        if (currentTransaction != null)
-                        {
-                            Connection.EnlistTransaction(currentTransaction);
-                        }
-                    }
-                    else if (_connectionRequestCount > 1)
-                    {
-                        // We opened the connection. In addition we are here because there are multiple
-                        // active requests going on (read: enumerators that has not been disposed yet) 
-                        // using the same connection. (If there is only one active request e.g. like SaveChanges
-                        // or single enumerator there is no need for any specific transaction handling - either
-                        // we use the implicit ambient transaction (Transaction.Current) if one exists or we 
-                        // will create our own local transaction. Also if there is only one active request
-                        // the user could not enlist it in a transaction using EntityConnection.EnlistTransaction()
-                        // because we opened the connection).
-                        // If there are multiple active requests the user might have "played" with transactions
-                        // after the first transaction. This code tries to deal with this kind of changes.
-
-                        if (null == _lastTransaction)
-                        {
-                            Debug.Assert(currentTransaction != null, "transaction has changed and the lastTransaction was null");
-
-                            // Two cases here: 
-                            // - the previous operation was not run inside a transaction created by the user while this one is - just
-                            //   enlist the connection in the transaction
-                            // - the previous operation ran withing explicit transaction started with EntityConnection.EnlistTransaction()
-                            //   method - try enlisting the connection in the transaction. This may fail however if the transactions 
-                            //   are nested as you cannot enlist the connection in the transaction until the previous transaction has
-                            //   completed.
-                            Connection.EnlistTransaction(currentTransaction);
-                        }
-                        else
-                        {
-                            // We'll close and reopen the connection to get the benefit of automatic transaction enlistment.
-                            // Remarks: We get here only if there is more than one active query (e.g. nested foreach or two subsequent queries or SaveChanges
-                            // inside a for each) and each of these queries are using a different transaction (note that using TransactionScopeOption.Required 
-                            // will not create a new transaction if an ambient transaction already exists - the ambient transaction will be used and we will 
-                            // not end up in this code path). If we get here we are already in a loss-loss situation - we cannot enlist to the second transaction
-                            // as this would cause an exception saying that there is already an active transaction that needs to be committed or rolled back
-                            // before we can enlist the connection to a new transaction. The other option (and this is what we do here) is to close and reopen
-                            // the connection. This will enlist the newly opened connection to the second transaction but will also close the reader being used
-                            // by the first active query. As a result when trying to continue reading results from the first query the user will get an exception
-                            // saying that calling "Read" on a closed data reader is not a valid operation.
-                            Connection.Close();
-                            await Connection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                            _openedConnection = true;
-                            _connectionRequestCount++;
-                        }
-                    }
-                }
-                else
-                {
-                    // we don't need to do anything, nothing has changed.
-                }
+                await EnsureContextIsEnlistedInCurrentTransaction(
+                    currentTransaction, async () =>
+                                                  {
+                                                      await
+                                                          Connection.OpenAsync(cancellationToken).ConfigureAwait(
+                                                              continueOnCapturedContext: false);
+                                                      _openedConnection = true;
+                                                      _connectionRequestCount++;
+                                                      return true;
+                                                  },
+                    Task.FromResult(false)).ConfigureAwait(continueOnCapturedContext: false);
 
                 // If we get here, we have an open connection, either enlisted in the current
                 // transaction (if it's non-null) or unenlisted from all transactions (if the
                 // current transaction is null)
                 _lastTransaction = currentTransaction;
-
-                #endregion
             }
             catch (Exception)
             {
@@ -1728,6 +1557,99 @@ namespace System.Data.Entity.Core.Objects
         }
 
 #endif
+
+        private T EnsureContextIsEnlistedInCurrentTransaction<T>(Transaction currentTransaction, Func<T> openConnection, T defaultValue)
+        {
+            // The following conditions are no longer valid since Metadata Independence.
+            Debug.Assert(ConnectionState.Open == Connection.State, "Connection must be open.");
+
+            // IF YOU MODIFIED THIS TABLE YOU MUST UPDATE TESTS IN SaveChangesTransactionTests SUITE ACCORDINGLY AS SOME CASES REFER TO NUMBERS IN THIS TABLE
+            //
+            // TABLE OF ACTIONS WE PERFORM HERE:
+            //
+            //  #  lastTransaction     currentTransaction         ConnectionState   WillClose      Action                                  Behavior when no explicit transaction (started with .ElistTransaction())     Behavior with explicit transaction (started with .ElistTransaction())
+            //  1   null                null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
+            //  2   non-null tx1        non-null tx1               Open              No             no-op;                                  the last transaction will be used                                            N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+            //  3   null                non-null                   Closed            Yes            connection.Open();                      Opening connection will automatically enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
+            //  4   null                non-null                   Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+            //  5   non-null            null                       Open              No             no-op;                                  implicit transaction will be created and used                                explicit transaction should be used
+            //  6   non-null            null                       Closed            Yes            no-op;                                  implicit transaction will be created and used                                N/A - cannot enlist in transaction on a closed connection
+            //  7   non-null tx1        non-null tx2               Open              No             connection.Enlist(currentTransaction);  currentTransaction enlisted and used                                         N/A - it is not possible to EnlistTransaction if another transaction has already enlisted
+            //  8   non-null tx1        non-null tx2               Open              Yes            connection.Close(); connection.Open();  Re-opening connection will automatically enlist into Transaction.Current     N/A - only applies to TransactionScope - requires two transactions and CommitableTransaction and TransactionScope cannot be mixed
+            //  9   non-null tx1        non-null tx2               Closed            Yes            connection.Open();                      Opening connection will automatcially enlist into Transaction.Current        N/A - cannot enlist in transaction on a closed connection
+
+            var transactionHasChanged = (null != currentTransaction && !currentTransaction.Equals(_lastTransaction)) ||
+                                        (null != _lastTransaction && !_lastTransaction.Equals(currentTransaction));
+
+            if (transactionHasChanged)
+            {
+                if (!_openedConnection)
+                {
+                    // We didn't open the connection so, just try to enlist the connection in the current transaction. 
+                    // Note that the connection can already be enlisted in a transaction (since the user opened 
+                    // it s/he could enlist it manually using EntityConnection.EnlistTransaction() method). If the 
+                    // transaction the connection is enlisted in has not completed (e.g. nested transaction) this call 
+                    // will fail (throw). Also currentTransaction can be null here which means that the transaction
+                    // used in the previous operation has completed. In this case we should not enlist the connection
+                    // in "null" transaction as the user might have enlisted in a transaction manually between calls by 
+                    // calling EntityConnection.EnlistTransaction() method. Enlisting with null would in this case mean "unenlist" 
+                    // and would cause an exception (see above). Had the user not enlisted in a transaction between the calls
+                    // enlisting with null would be a no-op - so again no reason to do it. 
+                    if (currentTransaction != null)
+                    {
+                        Connection.EnlistTransaction(currentTransaction);
+                    }
+                }
+                else if (_connectionRequestCount > 1)
+                {
+                    // We opened the connection. In addition we are here because there are multiple
+                    // active requests going on (read: enumerators that has not been disposed yet) 
+                    // using the same connection. (If there is only one active request e.g. like SaveChanges
+                    // or single enumerator there is no need for any specific transaction handling - either
+                    // we use the implicit ambient transaction (Transaction.Current) if one exists or we 
+                    // will create our own local transaction. Also if there is only one active request
+                    // the user could not enlist it in a transaction using EntityConnection.EnlistTransaction()
+                    // because we opened the connection).
+                    // If there are multiple active requests the user might have "played" with transactions
+                    // after the first transaction. This code tries to deal with this kind of changes.
+
+                    if (null == _lastTransaction)
+                    {
+                        Debug.Assert(currentTransaction != null, "transaction has changed and the lastTransaction was null");
+
+                        // Two cases here: 
+                        // - the previous operation was not run inside a transaction created by the user while this one is - just
+                        //   enlist the connection in the transaction
+                        // - the previous operation ran withing explicit transaction started with EntityConnection.EnlistTransaction()
+                        //   method - try enlisting the connection in the transaction. This may fail however if the transactions 
+                        //   are nested as you cannot enlist the connection in the transaction until the previous transaction has
+                        //   completed.
+                        Connection.EnlistTransaction(currentTransaction);
+                    }
+                    else
+                    {
+                        // We'll close and reopen the connection to get the benefit of automatic transaction enlistment.
+                        // Remarks: We get here only if there is more than one active query (e.g. nested foreach or two subsequent queries or SaveChanges
+                        // inside a for each) and each of these queries are using a different transaction (note that using TransactionScopeOption.Required 
+                        // will not create a new transaction if an ambient transaction already exists - the ambient transaction will be used and we will 
+                        // not end up in this code path). If we get here we are already in a loss-loss situation - we cannot enlist to the second transaction
+                        // as this would cause an exception saying that there is already an active transaction that needs to be committed or rolled back
+                        // before we can enlist the connection to a new transaction. The other option (and this is what we do here) is to close and reopen
+                        // the connection. This will enlist the newly opened connection to the second transaction but will also close the reader being used
+                        // by the first active query. As a result when trying to continue reading results from the first query the user will get an exception
+                        // saying that calling "Read" on a closed data reader is not a valid operation.
+                        Connection.Close();
+                        return openConnection();
+                    }
+                }
+            }
+            else
+            {
+                // we don't need to do anything, nothing has changed.
+            }
+
+            return defaultValue;
+        }
 
         /// <summary>
         ///     Resets the state of connection management when the connection becomes closed.
@@ -2398,6 +2320,61 @@ namespace System.Data.Entity.Core.Objects
             RefreshMode refreshMode, Dictionary<EntityKey, EntityEntry> trackedEntities,
             EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
         {
+            var queryTreeAndNextPosition = PrepareRefreshQuery(targetSet, targetKeys, startFrom);
+
+            // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
+            var mergeOption = (RefreshMode.StoreWins == refreshMode
+                                   ? MergeOption.OverwriteChanges
+                                   : MergeOption.PreserveChanges);
+
+            // The connection will be released by ObjectResult when enumeration is complete.
+            EnsureConnection();
+
+            try
+            {
+                var results = ExecuteCommandTree(queryTreeAndNextPosition.Item1, mergeOption);
+
+                foreach (var entity in results)
+                {
+                    // There is a risk that, during an event, the Entity removed itself from the cache.
+                    var entry = ObjectStateManager.FindEntityEntry(entity);
+                    if (null != entry
+                        && EntityState.Modified == entry.State)
+                    {
+                        // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
+                        Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
+                        entry.SetModifiedAll();
+                    }
+
+                    var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
+                    var key = wrappedEntity.EntityKey;
+                    if ((object)key == null)
+                    {
+                        throw Error.EntityKey_UnexpectedNull();
+                    }
+
+                    // Dev10#673631 - An incorrectly returned entity should result in an exception to avoid further corruption to the OSM.
+                    if (!trackedEntities.Remove(key))
+                    {
+                        throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
+                    }
+                }
+            }
+            catch
+            {
+                // Enumeration did not complete, so the connection must be explicitly released.
+                ReleaseConnection();
+                throw;
+            }
+
+            // Return the position in the list from which the next refresh operation should start.
+            // This will be equal to the list count if all remaining entities in the list were
+            // refreshed during this call.
+            return queryTreeAndNextPosition.Item2;
+        }
+
+        private Tuple<DbQueryCommandTree, int> PrepareRefreshQuery(EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
+        {
             // A single refresh query can be built for all entities from the same set.
             // For each entity set, a DbFilterExpression is constructed that
             // expresses the equivalent of:
@@ -2462,57 +2439,18 @@ namespace System.Data.Entity.Core.Objects
             DbExpression refreshQuery = entitySetBinding.Filter(entitySetFilter);
 
             // Initialize the command tree used to issue the refresh query.
-            var tree = DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery);
+            return new Tuple<DbQueryCommandTree, int>(
+                DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery),
+                startFrom);
+        }
 
-            // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
-            var mergeOption = (RefreshMode.StoreWins == refreshMode
-                                   ? MergeOption.OverwriteChanges
-                                   : MergeOption.PreserveChanges);
+        private ObjectResult<object> ExecuteCommandTree(DbQueryCommandTree tree, MergeOption mergeOption)
+        {
+            DebugCheck.NotNull(tree);
 
-            // The connection will be released by ObjectResult when enumeration is complete.
-            EnsureConnection();
-
-            try
-            {
-                var results = _objectQueryExecutionPlanFactory.ExecuteCommandTree<object>(this, tree, mergeOption);
-
-                foreach (var entity in results)
-                {
-                    // There is a risk that, during an event, the Entity removed itself from the cache.
-                    var entry = ObjectStateManager.FindEntityEntry(entity);
-                    if (null != entry
-                        && EntityState.Modified == entry.State)
-                    {
-                        // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
-                        Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
-                        entry.SetModifiedAll();
-                    }
-
-                    var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
-                    var key = wrappedEntity.EntityKey;
-                    if ((object)key == null)
-                    {
-                        throw Error.EntityKey_UnexpectedNull();
-                    }
-
-                    // Dev10#673631 - An incorrectly returned entity should result in an exception to avoid further corruption to the OSM.
-                    if (!trackedEntities.Remove(key))
-                    {
-                        throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
-                    }
-                }
-            }
-            catch
-            {
-                // Enumeration did not complete, so the connection must be explicitly released.
-                ReleaseConnection();
-                throw;
-            }
-
-            // Return the position in the list from which the next refresh operation should start.
-            // This will be equal to the list count if all remaining entities in the list were
-            // refreshed during this call.
-            return startFrom;
+            var execPlan = _objectQueryExecutionPlanFactory.Prepare(
+                this, tree, typeof(object), mergeOption, null, null, DbExpressionBuilder.AliasGenerator);
+            return execPlan.Execute<object>(this, null);
         }
 
         private static int RefreshEntitiesSize(IEnumerable collection)
@@ -2666,9 +2604,6 @@ namespace System.Data.Entity.Core.Objects
 
         private int SaveChangesToStore(SaveOptions options)
         {
-            int entriesAffected;
-            var mustReleaseConnection = false;
-            var connection = (EntityConnection)Connection;
             // get data adapter
             if (_adapter == null)
             {
@@ -2677,68 +2612,18 @@ namespace System.Data.Entity.Core.Objects
 
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
-            _adapter.Connection = connection;
+            _adapter.Connection = Connection;
             _adapter.CommandTimeout = CommandTimeout;
 
-            try
+            int entriesAffected;
+            if (_commandInterceptor == null
+                || !_commandInterceptor.IsEnabled)
             {
-                // determine what transaction to enlist in
-                var needLocalTransaction = false;
-
-                var interceptingEnabled
-                    = (_commandInterceptor != null) && _commandInterceptor.IsEnabled;
-
-                if (!interceptingEnabled)
-                {
-                    EnsureConnection();
-                    mustReleaseConnection = true;
-
-                    if (null == connection.CurrentTransaction
-                        && !connection.EnlistedInUserTransaction)
-                    {
-                        // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                        // on the current SysTx transaction so we don't need to construct a local
-                        // transaction.
-                        needLocalTransaction = (null == _lastTransaction);
-                    }
-                }
-
-                // else the user already has his own local transaction going; user will do the abort or commit.
-                DbTransaction localTransaction = null;
-                try
-                {
-                    // EntityConnection tracks the CurrentTransaction we don't need to pass it around
-                    if (needLocalTransaction)
-                    {
-                        localTransaction = connection.BeginTransaction();
-                    }
-
-                    entriesAffected = _adapter.Update(ObjectStateManager, !interceptingEnabled);
-
-                    if (null != localTransaction)
-                    {
-                        // we started the local transaction; so we also commit it
-                        localTransaction.Commit();
-                    }
-                    // else on success with no exception is thrown, user generally commits the transaction
-                }
-                finally
-                {
-                    if (null != localTransaction)
-                    {
-                        // we started the local transaction; so it requires disposal (rollback if not previously committed
-                        localTransaction.Dispose();
-                    }
-                    // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
-                }
+                entriesAffected = ExecuteInTransaction(() => _adapter.Update(ObjectStateManager, true));
             }
-            finally
+            else
             {
-                if (mustReleaseConnection)
-                {
-                    // Release the connection when we are done with the save
-                    ReleaseConnection();
-                }
+                entriesAffected = _adapter.Update(ObjectStateManager, false);
             }
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
@@ -2764,10 +2649,6 @@ namespace System.Data.Entity.Core.Objects
 
         private async Task<int> SaveChangesToStoreAsync(SaveOptions options, CancellationToken cancellationToken)
         {
-            int entriesAffected;
-            var mustReleaseConnection = false;
-            var connection = (EntityConnection)Connection;
-            // get data adapter
             if (_adapter == null)
             {
                 _adapter = (IEntityAdapter)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(IEntityAdapter));
@@ -2775,69 +2656,23 @@ namespace System.Data.Entity.Core.Objects
 
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
-            _adapter.Connection = connection;
+            _adapter.Connection = Connection;
             _adapter.CommandTimeout = CommandTimeout;
 
-            try
+            int entriesAffected;
+            if (_commandInterceptor == null
+                || !_commandInterceptor.IsEnabled)
             {
-                // determine what transaction to enlist in
-                var needLocalTransaction = false;
-
-                var interceptingEnabled
-                    = (_commandInterceptor != null) && _commandInterceptor.IsEnabled;
-
-                if (!interceptingEnabled)
-                {
-                    await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                    mustReleaseConnection = true;
-
-                    if (null == connection.CurrentTransaction
-                        && !connection.EnlistedInUserTransaction)
-                    {
-                        // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                        // on the current SysTx transaction so we don't need to construct a local
-                        // transaction.
-                        needLocalTransaction = (null == _lastTransaction);
-                    }
-                }
-
-                // else the user already has his own local transaction going; user will do the abort or commit.
-                DbTransaction localTransaction = null;
-                try
-                {
-                    // EntityConnection tracks the CurrentTransaction we don't need to pass it around
-                    if (needLocalTransaction)
-                    {
-                        localTransaction = connection.BeginTransaction();
-                    }
-
-                    entriesAffected =
-                        await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
-                    if (null != localTransaction)
-                    {
-                        // we started the local transaction; so we also commit it
-                        localTransaction.Commit();
-                    }
-                    // else on success with no exception is thrown, user generally commits the transaction
-                }
-                finally
-                {
-                    if (null != localTransaction)
-                    {
-                        // we started the local transaction; so it requires disposal (rollback if not previously committed
-                        localTransaction.Dispose();
-                    }
-                    // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
-                }
+                entriesAffected = await
+                                  ExecuteInTransactionAsync(
+                                      () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken),
+                                      cancellationToken)
+                                      .ConfigureAwait(continueOnCapturedContext: false);
             }
-            finally
+            else
             {
-                if (mustReleaseConnection)
-                {
-                    // Release the connection when we are done with the save
-                    ReleaseConnection();
-                }
+                entriesAffected =
+                    await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
@@ -2862,6 +2697,108 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         #endregion //SaveChanges
+
+        private T ExecuteInTransaction<T>(Func<T> func)
+        {
+            // determine what transaction to enlist in
+            var needLocalTransaction = false;
+            EnsureConnection();
+            var connection = (EntityConnection)Connection;
+            if (null == connection.CurrentTransaction
+                && !connection.EnlistedInUserTransaction)
+            {
+                // If there isn't a local transaction started by the user, we'll attempt to enlist 
+                // on the current SysTx transaction so we don't need to construct a local
+                // transaction.
+                needLocalTransaction = (_lastTransaction == null);
+            }
+            // else the user already has his own local transaction going; user will do the abort or commit.
+
+            DbTransaction localTransaction = null;
+            try
+            {
+                // EntityConnection tracks the CurrentTransaction we don't need to pass it around
+                if (needLocalTransaction)
+                {
+                    localTransaction = connection.BeginTransaction();
+                }
+
+                var result = func();
+
+                if (needLocalTransaction)
+                {
+                    // we started the local transaction; so we also commit it
+                    localTransaction.Commit();
+                }
+                // else on success with no exception is thrown, user generally commits the transaction
+
+                return result;
+            }
+            finally
+            {
+                if (localTransaction != null)
+                {
+                    // we started the local transaction; so it requires disposal (rollback if not previously committed
+                    localTransaction.Dispose();
+                }
+                // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
+
+                ReleaseConnection();
+            }
+        }
+
+#if !NET40
+
+        private async Task<T> ExecuteInTransactionAsync<T>(Func<Task<T>> func, CancellationToken cancellationToken)
+        {
+            // determine what transaction to enlist in
+            var needLocalTransaction = false;
+            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var connection = (EntityConnection)Connection;
+            if (null == connection.CurrentTransaction
+                && !connection.EnlistedInUserTransaction)
+            {
+                // If there isn't a local transaction started by the user, we'll attempt to enlist 
+                // on the current SysTx transaction so we don't need to construct a local
+                // transaction.
+                needLocalTransaction = (_lastTransaction == null);
+            }
+            // else the user already has his own local transaction going; user will do the abort or commit.
+
+            DbTransaction localTransaction = null;
+            try
+            {
+                // EntityConnection tracks the CurrentTransaction we don't need to pass it around
+                if (needLocalTransaction)
+                {
+                    localTransaction = connection.BeginTransaction();
+                }
+
+                var result = await func().ConfigureAwait(continueOnCapturedContext: false);
+
+                if (needLocalTransaction)
+                {
+                    // we started the local transaction; so we also commit it
+                    localTransaction.Commit();
+                }
+                // else on success with no exception is thrown, user generally commits the transaction
+
+                return result;
+            }
+            finally
+            {
+                if (localTransaction != null)
+                {
+                    // we started the local transaction; so it requires disposal (rollback if not previously committed
+                    localTransaction.Dispose();
+                }
+                // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
+
+                ReleaseConnection();
+            }
+        }
+
+#endif
 
         /// <summary>
         ///     For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values

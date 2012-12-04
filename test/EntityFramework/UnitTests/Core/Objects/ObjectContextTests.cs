@@ -144,8 +144,8 @@ namespace System.Data.Entity.Core.Objects
                 // first time return false to by-pass check in the constructor
                 var enlistedInUserTransactionCallCount = 0;
                 entityConnectionMock.SetupGet(m => m.EnlistedInUserTransaction).
-                    Callback(() => enlistedInUserTransactionCallCount++).
-                    Returns(enlistedInUserTransactionCallCount == 1);
+                                     Callback(() => enlistedInUserTransactionCallCount++).
+                                     Returns(enlistedInUserTransactionCallCount == 1);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
                 metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
@@ -392,16 +392,18 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 3 && list[0] == parameter1 && list[1] == parameter2
-                                    && list[2] == parameter3)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 3
+                                                        && list[0] == parameter1
+                                                        && list[1] == parameter2
+                                                        && list[2] == parameter3)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
@@ -441,25 +443,28 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 4 && list[0] == parameterMockList[0].Object && list[1] == parameterMockList[1].Object &&
-                                    list[2] == parameterMockList[2].Object
-                                    && list[3] == parameterMockList[3].Object)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 4
+                                                        && list[0] == parameterMockList[0].Object
+                                                        && list[1] == parameterMockList[1].Object
+                                                        &&
+                                                        list[2] == parameterMockList[2].Object
+                                                        && list[3] == parameterMockList[3].Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.SetupGet(m => m.CommandText).Returns("{0} Foo {1} Bar {2} Baz {3}");
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 dbCommandMock.Protected().Setup<DbParameter>("CreateDbParameter").
-                    Returns(() => parameterMockList[createdParameterCount].Object).
-                    Callback(() => createdParameterCount++);
+                              Returns(() => parameterMockList[createdParameterCount].Object).
+                              Callback(() => createdParameterCount++);
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
@@ -522,16 +527,16 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 1
-                                    && list[0] == parameterMock.Object)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 1
+                                                        && list[0] == parameterMock.Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
                     new Mock<DbDataReader>().Object);
@@ -553,7 +558,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
-                    .Throws(new InvalidOperationException("Foo"));
+                             .Throws(new InvalidOperationException("Foo"));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -575,7 +580,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbDataReaderMock = new Mock<DbDataReader>();
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
-                    .Returns(dbDataReaderMock.Object);
+                             .Returns(dbDataReaderMock.Object);
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -604,7 +609,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/);
                 objectContextMock.Setup(m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(0));
+                                 .Returns(Task.FromResult(0));
 
                 objectContextMock.Object.SaveChangesAsync().Wait();
 
@@ -643,7 +648,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var mockEntityAdapter = new Mock<IEntityAdapter>();
                 mockEntityAdapter.Setup(m => m.UpdateAsync(mockObjectStateManager.Object, CancellationToken.None))
-                    .Returns(Task.FromResult(1));
+                                 .Returns(Task.FromResult(1));
 
                 var mockObjectContext
                     = new Mock<ObjectContext>(null, null, null, mockCommandInterceptor.Object, mockEntityAdapter.Object)
@@ -718,8 +723,8 @@ namespace System.Data.Entity.Core.Objects
                 // first time return false to by-pass check in the constructor
                 var enlistedInUserTransactionCallCount = 0;
                 entityConnectionMock.SetupGet(m => m.EnlistedInUserTransaction).
-                    Callback(() => enlistedInUserTransactionCallCount++).
-                    Returns(enlistedInUserTransactionCallCount == 1);
+                                     Callback(() => enlistedInUserTransactionCallCount++).
+                                     Returns(enlistedInUserTransactionCallCount == 1);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
                 metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
@@ -986,16 +991,18 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 3 && list[0] == parameter1 && list[1] == parameter2
-                                    && list[2] == parameter3)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 3
+                                                        && list[0] == parameter1
+                                                        && list[1] == parameter2
+                                                        && list[2] == parameter3)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
@@ -1036,17 +1043,20 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 4 && list[0] == parameterMockList[0].Object && list[1] == parameterMockList[1].Object &&
-                                    list[2] == parameterMockList[2].Object
-                                    && list[3] == parameterMockList[3].Object)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 4
+                                                        && list[0] == parameterMockList[0].Object
+                                                        && list[1] == parameterMockList[1].Object
+                                                        &&
+                                                        list[2] == parameterMockList[2].Object
+                                                        && list[3] == parameterMockList[3].Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
@@ -1054,8 +1064,8 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 dbCommandMock.Protected().Setup<DbParameter>("CreateDbParameter").
-                    Returns(() => parameterMockList[createdParameterCount].Object).
-                    Callback(() => createdParameterCount++);
+                              Returns(() => parameterMockList[createdParameterCount].Object).
+                              Callback(() => createdParameterCount++);
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
@@ -1121,20 +1131,20 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                    Callback(
-                        (Array p) =>
-                            {
-                                var list = p.ToList<DbParameter>();
-                                if (list.Count == 1
-                                    && list[0] == parameterMock.Object)
-                                {
-                                    correctParameters = true;
-                                }
-                            });
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 1
+                                                        && list[0] == parameterMock.Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                    .Returns(Task.FromResult(new Mock<DbDataReader>().Object));
+                             .Returns(Task.FromResult(new Mock<DbDataReader>().Object));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
@@ -1155,7 +1165,7 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                    .Throws(new InvalidOperationException("Foo"));
+                             .Throws(new InvalidOperationException("Foo"));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -1180,7 +1190,7 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                    .Returns(Task.FromResult(dbDataReaderMock.Object));
+                             .Returns(Task.FromResult(dbDataReaderMock.Object));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -1235,11 +1245,11 @@ namespace System.Data.Entity.Core.Objects
                 m => m.CreateColumnMapFromReaderAndType(
                     It.IsAny<DbDataReader>(), It.IsAny<EdmType>(), It.IsAny<EntitySet>(),
                     It.IsAny<Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping>>()))
-                .Returns(collectionColumnMap);
+                                .Returns(collectionColumnMap);
 
             columnMapFactoryMock.Setup(
                 m => m.CreateColumnMapFromReaderAndClrType(It.IsAny<DbDataReader>(), It.IsAny<Type>(), It.IsAny<MetadataWorkspace>()))
-                .Returns(collectionColumnMap);
+                                .Returns(collectionColumnMap);
 
             var objectContext = CreateObjectContext(
                 objectStateManagerMock, entityConnectionMock, metadataWorkspace, translator, columnMapFactoryMock.Object);

@@ -341,8 +341,7 @@ namespace System.Data.Entity.SqlServer
         internal object ConvertToSqlTypesGeography(DbGeography geographyValue)
         {
             DebugCheck.NotNull(geographyValue);
-            var result = GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
-            return result;
+            return GetSqlTypesSpatialValue(geographyValue.AsSpatialValue(), SqlGeographyType);
         }
 
         internal object SqlTypesGeographyFromBinary(byte[] wellKnownBinary, int srid)
@@ -360,9 +359,7 @@ namespace System.Data.Entity.SqlServer
         internal object ConvertToSqlTypesGeometry(DbGeometry geometryValue)
         {
             DebugCheck.NotNull(geometryValue);
-
-            var result = GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
-            return result;
+            return GetSqlTypesSpatialValue(geometryValue.AsSpatialValue(), SqlGeometryType);
         }
 
         internal object SqlTypesGeometryFromBinary(byte[] wellKnownBinary, int srid)

@@ -126,15 +126,5 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             return (EntityCommandDefinition)definition;
         }
-
-        public ObjectResult<TResultType> ExecuteCommandTree<TResultType>(
-            ObjectContext context, DbQueryCommandTree query, MergeOption mergeOption)
-        {
-            DebugCheck.NotNull(context);
-            DebugCheck.NotNull(query);
-
-            var execPlan = Prepare(context, query, typeof(TResultType), mergeOption, null, null, DbExpressionBuilder.AliasGenerator);
-            return execPlan.Execute<TResultType>(context, null);
-        }
     }
 }

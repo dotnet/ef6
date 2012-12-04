@@ -38,18 +38,13 @@ namespace System.Data.Entity.Internal.Linq
 
         #region Implementation of abstract methods defined on DbQuery
 
-        /// <summary>
-        ///     Gets the underlying internal query object.
-        /// </summary>
-        /// <value> The internal query. </value>
+        /// <inheritdoc />
         internal override IInternalQuery InternalQuery
         {
             get { return _internalQuery; }
         }
 
-        /// <summary>
-        ///     See comments in <see cref="DbQuery" />.
-        /// </summary>
+        /// <inheritdoc />
         public override DbQuery Include(string path)
         {
             // We need this because the Code Contract gets compiled out in the release build even though
@@ -59,9 +54,7 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TElement>(_internalQuery.Include(path));
         }
 
-        /// <summary>
-        ///     See comments in <see cref="DbQuery" />.
-        /// </summary>
+        /// <inheritdoc />
         public override DbQuery AsNoTracking()
         {
             return new InternalDbQuery<TElement>(_internalQuery.AsNoTracking());

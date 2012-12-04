@@ -132,37 +132,16 @@ namespace System.Data.Entity.Core.Objects.Internal
             return sb.ToString();
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal virtual ObjectResult<TResultType> Execute<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues)
         {
             DbDataReader storeReader = null;
             try
             {
-                // create entity command (just do this to snarf store command)
-                var commandDefinition = (EntityCommandDefinition)CommandDefinition;
-                var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
-
-                // pass through parameters and timeout values
-                if (context.CommandTimeout.HasValue)
+                using (var entityCommand = PrepareEntityCommand(context, parameterValues))
                 {
-                    entityCommand.CommandTimeout = context.CommandTimeout.Value;
+                    // acquire store reader
+                    storeReader = entityCommand.GetCommandDefinition().ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
                 }
-
-                if (parameterValues != null)
-                {
-                    foreach (var parameter in parameterValues)
-                    {
-                        var index = entityCommand.Parameters.IndexOf(parameter.Name);
-
-                        if (index != -1)
-                        {
-                            entityCommand.Parameters[index].Value = parameter.Value ?? DBNull.Value;
-                        }
-                    }
-                }
-
-                // acquire store reader
-                storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
@@ -203,33 +182,14 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader storeReader = null;
             try
             {
-                // create entity command (just do this to snarf store command)
-                var commandDefinition = (EntityCommandDefinition)CommandDefinition;
-                var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
-
-                // pass through parameters and timeout values
-                if (context.CommandTimeout.HasValue)
+                using(var entityCommand = PrepareEntityCommand(context, parameterValues))
                 {
-                    entityCommand.CommandTimeout = context.CommandTimeout.Value;
+                    // acquire store reader
+                    storeReader = await
+                                  entityCommand.GetCommandDefinition()
+                                               .ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken)
+                                               .ConfigureAwait(continueOnCapturedContext: false);
                 }
-
-                if (parameterValues != null)
-                {
-                    foreach (var parameter in parameterValues)
-                    {
-                        var index = entityCommand.Parameters.IndexOf(parameter.Name);
-
-                        if (index != -1)
-                        {
-                            entityCommand.Parameters[index].Value = parameter.Value ?? DBNull.Value;
-                        }
-                    }
-                }
-
-                // acquire store reader
-                storeReader = await
-                              commandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken).
-                                                ConfigureAwait(continueOnCapturedContext: false);
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
                 var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
@@ -262,5 +222,35 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
+
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Disposed by caller")]
+        private EntityCommand PrepareEntityCommand(ObjectContext context, ObjectParameterCollection parameterValues)
+        {
+            // create entity command (just do this to snarf store command)
+            var commandDefinition = (EntityCommandDefinition)CommandDefinition;
+            var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
+
+            // pass through parameters and timeout values
+            if (context.CommandTimeout.HasValue)
+            {
+                entityCommand.CommandTimeout = context.CommandTimeout.Value;
+            }
+
+            if (parameterValues != null)
+            {
+                foreach (var parameter in parameterValues)
+                {
+                    var index = entityCommand.Parameters.IndexOf(parameter.Name);
+
+                    if (index != -1)
+                    {
+                        entityCommand.Parameters[index].Value = parameter.Value ?? DBNull.Value;
+                    }
+                }
+            }
+
+            return entityCommand;
+        }
     }
 }

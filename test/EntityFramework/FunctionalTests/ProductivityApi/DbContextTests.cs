@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -3390,6 +3391,7 @@ namespace ProductivityApiTests
         #endregion
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
+
         [Fact]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
@@ -3422,11 +3424,7 @@ namespace ProductivityApiTests
                 entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
 
                 // check that we throw when we attempt to use the implicitly-opened entityConnection with closed underlying store connection
-                Exception e = Assert.Throws<InvalidOperationException>(() =>
-                    {
-                        enumerator.MoveNext();
-                    });
-                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
+                Assert.Throws<EntityCommandExecutionException>(() => enumerator.MoveNext()).ValidateMessage("ADP_DataReaderClosed", "Read");
 
                 enumerator.Dispose();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
@@ -3476,11 +3474,7 @@ namespace ProductivityApiTests
                 entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
 
                 // check that we throw when we attempt to use the implicitly-opened entityConnection
-                Exception e = Assert.Throws<InvalidOperationException>(() =>
-                {
-                    enumerator.MoveNext();
-                });
-                Assert.True("Calling 'Read' when the data reader is closed is not a valid operation." == e.Message);
+                Assert.Throws<EntityCommandExecutionException>(() => enumerator.MoveNext()).ValidateMessage("ADP_DataReaderClosed", "Read");
 
                 enumerator.Dispose();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);

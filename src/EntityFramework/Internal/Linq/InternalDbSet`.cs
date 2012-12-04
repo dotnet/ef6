@@ -55,19 +55,13 @@ namespace System.Data.Entity.Internal.Linq
 
         #region Implementation of abstract methods defined on DbSet and DbQuery
 
-        /// <summary>
-        ///     Gets the underlying internal query object.
-        /// </summary>
-        /// <value> The internal query. </value>
+        /// <inheritdoc />
         internal override IInternalQuery InternalQuery
         {
             get { return _internalSet; }
         }
 
-        /// <summary>
-        ///     Gets the underlying internal set.
-        /// </summary>
-        /// <value> The internal set. </value>
+        /// <inheritdoc />
         internal override IInternalSet InternalSet
         {
             get { return _internalSet; }

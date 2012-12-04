@@ -67,13 +67,27 @@ namespace System.Data.Entity.Core.Objects
 
         public abstract Type ElementType { get; }
 
-        [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
-        public abstract void Dispose();
+        /// <summary>
+        ///     Performs tasks associated with freeing, releasing, or resetting resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass 
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        protected abstract void Dispose(bool disposing);
 
         /// <summary>
         ///     Get the next result set of a stored procedure.
         /// </summary>
-        /// <returns> An ObjectResult that enumerates the values of the next result set. null, if there are no more, or if the the ObjectResult is not the result of a stored procedure call. </returns>
+        /// <returns>
+        ///     An ObjectResult that enumerates the values of the next result set;
+        ///     null, if there are no more, or if the the ObjectResult is not the result of a stored procedure call.
+        /// </returns>
         public ObjectResult<TElement> GetNextResult<TElement>()
         {
             return GetNextResultInternal<TElement>();

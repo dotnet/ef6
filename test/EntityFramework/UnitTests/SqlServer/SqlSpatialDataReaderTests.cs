@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Common;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlTypes;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.SqlServer
         public void GetGeography_roundtrips_DbGeography()
         {
             var dbGeography = DbGeography.FromText("POINT (90 50)");
-            var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeography.ProviderValue, "sys.geography");
+            var mockSqlDataReader = CreateMockDbDataReader(dbGeography.ProviderValue, "sys.geography");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeography = sqlSpatialDataReader.GetGeography(0);
@@ -32,7 +33,7 @@ namespace System.Data.Entity.SqlServer
         public void GetGeographyAsync_roundtrips_DbGeography()
         {
             var dbGeography = DbGeography.FromText("POINT (90 50)");
-            var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeography.ProviderValue, "sys.geography");
+            var mockSqlDataReader = CreateMockDbDataReader(dbGeography.ProviderValue, "sys.geography");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeography = sqlSpatialDataReader.GetGeographyAsync(0).Result;
@@ -46,7 +47,7 @@ namespace System.Data.Entity.SqlServer
         public void GetGeometry_roundtrips_DbGeometry()
         {
             var dbGeometry = DbGeometry.FromText("POINT (90 50)");
-            var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeometry.ProviderValue, "sys.geometry");
+            var mockSqlDataReader = CreateMockDbDataReader(dbGeometry.ProviderValue, "sys.geometry");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
             var convertedDbGeometry = sqlSpatialDataReader.GetGeometry(0);
@@ -60,7 +61,7 @@ namespace System.Data.Entity.SqlServer
         public void GetGeometryAsync_roundtrips_DbGeometry()
         {
             var dbGeometry = DbGeometry.FromText("POINT (90 50)");
-            var sqlDataReaderWrapper = CreateSqlDataReaderWrapper(dbGeometry.ProviderValue, "sys.geometry");
+            var sqlDataReaderWrapper = CreateMockDbDataReader(dbGeometry.ProviderValue, "sys.geometry");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, sqlDataReaderWrapper);
 
             var convertedDbGeometry = sqlSpatialDataReader.GetGeometryAsync(0).Result;
@@ -70,26 +71,15 @@ namespace System.Data.Entity.SqlServer
 
 #endif
 
-        private SqlDataReaderWrapper CreateSqlDataReaderWrapper(object spatialProviderValueToReturn, string providerDataType)
+        private DbDataReader CreateMockDbDataReader(object spatialProviderValueToReturn, string providerDataType)
         {
-            var mockSqlDataReader = new Mock<SqlDataReaderWrapper>();
+            var mockSqlDataReader = new Mock<DbDataReader>();
 
-            using (var memoryStream = new MemoryStream())
-            {
-                var writer = new BinaryWriter(memoryStream);
-
-                var writeMethod = spatialProviderValueToReturn.GetType().GetMethod(
-                    "Write", BindingFlags.Public | BindingFlags.Instance,
-                    binder: null, types: new[] { typeof(BinaryWriter) }, modifiers: null);
-                writeMethod.Invoke(spatialProviderValueToReturn, new[] { writer });
-                var sqlBytes = new SqlBytes(memoryStream.ToArray());
-
-                mockSqlDataReader.Setup(m => m.GetSqlBytes(0)).Returns(sqlBytes);
+                mockSqlDataReader.Setup(m => m.GetValue(0)).Returns(spatialProviderValueToReturn);
 #if !NET40
-                mockSqlDataReader.Setup(m => m.GetFieldValueAsync<SqlBytes>(0, CancellationToken.None)).Returns(Task.FromResult(sqlBytes));
+                mockSqlDataReader.Setup(m => m.GetFieldValueAsync<object>(0, CancellationToken.None)).Returns(Task.FromResult(spatialProviderValueToReturn));
 #endif
                 mockSqlDataReader.Setup(m => m.GetDataTypeName(0)).Returns(providerDataType);
-            }
 
             return mockSqlDataReader.Object;
         }
