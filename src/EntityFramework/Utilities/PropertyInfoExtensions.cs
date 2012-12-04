@@ -18,7 +18,9 @@ namespace System.Data.Entity.Utilities
                    (propertyInfo.Name == otherPropertyInfo.Name
                     && (propertyInfo.DeclaringType == otherPropertyInfo.DeclaringType
                         || propertyInfo.DeclaringType.IsSubclassOf(otherPropertyInfo.DeclaringType)
-                        || otherPropertyInfo.DeclaringType.IsSubclassOf(propertyInfo.DeclaringType)));
+                        || otherPropertyInfo.DeclaringType.IsSubclassOf(propertyInfo.DeclaringType)
+                        || propertyInfo.DeclaringType.GetInterfaces().Contains(otherPropertyInfo.DeclaringType)
+                        || otherPropertyInfo.DeclaringType.GetInterfaces().Contains(propertyInfo.DeclaringType)));
         }
 
         public static bool ContainsSame(this IEnumerable<PropertyInfo> enumerable, PropertyInfo propertyInfo)

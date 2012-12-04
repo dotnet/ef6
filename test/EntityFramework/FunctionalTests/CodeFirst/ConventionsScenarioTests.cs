@@ -138,6 +138,22 @@ namespace FunctionalTests
                 .Properties.Single(c => c.Name == "ComplexProperty_StringProperty");
             Assert.Equal(256, column.MaxLength);
         }
+
+        [Fact]
+        public void Lightweight_conventions_can_filter_by_interface()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Entities<ILightweightEntity>()
+                .Configure(c => c.HasKey(e => e.IntProperty));
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
+        }
     }
 
     public class LightweightEntityWithConfiguration
@@ -164,9 +180,15 @@ namespace FunctionalTests
         public string StringProperty { get; set; }
     }
 
-    public class LightweightEntity
+    public interface ILightweightEntity
+    {
+        int IntProperty { get; set; }
+    }
+
+    public class LightweightEntity : ILightweightEntity
     {
         public int Id { get; set; }
+        public int IntProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }
 }
