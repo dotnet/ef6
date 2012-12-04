@@ -42,6 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private readonly List<EntityMappingConfiguration> _nonCloneableMappings = new List<EntityMappingConfiguration>();
 
         private bool _isKeyConfigured;
+        private bool _isKeyConfiguredByAttributes;
         private string _entitySetName;
 
         internal EntityTypeConfiguration(Type structuralType)
@@ -65,6 +66,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 source._entityMappingConfigurations.Except(source._nonCloneableMappings).Select(e => e.Clone()));
 
             _isKeyConfigured = source._isKeyConfigured;
+            _isKeyConfiguredByAttributes = source._isKeyConfiguredByAttributes;
             _entitySetName = source._entitySetName;
 
             IsReplaceable = source.IsReplaceable;
@@ -126,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             foreach (var property in keyProperties)
             {
-                Key(property, OverridableConfigurationParts.None);
+                Key(property, OverridableConfigurationParts.None, false);
             }
 
             _isKeyConfigured = true;
@@ -140,12 +142,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
-            Key(propertyInfo, null);
+            Key(propertyInfo, null, false);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         internal virtual void Key(
-            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts)
+            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts, bool configuredByAttribute)
         {
             DebugCheck.NotNull(propertyInfo);
 
@@ -158,8 +160,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 &&
                 // DevDiv #324763 (DbModelBuilder.Build is not idempotent):  If build is called twice when keys are configured via attributes 
                 // _isKeyConfigured is not set, thus we need to check whether the key has already been included.
-                !_keyProperties.ContainsSame(propertyInfo))
+                !_keyProperties.ContainsSame(propertyInfo)
+                && (configuredByAttribute || !_isKeyConfiguredByAttributes))
             {
+                _isKeyConfiguredByAttributes |= configuredByAttribute;
+
                 _keyProperties.Add(propertyInfo);
 
                 Property(new PropertyPath(propertyInfo), overridableConfigurationParts);
@@ -170,6 +175,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             _keyProperties.Clear();
             _isKeyConfigured = false;
+            _isKeyConfiguredByAttributes = false;
         }
 
         /// <summary>
@@ -605,22 +611,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
+                        {
+                            var primitivePropertyConfiguration =
+                                c.GetConfiguration() as PrimitivePropertyConfiguration;
+
+                            if ((primitivePropertyConfiguration != null)
+                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                                return;
+                            }
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                            var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
+                            c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
 
-                                c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
-
-                                c.CopyFrom(principalColumn);
-                            });
+                            c.CopyFrom(principalColumn);
+                        });
             }
         }
 

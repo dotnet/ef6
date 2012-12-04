@@ -295,7 +295,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void EntityTypeConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityTypeConfiguration>(10);
+            VerifyFieldCount<EntityTypeConfiguration>(11);
         }
 
         [Fact]
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
 
             // This should have no effect because _isKeyConfigured is set to true
-            clone.Key(mockPropertyInfo2, null);
+            clone.Key(mockPropertyInfo2);
 
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
 
