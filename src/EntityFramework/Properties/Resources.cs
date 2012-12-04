@@ -13404,6 +13404,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_NonScalarProperty, p0);
         }
+
+        /// <summary>
+        /// A string like "The connection was not closed."
+        /// </summary>
+        internal static string EntityClient_CannotReopenConnection
+        {
+            get { return EntityRes.GetString(EntityRes.EntityClient_CannotReopenConnection); }
+        }
     } 
 
     /// <summary>
@@ -16726,6 +16734,7 @@ namespace System.Data.Entity.Resources
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
         internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
+        internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
         
         static EntityRes loader = null;
         ResourceManager resources;

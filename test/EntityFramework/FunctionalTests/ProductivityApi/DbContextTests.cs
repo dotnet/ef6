@@ -3506,40 +3506,25 @@ namespace ProductivityApiTests
             {
                 EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
 
-                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
-                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
-                ConnectionState state = ConnectionState.Closed;
+                var dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                var entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
 
                 // verify that the open and close events have not been fired yet
                 dbConnectionTracker.VerifyNoConnectionEventsWereFired();
                 entityConnectionTracker.VerifyNoConnectionEventsWereFired();
 
-                DbConnection storeConnection = entityConnection.StoreConnection;
+                var storeConnection = entityConnection.StoreConnection;
                 storeConnection.Open();
 
-                // verify the open event has been fired on the store connection but not yet on the EntityConnection
-                dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
-                entityConnectionTracker.VerifyNoConnectionEventsWereFired();
-
-                // look at the EntityConnection's State (side-effect is we fire an event)
-                state = entityConnection.State;
-                Assert.Equal(ConnectionState.Open, state);
-
-                // now the open event should have been fired on both connections
+                // verify the open event has been fired on the store connection and the EntityConnection
+                // was subscribed so it updated too
                 dbConnectionTracker.VerifyConnectionOpenedEventWasFired();
                 entityConnectionTracker.VerifyConnectionOpenedEventWasFired();
 
                 storeConnection.Close();
 
-                // verify the close event has been fired on the store connection but not yet on the EntityConnection
-                dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
-                entityConnectionTracker.VerifyConnectionOpenedEventWasFired();
-
-                // look at the EntityConnection's State (side-effect is we fire an event)
-                state = entityConnection.State;
-                Assert.Equal(ConnectionState.Closed, state);
-
-                // now the close events should have been fired on both connections
+                // verify the close event has been fired on the store connection and the EntityConnection
+                // was subscribed so it updated too
                 dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
                 entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
             }

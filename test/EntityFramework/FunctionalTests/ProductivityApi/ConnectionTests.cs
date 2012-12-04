@@ -646,36 +646,6 @@ namespace ProductivityApiTests
             }
         }
 
-        public class OnModelConnectionContextWithOpen : OnModelConnectionContext<OnModelConnectionContextWithOpen>
-        {
-            protected override void OnModelCreating(DbModelBuilder modelBuilder)
-            {
-                var connection = Database.Connection;
-
-                // Esnure that something exists to connect to.
-                using (var context = new SimpleModelContext(connection, contextOwnsConnection: false))
-                {
-                    context.Database.CreateIfNotExists();
-                }
-
-                connection.Open();
-
-                ModelCreated = true;
-            }
-        }
-
-        [Fact]
-        public void Leaving_connection_open_in_OnModelCreating_results_in_exception()
-        {
-            using (var context = new OnModelConnectionContextWithOpen())
-            {
-                Assert.Throws<ArgumentException>(() => context.Database.Initialize(force: false)).ValidateMessage(
-                    "EntityClient_ConnectionMustBeClosed");
-
-                Assert.True(context.ModelCreated);
-            }
-        }
-
         #endregion
 
         #region Getting Connection without initializing context

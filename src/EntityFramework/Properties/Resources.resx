@@ -5340,4 +5340,7 @@
     <value>The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="EntityClient_CannotReopenConnection" xml:space="preserve">
+    <value>The connection was not closed.</value>
+  </data>
 </root>
