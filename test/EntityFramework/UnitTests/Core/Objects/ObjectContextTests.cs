@@ -539,7 +539,7 @@ namespace System.Data.Entity.Core.Objects
                                                 });
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
-                    new Mock<DbDataReader>().Object);
+                    Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new [] { new object() } }));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
@@ -550,6 +550,21 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
                 Assert.True(correctParameters);
+            }
+
+            [Fact]
+            public void DbDataReader_is_buffered_by_default()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
+                    new Mock<DbDataReader>().Object);
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
+                    () => new Mock<DbParameterCollection>().Object);
+
+                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+
+                objectContext.ExecuteStoreQuery<object>("{0} Foo");
             }
 
             [Fact]
@@ -577,10 +592,10 @@ namespace System.Data.Entity.Core.Objects
             public void Connection_is_released_after_translator_exception()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                var dbDataReaderMock = new Mock<DbDataReader>();
+                var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
-                             .Returns(dbDataReaderMock.Object);
+                             .Returns(dataReader);
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -596,7 +611,7 @@ namespace System.Data.Entity.Core.Objects
                         objectContext.ExecuteStoreQuery<object>("Foo")).Message);
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
-                dbDataReaderMock.Protected().Verify("Dispose", Times.Once(), true);
+                Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
             }
         }
 
@@ -1144,7 +1159,8 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                             .Returns(Task.FromResult(new Mock<DbDataReader>().Object));
+                             .Returns(Task.FromResult(
+                              Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new [] { new object() } })));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
@@ -1186,11 +1202,11 @@ namespace System.Data.Entity.Core.Objects
             public void Connection_is_released_after_translator_exception()
             {
                 var dbCommandMock = new Mock<DbCommand>();
-                var dbDataReaderMock = new Mock<DbDataReader>();
+                var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                             .Returns(Task.FromResult(dbDataReaderMock.Object));
+                             .Returns(Task.FromResult(dataReader));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
@@ -1208,7 +1224,7 @@ namespace System.Data.Entity.Core.Objects
                             objectContext.ExecuteStoreQueryAsync<object>("Foo").Wait())).Message);
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
-                dbDataReaderMock.Protected().Verify("Dispose", Times.Once(), true);
+                Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
             }
         }
 

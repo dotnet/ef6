@@ -14917,6 +14917,38 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "The attempted operation is not valid. The data reader is closed."
+        /// </summary>
+        internal static Exception ADP_ClosedDataReaderError()
+        {
+            return new InvalidOperationException(Strings.ADP_ClosedDataReaderError);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Calling '{0}' when the data reader is closed is not a valid operation."
+        /// </summary>
+        internal static Exception ADP_DataReaderClosed(object p0)
+        {
+            return new InvalidOperationException(Strings.ADP_DataReaderClosed(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The attempted operation is not valid. The nested data reader has been implicitly closed because its parent data reader has been read or closed."
+        /// </summary>
+        internal static Exception ADP_ImplicitlyClosedDataReaderError()
+        {
+            return new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "There was an attempt to read, but no data was present."
+        /// </summary>
+        internal static Exception ADP_NoData()
+        {
+            return new InvalidOperationException(Strings.ADP_NoData);
+        }
+
+        /// <summary>
         /// ArgumentException with message like "All 'EdmMember' instances must be a valid member of the EdmType."
         /// </summary>
         internal static Exception InvalidEdmMemberInstance()

@@ -3036,6 +3036,8 @@ namespace System.Data.Entity.Core.Objects
             return entityCommand;
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Buffer disposed by the returned ObjectResult")]
         private ObjectResult<TElement> CreateFunctionObjectResult<TElement>(
             EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes, MergeOption mergeOption)
         {
@@ -3047,13 +3049,21 @@ namespace System.Data.Entity.Core.Objects
             var commandDefinition = entityCommand.GetCommandDefinition();
 
             // get store data reader
-            DbDataReader storeReader;
+            DbDataReader storeReader = null;
+            BufferedDataReader bufferedReader = null;
             try
             {
                 storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
+                bufferedReader = new BufferedDataReader(storeReader);
+                bufferedReader.Initialize();
             }
             catch (Exception e)
             {
+                if (bufferedReader != null)
+                {
+                    bufferedReader.Dispose();
+                }
+
                 ReleaseConnection();
                 if (e.IsCatchableEntityExceptionType())
                 {
@@ -3063,7 +3073,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            return MaterializedDataRecord<TElement>(entityCommand, storeReader, 0, entitySets, edmTypes, mergeOption);
+            return MaterializedDataRecord<TElement>(entityCommand, bufferedReader, 0, entitySets, edmTypes, mergeOption);
         }
 
         /// <summary>
@@ -3462,10 +3472,12 @@ namespace System.Data.Entity.Core.Objects
             return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, mergeOption, parameters);
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Buffer disposed by the returned ObjectResult")]
         private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
@@ -3476,15 +3488,22 @@ namespace System.Data.Entity.Core.Objects
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
             EnsureConnection();
-            DbDataReader reader = null;
 
+            DbDataReader reader = null;
+            BufferedDataReader bufferedReader = null;
             try
             {
                 var command = CreateStoreCommand(commandText, parameters);
                 reader = command.ExecuteReader();
+                bufferedReader = new BufferedDataReader(reader);
+                bufferedReader.Initialize();
             }
             catch
             {
+                if (bufferedReader != null)
+                {
+                    bufferedReader.Dispose();
+                }
                 // We only release the connection when there is an exception. Otherwise, the ObjectResult is
                 // in charge of releasing it.
                 ReleaseConnection();
@@ -3493,11 +3512,11 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                return InternalTranslate<TElement>(reader, entitySetName, mergeOption, true);
+                return InternalTranslate<TElement>(bufferedReader, entitySetName, mergeOption, true);
             }
             catch
             {
-                reader.Dispose();
+                bufferedReader.Dispose();
                 ReleaseConnection();
                 throw;
             }
@@ -3604,15 +3623,22 @@ namespace System.Data.Entity.Core.Objects
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
             await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            DbDataReader reader = null;
 
+            DbDataReader reader = null;
+            BufferedDataReader bufferedReader = null;
             try
             {
                 var command = CreateStoreCommand(commandText, parameters);
                 reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                bufferedReader = new BufferedDataReader(reader);
+                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch
             {
+                if (bufferedReader != null)
+                {
+                    bufferedReader.Dispose();
+                }
                 // We only release the connection when there is an exception. Otherwise, the ObjectResult is
                 // in charge of releasing it.
                 ReleaseConnection();
@@ -3621,11 +3647,11 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                return InternalTranslate<TElement>(reader, entitySetName, mergeOption, true);
+                return InternalTranslate<TElement>(bufferedReader, entitySetName, mergeOption, true);
             }
             catch
             {
-                reader.Dispose();
+                bufferedReader.Dispose();
                 ReleaseConnection();
                 throw;
             }

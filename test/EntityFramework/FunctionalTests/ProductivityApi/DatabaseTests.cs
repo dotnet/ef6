@@ -15,7 +15,7 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        static DatabaseTests()
+        public DatabaseTests()
         {
             using (var context = new SimpleModelContext())
             {
@@ -282,6 +282,7 @@ namespace ProductivityApiTests
             {
                 context.Database.CreateIfNotExists();
             }
+
             deleteDatabase();
 
             Assert.False(databaseExists());
@@ -328,7 +329,6 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Can_delete_database_if_exists_using_static_method_taking_named_connection_string_where_last_token_exists_in_config_file(
-            
             )
         {
             Can_delete_database_if_exists_using_static_method_taking_named_connection_string(
@@ -339,16 +339,16 @@ namespace ProductivityApiTests
             string namedConnectionString)
         {
             // Arrange
-            Database.Delete("SimpleModelInAppConfig");
-            using (var context = new SimpleModelContext("SimpleModelInAppConfig"))
+            Database.Delete(namedConnectionString);
+            using (var context = new SimpleModelContext(namedConnectionString))
             {
                 context.Database.Create();
-                Assert.True(Database.Exists("SimpleModelInAppConfig"));
+                Assert.True(Database.Exists(namedConnectionString));
             }
 
             // Act- Assert
-            Database.Delete("SimpleModelInAppConfig");
-            Assert.False(Database.Exists("SimpleModelInAppConfig"));
+            Database.Delete(namedConnectionString);
+            Assert.False(Database.Exists(namedConnectionString));
         }
 
         [Fact]

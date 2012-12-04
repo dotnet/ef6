@@ -200,8 +200,10 @@ namespace System.Data.Entity.SqlServer
         internal static string DropDatabaseScript(string databaseName)
         {
             var builder = new SqlDdlBuilder();
+
             builder.AppendSql("drop database ");
             builder.AppendIdentifier(databaseName);
+
             return builder.unencodedStringBuilder.ToString();
         }
 

@@ -53,7 +53,7 @@ namespace ProductivityApiUnitTests
         public class GetDefaultConnectionFactory : TestBase
         {
             private const string SqlExpressBaseConnectionString =
-                @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True";
+                @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
 
             private const string SqlConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";
 

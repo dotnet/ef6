@@ -33,11 +33,11 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new connection factory with a default BaseConnectionString property of
-        ///     'Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True'.
+        ///     'Data Source=.\SQLEXPRESS; Integrated Security=True;'.
         /// </summary>
         public SqlConnectionFactory()
         {
-            _baseConnectionString = @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True";
+            _baseConnectionString = @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The connection string to use for options to the database other than the 'Initial Catalog'.
         ///     The 'Initial Catalog' will  be prepended to this string based on the database name when
         ///     CreateConnection is called.
-        ///     The default is 'Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True'.
+        ///     The default is 'Data Source=.\SQLEXPRESS; Integrated Security=True;'.
         /// </summary>
         public string BaseConnectionString
         {

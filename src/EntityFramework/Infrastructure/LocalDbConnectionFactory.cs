@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotEmpty(localDbVersion, "localDbVersion");
 
             _localDbVersion = localDbVersion;
-            _baseConnectionString = @"Integrated Security=True; MultipleActiveResultSets=True;";
+            _baseConnectionString = @"Integrated Security=True;";
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The 'Initial Catalog' and 'AttachDbFilename' will be prepended to this string based on the
         ///     database name when CreateConnection is called.
         ///     The 'Data Source' will be set based on the LocalDbVersion argument.
-        ///     The default is 'Integrated Security=True; MultipleActiveResultSets=True;'.
+        ///     The default is 'Integrated Security=True;'.
         /// </summary>
         public string BaseConnectionString
         {

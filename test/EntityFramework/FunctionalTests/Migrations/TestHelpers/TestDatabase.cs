@@ -137,6 +137,7 @@ namespace System.Data.Entity.Migrations
 
         public override void DropDatabase()
         {
+            SqlConnection.ClearAllPools();
             ExecuteNonQuery(
                 @"ALTER DATABASE [" + _name
                 + "] SET OFFLINE WITH ROLLBACK IMMEDIATE;ALTER DATABASE [" + _name

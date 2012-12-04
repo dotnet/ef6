@@ -889,7 +889,7 @@ namespace ProductivityApiTests
             {
                 DefaultConnectionFactoryResolver.Instance.ConnectionFactory =
                     new SqlConnectionFactory(
-                        "Data Source=(localdb)\v11.0; Integrated Security=True; MultipleActiveResultSets=True; Connection Timeout=1");
+                        "Data Source=(localdb)\v11.0; Integrated Security=True; Connection Timeout=1;");
 
                 using (var context = new BadMvcContext())
                 {

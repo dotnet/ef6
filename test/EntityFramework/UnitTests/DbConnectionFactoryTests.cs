@@ -276,7 +276,6 @@ namespace ProductivityApiUnitTests
         {
             Assert.True(connectionString.Contains(@"Data Source=.\SQLEXPRESS"));
             Assert.True(connectionString.Contains("Integrated Security=True"));
-            Assert.True(connectionString.Contains("MultipleActiveResultSets=True"));
         }
 
         [Fact]
@@ -527,7 +526,7 @@ namespace ProductivityApiUnitTests
                         using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                         {
                             Assert.Equal(
-                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True",
                                 connection.ConnectionString);
                         }
                     });
@@ -543,7 +542,7 @@ namespace ProductivityApiUnitTests
                         using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                         {
                             Assert.Equal(
-                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
+                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True",
                                 connection.ConnectionString);
                         }
                     });

@@ -3392,7 +3392,7 @@ namespace ProductivityApiTests
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
 
-        [Fact]
+        [Fact(Skip = "Streaming isn't supported yet")]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
             using (var context = new SimpleModelContext())
@@ -3443,7 +3443,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Streaming isn't supported yet")]
         public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
         {
             using (var context = new SimpleModelContext())

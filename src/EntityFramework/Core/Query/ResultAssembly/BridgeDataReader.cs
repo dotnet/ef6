@@ -192,11 +192,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             {
                 if (_dataRecord.IsImplicitlyClosed)
                 {
-                    throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
+                    throw Error.ADP_ImplicitlyClosedDataReaderError();
                 }
                 if (_dataRecord.IsExplicitlyClosed)
                 {
-                    throw new InvalidOperationException(Strings.ADP_DataReaderClosed(methodName));
+                    throw Error.ADP_DataReaderClosed(methodName);
                 }
             }
         }

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -52,15 +53,23 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public static DbDataReader CreateDbDataReader(params IEnumerable<object[]>[] sourceEnumerables)
         {
+            if (sourceEnumerables.Length == 0)
+            {
+                sourceEnumerables = new[] { new object[0][] };
+            }
             var underlyingEnumerators = new IEnumerator<object[]>[sourceEnumerables.Length];
+            var fieldCounts = new int[sourceEnumerables.Length];
             for (var i = 0; i < sourceEnumerables.Length; i++)
             {
                 underlyingEnumerators[i] = sourceEnumerables[i].GetEnumerator();
+                fieldCounts[i] = sourceEnumerables[i].Count() > 0
+                    ? sourceEnumerables[i].First().Count()
+                    : 0;
             }
 
             var currentResultSet = 0;
 
-            var dbDataReaderMock = new Mock<DbDataReader>();
+            var dbDataReaderMock = new Mock<DbDataReader>() { CallBase = true };
             dbDataReaderMock
                 .Setup(m => m.Read())
                 .Returns(
@@ -96,9 +105,42 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 .Returns(
                     (int ordinal) =>
                     underlyingEnumerators[currentResultSet].Current[ordinal]);
+
             dbDataReaderMock
                 .Setup(m => m.IsDBNull(It.IsAny<int>()))
                 .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal] == null);
+
+#if !NET40
+
+            dbDataReaderMock
+                .Setup(m => m.GetFieldValueAsync<object>(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .Returns(
+                    (int ordinal, CancellationToken ct) =>
+                    Task.FromResult(underlyingEnumerators[currentResultSet].Current[ordinal]));
+
+            dbDataReaderMock
+                .Setup(m => m.IsDBNullAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .Returns((int ordinal, CancellationToken ct) => Task.FromResult(underlyingEnumerators[currentResultSet].Current[ordinal] == null));
+
+#endif
+
+            dbDataReaderMock
+                .Setup(m => m.FieldCount)
+                .Returns(() => fieldCounts[currentResultSet]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetName(It.IsAny<int>()))
+                .Returns((int ordinal) => "column" + ordinal);
+
+            var closed = false;
+
+            dbDataReaderMock
+                .Setup(m => m.IsClosed)
+                .Returns(() => closed);
+
+            dbDataReaderMock
+                .Setup(m => m.Close())
+                .Callback(() => closed = true);
 
             return dbDataReaderMock.Object;
         }

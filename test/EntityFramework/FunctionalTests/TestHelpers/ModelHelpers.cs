@@ -99,7 +99,7 @@ namespace System.Data.Entity
         {
             return String.Format(
                 CultureInfo.InvariantCulture,
-                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFrameworkMUE",
+                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};Integrated Security=True;Application Name=EntityFrameworkMUE;",
                 databaseName);
         }
 
@@ -114,7 +114,7 @@ namespace System.Data.Entity
 
             return String.Format(
                 CultureInfo.InvariantCulture,
-                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;MultipleActiveResultSets=True",
+                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;",
                 databaseName, databasePath);
         }
 

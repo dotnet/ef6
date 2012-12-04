@@ -4439,15 +4439,19 @@
   </data>
   <data name="ADP_ClosedDataReaderError" xml:space="preserve">
     <value>The attempted operation is not valid. The data reader is closed.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ADP_DataReaderClosed" xml:space="preserve">
     <value>Calling '{0}' when the data reader is closed is not a valid operation.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ADP_ImplicitlyClosedDataReaderError" xml:space="preserve">
     <value>The attempted operation is not valid. The nested data reader has been implicitly closed because its parent data reader has been read or closed.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ADP_NoData" xml:space="preserve">
     <value>There was an attempt to read, but no data was present.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ADP_GetSchemaTableIsNotSupported" xml:space="preserve">
     <value>The GetSchemaTable method is not supported.</value>

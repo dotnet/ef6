@@ -13,17 +13,14 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
 #endif
 
     /// <summary>
     ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific
-    ///     <see
-    ///         cref="ObjectQuery" />
+    ///     <see cref="ObjectQuery" />
     /// </summary>
     internal class ObjectQueryExecutionPlan
     {
@@ -132,9 +129,12 @@ namespace System.Data.Entity.Core.Objects.Internal
             return sb.ToString();
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Buffer disposed by the returned ObjectResult")]
         internal virtual ObjectResult<TResultType> Execute<TResultType>(ObjectContext context, ObjectParameterCollection parameterValues)
         {
             DbDataReader storeReader = null;
+            BufferedDataReader bufferedReader = null;
             try
             {
                 using (var entityCommand = PrepareEntityCommand(context, parameterValues))
@@ -143,8 +143,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                     storeReader = entityCommand.GetCommandDefinition().ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
                 }
 
+                bufferedReader = new BufferedDataReader(storeReader);
+                bufferedReader.Initialize();
+
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
-                var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                var shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
 
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
@@ -163,11 +166,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             catch (Exception)
             {
-                if (null != storeReader)
+                if (bufferedReader != null)
                 {
                     // Note: The caller is responsible for disposing reader if creating
                     // the enumerator fails.
-                    storeReader.Dispose();
+                    bufferedReader.Dispose();
                 }
                 throw;
             }
@@ -180,9 +183,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             CancellationToken cancellationToken)
         {
             DbDataReader storeReader = null;
+            BufferedDataReader bufferedReader = null;
             try
             {
-                using(var entityCommand = PrepareEntityCommand(context, parameterValues))
+                using (var entityCommand = PrepareEntityCommand(context, parameterValues))
                 {
                     // acquire store reader
                     storeReader = await
@@ -191,8 +195,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                                                .ConfigureAwait(continueOnCapturedContext: false);
                 }
 
+                bufferedReader = new BufferedDataReader(storeReader);
+                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
-                var shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                var shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
 
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
@@ -211,11 +218,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             catch (Exception)
             {
-                if (null != storeReader)
+                if (bufferedReader != null)
                 {
                     // Note: The caller is responsible for disposing reader if creating
                     // the enumerator fails.
-                    storeReader.Dispose();
+                    bufferedReader.Dispose();
                 }
                 throw;
             }

@@ -138,10 +138,8 @@ namespace System.Data.Entity.SqlServer
                 && 0 < parameters.Count)
             {
                 if (commandTree.CommandTreeKind != DbCommandTreeKind.Delete
-                    &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Insert
-                    &&
-                    commandTree.CommandTreeKind != DbCommandTreeKind.Update)
+                    && commandTree.CommandTreeKind != DbCommandTreeKind.Insert
+                    && commandTree.CommandTreeKind != DbCommandTreeKind.Update)
                 {
                     throw new InvalidOperationException(
                         Strings.ADP_InternalProviderError(1017 /*InternalErrorCode.SqlGenParametersNotPermitted*/));
@@ -753,7 +751,6 @@ namespace System.Data.Entity.SqlServer
         ///     CreateDatabase
         ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
@@ -762,16 +759,17 @@ namespace System.Data.Entity.SqlServer
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
+
             var sqlVersion = GetSqlVersion(storeItemCollection);
             var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName);
-            var setDatabaseOptionsScript = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
-            var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);            
-
             UsingMasterConnection(
                 sqlConnection, conn =>
                                    {
                                        // create database
-                                       CreateCommand(conn, createDatabaseScript, commandTimeout).ExecuteNonQuery();
+                                       using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
+                                       {
+                                           command.ExecuteNonQuery();
+                                       }
                                    });
 
             // Create database already succeeded. If there is a failure from this point on, the user should be informed.
@@ -781,22 +779,33 @@ namespace System.Data.Entity.SqlServer
                 // invalid connection may now be valid.
                 SqlConnection.ClearPool(sqlConnection);
 
+                var setDatabaseOptionsScript = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
                 if (!String.IsNullOrEmpty(setDatabaseOptionsScript))
                 {
                     UsingMasterConnection(
                         sqlConnection, conn =>
-                        {
-                            // set database options
-                            CreateCommand(conn, setDatabaseOptionsScript, commandTimeout).ExecuteNonQuery();
-                        });
+                                           {
+                                               // set database options
+                                               using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
+                                               {
+                                                   command.ExecuteNonQuery();
+                                               }
+                                           });
                 }
 
-                UsingConnection(
-                    sqlConnection, conn =>
-                                       {
-                                           // create database objects
-                                           CreateCommand(conn, createObjectsScript, commandTimeout).ExecuteNonQuery();
-                                       });
+                var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
+                if (!string.IsNullOrWhiteSpace(createObjectsScript))
+                {
+                    UsingConnection(
+                        sqlConnection, conn =>
+                                           {
+                                               // create database objects
+                                               using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
+                                               {
+                                                   command.ExecuteNonQuery();
+                                               }
+                                           });
+                }
             }
             catch (Exception e)
             {
@@ -927,7 +936,6 @@ namespace System.Data.Entity.SqlServer
         ///     Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
         ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
@@ -973,8 +981,11 @@ namespace System.Data.Entity.SqlServer
                                                var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
                                                var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
                                                    fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                               var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                                               databaseDoesNotExistInSysTables = (result == 0);
+                                               using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
+                                               {
+                                                   var rowsAffected = (int)command.ExecuteScalar();
+                                                   databaseDoesNotExistInSysTables = (rowsAffected == 0);
+                                               }
                                            });
                     if (databaseDoesNotExistInSysTables)
                     {
@@ -988,7 +999,6 @@ namespace System.Data.Entity.SqlServer
             return false;
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
             var databaseExistsInSysTables = false;
@@ -998,8 +1008,11 @@ namespace System.Data.Entity.SqlServer
                                        var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
                                        var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
                                            databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                       var result = (int)CreateCommand(conn, databaseExistsScript, commandTimeout).ExecuteScalar();
-                                       databaseExistsInSysTables = (result > 0);
+                                       using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
+                                       {
+                                           var rowsAffected = (int)command.ExecuteScalar();
+                                           databaseExistsInSysTables = (rowsAffected > 0);
+                                       }
                                    });
             return databaseExistsInSysTables;
         }
@@ -1075,14 +1088,20 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private static void DropDatabase(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
-            // clear the connection pool in case someone's holding on to the database still
-            SqlConnection.ClearPool(sqlConnection);
+            // clear the connection pools in case someone's holding on to the database still
+            SqlConnection.ClearAllPools();
 
             var dropDatabaseScript = SqlDdlBuilder.DropDatabaseScript(databaseName);
-            UsingMasterConnection(sqlConnection, (conn) => { CreateCommand(conn, dropDatabaseScript, commandTimeout).ExecuteNonQuery(); });
+            UsingMasterConnection(
+                sqlConnection, conn =>
+                                   {
+                                       using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
+                                       {
+                                           command.ExecuteNonQuery();
+                                       }
+                                   });
         }
 
         private static string CreateObjectsScript(SqlVersion version, StoreItemCollection storeItemCollection)
@@ -1090,7 +1109,7 @@ namespace System.Data.Entity.SqlServer
             return SqlDdlBuilder.CreateObjectsScript(storeItemCollection, createSchemas: version != SqlVersion.Sql8);
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by caller")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private static SqlCommand CreateCommand(SqlConnection sqlConnection, string commandText, int? commandTimeout)
         {
@@ -1128,10 +1147,7 @@ namespace System.Data.Entity.SqlServer
                     // if we opened the connection, we should close it
                     sqlConnection.Close();
                 }
-                if (sqlConnection.ConnectionString != holdConnectionString)
-                {
-                    sqlConnection.ConnectionString = holdConnectionString;
-                }
+                sqlConnection.ConnectionString = holdConnectionString;
             }
         }
 
@@ -1154,8 +1170,7 @@ namespace System.Data.Entity.SqlServer
             {
                 // if it appears that the credentials have been removed from the connection string, use an alternate explanation
                 if (!connectionBuilder.IntegratedSecurity
-                    &&
-                    (string.IsNullOrEmpty(connectionBuilder.UserID) || string.IsNullOrEmpty(connectionBuilder.Password)))
+                    && (string.IsNullOrEmpty(connectionBuilder.UserID) || string.IsNullOrEmpty(connectionBuilder.Password)))
                 {
                     throw new InvalidOperationException(Strings.SqlProvider_CredentialsMissingForMasterConnection, e);
                 }

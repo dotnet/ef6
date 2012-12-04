@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// <summary>
         ///     Where the data comes from
         /// </summary>
-        private readonly Shaper<RecordState> Shaper;
+        private readonly Shaper<RecordState> _shaper;
 
         /// <summary>
         ///     The current record that we're responsible for; this will change from row to row
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         internal BridgeDataRecord(Shaper<RecordState> shaper, int depth)
         {
             DebugCheck.NotNull(shaper);
-            Shaper = shaper;
+            _shaper = shaper;
             Depth = depth;
             // Rest of state is set through the SetRecordSource method.
         }
@@ -241,11 +241,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             if (IsExplicitlyClosed)
             {
-                throw new InvalidOperationException(Strings.ADP_ClosedDataReaderError);
+                throw Error.ADP_ClosedDataReaderError();
             }
             if (IsImplicitlyClosed)
             {
-                throw new InvalidOperationException(Strings.ADP_ImplicitlyClosedDataReaderError);
+                throw Error.ADP_ImplicitlyClosedDataReaderError();
             }
         }
 
@@ -258,7 +258,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
             if (!HasData)
             {
-                throw new InvalidOperationException(Strings.ADP_NoData);
+                throw Error.ADP_NoData();
             }
         }
 
@@ -566,7 +566,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                     }
                     else
                     {
-                        var nestedRecord = new BridgeDataRecord(Shaper, Depth + 1);
+                        var nestedRecord = new BridgeDataRecord(_shaper, Depth + 1);
                         nestedRecord.SetRecordSource(recordState, true);
                         result = nestedRecord;
                         _currentNestedRecord = nestedRecord;
@@ -579,7 +579,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                     if (null != coordinator)
                     {
                         var nestedReader = new BridgeDataReader(
-                            Shaper, coordinator.TypedCoordinatorFactory, Depth + 1, nextResultShaperInfos: null);
+                            _shaper, coordinator.TypedCoordinatorFactory, Depth + 1, nextResultShaperInfos: null);
                         result = nestedReader;
                         _currentNestedRecord = null;
                         _currentNestedReader = nestedReader;

@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         private readonly MergeOption _mergeOption;
 
         /// <summary>
-        ///     Result type affects assembly plan.
+        ///     Result type affects assembly plan
         /// </summary>
         private readonly Type _resultType;
 
