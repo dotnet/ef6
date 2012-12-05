@@ -13406,7 +13406,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The connection was not closed."
+        /// A string like "The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again."
         /// </summary>
         internal static string EntityClient_CannotReopenConnection
         {

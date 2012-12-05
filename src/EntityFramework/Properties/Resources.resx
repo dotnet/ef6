@@ -5341,6 +5341,6 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_CannotReopenConnection" xml:space="preserve">
-    <value>The connection was not closed.</value>
+    <value>The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again.</value>
   </data>
 </root>
