@@ -1198,7 +1198,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The context cannot be used while the model is being created."
+        /// A string like "The context cannot be used while the model is being created. This exception may be thrown if the context is used inside the OnModelCreating method or if the same context instance is accessed by multiple threads concurrently. Note that instance members of DbContext and related classes are not guaranteed to be thread safe."
         /// </summary>
         internal static string DbContext_ContextUsedInModelCreating
         {
@@ -14389,7 +14389,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "The context cannot be used while the model is being created."
+        /// InvalidOperationException with message like "The context cannot be used while the model is being created. This exception may be thrown if the context is used inside the OnModelCreating method or if the same context instance is accessed by multiple threads concurrently. Note that instance members of DbContext and related classes are not guaranteed to be thread safe."
         /// </summary>
         internal static Exception DbContext_ContextUsedInModelCreating()
         {
