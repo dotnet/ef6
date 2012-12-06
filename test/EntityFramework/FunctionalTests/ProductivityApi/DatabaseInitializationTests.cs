@@ -1488,30 +1488,20 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CreateDatabaseScript_returns_expected_result()
+        public void SetDatabaseOptionsScript_returns_expected_result()
         {
             const string databaseName = "ADatabaseName";
-            const string dataFileName = "ADataFileName";
-            const string logFileName = "ALogFileName";
-
-            const string sql8ScriptFormat =
-                "create database [{0}] " +
-                "on primary (name=N'{1}', filename=N'{1}') " +
-                "log on (name=N'{2}', filename=N'{2}')";
-
             const string sql9ScriptFormat =
-                sql8ScriptFormat + "\r\n" +
-                "if serverproperty('EngineEdition') <> 5 " +
-                "alter database [{0}] set read_committed_snapshot on";
+                "if serverproperty('EngineEdition') <> 5 execute sp_executesql N'alter database [{0}] set read_committed_snapshot on'";
 
-            var sql8Script = String.Format(sql8ScriptFormat, databaseName, dataFileName, logFileName);
-            var sql9Script = String.Format(sql9ScriptFormat, databaseName, dataFileName, logFileName);
+            var sql8Script = String.Empty;
+            var sql9Script = String.Format(sql9ScriptFormat, databaseName);
 
             foreach (SqlVersion sqlVersion in Enum.GetValues(typeof(SqlVersion)))
             {
-                var script = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName, sqlVersion);
-                var expectedScript = (sqlVersion >= SqlVersion.Sql9) ? sql9Script : sql8Script;                
-                Assert.True(String.CompareOrdinal(script, expectedScript) == 0);
+                var expectedScript = (sqlVersion >= SqlVersion.Sql9) ? sql9Script : sql8Script;
+                var script = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
+                Assert.Equal(expectedScript, script);
             }
         }
     }

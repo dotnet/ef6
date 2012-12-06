@@ -768,9 +768,9 @@ namespace System.Data.Entity.SqlServer
             string databaseName, dataFileName, logFileName;
             GetOrGenerateDatabaseNameAndGetFileNames(sqlConnection, out databaseName, out dataFileName, out logFileName);
             var sqlVersion = GetSqlVersion(storeItemCollection);
-            var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName, sqlVersion);
-
-            var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
+            var createDatabaseScript = SqlDdlBuilder.CreateDatabaseScript(databaseName, dataFileName, logFileName);
+            var setDatabaseOptionsScript = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
+            var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);            
 
             UsingMasterConnection(
                 sqlConnection, conn =>
@@ -785,6 +785,16 @@ namespace System.Data.Entity.SqlServer
                 // Clear connection pool for the database connection since after the 'create database' call, a previously
                 // invalid connection may now be valid.
                 SqlConnection.ClearPool(sqlConnection);
+
+                if (!String.IsNullOrEmpty(setDatabaseOptionsScript))
+                {
+                    UsingMasterConnection(
+                        sqlConnection, conn =>
+                        {
+                            // set database options
+                            CreateCommand(conn, setDatabaseOptionsScript, commandTimeout).ExecuteNonQuery();
+                        });
+                }
 
                 UsingConnection(
                     sqlConnection, conn =>
