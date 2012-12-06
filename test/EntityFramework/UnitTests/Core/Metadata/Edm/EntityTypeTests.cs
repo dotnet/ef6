@@ -9,6 +9,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class EntityTypeTests
     {
         [Fact]
+        public void Properties_collection_is_live_until_entity_goes_readonly()
+        {
+            var entityType = new EntityType();
+
+            Assert.False(entityType.IsReadOnly);
+            Assert.NotSame(entityType.Properties, entityType.Properties);
+
+            entityType.SetReadOnly();
+
+            Assert.Same(entityType.Properties, entityType.Properties);
+        }
+
+        [Fact]
         public void Can_add_and_remove_foreign_key_builders()
         {
             var entityType = new EntityType();

@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Data.Entity.Resources;
+    using System.CodeDom.Compiler;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public sealed class ConfigurationRegistrarTests
@@ -49,6 +50,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         }
 
         [Fact]
+        public void AddFromAssembly_throw_if_assembly_is_null()
+        {
+            var registrar = new ConfigurationRegistrar(new ModelConfiguration());
+
+            Assert.Equal("assembly", Assert.Throws<ArgumentNullException>(() => registrar.AddFromAssembly(null)).ParamName);
+        }
+
+        [Fact]
+        public void AddFromAssembly_should_add_all_configuration_to_model_configuration()
+        {
+            var modelConfiguration = new ModelConfiguration();
+
+            new ConfigurationRegistrar(modelConfiguration).AddFromAssembly(CreateDynamicAssemblyWithStructuralTypeConfigurations());
+
+            Assert.Equal(3, modelConfiguration.ComplexTypes.Count());
+            Assert.Equal(3, modelConfiguration.Entities.Count());
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Entity1"));
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Complex1"));
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Entity2"));
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Complex2"));
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Entity3"));
+            Assert.Equal(1, modelConfiguration.ConfiguredTypes.Count(t => t.Name == "Complex3"));
+        }
+
+        [Fact]
         public void Get_configured_types_should_return_types()
         {
             var modelConfiguration = new ModelConfiguration();
@@ -58,6 +84,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     .Add(new EntityTypeConfiguration<string>());
 
             Assert.Equal(2, configurationRegistrar.GetConfiguredTypes().Count());
+        }
+
+        private Assembly CreateDynamicAssemblyWithStructuralTypeConfigurations()
+        {
+            var parameters = new CompilerParameters
+                                 {
+                                     GenerateExecutable = false,
+                                     OutputAssembly = "DynamicAssemblyWithStructuralTypeConfigurationsForTests.dll"
+                                 };
+            parameters.ReferencedAssemblies.Add("EntityFramework.dll");
+
+            return CodeDomProvider
+                .CreateProvider("C#")
+                .CompileAssemblyFromSource(
+                    parameters,
+                    @"using System.Data.Entity.ModelConfiguration;
+                      namespace Tests
+                      {
+                          public class Entity1 {}
+                          public class Entity2 {}
+                          public class Entity3 {}
+                          public class Complex1 {} 
+                          public class Complex2 {} 
+                          public class Complex3 {} 
+                          public class Foo {}
+                          class CommonEntityConfig<T> : EntityTypeConfiguration<T> where T : class {} 
+                          class CommonComplexConfig<T> : ComplexTypeConfiguration<T> where T : class {}
+                          class EntityConfig1 : EntityTypeConfiguration<Entity1> {} 
+                          class ComplexConfig1 : ComplexTypeConfiguration<Complex1> {}
+                          class EntityConfig2 : CommonEntityConfig<Entity2> {} 
+                          class ComplexConfig2 : CommonComplexConfig<Complex2> {}
+                          abstract class AbstractEntityConfig : EntityTypeConfiguration<Entity3> {} 
+                          abstract class AbstractComplexConfig : ComplexTypeConfiguration<Complex3> {}
+                          class EntityConfig3 : AbstractEntityConfig {} 
+                          class ComplexConfig3 : AbstractComplexConfig {}
+                      }")
+                .CompiledAssembly;
         }
     }
 }

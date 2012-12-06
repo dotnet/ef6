@@ -295,7 +295,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void EntityTypeConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityTypeConfiguration>(10);
+            VerifyFieldCount<EntityTypeConfiguration>(11);
         }
 
         [Fact]
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
 
             // This should have no effect because _isKeyConfigured is set to true
-            clone.Key(mockPropertyInfo2, null);
+            clone.Key(mockPropertyInfo2);
 
             VerifyKeyProperty(clone, "P1", mockPropertyInfo1, mockPropertyInfo2);
 
@@ -909,6 +909,12 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         }
 
         [Fact]
+        public void Entities_with_type_returns_configuration_object()
+        {
+            Assert.NotNull(new DbModelBuilder().Entities<object>());
+        }
+
+        [Fact]
         public void Properties_returns_configuration_object()
         {
             Assert.NotNull(new DbModelBuilder().Properties());
@@ -920,7 +926,6 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var decimalProperty = new MockPropertyInfo(typeof(decimal), "Property1");
             var nullableDecimalProperty = new MockPropertyInfo(typeof(decimal?), "Property2");
             var nonDecimalProperty = new MockPropertyInfo(typeof(string), "Property3");
-
 
             var config = new DbModelBuilder().Properties<decimal>();
             Assert.NotNull(config);
@@ -942,6 +947,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             modelBuilder.Properties<DbGeography>();
             modelBuilder.Properties<DbGeometry>();
             modelBuilder.Properties<string>();
+            modelBuilder.Properties<DateTimeKind>();
 
             var ex = Assert.Throws<InvalidOperationException>(
                 () => modelBuilder.Properties<object>());

@@ -217,6 +217,25 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class ShopContext_v5 : ShopContext_v1
+    {
+        public ShopContext_v5()
+        {
+        }
+
+        public ShopContext_v5(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasDefaultSchema("non_default_schema");
+        }
+    }
+
     public class EmptyModel : DbContext
     {
     }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -78,6 +79,18 @@ namespace System.Data.Entity.Migrations
                       };
 
             Assert.Equal("Foo", migrationsConfiguration.ContextKey);
+        }
+
+        [Fact]
+        public void ContextKey_restricts_length_to_context_key_max_length()
+        {
+            var migrationsConfiguration
+                = new TestMigrationsConfiguration
+                {
+                    ContextKey = new string('a', 600)
+                };
+
+            Assert.Equal(new string('a', HistoryContext.ContextKeyMaxLength), migrationsConfiguration.ContextKey);
         }
 
         [Fact]

@@ -11,20 +11,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model and a captured value.
+    ///     the entity types in a model that inherit from a common, specified type and a 
+    ///     captured value.
     /// </summary>
-    /// <typeparam name="T"> Type of the captured value. </typeparam>
-    public class EntityConventionWithHavingConfiguration<T>
+    /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>
+    /// <typeparam name="TValue"> Type of the captured value. </typeparam>
+    public class EntityConventionOfTypeWithHavingConfiguration<T, TValue>
         where T : class
+        where TValue : class
     {
         private readonly ConventionsConfiguration _conventionsConfiguration;
         private readonly IEnumerable<Func<Type, bool>> _predicates;
-        private readonly Func<Type, T> _capturingPredicate;
+        private readonly Func<Type, TValue> _capturingPredicate;
 
-        internal EntityConventionWithHavingConfiguration(
+        internal EntityConventionOfTypeWithHavingConfiguration(
             ConventionsConfiguration conventionsConfiguration,
             IEnumerable<Func<Type, bool>> predicates,
-            Func<Type, T> capturingPredicate)
+            Func<Type, TValue> capturingPredicate)
         {
             DebugCheck.NotNull(conventionsConfiguration);
             DebugCheck.NotNull(predicates);
@@ -45,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _predicates; }
         }
 
-        internal Func<Type, T> CapturingPredicate
+        internal Func<Type, TValue> CapturingPredicate
         {
             get { return _capturingPredicate; }
         }
@@ -54,15 +57,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="LightweightEntityConfiguration" />
+        ///     An action that performs configuration against a <see cref="LightweightEntityConfiguration{T}" />
         ///     using a captured value.
         /// </param>
-        public void Configure(Action<LightweightEntityConfiguration, T> entityConfigurationAction)
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public void Configure(Action<LightweightEntityConfiguration<T>, TValue> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
             _conventionsConfiguration.Add(
-                new EntityConventionWithHaving<T>(
+                new EntityConventionOfTypeWithHaving<T, TValue>(
                     _predicates,
                     _capturingPredicate,
                     entityConfigurationAction));

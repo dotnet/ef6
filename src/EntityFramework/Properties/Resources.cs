@@ -1198,7 +1198,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The context cannot be used while the model is being created."
+        /// A string like "The context cannot be used while the model is being created. This exception may be thrown if the context is used inside the OnModelCreating method or if the same context instance is accessed by multiple threads concurrently. Note that instance members of DbContext and related classes are not guaranteed to be thread safe."
         /// </summary>
         internal static string DbContext_ContextUsedInModelCreating
         {
@@ -13366,6 +13366,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly."
+        /// </summary>
+        internal static string CreateConfigurationType_NoParameterlessConstructor(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CreateConfigurationType_NoParameterlessConstructor, p0);
+        }
+
+        /// <summary>
         /// A string like "The '{0}' collection used in the call to '{1}' must contain at least one element."
         /// </summary>
         internal static string CollectionEmpty(object p0, object p1)
@@ -13382,11 +13390,35 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported."
+        /// A string like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static string ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
             return EntityRes.GetString(EntityRes.ModelBuilder_PropertyFilterTypeMustBePrimitive, p0);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' is invalid. The specified type must derive from '{1}'."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_TypeMismatch, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_NonScalarProperty(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_NonScalarProperty, p0);
+        }
+
+        /// <summary>
+        /// A string like "The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again."
+        /// </summary>
+        internal static string EntityClient_CannotReopenConnection
+        {
+            get { return EntityRes.GetString(EntityRes.EntityClient_CannotReopenConnection); }
         }
     } 
 
@@ -14373,7 +14405,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "The context cannot be used while the model is being created."
+        /// InvalidOperationException with message like "The context cannot be used while the model is being created. This exception may be thrown if the context is used inside the OnModelCreating method or if the same context instance is accessed by multiple threads concurrently. Note that instance members of DbContext and related classes are not guaranteed to be thread safe."
         /// </summary>
         internal static Exception DbContext_ContextUsedInModelCreating()
         {
@@ -14981,11 +15013,27 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// InvalidOperationException with message like "The type '{0}' cannot be used used to filter properties. Only scalar types, string, and byte[] are supported."
+        /// InvalidOperationException with message like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static Exception ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
             return new InvalidOperationException(Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(p0));
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "The type '{0}' is invalid. The specified type must derive from '{1}'."
+        /// </summary>
+        internal static Exception LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
+        {
+            return new ArgumentException(Strings.LightweightEntityConfiguration_TypeMismatch(p0, p1));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
+        /// </summary>
+        internal static Exception LightweightEntityConfiguration_NonScalarProperty(object p0)
+        {
+            return new InvalidOperationException(Strings.LightweightEntityConfiguration_NonScalarProperty(p0));
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16689,9 +16737,13 @@ namespace System.Data.Entity.Resources
         internal const string DbSpatialServicesTypeNotFound = "DbSpatialServicesTypeNotFound";
         internal const string DbSpatialServices_InstanceMissing = "DbSpatialServices_InstanceMissing";
         internal const string DbSpatialServices_NotDbSpatialServices = "DbSpatialServices_NotDbSpatialServices";
+        internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
+        internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
+        internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
+        internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
         
         static EntityRes loader = null;
         ResourceManager resources;

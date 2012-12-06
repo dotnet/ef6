@@ -43,6 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
+                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -61,15 +62,18 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
+                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.Open(), Times.Once());
             }
 
             [Fact]
-            public void Underlying_dbConnection_is_not_being_reopened_if_it_was_initally_open()
+            public void Exception_is_thrown_when_trying_to_open_already_opened_connection()
             {
+                var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+                dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -77,9 +81,11 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true);
 
                 entityConnection.Open();
+                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
-                dbConnectionMock.Verify(m => m.Open(), Times.Never());
-                Assert.Equal(ConnectionState.Open, dbConnectionMock.Object.State);
+                Assert.Equal(
+                    Strings.EntityClient_CannotReopenConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
             }
 
             [Fact]
@@ -118,7 +124,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 dbConnectionMock.Verify(m => m.Close(), Times.Never());
 
-                Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
 
             [Fact]
@@ -158,12 +164,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open entityConnection (automatically opens store connection)
                     entityConnection.Open();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // close entityConnection without explicitly closing underlying store connection 
                     entityConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -188,12 +196,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open entityConnection (automatically opens store connection)
                 entityConnection.Open();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // close entityConnection without explicitly closing underlying store connection 
                 entityConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -217,12 +227,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open underlying store connection without explicitly opening entityConnection
                     entityConnection.StoreConnection.Open();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                     // now close underlying store connection (without explicitly closing entityConnection)
                     entityConnection.StoreConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State);
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -245,12 +257,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open underlying store connection without explicitly opening entityConnection
                 entityConnection.StoreConnection.Open();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // now close underlying store connection (without explicitly closing entityConnection)
                 entityConnection.StoreConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -274,17 +288,20 @@ namespace System.Data.Entity.Core.EntityClient
                     // open entityConnection - both entityConnection and store connection should now be open
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
                     entityConnection.Open();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // now close the underlying store connection without explicitly closing entityConnection
                     entityConnection.StoreConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                     // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                     entityConnection.StoreConnection.Open();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State);
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
                 }
@@ -306,17 +323,20 @@ namespace System.Data.Entity.Core.EntityClient
                 // open entityConnection - both entityConnection and store connection should now be open
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
                 entityConnection.Open();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // now close the underlying store connection without explicitly closing entityConnection
                 entityConnection.StoreConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                 entityConnection.StoreConnection.Open();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
@@ -352,6 +372,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true);
 
                 entityConnection.OpenAsync().Wait();
+                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -370,12 +391,13 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true);
 
                 entityConnection.OpenAsync().Wait();
+                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
             }
 
             [Fact]
-            public void Underlying_dbConnection_is_not_being_reopened_if_it_was_initally_open()
+            public void Attempt_to_reopen_EntityConnection_throws()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
@@ -384,10 +406,8 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true);
 
-                entityConnection.OpenAsync().Wait();
-
-                dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Never());
-                Assert.Equal(ConnectionState.Open, dbConnectionMock.Object.State);
+                AssertThrowsInAsyncMethod<InvalidOperationException>(
+                    Strings.EntityClient_CannotReopenConnection, () => entityConnection.OpenAsync().Wait());
             }
 
             [Fact]
@@ -412,10 +432,8 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_open_and_metadata_initialization_fails()
             {
-                var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
-                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
 
@@ -423,20 +441,23 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true);
 
+                Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
+
                 AssertThrowsInAsyncMethod<InvalidOperationException>(null, () => entityConnection.OpenAsync().Wait());
 
                 dbConnectionMock.Verify(m => m.Close(), Times.Never());
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
 
             [Fact]
             public void EntityConnection_with_closed_underlying_connection_maintains_closed_if_metadata_initialization_fails()
             {
-                var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
-                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
 
@@ -491,12 +512,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open entityConnection (automatically opens store connection)
                     entityConnection.OpenAsync().Wait();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // close entityConnection without explicitly closing underlying store connection 
                     entityConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -522,12 +545,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open entityConnection (automatically opens store connection)
                 entityConnection.OpenAsync().Wait();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // close entityConnection without explicitly closing underlying store connection 
                 entityConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -552,12 +577,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open underlying store connection without explicitly opening entityConnection
                     entityConnection.StoreConnection.OpenAsync().Wait();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                     // now close underlying store connection (without explicitly closing entityConnection)
                     entityConnection.StoreConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State);
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -581,12 +608,14 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open underlying store connection without explicitly opening entityConnection
                 entityConnection.StoreConnection.OpenAsync().Wait();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // now close underlying store connection (without explicitly closing entityConnection)
                 entityConnection.StoreConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -610,17 +639,20 @@ namespace System.Data.Entity.Core.EntityClient
                     // open entityConnection - both entityConnection and store connection should now be open
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
                     entityConnection.OpenAsync().Wait();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // now close the underlying store connection without explicitly closing entityConnection
                     entityConnection.StoreConnection.Close();
+                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                     // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                     entityConnection.StoreConnection.OpenAsync().Wait();
+                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State);
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
                 }
@@ -642,17 +674,20 @@ namespace System.Data.Entity.Core.EntityClient
                 // open entityConnection - both entityConnection and store connection should now be open
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
                 entityConnection.OpenAsync().Wait();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // now close the underlying store connection without explicitly closing entityConnection
                 entityConnection.StoreConnection.Close();
+                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                 entityConnection.StoreConnection.OpenAsync().Wait();
+                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }

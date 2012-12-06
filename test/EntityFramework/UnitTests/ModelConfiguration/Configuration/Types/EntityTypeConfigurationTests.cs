@@ -264,5 +264,52 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
                         TableName = new DatabaseName("E1TableExtended")
                     });
         }
+
+        [Fact]
+        public void Key_appends_key_members_when_set_by_attributes()
+        {
+            var type = new MockType()
+                .Property<int>("Key1")
+                .Property<int>("Key2");
+            var config = new EntityTypeConfiguration(type);
+
+            config.Key(type.GetProperty("Key1"), null, true);
+            config.Key(type.GetProperty("Key2"), null, true);
+
+            Assert.Equal(2, config.KeyProperties.Count());
+            Assert.Equal("Key1", config.KeyProperties.First().Name);
+            Assert.Equal("Key2", config.KeyProperties.Last().Name);
+        }
+
+        [Fact]
+        public void Key_appends_key_members_when_not_set_by_attributes()
+        {
+            var type = new MockType()
+                .Property<int>("Key1")
+                .Property<int>("Key2");
+            var config = new EntityTypeConfiguration(type);
+
+            config.Key(type.GetProperty("Key1"));
+            config.Key(type.GetProperty("Key2"));
+
+            Assert.Equal(2, config.KeyProperties.Count());
+            Assert.Equal("Key1", config.KeyProperties.First().Name);
+            Assert.Equal("Key2", config.KeyProperties.Last().Name);
+        }
+
+        [Fact]
+        public void Key_does_not_append_key_members_once_set_by_attributes()
+        {
+            var type = new MockType()
+                .Property<int>("Key1")
+                .Property<int>("Key2");
+            var config = new EntityTypeConfiguration(type);
+
+            config.Key(type.GetProperty("Key1"), null, true);
+            config.Key(type.GetProperty("Key2"));
+
+            Assert.Equal(1, config.KeyProperties.Count());
+            Assert.Equal("Key1", config.KeyProperties.Single().Name);
+        }
     }
 }

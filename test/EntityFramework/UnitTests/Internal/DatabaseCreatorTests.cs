@@ -116,7 +116,7 @@ namespace System.Data.Entity.Internal
             Assert.Equal(
                 "Database=Foo",
                 configuration.TargetDatabase.GetConnectionString(AppConfig.DefaultInstance).ConnectionString);
-            Assert.Equal("Castle.Proxies.FakeContextProxy", configuration.ContextKey);
+            Assert.Equal("System.Data.Entity.Internal.DatabaseCreatorTests+FakeContext", configuration.ContextKey);
         }
 
         [Fact]
@@ -180,6 +180,7 @@ namespace System.Data.Entity.Internal
             mockContext.Setup(m => m.ProviderName).Returns("System.Data.SqlClient");
             mockContext.Setup(m => m.ModelProviderInfo).Returns(ProviderRegistry.Sql2008_ProviderInfo);
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection());
+            mockContext.Setup(m => m.OwnerShortTypeName).Returns(typeof(FakeContext).ToString());
 
             if (mockOperations != null)
             {

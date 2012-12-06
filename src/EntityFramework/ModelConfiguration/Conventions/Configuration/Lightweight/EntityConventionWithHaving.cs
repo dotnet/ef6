@@ -6,29 +6,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal class EntityConventionWithHaving<T> : EntityConventionBase
+    internal class EntityConventionWithHaving<T> : EntityConventionWithHavingBase<T>
         where T : class
     {
-        private readonly Func<Type, T> _capturingPredicate;
         private readonly Action<LightweightEntityConfiguration, T> _entityConfigurationAction;
 
         public EntityConventionWithHaving(
             IEnumerable<Func<Type, bool>> predicates,
             Func<Type, T> capturingPredicate,
             Action<LightweightEntityConfiguration, T> entityConfigurationAction)
-            : base(predicates)
+            : base(predicates, capturingPredicate)
         {
             DebugCheck.NotNull(predicates);
             DebugCheck.NotNull(capturingPredicate);
             DebugCheck.NotNull(entityConfigurationAction);
 
-            _capturingPredicate = capturingPredicate;
             _entityConfigurationAction = entityConfigurationAction;
-        }
-
-        internal Func<Type, T> CapturingPredicate
-        {
-            get { return _capturingPredicate; }
         }
 
         internal Action<LightweightEntityConfiguration, T> EntityConfigurationAction
@@ -36,17 +29,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _entityConfigurationAction; }
         }
 
-        protected override void ApplyCore(Type memberInfo, Func<EntityTypeConfiguration> configuration)
+        protected override void InvokeAction(Type memberInfo, Func<EntityTypeConfiguration> configuration, T value)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(value);
 
-            var value = _capturingPredicate(memberInfo);
-
-            if (value != null)
-            {
-                _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration), value);
-            }
+            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration), value);
         }
     }
 }

@@ -9,12 +9,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     ///     Allows derived configuration classes for entities and complex types to be registered with a
-    ///     <see
-    ///         cref="DbModelBuilder" />
-    ///     .
+    ///     <see cref="DbModelBuilder" />.
     /// </summary>
     /// <remarks>
     ///     Derived configuration classes are created by deriving from <see cref="EntityTypeConfiguration" />
@@ -32,6 +31,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(modelConfiguration);
 
             _modelConfiguration = modelConfiguration;
+        }
+
+        /// <summary>
+        ///     Discovers all types that inherit from <see cref="EntityTypeConfiguration" /> or
+        ///     <see cref="ComplexTypeConfiguration" /> in the given assembly and adds an instance
+        ///     of each discovered type to this registrar.
+        /// </summary>
+        /// <remarks>
+        ///     Note that only types that are abstract or generic type definitions are skipped. Every
+        ///     type that is discovered and added must provide a parameterless constructor.
+        /// </remarks>
+        /// <param name="assembly">The assembly containing model configurations to add.</param>
+        /// <returns>The same ConfigurationRegistrar instance so that multiple calls can be chained.</returns>
+        public virtual ConfigurationRegistrar AddFromAssembly(Assembly assembly)
+        {
+            Check.NotNull(assembly, "assembly");
+
+            new ConfigurationTypesFinder().AddConfigurationTypesToModel(assembly.GetAccessibleTypes(), _modelConfiguration);
+
+            return this;
         }
 
         /// <summary>

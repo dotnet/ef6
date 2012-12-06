@@ -34,12 +34,6 @@ namespace System.Data.Entity.Core.EntityClient
         private const string s_providerConnectionString = "provider connection string";
         private const string s_readerPrefix = "reader://";
 
-        private static readonly StateChangeEventArgs _stateChangeClosed = new StateChangeEventArgs(
-            ConnectionState.Open, ConnectionState.Closed);
-
-        private static readonly StateChangeEventArgs _stateChangeOpen = new StateChangeEventArgs(
-            ConnectionState.Closed, ConnectionState.Open);
-
         private readonly object _connectionStringLock = new object();
         private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
 
@@ -47,13 +41,13 @@ namespace System.Data.Entity.Core.EntityClient
         private DbConnectionOptions _userConnectionOptions;
         private DbConnectionOptions _effectiveConnectionOptions;
 
-        // The internal connection state of the entity client, which is distinct from that of the
-        // store connection it aggregates.
+        // The internal connection state of the entity client, which reflects the underlying
+        // store connection's state.
         private ConnectionState _entityClientConnectionState = ConnectionState.Closed;
 
         private DbProviderFactory _providerFactory;
         private DbConnection _storeConnection;
-        private readonly bool _userOwnsStoreConnection;
+        private readonly bool _entityConnectionShouldDisposeStoreConnection = true;
         private MetadataWorkspace _metadataWorkspace;
         // DbTransaction started using BeginDbTransaction() method
         private EntityTransaction _currentTransaction;
@@ -127,11 +121,6 @@ namespace System.Data.Entity.Core.EntityClient
                         Strings.EntityClient_ItemCollectionsNotRegisteredInWorkspace("StorageMappingItemCollection"));
                 }
 
-                if (connection.State != ConnectionState.Closed)
-                {
-                    throw new ArgumentException(Strings.EntityClient_ConnectionMustBeClosed);
-                }
-
                 // Verify that a factory can be retrieved
                 if (connection.GetProviderFactory() == null)
                 {
@@ -141,15 +130,46 @@ namespace System.Data.Entity.Core.EntityClient
                 var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
 
                 _providerFactory = collection.StoreProviderFactory;
-                _userOwnsStoreConnection = true;
+                _entityConnectionShouldDisposeStoreConnection = false; // something outside of EntityConnection created the storeConnection and that is responsible for disposing it
                 _initialized = true;
             }
 
             _metadataWorkspace = workspace;
             _storeConnection = connection;
-            // Note: as a design decision we decided _not_ to subscribe to state change events on the underlying DbConnection, but
-            // rather to ensure that the EntityConnection State is updated to the same as the underlying DbConnection's State
-            // whenever you ask for it
+
+            if (_storeConnection != null)
+            {
+                _entityClientConnectionState = _storeConnection.State;
+            }
+
+            SubscribeToStoreConnectionStateChangeEvents();
+        }
+
+        private void SubscribeToStoreConnectionStateChangeEvents()
+        {
+            if (_storeConnection != null)
+            {
+                _storeConnection.StateChange += StoreConnectionStateChangeHandler;
+            }
+        }
+
+        private void UnsubscribeFromStoreConnectionStateChangeEvents()
+        {
+            if (_storeConnection != null)
+            {
+                _storeConnection.StateChange -= StoreConnectionStateChangeHandler;
+            }
+        }
+
+        protected virtual void StoreConnectionStateChangeHandler(Object sender, StateChangeEventArgs stateChange)
+        {
+            var newStoreConnectionState = stateChange.CurrentState;
+            if (_entityClientConnectionState != newStoreConnectionState)
+            {
+                var origEntityConnectionState = _entityClientConnectionState;
+                _entityClientConnectionState = stateChange.CurrentState;
+                OnStateChange(new StateChangeEventArgs(origEntityConnectionState, newStoreConnectionState));
+            }
         }
 
         /// <summary>
@@ -289,31 +309,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             get
             {
-                try
-                {
-                    if (StoreConnection != null)
-                    {
-                        ConnectionState storeConnectionState = StoreConnection.State;
-                        if (storeConnectionState != _entityClientConnectionState)
-                        {
-                            ConnectionState originalState = _entityClientConnectionState;
-                            _entityClientConnectionState = storeConnectionState;
-                            OnStateChange(new StateChangeEventArgs(originalState, _entityClientConnectionState));
-                        }
-
-                    }
-
-                    return _entityClientConnectionState;
-                }
-                catch (Exception e)
-                {
-                    if (e.IsCatchableExceptionType())
-                    {
-                        throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"State"), e);
-                    }
-
-                    throw;
-                }
+                return _entityClientConnectionState;
             }
         }
 
@@ -535,17 +531,19 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
+            if (State != ConnectionState.Closed)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+            }
+
             var closeStoreConnectionOnFailure = false;
             try
             {
-                if (_storeConnection.State
-                    != ConnectionState.Open)
+                if (_storeConnection.State != ConnectionState.Open)
                 {
                     _storeConnection.Open();
                     closeStoreConnectionOnFailure = true;
                 }
-
-                ResetStoreConnection(_storeConnection, originalConnection: null, closeOriginalConnection: false);
 
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
@@ -570,7 +568,6 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
-            SetEntityClientConnectionStateToOpen();
         }
 
 #if !NET40
@@ -588,17 +585,19 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
             }
 
+            if (State != ConnectionState.Closed)
+            {
+                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+            }
+
             var closeStoreConnectionOnFailure = false;
             try
             {
-                if (_storeConnection.State
-                    != ConnectionState.Open)
+                if (_storeConnection.State != ConnectionState.Open)
                 {
                     await _storeConnection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     closeStoreConnectionOnFailure = true;
                 }
-
-                ResetStoreConnection(_storeConnection, originalConnection: null, closeOriginalConnection: false);
 
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
@@ -623,7 +622,6 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
-            SetEntityClientConnectionStateToOpen();
         }
 
 #endif
@@ -666,35 +664,25 @@ namespace System.Data.Entity.Core.EntityClient
                 // Undo the open if something failed
                 if (e.IsCatchableExceptionType())
                 {
-                    ResetStoreConnection(newConnection, originalConnection, closeOriginalConnectionOnFailure);
+                    if (newConnection != originalConnection)
+                    {
+                        UnsubscribeFromStoreConnectionStateChangeEvents();
+                    }
+
+                    _storeConnection = newConnection;
+
+                    if (newConnection != originalConnection)
+                    {
+                        SubscribeToStoreConnectionStateChangeEvents();
+                    }
+
+                    if (closeOriginalConnectionOnFailure && originalConnection != null)
+                    {
+                        originalConnection.Close();
+                    }
                 }
 
                 throw;
-            }
-        }
-
-        /// <summary>
-        ///     Set the entity client connection state to Open, and raise an appropriate event
-        /// </summary>
-        private void SetEntityClientConnectionStateToOpen()
-        {
-            _entityClientConnectionState = ConnectionState.Open;
-            OnStateChange(_stateChangeOpen);
-        }
-
-        /// <summary>
-        ///     This method sets the store connection and hooks up the event
-        /// </summary>
-        /// <param name="newConnection"> The DbConnection to set </param>
-        /// <param name="originalConnection"> The original DbConnection to be closed - this argument could be null </param>
-        /// <param name="closeOriginalConnection"> Indicates whether the original store connection should be closed </param>
-        private void ResetStoreConnection(DbConnection newConnection, DbConnection originalConnection, bool closeOriginalConnection)
-        {
-            _storeConnection = newConnection;
-
-            if (closeOriginalConnection && originalConnection != null)
-            {
-                originalConnection.Close();
             }
         }
 
@@ -709,7 +697,7 @@ namespace System.Data.Entity.Core.EntityClient
                 return;
             }
 
-            CloseHelper();
+            StoreCloseHelper(); // note: we will update our own state since we are subscribed to event on underlying store connection
         }
 
         /// <summary>
@@ -862,14 +850,14 @@ namespace System.Data.Entity.Core.EntityClient
             if (disposing)
             {
                 ClearTransactions();
-                var raiseStateChangeEvent = EntityCloseHelper(false, State);
 
                 if (_storeConnection != null)
                 {
                     StoreCloseHelper(); // closes store connection
                     if (_storeConnection != null)
                     {
-                        if (!_userOwnsStoreConnection) // only dispose it if we didn't get it from the user...
+                        UnsubscribeFromStoreConnectionStateChangeEvents();
+                        if (_entityConnectionShouldDisposeStoreConnection) // only dispose it if we are responsible for disposing...
                         {
                             _storeConnection.Dispose();
                         }
@@ -877,15 +865,13 @@ namespace System.Data.Entity.Core.EntityClient
                     }
                 }
 
+                // ensure our own state is closed even if _storeConnection was null
+                _entityClientConnectionState = ConnectionState.Closed;
+
                 // Change the connection string to just an empty string, ChangeConnectionString should always succeed here,
                 // it's unnecessary to pass in the connection string parameter name in the second argument, which we don't
                 // have anyway
                 ChangeConnectionString(String.Empty);
-
-                if (raiseStateChangeEvent) // we need to raise the event explicitly
-                {
-                    OnStateChange(_stateChangeClosed);
-                }
             }
             base.Dispose(disposing);
         }
@@ -991,7 +977,8 @@ namespace System.Data.Entity.Core.EntityClient
                 _metadataWorkspace = null;
 
                 ClearTransactions();
-                ResetStoreConnection(storeConnection, null, false);
+                _storeConnection = storeConnection;
+                SubscribeToStoreConnectionStateChangeEvents();
 
                 // Remembers the connection options objects with the connection string set by the user
                 _userConnectionOptions = userConnectionOptions;
@@ -1239,20 +1226,6 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Helper method invoked as part of Close()/Dispose() that releases the underlying
-        ///     store connection and raises the appropriate event.
-        /// </summary>
-        private void CloseHelper()
-        {
-            var previousState = State; // the public connection state before cleanup
-            StoreCloseHelper();
-            EntityCloseHelper(
-                true, // raise the state change event
-                previousState
-                );
-        }
-
-        /// <summary>
         ///     Store-specific helper method invoked as part of Close()/Dispose().
         /// </summary>
         private void StoreCloseHelper()
@@ -1277,33 +1250,6 @@ namespace System.Data.Entity.Core.EntityClient
 
                 throw;
             }
-        }
-
-        /// <summary>
-        ///     Entity-specific helper method invoked as part of Close()/Dispose().
-        /// </summary>
-        /// <param name="fireEventOnStateChange"> Indicates whether we need to raise the state change event here </param>
-        /// <param name="previousState"> The public state of the connection before cleanup began </param>
-        /// <returns> true if the caller needs to raise the state change event </returns>
-        private bool EntityCloseHelper(bool fireEventOnStateChange, ConnectionState previousState)
-        {
-            var result = false;
-
-            _entityClientConnectionState = ConnectionState.Closed;
-
-            if (previousState == ConnectionState.Open)
-            {
-                if (fireEventOnStateChange)
-                {
-                    OnStateChange(_stateChangeClosed);
-                }
-                else
-                {
-                    result = true; // we didn't raise the event here; the caller should do that
-                }
-            }
-
-            return result;
         }
 
         /// <summary>

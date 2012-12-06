@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             if (memberInfo.IsValidEdmScalarProperty())
             {
-                configuration.Key(memberInfo);
+                configuration.Key(memberInfo, null, true);
             }
         }
     }

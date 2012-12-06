@@ -15,6 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
     {
+        private ReadOnlyMetadataCollection<EdmProperty> _properties;
+
         internal EntityType()
             : this("E", XmlConstants.ModelNamespace_3, DataSpace.CSpace)
         {
@@ -162,8 +164,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                return new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
-                    Members, Helper.IsEdmProperty);
+                if (!IsReadOnly)
+                {
+                    return new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(Members, Helper.IsEdmProperty);
+                }
+
+                if (_properties == null)
+                {
+                    Interlocked.CompareExchange(
+                        ref _properties,
+                        new FilteredReadOnlyMetadataCollection<EdmProperty, EdmMember>(
+                            Members, Helper.IsEdmProperty), null);
+                }
+
+                return _properties;
             }
         }
 

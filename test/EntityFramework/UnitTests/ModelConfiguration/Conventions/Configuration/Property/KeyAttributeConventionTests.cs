@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             new KeyAttributeConvention()
                 .Apply(mockPropertyInfo, mockEntityTypeConfiguration.Object, new KeyAttribute());
 
-            mockEntityTypeConfiguration.Verify(e => e.Key(mockPropertyInfo, null));
+            mockEntityTypeConfiguration.Verify(e => e.Key(mockPropertyInfo, null, true));
         }
     }
 }

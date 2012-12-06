@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
@@ -23,6 +24,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private readonly Lazy<DecimalPropertyConfiguration> _decimalConfiguration;
         private readonly Lazy<LengthPropertyConfiguration> _lengthConfiguration;
         private readonly Lazy<StringPropertyConfiguration> _stringConfiguration;
+
+        internal LightweightPropertyConfiguration()
+        {
+            Debug.Assert(
+                this is MissingPropertyConfiguration,
+                "This constructor is only intended to be used by the LightweightMissingPropertyConfiguration class.");
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LightweightPropertyConfiguration" /> class.
@@ -53,9 +61,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <summary>
         ///     Gets the <see cref="PropertyInfo" /> for this property.
         /// </summary>
-        public PropertyInfo ClrPropertyInfo
+        public virtual PropertyInfo ClrPropertyInfo
         {
             get { return _propertyInfo; }
+        }
+
+        internal Func<PrimitivePropertyConfiguration> Configuration
+        {
+            get { return _configuration; }
         }
 
         /// <summary>
@@ -68,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration HasColumnName(string columnName)
+        public virtual LightweightPropertyConfiguration HasColumnName(string columnName)
         {
             if (_configuration().ColumnName == null)
             {
@@ -89,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration HasColumnOrder(int columnOrder)
+        public virtual LightweightPropertyConfiguration HasColumnOrder(int columnOrder)
         {
             if (columnOrder < 0)
             {
@@ -114,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration HasColumnType(string columnType)
+        public virtual LightweightPropertyConfiguration HasColumnType(string columnType)
         {
             if (_configuration().ColumnType == null)
             {
@@ -133,7 +146,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration IsConcurrencyToken()
+        public virtual LightweightPropertyConfiguration IsConcurrencyToken()
         {
             return IsConcurrencyToken(true);
         }
@@ -148,7 +161,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
+        public virtual LightweightPropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
         {
             if (_configuration().ConcurrencyMode == null)
             {
@@ -170,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration HasDatabaseGeneratedOption(
+        public virtual LightweightPropertyConfiguration HasDatabaseGeneratedOption(
             DatabaseGeneratedOption databaseGeneratedOption)
         {
             if (!Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption))
@@ -196,7 +209,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration IsOptional()
+        public virtual LightweightPropertyConfiguration IsOptional()
         {
             if (_configuration().IsNullable == null)
             {
@@ -216,7 +229,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightPropertyConfiguration IsRequired()
+        public virtual LightweightPropertyConfiguration IsRequired()
         {
             if (_configuration().IsNullable == null)
             {
@@ -236,7 +249,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="String" />.
         /// </remarks>
-        public LightweightPropertyConfiguration IsUnicode()
+        public virtual LightweightPropertyConfiguration IsUnicode()
         {
             return IsUnicode(true);
         }
@@ -252,7 +265,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="String" />.
         /// </remarks>
-        public LightweightPropertyConfiguration IsUnicode(bool unicode)
+        public virtual LightweightPropertyConfiguration IsUnicode(bool unicode)
         {
             if (_stringConfiguration.Value != null
                 && _stringConfiguration.Value.IsUnicode == null)
@@ -274,7 +287,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public LightweightPropertyConfiguration IsFixedLength()
+        public virtual LightweightPropertyConfiguration IsFixedLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
@@ -296,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public LightweightPropertyConfiguration IsVariableLength()
+        public virtual LightweightPropertyConfiguration IsVariableLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
@@ -318,7 +331,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public LightweightPropertyConfiguration HasMaxLength(int value)
+        public virtual LightweightPropertyConfiguration HasMaxLength(int value)
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.MaxLength == null
@@ -351,7 +364,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public LightweightPropertyConfiguration IsMaxLength()
+        public virtual LightweightPropertyConfiguration IsMaxLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsMaxLength == null
@@ -375,7 +388,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="DateTime" />.
         /// </remarks>
-        public LightweightPropertyConfiguration HasPrecision(byte value)
+        public virtual LightweightPropertyConfiguration HasPrecision(byte value)
         {
             if (_dateTimeConfiguration.Value != null
                 && _dateTimeConfiguration.Value.Precision == null)
@@ -398,7 +411,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="Decimal" />.
         /// </remarks>
-        public LightweightPropertyConfiguration HasPrecision(byte precision, byte scale)
+        public virtual LightweightPropertyConfiguration HasPrecision(byte precision, byte scale)
         {
             if (_decimalConfiguration.Value != null
                 && _decimalConfiguration.Value.Precision == null
@@ -424,7 +437,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="T:Byte[]" />.
         /// </remarks>
-        public LightweightPropertyConfiguration IsRowVersion()
+        public virtual LightweightPropertyConfiguration IsRowVersion()
         {
             if (_binaryConfiguration.Value != null
                 && _binaryConfiguration.Value.IsRowVersion == null)
@@ -442,7 +455,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that
         ///     multiple calls can be chained.
         /// </returns>
-        public LightweightPropertyConfiguration IsKey()
+        public virtual LightweightPropertyConfiguration IsKey()
         {
             var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
 
