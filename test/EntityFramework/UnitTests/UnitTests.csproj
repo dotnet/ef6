@@ -139,6 +139,7 @@
     <Compile Include="Config\RootDependencyResolverTests.cs" />
     <Compile Include="Config\SingletonDependencyResolverTests.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
+    <Compile Include="Core\Common\CommandTrees\DbExpressionBuilderTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\CodeGenEmitterTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\ShaperTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
