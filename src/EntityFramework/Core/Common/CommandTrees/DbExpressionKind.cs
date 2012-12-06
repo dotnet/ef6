@@ -146,11 +146,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         IsOfOnly = 26,
 
         /// <summary>
-        ///     Application of a lambda function
-        /// </summary>
-        Lambda = 57,
-
-        /// <summary>
         ///     Left outer join
         /// </summary>
         LeftOuterJoin = 27,
@@ -298,6 +293,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         ///     A reference to a variable.
         /// </summary>
-        VariableReference = 56
+        VariableReference = 56,
+
+        /// <summary>
+        ///     Application of a lambda function
+        /// </summary>
+        Lambda = 57,
+
+        /// <summary>
+        ///     In.
+        /// </summary>
+        In = 58
+    }
+
+    internal static class DbExpressionKindHelper
+    {
+        /// <summary>
+        /// The last value in the DbExpressionKind enumeration.
+        /// </summary>
+        public static readonly DbExpressionKind Last = DbExpressionKind.In;
     }
 }

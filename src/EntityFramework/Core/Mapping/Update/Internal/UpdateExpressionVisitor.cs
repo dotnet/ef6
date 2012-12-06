@@ -261,6 +261,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             throw ConstructNotSupportedException(expression);
         }
 
+        public override TReturn Visit(DbInExpression expression)
+        {
+            Check.NotNull(expression, "expression");
+
+            throw ConstructNotSupportedException(expression);
+        }
+
         public override TReturn Visit(DbParameterReferenceExpression expression)
         {
             Check.NotNull(expression, "expression");

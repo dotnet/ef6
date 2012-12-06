@@ -230,6 +230,7 @@
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="Query\FunctionTests.cs" />
     <Compile Include="Query\GroupAggregateTests.cs" />
+    <Compile Include="Query\EnumerableContainsTests.cs" />
     <Compile Include="Query\ModelDefinedFunctionTests.cs" />
     <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\QueryEnumTests.cs" />

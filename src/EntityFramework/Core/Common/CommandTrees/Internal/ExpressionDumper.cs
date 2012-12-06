@@ -574,6 +574,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             End(e);
         }
 
+        public override void Visit(DbInExpression e)
+        {
+            Check.NotNull(e, "e");
+
+            Begin(e);
+            Dump(e.Item);
+            Dump(e.List, "List", "Item");
+            End(e);
+        }
+
         public override void Visit(DbNotExpression e)
         {
             Check.NotNull(e, "e");

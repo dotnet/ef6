@@ -267,5 +267,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="expression"> The DbVariableReferenceExpression that is being visited. </param>
         public abstract void Visit(DbVariableReferenceExpression expression);
+
+        /// <summary>
+        ///     Visitor pattern method for DbInExpression.
+        /// </summary>
+        /// <param name="expression"> The DbInExpression that is being visited. </param>
+        public abstract void Visit(DbInExpression expression);
     }
 }

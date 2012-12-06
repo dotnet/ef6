@@ -770,7 +770,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     The grammar for the pattern that we are looking for is -
         ///     Pattern := Target OP Source | Source OP Target
-        ///     OP := Like | Comparison
+        ///     OP := Like | In | Comparison
         ///     Source := Non-unicode DbPropertyExpression
         ///     Target := Target FUNC Target | DbConstantExpression | DBParameterExpression
         ///     FUNC := CONCAT | RTRIM | LTRIM | TRIM | SUBSTRING | TOLOWER | TOUPPER | REVERSE | REPLACE
@@ -779,22 +779,27 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <returns> </returns>
         private bool MatchPatternForForcingNonUnicode(DbExpression e)
         {
-            if (e.ExpressionKind
-                == DbExpressionKind.Like)
+            switch (e.ExpressionKind)
             {
-                var likeExpr = (DbLikeExpression)e;
-                return MatchSourcePatternForForcingNonUnicode(likeExpr.Argument) &&
-                       MatchTargetPatternForForcingNonUnicode(likeExpr.Pattern) &&
-                       MatchTargetPatternForForcingNonUnicode(likeExpr.Escape);
+                case DbExpressionKind.Like:
+                    var likeExpr = (DbLikeExpression)e;
+                    return MatchSourcePatternForForcingNonUnicode(likeExpr.Argument) &&
+                           MatchTargetPatternForForcingNonUnicode(likeExpr.Pattern) &&
+                           MatchTargetPatternForForcingNonUnicode(likeExpr.Escape);
+
+                case DbExpressionKind.In:
+                    var inExpr = (DbInExpression)e;
+                    return MatchSourcePatternForForcingNonUnicode(inExpr.Item);
+
+                default:
+                    // DBExpressionKind is any of (Equals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals, NotEquals)
+                    var compareExpr = (DbComparisonExpression)e;
+                    var left = compareExpr.Left;
+                    var right = compareExpr.Right;
+
+                    return (MatchSourcePatternForForcingNonUnicode(left) && MatchTargetPatternForForcingNonUnicode(right)) ||
+                           (MatchSourcePatternForForcingNonUnicode(right) && MatchTargetPatternForForcingNonUnicode(left));
             }
-
-            // DBExpressionKind is any of (Equals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals, NotEquals)
-            var compareExpr = (DbComparisonExpression)e;
-            var left = compareExpr.Left;
-            var right = compareExpr.Right;
-
-            return (MatchSourcePatternForForcingNonUnicode(left) && MatchTargetPatternForForcingNonUnicode(right)) ||
-                   (MatchSourcePatternForForcingNonUnicode(right) && MatchTargetPatternForForcingNonUnicode(left));
         }
 
         /// <summary>
@@ -1969,6 +1974,51 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             return VisitBinaryExpression(" OR ", e.ExpressionKind, e.Left, e.Right);
+        }
+
+        /// <summary>
+        ///     Visits a DbInExpression and generates the corresponding SQL fragment.
+        /// </summary>
+        /// <param name="e"> A <see cref="DbInExpression" /> that specifies the expression to be visited. </param>
+        /// <returns>
+        ///     A <see cref="SqlBuilder" /> that specifies the generated SQL fragment.
+        /// </returns>
+        public override ISqlFragment Visit(DbInExpression e)
+        {
+            Check.NotNull(e, "e");
+
+            var result = new SqlBuilder();
+
+            // Do not optimize the comparison, if the item to be matched is not of type string.
+            if (e.Item.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
+            {
+                // Check if the expression is a candidate for compensation in order to optimize store performance.
+                _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
+            }
+
+            result.Append(e.Item.Accept(this));
+            result.Append(" IN (");
+
+            var first = true;
+            foreach (var item in e.List)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    result.Append(", ");
+                }
+
+                result.Append(item.Accept(this));
+            }
+
+            result.Append(")");
+
+            _forceNonUnicode = false;
+
+            return result;
         }
 
         internal static IDictionary<DbExpression, IList<DbExpression>> HasBuiltMapForIn(DbOrExpression expression)

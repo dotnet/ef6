@@ -1100,6 +1100,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                         return "GroupByInto";
                     case OpType.GT:
                         return "GT";
+                    case OpType.In:
+                        return "In";
                     case OpType.InnerJoin:
                         return "InnerJoin";
                     case OpType.InternalConstant:

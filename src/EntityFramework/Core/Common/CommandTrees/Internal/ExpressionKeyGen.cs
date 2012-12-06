@@ -431,6 +431,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             VisitBinary(e);
         }
 
+        public override void Visit(DbInExpression e)
+        {
+            Check.NotNull(e, "e");
+
+            VisitExprKind(e.ExpressionKind);
+            _key.Append('(');
+            e.Item.Accept(this);
+            _key.Append(",(");
+
+            var first = true;
+            foreach (var item in e.List)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    _key.Append(',');
+                }
+
+                item.Accept(this);
+            }
+
+            _key.Append("))");
+        }
+
         public override void Visit(DbNotExpression e)
         {
             Check.NotNull(e, "e");

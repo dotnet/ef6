@@ -10814,6 +10814,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "DbInExpression requires the same result type for the input expressions."
+        /// </summary>
+        internal static string Cqt_In_SameResultTypeRequired
+        {
+            get { return EntityRes.GetString(EntityRes.Cqt_In_SameResultTypeRequired); }
+        }
+
+        /// <summary>
         /// A string like "An Instance property of type DbExpression is required for an instance property."
         /// </summary>
         internal static string Cqt_Property_InstanceRequiredForInstance
@@ -16362,6 +16370,7 @@ namespace System.Data.Entity.Resources
         internal const string Cqt_NewInstance_IncompatibleRelatedEntity_SourceTypeNotValid = "Cqt_NewInstance_IncompatibleRelatedEntity_SourceTypeNotValid";
         internal const string Cqt_Not_BooleanArgumentRequired = "Cqt_Not_BooleanArgumentRequired";
         internal const string Cqt_Or_BooleanArgumentsRequired = "Cqt_Or_BooleanArgumentsRequired";
+        internal const string Cqt_In_SameResultTypeRequired = "Cqt_In_SameResultTypeRequired";
         internal const string Cqt_Property_InstanceRequiredForInstance = "Cqt_Property_InstanceRequiredForInstance";
         internal const string Cqt_Ref_PolymorphicArgRequired = "Cqt_Ref_PolymorphicArgRequired";
         internal const string Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship = "Cqt_RelatedEntityRef_TargetEndFromDifferentRelationship";

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a conditional operation - and,or,not, is null
+    ///     Represents a conditional operation - and, or, in, not, is null
     /// </summary>
     internal sealed class ConditionalOp : ScalarOp
     {
@@ -32,6 +32,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly ConditionalOp PatternAnd = new ConditionalOp(OpType.And);
 
         internal static readonly ConditionalOp PatternOr = new ConditionalOp(OpType.Or);
+        internal static readonly ConditionalOp PatternIn = new ConditionalOp(OpType.In);
         internal static readonly ConditionalOp PatternNot = new ConditionalOp(OpType.Not);
         internal static readonly ConditionalOp PatternIsNull = new ConditionalOp(OpType.IsNull);
 

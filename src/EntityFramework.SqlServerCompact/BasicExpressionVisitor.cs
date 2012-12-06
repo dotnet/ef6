@@ -425,6 +425,21 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
+        ///     Visitor pattern method for <see cref="DbInExpression" />.
+        /// </summary>
+        /// <param name="expression"> The DbInExpression that is being visited. </param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="expression" />
+        ///     is null</exception>
+        public override void Visit(DbInExpression expression)
+        {
+            Check.NotNull(expression, "expression");
+
+            VisitExpression(expression.Item);
+            VisitExpressionList(expression.List);
+        }
+
+        /// <summary>
         ///     Visitor pattern method for <see cref="DbNotExpression" />.
         /// </summary>
         /// <param name="expression"> The DbNotExpression that is being visited. </param>

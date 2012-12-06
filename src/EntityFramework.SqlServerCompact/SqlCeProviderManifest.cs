@@ -451,5 +451,16 @@ namespace System.Data.Entity.SqlServerCompact
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName),
                 null, resourceName);
         }
+
+        /// <summary>
+        ///     Returns a boolean that specifies whether the corresponding provider can handle expression trees 
+        ///     containing instances of DbInExpression.
+        ///     The SqlCe provider handles instances of DbInExpression.
+        /// </summary>
+        /// <returns> <c>true</c>. </returns>
+        public override bool SupportsInExpression()
+        {
+            return true;
+        }
     }
 }

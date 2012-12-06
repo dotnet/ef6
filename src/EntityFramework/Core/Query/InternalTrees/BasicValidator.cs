@@ -78,6 +78,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 n.Children.Count);
         }
 
+        protected static void AssertMinimumArity(Node n, int minArity)
+        {
+            Assert(
+                minArity <= n.Children.Count, "Op Arity mismatch for Op {0}: Expected minimum {1} arguments; found {2} arguments", n.Op.OpType, minArity,
+                n.Children.Count);
+        }
+
         protected static void AssertArity(Node n)
         {
             if (n.Op.Arity
@@ -215,6 +222,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     AssertArity(n, 2);
                     AssertBooleanOp(n.Child0.Op);
                     AssertBooleanOp(n.Child1.Op);
+                    break;
+                case OpType.In:
+                    AssertMinimumArity(n, 2);
                     break;
                 case OpType.Not:
                     AssertArity(n, 1);

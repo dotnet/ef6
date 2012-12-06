@@ -27,5 +27,8 @@
             <Term CompoundAlternate="MultiPoint">multipoint</Term>
             <Term CompoundAlternate="StartUp">startup</Term>
         </Compound>
+        <DiscreteExceptions>
+            <Term>InExpression</Term>
+        </DiscreteExceptions>
     </Words>
 </Dictionary>

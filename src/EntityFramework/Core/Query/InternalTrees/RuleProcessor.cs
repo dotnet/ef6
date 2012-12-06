@@ -119,8 +119,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 // Walk my children
                 for (var i = 0; i < subTreeRoot.Children.Count; i++)
                 {
-                    subTreeRoot.Children[i] = ApplyRulesToSubtree(context, rules, subTreeRoot.Children[i], subTreeRoot, i);
-                }
+                    var childNode = subTreeRoot.Children[i];
+                    if (ShouldApplyRules(childNode, subTreeRoot))
+                    {
+                        subTreeRoot.Children[i] = ApplyRulesToSubtree(context, rules, childNode, subTreeRoot, i);
+                    }
+                }                
 
                 // Apply rules to myself. If no transformations were performed, 
                 // then mark this subtree as processed, and break out
@@ -138,6 +142,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             context.PostProcessSubTree(subTreeRoot);
             return subTreeRoot;
+        }
+
+        private static bool ShouldApplyRules(Node node, Node parent)
+        {
+            // For performance reasons skip the OpType.Constant child nodes of an OpType.In parent node.
+            return parent.Op.OpType != OpType.In || node.Op.OpType != OpType.Constant;
         }
 
         #endregion

@@ -384,6 +384,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     case DbExpressionKind.GreaterThanOrEquals:
                     case DbExpressionKind.And:
                     case DbExpressionKind.Or:
+                    case DbExpressionKind.In:
                     case DbExpressionKind.Not:
                     case DbExpressionKind.Like:
                     case DbExpressionKind.IsEmpty:
@@ -1630,6 +1631,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             Op op = _iqtCommand.CreateConditionalOp(OpType.Or);
             return VisitBinary(e, op, VisitExprAsPredicate);
+        }
+
+        public override Node Visit(DbInExpression e)
+        {
+            Check.NotNull(e, "e");
+
+            Op op = _iqtCommand.CreateConditionalOp(OpType.In);
+
+            var children = new List<Node>(1 + e.List.Count)
+                               {
+                                   VisitExpr(e.Item)
+                               };
+            children.AddRange(e.List.Select(VisitExpr));
+
+            return _iqtCommand.CreateNode(op, children);
         }
 
         public override Node Visit(DbNotExpression e)

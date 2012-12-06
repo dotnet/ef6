@@ -604,16 +604,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             CheckType(nullType, "nullType");
         }
 
-        internal static TypeUsage ValidateConstant(object value)
+        internal static TypeUsage ValidateConstant(Type type)
         {
-            // Check that typeof(value) is actually a valid constant (i.e. primitive) type
+            // Check that type is actually a valid constant (i.e. primitive) type
             PrimitiveTypeKind primitiveTypeKind;
-            if (!TryGetPrimitiveTypeKind(value.GetType(), out primitiveTypeKind))
+            if (!TryGetPrimitiveTypeKind(type, out primitiveTypeKind))
             {
-                throw new ArgumentException(Strings.Cqt_Constant_InvalidType, "value");
+                throw new ArgumentException(Strings.Cqt_Constant_InvalidType, "type");
             }
 
             return TypeHelpers.GetLiteralTypeUsage(primitiveTypeKind);
+        }
+
+        internal static TypeUsage ValidateConstant(object value)
+        {
+            // Check that typeof(value) is actually a valid constant (i.e. primitive) type
+            return ValidateConstant(value.GetType());
         }
 
         internal static void ValidateConstant(TypeUsage constantType, object value)

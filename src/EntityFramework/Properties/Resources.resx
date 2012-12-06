@@ -4215,7 +4215,7 @@
   <data name="Cqt_Binding_CollectionRequired" xml:space="preserve">
     <value>DbExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
-s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
+  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
     <value>DbGroupExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
   <data name="Cqt_GroupBinding_GroupVariableNameNotValid" xml:space="preserve">
@@ -4352,6 +4352,9 @@ s  <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
   </data>
   <data name="Cqt_Or_BooleanArgumentsRequired" xml:space="preserve">
     <value>DbOrExpression requires arguments with a common Boolean type.</value>
+  </data>
+  <data name="Cqt_In_SameResultTypeRequired" xml:space="preserve">
+    <value>DbInExpression requires the same result type for the input expressions.</value>
   </data>
   <data name="Cqt_Property_InstanceRequiredForInstance" xml:space="preserve">
     <value>An Instance property of type DbExpression is required for an instance property.</value>

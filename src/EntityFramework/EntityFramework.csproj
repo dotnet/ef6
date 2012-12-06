@@ -190,6 +190,7 @@
     <Compile Include="Core\Common\CommandTrees\ExpressionRebinder.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\DbExpressionRule.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\DbExpressionRuleProcessingVisitor.cs" />
+    <Compile Include="Core\Common\CommandTrees\DbInExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionDumper.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionKeyGen.cs" />
     <Compile Include="Core\Common\CommandTrees\Internal\ExpressionList.cs" />

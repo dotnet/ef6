@@ -310,5 +310,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbVariableReferenceExpression that is being visited. </param>
         /// <returns> An instance of TResultType. </returns>
         public abstract TResultType Visit(DbVariableReferenceExpression expression);
+
+        /// <summary>
+        ///     Typed visitor pattern method for DbInExpression.
+        /// </summary>
+        /// <param name="expression"> The DbInExpression that is being visited. </param>
+        /// <returns> An instance of TResultType. </returns>
+        public abstract TResultType Visit(DbInExpression expression);
     }
 }

@@ -1015,6 +1015,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     }
                     break;
 
+                case OpType.In:
+                    {
+                        var count = n.Children.Count;
+                        var list = new List<DbExpression>(count - 1);
+                        for (var i = 1; i < count; i++)
+                        {
+                            list.Add(VisitChild(n, i));
+                        }
+
+                        condExpr = DbExpressionBuilder.CreateInExpression(left, list);
+                    }
+                    break;
+
                 case OpType.Not:
                     {
                         // Convert Not(Not(<expression>)) to just <expression>. This is taken into account here

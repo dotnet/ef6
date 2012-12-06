@@ -775,6 +775,17 @@ namespace System.Data.Entity.SqlServer
             return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }
 
+        /// <summary>
+        ///     Returns a boolean that specifies whether the corresponding provider can handle expression trees 
+        ///     containing instances of DbInExpression.
+        ///     The Sql provider handles instances of DbInExpression.
+        /// </summary>
+        /// <returns> <c>true</c>. </returns>
+        public override bool SupportsInExpression()
+        {
+            return true;
+        }
+
         #endregion
     }
 }

@@ -1656,11 +1656,45 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
+        ///     Visits a DbInExpression and generates the corresponding SQL fragment.
         /// </summary>
-        /// <param name="e"> </param>
+        /// <param name="e"> A <see cref="DbInExpression" /> that specifies the expression to be visited. </param>
         /// <returns>
-        ///     A <see cref="SqlBuilder" />
+        ///     A <see cref="SqlBuilder" /> that specifies the generated SQL fragment.
         /// </returns>
+        public override ISqlFragment Visit(DbInExpression e)
+        {
+            Check.NotNull(e, "e");
+
+            var result = new SqlBuilder();
+
+            result.Append(e.Item.Accept(this));
+            result.Append(" IN (");
+
+            var first = true;
+            foreach (var item in e.List)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    result.Append(", ");
+                }
+
+                result.Append(item.Accept(this));
+            }
+
+            result.Append(")");
+
+            return result;
+        }
+
+        ///<summary>
+        ///</summary>
+        ///<param name="e"> </param>
+        ///<returns> A <see cref="SqlBuilder" /> </returns>
         public override ISqlFragment Visit(DbParameterReferenceExpression e)
         {
             Check.NotNull(e, "e");

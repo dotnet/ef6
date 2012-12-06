@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             // Add new valid DbExpressionKind values to this method as well as the enum itself.
             // DbExpressionKind is a contiguous enum from All = 0 through View            
             if ((kind < DbExpressionKind.All)
-                || (DbExpressionKind.Lambda < kind))
+                || (DbExpressionKindHelper.Last < kind))
             {
                 var paramName = typeof(DbExpressionKind).Name;
                 throw new ArgumentOutOfRangeException(

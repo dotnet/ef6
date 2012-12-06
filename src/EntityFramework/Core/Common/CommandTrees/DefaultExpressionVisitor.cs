@@ -636,6 +636,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.Or);
         }
 
+        public override DbExpression Visit(DbInExpression expression)
+        {
+            Check.NotNull(expression, "expression");
+
+            DbExpression result = expression;
+            var newItem = VisitExpression(expression.Item);
+            var newList = VisitExpressionList(expression.List);
+
+            if (!ReferenceEquals(expression.Item, newItem)
+                ||
+                !ReferenceEquals(expression.List, newList))
+            {
+                result = CqtBuilder.CreateInExpression(newItem, newList);
+            }
+
+            NotifyIfChanged(expression, result);
+            return result;
+        }
+
+
         public override DbExpression Visit(DbNotExpression expression)
         {
             Check.NotNull(expression, "expression");

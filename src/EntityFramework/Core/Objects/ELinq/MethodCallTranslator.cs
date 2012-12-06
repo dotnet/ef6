@@ -2673,32 +2673,58 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         var arguments = ((DbNewInstanceExpression)source).Arguments;
                         if (arguments.Count > 0)
                         {
-                            if (!parent._funcletizer.RootContext.ContextOptions.UseCSharpNullComparisonBehavior)
+                            var useCSharpNullComparisonBehavior = parent._funcletizer.RootContext.ContextOptions.UseCSharpNullComparisonBehavior;
+                            var providerSupportsInExpression = parent.ProviderManifest.SupportsInExpression();
+
+                            if (!useCSharpNullComparisonBehavior && !providerSupportsInExpression)
                             {
                                 return TranslateContainsHelper(
                                     parent, value, arguments, EqualsPattern.Store, sourceArgumentType, valueExpression.Type);
                             }
+
                             // Replaces this => (tbl.Col = 1 AND tbl.Col IS NOT NULL) OR (tbl.Col = 2 AND tbl.Col IS NOT NULL) OR ... 
                             // with this => (tbl.Col = 1 OR tbl.Col = 2 OR ...) AND (tbl.Col IS NOT NULL))
                             // which in turn gets simplified to this => (tbl.Col IN (1, 2, ...) AND (tbl.Col IS NOT NULL)) in SqlGenerator
-                            var constantArguments = arguments.Where(argument => argument.ExpressionKind == DbExpressionKind.Constant);
+
+                            var constantArguments = new List<DbExpression>();
+                            var otherArguments = new List<DbExpression>();
+                            foreach (var arg in arguments)
+                            {
+                                var list = (arg.ExpressionKind == DbExpressionKind.Constant) ? constantArguments : otherArguments;
+                                list.Add(arg);
+                            }
+
                             CqtExpression constantCqt = null;
-                            if (constantArguments.Count() > 0)
+                            if (constantArguments.Count > 0)
                             {
-                                constantCqt = TranslateContainsHelper(
-                                    parent, value, constantArguments, EqualsPattern.PositiveNullEqualityNonComposable, sourceArgumentType,
-                                    valueExpression.Type);
-                                constantCqt = constantCqt.And(value.IsNull().Not());
+                                var equalsPattern = useCSharpNullComparisonBehavior
+                                                        ? EqualsPattern.PositiveNullEqualityNonComposable
+                                                        : EqualsPattern.Store;
+
+                                constantCqt = providerSupportsInExpression
+                                                  ? DbExpressionBuilder.CreateInExpression(value, constantArguments)
+                                                  : TranslateContainsHelper(
+                                                      parent, value, constantArguments, equalsPattern, sourceArgumentType,
+                                                      valueExpression.Type);
+
+                                if (useCSharpNullComparisonBehavior)
+                                {
+                                    constantCqt = constantCqt.And(value.IsNull().Not());
+                                }
                             }
+
                             // Does not optimize conversion of variables embedded in the list.
-                            var otherArguments = arguments.Where(argument => argument.ExpressionKind != DbExpressionKind.Constant);
                             CqtExpression otherCqt = null;
-                            if (otherArguments.Count() > 0)
+                            if (otherArguments.Count > 0)
                             {
+                                var equalsPattern = useCSharpNullComparisonBehavior
+                                                        ? EqualsPattern.PositiveNullEqualityComposable
+                                                        : EqualsPattern.Store;
+
                                 otherCqt = TranslateContainsHelper(
-                                    parent, value, otherArguments, EqualsPattern.PositiveNullEqualityComposable, sourceArgumentType,
-                                    valueExpression.Type);
+                                    parent, value, otherArguments, equalsPattern, sourceArgumentType, valueExpression.Type);
                             }
+
                             if (constantCqt == null)
                             {
                                 return otherCqt;

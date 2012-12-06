@@ -82,6 +82,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         private static readonly DbConstantExpression _boolTrue = Constant(true);
         private static readonly DbConstantExpression _boolFalse = Constant(false);
 
+        private static readonly TypeUsage _booleanType = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Boolean);
+
         #endregion
 
         #region Helpers (not strictly Command Tree API)
@@ -1083,6 +1085,59 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
             var resultType = ArgumentValidation.ValidateOr(left, right);
             return new DbOrExpression(resultType, left, right);
+        }
+
+        /// <summary>
+        ///     Creates a <see cref="DbInExpression" /> that matches the result of the specified 
+        ///     expression with the results of the constant expressions in the specified list.
+        /// </summary>
+        /// <param name="expression"> A DbExpression to be matched. </param>
+        /// <param name="values"> A list of DbConstantExpression to test for a match. </param>
+        /// <returns> 
+        ///     A new DbInExpression with the specified arguments if the DbConstantExpression list
+        ///     is not empty, otherwise a false constant expression. 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="expression" /> 
+        ///     or 
+        ///     <paramref name="list" /> 
+        ///     is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     The result type of
+        ///     <paramref name="expression" />
+        ///     is different than the result type of an expression from
+        ///     <paramref name="list" />.
+        /// </exception>
+        public static DbExpression In(this DbExpression expression, IList<DbConstantExpression> list)
+        {
+            Check.NotNull(expression, "expression");
+            Check.NotNull(list, "list");
+
+            if (list.Count == 0)
+            {
+                return False;
+            }
+
+            // Shallow copy the input expression list to ensure DbInExpression immutability.
+            var internalList = new List<DbExpression>(list.Count);
+
+            foreach (var item in list)
+            {
+                if (!TypeSemantics.IsEqual(expression.ResultType, item.ResultType))
+                {
+                    throw new ArgumentException(Strings.Cqt_In_SameResultTypeRequired);
+                }
+
+                internalList.Add(item);
+            }
+
+            return CreateInExpression(expression, internalList);
+        }
+
+        internal static DbInExpression CreateInExpression(DbExpression item, IList<DbExpression> list)
+        {
+            return new DbInExpression(_booleanType, item, new DbExpressionList(list));
         }
 
         /// <summary>

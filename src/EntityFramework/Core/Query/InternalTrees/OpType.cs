@@ -116,6 +116,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         Or,
 
         /// <summary>
+        ///     In
+        /// </summary>
+        In,
+
+        /// <summary>
         ///     Not
         /// </summary>
         Not,

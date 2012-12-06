@@ -611,6 +611,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
+        ///     <see cref="DbInExpression" />
+        /// </summary>
+        /// <param name="expression"> The DbInExpression that is being visited. </param>
+        /// <returns> </returns>
+        public override bool Visit(DbInExpression expression)
+        {
+            Check.NotNull(expression, "expression");
+
+            return VisitExpression(expression.Item) || VisitExpressionList(expression.List);
+        }
+
+        /// <summary>
         ///     Returns false
         /// </summary>
         /// <param name="expression"> The DbParameterReferenceExpression that is being visited. </param>

@@ -39,6 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             TestVisitNull(v => v.Visit((DbNullExpression)null));
             TestVisitNull(v => v.Visit((DbOfTypeExpression)null));
             TestVisitNull(v => v.Visit((DbOrExpression)null));
+            TestVisitNull(v => v.Visit((DbInExpression)null));
             TestVisitNull(v => v.Visit((DbParameterReferenceExpression)null));
             TestVisitNull(v => v.Visit((DbProjectExpression)null));
             TestVisitNull(v => v.Visit((DbPropertyExpression)null));

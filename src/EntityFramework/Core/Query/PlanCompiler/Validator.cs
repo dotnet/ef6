@@ -147,6 +147,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             AddAllEntry(validOpTypes, OpType.Null);
             AddAllEntry(validOpTypes, OpType.NullSentinel);
             AddAllEntry(validOpTypes, OpType.Or);
+            AddAllEntry(validOpTypes, OpType.In);
             AddAllEntry(validOpTypes, OpType.OuterApply);
             AddAllEntry(validOpTypes, OpType.PhysicalProject);
             AddAllEntry(validOpTypes, OpType.Plus);
@@ -199,9 +200,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        #region private methods
+    #region private methods
 
-        #region Initializers
+    #region Initializers
 
         private static int ComputeHash(OpType opType, PlanCompilerPhase phase)
         {
@@ -239,7 +240,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        #region Visitors
+    #region Visitors
 
         protected override void VisitDefault(Node n)
         {
@@ -249,7 +250,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "Unxpected Op {0} in Phase {1}", n.Op.OpType, m_compilerState.Phase);
         }
 
-        #region ScalarOps
+    #region ScalarOps
 
         public override void Visit(NewEntityOp op, Node n)
         {
@@ -266,15 +267,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        #region PhysicalOps
+    #region PhysicalOps
 
         #endregion
 
-        #region RelOps
+    #region RelOps
 
         #endregion
 
-        #region AncillaryOps
+    #region AncillaryOps
 
         #endregion
 
@@ -282,7 +283,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        #region private state
+    #region private state
 
         private readonly PlanCompiler m_compilerState;
 

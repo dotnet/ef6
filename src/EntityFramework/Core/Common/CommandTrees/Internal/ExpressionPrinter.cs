@@ -679,6 +679,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 return VisitInfix(e.Left, "Or", e.Right);
             }
 
+            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
+                MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])"
+                )]
+            public override TreeNode Visit(DbInExpression e)
+            {
+                Check.NotNull(e, "e");
+
+                const string inString = "In";
+                TreeNode retInfo;
+
+                if (_infix)
+                {
+                    retInfo = new TreeNode(String.Empty);
+                    retInfo.Children.Add(VisitExpression(e.Item));
+                    retInfo.Children.Add(new TreeNode(inString));
+                }
+                else
+                {
+                    retInfo = new TreeNode(inString);
+                    retInfo.Children.Add(VisitExpression(e.Item));
+                }
+
+                foreach (var item in e.List)
+                {
+                    retInfo.Children.Add(VisitExpression(item));
+                }
+
+                return retInfo;
+            }
+
             public override TreeNode Visit(DbNotExpression e)
             {
                 Check.NotNull(e, "e");
