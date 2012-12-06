@@ -51,7 +51,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Filters the properties that this convention applies to based on a predicate.
         /// </summary>
         /// <param name="predicate"> A function to test each property for a condition. </param>
-        /// <returns> A <see cref="PropertyConventionConfiguration" /> instance so that multiple calls can be chained. </returns>
+        /// <returns>
+        ///     A <see cref="PropertyConventionConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         public PropertyConventionConfiguration Where(Func<PropertyInfo, bool> predicate)
         {
             Check.NotNull(predicate, "predicate");
@@ -67,8 +69,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="capturingPredicate">
         ///     A function to capture a value for each property. If the value is null, the
         ///     property will be filtered out.
-        ///</param>
-        /// <returns> A <see cref="PropertyConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained. </returns>
+        /// </param>
+        /// <returns>
+        ///     A <see cref="PropertyConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         public PropertyConventionWithHavingConfiguration<T> Having<T>(
             Func<PropertyInfo, T> capturingPredicate)
             where T : class

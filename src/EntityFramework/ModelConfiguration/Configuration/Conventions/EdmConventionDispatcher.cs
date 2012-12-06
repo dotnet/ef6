@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Internal;
+    using System.Data.Entity.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
 

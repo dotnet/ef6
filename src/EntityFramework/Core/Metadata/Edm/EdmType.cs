@@ -14,6 +14,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class EdmType : GlobalItem, IQualifiedNameMetadataItem
     {
+        internal static IEnumerable<T> SafeTraverseHierarchy<T>(T startFrom)
+            where T : EdmType
+        {
+            var visitedTypes = new HashSet<T>();
+            var thisType = startFrom;
+            while (thisType != null
+                   && !visitedTypes.Contains(thisType))
+            {
+                visitedTypes.Add(thisType);
+                yield return thisType;
+                thisType = thisType.BaseType as T;
+            }
+        }
+
         /// <summary>
         ///     Initializes a new instance of EdmType
         /// </summary>

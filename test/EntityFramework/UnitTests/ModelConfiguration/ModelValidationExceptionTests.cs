@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.UnitTests
 {
     using System.CodeDom.Compiler;
-    using System.Data.Entity.Edm.Common;
+    using System.Data.Entity.Edm.Validation;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;

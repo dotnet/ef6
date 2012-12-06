@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model that inherit from a common, specified type and a 
+    ///     the entity types in a model that inherit from a common, specified type and a
     ///     captured value.
     /// </summary>
     /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>

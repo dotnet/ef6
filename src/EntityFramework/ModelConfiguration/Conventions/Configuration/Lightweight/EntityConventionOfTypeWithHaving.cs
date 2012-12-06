@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private readonly Action<LightweightEntityConfiguration<T>, TValue> _entityConfigurationAction;
 
         public EntityConventionOfTypeWithHaving(
-           IEnumerable<Func<Type, bool>> predicates,
+            IEnumerable<Func<Type, bool>> predicates,
             Func<Type, TValue> capturingPredicate,
             Action<LightweightEntityConfiguration<T>, TValue> entityConfigurationAction)
             : base(predicates.Prepend(EntityConventionOfType<T>.OfTypePredicate), capturingPredicate)

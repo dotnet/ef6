@@ -22,7 +22,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Initializes a new instance of the <see cref="LightweightEntityConfiguration{T}" /> class.
         /// </summary>
-        /// <param name="type"> The <see cref="Type" /> of this entity type. </param>
+        /// <param name="type">
+        ///     The <see cref="Type" /> of this entity type.
+        /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
         public LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
             : base(type, configuration)

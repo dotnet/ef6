@@ -3,8 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;

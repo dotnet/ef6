@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Serialization.Xml.Internal.Msl;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Xml;
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Edm.Serialization
             Check.NotNull(databaseMapping, "databaseMapping");
             Check.NotNull(xmlWriter, "xmlWriter");
 
-            var schemaWriter = new DbModelMslSchemaWriter(xmlWriter, databaseMapping.Model.Version);
+            var schemaWriter = new MslXmlSchemaWriter(xmlWriter, databaseMapping.Model.Version);
 
             schemaWriter.WriteSchema(databaseMapping);
 

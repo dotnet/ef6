@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers.UnitTests
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Linq;

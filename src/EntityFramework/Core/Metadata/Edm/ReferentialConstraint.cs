@@ -89,6 +89,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal AssociationEndMember PrincipalEnd(AssociationType association)
+        {
+            DebugCheck.NotNull(association);
+
+            return DependentEnd == association.SourceEnd ? association.TargetEnd : association.SourceEnd;
+        }
+
         /// <summary>
         ///     Returns the collection of properties on the from role on which the constraint is defined on
         /// </summary>

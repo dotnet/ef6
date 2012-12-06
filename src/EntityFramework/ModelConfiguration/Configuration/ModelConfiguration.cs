@@ -9,8 +9,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -332,7 +330,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             databaseMapping.Database.GetEntitySets()
                            .Where(es => string.IsNullOrWhiteSpace(es.Schema))
-                           .Each(es => es.Schema = DefaultSchema ?? DbDatabaseMetadataExtensions.DefaultSchema);
+                           .Each(es => es.Schema = DefaultSchema ?? EdmModelExtensions.DefaultSchema);
         }
 
         private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
