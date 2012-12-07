@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var principalEnd = edmDataModelItem.GetOtherEnd(constraint.DependentEnd);
 
                 // find the navigation property with this end
-                var navProp = model.Namespaces.SelectMany(ns => ns.EntityTypes)
+                var navProp = model.EntityTypes
                                    .SelectMany(et => et.DeclaredNavigationProperties)
                                    .SingleOrDefault(np => np.ResultEnd == principalEnd);
 

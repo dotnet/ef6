@@ -177,13 +177,14 @@ namespace System.Data.Entity.Edm.Serialization
             return _syndicationTextContentKindToString[(int)value];
         }
 
-        private static readonly string[] _syndicationTextContentKindToString = new[]
-                                                                                   {
-                                                                                       SyndicationXmlConstants.
-                                                                                           SyndContentKindPlaintext,
-                                                                                       SyndicationXmlConstants.SyndContentKindHtml,
-                                                                                       SyndicationXmlConstants.SyndContentKindXHtml
-                                                                                   };
+        private static readonly string[] _syndicationTextContentKindToString
+            = new[]
+                  {
+                      SyndicationXmlConstants.
+                          SyndContentKindPlaintext,
+                      SyndicationXmlConstants.SyndContentKindHtml,
+                      SyndicationXmlConstants.SyndContentKindXHtml
+                  };
 
         internal EdmXmlSchemaWriter(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability)
         {
@@ -195,9 +196,11 @@ namespace System.Data.Entity.Edm.Serialization
         internal void WriteSchemaElementHeader(string schemaNamespace)
         {
             var xmlNamespace = XmlConstants.GetCsdlNamespace(_version);
+
             _xmlWriter.WriteStartElement(XmlConstants.Schema, xmlNamespace);
             _xmlWriter.WriteAttributeString(XmlConstants.Namespace, schemaNamespace);
             _xmlWriter.WriteAttributeString(XmlConstants.Alias, XmlConstants.Self);
+
             if (_version == XmlConstants.EdmVersionForV3)
             {
                 _xmlWriter.WriteAttributeString(

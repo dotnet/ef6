@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
     
@@ -84,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var inverseAssociationType = new AssociationType();
             inverseAssociationType.SourceEnd = new AssociationEndMember("S", new EntityType());
             inverseAssociationType.TargetEnd = new AssociationEndMember("T", new EntityType());
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             model.AddAssociationType(inverseAssociationType);
             var inverseNavigationProperty
                 = model.AddEntityType("T")
@@ -99,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.Same(associationType, inverseNavigationProperty.Association);
             Assert.Same(associationType.SourceEnd, inverseNavigationProperty.ResultEnd);
-            Assert.Equal(0, model.GetAssociationTypes().Count());
+            Assert.Equal(0, model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -115,9 +116,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var associationType = new AssociationType();
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
-            var tempQualifier = associationType.SourceEnd.GetEntityType();
 
-            tempQualifier.Annotations.SetClrType(mockType);
+            associationType.SourceEnd.GetEntityType().Annotations.SetClrType(mockType);
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
@@ -149,9 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
 
-            var tempQualifier = associationType.SourceEnd.GetEntityType();
-
-            tempQualifier.Annotations.SetClrType(mockType);
+            associationType.SourceEnd.GetEntityType().Annotations.SetClrType(mockType);
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many; // make this the principal
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 
@@ -181,7 +179,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
+                    .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeConceptual());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
                 new AssociationSet("AS", new AssociationType()), new EntitySet());

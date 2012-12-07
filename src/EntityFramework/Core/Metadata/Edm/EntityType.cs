@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
 
         internal EntityType()
-            : this("E", XmlConstants.ModelNamespace_3, DataSpace.CSpace)
+            : this("E", "N", DataSpace.CSpace)
         {
             // testing only
         }

@@ -6,7 +6,9 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Transactions;
     using FunctionalTests.Model;
@@ -70,7 +72,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(1, databaseMapping.Database.EntityTypes.Count());
         }
 
         [Fact]
@@ -418,26 +420,26 @@ namespace FunctionalTests
                 "ITFoo",
                 databaseMapping.Model.Containers.Single().EntitySets.Single(es => es.Name == "ITFoos").
                                 ElementType.Name);
-            Assert.Equal(3, databaseMapping.Model.Namespaces.Single().EntityTypes.Count);
+            Assert.Equal(3, databaseMapping.Model.EntityTypes.Count());
 
             //Base type with 1 prop
             Assert.Equal(
                 1,
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single(et => et.Name == "ITFoo").
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "ITFoo").
                                 DeclaredProperties.Count);
             Assert.Equal(
                 1,
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single(et => et.Name == "ITFoo").
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "ITFoo").
                                 Properties.Count());
 
             //Derived type with 1 prop, 0 declared
             Assert.Equal(
                 0,
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single(et => et.Name == "ITBar").
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "ITBar").
                                 DeclaredProperties.Count);
             Assert.Equal(
                 1,
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single(et => et.Name == "ITBar").
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "ITBar").
                                 Properties.Count());
         }
 
@@ -574,8 +576,8 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal("C1", databaseMapping.Model.Containers[0].AssociationSets[0].SourceSet.Name);
-            Assert.Equal("D1", databaseMapping.Model.Containers[0].AssociationSets[0].TargetSet.Name);
+            Assert.Equal("C1", databaseMapping.Model.Containers.Single().AssociationSets[0].SourceSet.Name);
+            Assert.Equal("D1", databaseMapping.Model.Containers.Single().AssociationSets[0].TargetSet.Name);
         }
 
         [Fact]
@@ -590,8 +592,8 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal("C1", databaseMapping.Model.Containers[0].AssociationSets[0].SourceSet.Name);
-            Assert.Equal("D1", databaseMapping.Model.Containers[0].AssociationSets[0].TargetSet.Name);
+            Assert.Equal("C1", databaseMapping.Model.Containers.Single().AssociationSets[0].SourceSet.Name);
+            Assert.Equal("D1", databaseMapping.Model.Containers.Single().AssociationSets[0].TargetSet.Name);
         }
 
         [Fact]

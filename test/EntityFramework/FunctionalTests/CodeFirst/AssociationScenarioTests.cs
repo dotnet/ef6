@@ -12,6 +12,7 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -46,7 +47,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -64,7 +65,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -82,7 +83,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.One, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -393,7 +394,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -554,7 +555,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -575,7 +576,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -608,7 +609,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -635,7 +636,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -658,7 +659,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var associationType = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = databaseMapping.Model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.One, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
@@ -694,11 +695,11 @@ namespace FunctionalTests
 
             Assert.Equal(
                 OperationAction.None,
-                databaseMapping.Model.Namespaces.Single().AssociationTypes.Single().SourceEnd.DeleteBehavior);
+                databaseMapping.Model.AssociationTypes.Single().SourceEnd.DeleteBehavior);
 
             Assert.Equal(
                 OperationAction.None,
-                databaseMapping.Model.Namespaces.Single().AssociationTypes.Single().TargetEnd.DeleteBehavior);
+                databaseMapping.Model.AssociationTypes.Single().TargetEnd.DeleteBehavior);
         }
 
         [Fact]
@@ -722,15 +723,17 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             var fkConstraint
-                = databaseMapping.Database.GetEntityTypes()
+                = databaseMapping.Database.EntityTypes
                     .Single(t => t.Name == "CompositeAnnotatedDependent")
                     .ForeignKeyBuilders
                     .Single();
 
             Assert.True(new[] { "TheFk2", "TheFk1" }.SequenceEqual(fkConstraint.DependentColumns.Select(c => c.Name)));
 
+            EdmModel tempQualifier1 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier1);
             fkConstraint
-                = databaseMapping.Database.GetEntityTypes()
+                = tempQualifier1.EntityTypes
                     .Single(t => t.Name == "CompositePartiallyAnnotatedDependent")
                     .ForeignKeyBuilders
                     .Single();
@@ -795,7 +798,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var table = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "TagProductA");
+            var table = databaseMapping.Database.EntityTypes.Single(t => t.Name == "TagProductA");
 
             Assert.Equal("bigint", table.Properties.Single(c => c.Name == "Tag_Id").TypeName);
             Assert.Equal("bigint", table.Properties.Single(c => c.Name == "ProductA_Id").TypeName);
@@ -829,7 +832,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var table = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "ToOne");
+            var table = databaseMapping.Database.EntityTypes.Single(t => t.Name == "ToOne");
 
             Assert.Equal("bigint", table.Properties.Single(c => c.Name == "NavOne_AnId").TypeName);
         }
@@ -926,7 +929,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -945,7 +948,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -965,7 +968,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -985,7 +988,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(2, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -1014,7 +1017,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var association = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var association = databaseMapping.Model.AssociationTypes.Single();
             Assert.Equal("SomeItem", association.SourceEnd.GetEntityType().Name);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, association.SourceEnd.RelationshipMultiplicity);
             Assert.Equal("SomeItem", association.Constraint.DependentEnd.GetEntityType().Name);
@@ -1033,7 +1036,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
             databaseMapping.AssertValid();
 
-            var association = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+            var association = databaseMapping.Model.AssociationTypes.Single();
             Assert.Equal("ProductSubcategory", association.SourceEnd.GetEntityType().Name);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, association.SourceEnd.RelationshipMultiplicity);
             Assert.Equal("Product", association.Constraint.DependentEnd.GetEntityType().Name);
@@ -1092,7 +1095,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
             databaseMapping.Assert<TreeNode>().HasForeignKeyColumn("ParentId");
         }
 
@@ -1255,7 +1258,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var joinTable = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "PersonPerson");
+            var joinTable = databaseMapping.Database.EntityTypes.Single(t => t.Name == "PersonPerson");
 
             Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
 
@@ -1328,7 +1331,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var joinTable = databaseMapping.Database.GetEntityTypes().Single(t => t.Name == "ProductATag");
+            var joinTable = databaseMapping.Database.EntityTypes.Single(t => t.Name == "ProductATag");
 
             Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
 
@@ -1413,8 +1416,11 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.Equal(2, databaseMapping.Model.Containers.Single().AssociationSets.Count());
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Count());
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Count());
+            EdmModel tempQualifier1 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier1);
+            Assert.Equal(2, tempQualifier1.EntityTypes.ElementAt(0).Properties.Count());
+
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.ElementAt(1).Properties.Count());
         }
 
         [Fact]
@@ -1487,7 +1493,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -1499,7 +1505,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.NotNull(databaseMapping.Model.Namespaces.Single().AssociationTypes.Single().Constraint);
+            Assert.NotNull(databaseMapping.Model.AssociationTypes.Single().Constraint);
         }
 
         [Fact]
@@ -1646,7 +1652,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
         }
 
         [Fact]
@@ -1755,7 +1761,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid")
@@ -1811,7 +1817,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "rowguid")
@@ -1883,7 +1889,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
 
             databaseMapping.Assert<SpecialOfferProduct>("ProductOne")
                 .HasColumns("ProductID", "rowguid", "TheFK")
@@ -1909,7 +1915,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
 
             databaseMapping.Assert<SpecialOfferProduct>()
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid", "ModifiedDate", "TheFK")
@@ -1939,7 +1945,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
 
             databaseMapping.Assert<SpecialOfferProduct>()
                 .HasColumns("ProductID", "SpecialOfferID", "rowguid", "ModifiedDate", "TheFK")
@@ -1975,7 +1981,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Equal(OperationAction.None, aset.ElementType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, aset.ElementType.TargetEnd.DeleteBehavior);
         }
@@ -1992,7 +1998,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Equal(OperationAction.Cascade, aset.ElementType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, aset.ElementType.TargetEnd.DeleteBehavior);
         }
@@ -2008,7 +2014,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Equal(OperationAction.None, aset.ElementType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, aset.ElementType.TargetEnd.DeleteBehavior);
         }
@@ -2025,7 +2031,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Equal(OperationAction.Cascade, aset.ElementType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, aset.ElementType.TargetEnd.DeleteBehavior);
         }
@@ -2040,7 +2046,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Null(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2075,7 +2081,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Null(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2094,7 +2100,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.NotNull(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2112,7 +2118,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.NotNull(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2130,7 +2136,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.NotNull(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2148,7 +2154,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.NotNull(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2167,7 +2173,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Null(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2488,7 +2494,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.Null(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
@@ -2507,7 +2513,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers[0].AssociationSets[0];
+            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
             Assert.NotNull(aset.ElementType.Constraint);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);

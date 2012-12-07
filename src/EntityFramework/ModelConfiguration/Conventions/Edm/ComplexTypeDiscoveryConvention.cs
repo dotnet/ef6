@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -33,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             //      8) Any inbound navigation properties do not have explicit configuration.
 
             var candidates
-                = from entityType in model.GetEntityTypes()
+                = from entityType in model.EntityTypes
                   where entityType.DeclaredKeyProperties.Count == 0 // (1)
                         && entityType.BaseType == null
                   // (1)
@@ -44,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         && !entityType.NavigationProperties.Any()
                   // (3)
                   let matchingAssociations
-                      = from associationType in model.GetAssociationTypes()
+                      = from associationType in model.AssociationTypes
                         where associationType.SourceEnd.GetEntityType() == entityType ||
                               associationType.TargetEnd.GetEntityType() == entityType
                         let declaringEnd

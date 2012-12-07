@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(databaseMapping);
-            DebugCheck.NotNull(database);
+            
 
             databaseMapping.Model = model;
             databaseMapping.Database = database;

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
     public sealed class SqlCePropertyMaxLengthConventionTests
@@ -180,9 +179,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
         private static EdmModel CreateEdmModel()
         {
-            var model = new EdmModel();
-
-            model.SetProviderInfo(ProviderRegistry.SqlCe4_ProviderInfo);
+            var model
+                = new EdmModel
+                      {
+                          ProviderInfo = ProviderRegistry.SqlCe4_ProviderInfo
+                      };
 
             return model;
         }

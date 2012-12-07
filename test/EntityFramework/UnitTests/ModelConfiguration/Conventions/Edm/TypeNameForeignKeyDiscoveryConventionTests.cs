@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
             ((IEdmConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -46,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
             ((IEdmConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
             ((IEdmConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -93,9 +93,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            var model = new EdmModel().Initialize();
-            model.Namespaces.Single().AssociationTypes.Add(associationType);
-            model.Namespaces.Single().AssociationTypes.Add(associationType);
+            var model = new EdmModel().InitializeConceptual();
+            model.AddItem(associationType);
+            model.AddItem(associationType);
 
             ((IEdmConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, model);
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
             ((IEdmConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Null(associationType.Constraint);
         }

@@ -41,7 +41,7 @@ namespace FunctionalTests
 
             Assert.True(
                 expectedPropertyOrder.SequenceEqual(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().DeclaredKeyProperties.Select(
+                    databaseMapping.Model.EntityTypes.Single().DeclaredKeyProperties.Select(
                         p => p.Name)));
 
             databaseMapping.Assert<CompositeKeyNoOrder>("CompositeKeyNoOrders").HasColumns(expectedColumnOrder);

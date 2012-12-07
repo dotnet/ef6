@@ -13,6 +13,7 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Windows.Media;
     using FunctionalTests.Model;
@@ -1430,10 +1431,10 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.False(
-                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                     .Any(p => p.Name == "BaseClassProperty"));
             Assert.False(
-                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                     .Any(p => p.Name == "VirtualBaseClassProperty"));
         }
 
@@ -1468,7 +1469,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.False(
-                databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                     .Any(p => p.Name == "AbstractBaseClassProperty"));
         }
 
@@ -1502,10 +1503,10 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             Assert.False(
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                databaseMapping.Model.EntityTypes.Single().Properties.Any(
                     p => p.Name == "BaseClassProperty"));
             Assert.False(
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                databaseMapping.Model.EntityTypes.Single().Properties.Any(
                     p => p.Name == "VirtualBaseClassProperty"));
         }
 
@@ -1624,7 +1625,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -1639,7 +1640,7 @@ namespace FunctionalTests
 
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, typeof(Product));
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
 
         [Fact]
@@ -2278,7 +2279,7 @@ namespace FunctionalTests
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.False(
-                databaseMapping.Model.Namespaces[0].EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
                     p => p.Name == "DerivedData").Nullable);
 
             databaseMapping.Assert<TPHBase>()
@@ -2308,7 +2309,7 @@ namespace FunctionalTests
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.False(
-                databaseMapping.Model.Namespaces[0].EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
+                databaseMapping.Model.EntityTypes.Single(et => et.Name == "TPHDerived").Properties.Single(
                     p => p.Name == "DerivedData").Nullable);
             databaseMapping.Assert<TPHBase>()
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData");
@@ -3264,7 +3265,7 @@ namespace FunctionalTests
                 .HasColumns("Key1", "Key2")
                 .HasForeignKey(new[] { "Key1", "Key2" }, "Base");
 
-            var joinTable = databaseMapping.Database.GetEntityTypes().ElementAt(1);
+            var joinTable = databaseMapping.Database.EntityTypes.ElementAt(1);
             Assert.Equal("SRDerivedSRDeriveds", databaseMapping.Database.GetEntitySet(joinTable).Table);
             Assert.True(
                 joinTable.Properties.Select(x => x.Name).SequenceEqual(
@@ -3918,7 +3919,7 @@ namespace FunctionalTests
                 .HasColumns("Key1", "Key2", "BaseProperty")
                 .HasNoForeignKeyColumns();
 
-            var joinTable = databaseMapping.Database.GetEntityTypes().ElementAt(1);
+            var joinTable = databaseMapping.Database.EntityTypes.ElementAt(1);
             Assert.Equal("SRDerivedSRDeriveds", databaseMapping.Database.GetEntitySet(joinTable).Table);
             Assert.True(
                 joinTable.Properties.Select(x => x.Name).SequenceEqual(
@@ -4521,7 +4522,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(1, databaseMapping.Database.GetEntityTypes().Count());
+
+            Assert.Equal(1, databaseMapping.Database.EntityTypes.Count());
         }
 
         [Fact]
@@ -4631,7 +4633,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
+
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 2,
                 databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
@@ -4684,7 +4687,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
+
+            Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 3,
                 databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
@@ -4917,7 +4921,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(3, databaseMapping.Database.GetEntityTypes().Count());
+
+            Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 3,
                 databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
@@ -6152,7 +6157,8 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(2, databaseMapping.Database.GetEntityTypes().Count());
+
+            Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
             databaseMapping.Assert<AbsInMiddle>("Base").HasColumns("Id", "Data");
             databaseMapping.Assert<AbsInMiddleL2>("L2").HasColumns("Id", "Data", "L1Data", "L2Data");
         }

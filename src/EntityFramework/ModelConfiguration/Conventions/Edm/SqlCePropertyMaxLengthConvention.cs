@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -19,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            var providerInfo = model.GetProviderInfo();
+            var providerInfo = model.ProviderInfo;
 
             if ((providerInfo != null)
                 && providerInfo.IsSqlCe())
@@ -33,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            var providerInfo = model.GetProviderInfo();
+            var providerInfo = model.ProviderInfo;
 
             if ((providerInfo != null)
                 && providerInfo.IsSqlCe())

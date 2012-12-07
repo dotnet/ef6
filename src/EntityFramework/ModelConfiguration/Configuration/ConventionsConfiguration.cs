@@ -176,7 +176,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyDatabase(EdmModel database)
         {
-            DebugCheck.NotNull(database);
+            
 
             foreach (var convention in _conventions)
             {

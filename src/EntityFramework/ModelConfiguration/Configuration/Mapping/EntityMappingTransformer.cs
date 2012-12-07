@@ -107,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping, EntityType toTable, EntityType entityType, bool removeFks)
         {
-            foreach (var associationType in databaseMapping.Model.Namespaces.Single().AssociationTypes
+            foreach (var associationType in databaseMapping.Model.AssociationTypes
                                                            .Where(
                                                                at =>
                                                                at.SourceEnd.GetEntityType().Equals(entityType)
@@ -251,17 +251,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private static void CopyForeignKeyConstraint(
-            EdmModel database, EntityType toTable,
-            ForeignKeyBuilder fk)
+        private static void CopyForeignKeyConstraint(EdmModel database, EntityType toTable, ForeignKeyBuilder fk)
         {
+            
             DebugCheck.NotNull(toTable);
             DebugCheck.NotNull(fk);
 
             var newFk
                 = new ForeignKeyBuilder(
                     database,
-                    database.GetEntityTypes().SelectMany(t => t.ForeignKeyBuilders).UniquifyName(fk.Name))
+                    database.EntityTypes.SelectMany(t => t.ForeignKeyBuilders).UniquifyName(fk.Name))
                       {
                           PrincipalTable = fk.PrincipalTable,
                           DeleteAction = fk.DeleteAction

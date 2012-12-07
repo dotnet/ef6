@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         owner != PrincipalTable ? owner.Name : owner.Name + SelfRefSuffix,
                         owner);
 
-                if (!_database.GetAssociationTypes().Contains(_assocationType))
+                if (!_database.AssociationTypes.Contains(_assocationType))
                 {
                     _database.AddAssociationType(_assocationType);
                     _database.AddAssociationSet(_associationSet);

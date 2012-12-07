@@ -87,10 +87,10 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                    databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                         .Any(p => p.Name == "BaseClassProperty"));
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                    databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                         .Any(p => p.Name == "VirtualBaseClassProperty"));
             }
         }
@@ -115,7 +115,7 @@ namespace FunctionalTests
                     databaseMapping.AssertValid();
 
                     Assert.False(
-                        databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                        databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                             .Any(p => p.Name == "VirtualBaseClassProperty"));
                 }
             }
@@ -136,9 +136,9 @@ namespace FunctionalTests
 
                 databaseMapping.AssertValid();
 
-                Assert.True(databaseMapping.Model.Namespaces.Single().EntityTypes.Any(e => e.Name == "AbstractBaseEntity"));
+                Assert.True(databaseMapping.Model.EntityTypes.Any(e => e.Name == "AbstractBaseEntity"));
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                    databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                         .Any(p => p.Name == "AbstractBaseClassProperty"));
             }
         }
@@ -161,7 +161,7 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.SelectMany(e => e.Properties)
+                    databaseMapping.Model.EntityTypes.SelectMany(e => e.Properties)
                         .Any(p => p.Name == "AbstractBaseClassProperty"));
             }
         }
@@ -205,7 +205,7 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                    databaseMapping.Model.EntityTypes.Single().Properties.Any(
                         p => p.Name == "VirtualBaseClassProperty"));
             }
         }
@@ -231,7 +231,7 @@ namespace FunctionalTests
                     databaseMapping.AssertValid();
 
                     Assert.False(
-                        databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                        databaseMapping.Model.EntityTypes.Single().Properties.Any(
                             p => p.Name == "VirtualBaseClassProperty"));
                 }
             }
@@ -255,7 +255,7 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                    databaseMapping.Model.EntityTypes.Single().Properties.Any(
                         p => p.Name == "VirtualBaseClassProperty"));
             }
         }
@@ -276,7 +276,7 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 Assert.False(
-                    databaseMapping.Model.Namespaces.Single().EntityTypes.Single().Properties.Any(
+                    databaseMapping.Model.EntityTypes.Single().Properties.Any(
                         p => p.Name == "VirtualBaseClassProperty"));
             }
         }
@@ -365,7 +365,7 @@ namespace FunctionalTests
                 .DbEqual(128, f => f.MaxLength)
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
 
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
             databaseMapping.Assert<ReferencingClass>().ForeignKeyColumn("Person_PersonFirstName")
                 .DbEqual("nvarchar", c => c.TypeName)
                 .DbEqual(128, f => f.MaxLength);
@@ -414,7 +414,7 @@ namespace FunctionalTests
                     .DbEqual(64, f => f.MaxLength)
                     .DbEqual(true, c => c.IsPrimaryKeyColumn);
 
-                Assert.Equal(1, databaseMapping.Model.Namespaces.Single().AssociationTypes.Count());
+                Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
                 databaseMapping.Assert<ReferencingClass>().ForeignKeyColumn("Person_PersonFirstName")
                     .DbEqual("nvarchar", c => c.TypeName)
                     .DbEqual(64, f => f.MaxLength);
@@ -676,7 +676,7 @@ namespace FunctionalTests
                     var databaseMapping = BuildMapping(modelBuilder);
                     databaseMapping.AssertValid();
 
-                    var association = databaseMapping.Model.Namespaces.Single().AssociationTypes.Single();
+                    var association = databaseMapping.Model.AssociationTypes.Single();
                     Assert.Equal("Profile", association.SourceEnd.GetEntityType().Name);
                     Assert.Equal(RelationshipMultiplicity.ZeroOrOne, association.SourceEnd.RelationshipMultiplicity);
                     Assert.Equal("Login", association.TargetEnd.GetEntityType().Name);

@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && property.PrimitiveType != null
                     && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
-                    if (!model.GetAssociationTypes().Any(a => IsNonTableSplittingForeignKey(a, property))
+                    if (!model.AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
                         && !ParentOfTpc(edmDataModelItem, model))
                     {
                         property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
@@ -72,7 +72,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private static bool ParentOfTpc(EntityType entityType, EdmModel model)
         {
-            return (from e in model.GetEntityTypes().Where(et => et.GetRootType() == entityType)
+            return (from e in model.EntityTypes.Where(et => et.GetRootType() == entityType)
                     let configuration = e.GetConfiguration() as EntityTypeConfiguration
                     where configuration != null && configuration.IsMappingAnyInheritedProperty(e)
                     select e).Any();

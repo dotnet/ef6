@@ -219,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       };
 
             var principalNavigationProperty
-                = databaseMapping.Model.GetEntityTypes()
+                = databaseMapping.Model.EntityTypes
                                  .SelectMany(e => e.DeclaredNavigationProperties)
                                  .SingleOrDefault(n => n.ResultEnd == principalEnd);
 

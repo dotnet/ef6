@@ -95,39 +95,7 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
         }
 
-        protected virtual void VisitNamespaces(EdmModel model, IEnumerable<EdmNamespace> namespaces)
-        {
-            VisitCollection(namespaces, VisitEdmNamespace);
-        }
-
-        protected virtual void VisitEdmNamespace(EdmNamespace item)
-        {
-            VisitMetadataItem(item);
-            if (item != null)
-            {
-                if (item.ComplexTypes.Any())
-                {
-                    VisitComplexTypes(item, item.ComplexTypes);
-                }
-
-                if (item.EntityTypes.Any())
-                {
-                    VisitEntityTypes(item, item.EntityTypes);
-                }
-
-                if (item.EnumTypes.Any())
-                {
-                    VisitEnumTypes(item, item.EnumTypes);
-                }
-
-                if (item.AssociationTypes.Any())
-                {
-                    VisitAssociationTypes(item, item.AssociationTypes);
-                }
-            }
-        }
-
-        protected virtual void VisitComplexTypes(EdmNamespace edmNamespace, IEnumerable<ComplexType> complexTypes)
+        protected virtual void VisitComplexTypes(IEnumerable<ComplexType> complexTypes)
         {
             VisitCollection(complexTypes, VisitComplexType);
         }
@@ -146,12 +114,12 @@ namespace System.Data.Entity.Edm
             VisitCollection(properties, VisitEdmProperty);
         }
 
-        protected virtual void VisitEntityTypes(EdmNamespace edmNamespace, IEnumerable<EntityType> entityTypes)
+        protected virtual void VisitEntityTypes(IEnumerable<EntityType> entityTypes)
         {
             VisitCollection(entityTypes, VisitEdmEntityType);
         }
 
-        protected virtual void VisitEnumTypes(EdmNamespace edmNamespace, IEnumerable<EnumType> enumTypes)
+        protected virtual void VisitEnumTypes(IEnumerable<EnumType> enumTypes)
         {
             VisitCollection(enumTypes, VisitEdmEnumType);
         }
@@ -211,8 +179,7 @@ namespace System.Data.Entity.Edm
             VisitCollection(navigationProperties, VisitEdmNavigationProperty);
         }
 
-        protected virtual void VisitAssociationTypes(
-            EdmNamespace edmNamespace, IEnumerable<AssociationType> associationTypes)
+        protected virtual void VisitAssociationTypes(IEnumerable<AssociationType> associationTypes)
         {
             VisitCollection(associationTypes, VisitEdmAssociationType);
         }
@@ -275,15 +242,11 @@ namespace System.Data.Entity.Edm
         {
             if (item != null)
             {
-                if (item.Namespaces.Any())
-                {
-                    VisitNamespaces(item, item.Namespaces);
-                }
-
-                if (item.Containers.Any())
-                {
-                    VisitEntityContainers(item.Containers);
-                }
+                VisitComplexTypes(item.ComplexTypes);
+                VisitEntityTypes(item.EntityTypes);
+                VisitEnumTypes(item.EnumTypes);
+                VisitAssociationTypes(item.AssociationTypes);
+                VisitEntityContainers(item.Containers);
             }
         }
     }

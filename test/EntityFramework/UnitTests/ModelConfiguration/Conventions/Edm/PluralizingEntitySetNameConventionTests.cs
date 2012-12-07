@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_pluralized_name()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entitySet = model.AddEntitySet("Cat", new EntityType());
 
             ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_current_entity_set()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entitySet = model.AddEntitySet("Cats", new EntityType());
 
             ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_uniquify_names()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             model.AddEntitySet("Cats", new EntityType());
             var entitySet = model.AddEntitySet("Cat", new EntityType());
 
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 //        [Fact(Skip = "Need to figure out name duplication in core Metadata")]
 //        public void Apply_should_uniquify_names_multiple()
 //        {
-//            var model = new EdmModel().Initialize();
+//            var model = new EdmModel().InitializeConceptual();
 //            model.AddEntitySet("Cats1", new EntityType());
 //            var entitySet1 = model.AddEntitySet("Cat", new EntityType());
 //            var entitySet2 = model.AddEntitySet("Cat", new EntityType());

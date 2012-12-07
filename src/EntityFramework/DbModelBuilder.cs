@@ -349,8 +349,9 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model = new EdmModel().Initialize(_modelBuilderVersion.GetEdmVersion());
-            model.SetProviderInfo(providerInfo);
+            var model = new EdmModel().InitializeConceptual(_modelBuilderVersion.GetEdmVersion());
+
+            model.ProviderInfo = providerInfo;
 
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 
@@ -371,7 +372,7 @@ namespace System.Data.Entity
             _conventionsConfiguration.ApplyDatabase(databaseMapping.Database);
             _conventionsConfiguration.ApplyMapping(databaseMapping);
 
-            databaseMapping.Database.SetProviderInfo(providerInfo);
+            databaseMapping.Database.ProviderInfo = providerInfo;
 
             return new DbModel(databaseMapping, Clone());
         }

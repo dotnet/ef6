@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var principalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var principalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new EdmModel
                       {
                           Version = 3.0
-                      }.DbInitialize();
+                      }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);

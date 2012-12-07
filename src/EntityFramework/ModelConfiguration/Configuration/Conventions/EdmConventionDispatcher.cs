@@ -143,13 +143,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmAssociationSetEnd(item);
             }
 
-            protected override void VisitEdmNamespace(EdmNamespace item)
-            {
-                Dispatch(item);
-
-                base.VisitEdmNamespace(item);
-            }
-
             protected override void VisitComplexType(ComplexType item)
             {
                 Dispatch(item);

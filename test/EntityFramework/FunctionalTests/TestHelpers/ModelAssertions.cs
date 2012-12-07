@@ -18,7 +18,7 @@ namespace System.Data.Entity
             this DbDatabaseMapping databaseMapping, Expression<Func<TStructuralType, object>> propertyExpression)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems
+                = databaseMapping.Model.NamespaceItems
                     .OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
@@ -26,7 +26,7 @@ namespace System.Data.Entity
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var property
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>()
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Where(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
@@ -51,7 +51,7 @@ namespace System.Data.Entity
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -71,7 +71,7 @@ namespace System.Data.Entity
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping, string tableName)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>()
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrType"
@@ -106,7 +106,7 @@ namespace System.Data.Entity
             string tableName)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -131,7 +131,7 @@ namespace System.Data.Entity
             string tableName, bool isTypeOfMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));
@@ -149,7 +149,7 @@ namespace System.Data.Entity
         internal static void AssertNoMapping<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
-                = databaseMapping.Model.Namespaces.Single().NamespaceItems.OfType<StructuralType>().Single(
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
                         a => a.Name == "ClrType"
                              && (Type)a.Value == typeof(TStructuralType)));

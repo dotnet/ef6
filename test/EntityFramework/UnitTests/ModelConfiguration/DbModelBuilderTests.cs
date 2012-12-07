@@ -115,7 +115,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
-            Assert.Equal(0, databaseMapping.Model.GetComplexTypes().Count());
+            Assert.Equal(0, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -130,8 +130,9 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
             Assert.NotNull(databaseMapping);
-            Assert.Equal(1, databaseMapping.Model.GetEntityTypes().Count());
-            Assert.Equal(1, databaseMapping.Model.GetComplexTypes().Count());
+
+            Assert.Equal(1, databaseMapping.Model.EntityTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -148,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             Assert.NotNull(databaseMapping);
             Assert.Equal(
                 ConcurrencyMode.Fixed,
-                databaseMapping.Model.Namespaces.Single().EntityTypes.Single().DeclaredProperties.Single().ConcurrencyMode);
+                databaseMapping.Model.EntityTypes.Single().DeclaredProperties.Single().ConcurrencyMode);
         }
 
         [Fact]

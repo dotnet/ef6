@@ -162,6 +162,7 @@
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityContainerTests.cs" />

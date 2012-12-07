@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.TargetEnd = new AssociationEndMember("T", associationType.SourceEnd.GetEntityType());
 
             ((IEdmConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Equal(OperationAction.None, associationType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, associationType.TargetEnd.DeleteBehavior);
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.SourceEnd.DeleteBehavior = OperationAction.Restrict;
 
             ((IEdmConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Equal(OperationAction.Restrict, associationType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, associationType.TargetEnd.DeleteBehavior);
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             ((IEdmConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Equal(OperationAction.Cascade, associationType.SourceEnd.DeleteBehavior);
         }
@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
             ((IEdmConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Equal(OperationAction.Cascade, associationType.TargetEnd.DeleteBehavior);
         }

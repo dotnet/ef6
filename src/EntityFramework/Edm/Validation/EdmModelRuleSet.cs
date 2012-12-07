@@ -36,7 +36,7 @@ namespace System.Data.Entity.Edm.Validation
 
             #region Common Semantic Rules
 
-            AddRule(EdmModelSemanticValidationRules.EdmModel_SystemNamespaceEncountered);
+            AddRule(EdmModelSemanticValidationRules.EdmType_SystemNamespaceEncountered);
 
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_SimilarRelationshipEnd);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_InvalidEntitySetNameReference);

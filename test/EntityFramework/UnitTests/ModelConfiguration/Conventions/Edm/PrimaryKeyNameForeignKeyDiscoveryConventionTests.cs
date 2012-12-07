@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.PId == Bar.PId
 
             ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.PID == Bar.PId
 
             ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.PId1 == Bar.PId1 && Foo.PId2 == Bar.PId2
 
             ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
@@ -89,9 +89,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             // Foo.PId == Bar.PId
 
-            var model = new EdmModel().Initialize();
-            model.Namespaces.Single().AssociationTypes.Add(associationType);
-            model.Namespaces.Single().AssociationTypes.Add(associationType);
+            var model = new EdmModel().InitializeConceptual();
+            model.AddItem(associationType);
+            model.AddItem(associationType);
 
             ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, model);
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             // Foo.PId == Bar.PId
 
             ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.Null(associationType.Constraint);
         }

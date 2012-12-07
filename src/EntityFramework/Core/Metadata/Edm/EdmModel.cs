@@ -3,54 +3,140 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
-    /// <summary>
-    ///     EdmModel is the top-level container for namespaces and entity containers belonging to the same logical Entity Data Model (EDM) model.
-    /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
-    public class EdmModel : MetadataItem
+    public class EdmModel
     {
-        private readonly List<EntityContainer> containersList = new List<EntityContainer>();
-        private readonly List<EdmNamespace> namespacesList = new List<EdmNamespace>();
+        private readonly List<EntityContainer> _containers = new List<EntityContainer>();
+        private readonly List<AssociationType> _associationTypes = new List<AssociationType>();
+        private readonly List<ComplexType> _complexTypes = new List<ComplexType>();
+        private readonly List<EntityType> _entityTypes = new List<EntityType>();
+        private readonly List<EnumType> _enumTypes = new List<EnumType>();
 
-        /// <summary>
-        ///     Gets or sets an optional value that indicates the entity model version.
-        /// </summary>
-        public virtual double Version { get; set; }
+        private DbProviderInfo _providerInfo;
 
-        /// <summary>
-        ///     Gets or sets the containers declared within the model.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual IList<EntityContainer> Containers
+        public double Version { get; set; }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public EdmModel InitializeConceptual(double version = XmlConstants.EdmVersionForV3)
         {
-            get { return containersList; }
+            Version = version;
+
+            _containers.Add(new EntityContainer("CodeFirstContainer", DataSpace.CSpace));
+
+            return this;
         }
 
-        /// <summary>
-        ///     Gets or sets the namespaces declared within the model.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual IList<EdmNamespace> Namespaces
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public EdmModel InitializeStore(double version = XmlConstants.StoreVersionForV3)
         {
-            get { return namespacesList; }
+            Version = version;
+
+            _containers.Add(new EntityContainer("CodeFirstDatabase", DataSpace.SSpace));
+
+            return this;
         }
 
-        /// <summary>
-        ///     Gets or sets the currently assigned name.
-        /// </summary>
-        public virtual string Name { get; set; }
-
-        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-        public override BuiltInTypeKind BuiltInTypeKind
+        public virtual IEnumerable<EntityContainer> Containers
         {
-            get { throw new NotImplementedException(); }
+            get { return _containers; }
         }
 
-        internal override string Identity
+        public virtual IEnumerable<string> NamespaceNames
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return NamespaceItems
+                    .Select(t => t.NamespaceName)
+                    .Distinct();
+            }
+        }
+
+        public IEnumerable<EdmType> NamespaceItems
+        {
+            get
+            {
+                return _associationTypes
+                    .Concat<EdmType>(_complexTypes)
+                    .Concat(_entityTypes)
+                    .Concat(_enumTypes);
+            }
+        }
+
+        public DbProviderInfo ProviderInfo
+        {
+            get { return _providerInfo; }
+            set
+            {
+                DebugCheck.NotNull(value);
+
+                _providerInfo = value;
+            }
+        }
+
+        public IEnumerable<AssociationType> AssociationTypes
+        {
+            get { return _associationTypes; }
+        }
+
+        public IEnumerable<ComplexType> ComplexTypes
+        {
+            get { return _complexTypes; }
+        }
+
+        public IEnumerable<EntityType> EntityTypes
+        {
+            get { return _entityTypes; }
+        }
+
+        public IEnumerable<EnumType> EnumTypes
+        {
+            get { return _enumTypes; }
+        }
+
+        public void AddItem(AssociationType associationType)
+        {
+            Check.NotNull(associationType, "associationType");
+
+            _associationTypes.Add(associationType);
+        }
+
+        public void RemoveItem(AssociationType associationType)
+        {
+            Check.NotNull(associationType, "associationType");
+
+            _associationTypes.Remove(associationType);
+        }
+
+        public void AddItem(ComplexType complexType)
+        {
+            Check.NotNull(complexType, "complexType");
+
+            _complexTypes.Add(complexType);
+        }
+
+        public void AddItem(EntityType entityType)
+        {
+            Check.NotNull(entityType, "entityType");
+
+            _entityTypes.Add(entityType);
+        }
+
+        public void RemoveItem(EntityType entityType)
+        {
+            Check.NotNull(entityType, "entityType");
+
+            _entityTypes.Remove(entityType);
+        }
+
+        public void AddItem(EnumType enumType)
+        {
+            Check.NotNull(enumType, "enumType");
+
+            _enumTypes.Add(enumType);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_should_initialize_mapping_model()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_can_map_a_simple_entity_type_and_set()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_should_correctly_map_string_primitive_property_facets()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_should_correctly_map_time_primitive_property_facets()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_should_correctly_map_decimal_primitive_property_facets()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -174,7 +174,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_should_map_entity_keys_to_primary_keys()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -199,7 +199,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_can_map_independent_association_type()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var principalEntityType = model.AddEntityType("P");
             var type = typeof(object);
 
@@ -248,7 +248,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_can_map_foreign_key_association_type()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
 
             var principalEntityType = model.AddEntityType("P");
             principalEntityType.Annotations.SetClrType(typeof(object));
@@ -301,7 +301,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_can_map_type_hierarchies_using_Tph()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var rootEntityType = model.AddEntityType("E");
             var type = typeof(object);
 
@@ -361,7 +361,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         [Fact]
         public void Generate_maps_abstract_type_hierarchies_correctly()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
 
             var rootEntityType = model.AddEntityType("E");
 

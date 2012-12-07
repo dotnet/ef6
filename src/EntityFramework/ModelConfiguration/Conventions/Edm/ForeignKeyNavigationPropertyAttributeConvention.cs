@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                          .Select(p => p.Trim());
 
                 var declaringEntityType
-                    = model.GetEntityTypes()
+                    = model.EntityTypes
                            .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
 
                 var dependentProperties

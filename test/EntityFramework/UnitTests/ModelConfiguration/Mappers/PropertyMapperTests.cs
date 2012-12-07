@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var complexType = new ComplexType("C");
             var mappingContext
-                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
+                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().InitializeConceptual());
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(int), "Foo"), complexType, () => new ComplexTypeConfiguration(typeof(object)));
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Map_should_map_entity_navigation_properties()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
             var entityType = new EntityType();
             var mappingContext
-                = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel().Initialize());
+                = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel().InitializeConceptual());
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(mockComplexType, "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var entityType = new EntityType();
             var mappingContext
-                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
+                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().InitializeConceptual());
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(new MockPropertyInfo(typeof(int), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
@@ -88,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var entityType = new EntityType();
             var mappingContext
-                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().Initialize());
+                = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel().InitializeConceptual());
 
             new PropertyMapper(new TypeMapper(mappingContext))
                 .Map(

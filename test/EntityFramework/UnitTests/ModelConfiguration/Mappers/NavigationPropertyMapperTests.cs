@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_set_default_association_multiplicity_to_collection_to_optional()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -26,9 +26,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                     new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
-            Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(1, model.AssociationTypes.Count());
 
-            var associationType = model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.Many, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.TargetEnd.RelationshipMultiplicity);
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_create_association_sets_for_associations()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType
                                  {
                                      Name = "Source"
@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_detect_collection_associations_and_set_correct_end_kinds()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -75,9 +75,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                     new MockPropertyInfo(typeof(List<NavigationPropertyMapperTests>), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
-            Assert.Equal(1, model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(1, model.AssociationTypes.Count());
 
-            var associationType = model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_not_detect_arrays_as_collection_associations()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -96,14 +96,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                     new MockPropertyInfo(typeof(NavigationPropertyMapperTests[]), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
-            Assert.Equal(0, model.Namespaces.Single().AssociationTypes.Count);
+            Assert.Equal(0, model.AssociationTypes.Count());
         }
 
         [Fact]
         public void Map_should_create_navigation_property_for_association()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_set_clr_property_info_on_assocation_source_end()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -138,7 +138,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                     mockPropertyInfo, entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
-            var associationType = model.Namespaces.Single().AssociationTypes.Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Same(mockPropertyInfo.Object, associationType.SourceEnd.GetClrPropertyInfo());
         }

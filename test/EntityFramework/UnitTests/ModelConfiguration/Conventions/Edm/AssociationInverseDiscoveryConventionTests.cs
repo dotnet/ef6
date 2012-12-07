@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -20,14 +22,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
+            
             var navigationProperties
-                = model.GetEntityTypes().SelectMany(e => e.NavigationProperties);
+                = model.EntityTypes.SelectMany(e => e.NavigationProperties);
 
             Assert.Equal(2, navigationProperties.Count());
 
             var navigationProperty1 = navigationProperties.ElementAt(0);
             var navigationProperty2 = navigationProperties.ElementAt(1);
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Same(associationType, navigationProperty1.Association);
             Assert.Same(associationType, navigationProperty2.Association);
@@ -46,10 +49,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
@@ -66,10 +69,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.Many, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
@@ -86,10 +89,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.TargetEnd.RelationshipMultiplicity);
@@ -106,10 +109,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
@@ -130,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(3, model.GetAssociationTypes().Count());
+            Assert.Equal(3, model.AssociationTypes.Count());
             Assert.Equal(3, model.Containers.Single().AssociationSets.Count());
         }
 
@@ -146,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(3, model.GetAssociationTypes().Count());
+            Assert.Equal(3, model.AssociationTypes.Count());
             Assert.Equal(3, model.Containers.Single().AssociationSets.Count());
         }
     }

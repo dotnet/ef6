@@ -41,7 +41,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(model, "model");
 
-            model.Namespaces.Single().Name = _modelNamespace;
+            model.NamespaceItems.Each(t => t.NamespaceName = _modelNamespace);
         }
 
         #endregion

@@ -1385,7 +1385,6 @@
     <Compile Include="Edm\Validation\DataModelErrorEventArgs.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
-    <Compile Include="Core\Metadata\Edm\EdmNamespace.cs" />
     <Compile Include="Core\Metadata\Edm\IQualifiedNameMetadataItem.cs" />
     <Compile Include="Edm\EdmModelVisitor.cs" />
     <Compile Include="Edm\Serialization\CsdlSerializer.cs" />

@@ -325,8 +325,7 @@ namespace FunctionalTests
 
             Assert.Equal(
                 3,
-                databaseMapping.Model.Namespaces
-                    .Single()
+                databaseMapping.Model
                     .AssociationTypes
                     .SelectMany(a => a.Members)
                     .Cast<AssociationEndMember>()

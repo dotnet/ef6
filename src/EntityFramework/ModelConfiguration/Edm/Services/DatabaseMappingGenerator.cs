@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
@@ -47,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(model, new EdmModel().DbInitialize(model.Version));
+                    .Initialize(model, new EdmModel().InitializeStore(model.Version));
 
             return databaseMapping;
         }
@@ -57,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var entityType in model.GetEntityTypes())
+            foreach (var entityType in model.EntityTypes)
             {
                 if (!entityType.Abstract)
                 {
@@ -112,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var associationType in model.GetAssociationTypes())
+            foreach (var associationType in model.AssociationTypes)
             {
                 new AssociationTypeMappingGenerator(_providerManifest)
                     .Generate(associationType, databaseMapping);

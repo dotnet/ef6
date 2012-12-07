@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -21,8 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(model, "model");
 
             var associationPairs
-                = (from a1 in model.GetAssociationTypes()
-                   from a2 in model.GetAssociationTypes()
+                = (from a1 in model.AssociationTypes
+                   from a2 in model.AssociationTypes
                    where a1 != a2
                    where a1.SourceEnd.GetEntityType() == a2.TargetEnd.GetEntityType()
                          && a1.TargetEnd.GetEntityType() == a2.SourceEnd.GetEntityType()
@@ -73,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EdmModel model, AssociationType unifiedAssociation, AssociationType redundantAssociation)
         {
             foreach (var navigationProperty
-                in model.GetEntityTypes()
+                in model.EntityTypes
                         .SelectMany(e => e.NavigationProperties)
                         .Where(np => np.Association == redundantAssociation))
             {

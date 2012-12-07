@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_entity_set_name()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityType = new EntityType
                                  {
                                      Name = "E"
@@ -181,9 +181,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
                                      BaseType = new EntityType()
                                  };
             var type = typeof(string);
-            var tempQualifier = entityType.BaseType;
 
-            tempQualifier.Annotations.SetClrType(type);
+            entityType.BaseType.Annotations.SetClrType(type);
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             entityTypeConfiguration.Key(new MockPropertyInfo(typeof(int), "Id"));
 

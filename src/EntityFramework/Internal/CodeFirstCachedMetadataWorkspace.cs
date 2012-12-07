@@ -33,13 +33,12 @@ namespace System.Data.Entity.Internal
         {
             DebugCheck.NotNull(databaseMapping);
 
-            _providerInfo = databaseMapping.Database.GetProviderInfo();
-
+            _providerInfo = databaseMapping.Database.ProviderInfo;
             _metadataWorkspace = databaseMapping.ToMetadataWorkspace();
-
             _assemblies = databaseMapping.Model.GetClrTypes().Select(t => t.Assembly).Distinct().ToList();
 
             Debug.Assert(databaseMapping.Model.Containers.Count() == 1, "Expecting Code First to create only one container.");
+
             _defaultContainerName = databaseMapping.Model.Containers.First().Name;
         }
 

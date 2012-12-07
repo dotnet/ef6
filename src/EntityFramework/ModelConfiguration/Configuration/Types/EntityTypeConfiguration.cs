@@ -565,7 +565,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Configure(propertyMappings, providerManifest, allowOverride);
 
             foreach (
-                var derivedEntityType in databaseMapping.Model.GetEntityTypes().Where(et => et.BaseType == entityType))
+                var derivedEntityType in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))
             {
                 ConfigurePropertyMappings(databaseMapping, derivedEntityType, providerManifest, true);
             }
@@ -602,7 +602,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
 
-            foreach (var foreignKeyConstraint in databaseMapping.Database.GetEntityTypes().SelectMany(t => t.ForeignKeyBuilders))
+            foreach (var foreignKeyConstraint in databaseMapping.Database.EntityTypes.SelectMany(t => t.ForeignKeyBuilders))
             {
                 foreignKeyConstraint
                     .DependentColumns

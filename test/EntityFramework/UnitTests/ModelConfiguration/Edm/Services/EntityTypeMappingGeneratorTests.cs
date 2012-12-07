@@ -95,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         private static DbDatabaseMapping CreateEmptyModel()
         {
             return new DbDatabaseMapping()
-                .Initialize(new EdmModel().Initialize(), new EdmModel().Initialize());
+                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeConceptual());
         }
     }
 }

@@ -8,7 +8,9 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -88,7 +90,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
 
             databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
                 "Id", "Bar",
@@ -107,7 +109,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
 
             databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
                 "Id", "Bar",
@@ -131,7 +133,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
             databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
                 "Id", "Bar",
                 "Foo2",
@@ -151,7 +153,7 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
             databaseMapping.Assert<EntityWithNestedComplexType>("EntityWithNestedComplexTypes").HasColumns(
                 "Id", "Bar",
                 "Foo", "Foo1");
@@ -226,7 +228,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -241,7 +243,7 @@ namespace FunctionalTests
                 typeof(RowDetails));
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -256,7 +258,7 @@ namespace FunctionalTests
                 typeof(UnitMeasure));
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(1, databaseMapping.Model.Namespaces.Single().ComplexTypes.Count);
+            Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -357,22 +359,29 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             // Not propagated
-            Assert.Equal(
-                false,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
-                    .Nullable);
-            Assert.Equal(
-                true,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line1")
-                    .Nullable);
 
             Assert.Equal(
-                true,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
+                false,
+                databaseMapping.Database.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
                     .Nullable);
+            EdmModel tempQualifier1 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier1);
             Assert.Equal(
                 true,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line2")
+                tempQualifier1.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line1")
+                    .Nullable);
+
+            EdmModel tempQualifier2 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier2);
+            Assert.Equal(
+                true,
+                tempQualifier2.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
+                    .Nullable);
+            EdmModel tempQualifier3 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier3);
+            Assert.Equal(
+                true,
+                tempQualifier3.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line2")
                     .Nullable);
         }
 
@@ -392,20 +401,26 @@ namespace FunctionalTests
 
             Assert.Equal(
                 false,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
+                databaseMapping.Database.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
                     .Nullable);
+            EdmModel tempQualifier1 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier1);
             Assert.Equal(
                 false,
-                databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line1")
+                tempQualifier1.EntityTypes.ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line1")
                     .Nullable);
 
+            EdmModel tempQualifier2 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier2);
             Assert.Equal(
                 true,
-                databaseMapping.Database.GetEntityTypes().ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
+                tempQualifier2.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
                     .Nullable);
+            EdmModel tempQualifier3 = databaseMapping.Database;
+            DebugCheck.NotNull(tempQualifier3);
             Assert.Equal(
                 true,
-                databaseMapping.Database.GetEntityTypes().ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line2")
+                tempQualifier3.EntityTypes.ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line2")
                     .Nullable);
         }
 
@@ -434,7 +449,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            Assert.Equal(2, databaseMapping.Model.Namespaces[0].ComplexTypes.Count);
+            Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
         }
 
         [Fact]
@@ -448,7 +463,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             // Not propagated
-            var annotations = databaseMapping.Model.Namespaces[0]
+            var annotations = databaseMapping.Model
                 .EntityTypes.Single(x => x.Name == "CTEmployee")
                 .Properties.Single(p => p.Name == "HomeAddress")
                 .Annotations;

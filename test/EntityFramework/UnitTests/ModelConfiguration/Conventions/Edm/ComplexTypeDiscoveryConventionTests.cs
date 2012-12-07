@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Common;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -20,11 +22,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(0, model.GetAssociationTypes().Count());
-            Assert.Equal(1, model.GetEntityTypes().Count());
-            Assert.Equal(1, model.GetComplexTypes().Count());
+            Assert.Equal(0, model.AssociationTypes.Count());
+            
+            Assert.Equal(1, model.EntityTypes.Count());
+            Assert.Equal(1, model.ComplexTypes.Count());
             Assert.Equal(0, declaringEntityType.DeclaredNavigationProperties.Count);
-            Assert.Equal(1, model.GetComplexTypes().Single().Properties.Count);
+            Assert.Equal(1, model.ComplexTypes.Single().Properties.Count);
             Assert.Equal(1, declaringEntityType.DeclaredProperties.Count());
         }
 
@@ -39,9 +42,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -55,9 +59,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -75,9 +80,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -97,9 +103,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -109,13 +116,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EntityType declaringEntityType;
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            model.Namespaces.Single().AssociationTypes.Add(model.GetAssociationTypes().Single());
+            model.AddItem(model.AssociationTypes.Single());
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(0, model.GetAssociationTypes().Count());
-            Assert.Equal(1, model.GetEntityTypes().Count());
-            Assert.Equal(1, model.GetComplexTypes().Count());
+            Assert.Equal(0, model.AssociationTypes.Count());
+            
+            Assert.Equal(1, model.EntityTypes.Count());
+            Assert.Equal(1, model.ComplexTypes.Count());
             Assert.Equal(0, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -127,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
@@ -140,9 +148,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -152,13 +161,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EntityType declaringEntityType;
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            model.GetAssociationTypes().Single().SetConfiguration(42);
+            model.AssociationTypes.Single().SetConfiguration(42);
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -170,7 +180,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
 
-            var associationType = model.GetAssociationTypes().Single();
+            var associationType = model.AssociationTypes.Single();
 
             associationType.SourceEnd
                 = new AssociationEndMember("S", complexEntityType);
@@ -179,9 +189,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -191,13 +202,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             EntityType declaringEntityType;
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            model.GetAssociationTypes().Single().TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+            model.AssociationTypes.Single().TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -209,13 +221,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
 
-            declaringEntityType.AddNavigationProperty("E.C2", model.GetAssociationTypes().Single());
+            declaringEntityType.AddNavigationProperty("E.C2", model.AssociationTypes.Single());
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(0, model.GetAssociationTypes().Count());
-            Assert.Equal(1, model.GetEntityTypes().Count());
-            Assert.Equal(1, model.GetComplexTypes().Count());
+            Assert.Equal(0, model.AssociationTypes.Count());
+            
+            Assert.Equal(1, model.EntityTypes.Count());
+            Assert.Equal(1, model.ComplexTypes.Count());
             Assert.Equal(0, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
@@ -229,16 +242,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
-            Assert.Equal(1, model.GetAssociationTypes().Count());
-            Assert.Equal(2, model.GetEntityTypes().Count());
-            Assert.Equal(0, model.GetComplexTypes().Count());
+            Assert.Equal(1, model.AssociationTypes.Count());
+            
+            Assert.Equal(2, model.EntityTypes.Count());
+            Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal(1, declaringEntityType.DeclaredNavigationProperties.Count);
         }
 
         private static EdmModel CreateModelFixture(
             out EntityType declaringEntityType, out EntityType complexEntityType)
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
 
             declaringEntityType = model.AddEntityType("E");
             complexEntityType = model.AddEntityType("C");

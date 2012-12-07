@@ -5,7 +5,6 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Diagnostics;
     using System.Linq;
     using System.Xml;
 
@@ -23,26 +22,26 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void Visit(EdmModel edmModel)
         {
-            Debug.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
-
-            var namespaceName = edmModel.Namespaces.First().Name;
+            var namespaceName
+                = edmModel
+                    .NamespaceNames
+                    .DefaultIfEmpty("Empty")
+                    .Single();
 
             _schemaWriter.WriteSchemaElementHeader(namespaceName);
 
-            base.VisitEdmModel(edmModel);
+            VisitEdmModel(edmModel);
 
             _schemaWriter.WriteEndElement();
         }
 
         internal void Visit(EdmModel edmModel, string provider, string providerManifestToken)
         {
-            Debug.Assert(edmModel.Namespaces.Count == 1, "Expected exactly 1 namespace");
-
-            var namespaceName = edmModel.Name;
+            var namespaceName = edmModel.Containers.Single().Name;
 
             _schemaWriter.WriteSchemaElementHeader(namespaceName, provider, providerManifestToken);
 
-            base.VisitEdmModel(edmModel);
+            VisitEdmModel(edmModel);
 
             _schemaWriter.WriteEndElement();
         }
@@ -103,10 +102,12 @@ namespace System.Data.Entity.Edm.Serialization
             if (properties.Any())
             {
                 _schemaWriter.WriteDelaredKeyPropertiesElementHeader();
+
                 foreach (var keyProperty in properties)
                 {
                     _schemaWriter.WriteDelaredKeyPropertyRefElement(keyProperty);
                 }
+
                 _schemaWriter.WriteEndElement();
             }
         }

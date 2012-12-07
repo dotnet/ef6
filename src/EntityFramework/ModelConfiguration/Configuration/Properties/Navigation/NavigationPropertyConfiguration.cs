@@ -329,8 +329,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 {
                     associationType.MarkPrincipalConfigured();
 
-                    var navProp = model.Namespaces
-                                       .SelectMany(ns => ns.EntityTypes)
+                    var navProp = model.EntityTypes
                                        .SelectMany(et => et.DeclaredNavigationProperties)
                                        .Single(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
 

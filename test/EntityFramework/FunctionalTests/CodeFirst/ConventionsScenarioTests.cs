@@ -12,6 +12,7 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -111,7 +112,7 @@ namespace FunctionalTests
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
             var table
-                = model.DatabaseMapping.Database.GetEntityTypes()
+                = model.DatabaseMapping.Database.EntityTypes
                     .Single(t => t.Name == "LightweightEntityWithConfiguration");
 
             var attributeColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByAttribute");
@@ -135,7 +136,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var column = model.DatabaseMapping.Database.GetEntityTypes()
+            var column = model.DatabaseMapping.Database.EntityTypes
                 .Single()
                 .Properties.Single(c => c.Name == "ComplexProperty_StringProperty");
             Assert.Equal(256, column.MaxLength);
@@ -152,7 +153,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.DeclaredKeyProperties.Count());
             Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
@@ -168,7 +169,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.DeclaredKeyProperties.Count());
             Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
@@ -185,7 +186,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.DeclaredKeyProperties.Count());
             Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
@@ -206,7 +207,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             var keys = entity.DeclaredKeyProperties;
             Assert.Equal(2, keys.Count());
             Assert.Equal("IntProperty", keys.ElementAt(0).Name);
@@ -225,7 +226,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             var keys = entity.DeclaredKeyProperties;
             Assert.Equal(1, keys.Count());
             Assert.Equal("IntProperty", keys.ElementAt(0).Name);
@@ -242,7 +243,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             var keys = entity.DeclaredKeyProperties;
             Assert.Equal(2, keys.Count());
             Assert.Equal("IntProperty", keys.First().Name);
@@ -260,7 +261,7 @@ namespace FunctionalTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var entity = model.DatabaseMapping.Model.EntityTypes.Single();
             var keys = entity.DeclaredKeyProperties;
             Assert.Equal(1, keys.Count());
             Assert.Equal("IntProperty", keys.First().Name);

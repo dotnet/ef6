@@ -5,7 +5,6 @@ namespace System.Data.Entity.Edm.Validation
     using System.Data.Entity.Core.Metadata.Edm;
 
     internal abstract class DataModelValidationRule<TItem> : DataModelValidationRule
-        where TItem : IMetadataItem
     {
         protected Action<EdmModelValidationContext, TItem> _validate;
 

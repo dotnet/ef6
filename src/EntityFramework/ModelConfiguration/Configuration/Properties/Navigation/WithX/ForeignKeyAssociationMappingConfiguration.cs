@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(associationSetMapping);
-            DebugCheck.NotNull(database);
+            
             DebugCheck.NotNull(navigationProperty);
 
             // By convention source end contains the dependent column mappings
@@ -106,7 +106,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if (_tableName != null)
             {
                 var targetTable
-                    = ((from t in database.GetEntityTypes()
+                    = ((from t in database.EntityTypes
                         let n = t.GetTableName()
                         where (n != null && n.Equals(_tableName))
                         select t)

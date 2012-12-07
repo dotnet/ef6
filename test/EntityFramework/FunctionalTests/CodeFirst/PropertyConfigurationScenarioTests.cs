@@ -209,7 +209,7 @@ namespace FunctionalTests
 
             Assert.Equal(
                 ConcurrencyMode.Fixed,
-                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
+                databaseMapping.Model.ComplexTypes.Single()
                     .Properties.Single(p => p.Name == "UnitMeasureCode").ConcurrencyMode);
         }
 
@@ -232,7 +232,7 @@ namespace FunctionalTests
 
             Assert.Equal(
                 ConcurrencyMode.Fixed,
-                databaseMapping.Model.Namespaces.Single().ComplexTypes.Single()
+                databaseMapping.Model.ComplexTypes.Single()
                     .Properties.Single(p => p.Name == "UnitMeasureCode").ConcurrencyMode);
         }
 
@@ -292,8 +292,8 @@ namespace FunctionalTests
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
-                databaseMapping.Model.Namespaces
-                    .Single().ComplexTypes.Single()
+                databaseMapping.Model
+                    .ComplexTypes.Single()
                     .Properties.Single(p => p.Name == "OrderQty")
                     .Annotations.Single(a => a.Name == "StoreGeneratedPattern").Value);
         }

@@ -19,7 +19,7 @@ namespace System.Data.Entity
 
         public TestModelBuilder()
         {
-            _model = new EdmModel().Initialize();
+            _model = new EdmModel().InitializeConceptual();
         }
 
         public TestModelBuilder Entities(params string[] names)

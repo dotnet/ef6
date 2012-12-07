@@ -35,8 +35,9 @@ namespace System.Data.Entity.Edm.Serialization
 
         private void WriteDbModelElement(DbDatabaseMapping databaseMapping)
         {
-            _entityTypeNamespace = databaseMapping.Model.Namespaces.First().Name;
-            _dbSchemaName = databaseMapping.Database.Name;
+            _entityTypeNamespace = databaseMapping.Model.NamespaceNames.SingleOrDefault();
+            _dbSchemaName = databaseMapping.Database.Containers.Single().Name;
+            
             WriteEntityContainerMappingElement(databaseMapping.EntityContainerMappings.FirstOrDefault());
         }
 

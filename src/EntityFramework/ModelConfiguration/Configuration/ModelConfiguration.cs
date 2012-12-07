@@ -307,7 +307,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(providerManifest);
 
             foreach (var structuralTypeConfiguration
-                in databaseMapping.Model.GetComplexTypes()
+                in databaseMapping.Model.ComplexTypes
                                   .Select(ct => ct.GetConfiguration())
                                   .Cast<StructuralTypeConfiguration>()
                                   .Where(c => c != null))
@@ -356,7 +356,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             new EntityMappingService(databaseMapping).Configure();
 
-            foreach (var entityType in databaseMapping.Model.GetEntityTypes().Where(e => e.GetConfiguration() != null))
+            foreach (var entityType in databaseMapping.Model.EntityTypes.Where(e => e.GetConfiguration() != null))
             {
                 var entityTypeConfiguration = (EntityTypeConfiguration)entityType.GetConfiguration();
 
@@ -390,9 +390,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static void ConfigureTables(EdmModel database)
         {
-            DebugCheck.NotNull(database);
+            
 
-            foreach (var table in database.GetEntityTypes().ToList())
+            foreach (var table in database.EntityTypes.ToList())
             {
                 ConfigureTable(database, table);
             }
@@ -401,7 +401,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void ConfigureTable(
             EdmModel database, EntityType table)
         {
-            DebugCheck.NotNull(database);
+            
             DebugCheck.NotNull(table);
 
             var tableName = table.GetTableName();
@@ -537,7 +537,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(databaseMapping);
 
             var tables
-                = (from t in databaseMapping.Database.GetEntityTypes()
+                = (from t in databaseMapping.Database.EntityTypes
                    where databaseMapping.GetEntitySetMappings()
                                         .SelectMany(esm => esm.EntityTypeMappings)
                                         .SelectMany(etm => etm.MappingFragments).All(etmf => etmf.Table != t)

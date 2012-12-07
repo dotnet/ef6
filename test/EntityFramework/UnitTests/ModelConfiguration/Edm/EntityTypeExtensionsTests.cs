@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void TypeHierarchyIterator_should_return_entity_types_in_depth_first_order()
         {
-            var model = new EdmModel().Initialize();
+            var model = new EdmModel().InitializeConceptual();
             var entityTypeRoot = model.AddEntityType("Root");
             var derivedType1 = model.AddEntityType("DType1");
             var derivedType2 = model.AddEntityType("DType2");

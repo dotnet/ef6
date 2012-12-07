@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.Constraint = associationConstraint;
 
             ((IEdmConvention<AssociationType>)new ForeignKeyAssociationMultiplicityConvention())
-                .Apply(associationType, new EdmModel().Initialize());
+                .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.True(associationType.SourceEnd.IsRequired());
         }
