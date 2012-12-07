@@ -5,8 +5,10 @@ namespace FunctionalTests
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -154,6 +156,134 @@ namespace FunctionalTests
             Assert.Equal(1, entity.DeclaredKeyProperties.Count());
             Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
+
+        [Fact]
+        public void Lightweight_conventions_can_filter_by_object()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Entities<LightweightEntity>()
+                .Configure(c => c.HasKey(e => e.IntProperty));
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
+        }
+
+        [Fact]
+        public void Single_key_configurable_with_isKey()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Properties()
+                .Where(p => p.Name == "IntProperty")
+                .Configure(c => c.IsKey());
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
+        }
+
+        [Fact]
+        public void Composite_key_configurable_with_isKey()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Properties()
+                .Where(p => p.Name == "IntProperty")
+                .Configure(c => c.HasColumnOrder(0).IsKey());
+
+            modelBuilder.Properties()
+                .Where(p => p.Name == "IntProperty1")
+                .Configure(c => c.HasColumnOrder(1).IsKey());
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var keys = entity.DeclaredKeyProperties;
+            Assert.Equal(2, keys.Count());
+            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
+            Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
+        }
+
+        [Fact]
+        public void Is_key_is_ignored_if_key_is_already_set()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+            modelBuilder.Properties()
+                .Where(p => p.Name == "IntProperty1")
+                .Configure(c => c.HasColumnOrder(1).IsKey());
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var keys = entity.DeclaredKeyProperties;
+            Assert.Equal(1, keys.Count());
+            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
+        }
+
+        [Fact]
+        public void HasKey_can_build_composite_keys_filtered_by_interface()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Entities<ILightweightEntity>()
+                .Configure(c => c.HasKey(e => new { e.IntProperty, e.IntProperty1 }));
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var keys = entity.DeclaredKeyProperties;
+            Assert.Equal(2, keys.Count());
+            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
+            Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
+        }
+
+        [Fact]
+        public void HasKey_can_build_composite_keys_with_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+            modelBuilder.Entities<ILightweightEntity>()
+                .Configure(c => c.HasKey(e => e.IntProperty));
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var keys = entity.DeclaredKeyProperties;
+            Assert.Equal(2, keys.Count());
+            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
+            Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
+        }
+
+        [Fact]
+        public void Ignores_invalid_property_name()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Properties()
+                .Where(p => p.Name == "TypoProperty")
+                .Configure(c => c.HasColumnOrder(1).IsKey());
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
+            var keys = entity.DeclaredKeyProperties;
+            Assert.Equal(1, keys.Count());
+            Assert.Equal("Id", keys.First().Name);
+        }
     }
 
     public class LightweightEntityWithConfiguration
@@ -183,12 +313,23 @@ namespace FunctionalTests
     public interface ILightweightEntity
     {
         int IntProperty { get; set; }
+        int IntProperty1 { get; set; }
     }
 
     public class LightweightEntity : ILightweightEntity
     {
         public int Id { get; set; }
         public int IntProperty { get; set; }
+        public int IntProperty1 { get; set; }
+        public LightweightComplexType ComplexProperty { get; set; }
+    }
+
+    public class LightweightEntityWithKeyConfiguration : ILightweightEntity
+    {
+        public int Id { get; set; }
+        [Key, Column(Order = 0)]
+        public int IntProperty { get; set; }
+        public int IntProperty1 { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }
 }
