@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
 
     /// <summary>
     ///     Provides singleton model TypeUsages for each DbType that can be expressed using a supported EDM type and appropriate facet values.

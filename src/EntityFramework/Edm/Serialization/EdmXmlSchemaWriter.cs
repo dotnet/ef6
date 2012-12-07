@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Diagnostics;
     using System.Globalization;

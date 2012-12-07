@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>

@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityModel.SchemaObjectModel
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

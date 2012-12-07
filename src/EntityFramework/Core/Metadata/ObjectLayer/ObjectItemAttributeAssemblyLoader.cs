@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

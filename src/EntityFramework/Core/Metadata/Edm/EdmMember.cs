@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Utilities;
 
     /// <summary>

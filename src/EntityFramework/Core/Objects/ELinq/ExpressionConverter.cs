@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
