@@ -615,6 +615,51 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        public class Dispose
+        {
+            [Fact]
+            public void ObjectContext_disposes_underlying_EntityConnection_if_contextOwnConnection_flag_is_set()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
+
+                var objectContext = new ObjectContext(entityConnectionMock.Object, true);
+                objectContext.Dispose();
+
+                entityConnectionMock.Protected().Verify("Dispose", Times.Once(), true);
+            }
+
+            [Fact]
+            public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_set()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Protected().Setup("Dispose", false).Verifiable();
+
+                var objectContext = new ObjectContext(entityConnectionMock.Object, false);
+                objectContext.Dispose();
+
+                entityConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
+            }
+
+            [Fact]
+            public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_specified()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
+
+                var objectContext = new ObjectContext(entityConnectionMock.Object);
+                objectContext.Dispose();
+
+                entityConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
+            }
+        }
+
 #if !NET40
 
         public class SaveChangesAsync

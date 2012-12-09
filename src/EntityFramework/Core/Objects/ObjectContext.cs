@@ -97,8 +97,20 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="connection"> connection to the store </param>
         public ObjectContext(EntityConnection connection)
-            : this(connection, true)
+            : this(connection, true, null)
         {
+            _createdConnection = false;
+        }
+
+        /// <summary>
+        ///     Creates an ObjectContext with the given connection and metadata workspace.
+        /// </summary>
+        /// <param name="connection"> connection to the store </param>
+        /// <param name="contextOwnsConnection"> If set to true the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
+        public ObjectContext(EntityConnection connection, bool contextOwnsConnection)
+            : this(connection, true, null)
+        {
+            _createdConnection = contextOwnsConnection;
         }
 
         /// <summary>
@@ -117,7 +129,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         public ObjectContext(string connectionString)
-            : this(CreateEntityConnection(connectionString), false)
+            : this(CreateEntityConnection(connectionString), false, null)
         {
             _createdConnection = true;
         }
@@ -169,7 +181,7 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectContext(
             EntityConnection connection,
             bool isConnectionConstructor,
-            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
+            ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory,
             Translator translator = null,
             ColumnMapFactory columnMapFactory = null,
             IDbCommandInterceptor commandInterceptor = null)

@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.EntityClient
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
                     Returns(columnMapMock.Object);
 
-                var entityConnectionMock = new Mock<EntityConnection>(null /*workspace*/, null /*connection*/, true /*skipInitialization*/);
+                var entityConnectionMock = new Mock<EntityConnection>(null /*workspace*/, null /*connection*/, true /*skipInitialization*/, true /*entityConnectionOwnsStoreConnection*/);
 
                 var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.SetupGet(m => m.Connection).Returns(entityConnectionMock.Object);
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Core.EntityClient
                     Returns(columnMapMock.Object);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
-                var entityConnectionMock = new Mock<EntityConnection>(null /*workspace*/, null /*connection*/, true /*skipInitialization*/);
+                var entityConnectionMock = new Mock<EntityConnection>(null /*workspace*/, null /*connection*/, true /*skipInitialization*/, true /*entityConnectionOwnsStoreConnection*/);
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
 
                 var entityCommandMock = new Mock<EntityCommand>();

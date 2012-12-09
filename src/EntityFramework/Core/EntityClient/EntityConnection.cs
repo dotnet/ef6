@@ -91,10 +91,26 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Constructs the EntityConnection from Metadata loaded in memory
         /// </summary>
         /// <param name="workspace"> Workspace containing metadata information. </param>
+        /// <param name="connection"> Store connection. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection)
-            : this(workspace, connection, false)
+            : this(workspace, connection, false, false)
+        {
+            Check.NotNull(workspace, "workspace");
+            Check.NotNull(connection, "connection");
+        }
+
+        /// <summary>
+        ///     Constructs the EntityConnection from Metadata loaded in memory
+        /// </summary>
+        /// <param name="workspace"> Workspace containing metadata information. </param>
+        /// <param name="connection"> Store connection. </param>
+        /// <param name="entityConnectionOwnsStoreConnection"> If set to true the store connection is disposed when the entity connection is disposed, otherwise the caller must dispose the store connection. </param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
+            Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
+        public EntityConnection(MetadataWorkspace workspace, DbConnection connection, bool entityConnectionOwnsStoreConnection)
+            : this(workspace, connection, false, entityConnectionOwnsStoreConnection)
         {
             Check.NotNull(workspace, "workspace");
             Check.NotNull(connection, "connection");
@@ -103,7 +119,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     This constructor allows to skip the initialization code for testing purposes.
         /// </summary>
-        internal EntityConnection(MetadataWorkspace workspace, DbConnection connection, bool skipInitialization)
+        internal EntityConnection(MetadataWorkspace workspace, DbConnection connection, bool skipInitialization, bool entityConnectionOwnsStoreConnection)
         {
             if (!skipInitialization)
             {
@@ -122,7 +138,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 // Verify that a factory can be retrieved
-                if (connection.GetProviderFactory() == null)
+                if (connection.GetProviderFactory() == null)    
                 {
                     throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
                 }
@@ -130,12 +146,12 @@ namespace System.Data.Entity.Core.EntityClient
                 var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
 
                 _providerFactory = collection.StoreProviderFactory;
-                _entityConnectionShouldDisposeStoreConnection = false; // something outside of EntityConnection created the storeConnection and that is responsible for disposing it
                 _initialized = true;
             }
 
             _metadataWorkspace = workspace;
             _storeConnection = connection;
+            _entityConnectionShouldDisposeStoreConnection = entityConnectionOwnsStoreConnection;
 
             if (_storeConnection != null)
             {
