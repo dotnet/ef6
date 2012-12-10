@@ -60,7 +60,7 @@
             <DatePart>1$([System.DateTime]::Now.ToString("MMdd"))</DatePart>
             <AssemblyVersion>6.0.0.0</AssemblyVersion>
             <AssemblyFileVersion>6.0.$(DatePart).$(BUILD_NUMBER)</AssemblyFileVersion>
-            <AssemblyInfoVersion>6.0.0-alpha1-$(DatePart)</AssemblyInfoVersion>
+            <AssemblyInfoVersion>6.0.0-alpha2-$(DatePart)</AssemblyInfoVersion>
         </PropertyGroup>
         <ItemGroup>
             <Lines Include="using System.Reflection%3b"/>
