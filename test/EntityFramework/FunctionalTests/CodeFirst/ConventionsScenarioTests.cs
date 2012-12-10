@@ -245,12 +245,12 @@ namespace FunctionalTests
             var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
             var keys = entity.DeclaredKeyProperties;
             Assert.Equal(2, keys.Count());
-            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
-            Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
+            Assert.Equal("IntProperty", keys.First().Name);
+            Assert.Equal("IntProperty1", keys.Last().Name);
         }
 
         [Fact]
-        public void HasKey_can_build_composite_keys_with_annotations()
+        public void HasKey_ignores_rule_if_key_configured_with_annotations()
         {
             var modelBuilder = new DbModelBuilder();
 
@@ -262,27 +262,8 @@ namespace FunctionalTests
 
             var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
             var keys = entity.DeclaredKeyProperties;
-            Assert.Equal(2, keys.Count());
-            Assert.Equal("IntProperty", keys.ElementAt(0).Name);
-            Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
-        }
-
-        [Fact]
-        public void Ignores_invalid_property_name()
-        {
-            var modelBuilder = new DbModelBuilder();
-
-            modelBuilder.Entity<LightweightEntity>();
-            modelBuilder.Properties()
-                .Where(p => p.Name == "TypoProperty")
-                .Configure(c => c.HasColumnOrder(1).IsKey());
-
-            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
-
-            var entity = model.DatabaseMapping.Model.GetEntityTypes().Single();
-            var keys = entity.DeclaredKeyProperties;
             Assert.Equal(1, keys.Count());
-            Assert.Equal("Id", keys.First().Name);
+            Assert.Equal("IntProperty", keys.First().Name);
         }
     }
 
