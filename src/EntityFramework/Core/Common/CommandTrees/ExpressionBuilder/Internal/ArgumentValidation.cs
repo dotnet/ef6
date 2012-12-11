@@ -548,11 +548,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             EnumType edmEnumType;
             if (TypeHelpers.TryGetEdmType(constantType, out edmEnumType))
             {
-                var clrEnumUnderlyingType = edmEnumType.UnderlyingType.ClrEquivalentType;
-
                 // type of the value has to match the edm enum type or underlying types have to be the same
-                if ((value.GetType().IsEnum || clrEnumUnderlyingType != value.GetType())
-                    && !ClrEdmEnumTypesMatch(edmEnumType, value.GetType()))
+                var clrEnumUnderlyingType = edmEnumType.UnderlyingType.ClrEquivalentType;
+                if (clrEnumUnderlyingType != value.GetType() 
+                    && !(value.GetType().IsEnum && ClrEdmEnumTypesMatch(edmEnumType, value.GetType())))
                 {
                     throw new ArgumentException(
                         Strings.Cqt_Constant_ClrEnumTypeDoesNotMatchEdmEnumType(
