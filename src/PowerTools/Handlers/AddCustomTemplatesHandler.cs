@@ -2,7 +2,6 @@
 namespace Microsoft.DbContextPackage.Handlers
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using EnvDTE;
     using Microsoft.DbContextPackage.Extensions;
@@ -15,14 +14,14 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public AddCustomTemplatesHandler(DbContextPackage package)
         {
-            Contract.Requires(package != null);
+            DebugCheck.NotNull(package);
 
             _package = package;
         }
 
         public void AddCustomTemplates(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             try
             {
@@ -38,8 +37,8 @@ namespace Microsoft.DbContextPackage.Handlers
 
         private static void AddTemplate(Project project, string templatePath)
         {
-            Contract.Requires(project != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(templatePath));
+            DebugCheck.NotNull(project);
+            DebugCheck.NotEmpty(templatePath);
 
             var projectDir = project.GetProjectDir();
 

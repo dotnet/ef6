@@ -2,7 +2,6 @@
 namespace Microsoft.DbContextPackage.Handlers
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using Microsoft.DbContextPackage.Resources;
     using Microsoft.DbContextPackage.Utilities;
@@ -13,7 +12,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public ViewDdlHandler(DbContextPackage package)
         {
-            Contract.Requires(package != null);
+            DebugCheck.NotNull(package);
 
             _package = package;
         }

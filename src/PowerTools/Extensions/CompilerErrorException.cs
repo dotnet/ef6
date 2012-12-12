@@ -4,8 +4,8 @@ namespace Microsoft.DbContextPackage.Extensions
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Runtime.Serialization;
+    using Microsoft.DbContextPackage.Utilities;
 
     [Serializable]
     public class CompilerErrorException : Exception
@@ -29,7 +29,7 @@ namespace Microsoft.DbContextPackage.Extensions
         public CompilerErrorException(string message, IEnumerable<CompilerError> errors)
             : base(message)
         {
-            Contract.Requires(errors != null);
+            Check.NotNull(errors, "errors");
 
             _errors = errors;
         }
@@ -37,7 +37,7 @@ namespace Microsoft.DbContextPackage.Extensions
         protected CompilerErrorException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Contract.Requires(info != null);
+            Check.NotNull(info, "info");
 
             _errors = (IEnumerable<CompilerError>)info.GetValue("Errors", typeof(IEnumerable<CompilerError>));
         }
@@ -49,7 +49,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            Contract.Requires(info != null);
+            Check.NotNull(info, "info");
 
             info.AddValue("Errors", _errors);
 

@@ -5,7 +5,6 @@ namespace Microsoft.DbContextPackage.Utilities
     using System.Data.Entity.Design;
     using System.Data.Mapping;
     using System.Data.Metadata.Edm;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Xml;
     using System.Xml.Linq;
@@ -25,7 +24,7 @@ namespace Microsoft.DbContextPackage.Utilities
 
         public EdmxUtility(string edmxPath)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(edmxPath));
+            DebugCheck.NotEmpty(edmxPath);
 
             _edmxPath = edmxPath;
         }
@@ -69,7 +68,7 @@ namespace Microsoft.DbContextPackage.Utilities
 
         private XmlReader CreateSectionReader(EdmxSection edmxSection)
         {
-            Contract.Requires(edmxSection != null);
+            DebugCheck.NotNull(edmxSection);
 
             var edmxDocument = XElement.Load(_edmxPath, LoadOptions.SetBaseUri | LoadOptions.SetLineInfo);
 

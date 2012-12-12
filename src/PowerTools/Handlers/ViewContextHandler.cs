@@ -3,7 +3,6 @@ namespace Microsoft.DbContextPackage.Handlers
 {
     using System;
     using System.ComponentModel.Design;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Reflection;
     using System.Xml;
@@ -16,15 +15,15 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public ViewContextHandler(DbContextPackage package)
         {
-            Contract.Requires(package != null);
+            DebugCheck.NotNull(package);
 
             _package = package;
         }
 
         public void ViewContext(MenuCommand menuCommand, dynamic context, Type systemContextType)
         {
-            Contract.Requires(menuCommand != null);
-            Contract.Requires(systemContextType != null);
+            DebugCheck.NotNull(menuCommand);
+            DebugCheck.NotNull(systemContextType);
 
             Type contextType = context.GetType();
 

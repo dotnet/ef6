@@ -2,7 +2,7 @@
 namespace Microsoft.DbContextPackage.Utilities
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.IO;
     using EnvDTE;
     using Microsoft.DbContextPackage.Extensions;
@@ -18,7 +18,7 @@ namespace Microsoft.DbContextPackage.Utilities
 
         public TemplateProcessor(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             _project = project;
             _templateCache = new Dictionary<string, string>();
@@ -26,8 +26,8 @@ namespace Microsoft.DbContextPackage.Utilities
 
         public string Process(string templatePath, EfTextTemplateHost host)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(templatePath));
-            Contract.Requires(host != null);
+            DebugCheck.NotEmpty(templatePath);
+            DebugCheck.NotNull(host);
 
             host.TemplateFile = templatePath;
 
@@ -42,7 +42,7 @@ namespace Microsoft.DbContextPackage.Utilities
 
         private string GetTemplate(string templatePath)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(templatePath));
+            DebugCheck.NotEmpty(templatePath);
 
             if (_templateCache.ContainsKey(templatePath))
             {
@@ -50,7 +50,7 @@ namespace Microsoft.DbContextPackage.Utilities
             }
 
             var items = templatePath.Split('\\');
-            Contract.Assert(items.Length > 1);
+            Debug.Assert(items.Length > 1);
 
             var childProjectItem
                 = _project.ProjectItems

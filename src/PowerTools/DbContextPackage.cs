@@ -5,7 +5,7 @@ namespace Microsoft.DbContextPackage
     using System.Collections.Generic;
     using System.ComponentModel.Design;
     using System.Configuration;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -140,7 +140,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnItemMenuBeforeQueryStatus(object sender, IEnumerable<string> supportedExtensions)
         {
-            Contract.Requires(supportedExtensions != null);
+            DebugCheck.NotNull(supportedExtensions);
 
             var menuCommand = sender as MenuCommand;
 
@@ -266,8 +266,8 @@ namespace Microsoft.DbContextPackage
 
         internal void LogError(string statusMessage, Exception exception)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(statusMessage));
-            Contract.Requires(exception != null);
+            DebugCheck.NotEmpty(statusMessage);
+            DebugCheck.NotNull(exception);
 
             var edmSchemaErrorException = exception as EdmSchemaErrorException;
             var compilerErrorException = exception as CompilerErrorException;
@@ -379,7 +379,7 @@ namespace Microsoft.DbContextPackage
                                 else
                                 {
                                     constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(ConnectionStringSettingsCollection) });
-                                    Contract.Assert(constructor != null);
+                                    Debug.Assert(constructor != null);
 
                                     // Versions 4.1.10715 through 4.2.0.0
                                     contextInfo = constructor.Invoke(new object[] { userContextType, userConfig.ConnectionStrings.ConnectionStrings });
@@ -454,7 +454,7 @@ namespace Microsoft.DbContextPackage
 
         private static Configuration GetUserConfig(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             var userConfigFilename
                 = Path.Combine(
@@ -470,7 +470,7 @@ namespace Microsoft.DbContextPackage
 
         private static void SetDataDirectory(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             AppDomain.CurrentDomain.SetData(
                 "DataDirectory",
@@ -481,7 +481,7 @@ namespace Microsoft.DbContextPackage
 
         private static IEnumerable<CodeElement> FindClassesInCodeModel(CodeElements codeElements)
         {
-            Contract.Requires(codeElements != null);
+            DebugCheck.NotNull(codeElements);
 
             foreach (CodeElement codeElement in codeElements)
             {
@@ -499,8 +499,8 @@ namespace Microsoft.DbContextPackage
 
         private static void DisableDatabaseInitializer(Type userContextType, Type systemContextType)
         {
-            Contract.Requires(userContextType != null);
-            Contract.Requires(systemContextType != null);
+            DebugCheck.NotNull(userContextType);
+            DebugCheck.NotNull(systemContextType);
 
             var databaseType = systemContextType.Assembly.GetType("System.Data.Entity.Database");
 

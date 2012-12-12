@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace Microsoft.DbContextPackage.Utilities
 {
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.IO;
     using System.Text;
 
@@ -13,11 +13,11 @@ namespace Microsoft.DbContextPackage.Utilities
 
         public static string GetDefaultTemplate(string path)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(path));
+            DebugCheck.NotEmpty(path);
 
             var stream = typeof(Templates).Assembly.GetManifestResourceStream(
                 "Microsoft.DbContextPackage." + path.Replace('\\', '.'));
-            Contract.Assert(stream != null);
+            Debug.Assert(stream != null);
 
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {

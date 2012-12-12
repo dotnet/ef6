@@ -5,7 +5,7 @@ namespace Microsoft.DbContextPackage.Handlers
     using System.Data.Entity.Design;
     using System.Data.Mapping;
     using System.Data.Metadata.Edm;
-    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
     using System.Windows.Forms;
@@ -21,7 +21,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public OptimizeContextHandler(DbContextPackage package)
         {
-            Contract.Requires(package != null);
+            DebugCheck.NotNull(package);
 
             _package = package;
         }
@@ -61,7 +61,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void OptimizeEdmx(string inputPath)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(inputPath));
+            DebugCheck.NotEmpty(inputPath);
 
             var baseFileName = Path.GetFileNameWithoutExtension(inputPath);
 
@@ -83,8 +83,8 @@ namespace Microsoft.DbContextPackage.Handlers
 
         private void OptimizeContextCore(LanguageOption languageOption, string baseFileName, StorageMappingItemCollection mappingCollection)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(baseFileName));
-            Contract.Requires(mappingCollection != null);
+            DebugCheck.NotEmpty(baseFileName);
+            DebugCheck.NotNull(mappingCollection);
 
             var progressTimer = new Timer { Interval = 1000 };
 
@@ -151,7 +151,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         private Version GetEntityFrameworkVersion(Type contextType)
         {
-            Contract.Requires(contextType != null);
+            DebugCheck.NotNull(contextType);
 
             while (contextType != null
                 && contextType.FullName != "System.Data.Entity.DbContext"
@@ -160,7 +160,7 @@ namespace Microsoft.DbContextPackage.Handlers
                 contextType = contextType.BaseType;
             }
 
-            Contract.Assert(contextType != null);
+            Debug.Assert(contextType != null);
 
             return contextType.Assembly.GetName().Version;
         }

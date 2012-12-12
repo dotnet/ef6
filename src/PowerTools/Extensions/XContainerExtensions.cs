@@ -2,9 +2,9 @@
 namespace Microsoft.DbContextPackage.Extensions
 {
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Xml.Linq;
+    using Microsoft.DbContextPackage.Utilities;
 
     internal static class XContainerExtensions
     {
@@ -17,9 +17,9 @@ namespace Microsoft.DbContextPackage.Extensions
         /// <returns>A <see cref="XElement" /> that matches the specified name and namespace, or null.</returns>
         public static XElement Element(this XContainer container, IEnumerable<XNamespace> namespaces, string localName)
         {
-            Contract.Requires(container != null);
-            Contract.Requires(namespaces != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(localName));
+            DebugCheck.NotNull(container);
+            DebugCheck.NotNull(namespaces);
+            DebugCheck.NotEmpty(localName);
 
             return container.Elements()
                 .FirstOrDefault(

@@ -3,14 +3,14 @@ namespace Microsoft.DbContextPackage.Extensions
 {
     using System.Collections.Generic;
     using System.Data.Metadata.Edm;
-    using System.Diagnostics.Contracts;
     using System.Linq;
+    using Microsoft.DbContextPackage.Utilities;
 
     internal static class IEnumerableOfEdmSchemaErrorExtensions
     {
         public static void HandleErrors(this IEnumerable<EdmSchemaError> errors, string message)
         {
-            Contract.Requires(errors != null);
+            DebugCheck.NotNull(errors);
 
             if (errors.HasErrors())
             {
@@ -20,7 +20,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         private static bool HasErrors(this IEnumerable<EdmSchemaError> errors)
         {
-            Contract.Requires(errors != null);
+            DebugCheck.NotNull(errors);
 
             return errors.Any(e => e.Severity == EdmSchemaErrorSeverity.Error);
         }

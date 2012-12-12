@@ -9,7 +9,6 @@ namespace Microsoft.DbContextPackage.Handlers
     using System.Data.Entity.Design.PluralizationServices;
     using System.Data.Metadata.Edm;
     using System.Data.SqlClient;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -34,14 +33,14 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public ReverseEngineerCodeFirstHandler(DbContextPackage package)
         {
-            Contract.Requires(package != null);
+            DebugCheck.NotNull(package);
 
             _package = package;
         }
 
         public void ReverseEngineerCodeFirst(Project project)
         {
-            Contract.Requires(project != null);
+            DebugCheck.NotNull(project);
 
             try
             {
@@ -194,9 +193,9 @@ namespace Microsoft.DbContextPackage.Handlers
 
         private static void AddConnectionStringToConfigFile(Project project, string connectionString, string providerInvariant, string connectionStringName)
         {
-            Contract.Requires(project != null);
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerInvariant));
-            Contract.Requires(!string.IsNullOrWhiteSpace(connectionStringName));
+            DebugCheck.NotNull(project);
+            DebugCheck.NotEmpty(providerInvariant);
+            DebugCheck.NotEmpty(connectionStringName);
 
             // Find App.config or Web.config
             var configFilePath = Path.Combine(
@@ -241,7 +240,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         private static string FixUpConnectionString(string connectionString, string providerName)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(providerName));
+            DebugCheck.NotEmpty(providerName);
 
             if (providerName != "System.Data.SqlClient")
             {
@@ -261,8 +260,8 @@ namespace Microsoft.DbContextPackage.Handlers
         {
             public EdmMapping(EntityModelSchemaGenerator mcGenerator, StoreItemCollection store)
             {
-                Contract.Requires(mcGenerator != null);
-                Contract.Requires(store != null);
+                DebugCheck.NotNull(mcGenerator);
+                DebugCheck.NotNull(store);
 
                 // Pull mapping xml out
                 var mappingDoc = new XmlDocument();
@@ -289,9 +288,9 @@ namespace Microsoft.DbContextPackage.Handlers
 
             private static Dictionary<AssociationType, Tuple<EntitySet, Dictionary<RelationshipEndMember, Dictionary<EdmMember, string>>>> BuildManyToManyMappings(XmlDocument mappingDoc, IEnumerable<AssociationSet> associationSets, IEnumerable<EntitySet> tableSets)
             {
-                Contract.Requires(mappingDoc != null);
-                Contract.Requires(associationSets != null);
-                Contract.Requires(tableSets != null);
+                DebugCheck.NotNull(mappingDoc);
+                DebugCheck.NotNull(associationSets);
+                DebugCheck.NotNull(tableSets);
 
                 // Build mapping for each association
                 var mappings = new Dictionary<AssociationType, Tuple<EntitySet, Dictionary<RelationshipEndMember, Dictionary<EdmMember, string>>>>();
@@ -327,9 +326,9 @@ namespace Microsoft.DbContextPackage.Handlers
 
             private static Dictionary<EntityType, Tuple<EntitySet, Dictionary<EdmProperty, EdmProperty>>> BuildEntityMappings(XmlDocument mappingDoc, IEnumerable<EntitySet> entitySets, IEnumerable<EntitySet> tableSets)
             {
-                Contract.Requires(mappingDoc != null);
-                Contract.Requires(entitySets != null);
-                Contract.Requires(tableSets != null);
+                DebugCheck.NotNull(mappingDoc);
+                DebugCheck.NotNull(entitySets);
+                DebugCheck.NotNull(tableSets);
 
                 // Build mapping for each type
                 var mappings = new Dictionary<EntityType, Tuple<EntitySet, Dictionary<EdmProperty, EdmProperty>>>();
