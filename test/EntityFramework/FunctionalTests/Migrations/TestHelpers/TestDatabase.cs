@@ -66,7 +66,7 @@ namespace System.Data.Entity.Migrations
         private readonly string _name;
 
         private const string ConnectionStringFormat
-            = "Data Source=.\\sqlexpress;Initial Catalog={0};Integrated Security=True;Pooling=false;";
+            = "Data Source=.\\sqlexpress;Initial Catalog={0};Integrated Security=True;";
 
         public SqlTestDatabase(string name)
         {
