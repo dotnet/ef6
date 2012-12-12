@@ -45,23 +45,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Equal("Cats1", entitySet.Name);
         }
 
-        // TODO: METADATA
-//        [Fact(Skip = "Need to figure out name duplication in core Metadata")]
-//        public void Apply_should_uniquify_names_multiple()
-//        {
-//            var model = new EdmModel().InitializeConceptual();
-//            model.AddEntitySet("Cats1", new EntityType());
-//            var entitySet1 = model.AddEntitySet("Cat", new EntityType());
-//            var entitySet2 = model.AddEntitySet("Cat", new EntityType());
-//
-//            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-//                .Apply(entitySet1, model);
-//
-//            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-//                .Apply(entitySet2, model);
-//
-//            Assert.Equal("Cats", entitySet1.Name);
-//            Assert.Equal("Cats2", entitySet2.Name);
-//        }
+        [Fact]
+        public void Apply_should_uniquify_names_multiple()
+        {
+            var model = new EdmModel().InitializeConceptual();
+            model.AddEntitySet("Cats1", new EntityType());
+            var entitySet1 = model.AddEntitySet("Cats", new EntityType());
+            var entitySet2 = model.AddEntitySet("Cat", new EntityType());
+
+            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+                .Apply(entitySet1, model);
+
+            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+                .Apply(entitySet2, model);
+
+            Assert.Equal("Cats", entitySet1.Name);
+            Assert.Equal("Cats2", entitySet2.Name);
+        }
     }
 }

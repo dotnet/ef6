@@ -212,7 +212,7 @@ namespace FunctionalTests
             databaseMapping.Assert<EntityWithDescA>(e => e.Description).DbEqual("Description1", c => c.Name);
         }
 
-        // TODO: METADATA [Fact]
+        [Fact]
         public void Can_have_configured_duplicate_column_and_by_convention_columns_are_uniquified_conflict()
         {
             var modelBuilder = new DbModelBuilder();

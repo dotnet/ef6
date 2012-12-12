@@ -25,8 +25,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static StoreItemCollection ToStoreItemCollection(this EdmModel database)
         {
-            
-
             // Provider information should be first class in EDM when we ship
             // but for now we use our annotation
             var providerInfo = database.ProviderInfo;
@@ -59,7 +57,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static EntityType AddTable(this EdmModel database, string name)
         {
-            
             DebugCheck.NotEmpty(name);
 
             var uniqueIdentifier = database.EntityTypes.UniquifyName(name);
@@ -92,7 +89,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         public static EntityType FindTableByName(this EdmModel database, DatabaseName tableName)
         {
-            
             DebugCheck.NotNull(tableName);
 
             return database.EntityTypes.SingleOrDefault(
@@ -320,8 +316,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Debug.Assert(model.Containers.Count() == 1);
 
             var entitySet = new EntitySet(name, null, table, null, elementType);
-
-            // TODO: METADATA: Naming uniqueness constraint
+            
             model.Containers.Single().AddEntitySetBase(entitySet);
 
             return entitySet;

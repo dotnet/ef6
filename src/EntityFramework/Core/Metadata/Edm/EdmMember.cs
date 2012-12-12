@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     Represents the edm member class
@@ -13,6 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private StructuralType _declaringType;
         private TypeUsage _typeUsage;
         private string _name;
+        private string _identity;
 
         internal EdmMember()
         {
@@ -38,14 +41,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal override string Identity
         {
-            get { return Name; }
+            get { return _identity ?? Name; }
         }
 
         /// <summary>
         ///     Returns the name of the member
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        public virtual String Name
+        public virtual string Name
         {
             get { return _name; }
             set
@@ -54,6 +57,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Util.ThrowIfReadOnly(this);
 
                 _name = value;
+
+                if ((_declaringType != null)
+                    && (_declaringType.Members.Except(new[] { this })
+                                      .Any(c => string.Equals(Identity, c.Identity, StringComparison.Ordinal))))
+                {
+                    // Duplicate configured name, uniquify the identity so that
+                    // a validation exception can be generated later on.
+                    _identity = _declaringType.Members.UniquifyName(Identity);
+                }
             }
         }
 

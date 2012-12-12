@@ -471,7 +471,7 @@ namespace FunctionalTests
             databaseMapping.Assert<Building>("Buildings").HasColumns("Id", "FirstLine", "Address_Line2");
         }
 
-        // TODO: METADATA [Fact]
+        [Fact]
         public void Configure_HasColumnName_on_complex_type_appearing_several_times_on_an_entity_throws()
         {
             var modelBuilder = new DbModelBuilder();

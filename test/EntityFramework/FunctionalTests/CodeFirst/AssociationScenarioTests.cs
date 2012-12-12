@@ -1360,7 +1360,7 @@ namespace FunctionalTests
             databaseMapping.Assert("TagProductAs").HasColumns("TagId", "ProductId");
         }
 
-        // TODO: METADATA [Fact]
+        [Fact]
         public void Many_to_many_mapping_configuration_repeated_key_throws()
         {
             var modelBuilder = new DbModelBuilder();
@@ -1952,7 +1952,7 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("TheFK");
         }
 
-        // TODO: METADATA [Fact]
+        [Fact]
         public void Mapping_IA_column_name_to_existing_one_throws()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

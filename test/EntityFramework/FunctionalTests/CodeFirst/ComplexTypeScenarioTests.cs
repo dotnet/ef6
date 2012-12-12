@@ -159,7 +159,7 @@ namespace FunctionalTests
                 "Foo", "Foo1");
         }
 
-        // TODO: METADATA [Fact]
+        [Fact]
         public void Complex_type_and_nested_complex_type_column_names_configured_using_complex_type_configuration_throws()
         {
             var modelBuilder = new DbModelBuilder();
