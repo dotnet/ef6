@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 {
-    public class <#= efHost.EntityType.Name #>
+    public partial class <#= efHost.EntityType.Name #>
     {
 <#
     var collectionNavigations = efHost.EntityType.NavigationProperties.Where(

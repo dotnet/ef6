@@ -11,17 +11,17 @@ using <#= code.EscapeNamespace(efHost.MappingNamespace) #>;
 
 namespace <#= code.EscapeNamespace(efHost.Namespace) #>
 {
-    public class <#= efHost.EntityContainer.Name #> : DbContext
+    public partial class <#= efHost.EntityContainer.Name #> : DbContext
     {
         static <#= efHost.EntityContainer.Name #>()
         {
             Database.SetInitializer<<#= efHost.EntityContainer.Name #>>(null);
         }
 
-		public <#= efHost.EntityContainer.Name #>()
-			: base("Name=<#= efHost.EntityContainer.Name #>")
-		{
-		}
+        public <#= efHost.EntityContainer.Name #>()
+            : base("Name=<#= efHost.EntityContainer.Name #>")
+        {
+        }
 
 <#
     foreach (var set in efHost.EntityContainer.BaseEntitySets.OfType<EntitySet>())
