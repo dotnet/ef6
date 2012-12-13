@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Reflection;
-    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -18,11 +17,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             Metadata_methods_return_expected_results(false);
         }
 
+#if !NET40
         [Fact]
         public void Metadata_methods_return_expected_results_async()
         {
             Metadata_methods_return_expected_results(true);
         }
+#endif
 
         private void Metadata_methods_return_expected_results(bool async)
         {
@@ -37,7 +38,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedDataReader = new BufferedDataReader(reader);
             if (async)
             {
+#if !NET40
                 bufferedDataReader.InitializeAsync(CancellationToken.None).Wait();
+#endif
             }
             else
             {
@@ -55,7 +58,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             bufferedDataReader.Close();
             Assert.Equal(2, bufferedDataReader.RecordsAffected);
         }
-        
+
         [Fact]
         public void Metadata_methods_throw_if_reader_is_closed()
         {
@@ -67,15 +70,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             bufferedDataReader.Close();
 
             Assert.Throws<InvalidOperationException>(() => bufferedDataReader.FieldCount)
-                .ValidateMessage("ADP_ClosedDataReaderError");
+                  .ValidateMessage("ADP_ClosedDataReaderError");
             Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetOrdinal("columnName"))
-                .ValidateMessage("ADP_ClosedDataReaderError");
+                  .ValidateMessage("ADP_ClosedDataReaderError");
             Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetDataTypeName(0))
-                .ValidateMessage("ADP_ClosedDataReaderError");
+                  .ValidateMessage("ADP_ClosedDataReaderError");
             Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetFieldType(0))
-                .ValidateMessage("ADP_ClosedDataReaderError");
+                  .ValidateMessage("ADP_ClosedDataReaderError");
             Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetName(0))
-                .ValidateMessage("ADP_ClosedDataReaderError");
+                  .ValidateMessage("ADP_ClosedDataReaderError");
         }
 
         [Fact]
@@ -84,11 +87,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             Manipulation_methods_perform_expected_actions(false);
         }
 
+#if !NET40
         [Fact]
         public void Manipulation_methods_perform_expected_actions_async()
         {
             Manipulation_methods_perform_expected_actions(true);
         }
+#endif
 
         private void Manipulation_methods_perform_expected_actions(bool async)
         {
@@ -100,7 +105,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.False(bufferedDataReader.IsClosed);
             if (async)
             {
+#if !NET40
                 bufferedDataReader.InitializeAsync(CancellationToken.None).Wait();
+#endif
             }
             else
             {
@@ -112,8 +119,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             if (async)
             {
+#if !NET40
                 Assert.True(bufferedDataReader.ReadAsync().Result);
                 Assert.False(bufferedDataReader.ReadAsync().Result);
+#endif
             }
             else
             {
@@ -125,7 +134,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             if (async)
             {
+#if !NET40
                 Assert.True(bufferedDataReader.NextResultAsync().Result);
+#endif
             }
             else
             {
@@ -136,8 +147,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             if (async)
             {
+#if !NET40
                 Assert.False(bufferedDataReader.ReadAsync().Result);
                 Assert.False(bufferedDataReader.NextResultAsync().Result);
+#endif
             }
             else
             {
@@ -202,6 +215,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             bufferedReader.Initialize();
         }
 
+#if !NET40
         [Fact]
         public void InitializeAsync_is_idempotent()
         {
@@ -213,18 +227,21 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.True(reader.IsClosed);
             bufferedReader.InitializeAsync(CancellationToken.None);
         }
+#endif
 
         [Fact]
         public void Data_methods_return_expected_results_sync()
         {
             Data_methods_return_expected_results(false);
         }
-
+        
+#if !NET40
         [Fact]
         public void Data_methods_return_expected_results_async()
         {
             Data_methods_return_expected_results(true);
         }
+#endif
 
         private void Data_methods_return_expected_results(bool async)
         {
@@ -270,8 +287,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
             if (async)
             {
+#if !NET40
                 bufferedReader.InitializeAsync(CancellationToken.None).Wait();
                 Assert.True(bufferedReader.ReadAsync().Result);
+#endif
             }
             else
             {
