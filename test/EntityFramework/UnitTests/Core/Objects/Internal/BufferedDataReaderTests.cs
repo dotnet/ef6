@@ -8,6 +8,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection;
     using Moq;
     using Xunit;
+#if !NET40
+    using System.Threading;
+#endif
 
     public class BufferedDataReaderTests
     {
