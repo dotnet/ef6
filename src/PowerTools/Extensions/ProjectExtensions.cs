@@ -62,7 +62,6 @@ namespace Microsoft.DbContextPackage.Extensions
 
             var typeNuGetConstants = Type.GetType("NuGet.NuGetConstants, NuGet.VisualStudio", true);
             var typeIVsPackageInstaller = Type.GetType("NuGet.VisualStudio.IVsPackageInstaller, NuGet.VisualStudio", true);
-            var typeSemanticVersion = Type.GetType("NuGet.SemanticVersion, NuGet.Core", true);
 
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var packageInstaller = componentModel.GetService(typeIVsPackageInstaller);
@@ -70,7 +69,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
             typeIVsPackageInstaller.GetMethod(
                 "InstallPackage",
-                new[] { typeof(string), typeof(Project), typeof(string), typeSemanticVersion, typeof(bool) })
+                new[] { typeof(string), typeof(Project), typeof(string), typeof(Version), typeof(bool) })
                 .Invoke(packageInstaller, new object[] { source, project, packageId, null, false });
         }
 
@@ -127,7 +126,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         private static IEnumerable<string> GetProjectTypes(this Project project)
         {
-            DebugCheck.NotNull(project );
+            DebugCheck.NotNull(project);
 
             IVsSolution solution;
             using (var serviceProvider = new ServiceProvider((IServiceProvider)project.DTE))
