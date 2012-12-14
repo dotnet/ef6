@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal class ObjectQueryExecutionPlan
     {
         internal readonly DbCommandDefinition CommandDefinition;
+        internal readonly bool Streaming;
         internal readonly ShaperFactory ResultShaperFactory;
         internal readonly TypeUsage ResultType;
         internal readonly MergeOption MergeOption;
@@ -40,12 +41,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         public ObjectQueryExecutionPlan(
             DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption,
-            EntitySet singleEntitySet, IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> compiledQueryParameters)
+            bool streaming, EntitySet singleEntitySet, IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> compiledQueryParameters)
         {
             CommandDefinition = commandDefinition;
             ResultShaperFactory = resultShaperFactory;
             ResultType = resultType;
             MergeOption = mergeOption;
+            Streaming = streaming;
             _singleEntitySet = singleEntitySet;
             CompiledQueryParameters = compiledQueryParameters;
         }
@@ -143,15 +145,22 @@ namespace System.Data.Entity.Core.Objects.Internal
                     storeReader = entityCommand.GetCommandDefinition().ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
                 }
 
-                bufferedReader = new BufferedDataReader(storeReader);
-                bufferedReader.Initialize();
-
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
-                var shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                Shaper<TResultType> shaper;
+                if (Streaming)
+                {
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                }
+                else
+                {
+                    bufferedReader = new BufferedDataReader(storeReader);
+                    bufferedReader.Initialize();
 
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                }
+                
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
-
                 if (ResultType.EdmType.BuiltInTypeKind
                     == BuiltInTypeKind.CollectionType)
                 {
@@ -166,10 +175,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             catch (Exception)
             {
-                if (bufferedReader != null)
+                // Note: The ObjectResult is responsible for disposing the reader if creating
+                // the enumerator fails.
+                if (Streaming && storeReader != null)
                 {
-                    // Note: The caller is responsible for disposing reader if creating
-                    // the enumerator fails.
+                    storeReader.Dispose();
+                }
+
+                if (!Streaming && bufferedReader != null)
+                {
                     bufferedReader.Dispose();
                 }
                 throw;
@@ -195,11 +209,19 @@ namespace System.Data.Entity.Core.Objects.Internal
                                                .ConfigureAwait(continueOnCapturedContext: false);
                 }
 
-                bufferedReader = new BufferedDataReader(storeReader);
-                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
-                var shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                Shaper<TResultType> shaper;
+                if (Streaming)
+                {
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                }
+                else
+                {
+                    bufferedReader = new BufferedDataReader(storeReader);
+                    await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                }
 
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
@@ -218,10 +240,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
             catch (Exception)
             {
-                if (bufferedReader != null)
+                // Note: The ObjectResult is responsible for disposing the reader if creating
+                // the enumerator fails.
+                if (Streaming && storeReader != null)
                 {
-                    // Note: The caller is responsible for disposing reader if creating
-                    // the enumerator fails.
+                    storeReader.Dispose();
+                }
+
+                if (!Streaming && bufferedReader != null)
+                {
                     bufferedReader.Dispose();
                 }
                 throw;

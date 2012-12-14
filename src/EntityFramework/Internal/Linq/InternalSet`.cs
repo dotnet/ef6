@@ -677,7 +677,7 @@ namespace System.Data.Entity.Internal.Linq
                 () =>
                     {
                         var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
-                            sql, EntitySetName, mergeOption, parameters);
+                            sql, EntitySetName, new ExecutionOptions(mergeOption, false), parameters);
                         try
                         {
                             var result = disposableEnumerable.GetEnumerator();
@@ -716,7 +716,7 @@ namespace System.Data.Entity.Internal.Linq
                 async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, mergeOption, cancellationToken, parameters).ConfigureAwait(
+                                  sql, EntitySetName, new ExecutionOptions(mergeOption, false), cancellationToken, parameters).ConfigureAwait(
                                       continueOnCapturedContext: false);
 
                               try

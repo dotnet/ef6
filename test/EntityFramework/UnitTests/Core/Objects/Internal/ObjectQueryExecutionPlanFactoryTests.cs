@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var objectQueryExecutionPlan = objectQueryExecutionPlanFactory.Prepare(
                 objectContext, dbQueryCommandTree, typeof(object),
-                MergeOption.NoTracking, new Span(), parameters, aliasGenerator: null);
+                MergeOption.NoTracking, false, new Span(), parameters, aliasGenerator: null);
 
             Assert.NotNull(objectQueryExecutionPlan);
         }

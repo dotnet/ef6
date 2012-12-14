@@ -101,10 +101,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // If the context flag UseCSharpNullComparisonBehavior was modified, then the plan is no longer valid.
                 if ((explicitMergeOption.HasValue &&
                      explicitMergeOption.Value != plan.MergeOption)
-                    ||
-                    _recompileRequired()
-                    ||
-                    ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior)
+                    || _recompileRequired()
+                    || ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior)
                 {
                     plan = null;
                 }
@@ -174,6 +172,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             (null == Parameters ? null : Parameters.GetCacheKey()),
                             (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
                             mergeOption,
+                            EffectiveStreamingBehaviour,
                             _useCSharpNullComparisonBehavior,
                             ElementType);
 
@@ -191,7 +190,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
-                        ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, null, converter.AliasGenerator);
+                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, null, converter.AliasGenerator);
 
                     // If caching is enabled then update the cache now.
                     // Note: the logic is the same as in EntitySqlQueryState.

@@ -96,8 +96,19 @@ namespace System.Data.Entity.Core.Objects.Internal
             : this(elementType, query.Context, null, null)
         {
             _cachingEnabled = query.EnablePlanCaching;
+            UserSpecifiedStreamingBehaviour = query.QueryState.UserSpecifiedStreamingBehaviour;
         }
 
+        internal bool EffectiveStreamingBehaviour
+        {
+            get
+            {
+                return UserSpecifiedStreamingBehaviour ?? false;
+            }
+        }
+
+        internal bool? UserSpecifiedStreamingBehaviour { get; set; }
+        
         /// <summary>
         ///     Gets the element type - the type of each result item - for this query as a CLR type instance.
         /// </summary>

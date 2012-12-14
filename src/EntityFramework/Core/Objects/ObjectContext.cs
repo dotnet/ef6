@@ -1754,16 +1754,16 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Creates an ObjectQuery<typeparamref name="T" /> over the store, ready to be executed.
         /// </summary>
-        /// <typeparam name="T"> type of the query result </typeparam>
-        /// <param name="queryString"> the query string to be executed </param>
-        /// <param name="parameters"> parameters to pass to the query </param>
-        /// <returns> an ObjectQuery instance, ready to be executed </returns>
+        /// <typeparam name="T"> Type of the query result </typeparam>
+        /// <param name="queryString"> The query string to be executed </param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns> An <see cref="ObjectQuery{T}"/> instance, ready to be executed </returns>
         public virtual ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
         {
             Check.NotNull(queryString, "queryString");
             Check.NotNull(parameters, "parameters");
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // We either auto-load <T>'s assembly into the ObjectItemCollection or we auto-load the user's calling assembly and its referenced assemblies.
             // If the entities in the user's result spans multiple assemblies, the user must manually call LoadFromAssembly.
@@ -2098,7 +2098,7 @@ namespace System.Data.Entity.Core.Objects
             var entitySet = key.GetEntitySet(MetadataWorkspace);
             Debug.Assert(entitySet != null, "Key's EntitySet should not be null in the MetadataWorkspace");
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // Either the entity type's assembly is already in the ObjectItemCollection or we auto-load the user's calling assembly and its referenced assemblies.
             // *GetCallingAssembly returns the assembly of the method that invoked the currently executing method.
@@ -2365,7 +2365,7 @@ namespace System.Data.Entity.Core.Objects
                         throw Error.EntityKey_UnexpectedNull();
                     }
 
-                    // Dev10#673631 - An incorrectly returned entity should result in an exception to avoid further corruption to the OSM.
+                    // An incorrectly returned entity should result in an exception to avoid further corruption to the ObjectStateManager.
                     if (!trackedEntities.Remove(key))
                     {
                         throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
@@ -2461,7 +2461,7 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(tree);
 
             var execPlan = _objectQueryExecutionPlanFactory.Prepare(
-                this, tree, typeof(object), mergeOption, null, null, DbExpressionBuilder.AliasGenerator);
+                this, tree, typeof(object), mergeOption, false, null, null, DbExpressionBuilder.AliasGenerator);
             return execPlan.Execute<object>(this, null);
         }
 
@@ -2648,7 +2648,7 @@ namespace System.Data.Entity.Core.Objects
                 }
                 catch (Exception e)
                 {
-                    // If AcceptAllChanges throw - let's inform user that changes in database were committed 
+                    // If AcceptAllChanges throws - let's inform user that changes in database were committed 
                     // and that Context and Database can be in inconsistent state.
                     throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
                 }
@@ -2862,7 +2862,7 @@ namespace System.Data.Entity.Core.Objects
             // Validate the EntityKey values against the EntitySet
             key.ValidateEntityKey(_workspace, entitySet, true /*isArgumentException*/, "key");
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // Either the entity type's assembly is already in the ObjectItemCollection or we auto-load the user's calling assembly and its referenced assemblies.
             // *GetCallingAssembly returns the assembly of the method that invoked the currently executing method.
@@ -2918,9 +2918,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Executes the given function on the default container.
         /// </summary>
         /// <typeparam name="TElement"> Element type for function results. </typeparam>
-        /// <param name="functionName"> Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known. </param>
-        /// <param name="parameters"> </param>
-        /// <exception cref="ArgumentException">If function is null or empty</exception>
+        /// <param name="functionName">
+        ///     Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// </param>
+        /// <param name="parameters"> The parameter values to use for the function. </param>
+        /// <exception cref="ArgumentException"> If function is null or empty </exception>
         /// <exception cref="InvalidOperationException">
         ///     If function is invalid (syntax,
         ///     does not exist, refers to a function with return type incompatible with T)
@@ -2936,9 +2938,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Executes the given function on the default container.
         /// </summary>
         /// <typeparam name="TElement"> Element type for function results. </typeparam>
-        /// <param name="functionName"> Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known. </param>
-        /// <param name="mergeOption"> </param>
-        /// <param name="parameters"> </param>
+        /// <param name="functionName">
+        ///     Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// </param>
+        /// <param name="mergeOption"> Merge option to use for entity results. </param>
+        /// <param name="parameters"> The parameter values to use for the function. </param>
         /// <exception cref="ArgumentException">If function is null or empty</exception>
         /// <exception cref="InvalidOperationException">
         ///     If function is invalid (syntax,
@@ -2946,6 +2950,28 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
+        {
+            Check.NotNull(parameters, "parameters");
+            Check.NotEmpty(functionName, "function");
+            return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption, false), parameters);
+        }
+
+        /// <summary>
+        ///     Executes the given function on the default container.
+        /// </summary>
+        /// <typeparam name="TElement"> Element type for function results. </typeparam>
+        /// <param name="functionName">
+        ///     Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// </param>
+        /// <param name="executionOptions"> The options for executing this function. </param>
+        /// <param name="parameters"> The parameter values to use for the function. </param>
+        /// <exception cref="ArgumentException"> If function is null or empty </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     If function is invalid (syntax,
+        ///     does not exist, refers to a function with return type incompatible with T)
+        /// </exception>
+        public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
+            string functionName, ExecutionOptions executionOptions, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
             Check.NotEmpty(functionName, "function");
@@ -2963,14 +2989,16 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            return CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, mergeOption);
+            return CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions);
         }
 
         /// <summary>
         ///     Executes the given function on the default container and discard any results returned from the function.
         /// </summary>
-        /// <param name="functionName"> Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known. </param>
-        /// <param name="parameters"> </param>
+        /// <param name="functionName">
+        ///     Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// </param>
+        /// <param name="parameters"> The parameter values to use for the function. </param>
         /// <returns> Number of rows affected </returns>
         /// <exception cref="ArgumentException">If function is null or empty</exception>
         /// <exception cref="InvalidOperationException">
@@ -2987,7 +3015,7 @@ namespace System.Data.Entity.Core.Objects
 
             EnsureConnection();
 
-            // Prepare the command before calling ExecuteNonQuery, so that exceptions thrown during preparation are not wrapped in CommandCompilationException
+            // Prepare the command before calling ExecuteNonQuery, so that exceptions thrown during preparation are not wrapped in EntityCommandExecutionException
             entityCommand.Prepare();
 
             try
@@ -3051,7 +3079,8 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Buffer disposed by the returned ObjectResult")]
         private ObjectResult<TElement> CreateFunctionObjectResult<TElement>(
-            EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes, MergeOption mergeOption)
+            EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes,
+            ExecutionOptions executionOptions)
         {
             DebugCheck.NotNull(edmTypes);
             Debug.Assert(edmTypes.Length > 0);
@@ -3062,21 +3091,14 @@ namespace System.Data.Entity.Core.Objects
 
             // get store data reader
             DbDataReader storeReader = null;
-            BufferedDataReader bufferedReader = null;
             try
             {
                 storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
-                bufferedReader = new BufferedDataReader(storeReader);
-                bufferedReader.Initialize();
             }
             catch (Exception e)
             {
-                if (bufferedReader != null)
-                {
-                    bufferedReader.Dispose();
-                }
-
                 ReleaseConnection();
+
                 if (e.IsCatchableEntityExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
@@ -3085,7 +3107,34 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            return MaterializedDataRecord<TElement>(entityCommand, bufferedReader, 0, entitySets, edmTypes, mergeOption);
+            if (executionOptions.Streaming)
+            {
+                return MaterializedDataRecord<TElement>(entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption);
+            }
+            else
+            {
+                BufferedDataReader bufferedReader = null;
+                try
+                {
+                    bufferedReader = new BufferedDataReader(storeReader);
+                    bufferedReader.Initialize();
+                }
+                catch (Exception e)
+                {
+                    bufferedReader.Dispose();
+                    ReleaseConnection();
+
+                    if (e.IsCatchableEntityExceptionType())
+                    {
+                        throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
+                    }
+
+                    throw;
+                }
+
+                return MaterializedDataRecord<TElement>(
+                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption);
+            }
         }
 
         /// <summary>
@@ -3462,7 +3511,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
             return ExecuteStoreQueryInternal<TElement>(
-                commandText, /*entitySetName:*/null, MergeOption.AppendOnly, parameters);
+                commandText, /*entitySetName:*/null, ExecutionOptions.Default, parameters);
         }
 
         /// <summary>
@@ -3475,19 +3524,38 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     An enumeration of objects of type <typeparamref name="TElement" />.
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, mergeOption, parameters);
+            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, new ExecutionOptions(mergeOption, false), parameters);
+        }
+
+        /// <summary>
+        ///     Execute the sequence returning query against the database server.
+        ///     The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
+        /// <param name="commandText"> The DbDataReader to translate </param>
+        /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
+        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
+            string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
+        {
+            Check.NotEmpty(entitySetName, "entitySetName");
+            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, executionOptions, parameters);
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Buffer disposed by the returned ObjectResult")]
         private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
-            string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
+            string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
             // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
@@ -3502,33 +3570,41 @@ namespace System.Data.Entity.Core.Objects
             EnsureConnection();
 
             DbDataReader reader = null;
-            BufferedDataReader bufferedReader = null;
             try
             {
-                var command = CreateStoreCommand(commandText, parameters);
-                reader = command.ExecuteReader();
-                bufferedReader = new BufferedDataReader(reader);
-                bufferedReader.Initialize();
+                using (var command = CreateStoreCommand(commandText, parameters))
+                {
+                    reader = command.ExecuteReader();
+                }
+                if (executionOptions.Streaming)
+                {
+                    return InternalTranslate<TElement>(reader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                }
             }
             catch
             {
-                if (bufferedReader != null)
+                // We only release the connection and dispose the reader when there is an exception.
+                // Otherwise, the ObjectResult is in charge of doing it.
+                if (reader != null)
                 {
-                    bufferedReader.Dispose();
+                    reader.Dispose();
                 }
-                // We only release the connection when there is an exception. Otherwise, the ObjectResult is
-                // in charge of releasing it.
+
                 ReleaseConnection();
                 throw;
             }
 
+            BufferedDataReader bufferedReader = null;
             try
             {
-                return InternalTranslate<TElement>(bufferedReader, entitySetName, mergeOption, true);
+                bufferedReader = new BufferedDataReader(reader);
+                bufferedReader.Initialize();
+                return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
             }
             catch
             {
                 bufferedReader.Dispose();
+
                 ReleaseConnection();
                 throw;
             }
@@ -3567,11 +3643,10 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
-            string commandText,
-            CancellationToken cancellationToken, params object[] parameters)
+            string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             return ExecuteStoreQueryInternalAsync<TElement>(
-                commandText, /*entitySetName:*/null, MergeOption.AppendOnly, cancellationToken, parameters);
+                commandText, /*entitySetName:*/null, ExecutionOptions.Default, cancellationToken, parameters);
         }
 
         /// <summary>
@@ -3589,10 +3664,9 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
-            string commandText,
-            string entitySetName, MergeOption mergeOption, params object[] parameters)
+            string commandText, string entitySetName, ExecutionOptions executionOption, params object[] parameters)
         {
-            return ExecuteStoreQueryAsync<TElement>(commandText, entitySetName, mergeOption, CancellationToken.None, parameters);
+            return ExecuteStoreQueryAsync<TElement>(commandText, entitySetName, executionOption, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -3603,7 +3677,7 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
         /// <param name="commandText"> The DbDataReader to translate </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
-        /// <param name="mergeOption"> Merge option to use for entity results. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param> 
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
@@ -3611,20 +3685,20 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
-            string commandText,
-            string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken, params object[] parameters)
+            string commandText, string entitySetName, ExecutionOptions executionOption, CancellationToken cancellationToken,
+            params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
 
             return ExecuteStoreQueryInternalAsync<TElement>(
-                commandText, entitySetName, MergeOption.AppendOnly, cancellationToken, parameters);
+                commandText, entitySetName, executionOption, cancellationToken, parameters);
         }
 
         private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(
-            string commandText, string entitySetName, MergeOption mergeOption, CancellationToken cancellationToken,
+            string commandText, string entitySetName, ExecutionOptions executionOptions, CancellationToken cancellationToken,
             params object[] parameters)
         {
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
@@ -3637,33 +3711,41 @@ namespace System.Data.Entity.Core.Objects
             await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             DbDataReader reader = null;
-            BufferedDataReader bufferedReader = null;
             try
             {
-                var command = CreateStoreCommand(commandText, parameters);
-                reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                bufferedReader = new BufferedDataReader(reader);
-                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                using (var command = CreateStoreCommand(commandText, parameters))
+                {
+                    reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                }
+                if (executionOptions.Streaming)
+                {
+                    return InternalTranslate<TElement>(reader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                }
             }
             catch
             {
-                if (bufferedReader != null)
+                // We only release the connection and dispose the reader when there is an exception.
+                // Otherwise, the ObjectResult is in charge of doing it.
+                if (reader != null)
                 {
-                    bufferedReader.Dispose();
+                    reader.Dispose();
                 }
-                // We only release the connection when there is an exception. Otherwise, the ObjectResult is
-                // in charge of releasing it.
+
                 ReleaseConnection();
                 throw;
             }
 
+            BufferedDataReader bufferedReader = null;
             try
             {
-                return InternalTranslate<TElement>(bufferedReader, entitySetName, mergeOption, true);
+                bufferedReader = new BufferedDataReader(reader);
+                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
             }
             catch
             {
                 bufferedReader.Dispose();
+
                 ReleaseConnection();
                 throw;
             }
@@ -3680,7 +3762,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> The translated sequence of objects. </returns>
         public virtual ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
         {
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <TElement>'s assembly into the ObjectItemCollection or we
@@ -3690,7 +3772,7 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TElement>(reader, null /*entitySetName*/, MergeOption.AppendOnly, false);
+            return InternalTranslate<TElement>(reader, null /*entitySetName*/, MergeOption.AppendOnly, readerOwned: false);
         }
 
         /// <summary>
@@ -3707,7 +3789,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotEmpty(entitySetName, "entitySetName");
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
+            // Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <TEntity>'s assembly into the ObjectItemCollection or we

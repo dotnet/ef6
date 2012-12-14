@@ -52,6 +52,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
         private readonly Type _resultType;
 
         /// <summary>
+        ///     Whether the query is streaming or buffering
+        /// </summary>
+        private readonly bool _streaming;
+
+        /// <summary>
         ///     Creates a new instance of ObjectQueryCacheKey given a entityCommand instance
         /// </summary>
         /// <param name="defaultContainerName"> The default container name in effect when parsing the query (may be null) </param>
@@ -67,6 +72,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             string parametersToken,
             string includePathsToken,
             MergeOption mergeOption,
+            bool streaming,
             Type resultType)
         {
             DebugCheck.NotNull(eSqlStatement);
@@ -77,6 +83,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _parametersToken = parametersToken;
             _includePathsToken = includePathsToken;
             _mergeOption = mergeOption;
+            _streaming = streaming;
             _resultType = resultType;
 
             var combinedHash = _eSqlStatement.GetHashCode() ^
@@ -118,6 +125,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // also use result type...
             return (_parameterCount == otherObjectQueryCacheKey._parameterCount) &&
                    (_mergeOption == otherObjectQueryCacheKey._mergeOption) &&
+                   (_streaming == otherObjectQueryCacheKey._streaming) &&
                    Equals(otherObjectQueryCacheKey._defaultContainer, _defaultContainer) &&
                    Equals(otherObjectQueryCacheKey._eSqlStatement, _eSqlStatement) &&
                    Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&

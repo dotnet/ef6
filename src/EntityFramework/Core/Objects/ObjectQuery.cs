@@ -158,6 +158,15 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
+        ///     Whether the query is streaming or buffering
+        /// </summary>
+        public bool Streaming
+        {
+            get { return _state.EffectiveStreamingBehaviour; }
+            set { _state.UserSpecifiedStreamingBehaviour = value; }
+        }
+
+        /// <summary>
         ///     The parameter collection for this query.
         /// </summary>
         public ObjectParameterCollection Parameters
@@ -166,7 +175,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Defines if the query plan should be cached.
+        ///     Defines whether the query plan should be cached.
         /// </summary>
         public bool EnablePlanCaching
         {

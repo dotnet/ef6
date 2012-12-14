@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
             catch (Exception e)
             {
-                if (e.IsCatchableExceptionType())
+                if (e.IsCatchableExceptionType() && !shaper.Reader.IsClosed)
                 {
                     // Some errors can occur while a close handler is registered.  This clears
                     // out the handler so that ElementWithErrorHandling will report the correct

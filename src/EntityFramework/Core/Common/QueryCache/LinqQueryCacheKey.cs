@@ -46,6 +46,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
         private readonly Type _resultType;
 
         /// <summary>
+        ///     Whether the query is streaming or buffering
+        /// </summary>
+        private readonly bool _streaming;
+
+        /// <summary>
         ///     Flag indicating if the C# behavior should be used for null comparisons
         /// </summary>
         private readonly bool _useCSharpNullComparisonBehavior;
@@ -66,6 +71,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             string parametersToken,
             string includePathsToken,
             MergeOption mergeOption,
+            bool streaming,
             bool useCSharpNullComparisonBehavior,
             Type resultType)
         {
@@ -76,6 +82,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _parametersToken = parametersToken;
             _includePathsToken = includePathsToken;
             _mergeOption = mergeOption;
+            _streaming = streaming;
             _resultType = resultType;
             _useCSharpNullComparisonBehavior = useCSharpNullComparisonBehavior;
 
@@ -113,6 +120,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             // also use result type...
             return (_parameterCount == otherObjectQueryCacheKey._parameterCount) &&
                    (_mergeOption == otherObjectQueryCacheKey._mergeOption) &&
+                   (_streaming == otherObjectQueryCacheKey._streaming) &&
                    Equals(otherObjectQueryCacheKey._expressionKey, _expressionKey) &&
                    Equals(otherObjectQueryCacheKey._includePathsToken, _includePathsToken) &&
                    Equals(otherObjectQueryCacheKey._parametersToken, _parametersToken) &&

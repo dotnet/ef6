@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // Prepare the execution plan using the command tree and the computed effective merge option
                     var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
-                        ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, parameters, converter.AliasGenerator);
+                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, parameters, converter.AliasGenerator);
 
                     // Update and retrieve the execution plan
                     plan = cacheEntry.SetExecutionPlan(plan, useCSharpNullComparisonBehavior);
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         // The plan is not present, so prepare it now using the computed effective merge option
                         plan = _objectQueryExecutionPlanFactory.Prepare(
-                            ObjectContext, tree, ElementType, mergeOption, converter.PropagatedSpan, parameters, converter.AliasGenerator);
+                            ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, parameters, converter.AliasGenerator);
 
                         // Update the execution plan on the cache entry.
                         // If the execution plan was set in the meantime, SetExecutionPlan will return that value, otherwise it will return 'plan'.
@@ -191,8 +191,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var cacheEntry = _cacheEntry;
             TypeUsage resultType;
             if (cacheEntry != null
-                &&
-                cacheEntry.TryGetResultType(out resultType))
+                && cacheEntry.TryGetResultType(out resultType))
             {
                 return resultType;
             }

@@ -136,11 +136,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             dbDataReaderMock
                 .Setup(m => m.IsClosed)
-                .Returns(() => closed);
+                .Returns(() => 
+                    closed);
 
             dbDataReaderMock
                 .Setup(m => m.Close())
-                .Callback(() => closed = true);
+                .Callback(() =>
+                    closed = true);
 
             return dbDataReaderMock.Object;
         }

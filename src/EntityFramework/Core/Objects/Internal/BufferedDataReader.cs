@@ -23,6 +23,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private List<BufferedDataRecord> _bufferedDataRecords = new List<BufferedDataRecord>();
         private int _currentResultSet;
         private int _recordsAffected;
+        private bool _disposed;
 
         public BufferedDataReader(DbDataReader reader)
         {
@@ -208,6 +209,17 @@ namespace System.Data.Entity.Core.Objects.Internal
                 _underlyingReader = null;
                 reader.Dispose();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed && disposing && !IsClosed)
+            {
+                Close();
+            }
+            _disposed = true;
+
+            base.Dispose(disposing);
         }
 
         public override bool GetBoolean(int ordinal)

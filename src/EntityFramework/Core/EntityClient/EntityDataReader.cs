@@ -30,6 +30,8 @@ namespace System.Data.Entity.Core.EntityClient
         private readonly DbDataReader _storeDataReader;
         private readonly IExtendedDataRecord _storeExtendedDataRecord;
 
+        private bool _disposed;
+
         /// <summary>
         ///     The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
         ///     DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
@@ -169,11 +171,16 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="disposing"> true to release both managed and unmanaged resources, false to release only unmanaged resources </param>
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            if (disposing)
+            if (!_disposed)
             {
-                _storeDataReader.Dispose();
+                if (disposing)
+                {
+                    _storeDataReader.Dispose();
+                }
             }
+            _disposed = true;
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

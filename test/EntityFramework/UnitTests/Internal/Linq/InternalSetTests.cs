@@ -23,14 +23,14 @@ namespace System.Data.Entity.Internal.Linq
             // The query shouldn't have run yet
             objectContextMock
                 .Verify(
-                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()),
+                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()),
                     Times.Never());
 
             actualEnumerator.MoveNext();
 
             objectContextMock
                 .Verify(
-                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()),
+                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()),
                     Times.Once());
 
             Assert.Equal("foo", actualEnumerator.Current);
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Internal.Linq
                 .Verify(
                     m =>
                     m.ExecuteStoreQueryAsync<string>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
+                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
                     Times.Never());
 
             actualEnumerator.MoveNextAsync(CancellationToken.None).Wait();
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Internal.Linq
                 .Verify(
                     m =>
                     m.ExecuteStoreQueryAsync<string>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
+                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
                     Times.Once());
 
             Assert.Equal("foo", actualEnumerator.Current);
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Internal.Linq
 
             objectContextMock
                 .Setup(
-                    m => m.ExecuteStoreQuery<TEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<object[]>()))
+                    m => m.ExecuteStoreQuery<TEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
                 .Returns(objectResultMock.Object);
 
 #if !NET40
@@ -138,7 +138,7 @@ namespace System.Data.Entity.Internal.Linq
                 .Setup(
                     m =>
                     m.ExecuteStoreQueryAsync<TEntity>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
                 .Returns(Task.FromResult(objectResultMock.Object));
 #endif
 

@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         public virtual ObjectQueryExecutionPlan Prepare(
-            ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, Span span,
+            ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, bool streaming, Span span,
             IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> compiledQueryParameters, AliasGenerator aliasGenerator)
         {
             var treeResultType = tree.Query.ResultType;
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
 
             return new ObjectQueryExecutionPlan(
-                entityDefinition, shaperFactory, treeResultType, mergeOption, singleEntitySet, compiledQueryParameters);
+                entityDefinition, shaperFactory, treeResultType, mergeOption, streaming, singleEntitySet, compiledQueryParameters);
         }
 
         private static EntityCommandDefinition CreateCommandDefinition(ObjectContext context, DbQueryCommandTree tree)

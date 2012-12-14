@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Objects
                                            };
 
             var objectQueryExecutionPlanMock = new Mock<ObjectQueryExecutionPlan>(
-                MockBehavior.Loose, null, null, null, MergeOption.NoTracking, null, null);
+                MockBehavior.Loose, null, null, null, MergeOption.NoTracking, false, null, null);
             objectQueryExecutionPlanMock.Setup(m => m.Execute<TEntity>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()))
                 .Returns(() => objectResultMock.Object);
 

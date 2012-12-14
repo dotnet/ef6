@@ -417,7 +417,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
             // If we actually executed something, then go ahead and construct a bridge
             // data reader for it.
-            if (null != storeDataReader)
+            if (storeDataReader != null)
             {
                 try
                 {
