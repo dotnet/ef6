@@ -11,8 +11,11 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Threading.Tasks;
     using System.Transactions;
     using Moq;
-    using Moq.Protected;
     using Xunit;
+
+#if !NET40
+    using Moq.Protected;
+#endif
 
     public class EntityConnectionTests
     {
@@ -343,6 +346,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+#if !NET40 // These tests rely on being able to mock DbConnection, which is very complicated on .NET 4, so disabling these tests on that platform
         public class Dispose
         {
             [Fact]
@@ -405,6 +409,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
             }
         }
+#endif
 
 #if !NET40
 
