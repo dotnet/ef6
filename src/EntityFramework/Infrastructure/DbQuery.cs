@@ -165,6 +165,16 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public abstract DbQuery AsStreaming();
+
+        #endregion
+
         #region Conversion to generic
 
         /// <summary>

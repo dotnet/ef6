@@ -389,7 +389,7 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbRawSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, parameters));
+            return new DbRawSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, /*streaming:*/ false, parameters));
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbRawSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, parameters));
+            return new DbRawSqlQuery(new InternalSqlNonSetQuery(_internalContext, elementType, sql, /*isNoTracking:*/ false, parameters));
         }
 
         /// <summary>

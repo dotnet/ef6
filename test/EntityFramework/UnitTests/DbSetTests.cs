@@ -331,7 +331,10 @@ namespace ProductivityApiUnitTests
             {
                 var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
 
-                Assert.NotNull(set.SqlQuery("query"));
+                var query = set.SqlQuery("query");
+
+                Assert.NotNull(query);
+                Assert.False(query.InternalQuery.Streaming);
             }
         }
 
@@ -374,7 +377,9 @@ namespace ProductivityApiUnitTests
             {
                 var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
 
-                Assert.NotNull(set.SqlQuery("query"));
+                var query = set.SqlQuery("query");
+                Assert.NotNull(query);
+                Assert.False(query.InternalQuery.Streaming);
             }
         }
     }

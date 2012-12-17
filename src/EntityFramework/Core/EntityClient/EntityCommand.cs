@@ -862,8 +862,7 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
 
-            var result = EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
-            return result;
+            return EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
         }
 
         private void CheckConnectionPresent()

@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(entityType, "entityType");
             Check.NotEmpty(name, "name");
-            // SQLBU 480236: catalogName, schemaName & tableName are allowed to be null, empty & non-empty
+            // catalogName, schemaName & tableName are allowed to be null, empty & non-empty
 
             _name = name;
 

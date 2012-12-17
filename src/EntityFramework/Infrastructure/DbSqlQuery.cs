@@ -33,10 +33,23 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query where the results of the query will not be tracked by the associated
         ///     <see cref="DbContext" />.
         /// </summary>
-        /// <returns> A new query with no-tracking applied. </returns>
+        /// <returns> A new query with NoTracking applied. </returns>
         public DbSqlQuery AsNoTracking()
         {
             return new DbSqlQuery(InternalQuery.AsNoTracking());
+        }
+
+        #endregion
+
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public new DbSqlQuery AsStreaming()
+        {
+            return new DbSqlQuery(InternalQuery.AsStreaming());
         }
 
         #endregion

@@ -237,11 +237,14 @@ namespace ProductivityApiUnitTests
             }
 
             [Fact]
-            public void With_valid_arguments_dont_throw()
+            public void With_valid_arguments_doesnt_throw()
             {
                 var database = new Database(new Mock<InternalContextForMock>().Object);
 
-                Assert.NotNull(database.SqlQuery<Random>("query"));
+                var query = database.SqlQuery<Random>("query");
+
+                Assert.NotNull(query);
+                Assert.False(query.InternalQuery.Streaming);
             }
         }
 
@@ -302,7 +305,10 @@ namespace ProductivityApiUnitTests
             {
                 var database = new Database(new Mock<InternalContextForMock>().Object);
 
-                Assert.NotNull(database.SqlQuery(typeof(Random), "query"));
+                var query = database.SqlQuery(typeof(Random), "query");
+
+                Assert.NotNull(query);
+                Assert.False(query.InternalQuery.Streaming);
             }
         }
     }

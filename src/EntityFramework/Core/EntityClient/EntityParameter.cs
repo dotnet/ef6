@@ -583,12 +583,9 @@ namespace System.Data.Entity.Core.EntityClient
                 // Spatial types have only DbType 'Object', and cannot be represented in the static type map.
                 PrimitiveType primitiveParameterType;
                 if (DbType == DbType.Object
-                    &&
-                    Value != null
-                    &&
-                    ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
-                    &&
-                    Helper.IsSpatialType(primitiveParameterType))
+                    && Value != null
+                    && ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
+                    && Helper.IsSpatialType(primitiveParameterType))
                 {
                     typeUsage = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveParameterType.PrimitiveTypeKind);
                 }

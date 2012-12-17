@@ -179,6 +179,7 @@
     <Compile Include="Core\Metadata\Edm\StucturalTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\TypeUsageTests.cs" />
     <Compile Include="Core\Objects\DataClasses\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Objects\ExecutionOptionsTests.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataReaderTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanTests.cs" />

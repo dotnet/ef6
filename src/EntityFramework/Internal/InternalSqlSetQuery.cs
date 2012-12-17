@@ -24,11 +24,12 @@ namespace System.Data.Entity.Internal
         /// <param name="set"> The set. </param>
         /// <param name="sql"> The SQL. </param>
         /// <param name="isNoTracking">
-        ///     if set to <c>true</c> then the entities will not be tracked.
+        ///     If set to <c>true</c> then the entities will not be tracked.
         /// </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
-        internal InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, object[] parameters)
-            : base(sql, parameters)
+        internal InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, bool streaming, object[] parameters)
+            : base(sql, streaming, parameters)
         {
             DebugCheck.NotNull(set);
 
@@ -40,14 +41,12 @@ namespace System.Data.Entity.Internal
 
         #region AsNoTracking
 
-        /// <summary>
-        ///     If the query is would track entities, then this method returns a new query that will
-        ///     not track entities.
-        /// </summary>
-        /// <returns> A no-tracking query. </returns>
+        /// <inheritdoc/>
         public override InternalSqlQuery AsNoTracking()
         {
-            return new InternalSqlSetQuery(_set, Sql, isNoTracking: true, parameters: Parameters);
+            return _isNoTracking
+                       ? this
+                       : new InternalSqlSetQuery(_set, Sql, isNoTracking: true, streaming: Streaming, parameters: Parameters);
         }
 
         /// <summary>
@@ -65,6 +64,18 @@ namespace System.Data.Entity.Internal
 
         #endregion
 
+        #region AsStreaming
+
+        /// <inheritdoc/>
+        public override InternalSqlQuery AsStreaming()
+        {
+            return Streaming
+                       ? this
+                       : new InternalSqlSetQuery(_set, Sql, isNoTracking: _isNoTracking, streaming: true, parameters: Parameters);
+        }
+
+        #endregion
+
         #region IEnumerable implementation
 
         /// <summary>
@@ -74,7 +85,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
         {
-            return _set.ExecuteSqlQuery(Sql, _isNoTracking, Parameters);
+            return _set.ExecuteSqlQuery(Sql, _isNoTracking, Streaming, Parameters);
         }
 
         #endregion
@@ -90,7 +101,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()
         {
-            return _set.ExecuteSqlQueryAsync(Sql, _isNoTracking, Parameters);
+            return _set.ExecuteSqlQueryAsync(Sql, _isNoTracking, Streaming, Parameters);
         }
 
 #endif

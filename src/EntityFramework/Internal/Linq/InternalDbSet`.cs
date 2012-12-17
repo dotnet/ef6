@@ -84,6 +84,12 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <inheritdoc />
+        public override DbQuery AsStreaming()
+        {
+            return new InternalDbQuery<TEntity>(_internalSet.AsStreaming());
+        }
+
+        /// <inheritdoc />
         public override object Find(params object[] keyValues)
         {
             return _internalSet.Find(keyValues);

@@ -637,6 +637,61 @@ namespace System.Data.Entity
         }
 
         #endregion
+        
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering. This method works by calling
+        ///     the AsStreaming method of the underlying query object. If the underlying query object does not have
+        ///     an AsStreaming method, then calling this method will have no affect.
+        /// </summary>
+        /// <typeparam name="T"> The element type. </typeparam>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
+        public static IQueryable<T> AsStreaming<T>(this IQueryable<T> source) where T : class
+        {
+            Check.NotNull(source, "source");
+
+            var asDbQuery = source as DbQuery<T>;
+            return asDbQuery != null ? asDbQuery.AsStreaming() : CommonAsStreaming(source);
+        }
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering. This method works by calling
+        ///     the AsStreaming method of the underlying query object. If the underlying query object does not have
+        ///     an AsStreaming method, then calling this method will have no affect.
+        /// </summary>
+        /// <param name="source"> The source query. </param>
+        /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
+        public static IQueryable AsStreaming(this IQueryable source)
+        {
+            Check.NotNull(source, "source");
+
+            var asDbQuery = source as DbQuery;
+            return asDbQuery != null ? asDbQuery.AsStreaming() : CommonAsStreaming(source);
+        }
+
+        private static T CommonAsStreaming<T>(T source) where T : class
+        {
+            DebugCheck.NotNull(source);
+
+            var asObjectQuery = source as ObjectQuery;
+            if (asObjectQuery != null)
+            {
+                return (T)DbHelpers.CreateStreamingQuery(asObjectQuery);
+            }
+
+            var asStreamingMethod = source.GetType().GetMethod("AsStreaming", Type.EmptyTypes);
+            if (asStreamingMethod != null
+                && typeof(T).IsAssignableFrom(asStreamingMethod.ReturnType))
+            {
+                return (T)asStreamingMethod.Invoke(source, null);
+            }
+
+            return source;
+        }
+
+        #endregion
 
         #region Load
 

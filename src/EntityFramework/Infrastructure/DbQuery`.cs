@@ -62,7 +62,7 @@ namespace System.Data.Entity.Infrastructure
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>
-        ///     A new DbQuery <T>with the defined query path.
+        ///     A new <see cref="DbQuery{T}"/> with the defined query path.
         /// </returns>
         public DbQuery<TResult> Include(string path)
         {
@@ -82,6 +82,19 @@ namespace System.Data.Entity.Infrastructure
         public DbQuery<TResult> AsNoTracking()
         {
             return new DbQuery<TResult>(_internalQuery.AsNoTracking());
+        }
+
+        #endregion
+
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public DbQuery<TResult> AsStreaming()
+        {
+            return new DbQuery<TResult>(_internalQuery.AsStreaming());
         }
 
         #endregion

@@ -42,6 +42,19 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public DbRawSqlQuery AsStreaming()
+        {
+            return new DbRawSqlQuery(_internalQuery.AsStreaming());
+        }
+
+        #endregion
+
         #region IEnumerable implementation
 
         /// <summary>

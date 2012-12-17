@@ -60,6 +60,12 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TElement>(_internalQuery.AsNoTracking());
         }
 
+        /// <inheritdoc/>
+        public override DbQuery AsStreaming()
+        {
+            return new InternalDbQuery<TElement>(_internalQuery.AsStreaming());
+        }
+
         #endregion
 
         #region IEnumerable implementation

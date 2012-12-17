@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     concrete Class for representing a entity set
+    ///     Concrete class for representing a entity set
     /// </summary>
     public class EntitySet : EntitySetBase
     {

@@ -102,6 +102,20 @@ namespace System.Data.Entity.Internal.Linq
 
         #endregion
 
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public virtual IInternalQuery<TElement> AsStreaming()
+        {
+            return new InternalQuery<TElement>(
+                _internalContext, (ObjectQuery)DbHelpers.CreateStreamingQuery(_objectQuery));
+        }
+
+        #endregion
+
         #region Query properties
 
         /// <summary>

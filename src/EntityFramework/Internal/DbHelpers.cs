@@ -391,7 +391,7 @@ namespace System.Data.Entity.Internal
 
         #endregion
 
-        #region Creating NoTracking queries
+        #region ObjectQuery helpers
 
         /// <summary>
         ///     Creates a new <see cref="ObjectQuery" /> with the NoTracking merge option applied.
@@ -406,6 +406,22 @@ namespace System.Data.Entity.Internal
             var asIQueryable = (IQueryable)query;
             var newQuery = (ObjectQuery)asIQueryable.Provider.CreateQuery(asIQueryable.Expression);
             newQuery.MergeOption = MergeOption.NoTracking;
+            return newQuery;
+        }
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        ///     The query object passed in is not changed.
+        /// </summary>
+        /// <param name="query"> The query. </param>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public static IQueryable CreateStreamingQuery(ObjectQuery query)
+        {
+            DebugCheck.NotNull(query);
+
+            var asIQueryable = (IQueryable)query;
+            var newQuery = (ObjectQuery)asIQueryable.Provider.CreateQuery(asIQueryable.Expression);
+            newQuery.Streaming = true;
             return newQuery;
         }
 

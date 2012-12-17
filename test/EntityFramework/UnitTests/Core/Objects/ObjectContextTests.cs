@@ -3,8 +3,11 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
+    using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Mapping;
@@ -13,6 +16,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -539,13 +543,49 @@ namespace System.Data.Entity.Core.Objects
                                                 });
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
-                    Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new [] { new object() } }));
+                    Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } }));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQuery<object>("{0} Foo", parameterMock.Object);
+
+                dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
+                dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                Assert.True(correctParameters);
+            }
+
+            [Fact]
+            public void Command_is_executed_with_correct_CommandText_and_parameters_with_streaming()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+
+                var parameterMock = new Mock<DbParameter>();
+                var correctParameters = false;
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 1
+                                                        && list[0] == parameterMock.Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
+
+                var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
+                // This reader will throw if buffering is on
+                Mock.Get(dataReader).Setup(m => m.Read()).Throws(new NotImplementedException());
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(dataReader);
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
+                    () => parameterCollectionMock.Object);
+
+                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+
+                objectContext.ExecuteStoreQuery<object>("{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true), parameterMock.Object);
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
@@ -612,6 +652,91 @@ namespace System.Data.Entity.Core.Objects
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
                 Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
+            }
+        }
+
+        public class ExecuteFunction
+        {
+            [Fact]
+            public void Command_is_executed_with_streaming()
+            {
+                var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
+                // This reader will throw if buffering is on
+                Mock.Get(dataReader).Setup(m => m.Read()).Throws(new NotImplementedException());
+
+                var entityCommandDefinition = EntityClient.MockHelper.CreateEntityCommandDefinition(
+                    dataReader, new List<EntityParameter>());
+                FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
+
+                var entityCommandMock = Mock.Get((EntityCommand)entityCommandDefinition.CreateCommand());
+
+                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityCommandMock.Object);
+
+                var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
+                entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
+
+                var entityTypeMock = new Mock<EntityType>
+                                         {
+                                             CallBase = true
+                                         };
+                var collectionTypeMock = new Mock<CollectionType>(entityTypeMock.Object)
+                                             {
+                                                 CallBase = true
+                                             };
+                var entityType = (EdmType)entityTypeMock.Object;
+                var metadataWorkspaceMock = Mock.Get(objectContext.MetadataWorkspace);
+                metadataWorkspaceMock.Setup(m => m.TryDetermineCSpaceModelType(It.IsAny<Type>(), out entityType))
+                                     .Returns(true);
+
+                var entityContainer = new EntityContainer("Bar", DataSpace.CSpace);
+                metadataWorkspaceMock.Setup(m => m.TryGetEntityContainer(It.IsAny<string>(), It.IsAny<DataSpace>(), out entityContainer))
+                                     .Returns(true);
+                var functionImport = new EdmFunction(
+                    "Foo", "Bar", DataSpace.CSpace,
+                    new EdmFunctionPayload
+                        {
+                            IsComposable = false,
+                            IsFunctionImport = true,
+                            ReturnParameters = new[]
+                                                   {
+                                                       new FunctionParameter(
+                                                           EdmConstants.ReturnType,
+                                                           TypeUsage.Create(collectionTypeMock.Object),
+                                                           ParameterMode.ReturnValue),
+                                                   }
+                        });
+                entityContainer.AddFunctionImport(functionImport);
+
+                var edmItemCollection = (EdmItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
+                var storeItemCollection = (StoreItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                var containerMappingMock = new Mock<StorageEntityContainerMapping>(entityContainer);
+                FunctionImportMapping targetFunctionMapping = new FunctionImportMappingNonComposable(
+                    functionImport, functionImport, new List<List<FunctionImportStructuralTypeMapping>>(), edmItemCollection);
+                containerMappingMock.Setup(
+                    m => m.TryGetFunctionImportMapping(
+                        It.IsAny<EdmFunction>(), out targetFunctionMapping)).Returns(true);
+
+                var storageMappingItemCollection = new Mock<StorageMappingItemCollection>(
+                    edmItemCollection, storeItemCollection, new string[0])
+                                                       {
+                                                           CallBase = true
+                                                       };
+                storageMappingItemCollection.Setup(m => m.GetItems<StorageEntityContainerMapping>())
+                                            .Returns(
+                                                new ReadOnlyCollection<StorageEntityContainerMapping>(
+                                                    new List<StorageEntityContainerMapping>
+                                                        {
+                                                            containerMappingMock.Object
+                                                        }));
+
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>()))
+                                     .Returns(storageMappingItemCollection.Object);
+
+                objectContext.ExecuteFunction<object>("Foo", new ExecutionOptions(MergeOption.AppendOnly, streaming: true));
+
+                entityCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+
+                FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
             }
         }
 
@@ -1204,14 +1329,56 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
-                             .Returns(Task.FromResult(
-                              Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new [] { new object() } })));
+                             .Returns(
+                                 Task.FromResult(
+                                     Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } })));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Wait();
+
+                dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
+                dbCommandMock.Protected().Verify(
+                    "ExecuteDbDataReaderAsync", Times.Once(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
+                Assert.True(correctParameters);
+            }
+
+            [Fact]
+            public void Command_is_executed_with_correct_CommandText_and_parameters_with_streaming()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+
+                var parameterMock = new Mock<DbParameter>();
+                var correctParameters = false;
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
+                                        Callback(
+                                            (Array p) =>
+                                                {
+                                                    var list = p.ToList<DbParameter>();
+                                                    if (list.Count == 1
+                                                        && list[0] == parameterMock.Object)
+                                                    {
+                                                        correctParameters = true;
+                                                    }
+                                                });
+
+                var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
+                // This reader will throw if buffering is on
+                Mock.Get(dataReader).Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Throws(new NotImplementedException());
+                dbCommandMock.Protected().Setup<Task<DbDataReader>>(
+                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                             .Returns(Task.FromResult(dataReader));
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
+                    () => parameterCollectionMock.Object);
+
+                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+
+                objectContext.ExecuteStoreQueryAsync<object>(
+                    "{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true),
+                    CancellationToken.None, parameterMock.Object).Wait();
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify(
@@ -1280,17 +1447,35 @@ namespace System.Data.Entity.Core.Objects
             var dbConnectionMock = new Mock<DbConnection>();
             dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommand);
 
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace>
+                                            {
+                                                CallBase = true
+                                            };
+            metadataWorkspaceMock.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspaceMock.Object);
+            var edmItemCollection = new EdmItemCollection();
+            var providerManifestMock = new Mock<DbProviderManifest>();
+            providerManifestMock.Setup(m => m.GetStoreTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType>()));
+            providerManifestMock.Setup(m => m.GetStoreFunctions()).Returns(new ReadOnlyCollection<EdmFunction>(new List<EdmFunction>()));
+
+            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, providerManifestMock.Object, "token");
+
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OSpace, It.IsAny<bool>()))
+                                 .Returns(new ObjectItemCollection());
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OCSpace, It.IsAny<bool>()))
+                                 .Returns(new ObjectItemCollection());
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSpace, It.IsAny<bool>()))
+                                 .Returns(edmItemCollection);
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace, It.IsAny<bool>()))
+                                 .Returns(storeItemCollection);
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>()))
+                                 .Returns(new StorageMappingItemCollection(edmItemCollection, storeItemCollection));
+            metadataWorkspaceMock.Setup(m => m.GetQueryCacheManager()).Returns(QueryCacheManager.Create());
+
             var entityConnectionMock = new Mock<EntityConnection>();
             entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Bar");
             entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
             entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
-
-            var objectStateManagerMock = new Mock<ObjectStateManager>();
-            var metadataWorkspace = new Mock<MetadataWorkspace>();
-            metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-            metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-            metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-            metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+            entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
 
             var translator = Common.Internal.Materialization.MockHelper.CreateTranslator<object>();
 
@@ -1300,6 +1485,8 @@ namespace System.Data.Entity.Core.Objects
             var collectionColumnMap = new SimpleCollectionColumnMap(
                 TypeUsage.Create(edmTypeMock.Object), "",
                 new ScalarColumnMap(TypeUsage.Create(edmTypeMock.Object), "", 0, 0), null, null);
+
+            var objectStateManagerMock = new Mock<ObjectStateManager>();
 
             var columnMapFactoryMock = new Mock<ColumnMapFactory>();
             columnMapFactoryMock.Setup(
@@ -1313,7 +1500,7 @@ namespace System.Data.Entity.Core.Objects
                                 .Returns(collectionColumnMap);
 
             var objectContext = CreateObjectContext(
-                objectStateManagerMock, entityConnectionMock, metadataWorkspace, translator, columnMapFactoryMock.Object);
+                objectStateManagerMock, entityConnectionMock, metadataWorkspaceMock, translator, columnMapFactoryMock.Object);
 
             return objectContext;
         }
@@ -1363,6 +1550,7 @@ namespace System.Data.Entity.Core.Objects
             objectContextMock.Setup(m => m.Connection).Returns(entityConnectionMock.Object);
             objectContextMock.Setup(m => m.ObjectStateManager).Returns(() => objectStateManagerMock.Object);
             objectContextMock.Setup(m => m.MetadataWorkspace).Returns(() => metadataWorkspace.Object);
+            objectContextMock.Setup(m => m.DefaultContainerName).Returns("Bar");
 
             return objectContextMock.Object;
         }

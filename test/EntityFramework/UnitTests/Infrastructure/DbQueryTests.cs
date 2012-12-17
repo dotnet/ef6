@@ -7,6 +7,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
     using Moq;
@@ -15,6 +16,60 @@ namespace System.Data.Entity.Infrastructure
 
     public class DbQueryTests : TestBase
     {
+        [Fact]
+        public void String_Include_with_null_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new DbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include(null)).Message);
+        }
+
+        [Fact]
+        public void String_Include_with_empty_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new DbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include("")).Message);
+        }
+
+        [Fact]
+        public void String_Include_with_whitespace_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new DbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include(" ")).Message);
+        }
+
+        [Fact]
+        public void Non_generic_String_Include_with_null_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new InternalDbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include(null)).Message);
+        }
+
+        [Fact]
+        public void Non_generic_String_Include_with_empty_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new InternalDbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include("")).Message);
+        }
+
+        [Fact]
+        public void Non_generic_String_Include_with_whitespace_string_called_on_actual_DbQuery_throws()
+        {
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("path"),
+                Assert.Throws<ArgumentException>(() =>
+                    new InternalDbQuery<object>(new Mock<IInternalQuery<object>>().Object).Include(" ")).Message);
+        }
+
         [Fact]
         public void Methods_delegate_to_underlying_InternalQuery_correctly()
         {

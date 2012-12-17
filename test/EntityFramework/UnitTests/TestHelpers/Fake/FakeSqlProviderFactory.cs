@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 
         public object GetService(Type serviceType)
         {
-            return new FakeSqlProviderServices();
+            return FakeSqlProviderServices.Instance;
         }
 
         public override DbConnection CreateConnection()

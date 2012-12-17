@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Migrations.History;
+    using System.Threading;
     using DaFunc;
     using Moq;
     using Xunit;
@@ -54,5 +56,157 @@ namespace System.Data.Entity.Internal
 
             Assert.Equal(new string('a', HistoryContext.ContextKeyMaxLength), internalContext.ContextKey);
         }
+
+        [Fact]
+        public void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery_with_buffering()
+        {
+            Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(false);
+        }
+
+        [Fact]
+        public void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery_with_streaming()
+        {
+            Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(true);
+        }
+
+        private void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        {
+            var internalContext = new Mock<InternalContextForMock<DbContext>>()
+                                      {
+                                          CallBase = true
+                                      }.Object;
+            var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+            objectContextMock.Setup(
+                m => m.ExecuteStoreQuery<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
+                             .Returns(Core.Objects.MockHelper.CreateMockObjectQuery(new Random())
+                                       .Object.Execute(MergeOption.AppendOnly));
+
+            var results = internalContext.ExecuteSqlQuery<Random>("sql", streaming, new object[] { "param" });
+
+            objectContextMock.Verify(m => m.ExecuteStoreQuery<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), new object[] { "param" }),
+                Times.Never());
+
+            results.MoveNext();
+
+            objectContextMock.Verify(m => m.ExecuteStoreQuery<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), new object[] { "param" }),
+                Times.Once());
+        }
+        
+        [Fact]
+        public void NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery_with_buffering()
+        {
+           NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(false);
+        }
+
+        [Fact]
+        public void NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery_with_streaming()
+        {
+            NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(true);
+        }
+
+        private void NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        {
+            var internalContext = new Mock<InternalContextForMock<DbContext>>()
+            {
+                CallBase = true
+            }.Object;
+            var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+            objectContextMock.Setup(
+                m => m.ExecuteStoreQuery<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
+                             .Returns(Core.Objects.MockHelper.CreateMockObjectQuery(new Random())
+                                       .Object.Execute(MergeOption.AppendOnly));
+
+            var results = internalContext.ExecuteSqlQuery(typeof(Random), "sql", streaming, new object[] { "param" });
+
+            objectContextMock.Verify(m => m.ExecuteStoreQuery<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), new object[] { "param" }),
+                Times.Never());
+
+            results.MoveNext();
+
+            objectContextMock.Verify(m => m.ExecuteStoreQuery<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), new object[] { "param" }),
+                Times.Once());
+        }
+
+#if !NET40
+        
+        [Fact]
+        public void Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery_with_buffering()
+        {
+            Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(false);
+        }
+
+        [Fact]
+        public void Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery_with_streaming()
+        {
+            Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(true);
+        }
+
+        private void Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        {
+            var internalContext = new Mock<InternalContextForMock<DbContext>>()
+            {
+                CallBase = true
+            }.Object;
+            var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+            objectContextMock.Setup(
+                m => m.ExecuteStoreQueryAsync<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                             .Returns(Core.Objects.MockHelper.CreateMockObjectQuery(new Random())
+                                       .Object.ExecuteAsync(MergeOption.AppendOnly));
+
+            var results = internalContext.ExecuteSqlQueryAsync<Random>("sql", streaming, new object[] { "param" });
+
+            objectContextMock.Verify(m => m.ExecuteStoreQueryAsync<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), CancellationToken.None, new object[] { "param" }),
+                Times.Never());
+
+            results.MoveNextAsync(CancellationToken.None);
+
+            objectContextMock.Verify(m => m.ExecuteStoreQueryAsync<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), CancellationToken.None, new object[] { "param" }),
+                Times.Once());
+        }
+
+        [Fact]
+        public void NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery_with_buffering()
+        {
+            NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(false);
+        }
+
+        [Fact]
+        public void NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery_with_streaming()
+        {
+            NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(true);
+        }
+
+        private void NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        {
+            var internalContext = new Mock<InternalContextForMock<DbContext>>()
+            {
+                CallBase = true
+            }.Object;
+            var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+            objectContextMock.Setup(
+                m => m.ExecuteStoreQueryAsync<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                             .Returns(Core.Objects.MockHelper.CreateMockObjectQuery(new Random())
+                                       .Object.ExecuteAsync(MergeOption.AppendOnly));
+
+            var results = internalContext.ExecuteSqlQueryAsync(typeof(Random),"sql", streaming, new object[] { "param" });
+
+            objectContextMock.Verify(m => m.ExecuteStoreQueryAsync<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), CancellationToken.None, new object[] { "param" }),
+                Times.Never());
+
+            results.MoveNextAsync(CancellationToken.None);
+
+            objectContextMock.Verify(m => m.ExecuteStoreQueryAsync<Random>("sql",
+                    new ExecutionOptions(MergeOption.AppendOnly, streaming), CancellationToken.None, new object[] { "param" }),
+                Times.Once());
+        }
+#endif
+
     }
 }

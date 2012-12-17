@@ -9,10 +9,11 @@ namespace System.Data.Entity.Internal.Linq
     ///     An interface implemented by <see cref="InternalQuery{TElement}" />.
     /// </summary>
     /// <typeparam name="TElement"> The type of the element. </typeparam>
-    internal interface IInternalQuery<TElement> : IInternalQuery
+    internal interface IInternalQuery<out TElement> : IInternalQuery
     {
         IInternalQuery<TElement> Include(string path);
         IInternalQuery<TElement> AsNoTracking();
+        IInternalQuery<TElement> AsStreaming();
 
 #if !NET40
         new IDbAsyncEnumerator<TElement> GetAsyncEnumerator();

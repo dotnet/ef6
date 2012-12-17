@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class CollectionType : EdmType
     {
+        // For testing only
         internal CollectionType()
         {
         }

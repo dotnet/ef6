@@ -21,19 +21,22 @@ namespace System.Data.Entity.Internal
 
         private readonly string _sql;
         private readonly object[] _parameters;
+        private readonly bool _streaming;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="InternalSqlQuery" /> class.
         /// </summary>
         /// <param name="sql"> The SQL. </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
-        internal InternalSqlQuery(string sql, object[] parameters)
+        internal InternalSqlQuery(string sql, bool streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
             _sql = sql;
             _parameters = parameters;
+            _streaming = streaming;
         }
 
         #endregion
@@ -47,6 +50,18 @@ namespace System.Data.Entity.Internal
         public string Sql
         {
             get { return _sql; }
+        }
+
+        /// <summary>
+        ///     Get the query streaming behavior.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if the query is streaming;
+        ///     <c>false</c> if the query is buffering
+        /// </value>
+        internal bool Streaming
+        {
+            get { return _streaming; }
         }
 
         /// <summary>
@@ -68,6 +83,17 @@ namespace System.Data.Entity.Internal
         /// </summary>
         /// <returns> A no-tracking query. </returns>
         public abstract InternalSqlQuery AsNoTracking();
+
+        #endregion
+
+        #region AsStreaming
+
+        /// <summary>
+        ///     If the query is buffering, then this method returns a new query that will stream
+        ///     the results instead.
+        /// </summary>
+        /// <returns> A streaming query. </returns>
+        public abstract InternalSqlQuery AsStreaming();
 
         #endregion
 
@@ -100,7 +126,7 @@ namespace System.Data.Entity.Internal
         ///     Returns <c>false</c>.
         /// </summary>
         /// <returns>
-        ///     <c>false</c> .
+        ///     <c>false</c>.
         /// </returns>
         public bool ContainsListCollection
         {

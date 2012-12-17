@@ -163,7 +163,6 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        // requires: all arguments must be given
         internal static EdmFunction FindFunctionImport(MetadataWorkspace workspace, string containerName, string functionImportName)
         {
             DebugCheck.NotNull(workspace);

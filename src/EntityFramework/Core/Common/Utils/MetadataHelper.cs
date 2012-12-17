@@ -126,8 +126,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
             EdmType modelEdmType;
             if (!workspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType)
-                ||
-                !modelEdmType.EdmEquals(spatialNormalizedEdmType))
+                || !modelEdmType.EdmEquals(spatialNormalizedEdmType))
             {
                 throw new InvalidOperationException(
                     Strings.ObjectContext_ExecuteFunctionTypeMismatch(

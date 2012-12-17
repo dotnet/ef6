@@ -11,19 +11,19 @@ namespace System.Data.Entity.Internal
 
     public static class MockHelper
     {
-        internal static InternalSqlSetQuery CreateInternalSqlSetQuery(string sql, params object[] parameters)
+        internal static InternalSqlSetQuery CreateInternalSqlSetQuery(string sql, bool isNoTracking = false, bool streaming = false, params object[] parameters)
         {
-            return new InternalSqlSetQuery(new Mock<InternalSetForMock<FakeEntity>>().Object, sql, false, parameters);
+            return new InternalSqlSetQuery(new Mock<InternalSetForMock<FakeEntity>>().Object, sql, isNoTracking, streaming, parameters);
         }
 
-        internal static InternalSqlNonSetQuery CreateInternalSqlNonSetQuery(string sql, params object[] parameters)
+        internal static InternalSqlNonSetQuery CreateInternalSqlNonSetQuery(string sql, bool streaming = false, params object[] parameters)
         {
-            return new InternalSqlNonSetQuery(new Mock<InternalContextForMock>().Object, typeof(object), sql, parameters);
+            return new InternalSqlNonSetQuery(new Mock<InternalContextForMock>().Object, typeof(object), sql, streaming, parameters);
         }
 
-        internal static Mock<InternalSqlNonSetQuery> CreateMockInternalSqlNonSetQuery(string sql, params object[] parameters)
+        internal static Mock<InternalSqlNonSetQuery> CreateMockInternalSqlNonSetQuery(string sql, bool streaming = false, params object[] parameters)
         {
-            return new Mock<InternalSqlNonSetQuery>(new Mock<InternalContextForMock>().Object, typeof(object), sql, parameters);
+            return new Mock<InternalSqlNonSetQuery>(new Mock<InternalContextForMock>().Object, typeof(object), sql, streaming, parameters);
         }
 
         internal static Mock<IEntityStateEntry> CreateMockStateEntry<TEntity>() where TEntity : class, new()

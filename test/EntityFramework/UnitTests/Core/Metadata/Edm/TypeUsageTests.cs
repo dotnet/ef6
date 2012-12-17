@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using Moq;
     using System.Data.Entity.Resources;
+    using Moq;
     using Xunit;
 
     public class TypeUsageTests
@@ -48,7 +48,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 Assert.Equal(
                     Strings.NotStringTypeForTypeUsage,
-                    Assert.Throws<ArgumentException>(() => TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false)).Message);
+                    Assert.Throws<ArgumentException>(
+                        () => TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false)).Message);
             }
 
             [Fact]
@@ -58,10 +59,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 primitiveTypeMock.SetupGet(m => m.PrimitiveTypeKind).Returns(PrimitiveTypeKind.String);
 
                 Assert.True(
-                    Assert.Throws<ArgumentOutOfRangeException>(() => TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false, maxLength: 0)).Message.StartsWith(Strings.InvalidMaxLengthSize));
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        () =>
+                        TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false, maxLength: 0))
+                          .Message.StartsWith(Strings.InvalidMaxLengthSize));
 
                 Assert.True(
-                    Assert.Throws<ArgumentOutOfRangeException>(() => TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false, maxLength: -10)).Message.StartsWith(Strings.InvalidMaxLengthSize));
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        () =>
+                        TypeUsage.CreateStringTypeUsage(primitiveTypeMock.Object, isUnicode: true, isFixedLength: false, maxLength: -10))
+                          .Message.StartsWith(Strings.InvalidMaxLengthSize));
             }
         }
 
@@ -75,7 +82,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 Assert.Equal(
                     Strings.NotBinaryTypeForTypeUsage,
-                    Assert.Throws<ArgumentException>(() => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false)).Message);
+                    Assert.Throws<ArgumentException>(() => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false))
+                          .Message);
             }
 
             [Fact]
@@ -85,10 +93,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 primitiveTypeMock.SetupGet(m => m.PrimitiveTypeKind).Returns(PrimitiveTypeKind.Binary);
 
                 Assert.True(
-                    Assert.Throws<ArgumentOutOfRangeException>(() => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false, maxLength: 0)).Message.StartsWith(Strings.InvalidMaxLengthSize));
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        () => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false, maxLength: 0))
+                          .Message.StartsWith(Strings.InvalidMaxLengthSize));
 
                 Assert.True(
-                    Assert.Throws<ArgumentOutOfRangeException>(() => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false, maxLength: -10)).Message.StartsWith(Strings.InvalidMaxLengthSize));
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        () => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false, maxLength: -10))
+                          .Message.StartsWith(Strings.InvalidMaxLengthSize));
             }
         }
     }

@@ -359,7 +359,7 @@ namespace System.Data.Entity.Core.Mapping
             m_functionImportMappings.Add(functionImport, mapping);
         }
 
-        internal bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping mapping)
+        internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping mapping)
         {
             return m_functionImportMappings.TryGetValue(functionImport, out mapping);
         }

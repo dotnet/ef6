@@ -3392,7 +3392,7 @@ namespace ProductivityApiTests
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
 
-        [Fact(Skip = "Streaming isn't supported yet")]
+        [Fact]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
             using (var context = new SimpleModelContext())
@@ -3406,6 +3406,8 @@ namespace ProductivityApiTests
 
                 var query = from p in context.Products
                             select p.Name;
+
+                query = query.AsStreaming();
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -3443,7 +3445,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact(Skip = "Streaming isn't supported yet")]
+        [Fact]
         public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
         {
             using (var context = new SimpleModelContext())
@@ -3457,6 +3459,8 @@ namespace ProductivityApiTests
 
                 var query = from p in context.Products
                             select p.Name;
+
+                query = query.AsStreaming();
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.EntityClient
 {
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -9,8 +10,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
-#if !NET40
-#endif
+    using Moq.Protected;
 
     internal class MockHelper
     {
@@ -39,15 +39,24 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
             storeDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
 #endif
+            return CreateEntityCommandDefinition(storeDataReaderMock.Object, Enumerable.Empty<EntityParameter>());
+        }
+
+        public static EntityCommandDefinition CreateEntityCommandDefinition(DbDataReader dataReader, IEnumerable<EntityParameter> parameters)
+        {
             var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(MockBehavior.Strict, null, null, null);
-            entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>());
+            entityCommandDefinitionMock.SetupGet(m => m.Parameters).Returns(parameters);
             entityCommandDefinitionMock.Setup(m => m.Execute(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                Returns(storeDataReaderMock.Object);
+                Returns(dataReader);
 #if !NET40
             entityCommandDefinitionMock.Setup(
                 m => m.ExecuteAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())).
-                Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(storeDataReaderMock.Object));
+                Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(dataReader));
 #endif
+            var entityCommandMock = new Mock<EntityCommand>();
+            entityCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(dataReader);
+            entityCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(entityCommandMock.Object);
+
             return entityCommandDefinitionMock.Object;
         }
     }

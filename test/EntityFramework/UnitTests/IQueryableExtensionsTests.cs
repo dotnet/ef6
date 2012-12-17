@@ -268,6 +268,223 @@ namespace System.Data.Entity
             }
         }
 
+        public class AsStreaming_Generic
+        {
+            [Fact]
+            public void With_null_source_called_on_extension_method_throws()
+            {
+                Assert.Equal(
+                    "source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsStreaming<FakeEntity>(null)).ParamName);
+            }
+
+            [Fact]
+            public void On_ObjectQuery_returns_an_AsStreaming_one()
+            {
+                var query = MockHelper.CreateMockObjectQuery(new object()).Object;
+
+                var newQuery = query.AsStreaming();
+
+                Assert.NotSame(query, newQuery);
+                Assert.False(query.Streaming);
+                Assert.True(((ObjectQuery<object>)newQuery).Streaming);
+            }
+
+            [Fact]
+            public void On_IEnumerable_does_nothing()
+            {
+                var enumerable = new List<FakeEntity>
+                                 {
+                                     new FakeEntity(),
+                                     new FakeEntity(),
+                                     new FakeEntity()
+                                 }.AsQueryable();
+                var afterAsStreaming = enumerable.AsStreaming();
+
+                Assert.Same(enumerable, afterAsStreaming);
+                Assert.Equal(3, afterAsStreaming.Count());
+            }
+
+            [Fact]
+            public void On_IQueryable_with_no_AsStreaming_method_does_nothing()
+            {
+                var mockQueryable = new Mock<IQueryable<FakeEntity>>().Object;
+                var afterAsStreaming = mockQueryable.AsStreaming();
+
+                Assert.Same(mockQueryable, afterAsStreaming);
+            }
+
+            public interface IAsStreamable<T> : IQueryable<T>
+            {
+                IAsStreamable<T> AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_AsStreaming_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IAsStreamable<FakeEntity>>(MockBehavior.Strict);
+                IQueryable<FakeEntity> source = mockQueryable.Object;
+                var result = new Mock<IAsStreamable<FakeEntity>>().Object;
+                mockQueryable.Setup(i => i.AsStreaming()).Returns(result);
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(result, afterAsStreaming);
+            }
+
+            public interface IAsStreamableWithFunnyAsStreaming<T> : IQueryable<T>
+            {
+                IAsStreamableWithFunnyAsStreaming<T> AsStreaming(string buffy, string summers);
+            }
+
+            [Fact]
+            public void On_IQueryable_with_non_matching_AsStreaming_is_ignored()
+            {
+                IQueryable<FakeEntity> source = new Mock<IAsStreamableWithFunnyAsStreaming<FakeEntity>>(MockBehavior.Strict).Object;
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(source, afterAsStreaming);
+            }
+
+            public interface IAsStreamableReturningVoid<T> : IQueryable<T>
+            {
+                void AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_void_AsStreaming_method_is_ignored()
+            {
+                var mockQueryable = new Mock<IAsStreamableReturningVoid<FakeEntity>>(MockBehavior.Strict);
+
+                var afterAsStreaming = ((IQueryable<FakeEntity>)mockQueryable.Object).AsStreaming();
+
+                Assert.Same(mockQueryable.Object, afterAsStreaming);
+            }
+
+            public interface IAsStreamableReturningString<T> : IQueryable<T>
+            {
+                string AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_AsStreaming_returning_string_is_ignored()
+            {
+                IQueryable<FakeEntity> source = new Mock<IAsStreamableReturningString<FakeEntity>>(MockBehavior.Strict).Object;
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(source, afterAsStreaming);
+            }
+        }
+
+        public class AsStreaming_NonGeneric
+        {
+            [Fact]
+            public void With_null_source_called_on_extension_method_throws()
+            {
+                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.AsStreaming(null)).ParamName);
+            }
+
+            [Fact]
+            public void On_ObjectQuery_returns_an_AsStreaming_one()
+            {
+                var query = (ObjectQuery)MockHelper.CreateMockObjectQuery(new object()).Object;
+
+                var newQuery = query.AsStreaming();
+
+                Assert.NotSame(query, newQuery);
+                Assert.False(query.Streaming);
+                Assert.True(((ObjectQuery)newQuery).Streaming);
+            }
+
+            [Fact]
+            public void On_IEnumerable_does_nothing()
+            {
+                var enumerable = (IQueryable)new List<FakeEntity>
+                                             {
+                                                 new FakeEntity(),
+                                                 new FakeEntity(),
+                                                 new FakeEntity()
+                                             }.AsQueryable();
+                var afterAsStreaming = enumerable.AsStreaming();
+
+                Assert.Same(enumerable, afterAsStreaming);
+                Assert.Equal(3, afterAsStreaming.ToList<FakeEntity>().Count());
+            }
+
+            [Fact]
+            public void On_IQueryable_with_no_AsStreaming_method_does_nothing()
+            {
+                var mockQueryable = new Mock<IQueryable>().Object;
+                var afterAsStreaming = mockQueryable.AsStreaming();
+
+                Assert.Same(mockQueryable, afterAsStreaming);
+            }
+
+            public interface IStreamable : IQueryable
+            {
+                IStreamable AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_AsStreaming_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IStreamable>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IStreamable>().Object;
+                mockQueryable.Setup(i => i.AsStreaming()).Returns(result);
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(result, afterAsStreaming);
+            }
+
+            public interface IAsStreamableWithFunnyAsStreaming : IQueryable
+            {
+                IAsStreamableWithFunnyAsStreaming AsStreaming(string buffy, string summers);
+            }
+
+            [Fact]
+            public void On_IQueryable_with_non_matching_AsStreaming_is_ignored()
+            {
+                IQueryable source = new Mock<IAsStreamableWithFunnyAsStreaming>(MockBehavior.Strict).Object;
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(source, afterAsStreaming);
+            }
+
+            public interface IAsStreamableReturningVoid : IQueryable
+            {
+                void AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_void_AsStreaming_method_is_ignored()
+            {
+                var mockQueryable = new Mock<IAsStreamableReturningVoid>(MockBehavior.Strict);
+
+                var afterAsStreaming = ((IQueryable)mockQueryable.Object).AsStreaming();
+
+                Assert.Same(mockQueryable.Object, afterAsStreaming);
+            }
+
+            public interface IAsStreamableReturningString : IQueryable
+            {
+                string AsStreaming();
+            }
+
+            [Fact]
+            public void On_IQueryable_with_AsStreaming_returning_string_is_ignored()
+            {
+                IQueryable source = new Mock<IAsStreamableReturningString>(MockBehavior.Strict).Object;
+
+                var afterAsStreaming = source.AsStreaming();
+
+                Assert.Same(source, afterAsStreaming);
+            }
+        }
+
         public class Include_Generic
         {
             [Fact]

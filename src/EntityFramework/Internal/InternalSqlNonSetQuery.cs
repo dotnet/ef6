@@ -23,10 +23,10 @@ namespace System.Data.Entity.Internal
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="elementType"> Type of the element. </param>
         /// <param name="sql"> The SQL. </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
-        internal InternalSqlNonSetQuery(
-            InternalContext internalContext, Type elementType, string sql, object[] parameters)
-            : base(sql, parameters)
+        internal InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, bool streaming, object[] parameters)
+            : base(sql, streaming, parameters)
         {
             DebugCheck.NotNull(internalContext);
             DebugCheck.NotNull(elementType);
@@ -50,6 +50,18 @@ namespace System.Data.Entity.Internal
 
         #endregion
 
+        #region AsStreaming
+
+        /// <inheritdoc/>
+        public override InternalSqlQuery AsStreaming()
+        {
+            return Streaming
+                       ? this
+                       : new InternalSqlNonSetQuery(_internalContext, _elementType, Sql, /*streaming:*/ true, Parameters);
+        }
+
+        #endregion
+
         #region IEnumerable implementation
 
         /// <summary>
@@ -59,7 +71,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
         {
-            return _internalContext.ExecuteSqlQuery(_elementType, Sql, Parameters);
+            return _internalContext.ExecuteSqlQuery(_elementType, Sql, Streaming, Parameters);
         }
 
         #endregion
@@ -75,7 +87,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()
         {
-            return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Parameters);
+            return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Streaming, Parameters);
         }
 
 #endif

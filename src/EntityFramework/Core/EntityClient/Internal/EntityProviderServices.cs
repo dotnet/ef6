@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     internal sealed class EntityProviderServices : DbProviderServices
     {
         /// <summary>
-        ///     Singleton object;
+        ///     Singleton object
         /// </summary>
         internal static readonly EntityProviderServices Instance = new EntityProviderServices();
 

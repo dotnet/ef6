@@ -32,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var query =
                 new DbRawSqlQuery<FakeEntity>(
-                    MockHelper.CreateInternalSqlNonSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
+                    MockHelper.CreateInternalSqlNonSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, 4, "Beverages"));
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var query =
                 new DbRawSqlQuery(
-                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
+                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var query =
                 new DbRawSqlQuery<FakeEntity>(
-                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", 4, "Beverages"));
+                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
         }

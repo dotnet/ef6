@@ -13,12 +13,23 @@ namespace System.Data.Entity.Internal.Linq
     public class InternalSetTests
     {
         [Fact]
-        public void ExecuteSqlQuery_delegates_lazily()
+        public void ExecuteSqlQuery_delegates_lazily_with_noTracking_and_buffering()
+        {
+            ExecuteSqlQuery_delegates_lazily(true, false);
+        }
+
+        [Fact]
+        public void ExecuteSqlQuery_delegates_lazily_with_tracking_and_streaming()
+        {
+            ExecuteSqlQuery_delegates_lazily(false, true);
+        }
+
+        private void ExecuteSqlQuery_delegates_lazily(bool noTracking, bool streaming)
         {
             var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<string>());
             var internalSet = CreateInternalSet(objectContextMock, "foo");
 
-            var actualEnumerator = internalSet.ExecuteSqlQuery("", true, new object[0]);
+            var actualEnumerator = internalSet.ExecuteSqlQuery("", noTracking, streaming, new object[0]);
 
             // The query shouldn't have run yet
             objectContextMock
@@ -30,7 +41,9 @@ namespace System.Data.Entity.Internal.Linq
 
             objectContextMock
                 .Verify(
-                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()),
+                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(),
+                        new ExecutionOptions(noTracking? MergeOption.NoTracking : MergeOption.AppendOnly, streaming),
+                        It.IsAny<object[]>()),
                     Times.Once());
 
             Assert.Equal("foo", actualEnumerator.Current);
@@ -39,12 +52,22 @@ namespace System.Data.Entity.Internal.Linq
 #if !NET40
 
         [Fact]
-        public void ExecuteSqlQueryAsync_delegates_lazily()
+        public void ExecuteSqlQueryAsync_delegates_lazily_with_noTracking_and_buffering()
+        {
+            ExecuteSqlQueryAsync_delegates_lazily(true, false);
+        }
+        [Fact]
+        public void ExecuteSqlQueryAsync_delegates_lazily_with_tracking_and_streaming()
+        {
+            ExecuteSqlQueryAsync_delegates_lazily(false, true);
+        }
+
+        private void ExecuteSqlQueryAsync_delegates_lazily(bool noTracking, bool streaming)
         {
             var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<string>());
             var internalSet = CreateInternalSet(objectContextMock, "foo");
 
-            var actualEnumerator = internalSet.ExecuteSqlQueryAsync("", true, new object[0]);
+            var actualEnumerator = internalSet.ExecuteSqlQueryAsync("", noTracking, streaming, new object[0]);
 
             // The query shouldn't have run yet
             objectContextMock
@@ -60,7 +83,9 @@ namespace System.Data.Entity.Internal.Linq
                 .Verify(
                     m =>
                     m.ExecuteStoreQueryAsync<string>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
+                        It.IsAny<string>(), It.IsAny<string>(),
+                        new ExecutionOptions(noTracking ? MergeOption.NoTracking : MergeOption.AppendOnly, streaming),
+                        It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
                     Times.Once());
 
             Assert.Equal("foo", actualEnumerator.Current);

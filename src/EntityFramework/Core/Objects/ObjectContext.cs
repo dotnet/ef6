@@ -343,7 +343,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (_perspective == null)
                 {
-                    _perspective = new ClrPerspective(_workspace);
+                    _perspective = new ClrPerspective(MetadataWorkspace);
                 }
 
                 return _perspective;
@@ -2953,7 +2953,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(parameters, "parameters");
             Check.NotEmpty(functionName, "function");
-            return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption, false), parameters);
+            return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption, streaming: false), parameters);
         }
 
         /// <summary>
@@ -3077,7 +3077,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
-            Justification = "Buffer disposed by the returned ObjectResult")]
+            Justification = "Reader disposed by the returned ObjectResult")]
         private ObjectResult<TElement> CreateFunctionObjectResult<TElement>(
             EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes,
             ExecutionOptions executionOptions)
@@ -3148,6 +3148,11 @@ namespace System.Data.Entity.Core.Objects
             EdmType[] edmTypes,
             MergeOption mergeOption)
         {
+            DebugCheck.NotNull(entityCommand);
+            DebugCheck.NotNull(storeReader);
+            DebugCheck.NotNull(entitySets);
+            DebugCheck.NotNull(edmTypes);
+
             var commandDefinition = entityCommand.GetCommandDefinition();
             try
             {
@@ -3518,6 +3523,23 @@ namespace System.Data.Entity.Core.Objects
         ///     Execute the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
+        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, ExecutionOptions executionOptions, params object[] parameters)
+        {
+            return ExecuteStoreQueryInternal<TElement>(
+                commandText, /*entitySetName:*/null, executionOptions, parameters);
+        }
+
+        /// <summary>
+        ///     Execute the sequence returning query against the database server.
+        ///     The query is specified using the server's native query language, such as SQL.
+        /// </summary>
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
         /// <param name="commandText"> The DbDataReader to translate </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
@@ -3530,7 +3552,7 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, new ExecutionOptions(mergeOption, false), parameters);
+            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, new ExecutionOptions(mergeOption, streaming: false), parameters);
         }
 
         /// <summary>
@@ -3651,13 +3673,54 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>
         ///     An asynchronous version of ExecuteStoreQuery, which
+        ///     executes the sequence returning query against the database server.
+        ///     The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
+            string commandText, ExecutionOptions executionOptions, params object[] parameters)
+        {
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, /*entitySetName:*/null, executionOptions, CancellationToken.None, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteStoreQuery, which
+        ///     executes the sequence returning query against the database server.
+        ///     The query is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
+            string commandText, ExecutionOptions executionOptions, CancellationToken cancellationToken, params object[] parameters)
+        {
+            return ExecuteStoreQueryInternalAsync<TElement>(
+                commandText, /*entitySetName:*/null, executionOptions, cancellationToken, parameters);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of ExecuteStoreQuery, which
         ///     execute the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
         /// <param name="commandText"> The DbDataReader to translate </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
-        /// <param name="mergeOption"> Merge option to use for entity results. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param> 
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
         ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .

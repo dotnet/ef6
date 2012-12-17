@@ -268,7 +268,7 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, false, parameters));
+            return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
         }
 
         #endregion

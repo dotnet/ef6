@@ -13,14 +13,14 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Generic_DbSqlQuery_AsNoTracking_returns_new_object_with_no_tracking_flag_set()
         {
-            var query = new DbSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query", 1, 2));
+            var query = new DbSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
             DynamicNoTrackingTest(query);
         }
 
         [Fact]
         public void Non_generic_DbSqlQuery_AsNoTracking_returns_new_object_with_no_tracking_flag_set()
         {
-            var query = new DbSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", 1, 2));
+            var query = new DbSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
             DynamicNoTrackingTest(query);
         }
 

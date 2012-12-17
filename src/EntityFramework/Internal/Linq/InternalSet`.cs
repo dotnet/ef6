@@ -663,9 +663,10 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         /// <param name="sql"> The SQL query. </param>
         /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
-        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, object[] parameters)
+        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, bool streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -677,7 +678,7 @@ namespace System.Data.Entity.Internal.Linq
                 () =>
                     {
                         var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
-                            sql, EntitySetName, new ExecutionOptions(mergeOption, false), parameters);
+                            sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), parameters);
                         try
                         {
                             var result = disposableEnumerable.GetEnumerator();
@@ -702,9 +703,10 @@ namespace System.Data.Entity.Internal.Linq
         /// </summary>
         /// <param name="sql"> The SQL query. </param>
         /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
-        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, object[] parameters)
+        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, bool streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -716,7 +718,7 @@ namespace System.Data.Entity.Internal.Linq
                 async cancellationToken =>
                           {
                               var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, new ExecutionOptions(mergeOption, false), cancellationToken, parameters).ConfigureAwait(
+                                  sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters).ConfigureAwait(
                                       continueOnCapturedContext: false);
 
                               try

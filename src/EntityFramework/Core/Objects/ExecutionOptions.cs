@@ -20,7 +20,44 @@ namespace System.Data.Entity.Core.Objects
             Streaming = streaming;
         }
 
-       public MergeOption MergeOption { get; private set; }
-       public bool Streaming { get; private set; }
+        public MergeOption MergeOption { get; private set; }
+        public bool Streaming { get; private set; }
+
+        public static bool operator ==(ExecutionOptions left, ExecutionOptions right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(left, null))
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ExecutionOptions left, ExecutionOptions right)
+        {
+            return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var otherOptions = obj as ExecutionOptions;
+            if (ReferenceEquals(otherOptions, null))
+            {
+                return false;
+            }
+
+            return MergeOption == otherOptions.MergeOption &&
+                   Streaming == otherOptions.Streaming;
+        }
+
+        public override int GetHashCode()
+        {
+            return MergeOption.GetHashCode() ^ Streaming.GetHashCode();
+        }
     }
 }

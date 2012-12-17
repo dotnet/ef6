@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [CLSCompliant(false)]
         public virtual ItemCollection GetItemCollection(DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection;
         }
 
@@ -292,7 +292,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 throw new MetadataException(Strings.InvalidCollectionForMapping(collection.DataSpace.ToString()));
             }
-            if (null != existing)
+
+            if (existing != null)
             {
                 throw new InvalidOperationException(Strings.ItemCollectionAlreadyRegistered(collection.DataSpace.ToString()));
             }
@@ -362,10 +363,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             if (versionToRegister != _schemaVersion
-                &&
-                versionToRegister != XmlConstants.UndefinedVersion
-                &&
-                _schemaVersion != XmlConstants.UndefinedVersion)
+                && versionToRegister != XmlConstants.UndefinedVersion
+                && _schemaVersion != XmlConstants.UndefinedVersion)
             {
                 Debug.Assert(itemCollectionType != null);
                 throw new MetadataException(
@@ -533,7 +532,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual T GetItem<T>(string identity, DataSpace dataSpace) where T : GlobalItem
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetItem<T>(identity, ignoreCase: false);
         }
 
@@ -549,7 +548,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
         {
             item = null;
-            var collection = GetItemCollection(space, false);
+            var collection = GetItemCollection(space, required: false);
             return (null != collection) && collection.TryGetItem(identity, false /*ignoreCase*/, out item);
         }
 
@@ -569,7 +568,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual T GetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace) where T : GlobalItem
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetItem<T>(identity, ignoreCase);
         }
 
@@ -586,7 +585,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
         {
             item = null;
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && collection.TryGetItem(identity, ignoreCase, out item);
         }
 
@@ -602,7 +601,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual ReadOnlyCollection<T> GetItems<T>(DataSpace dataSpace) where T : GlobalItem
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetItems<T>();
         }
 
@@ -621,7 +620,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "GetType")]
         public virtual EdmType GetType(string name, string namespaceName, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetType(name, namespaceName, ignoreCase: false);
         }
 
@@ -637,7 +636,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual bool TryGetType(string name, string namespaceName, DataSpace dataSpace, out EdmType type)
         {
             type = null;
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && collection.TryGetType(name, namespaceName, false /*ignoreCase*/, out type);
         }
 
@@ -657,7 +656,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "GetType")]
         public virtual EdmType GetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetType(name, namespaceName, ignoreCase);
         }
 
@@ -674,7 +673,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public virtual bool TryGetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace, out EdmType type)
         {
             type = null;
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && collection.TryGetType(name, namespaceName, ignoreCase, out type);
         }
 
@@ -692,7 +691,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual EntityContainer GetEntityContainer(string name, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetEntityContainer(name);
         }
 
@@ -709,7 +708,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer = null;
             // null check exists in call stack, but throws for "identity" not "name"
             Check.NotNull(name, "name");
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && collection.TryGetEntityContainer(name, out entityContainer);
         }
 
@@ -728,7 +727,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual EntityContainer GetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetEntityContainer(name, ignoreCase);
         }
 
@@ -746,7 +745,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer = null;
             // null check exists in call stack, but throws for "identity" not "name"
             Check.NotNull(name, "name");
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && collection.TryGetEntityContainer(name, ignoreCase, out entityContainer);
         }
 
@@ -788,7 +787,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotEmpty(name, "name");
             Check.NotEmpty(namespaceName, "namespaceName");
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
 
             // Get the function with this full name, which is namespace name plus name
             return collection.GetFunctions(namespaceName + "." + name, ignoreCase);
@@ -817,7 +816,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             function = null;
             Check.NotNull(name, "name");
             Check.NotNull(namespaceName, "namespaceName");
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
 
             // Get the function with this full name, which is namespace name plus name
             return (null != collection) && collection.TryGetFunction(namespaceName + "." + name, parameterTypes, ignoreCase, out function);
@@ -833,7 +832,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetItems<PrimitiveType>();
         }
 
@@ -847,7 +846,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         public virtual ReadOnlyCollection<GlobalItem> GetItems(DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetItems<GlobalItem>();
         }
 
@@ -862,7 +861,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
         internal virtual PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return collection.GetMappedPrimitiveType(primitiveTypeKind);
         }
 
@@ -878,7 +877,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
         {
             map = null;
-            var collection = GetItemCollection(mappingSpace, false);
+            var collection = GetItemCollection(mappingSpace, required: false);
             return (null != collection) && ((MappingItemCollection)collection).TryGetMap(typeIdentity, typeSpace, ignoreCase, out map);
         }
 
@@ -891,7 +890,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
         internal virtual Map GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return ((MappingItemCollection)collection).GetMap(identity, typeSpace);
         }
 
@@ -903,7 +902,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
         internal virtual Map GetMap(GlobalItem item, DataSpace dataSpace)
         {
-            var collection = GetItemCollection(dataSpace, true);
+            var collection = GetItemCollection(dataSpace, required: true);
             return ((MappingItemCollection)collection).GetMap(item);
         }
 
@@ -917,7 +916,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
         {
             map = null;
-            var collection = GetItemCollection(dataSpace, false);
+            var collection = GetItemCollection(dataSpace, required: false);
             return (null != collection) && ((MappingItemCollection)collection).TryGetMap(item, out map);
         }
 
@@ -947,7 +946,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [CLSCompliant(false)]
         public virtual bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
         {
-            collection = GetItemCollection(dataSpace, false);
+            collection = GetItemCollection(dataSpace, required: false);
             return (null != collection);
         }
 
@@ -955,8 +954,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Checks if the space is valid and whether the collection is registered for the given space, and if both are valid,
         ///     then returns the itemcollection for the given space
         /// </summary>
-        /// <param name="dataSpace"> </param>
-        /// <param name="required"> if true, will throw </param>
+        /// <param name="dataSpace"> The dataspace for the item collection that should be returned </param>
+        /// <param name="required"> if true, will throw if the collection isn't registered </param>
         /// <exception cref="ArgumentException">Thrown if required and mapping space is not valid or registered</exception>
         internal virtual ItemCollection GetItemCollection(DataSpace dataSpace, bool required)
         {
@@ -1240,7 +1239,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual GeneratedView GetGeneratedView(EntitySetBase extent)
         {
-            var collection = GetItemCollection(DataSpace.CSSpace, true);
+            var collection = GetItemCollection(DataSpace.CSSpace, required: true);
             return ((StorageMappingItemCollection)collection).GetGeneratedView(extent, this);
         }
 
@@ -1252,7 +1251,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetGeneratedViewOfType(
             EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
-            var collection = GetItemCollection(DataSpace.CSSpace, true);
+            var collection = GetItemCollection(DataSpace.CSSpace, required: true);
             return ((StorageMappingItemCollection)collection).TryGetGeneratedViewOfType(extent, type, includeSubtypes, out generatedView);
         }
 
@@ -1265,7 +1264,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
-            var collection = GetItemCollection(DataSpace.CSpace, true);
+            var collection = GetItemCollection(DataSpace.CSpace, required: true);
             return ((EdmItemCollection)collection).GetGeneratedFunctionDefinition(function);
         }
 
@@ -1320,13 +1319,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EdmType clrType = null;
             if (Helper.IsPrimitiveType(edmSpaceTypeUsage.EdmType))
             {
-                var collection = GetItemCollection(DataSpace.OSpace, true);
+                var collection = GetItemCollection(DataSpace.OSpace, required: true);
                 clrType = collection.GetMappedPrimitiveType(((PrimitiveType)edmSpaceTypeUsage.EdmType).PrimitiveTypeKind);
             }
             else
             {
                 // Check and throw if the OC space doesn't exist
-                var collection = GetItemCollection(DataSpace.OCSpace, true);
+                var collection = GetItemCollection(DataSpace.OCSpace, required: true);
 
                 // Get the OC map
                 var map = ((DefaultObjectMappingItemCollection)collection).GetMap(edmSpaceTypeUsage.EdmType);
@@ -1371,11 +1370,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 other.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace),
                 "requires: C, S and CS are registered in this and other");
 
-            var result = _itemsCSSpace.MetadataEquals(other._itemsCSSpace);
+            var result = GetItemCollection(DataSpace.CSSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.CSSpace, required: false));
 
             Debug.Assert(
                 !result ||
-                (_itemsCSpace.MetadataEquals(other._itemsCSpace) && _itemsSSpace.MetadataEquals(other._itemsSSpace)),
+                (GetItemCollection(DataSpace.CSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.CSpace, required: false))
+                 && GetItemCollection(DataSpace.SSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.SSpace, required: false))),
                 "constraint: this.CS == other.CS --> this.S == other.S && this.C == other.C");
 
             return result;
@@ -1533,7 +1533,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            var mappingCollection = (StorageMappingItemCollection)GetItemCollection(DataSpace.CSSpace, true);
+            var mappingCollection = (StorageMappingItemCollection)GetItemCollection(DataSpace.CSSpace, required: true);
             return mappingCollection.GetInterestingMembers(entitySet, entityType, interestingMembersKind);
         }
 

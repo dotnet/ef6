@@ -28,17 +28,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="resultType"> </param>
         /// <param name="parameters"> </param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="metadata" />
-        ///     ,
-        ///     <paramref name="dataSpace" />
-        ///     or
-        ///     <paramref name="edmFunction" />
-        ///     is null
+        ///     <paramref name="metadata" />, <paramref name="dataSpace" /> or <paramref name="edmFunction" /> is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     <paramref name="dataSpace" />
-        ///     does not represent a valid data space or
-        ///     <paramref name="edmFunction" />
+        ///     <paramref name="dataSpace" /> does not represent a valid data space or <paramref name="edmFunction" />
         ///     is a composable function
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
