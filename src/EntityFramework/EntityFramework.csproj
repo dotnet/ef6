@@ -209,6 +209,7 @@
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
     <Compile Include="Core\Mapping\IStructuralTypeMapping.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\QueryRewriting\FragmentQueryKBChaseSupport.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMapping.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\IMetadataItem.cs" />

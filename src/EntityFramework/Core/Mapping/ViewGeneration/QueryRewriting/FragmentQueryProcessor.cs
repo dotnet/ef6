@@ -13,16 +13,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
     internal class FragmentQueryProcessor : TileQueryProcessor<FragmentQuery>
     {
-        private readonly FragmentQueryKB _kb;
+        private readonly FragmentQueryKBChaseSupport _kb;
 
-        public FragmentQueryProcessor(FragmentQueryKB kb)
+        public FragmentQueryProcessor(FragmentQueryKBChaseSupport kb)
         {
             _kb = kb;
         }
 
         internal static FragmentQueryProcessor Merge(FragmentQueryProcessor qp1, FragmentQueryProcessor qp2)
         {
-            var mergedKB = new FragmentQueryKB();
+            var mergedKB = new FragmentQueryKBChaseSupport();
             mergedKB.AddKnowledgeBase(qp1.KnowledgeBase);
             mergedKB.AddKnowledgeBase(qp2.KnowledgeBase);
             return new FragmentQueryProcessor(mergedKB);
@@ -85,13 +85,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
         private bool IsSatisfiable(BoolExpression condition)
         {
-            // instantiate conversion context for each check - gives better performance
-            var conditionUnderKB = condition.Create(
-                new AndExpr<BoolDomainConstraint>(_kb.KbExpression, condition.Tree));
-            var context = IdentifierService<BoolDomainConstraint>.Instance.CreateConversionContext();
-            var converter = new Converter<BoolDomainConstraint>(conditionUnderKB.Tree, context);
-            var isSatisfiable = converter.Vertex.IsZero() == false;
-            return isSatisfiable;
+            return _kb.IsSatisfiable(condition.Tree);
         }
 
         // creates "derived" views that may be helpful for answering the query

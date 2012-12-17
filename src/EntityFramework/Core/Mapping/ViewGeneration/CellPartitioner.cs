@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
     using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<Structures.Cell>;
 
@@ -38,102 +39,58 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // contained in. At the end, run through the Cis and Sis and do a
             // "connected components" algorithm to determine partitions
 
-            // Now form a graph between different cells -- then compute the connected
-            // components in it
-            var graph = new UndirectedGraph<Cell>(EqualityComparer<Cell>.Default);
-
-            var alreadyAddedCells = new List<Cell>();
-            // For each extent, add an edge between it and all previously
-            // added extents with which it overlaps
+            var extentGraph = new UndirectedGraph<EntitySetBase>(EqualityComparer<EntitySetBase>.Default);
+            var extentToCell = new Dictionary<EntitySetBase, Set<Cell>>(EqualityComparer<EntitySetBase>.Default);
 
             foreach (var cell in m_cells)
             {
-                graph.AddVertex(cell);
-                // Add an edge from this cell to the already added cells
-                var firstCExtent = cell.CQuery.Extent;
-                var firstSExtent = cell.SQuery.Extent;
-                foreach (var existingCell in alreadyAddedCells)
+                foreach (var extent in new[] { cell.CQuery.Extent, cell.SQuery.Extent })
                 {
-                    var secondCExtent = existingCell.CQuery.Extent;
-                    var secondSExtent = existingCell.SQuery.Extent;
-
-                    // Add an edge between cell and existingCell if
-                    // * They have the same C or S extent
-                    // * They are linked via a foreign key between the S extents
-                    // * They are linked via a relationship
-                    var sameExtent = secondCExtent.Equals(firstCExtent) || secondSExtent.Equals(firstSExtent);
-                    var linkViaForeignKey = OverlapViaForeignKeys(cell, existingCell);
-                    var linkViaRelationship = AreCellsConnectedViaRelationship(cell, existingCell);
-
-                    if (sameExtent
-                        || linkViaForeignKey
-                        || linkViaRelationship)
+                    Set<Cell> cellsWithExtent;
+                    if (!extentToCell.TryGetValue(extent, out cellsWithExtent))
                     {
-                        graph.AddEdge(existingCell, cell);
+                        extentToCell[extent] = cellsWithExtent = new Set<Cell>();
+                    }
+                    cellsWithExtent.Add(cell);
+                    extentGraph.AddVertex(extent);
+                }
+                extentGraph.AddEdge(cell.CQuery.Extent, cell.SQuery.Extent);
+
+                var associationSetExtent = cell.CQuery.Extent as AssociationSet;
+                if (associationSetExtent != null)
+                {
+                    EntitySetBase prev = null;
+                    foreach (var end in associationSetExtent.AssociationSetEnds)
+                    {
+                        if (prev != null)
+                        {
+                            extentGraph.AddEdge(prev, end.EntitySet);
+                        }
+                        prev = end.EntitySet;
                     }
                 }
-                alreadyAddedCells.Add(cell);
             }
 
-            // Now determine the connected components of this graph
-            var result = GenerateConnectedComponents(graph);
-            return result;
-        }
-
-        // effects: Returns true iff cell1 is an extent at the end of cell2's
-        // relationship set or vice versa
-        private static bool AreCellsConnectedViaRelationship(Cell cell1, Cell cell2)
-        {
-            var cRelationSet1 = cell1.CQuery.Extent as AssociationSet;
-            var cRelationSet2 = cell2.CQuery.Extent as AssociationSet;
-            if (cRelationSet1 != null
-                && MetadataHelper.IsExtentAtSomeRelationshipEnd(cRelationSet1, cell2.CQuery.Extent))
+            foreach (var fk in m_foreignKeyConstraints)
             {
-                return true;
+                extentGraph.AddEdge(fk.ChildTable, fk.ParentTable);
             }
-            if (cRelationSet2 != null
-                && MetadataHelper.IsExtentAtSomeRelationshipEnd(cRelationSet2, cell1.CQuery.Extent))
-            {
-                return true;
-            }
-            return false;
-        }
 
-        // effects: Given a graph of cell groups, returns a list of cellgroup
-        // such that each cellgroup contains all the cells that are in the
-        // same connected component
-        private static List<CellGroup> GenerateConnectedComponents(UndirectedGraph<Cell> graph)
-        {
-            var groupMap = graph.GenerateConnectedComponents();
-
-            // Run through the list of groups and generate the merged groups
+            var groupMap = extentGraph.GenerateConnectedComponents();
             var result = new List<CellGroup>();
             foreach (var setNum in groupMap.Keys)
             {
-                var cellsInComponent = groupMap.ListForKey(setNum);
-                var component = new CellGroup(cellsInComponent);
+                var cellSets = groupMap.ListForKey(setNum).Select(e => extentToCell[e]);
+                var component = new CellGroup();
+                foreach (var cellSet in cellSets)
+                {
+                    component.AddRange(cellSet);
+                }
+
                 result.Add(component);
             }
+
             return result;
-        }
-
-        // effects: Returns true iff there is a foreign key constraint
-        // between cell1 and cell2's S extents
-        private bool OverlapViaForeignKeys(Cell cell1, Cell cell2)
-        {
-            var sExtent1 = cell1.SQuery.Extent;
-            var sExtent2 = cell2.SQuery.Extent;
-
-            foreach (var constraint in m_foreignKeyConstraints)
-            {
-                if (sExtent1.Equals(constraint.ParentTable) && sExtent2.Equals(constraint.ChildTable)
-                    ||
-                    sExtent2.Equals(constraint.ParentTable) && sExtent1.Equals(constraint.ChildTable))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         internal override void ToCompactString(StringBuilder builder)

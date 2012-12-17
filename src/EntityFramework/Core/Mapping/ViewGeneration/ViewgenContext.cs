@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 viewTarget, MemberProjectionIndex.Create(extent, m_edmItemCollection), queryDomainMap, updateDomainMap);
 
             // Create left fragment KB: includes constraints for the extent to be constructed
-            var leftKB = new FragmentQueryKB();
+            var leftKB = new FragmentQueryKBChaseSupport();
             leftKB.CreateVariableConstraints(extent, domainMap, m_edmItemCollection);
             m_leftFragmentQP = new FragmentQueryProcessor(leftKB);
             m_rewritingCache = new Dictionary<FragmentQuery, Tile<FragmentQuery>>(
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
 
             // Create right fragment KB: includes constraints for all extents and association roles of right queries
-            var rightKB = new FragmentQueryKB();
+            var rightKB = new FragmentQueryKBChaseSupport();
             var rightDomainMap = viewTarget == ViewTarget.QueryView ? updateDomainMap : queryDomainMap;
             foreach (var leftCellWrapper in m_cellWrappers)
             {

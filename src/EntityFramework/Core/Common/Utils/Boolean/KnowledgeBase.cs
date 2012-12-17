@@ -89,12 +89,23 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             return builder.ToString();
         }
 
-        // Private class improving debugging output for implication facts 
+        // Protected class improving debugging output for implication facts 
         // (fact appears as A --> B rather than !A + B)
-        private class Implication : OrExpr<T_Identifier>
+        protected class Implication : OrExpr<T_Identifier>
         {
             private readonly BoolExpr<T_Identifier> _condition;
             private readonly BoolExpr<T_Identifier> _implies;
+
+            // These properties are used for the satisfiability test optimization
+            internal BoolExpr<T_Identifier> Condition
+            {
+                get { return _condition; }
+            }
+
+            internal BoolExpr<T_Identifier> Implies
+            {
+                get { return _implies; }
+            }
 
             // (condition --> implies) iff. (!condition OR implies) 
             internal Implication(BoolExpr<T_Identifier> condition, BoolExpr<T_Identifier> implies)
@@ -110,12 +121,23 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             }
         }
 
-        // Private class improving debugging output for equivalence facts 
+        // Protected class improving debugging output for equivalence facts 
         // (fact appears as A <--> B rather than (!A + B) . (A + !B))
-        private class Equivalence : AndExpr<T_Identifier>
+        protected class Equivalence : AndExpr<T_Identifier>
         {
             private readonly BoolExpr<T_Identifier> _left;
             private readonly BoolExpr<T_Identifier> _right;
+
+            // These properties are used for the satisfiability test optimization
+            internal BoolExpr<T_Identifier> Left
+            {
+                get { return _left; }
+            }
+
+            internal BoolExpr<T_Identifier> Right
+            {
+                get { return _right; }
+            }
 
             // (left iff. right) iff. (left --> right AND right --> left)
             internal Equivalence(BoolExpr<T_Identifier> left, BoolExpr<T_Identifier> right)
