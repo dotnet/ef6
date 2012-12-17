@@ -425,30 +425,27 @@ namespace System.Data.Entity
         ///     Specifies the related objects to include in the query results.
         /// </summary>
         /// <remarks>
-        ///     This extension method calls the Include(String) method of the source IQueryable object, if such a method exists.
-        ///     If the source IQueryable does not have a matching method, then this method does nothing.
-        ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
+        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable{T}"/> object,
+        ///     if such a method exists. If the source <see cref="IQueryable{T}"/> does not have a matching method,
+        ///     then this method does nothing. The <see cref="ObjectQuery{T}"/>, <see cref="ObjectSet{T}"/>,
+        ///     <see cref="DbQuery{T}"/> and <see cref="DbSet{T}"/> types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable
-        ///     <T>
-        ///         . Other instances of IQueryable
-        ///         <T>
-        ///             and the object context itself are not affected.
-        ///             Because the Include method returns the query object, you can call this method multiple times on an IQueryable
-        ///             <T>
-        ///                 to
-        ///                 specify multiple paths for the query.
+        ///     the returned instance of the <see cref="IQueryable{T}"/>. Other instances of <see cref="IQueryable{T}"/>
+        ///     and the object context itself are not affected. Because the Include method returns the query object,
+        ///     you can call this method multiple times on an <see cref="IQueryable{T}"/> to specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
-        /// <param name="source"> The source IQueryable on which to call Include. </param>
+        /// <param name="source"> The source <see cref="IQueryable{T}"/> on which to call Include. </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>
-        ///     A new IQueryable <T>with the defined query path.
+        ///     A new <see cref="IQueryable{T}"/> with the defined query path.
         /// </returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string path) where T : class
         {
             Check.NotNull(source, "source");
+            Check.NotEmpty(path, "path");
+
             // Explicitly not checking the value of path since we don't care for the extension method.
 
             // We could use dynamic here, but the problem is that we want to do nothing if the method
@@ -478,27 +475,24 @@ namespace System.Data.Entity
         ///     Specifies the related objects to include in the query results.
         /// </summary>
         /// <remarks>
-        ///     This extension method calls the Include(String) method of the source IQueryable object, if such a method exists.
-        ///     If the source IQueryable does not have a matching method, then this method does nothing.
-        ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
+        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable"/> object,
+        ///     if such a method exists. If the source <see cref="IQueryable"/> does not have a matching method,
+        ///     then this method does nothing. The <see cref="ObjectQuery"/>, <see cref="ObjectSet{T}"/>,
+        ///     <see cref="DbQuery"/> and <see cref="DbSet"/> types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the IQueryable
-        ///     <T>
-        ///         . Other instances of IQueryable
-        ///         <T>
-        ///             and the object context itself are not affected.
-        ///             Because the Include method returns the query object, you can call this method multiple times on an IQueryable
-        ///             <T>
-        ///                 to
-        ///                 specify multiple paths for the query.
+        ///     the returned instance of the <see cref="IQueryable"/>. Other instances of <see cref="IQueryable"/>
+        ///     and the object context itself are not affected. Because the Include method returns the query object,
+        ///     you can call this method multiple times on an <see cref="IQueryable"/> to specify multiple paths for the query.
         /// </remarks>
-        /// <param name="source"> The source IQueryable on which to call Include. </param>
+        /// <param name="source"> The source <see cref="IQueryable"/> on which to call Include. </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
-        /// <returns> A new IQueryable with the defined query path. </returns>
+        /// <returns> A new <see cref="IQueryable"/> with the defined query path. </returns>
         public static IQueryable Include(this IQueryable source, string path)
         {
             Check.NotNull(source, "source");
+            Check.NotEmpty(path, "path");
+
             // Explicitly not checking the value of path since we don't care for the extension method.
 
             // We could use dynamic here, but the problem is that we want to do nothing if the method
@@ -589,7 +583,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
         ///     or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
-        ///     underlying query object.  If the underlying query object does not have a AsNoTracking method,
+        ///     underlying query object.  If the underlying query object does not have an AsNoTracking method,
         ///     then calling this method will have no affect.
         /// </summary>
         /// <typeparam name="T"> The element type. </typeparam>
@@ -606,7 +600,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />
         ///     or <see cref="ObjectContext" />.  This method works by calling the AsNoTracking method of the
-        ///     underlying query object.  If the underlying query object does not have a AsNoTracking method,
+        ///     underlying query object.  If the underlying query object does not have an AsNoTracking method,
         ///     then calling this method will have no affect.
         /// </summary>
         /// <param name="source"> The source query. </param>

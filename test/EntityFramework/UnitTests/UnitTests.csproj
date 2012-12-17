@@ -505,11 +505,9 @@
     <Compile Include="Infrastructure\DbRawSqlQueryTests.cs" />
     <Compile Include="DefaultConnectionFactoryTests.cs" />
     <Compile Include="EdmMetadataRepositoryTests.cs" />
-    <Compile Include="IncludeTests.cs" />
     <Compile Include="InternalConnectionTests.cs" />
     <Compile Include="ModelHashCalculatorTests.cs" />
     <Compile Include="MultiThreadingTests.cs" />
-    <Compile Include="NoTrackingTests.cs" />
     <Compile Include="PropertyConstraintExceptionTests.cs" />
     <Compile Include="SetDiscoveryTests.cs" />
     <Compile Include="ValidationTests.cs" />
