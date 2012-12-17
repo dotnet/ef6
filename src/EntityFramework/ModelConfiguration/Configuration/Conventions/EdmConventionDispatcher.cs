@@ -94,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
             }
 
-            protected override void VisitEdmAssociationEnd(AssociationEndMember item)
+            protected override void VisitEdmAssociationEnd(RelationshipEndMember item)
             {
                 Dispatch(item);
 

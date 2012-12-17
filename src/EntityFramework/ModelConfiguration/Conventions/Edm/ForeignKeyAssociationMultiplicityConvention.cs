@@ -26,25 +26,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 return;
             }
 
-            var navPropConfig = edmDataModelItem.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
+            var navigationPropertyConfiguration
+                = edmDataModelItem.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
 
             if (constraint.ToProperties.All(p => !p.Nullable))
             {
                 var principalEnd = edmDataModelItem.GetOtherEnd(constraint.DependentEnd);
 
                 // find the navigation property with this end
-                var navProp = model.EntityTypes
-                                   .SelectMany(et => et.DeclaredNavigationProperties)
-                                   .SingleOrDefault(np => np.ResultEnd == principalEnd);
+                var navigationProperty
+                    = model.EntityTypes
+                           .SelectMany(et => et.DeclaredNavigationProperties)
+                           .SingleOrDefault(np => np.ResultEnd == principalEnd);
 
-                PropertyInfo navPropInfo;
-                if (navPropConfig != null
-                    &&
-                    navProp != null
-                    &&
-                    ((navPropInfo = navProp.Annotations.GetClrPropertyInfo()) != null)
-                    && ((navPropInfo == navPropConfig.NavigationProperty && navPropConfig.RelationshipMultiplicity.HasValue) ||
-                        (navPropInfo == navPropConfig.InverseNavigationProperty && navPropConfig.InverseEndKind.HasValue)))
+                PropertyInfo propertyInfo;
+
+                if (navigationPropertyConfiguration != null
+                    && navigationProperty != null
+                    && ((propertyInfo = navigationProperty.Annotations.GetClrPropertyInfo()) != null)
+                    && ((propertyInfo == navigationPropertyConfiguration.NavigationProperty
+                         && navigationPropertyConfiguration.RelationshipMultiplicity.HasValue)
+                        || (propertyInfo == navigationPropertyConfiguration.InverseNavigationProperty
+                            && navigationPropertyConfiguration.InverseEndKind.HasValue)))
                 {
                     return;
                 }

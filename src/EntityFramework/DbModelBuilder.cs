@@ -362,7 +362,7 @@ namespace System.Data.Entity
             _modelConfiguration.Configure(model);
             _conventionsConfiguration.ApplyModel(model);
 
-            model.ValidateCsdl();
+            model.Validate();
 
             var databaseMapping = model.GenerateDatabaseMapping(providerManifest);
 

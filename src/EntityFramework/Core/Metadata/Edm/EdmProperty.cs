@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(NullableFacetDescription, value));
+                TypeUsage = TypeUsage.ShallowCopy(new FacetValues {Nullable = value});
             }
         }
 

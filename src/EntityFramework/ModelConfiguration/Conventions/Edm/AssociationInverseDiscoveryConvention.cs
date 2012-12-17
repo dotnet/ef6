@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -58,10 +57,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 if (redundantAssociation.Constraint != null)
                 {
                     unifiedAssociation.Constraint = redundantAssociation.Constraint;
-                    unifiedAssociation.Constraint.DependentEnd =
-                        unifiedAssociation.Constraint.DependentEnd.GetEntityType() == unifiedAssociation.SourceEnd.GetEntityType()
-                            ? unifiedAssociation.SourceEnd
-                            : unifiedAssociation.TargetEnd;
+
+                    unifiedAssociation.Constraint.FromRole = unifiedAssociation.SourceEnd;
+                    unifiedAssociation.Constraint.ToRole = unifiedAssociation.TargetEnd;
                 }
 
                 FixNavigationProperties(model, unifiedAssociation, redundantAssociation);
@@ -79,6 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         .Where(np => np.Association == redundantAssociation))
             {
                 navigationProperty.RelationshipType = unifiedAssociation;
+                navigationProperty.FromEndMember = unifiedAssociation.TargetEnd;
                 navigationProperty.ToEndMember = unifiedAssociation.SourceEnd;
             }
         }

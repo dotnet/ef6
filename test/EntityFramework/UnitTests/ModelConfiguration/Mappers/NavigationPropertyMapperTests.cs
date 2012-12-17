@@ -13,6 +13,31 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
     public sealed class NavigationPropertyMapperTests
     {
         [Fact]
+        public void Map_should_set_namespace_when_provided_via_model_configuration()
+        {
+            var modelConfiguration 
+                = new ModelConfiguration
+                                         {
+                                             ModelNamespace = "Foo"
+                                         };
+            var model = new EdmModel().InitializeConceptual();
+            var entityType = new EntityType();
+            model.AddEntitySet("Source", entityType);
+            var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
+
+            new NavigationPropertyMapper(new TypeMapper(mappingContext))
+                .Map(
+                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                    () => new EntityTypeConfiguration(typeof(object)));
+
+            Assert.Equal(1, model.AssociationTypes.Count());
+
+            var associationType = model.AssociationTypes.Single();
+
+            Assert.Equal("Foo", associationType.NamespaceName);
+        }
+
+        [Fact]
         public void Map_should_set_default_association_multiplicity_to_collection_to_optional()
         {
             var modelConfiguration = new ModelConfiguration();

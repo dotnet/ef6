@@ -30,6 +30,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal const string AnnotationNamespace = "http://schemas.microsoft.com/ado/2009/02/edm/annotation";
 
+        internal const string StoreGeneratedPatternAnnotation = AnnotationNamespace + ":" + StoreGeneratedPattern;
+
         internal const string Alias = "Alias";
         internal const string Self = "Self";
         internal const string Provider = "Provider";

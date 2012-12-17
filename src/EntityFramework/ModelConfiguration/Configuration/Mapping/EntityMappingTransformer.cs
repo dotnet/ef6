@@ -343,7 +343,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                             {
                                 var at = fk.GetAssociationType();
                                 if (at != null
-                                    && at.Constraint.DependentEnd.GetEntityType() == entityType
+                                    && at.Constraint.ToRole.GetEntityType() == entityType
                                     && !fk.GetIsTypeConstraint())
                                 {
                                     MoveForeignKeyConstraint(fromTable, toTable, fk);

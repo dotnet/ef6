@@ -215,7 +215,7 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
         }
 
-        protected virtual void VisitEdmAssociationEnd(AssociationEndMember item)
+        protected virtual void VisitEdmAssociationEnd(RelationshipEndMember item)
         {
             VisitMetadataItem(item);
         }
@@ -225,9 +225,9 @@ namespace System.Data.Entity.Edm
             if (item != null)
             {
                 VisitMetadataItem(item);
-                if (item.DependentEnd != null)
+                if (item.ToRole != null)
                 {
-                    VisitEdmAssociationEnd(item.DependentEnd);
+                    VisitEdmAssociationEnd(item.ToRole);
                 }
                 VisitCollection(item.ToProperties, VisitEdmProperty);
             }

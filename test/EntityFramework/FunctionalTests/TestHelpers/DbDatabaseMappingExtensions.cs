@@ -4,9 +4,7 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Diagnostics;

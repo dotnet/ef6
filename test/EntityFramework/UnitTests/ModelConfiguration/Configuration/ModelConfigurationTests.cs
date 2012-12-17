@@ -3,15 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -22,6 +17,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
     public sealed class ModelConfigurationTests
     {
+        [Fact]
+        public void Can_get_and_set_model_namespace()
+        {
+            var modelConfiguration = new ModelConfiguration();
+
+            Assert.Null(modelConfiguration.ModelNamespace);
+
+            modelConfiguration.ModelNamespace = "Foo";
+
+            Assert.Equal("Foo", modelConfiguration.ModelNamespace);
+        }
+
         [Fact]
         public void Configure_should_configure_default_default_schema()
         {
@@ -448,12 +455,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             // Action
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Entity(entityType2.GetClrType())
-                .AddMappingConfiguration(
-                    new EntityMappingConfiguration
-                        {
-                            MapInheritedProperties = true,
-                            TableName = new DatabaseName("E2")
-                        });
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          MapInheritedProperties = true,
+                                          TableName = new DatabaseName("E2")
+                                      });
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             //Validate
@@ -513,19 +520,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             // Action
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Entity(entityType2.GetClrType())
-                .AddMappingConfiguration(
-                    new EntityMappingConfiguration
-                        {
-                            MapInheritedProperties = true,
-                            TableName = new DatabaseName("E2")
-                        });
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          MapInheritedProperties = true,
+                                          TableName = new DatabaseName("E2")
+                                      });
             modelConfiguration.Entity(entityType3.GetClrType())
-                .AddMappingConfiguration(
-                    new EntityMappingConfiguration
-                        {
-                            MapInheritedProperties = true,
-                            TableName = new DatabaseName("E3")
-                        });
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          MapInheritedProperties = true,
+                                          TableName = new DatabaseName("E3")
+                                      });
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             //Validate
@@ -600,19 +607,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             // Action
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Entity(entityType2.GetClrType())
-                .AddMappingConfiguration(
-                    new EntityMappingConfiguration
-                        {
-                            MapInheritedProperties = true,
-                            TableName = new DatabaseName("E2")
-                        });
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          MapInheritedProperties = true,
+                                          TableName = new DatabaseName("E2")
+                                      });
             modelConfiguration.Entity(entityType3.GetClrType())
-                .AddMappingConfiguration(
-                    new EntityMappingConfiguration
-                        {
-                            MapInheritedProperties = true,
-                            TableName = new DatabaseName("E3")
-                        });
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                      {
+                                          MapInheritedProperties = true,
+                                          TableName = new DatabaseName("E3")
+                                      });
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             //Validate
@@ -729,9 +736,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
             Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
             Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
-            Assert.Same(table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Same(
+                table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
             Assert.Equal("foo", entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().Value);
-            Assert.Equal("nvarchar", entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty.TypeName);
+            Assert.Equal(
+                "nvarchar", entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty.TypeName);
             Assert.Equal(
                 DatabaseMappingGenerator.DiscriminatorMaxLength,
                 entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty.MaxLength);
@@ -836,7 +845,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
             Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
             Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
-            Assert.Same(table1.Properties[4], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
+            Assert.Same(
+                table1.Properties[4], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().ColumnProperty);
             Assert.Equal(1, entityType1MappingConditions.MappingFragments.Single().ColumnConditions.Single().Value);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);
@@ -963,9 +973,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             Assert.Equal(2, entityType1Mapping.MappingFragments.Single().ColumnMappings.Count());
             Assert.Equal("P1", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(0).ColumnProperty.Name);
             Assert.Equal("P2", entityType1Mapping.MappingFragments.Single().ColumnMappings.ElementAt(1).ColumnProperty.Name);
-            Assert.Same(table1.Properties[2], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
+            Assert.Same(
+                table1.Properties[2], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(0).ColumnProperty);
             Assert.True((bool)entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(0).IsNull);
-            Assert.Same(table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
+            Assert.Same(
+                table1.Properties[3], entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(1).ColumnProperty);
             Assert.True((bool)entityType1MappingConditions.MappingFragments.Single().ColumnConditions.ElementAt(1).IsNull);
 
             Assert.False(entityType2Mapping.IsHierarchyMapping);

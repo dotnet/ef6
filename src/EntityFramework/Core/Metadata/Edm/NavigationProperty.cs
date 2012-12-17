@@ -116,5 +116,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return Enumerable.Empty<EdmProperty>();
         }
+
+        internal override void SetReadOnly()
+        {
+            if (!IsReadOnly
+                && (ToEndMember != null)
+                && (ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.One))
+            {
+                // Correct our nullability if the multiplicity of the target end has changed. 
+                TypeUsage = TypeUsage.ShallowCopy(Facet.Create(NullableFacetDescription, false));
+            }
+
+            base.SetReadOnly();
+        }
     }
 }

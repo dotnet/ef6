@@ -2,15 +2,36 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
     public class EdmItemCollectionTests
     {
+        [Fact]
+        public void Can_initialize_from_edm_model_and_items_set_read_only()
+        {
+            var context = new ShopContext_v1();
+            var compiledModel = context.InternalContext.CodeFirstModel;
+
+            var builder = compiledModel.CachedModelBuilder.Clone();
+
+            var databaseMapping
+                = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
+
+            Assert.Equal(3.0, itemCollection.EdmVersion);
+
+            foreach (var globalItem in databaseMapping.Model.GlobalItems)
+            {
+                Assert.True(itemCollection.Contains(globalItem));
+                Assert.True(globalItem.IsReadOnly);
+            }
+        }
+
+        // TODO: METADATA: Rework these...
+
         [Fact]
         public void Code_first_built_entities_matches_som_loaded_entities()
         {
@@ -22,12 +43,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var databaseMapping
                 = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
-            var itemCollection = databaseMapping.Model.ToEdmItemCollection();
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
 
             var entities = databaseMapping.Model.EntityTypes.ToList();
             var somEntities = itemCollection.GetItems<EntityType>();
-
-            //EdmxWriter.WriteEdmx(context, XmlWriter.Create(Console.Out, new XmlWriterSettings { Indent = true }));
 
             Assert.Equal(entities.Count(), somEntities.Count());
 
@@ -55,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var databaseMapping
                 = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
-            var itemCollection = databaseMapping.Model.ToEdmItemCollection();
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
 
             var complexTypes = databaseMapping.Model.ComplexTypes.ToList();
             var somComplexTypes = itemCollection.GetItems<ComplexType>();
@@ -85,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var databaseMapping
                 = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
-            var itemCollection = databaseMapping.Model.ToEdmItemCollection();
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
 
             var enumTypes = databaseMapping.Model.EnumTypes.ToList();
             var somEnumTypes = itemCollection.GetItems<EnumType>();
@@ -115,7 +134,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var databaseMapping
                 = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
 
-            var itemCollection = databaseMapping.Model.ToEdmItemCollection();
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
 
             var associationTypes = databaseMapping.Model.AssociationTypes.ToList();
             var somAssociationTypes = itemCollection.GetItems<AssociationType>();

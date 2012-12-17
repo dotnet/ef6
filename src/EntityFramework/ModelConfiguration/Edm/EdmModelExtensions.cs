@@ -21,6 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     internal static class EdmModelExtensions
     {
         public const string DefaultSchema = "dbo";
+        public const string DefaultModelNamespace = "CodeFirstNamespace";
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public static StoreItemCollection ToStoreItemCollection(this EdmModel database)
@@ -141,44 +142,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return navigationProperties.FirstOrDefault();
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public static EdmItemCollection ToEdmItemCollection(this EdmModel model)
-        {
-            DebugCheck.NotNull(model);
-
-            var stringBuilder = new StringBuilder();
-
-            using (var xmlWriter = XmlWriter.Create(
-                stringBuilder, new XmlWriterSettings
-                                   {
-                                       Indent = true
-                                   }))
-            {
-                model.ValidateAndSerializeCsdl(xmlWriter);
-            }
-
-            using (var xmlReader = XmlReader.Create(new StringReader(stringBuilder.ToString())))
-            {
-                return new EdmItemCollection(new[] { xmlReader });
-            }
-        }
-
-        public static void ValidateCsdl(this EdmModel model)
-        {
-            DebugCheck.NotNull(model);
-
-            model.ValidateAndSerializeCsdl(XmlWriter.Create(Stream.Null));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static List<DataModelErrorEventArgs> GetCsdlErrors(this EdmModel model)
-        {
-            DebugCheck.NotNull(model);
-
-            return model.SerializeAndGetCsdlErrors(XmlWriter.Create(Stream.Null));
-        }
-
         public static void ValidateAndSerializeCsdl(this EdmModel model, XmlWriter writer)
         {
             DebugCheck.NotNull(model);
@@ -192,7 +155,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             }
         }
 
-        public static List<DataModelErrorEventArgs> SerializeAndGetCsdlErrors(this EdmModel model, XmlWriter writer)
+        private static List<DataModelErrorEventArgs> SerializeAndGetCsdlErrors(this EdmModel model, XmlWriter writer)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(writer);
@@ -265,7 +228,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return model.EnumTypes.SingleOrDefault(e => e.Name == name);
         }
 
-        public static EntityType AddEntityType(this EdmModel model, string name)
+        public static EntityType AddEntityType(this EdmModel model, string name, string modelNamespace = null)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(name);
@@ -273,7 +236,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entityType
                 = new EntityType(
                     name,
-                    "CodeFirstNamespace",
+                    modelNamespace ?? DefaultModelNamespace,
                     DataSpace.CSpace);
 
             model.AddItem(entityType);
@@ -316,13 +279,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Debug.Assert(model.Containers.Count() == 1);
 
             var entitySet = new EntitySet(name, null, table, null, elementType);
-            
+
             model.Containers.Single().AddEntitySetBase(entitySet);
 
             return entitySet;
         }
 
-        public static ComplexType AddComplexType(this EdmModel model, string name)
+        public static ComplexType AddComplexType(this EdmModel model, string name, string modelNamespace = null)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(name);
@@ -330,7 +293,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var complexType
                 = new ComplexType(
                     name,
-                    "CodeFirstNamespace",
+                    modelNamespace ?? DefaultModelNamespace,
                     DataSpace.CSpace);
 
             model.AddItem(complexType);
@@ -338,7 +301,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return complexType;
         }
 
-        public static EnumType AddEnumType(this EdmModel model, string name)
+        public static EnumType AddEnumType(this EdmModel model, string name, string modelNamespace = null)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(name);
@@ -346,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var enumType
                 = new EnumType(
                     name,
-                    "CodeFirstNamespace",
+                    modelNamespace ?? DefaultModelNamespace,
                     PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32),
                     false,
                     DataSpace.CSpace);
@@ -382,7 +345,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             EntityType sourceEntityType,
             RelationshipMultiplicity sourceAssociationEndKind,
             EntityType targetEntityType,
-            RelationshipMultiplicity targetAssociationEndKind)
+            RelationshipMultiplicity targetAssociationEndKind,
+            string modelNamespace = null)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(name);
@@ -392,16 +356,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var associationType
                 = new AssociationType(
                     name,
-                    "CodeFirstNamespace",
+                    modelNamespace ?? DefaultModelNamespace,
                     false,
                     DataSpace.CSpace)
                       {
                           SourceEnd =
                               new AssociationEndMember(
-                              name + "_Source", new RefType(sourceEntityType), sourceAssociationEndKind),
+                              name + "_Source", sourceEntityType.GetReferenceType(), sourceAssociationEndKind),
                           TargetEnd =
                               new AssociationEndMember(
-                              name + "_Target", new RefType(targetEntityType), targetAssociationEndKind)
+                              name + "_Target", targetEntityType.GetReferenceType(), targetAssociationEndKind)
                       };
 
             model.AddAssociationType(associationType);

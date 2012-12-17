@@ -883,9 +883,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 {
                     // grab a candidate
                     var association = allAssociations.First();
-                    principalKeyNamesType = association.Constraint.PrincipalEnd(association).GetEntityType();
+                    principalKeyNamesType = association.Constraint.FromRole.GetEntityType();
 
-                    if (allAssociations.All(x => x.Constraint.PrincipalEnd(x).GetEntityType() == principalKeyNamesType))
+                    if (allAssociations.All(x => x.Constraint.FromRole.GetEntityType() == principalKeyNamesType))
                     {
                         toTable.SetKeyNamesType(principalKeyNamesType);
                     }

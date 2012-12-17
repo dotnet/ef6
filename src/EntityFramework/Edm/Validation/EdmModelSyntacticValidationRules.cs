@@ -96,7 +96,7 @@ namespace System.Data.Entity.Edm.Validation
                 new EdmModelValidationRule<ReferentialConstraint>(
                     (context, edmAssociationConstraint) =>
                         {
-                            if (edmAssociationConstraint.DependentEnd == null)
+                            if (edmAssociationConstraint.ToRole == null)
                             {
                                 context.AddError(
                                     edmAssociationConstraint,
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Edm.Validation
                 new EdmModelValidationRule<NavigationProperty>(
                     (context, edmNavigationProperty) =>
                         {
-                            if (edmNavigationProperty.ResultEnd == null)
+                            if (edmNavigationProperty.ToEndMember == null)
                             {
                                 context.AddError(
                                     edmNavigationProperty,

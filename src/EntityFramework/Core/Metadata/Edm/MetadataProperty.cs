@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly string _name;
         private readonly PropertyKind _propertyKind;
-        private readonly object _value;
+        private object _value;
         private readonly TypeUsage _typeUsage;
 
         /// <summary>
@@ -106,6 +106,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 // If not, return the actual stored value
                 return _value;
+            }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+                DebugCheck.NotNull(value);
+
+                _value = value;
             }
         }
 

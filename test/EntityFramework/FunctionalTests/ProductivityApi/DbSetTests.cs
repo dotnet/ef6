@@ -1969,7 +1969,6 @@ namespace ProductivityApiTests
 
                 Assert.Null(context.Categories.Find("Spreads"));
                 Assert.Null(context.Products.Find(0));
-
                 Assert.Null(product.Category);
                 Assert.Null(product.CategoryId);
                 Assert.True(category.Products.Contains(product));

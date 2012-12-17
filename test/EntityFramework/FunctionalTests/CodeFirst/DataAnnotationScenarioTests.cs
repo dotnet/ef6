@@ -681,7 +681,7 @@ namespace FunctionalTests
                     Assert.Equal(RelationshipMultiplicity.ZeroOrOne, association.SourceEnd.RelationshipMultiplicity);
                     Assert.Equal("Login", association.TargetEnd.GetEntityType().Name);
                     Assert.Equal(RelationshipMultiplicity.One, association.TargetEnd.RelationshipMultiplicity);
-                    Assert.Equal("Profile", association.Constraint.DependentEnd.GetEntityType().Name);
+                    Assert.Equal("Profile", association.Constraint.ToRole.GetEntityType().Name);
                 }
             }
         }

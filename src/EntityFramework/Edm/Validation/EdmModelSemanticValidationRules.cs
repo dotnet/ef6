@@ -426,18 +426,13 @@ namespace System.Data.Entity.Edm.Validation
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.Association != null
-                                &&
-                                edmNavigationProperty.Association.SourceEnd != null
-                                &&
-                                edmNavigationProperty.Association.TargetEnd != null
-                                &&
-                                edmNavigationProperty.Association.SourceEnd.Name != null
-                                &&
-                                edmNavigationProperty.Association.TargetEnd.Name != null)
+                                && edmNavigationProperty.Association.SourceEnd != null
+                                && edmNavigationProperty.Association.TargetEnd != null
+                                && edmNavigationProperty.Association.SourceEnd.Name != null
+                                && edmNavigationProperty.Association.TargetEnd.Name != null)
                             {
-                                if (edmNavigationProperty.ResultEnd != edmNavigationProperty.Association.SourceEnd
-                                    &&
-                                    edmNavigationProperty.ResultEnd != edmNavigationProperty.Association.TargetEnd)
+                                if (edmNavigationProperty.ToEndMember != edmNavigationProperty.Association.SourceEnd
+                                    && edmNavigationProperty.ToEndMember != edmNavigationProperty.Association.TargetEnd)
                                 {
                                     context.AddError(
                                         edmNavigationProperty,
@@ -456,18 +451,46 @@ namespace System.Data.Entity.Edm.Validation
                     (context, edmNavigationProperty) =>
                         {
                             if (edmNavigationProperty.Association != null
-                                &&
-                                edmNavigationProperty.Association.SourceEnd != null
-                                &&
-                                edmNavigationProperty.Association.TargetEnd != null)
+                                && edmNavigationProperty.Association.SourceEnd != null
+                                && edmNavigationProperty.Association.TargetEnd != null)
                             {
-                                if (edmNavigationProperty.ResultEnd
-                                    == edmNavigationProperty.GetFromEnd())
+                                if (edmNavigationProperty.ToEndMember == edmNavigationProperty.GetFromEnd())
                                 {
                                     context.AddError(
                                         edmNavigationProperty,
                                         XmlConstants.ToRole,
                                         Strings.EdmModel_Validator_Semantic_BadNavigationPropertyRolesCannotBeTheSame);
+                                }
+                            }
+                        });
+
+        internal static readonly EdmModelValidationRule<NavigationProperty>
+            EdmNavigationProperty_BadNavigationPropertyBadFromRoleType =
+                new EdmModelValidationRule<NavigationProperty>(
+                    (context, edmNavigationProperty) =>
+                        {
+                            AssociationEndMember fromEnd;
+
+                            if (edmNavigationProperty.Association != null
+                                && (fromEnd = edmNavigationProperty.GetFromEnd()) != null)
+                            {
+                                var parent
+                                    = context.Model.EntityTypes
+                                             .Single(e => e.DeclaredNavigationProperties.Contains(edmNavigationProperty));
+
+                                var fromEndEntityType = fromEnd.GetEntityType();
+
+                                if (parent != fromEndEntityType)
+                                {
+                                    context.AddError(
+                                        edmNavigationProperty,
+                                        XmlConstants.FromRole,
+                                        Strings.BadNavigationPropertyBadFromRoleType(
+                                            edmNavigationProperty.Name,
+                                            fromEndEntityType.Name,
+                                            fromEnd.Name,
+                                            edmNavigationProperty.Association.Name,
+                                            parent.Name));
                                 }
                             }
                         });
@@ -557,12 +580,12 @@ namespace System.Data.Entity.Edm.Validation
                             if (IsReferentialConstraintReadyForValidation(edmAssociationType))
                             {
                                 // this also includes the scenario if the Principal and Dependent are pointing to the same AssociationEndMember
-                                if (edmAssociationType.Constraint.PrincipalEnd(edmAssociationType).Name
+                                if (edmAssociationType.Constraint.FromRole.Name
                                     ==
-                                    edmAssociationType.Constraint.DependentEnd.Name)
+                                    edmAssociationType.Constraint.ToRole.Name)
                                 {
                                     context.AddError(
-                                        edmAssociationType.Constraint.DependentEnd,
+                                        edmAssociationType.Constraint.ToRole,
                                         null,
                                         Strings.EdmModel_Validator_Semantic_SameRoleReferredInReferentialConstraint(
                                             edmAssociationType.Name));
@@ -580,8 +603,8 @@ namespace System.Data.Entity.Edm.Validation
                                 var constraint = edmAssociationType.Constraint;
 
                                 // Validate the to end and from end of the referential constraint
-                                var principalRoleEnd = constraint.PrincipalEnd(edmAssociationType);
-                                var dependentRoleEnd = constraint.DependentEnd;
+                                var principalRoleEnd = constraint.FromRole;
+                                var dependentRoleEnd = constraint.ToRole;
 
                                 bool isPrincipalRoleKeyProperty, isDependentRoleKeyProperty;
                                 bool areAllPrinicipalRolePropertiesNullable, areAllDependentRolePropertiesNullable;
@@ -602,7 +625,7 @@ namespace System.Data.Entity.Edm.Validation
                                 // Resolve all the property in the principal end attribute. Also checks whether this is nullable or not and 
                                 // whether the properties are the keys for the type in the principal role
                                 IsKeyProperty(
-                                    constraint.PrincipalEnd(edmAssociationType).GetEntityType().GetValidKey().ToList(),
+                                    constraint.FromRole.GetEntityType().GetValidKey().ToList(),
                                     principalRoleEnd,
                                     out isDependentRoleKeyProperty,
                                     out areAllPrinicipalRolePropertiesNullable,
@@ -610,7 +633,7 @@ namespace System.Data.Entity.Edm.Validation
                                     out isPrinicipalRolePropertiesSubsetofKeyProperties);
 
                                 Debug.Assert(
-                                    constraint.PrincipalEnd(edmAssociationType).GetEntityType().GetValidKey().Any(),
+                                    constraint.FromRole.GetEntityType().GetValidKey().Any(),
                                     "There should be some ref properties in Principal Role");
                                 Debug.Assert(constraint.ToProperties.Count() != 0, "There should be some ref properties in Dependent Role");
                                 Debug.Assert(
@@ -776,12 +799,12 @@ namespace System.Data.Entity.Edm.Validation
                         {
                             if (edmAssociationType.Constraint != null
                                 &&
-                                edmAssociationType.Constraint.DependentEnd != null
+                                edmAssociationType.Constraint.ToRole != null
                                 &&
-                                edmAssociationType.Constraint.DependentEnd.GetEntityType() != null)
+                                edmAssociationType.Constraint.ToRole.GetEntityType() != null)
                             {
                                 var dependentEndProperties =
-                                    edmAssociationType.Constraint.DependentEnd.GetEntityType().Properties.ToList();
+                                    edmAssociationType.Constraint.ToRole.GetEntityType().Properties.ToList();
                                 foreach (var property in edmAssociationType.Constraint.ToProperties)
                                 {
                                     if (property != null)
@@ -794,7 +817,7 @@ namespace System.Data.Entity.Edm.Validation
                                                 Strings.
                                                     EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraint(
                                                         property.Name,
-                                                        edmAssociationType.Constraint.DependentEnd.Name));
+                                                        edmAssociationType.Constraint.ToRole.Name));
                                         }
                                     }
                                 }
@@ -1067,14 +1090,14 @@ namespace System.Data.Entity.Edm.Validation
                 return false;
             }
 
-            if (constraint.PrincipalEnd(association) == null
-                || constraint.DependentEnd == null)
+            if (constraint.FromRole == null
+                || constraint.ToRole == null)
             {
                 return false;
             }
 
-            if (constraint.PrincipalEnd(association).GetEntityType() == null
-                || constraint.DependentEnd.GetEntityType() == null)
+            if (constraint.FromRole.GetEntityType() == null
+                || constraint.ToRole.GetEntityType() == null)
             {
                 return false;
             }
@@ -1099,7 +1122,7 @@ namespace System.Data.Entity.Edm.Validation
             {
                 return false;
             }
-            var keyList = constraint.PrincipalEnd(association).GetEntityType().GetValidKey();
+            var keyList = constraint.FromRole.GetEntityType().GetValidKey();
 
             if (keyList.Any())
             {
@@ -1114,7 +1137,7 @@ namespace System.Data.Entity.Edm.Validation
 
         private static void IsKeyProperty(
             List<EdmProperty> roleProperties,
-            AssociationEndMember roleElement,
+            RelationshipEndMember roleElement,
             out bool isKeyProperty,
             out bool areAllPropertiesNullable,
             out bool isAnyPropertyNullable,

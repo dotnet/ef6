@@ -71,6 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 return null;
             }
+
             return (EntityType)((RefType)TypeUsage.EdmType).ElementType;
         }
     }

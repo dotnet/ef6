@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -19,10 +18,10 @@ namespace System.Data.Entity
         {
             Ignore(
                 Assembly.GetExecutingAssembly().GetTypes()
-                    .Where(
-                        t => !string.IsNullOrWhiteSpace(t.Namespace)
-                             && t.Namespace.Contains("Model")).Except(
-                                 Configurations.GetConfiguredTypes().Union(unignoredTypes)));
+                        .Where(
+                            t => !string.IsNullOrWhiteSpace(t.Namespace)
+                                 && t.Namespace.Contains("Model")).Except(
+                                     Configurations.GetConfiguredTypes().Union(unignoredTypes)));
         }
 
         internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo, bool throwOnError, params Type[] unignoredTypes)

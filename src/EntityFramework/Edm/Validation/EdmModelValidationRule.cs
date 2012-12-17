@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Edm.Validation
 {
-    using System.Data.Entity.Core.Metadata.Edm;
-
     internal class EdmModelValidationRule<TItem> : DataModelValidationRule<TItem>
     {
         internal EdmModelValidationRule(Action<EdmModelValidationContext, TItem> validate)

@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     return null;
                 }
 
-                enumType = _mappingContext.Model.AddEnumType(type.Name);
+                enumType = _mappingContext.Model.AddEnumType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
                 enumType.IsFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
                 enumType.SetClrType(type);
 
@@ -98,7 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (complexType == null)
             {
-                complexType = _mappingContext.Model.AddComplexType(type.Name);
+                complexType = _mappingContext.Model.AddComplexType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
 
                 var complexTypeConfiguration
                     = new Func<ComplexTypeConfiguration>(() => _mappingContext.ModelConfiguration.ComplexType(type));
@@ -142,7 +142,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (entityType == null)
             {
-                entityType = _mappingContext.Model.AddEntityType(type.Name);
+                entityType = _mappingContext.Model.AddEntityType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
                 entityType.Abstract = type.IsAbstract;
 
                 Debug.Assert(type.BaseType != null);

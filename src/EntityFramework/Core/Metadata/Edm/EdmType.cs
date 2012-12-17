@@ -88,6 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     BuildIdentity(builder);
                     CacheIdentity = builder.ToString();
                 }
+
                 return CacheIdentity;
             }
         }
@@ -102,6 +103,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal set
             {
                 DebugCheck.NotNull(value);
+                Util.ThrowIfReadOnly(this);
+
                 _name = value;
             }
         }
@@ -116,6 +119,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal set
             {
                 DebugCheck.NotNull(value);
+                Util.ThrowIfReadOnly(this);
+
                 _namespace = value;
             }
         }
@@ -128,7 +133,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public bool Abstract
         {
             get { return GetFlag(MetadataFlags.IsAbstract); }
-            internal set { SetFlag(MetadataFlags.IsAbstract, value); }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+                
+                SetFlag(MetadataFlags.IsAbstract, value);
+            }
         }
 
         /// <summary>

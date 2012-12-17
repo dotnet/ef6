@@ -2,10 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -22,7 +19,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
-            
             var navigationProperties
                 = model.EntityTypes.SelectMany(e => e.NavigationProperties);
 
@@ -34,8 +30,43 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             Assert.Same(associationType, navigationProperty1.Association);
             Assert.Same(associationType, navigationProperty2.Association);
+            Assert.Same(associationType.SourceEnd, navigationProperty1.FromEndMember);
             Assert.Same(associationType.TargetEnd, navigationProperty1.ResultEnd);
+            Assert.Same(associationType.TargetEnd, navigationProperty2.FromEndMember);
             Assert.Same(associationType.SourceEnd, navigationProperty2.ResultEnd);
+        }
+
+        [Fact]
+        public void Apply_should_transfer_constraint()
+        {
+            EdmModel model
+                = new TestModelBuilder()
+                    .Entities("S", "T")
+                    .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
+                    .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
+
+            var association2 = model.AssociationTypes.Last();
+
+            var referentialConstraint 
+                = new ReferentialConstraint(
+                    association2.SourceEnd, 
+                    association2.TargetEnd, 
+                    new[] { new EdmProperty("P") }, 
+                    new[] { new EdmProperty("D") });
+            
+            association2.Constraint = referentialConstraint;
+
+            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+
+            Assert.Equal(1, model.AssociationTypes.Count());
+            Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
+
+            var associationType = model.AssociationTypes.Single();
+
+            Assert.NotSame(association2, associationType);
+            Assert.Same(referentialConstraint, associationType.Constraint);
+            Assert.Same(associationType.SourceEnd, referentialConstraint.FromRole);
+            Assert.Same(associationType.TargetEnd, referentialConstraint.ToRole);
         }
 
         [Fact]

@@ -1451,8 +1451,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
 
             if ((propertiesToRetrieve != null || propertiesToPropagateExist)
-                &&
-                _relationships != null)
+                && _relationships != null)
             {
                 // Not using defensive copy here since CheckReferentialConstraintProperties should not cause change in underlying
                 // _relationships collection.

@@ -2,9 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -108,23 +106,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         }
 
         [Fact]
-        public void GetValidationErrors_should_return_validation_errors()
-        {
-            var model = new EdmModel().InitializeConceptual();
-            model.AddEntitySet("S", new EntityType());
-
-            var validationErrors = model.GetCsdlErrors();
-
-            Assert.Equal(1, validationErrors.Count());
-        }
-
-        [Fact]
         public void Validate_should_throw()
         {
             var model = new EdmModel().InitializeConceptual();
             model.AddEntitySet("S", new EntityType());
 
-            Assert.Throws<ModelValidationException>(() => model.ValidateCsdl());
+            Assert.Throws<ModelValidationException>(() => model.Validate());
         }
 
         [Fact]
@@ -199,7 +186,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             model.ReplaceEntitySet(entityType, null);
 
-            
             Assert.Equal(1, model.EntityTypes.Count());
             Assert.Equal(0, model.Containers.First().EntitySets.Count());
         }
@@ -239,7 +225,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         }
 
         [Fact]
-        public void AddEntityType_should_create_and_add_to_default_namespace()
+        public void AddEntityType_should_create_and_add_with_default_namespace()
         {
             var model = new EdmModel().InitializeConceptual();
 
@@ -247,11 +233,51 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.NotNull(entityType);
             Assert.Equal("Foo", entityType.Name);
+            Assert.Equal(EdmModelExtensions.DefaultModelNamespace, entityType.NamespaceName);
             Assert.True(model.EntityTypes.Contains(entityType));
         }
 
         [Fact]
-        public void AddComplexType_should_create_and_add_to_default_namespace()
+        public void AddEntityType_should_create_and_add_when_custom_namespace()
+        {
+            var model = new EdmModel().InitializeConceptual();
+
+            var entityType = model.AddEntityType("Foo", "Bar");
+
+            Assert.NotNull(entityType);
+            Assert.Equal("Foo", entityType.Name);
+            Assert.Equal("Bar", entityType.NamespaceName);
+            Assert.True(model.EntityTypes.Contains(entityType));
+        }
+
+        [Fact]
+        public void AddEnumType_should_create_and_add_with_default_namespace()
+        {
+            var model = new EdmModel().InitializeConceptual();
+
+            var enumType = model.AddEnumType("Foo");
+
+            Assert.NotNull(enumType);
+            Assert.Equal("Foo", enumType.Name);
+            Assert.Equal(EdmModelExtensions.DefaultModelNamespace, enumType.NamespaceName);
+            Assert.True(model.EnumTypes.Contains(enumType));
+        }
+
+        [Fact]
+        public void AddEnumType_should_create_and_add_when_custom_namespace()
+        {
+            var model = new EdmModel().InitializeConceptual();
+
+            var enumType = model.AddEnumType("Foo", "Bar");
+
+            Assert.NotNull(enumType);
+            Assert.Equal("Foo", enumType.Name);
+            Assert.Equal("Bar", enumType.NamespaceName);
+            Assert.True(model.EnumTypes.Contains(enumType));
+        }
+
+        [Fact]
+        public void AddComplexType_should_create_and_add_with_default_namespace()
         {
             var model = new EdmModel().InitializeConceptual();
 
@@ -259,6 +285,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.NotNull(complexType);
             Assert.Equal("Foo", complexType.Name);
+            Assert.Equal(EdmModelExtensions.DefaultModelNamespace, complexType.NamespaceName);
+            Assert.True(model.ComplexTypes.Contains(complexType));
+        }
+
+        [Fact]
+        public void AddComplexType_should_create_and_add_when_custom_namespace()
+        {
+            var model = new EdmModel().InitializeConceptual();
+
+            var complexType = model.AddComplexType("Foo", "Bar");
+
+            Assert.NotNull(complexType);
+            Assert.Equal("Foo", complexType.Name);
+            Assert.Equal("Bar", complexType.NamespaceName);
             Assert.True(model.ComplexTypes.Contains(complexType));
         }
 
@@ -267,7 +307,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var model = new EdmModel().InitializeConceptual();
 
-            
             Assert.Same(model.EntityTypes, model.EntityTypes);
         }
 
@@ -284,13 +323,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         {
             var model = new EdmModel().InitializeConceptual();
 
-            var associationType 
+            var associationType
                 = new AssociationType
-                                      {
-                                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                                          TargetEnd = new AssociationEndMember("T", new EntityType()),
-                                          Name = "Foo"
-                                      };
+                      {
+                          SourceEnd = new AssociationEndMember("S", new EntityType()),
+                          TargetEnd = new AssociationEndMember("T", new EntityType()),
+                          Name = "Foo"
+                      };
             model.AddItem(associationType);
 
             Assert.Same(associationType, model.GetAssociationType("Foo"));
@@ -362,7 +401,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             model.RemoveEntityType(entityType);
 
-            
             Assert.Equal(0, model.EntityTypes.Count());
             Assert.Equal(0, model.Containers.First().EntitySets.Count());
         }
@@ -393,7 +431,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         }
 
         [Fact]
-        public void AddAssociationType_should_create_and_add_to_default_namespace()
+        public void AddAssociationType_should_create_and_add_with_default_namespace()
         {
             var model = new EdmModel().InitializeConceptual();
 
@@ -407,6 +445,31 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.NotNull(associationType);
             Assert.Equal("Foo", associationType.Name);
+            Assert.Equal(EdmModelExtensions.DefaultModelNamespace, associationType.NamespaceName);
+            Assert.Same(sourceEntityType, associationType.SourceEnd.GetEntityType());
+            Assert.Equal(RelationshipMultiplicity.One, associationType.SourceEnd.RelationshipMultiplicity);
+            Assert.Same(targetEntityType, associationType.TargetEnd.GetEntityType());
+            Assert.Equal(RelationshipMultiplicity.Many, associationType.TargetEnd.RelationshipMultiplicity);
+            Assert.True(model.AssociationTypes.Contains(associationType));
+        }
+
+        [Fact]
+        public void AddAssociationType_should_create_and_add_with_custom_namespace()
+        {
+            var model = new EdmModel().InitializeConceptual();
+
+            var sourceEntityType = model.AddEntityType("Source");
+            var targetEntityType = model.AddEntityType("Target");
+
+            var associationType = model.AddAssociationType(
+                "Foo",
+                sourceEntityType, RelationshipMultiplicity.One,
+                targetEntityType, RelationshipMultiplicity.Many,
+                "Bar");
+
+            Assert.NotNull(associationType);
+            Assert.Equal("Foo", associationType.Name);
+            Assert.Equal("Bar", associationType.NamespaceName);
             Assert.Same(sourceEntityType, associationType.SourceEnd.GetEntityType());
             Assert.Equal(RelationshipMultiplicity.One, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Same(targetEntityType, associationType.TargetEnd.GetEntityType());

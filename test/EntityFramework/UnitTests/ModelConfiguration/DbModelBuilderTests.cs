@@ -248,12 +248,16 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.Add(new EntityTypeConfiguration(entityType1));
             configuration.Add(new ComplexTypeConfiguration(complexType1));
             configuration.Ignore(ignoredType1);
+            configuration.DefaultSchema = "Foo";
+            configuration.ModelNamespace = "Bar";
 
             var clone = configuration.Clone();
 
             Assert.True(clone.Entities.Contains(entityType1));
             Assert.True(clone.ComplexTypes.Contains(complexType1));
             Assert.True(clone.IsIgnoredType(ignoredType1));
+            Assert.Equal("Foo", clone.DefaultSchema);
+            Assert.Equal("Bar", clone.ModelNamespace);
 
             var entityType2 = new MockType("E2");
             var complexType2 = new MockType("C2");
@@ -271,7 +275,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void ModelConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ModelConfiguration>(4);
+            VerifyFieldCount<ModelConfiguration>(5);
         }
 
         [Fact]

@@ -52,7 +52,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                         entityType,
                         sourceAssociationEndKind,
                         targetEntityType,
-                        targetAssociationEndKind);
+                        targetAssociationEndKind,
+                        _typeMapper.MappingContext.ModelConfiguration.ModelNamespace);
 
                 associationType.SourceEnd.SetClrPropertyInfo(propertyInfo);
 

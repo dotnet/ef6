@@ -4,7 +4,6 @@ namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Xml;
 
@@ -12,7 +11,6 @@ namespace System.Data.Entity.Edm.Serialization
     {
         private readonly double _edmVersion;
         private readonly EdmXmlSchemaWriter _schemaWriter;
-        private AssociationType _currentAssociationType;
 
         internal EdmSerializationVisitor(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability = false)
         {
@@ -135,13 +133,12 @@ namespace System.Data.Entity.Edm.Serialization
 
         public override void VisitEdmAssociationType(AssociationType item)
         {
-            _currentAssociationType = item;
             _schemaWriter.WriteAssociationTypeElementHeader(item);
             base.VisitEdmAssociationType(item);
             _schemaWriter.WriteEndElement();
         }
 
-        protected override void VisitEdmAssociationEnd(AssociationEndMember item)
+        protected override void VisitEdmAssociationEnd(RelationshipEndMember item)
         {
             _schemaWriter.WriteAssociationEndElementHeader(item);
             if (item.DeleteBehavior
@@ -157,11 +154,9 @@ namespace System.Data.Entity.Edm.Serialization
         {
             _schemaWriter.WriteReferentialConstraintElementHeader();
             _schemaWriter.WriteReferentialConstraintRoleElement(
-                XmlConstants.PrincipalRole,
-                item.PrincipalEnd(_currentAssociationType),
-                item.PrincipalEnd(_currentAssociationType).GetEntityType().GetValidKey());
+                XmlConstants.PrincipalRole, item.FromRole, item.FromProperties);
             _schemaWriter.WriteReferentialConstraintRoleElement(
-                XmlConstants.DependentRole, item.DependentEnd, item.ToProperties);
+                XmlConstants.DependentRole, item.ToRole, item.ToProperties);
             VisitMetadataItem(item);
             _schemaWriter.WriteEndElement();
         }

@@ -259,11 +259,11 @@ namespace System.Data.Entity
                 return this;
             }
 
-            public PropertyAssertions AnnotationEqual(object expected, string annotation)
+            public PropertyAssertions MetadataPropertyEqual(object expected, string annotation)
             {
                 Xunit.Assert.Equal(
-                    expected, _property.Annotations
-                        .Single(a => a.Name.Equals(annotation, StringComparison.Ordinal))
+                    expected, _property.MetadataProperties
+                        .Single(a => a.Name.Equals(XmlConstants.AnnotationNamespace + ":" + annotation, StringComparison.Ordinal))
                         .Value);
 
                 return this;

@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Edm.Validation;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -40,6 +42,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return this;
         }
 
+        internal virtual void Validate()
+        {
+            var validationErrors = new List<DataModelErrorEventArgs>();
+            var validator = new DataModelValidator();
+            validator.OnError += (_, e) => validationErrors.Add(e);
+
+            validator.Validate(this, true);
+
+            if (validationErrors.Count > 0)
+            {
+                throw new ModelValidationException(validationErrors);
+            }
+        }
+
         public virtual IEnumerable<EntityContainer> Containers
         {
             get { return _containers; }
@@ -64,6 +80,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     .Concat(_entityTypes)
                     .Concat(_enumTypes);
             }
+        }
+
+        public IEnumerable<GlobalItem> GlobalItems
+        {
+            get { return NamespaceItems.Concat<GlobalItem>(Containers); }
         }
 
         public DbProviderInfo ProviderInfo

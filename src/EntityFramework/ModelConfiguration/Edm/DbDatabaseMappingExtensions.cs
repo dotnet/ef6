@@ -30,8 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return databaseMapping;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
         public static MetadataWorkspace ToMetadataWorkspace(this DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -39,9 +38,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var metadataWorkspace = new MetadataWorkspace();
 
             var itemCollection
-                = databaseMapping.Model.ToEdmItemCollection();
+                = new EdmItemCollection(databaseMapping.Model);
+
             var storeItemCollection
                 = databaseMapping.Database.ToStoreItemCollection();
+
             var storageMappingItemCollection
                 = databaseMapping.ToStorageMappingItemCollection(itemCollection, storeItemCollection);
 
@@ -52,15 +53,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return metadataWorkspace;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        public static StorageMappingItemCollection ToStorageMappingItemCollection(
-            this DbDatabaseMapping databaseMapping)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        public static StorageMappingItemCollection ToStorageMappingItemCollection(this DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
 
             return databaseMapping.ToStorageMappingItemCollection(
-                databaseMapping.Model.ToEdmItemCollection(),
+                new EdmItemCollection(databaseMapping.Model),
                 databaseMapping.Database.ToStoreItemCollection());
         }
 

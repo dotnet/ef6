@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Transform candidate entities into complex types
             foreach (var candidate in candidates.ToList())
             {
-                var complexType = model.AddComplexType(candidate.EntityType.Name);
+                var complexType = model.AddComplexType(candidate.EntityType.Name, candidate.EntityType.NamespaceName);
 
                 foreach (var property in candidate.EntityType.DeclaredProperties)
                 {

@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                 .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
+            Assert.Same(associationType.TargetEnd, associationType.Constraint.ToRole);
             Assert.Equal("NavId", associationType.Constraint.ToProperties.Single().Name);
         }
 
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                 .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
+            Assert.Same(associationType.TargetEnd, associationType.Constraint.ToRole);
             Assert.Equal("NavId", associationType.Constraint.ToProperties.Single().Name);
         }
 
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                 .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
+            Assert.Same(associationType.TargetEnd, associationType.Constraint.ToRole);
             Assert.Equal("NavId", associationType.Constraint.ToProperties.Single().Name);
         }
 
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                 .Apply(associationType, new EdmModel().InitializeConceptual());
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Same(associationType.TargetEnd, associationType.Constraint.DependentEnd);
+            Assert.Same(associationType.TargetEnd, associationType.Constraint.ToRole);
             Assert.Equal(2, associationType.Constraint.ToProperties.Count());
         }
 

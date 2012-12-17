@@ -8,10 +8,8 @@ namespace System.Data.Entity
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.SqlClient;

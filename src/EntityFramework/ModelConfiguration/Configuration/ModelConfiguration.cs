@@ -42,13 +42,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _ignoredTypes.AddRange(source._ignoredTypes);
 
             DefaultSchema = source.DefaultSchema;
+            ModelNamespace = source.ModelNamespace;
         }
 
         internal virtual ModelConfiguration Clone()
         {
             return new ModelConfiguration(this);
         }
-
+        
         /// <summary>
         ///     Gets a collection of types that have been configured in this model including
         ///     entity types, complex types, and ignored types.
@@ -77,6 +78,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Gets or sets the default schema name.
         /// </summary>
         public string DefaultSchema { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the default model namespace.
+        /// </summary>
+        public string ModelNamespace { get; set; }
 
         internal virtual void Add(EntityTypeConfiguration entityTypeConfiguration)
         {

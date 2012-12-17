@@ -191,7 +191,7 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<SpecialOffer>(s => s.MaxQty)
-                .AnnotationEqual(StoreGeneratedPattern.Identity, "StoreGeneratedPattern");
+                .MetadataPropertyEqual("Identity", "StoreGeneratedPattern");
             databaseMapping.Assert<SpecialOffer>(s => s.MaxQty).DbIsFalse(t => t.Nullable);
         }
 
@@ -273,7 +273,7 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             databaseMapping.Assert<WorkOrder>(w => w.OrderQty)
-                .AnnotationEqual(StoreGeneratedPattern.Identity, "StoreGeneratedPattern");
+                .MetadataPropertyEqual("Identity", "StoreGeneratedPattern");
             databaseMapping.Assert<WorkOrder>(w => w.WorkOrderID)
                 .AnnotationNull("StoreGeneratedPattern");
         }
@@ -291,11 +291,11 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.Equal(
-                StoreGeneratedPattern.Identity,
+                "Identity",
                 databaseMapping.Model
                     .ComplexTypes.Single()
                     .Properties.Single(p => p.Name == "OrderQty")
-                    .Annotations.Single(a => a.Name == "StoreGeneratedPattern").Value);
+                    .MetadataProperties.Single(a => a.Name.EndsWith("StoreGeneratedPattern")).Value);
         }
 
         [Fact]

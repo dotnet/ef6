@@ -164,6 +164,7 @@
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityContainerTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntitySetBaseTests.cs" />
@@ -171,6 +172,8 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
+    <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
+    <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />
@@ -206,6 +209,7 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
+    <Compile Include="Edm\EdmModelSemanticValidationRulesTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
@@ -213,6 +217,7 @@
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
+    <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
@@ -590,11 +595,10 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+    <PostBuildEvent>if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+xcopy /s /y /d "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+xcopy /s /y /d "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

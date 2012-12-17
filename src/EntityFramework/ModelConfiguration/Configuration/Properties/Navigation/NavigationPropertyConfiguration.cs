@@ -208,15 +208,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     && (inverseNavigationProperty.Association.Constraint != null))
                 {
                     associationType.Constraint = inverseNavigationProperty.Association.Constraint;
-                    associationType.Constraint.DependentEnd =
-                        associationType.Constraint.DependentEnd.GetEntityType() == associationType.SourceEnd.GetEntityType()
-                            ? associationType.SourceEnd
-                            : associationType.TargetEnd;
+                    associationType.Constraint.FromRole = associationType.SourceEnd;
+                    associationType.Constraint.ToRole = associationType.TargetEnd;
                 }
 
                 model.RemoveAssociationType(inverseNavigationProperty.Association);
 
                 inverseNavigationProperty.RelationshipType = associationType;
+                inverseNavigationProperty.FromEndMember = associationType.TargetEnd;
                 inverseNavigationProperty.ToEndMember = associationType.SourceEnd;
             }
         }
@@ -386,7 +385,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                 if ((associationConstraint != null)
                     && associationConstraint.ToProperties
-                                            .SequenceEqual(associationConstraint.DependentEnd.GetEntityType().DeclaredKeyProperties))
+                                            .SequenceEqual(associationConstraint.ToRole.GetEntityType().DeclaredKeyProperties))
                 {
                     // The dependent FK is also the PK. We need to adjust the multiplicity
                     // when it has not been explicity configured because the default is *:0..1

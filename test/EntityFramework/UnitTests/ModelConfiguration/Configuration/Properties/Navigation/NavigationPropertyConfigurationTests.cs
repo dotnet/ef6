@@ -2,16 +2,10 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 {
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
@@ -100,6 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             Assert.Same(associationType, inverseNavigationProperty.Association);
             Assert.Same(associationType.SourceEnd, inverseNavigationProperty.ResultEnd);
+            Assert.Same(associationType.TargetEnd, inverseNavigationProperty.FromEndMember);
             Assert.Equal(0, model.AssociationTypes.Count());
         }
 
@@ -133,7 +128,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                 new EdmModel(), new EntityTypeConfiguration(typeof(object)));
 
             Assert.NotNull(associationType.Constraint);
-            Assert.Same(associationType.SourceEnd, associationType.Constraint.DependentEnd);
+            Assert.Same(associationType.SourceEnd, associationType.Constraint.ToRole);
+            Assert.Same(associationType.TargetEnd, associationType.Constraint.FromRole);
             Assert.True(associationType.Constraint.ToProperties.Any());
         }
 

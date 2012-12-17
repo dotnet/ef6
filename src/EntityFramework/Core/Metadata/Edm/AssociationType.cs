@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly ReadOnlyMetadataCollection<ReferentialConstraint> _referentialConstraints;
         private FilteredReadOnlyMetadataCollection<AssociationEndMember, EdmMember> _associationEndMembers;
-        private readonly bool _isForeignKey;
+        private bool _isForeignKey;
 
         /// <summary>
         ///     Returns the kind of the type
@@ -91,6 +91,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 AddReferentialConstraint(value);
+
+                _isForeignKey = true;
             }
         }
 

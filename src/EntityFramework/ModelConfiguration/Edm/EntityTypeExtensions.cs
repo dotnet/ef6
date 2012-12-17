@@ -253,10 +253,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(associationType);
 
+            var targetEntityType
+                = associationType.TargetEnd.GetEntityType();
+
+            var typeUsage
+                = associationType.TargetEnd.RelationshipMultiplicity.IsMany()
+                      ? (EdmType)targetEntityType.GetCollectionType()
+                      : targetEntityType;
+            
             var navigationProperty
-                = new NavigationProperty(name, TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
+                = new NavigationProperty(name, TypeUsage.Create(typeUsage))
                       {
                           RelationshipType = associationType,
+                          FromEndMember = associationType.SourceEnd,
                           ToEndMember = associationType.TargetEnd
                       };
 

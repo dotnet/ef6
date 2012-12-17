@@ -37,6 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       };
 
             Assert.Null(associationType.Constraint);
+            Assert.False(associationType.IsForeignKey);
 
             var property
                 = EdmProperty.Primitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
@@ -51,6 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             associationType.Constraint = referentialConstraint;
 
             Assert.Same(referentialConstraint, associationType.Constraint);
+            Assert.True(associationType.IsForeignKey);
         }
     }
 }

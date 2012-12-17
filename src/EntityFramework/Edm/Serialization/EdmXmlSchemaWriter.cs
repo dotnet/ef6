@@ -340,7 +340,7 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.Name, associationType.Name);
         }
 
-        internal void WriteAssociationEndElementHeader(AssociationEndMember associationEnd)
+        internal void WriteAssociationEndElementHeader(RelationshipEndMember associationEnd)
         {
             _xmlWriter.WriteStartElement(XmlConstants.End);
             _xmlWriter.WriteAttributeString(XmlConstants.Role, associationEnd.Name);
@@ -382,15 +382,13 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.Name, property.Name);
             _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, GetTypeReferenceName(property));
 
-            if (property.CollectionKind
-                != CollectionKind.None)
+            if (property.CollectionKind != CollectionKind.None)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.CollectionKind, property.CollectionKind.ToString());
             }
 
-            if (property.ConcurrencyMode
-                == ConcurrencyMode.Fixed)
+            if (property.ConcurrencyMode == ConcurrencyMode.Fixed)
             {
                 _xmlWriter.WriteAttributeString(EdmProviderManifest.ConcurrencyModeFacetName, XmlConstants.Fixed);
             }
@@ -528,8 +526,7 @@ namespace System.Data.Entity.Edm.Serialization
                     XmlConstants.ScaleElement, property.Scale.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (property.StoreGeneratedPattern
-                != StoreGeneratedPattern.None)
+            if (property.StoreGeneratedPattern != StoreGeneratedPattern.None)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.StoreGeneratedPattern,
@@ -544,13 +541,12 @@ namespace System.Data.Entity.Edm.Serialization
                     EdmConstants.Nullable, GetLowerCaseStringFromBoolValue(property.Nullable));
             }
 
-            DataModelAnnotation annotation;
-
-            if (property.Annotations.TryGetByName(XmlConstants.StoreGeneratedPattern, out annotation))
+            MetadataProperty metadataProperty;
+            if (property.MetadataProperties.TryGetValue(XmlConstants.StoreGeneratedPatternAnnotation, false, out metadataProperty))
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.StoreGeneratedPattern, XmlConstants.AnnotationNamespace,
-                    annotation.Value.ToString());
+                    metadataProperty.Value.ToString());
             }
         }
 
@@ -579,7 +575,7 @@ namespace System.Data.Entity.Edm.Serialization
                 XmlConstants.Relationship,
                 GetQualifiedTypeName(XmlConstants.Self, member.Association.Name));
             _xmlWriter.WriteAttributeString(XmlConstants.FromRole, member.GetFromEnd().Name);
-            _xmlWriter.WriteAttributeString(XmlConstants.ToRole, member.ResultEnd.Name);
+            _xmlWriter.WriteAttributeString(XmlConstants.ToRole, member.ToEndMember.Name);
         }
 
         private static string GetXmlMultiplicity(RelationshipMultiplicity endKind)
@@ -599,16 +595,18 @@ namespace System.Data.Entity.Edm.Serialization
         }
 
         internal void WriteReferentialConstraintRoleElement(
-            string roleName, AssociationEndMember edmAssociationEnd, IEnumerable<EdmProperty> properties)
+            string roleName, RelationshipEndMember edmAssociationEnd, IEnumerable<EdmProperty> properties)
         {
             _xmlWriter.WriteStartElement(roleName);
             _xmlWriter.WriteAttributeString(XmlConstants.Role, edmAssociationEnd.Name);
+
             foreach (var property in properties)
             {
                 _xmlWriter.WriteStartElement(XmlConstants.PropertyRef);
                 _xmlWriter.WriteAttributeString(XmlConstants.Name, property.Name);
                 _xmlWriter.WriteEndElement();
             }
+
             _xmlWriter.WriteEndElement();
         }
 

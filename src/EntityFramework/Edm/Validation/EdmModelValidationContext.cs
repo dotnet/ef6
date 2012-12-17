@@ -2,11 +2,8 @@
 
 namespace System.Data.Entity.Edm.Validation
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
-    using System.Linq;
 
     internal sealed class EdmModelValidationContext
     {
@@ -44,6 +41,12 @@ namespace System.Data.Entity.Edm.Validation
         public EdmModel Model
         {
             get { return _model; }
+            set
+            {
+                DebugCheck.NotNull(value);
+                
+                _model = value;
+            }
         }
 
         public void AddError(IMetadataItem item, string propertyName, string errorMessage)

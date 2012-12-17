@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Linq;
     using Xunit;
 
@@ -85,15 +84,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void AddNavigationProperty_should_create_and_add_navigation_property()
         {
             var entityType = new EntityType();
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType
+                = new AssociationType
+                      {
+                          SourceEnd = new AssociationEndMember("S", new EntityType()),
+                          TargetEnd = new AssociationEndMember("T", new EntityType().GetReferenceType(), RelationshipMultiplicity.Many)
+                      };
 
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
 
             Assert.NotNull(navigationProperty);
             Assert.Equal("N", navigationProperty.Name);
             Assert.Same(associationType, navigationProperty.Association);
+            Assert.Equal(BuiltInTypeKind.CollectionType, navigationProperty.TypeUsage.EdmType.BuiltInTypeKind);
+            Assert.Same(associationType.SourceEnd, navigationProperty.FromEndMember);
+            Assert.Same(associationType.TargetEnd, navigationProperty.ToEndMember);
             Assert.True(entityType.NavigationProperties.Contains(navigationProperty));
         }
 

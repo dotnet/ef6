@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     This class describes referential constraint on the relationships
@@ -24,17 +25,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<EdmProperty> fromProperties,
             IEnumerable<EdmProperty> toProperties)
         {
-            _fromRole = Check.NotNull(fromRole, "fromRole");
-            _toRole = Check.NotNull(toRole, "toRole");
-            _fromProperties = new ReadOnlyMetadataCollection<EdmProperty>(
-                new MetadataCollection<EdmProperty>(
-                    Check.NotNull(fromProperties, "fromProperties")));
-            _toProperties = new ReadOnlyMetadataCollection<EdmProperty>(
-                new MetadataCollection<EdmProperty>(
-                    Check.NotNull(toProperties, "toProperties")));
+            Check.NotNull(fromRole, "fromRole");
+            Check.NotNull(toRole, "toRole");
+            Check.NotNull(fromProperties, "fromProperties");
+            Check.NotNull(toProperties, "toProperties");
+
+            _fromRole = fromRole;
+            _toRole = toRole;
+
+            _fromProperties
+                = new ReadOnlyMetadataCollection<EdmProperty>(
+                    new MetadataCollection<EdmProperty>(fromProperties));
+
+            _toProperties
+                = new ReadOnlyMetadataCollection<EdmProperty>(
+                    new MetadataCollection<EdmProperty>(toProperties));
         }
 
-        private readonly RelationshipEndMember _fromRole;
+        private RelationshipEndMember _fromRole;
         private RelationshipEndMember _toRole;
 
         private readonly ReadOnlyMetadataCollection<EdmProperty> _fromProperties;
@@ -65,6 +73,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipEndMember FromRole
         {
             get { return _fromRole; }
+            set
+            {
+                DebugCheck.NotNull(value);
+                Util.ThrowIfReadOnly(this);
+
+                _fromRole = value;
+            }
         }
 
         /// <summary>
@@ -76,24 +91,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public RelationshipEndMember ToRole
         {
             get { return _toRole; }
-        }
-
-        internal AssociationEndMember DependentEnd
-        {
-            get { return (AssociationEndMember)ToRole; }
             set
             {
+                DebugCheck.NotNull(value);
                 Util.ThrowIfReadOnly(this);
 
                 _toRole = value;
             }
         }
 
-        internal AssociationEndMember PrincipalEnd(AssociationType association)
+        internal AssociationEndMember DependentEnd
         {
-            DebugCheck.NotNull(association);
-
-            return DependentEnd == association.SourceEnd ? association.TargetEnd : association.SourceEnd;
+            get { return (AssociationEndMember)ToRole; }
         }
 
         /// <summary>
@@ -102,7 +111,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> FromProperties
         {
-            get { return _fromProperties; }
+            get
+            {
+                if (!IsReadOnly && _fromProperties.Count == 0)
+                {
+                    _fromRole.GetEntityType().KeyMembers
+                             .Each(p => _fromProperties.Source.Add((EdmProperty)p));
+                }
+                
+                return _fromProperties;
+            }
         }
 
         /// <summary>
@@ -130,6 +148,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (!IsReadOnly)
             {
+                FromProperties.Source.SetReadOnly();
+                ToProperties.Source.SetReadOnly();
+                
                 base.SetReadOnly();
 
                 var fromRole = FromRole;
@@ -143,8 +164,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     toRole.SetReadOnly();
                 }
-                FromProperties.Source.SetReadOnly();
-                ToProperties.Source.SetReadOnly();
             }
         }
     }

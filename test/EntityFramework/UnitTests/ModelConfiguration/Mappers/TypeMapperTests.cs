@@ -246,6 +246,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         }
 
         [Fact]
+        public void MapEntityType_should_set_namespace_when_provided_via_model_configuration()
+        {
+            var model = new EdmModel().InitializeConceptual();
+            var typeMapper
+                = new TypeMapper(
+                    new MappingContext(
+                        new ModelConfiguration
+                            {
+                                ModelNamespace = "Bar"
+                            },
+                        new ConventionsConfiguration(), model));
+            var mockType = new MockType("Foo").TypeAttributes(TypeAttributes.Abstract);
+
+            var entityType = typeMapper.MapEntityType(mockType);
+
+            Assert.NotNull(entityType);
+            Assert.Equal("Bar", entityType.NamespaceName);
+        }
+
+        [Fact]
         public void MapEntityType_should_create_entity_type_with_clr_type_name_and_add_to_model()
         {
             var model = new EdmModel().InitializeConceptual();
@@ -271,6 +291,48 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
 
             Assert.NotNull(complexType);
             Assert.Same(complexType, model.GetComplexType("Foo"));
+        }
+
+        [Fact]
+        public void MapComplexType_should_set_namespace_when_provided_via_model_configuration()
+        {
+            var model = new EdmModel().InitializeConceptual();
+            var mockType = new MockType("Foo");
+            var modelConfiguration = new ModelConfiguration
+                                         {
+                                             ModelNamespace = "Bar"
+                                         };
+            modelConfiguration.ComplexType(mockType);
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            var complexType = typeMapper.MapComplexType(mockType);
+
+            Assert.NotNull(complexType);
+            Assert.Equal("Bar", complexType.NamespaceName);
+        }
+
+        [Fact]
+        public void MapEnumType_should_set_namespace_when_provided_via_model_configuration()
+        {
+            var model = new EdmModel().InitializeConceptual();
+            var mockType = new MockType("Foo");
+
+            mockType.SetupGet(t => t.IsEnum).Returns(true);
+            mockType.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
+            mockType.Setup(t => t.GetEnumNames()).Returns(new string[] { });
+            mockType.Setup(t => t.GetEnumValues()).Returns(new int[] { });
+
+            var modelConfiguration = new ModelConfiguration
+                                         {
+                                             ModelNamespace = "Bar"
+                                         };
+
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            var enumType = typeMapper.MapEnumType(mockType);
+
+            Assert.NotNull(enumType);
+            Assert.Equal("Bar", enumType.NamespaceName);
         }
 
         [Fact]
