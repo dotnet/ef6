@@ -2067,6 +2067,61 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #endregion
 
+        #region In
+
+        [Fact]
+        public void In_returns_false_constant_expression_for_empty_enumerable()
+        {
+            var expression = DbExpressionBuilder.Constant(0);
+            var list = new List<DbConstantExpression>();
+            var result = expression.In(list);
+
+            Assert.Equal(DbExpressionBuilder.False, result);
+        }
+
+        [Fact]
+        public void In_returns_correct_in_expression_for_non_empty_enumerable()
+        {
+            var expression = DbExpressionBuilder.Constant(3);
+            var list = new List<DbConstantExpression>()
+                           {
+                               DbExpressionBuilder.Constant(0),
+                               DbExpressionBuilder.Constant(1),
+                               DbExpressionBuilder.Constant(2),
+                           };
+            var result = expression.In(list) as DbInExpression;
+
+            Assert.NotEqual(null, result);
+            Assert.Equal(expression, result.Item);
+            Assert.Equal(list.Count, result.List.Count);
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                Assert.Equal(list[i], result.List[i]);
+            }
+        }
+
+        [Fact]
+        public void In_throws_argument_exception_for_input_expressions_with_different_result_types()
+        {
+            var list1 = new List<DbConstantExpression>()
+                           {
+                               DbExpressionBuilder.True,
+                               DbExpressionBuilder.Constant(0)
+                           };
+
+            var list2 = new List<DbConstantExpression>()
+                           {
+                               DbExpressionBuilder.True,
+                               DbExpressionBuilder.False
+                           };
+
+            Assert.Throws(typeof(ArgumentException), () => DbExpressionBuilder.False.In(list1));
+            Assert.Throws(typeof(ArgumentException), () => DbExpressionBuilder.Constant(0).In(list2));
+        }
+
+        #endregion
+
         #region Null checks
 
         [Fact]

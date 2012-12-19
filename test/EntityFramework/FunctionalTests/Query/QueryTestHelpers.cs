@@ -2,14 +2,18 @@
 
 namespace System.Data.Entity.Query
 {
+    using Moq;
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.IO;
+    using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml;
-    using Moq;
     using Xunit;
 
     public static class QueryTestHelpers
@@ -58,6 +62,12 @@ namespace System.Data.Entity.Query
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
 
+        public static void VerifyDbQuery<TElement>(IEnumerable<TElement> query, string expectedSql)
+        {
+            Assert.IsType(typeof(DbQuery<TElement>), query);
+            Assert.Equal(StripFormatting(expectedSql), StripFormatting(query.ToString()));
+        }
+
         public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string expectedExeptionMessage)
         {
             var exceptionThrown = false;
@@ -82,6 +92,11 @@ namespace System.Data.Entity.Query
             Assert.True(exceptionThrown, "No excepion has been thrown.");
         }
 
+        public static string StripFormatting(string argument)
+        {
+            return Regex.Replace(argument, @"\s", string.Empty);
+        }
+
         private static Exception GetInnerMostException(Exception exception)
         {
             if (exception == null)
@@ -96,11 +111,6 @@ namespace System.Data.Entity.Query
             }
 
             return currectException;
-        }
-
-        private static string StripFormatting(string argument)
-        {
-            return argument.Replace("\t", "").Replace("\r", "").Replace("\n", "").Replace(" ", "");
         }
     }
 }

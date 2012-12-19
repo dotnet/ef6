@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Query
+namespace System.Data.Entity.Query.LinqToEntities
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -73,7 +73,7 @@ WHERE ([Extent1].[Title] IN (N'Title1', N'Title2'))
                             where array.Contains(book.Title)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -97,7 +97,7 @@ WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS N
                             where array.Contains(book.Title)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -121,7 +121,7 @@ WHERE ([Extent1].[Title] IN ('Title1', 'Title2'))
                             where array.Contains(book.Title)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -145,7 +145,7 @@ WHERE (([Extent1].[Title] IN ('Title1', 'Title2')) AND ([Extent1].[Title] IS NOT
                             where array.Contains(book.Title)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -169,7 +169,7 @@ WHERE ([Extent1].[Genre] IN (1,2))
                             where array.Contains(book.Genre)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -193,7 +193,7 @@ WHERE (([Extent1].[Genre] IN (1,2)) AND ([Extent1].[Genre] IS NOT NULL))
                             where array.Contains(book.Genre)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -237,7 +237,7 @@ String p__linq__0 = ""Title3""
                             where new[] { "Title1", "Title2", parameter, null }.Contains(book.Title)
                             select book.Id;
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -268,86 +268,32 @@ String p__linq__0 = ""Title3""
                             select book.Id;
 
 
-                VerifyQuery(query, expectedSql);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
         [Fact]
-        public static void DbExpressionBuilder_In_returns_false_constant_expression_for_empty_enumerable()
+        public static void Contains_throws_for_constant_null_array()
         {
-            var expression = DbExpressionBuilder.Constant(0);
-            var list = new List<DbConstantExpression>();
-            var result = expression.In(list);
-
-            Assert.Equal(DbExpressionBuilder.False, result);
-        }
-
-        [Fact]
-        public static void DbExpressionBuilder_In_returns_correct_in_expression_for_non_empty_enumerable()
-        {
-            var expression = DbExpressionBuilder.Constant(3);
-            var list = new List<DbConstantExpression>()
-                           {
-                               DbExpressionBuilder.Constant(0),
-                               DbExpressionBuilder.Constant(1),
-                               DbExpressionBuilder.Constant(2),
-                           };
-            var result = expression.In(list) as DbInExpression;
-
-            Assert.NotEqual(null, result);
-            Assert.Equal(expression, result.Item);
-            Assert.Equal(list.Count, result.List.Count);
-
-            for (var i = 0; i < list.Count; i++)
+            using (var context = new UnicodeContext())
             {
-                Assert.Equal(list[i], result.List[i]);
+                string[] names = null;
+                var query = context.Books.Where(b => names.Contains(b.Title));
+
+                Assert.Throws<NotSupportedException>(() => query.ToString());
             }
         }
 
         [Fact]
-        public static void DbExpressionBuilder_In_throws_argument_exception_for_input_expressions_with_different_result_types()
+        public static void Contains_throws_for_constant_null_list()
         {
-            var list1 = new List<DbConstantExpression>()
-                           {
-                               DbExpressionBuilder.True,
-                               DbExpressionBuilder.Constant(0)
-                           };
-
-            var list2 = new List<DbConstantExpression>()
-                           {
-                               DbExpressionBuilder.True,
-                               DbExpressionBuilder.False
-                           };
-
-            Assert.Throws(typeof(ArgumentException), () => DbExpressionBuilder.False.In(list1));
-            Assert.Throws(typeof(ArgumentException), () => DbExpressionBuilder.Constant(0).In(list2));
-        }
-
-        private static void VerifyQuery(object query, string expectedSql)
-        {
-            Assert.Equal(StripFormatting(expectedSql), StripFormatting(query.ToString()));
-        }
-
-        private static string StripFormatting(string str)
-        {
-            var sb = new StringBuilder(str.Length);
-
-            foreach (var chr in str)
+            using (var context = new UnicodeContext())
             {
-                switch (chr)
-                {
-                    case ' ':
-                    case '\t':
-                    case '\r':
-                    case '\n':
-                        break;
-                    default:
-                        sb.Append(chr);
-                        break;
-                }
-            }
+                List<string> names = null;
+                var query = context.Books.Where(b => names.Contains(b.Title));
 
-            return sb.ToString();
+                Assert.Throws<NotSupportedException>(() => query.ToString());
+            }
         }
     }
 }
