@@ -425,13 +425,16 @@ namespace System.Data.Entity.Migrations
         ///     Updates the target database to a given migration.
         /// </summary>
         /// <param name="targetMigration"> The migration to upgrade/downgrade to. </param>
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override void Update(string targetMigration)
         {
             DetectInvalidHistoryChange();
 
-            base.EnsureDatabaseExists();
+            base.EnsureDatabaseExists(() => UpdateInternal(targetMigration));
+        }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        private void UpdateInternal(string targetMigration)
+        {
             var upgradeOperations = _historyRepository.GetUpgradeOperations();
 
             if (upgradeOperations.Any())
@@ -984,20 +987,54 @@ namespace System.Data.Entity.Migrations
             return EdmModelExtensions.DefaultSchema + "." + tableName;
         }
 
-        internal override void EnsureDatabaseExists()
+        /// <summary>
+        /// Ensures that the database exists by creating an empty database if one does not
+        /// already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
+        /// throws an exception, then an attempt is made to clean up (delete) the new empty database.
+        /// This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
+        /// which can then cause problems for database initializers that check whether or not a database
+        /// exists.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
         {
+            var databaseCreated = false;
             using (var connection = CreateConnection())
             {
                 if (!Database.Exists(connection))
                 {
                     new DatabaseCreator().Create(connection);
 
-                    _emptyMigrationNeeded = true;
+                    databaseCreated = true;
                 }
-                else
+            }
+
+            _emptyMigrationNeeded = databaseCreated;
+            
+            try
+            {
+                mustSucceedToKeepDatabase();
+            }
+            catch
+            {
+                if (databaseCreated)
                 {
-                    _emptyMigrationNeeded = false;
+                    try
+                    {
+                        using (var connection = CreateConnection())
+                        {
+                            new DatabaseCreator().Delete(connection);
+                        }
+                    }
+                    catch
+                    {
+                        // Intentionally swallowing this exception since it is better to throw the
+                        // original exception again for the user to see what the real problem is. An
+                        // exception here is unlikely and would not be a root cause, but rather a
+                        // cleanup issue.
+                    }
                 }
+                throw;
             }
         }
 

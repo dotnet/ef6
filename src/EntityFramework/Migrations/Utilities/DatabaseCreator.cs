@@ -16,5 +16,13 @@ namespace System.Data.Entity.Migrations.Utilities
                 ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
             }
         }
+
+        public virtual void Delete(DbConnection connection)
+        {
+            using (var context = new EmptyContext(connection))
+            {
+                ((IObjectContextAdapter)context).ObjectContext.DeleteDatabase();
+            }
+        }
     }
 }

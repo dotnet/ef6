@@ -12,6 +12,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.SqlServer;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
     using BadMappingModel;
@@ -1551,6 +1552,74 @@ namespace ProductivityApiTests
             public string CacheKey
             {
                 get { return V2 ? "SingleTableContext_v2" : "SingleTableContext"; }
+            }
+        }
+
+        public class InvalidSchemaContext : SimpleModelContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                // This intentionally creates a table name that is too long so that SqlClient/SQL Server will
+                // throw when we try to create the table.
+                modelBuilder.Entities().Configure(c => c.ToTable(c.ClrType.Name + new string('X', 400)));
+
+                base.OnModelCreating(modelBuilder);
+            }
+        }
+
+        [Fact]
+        public void Empty_database_is_cleaned_up_when_exception_is_thrown_from_the_Migration_pipeline_CodePlex_640()
+        {
+            using (var context = new InvalidSchemaContext())
+            {
+                context.Database.Delete();
+
+                // Not checking the message here since it is provider-specific
+                Assert.Throws<SqlException>(() => context.Database.Initialize(force: false));
+
+                Assert.False(context.Database.Exists());
+            }
+        }
+
+        public class InvalidSchemaContext2 : InvalidSchemaContext
+        {
+        }
+
+        public class EmptyContextForInvalidSchema : DbContext
+        {
+            static EmptyContextForInvalidSchema()
+            {
+                Database.SetInitializer<EmptyContextForInvalidSchema>(null);
+            }
+
+            public EmptyContextForInvalidSchema()
+                : base(ModelHelpers.SimpleConnectionString<InvalidSchemaContext2>())
+            {
+            }
+        }
+
+        [Fact]
+        public void Existing_database_is_not_deleted_when_exception_is_thrown_from_the_Migration_pipeline_CodePlex_640()
+        {
+            // Create an empty database with no __MigrationHistory table
+            using (var context = new EmptyContextForInvalidSchema())
+            {
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                if (!objectContext.DatabaseExists())
+                {
+                    objectContext.CreateDatabase();
+                }
+            }
+
+            // Now cause SQL Server to fail in DDL and check that database still exists
+            using (var context = new InvalidSchemaContext2())
+            {
+                Assert.True(context.Database.Exists());
+
+                // Not checking the message here since it is provider-specific
+                Assert.Throws<SqlException>(() => context.Database.Initialize(force: false));
+
+                Assert.True(context.Database.Exists());
             }
         }
     }

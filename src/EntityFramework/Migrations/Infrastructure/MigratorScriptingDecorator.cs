@@ -78,8 +78,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return _sqlBuilder.ToString();
         }
 
-        internal override void EnsureDatabaseExists()
+        internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
         {
+            mustSucceedToKeepDatabase();
         }
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)

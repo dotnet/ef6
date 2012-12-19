@@ -124,9 +124,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             _this.ApplyMigration(migration, lastMigration);
         }
 
-        internal virtual void EnsureDatabaseExists()
+        internal virtual void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
         {
-            _this.EnsureDatabaseExists();
+            _this.EnsureDatabaseExists(mustSucceedToKeepDatabase);
         }
 
         internal virtual void RevertMigration(string migrationId, DbMigration migration, XDocument sourceModel, XDocument targetModel)
