@@ -1,7 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using som = System.Data.Entity.Core.EntityModel.SchemaObjectModel;
-
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Concurrent;
@@ -13,6 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -23,6 +22,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Xml;
+    using EntityContainer = System.Data.Entity.Core.Metadata.Edm.EntityContainer;
     using OfTypeQVCacheKey =
         System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
@@ -1352,7 +1352,7 @@ namespace System.Data.Entity.Core.Mapping
                 string location = null;
                 if (mappingSchemaUris == null)
                 {
-                    som.SchemaManager.TryGetBaseUri(xmlReader, out location);
+                    SchemaManager.TryGetBaseUri(xmlReader, out location);
                 }
                 else
                 {

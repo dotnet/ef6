@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;

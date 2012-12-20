@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;

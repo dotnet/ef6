@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.EntityModel.SchemaObjectModel;
+    using System.Data.Entity.Core.SchemaObjectModel;
     using System.Diagnostics;
     using System.Runtime.Versioning;
     using System.Xml;
