@@ -1370,12 +1370,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 other.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace),
                 "requires: C, S and CS are registered in this and other");
 
-            var result = GetItemCollection(DataSpace.CSSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.CSSpace, required: false));
+            var result =
+                GetItemCollection(DataSpace.CSSpace, required: false)
+                    .MetadataEquals(other.GetItemCollection(DataSpace.CSSpace, required: false));
 
             Debug.Assert(
                 !result ||
-                (GetItemCollection(DataSpace.CSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.CSpace, required: false))
-                 && GetItemCollection(DataSpace.SSpace, required: false).MetadataEquals(other.GetItemCollection(DataSpace.SSpace, required: false))),
+                (GetItemCollection(DataSpace.CSpace, required: false)
+                     .MetadataEquals(other.GetItemCollection(DataSpace.CSpace, required: false))
+                 && GetItemCollection(DataSpace.SSpace, required: false)
+                        .MetadataEquals(other.GetItemCollection(DataSpace.SSpace, required: false))),
                 "constraint: this.CS == other.CS --> this.S == other.S && this.C == other.C");
 
             return result;

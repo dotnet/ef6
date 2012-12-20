@@ -105,7 +105,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(associationSetMapping);
-            
+
             DebugCheck.NotNull(navigationProperty);
 
             var table = associationSetMapping.Table;

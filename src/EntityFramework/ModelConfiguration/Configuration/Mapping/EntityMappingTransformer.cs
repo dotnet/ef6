@@ -253,7 +253,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static void CopyForeignKeyConstraint(EdmModel database, EntityType toTable, ForeignKeyBuilder fk)
         {
-            
             DebugCheck.NotNull(toTable);
             DebugCheck.NotNull(fk);
 

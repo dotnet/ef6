@@ -608,22 +608,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .DependentColumns
                     .Each(
                         (c, i) =>
-                        {
-                            var primitivePropertyConfiguration =
-                                c.GetConfiguration() as PrimitivePropertyConfiguration;
-
-                            if ((primitivePropertyConfiguration != null)
-                                && (primitivePropertyConfiguration.ColumnType != null))
                             {
-                                return;
-                            }
+                                var primitivePropertyConfiguration =
+                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
 
-                            var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
+                                if ((primitivePropertyConfiguration != null)
+                                    && (primitivePropertyConfiguration.ColumnType != null))
+                                {
+                                    return;
+                                }
 
-                            c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
+                                var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
 
-                            c.CopyFrom(principalColumn);
-                        });
+                                c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
+
+                                c.CopyFrom(principalColumn);
+                            });
             }
         }
 

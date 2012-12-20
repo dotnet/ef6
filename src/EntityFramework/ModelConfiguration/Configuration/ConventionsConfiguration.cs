@@ -176,8 +176,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void ApplyDatabase(EdmModel database)
         {
-            
-
             foreach (var convention in _conventions)
             {
                 new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();

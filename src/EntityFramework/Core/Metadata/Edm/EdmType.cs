@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal set
             {
                 Util.ThrowIfReadOnly(this);
-                
+
                 SetFlag(MetadataFlags.IsAbstract, value);
             }
         }

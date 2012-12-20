@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping.ViewGeneration.Utils;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.Objects.ELinq;
-    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -73,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _edmVersion = model.Version;
 
             model.Validate();
-            
+
             foreach (var globalItem in model.GlobalItems)
             {
                 globalItem.SetReadOnly();

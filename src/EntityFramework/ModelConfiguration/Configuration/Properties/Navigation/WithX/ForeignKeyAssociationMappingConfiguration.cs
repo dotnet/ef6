@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(associationSetMapping);
-            
+
             DebugCheck.NotNull(navigationProperty);
 
             // By convention source end contains the dependent column mappings

@@ -260,7 +260,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 = associationType.TargetEnd.RelationshipMultiplicity.IsMany()
                       ? (EdmType)targetEntityType.GetCollectionType()
                       : targetEntityType;
-            
+
             var navigationProperty
                 = new NavigationProperty(name, TypeUsage.Create(typeUsage))
                       {

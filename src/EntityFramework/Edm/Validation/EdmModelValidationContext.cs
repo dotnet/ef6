@@ -44,7 +44,7 @@ namespace System.Data.Entity.Edm.Validation
             set
             {
                 DebugCheck.NotNull(value);
-                
+
                 _model = value;
             }
         }

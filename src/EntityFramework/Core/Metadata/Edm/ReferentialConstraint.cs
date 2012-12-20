@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
-    using System.Linq;
 
     /// <summary>
     ///     This class describes referential constraint on the relationships
@@ -113,12 +112,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                if (!IsReadOnly && _fromProperties.Count == 0)
+                if (!IsReadOnly
+                    && _fromProperties.Count == 0)
                 {
                     _fromRole.GetEntityType().KeyMembers
                              .Each(p => _fromProperties.Source.Add((EdmProperty)p));
                 }
-                
+
                 return _fromProperties;
             }
         }
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 FromProperties.Source.SetReadOnly();
                 ToProperties.Source.SetReadOnly();
-                
+
                 base.SetReadOnly();
 
                 var fromRole = FromRole;

@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             return new ModelConfiguration(this);
         }
-        
+
         /// <summary>
         ///     Gets a collection of types that have been configured in this model including
         ///     entity types, complex types, and ignored types.
@@ -396,8 +396,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static void ConfigureTables(EdmModel database)
         {
-            
-
             foreach (var table in database.EntityTypes.ToList())
             {
                 ConfigureTable(database, table);
@@ -407,7 +405,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void ConfigureTable(
             EdmModel database, EntityType table)
         {
-            
             DebugCheck.NotNull(table);
 
             var tableName = table.GetTableName();

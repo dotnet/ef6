@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
