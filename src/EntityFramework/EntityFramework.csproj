@@ -529,7 +529,6 @@
     <Compile Include="Core\SchemaObjectModel\PropertyRefElement.cs" />
     <Compile Include="Core\SchemaObjectModel\ModelFunction.cs" />
     <Compile Include="Core\SchemaObjectModel\ModelFunctionTypeElement.cs" />
-    <Compile Include="Core\SchemaObjectModel\Multiplicity.cs" />
     <Compile Include="Core\SchemaObjectModel\NavigationProperty.cs" />
     <Compile Include="Core\SchemaObjectModel\OnOperation.cs" />
     <Compile Include="Core\SchemaObjectModel\Operation.cs" />
