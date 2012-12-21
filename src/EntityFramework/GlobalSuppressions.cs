@@ -51,7 +51,7 @@ using System.Diagnostics.CodeAnalysis;
         Target = "System.Data.Entity.Core.Common.EntitySql.CqlParser.#dump_stacks(System.Int32)")]
 [assembly:
     SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
-        MessageId = "System.Data.Entity.Core.EntityModel.SchemaObjectModel.ScalarType.ConvertToByteArray(System.String)", Scope = "member",
+        MessageId = "System.Data.Entity.Core.SchemaObjectModel.ScalarType.ConvertToByteArray(System.String)", Scope = "member",
         Target = "System.Data.Entity.Core.Metadata.Edm.MetadataAssemblyHelper.#.cctor()")]
 [assembly:
     SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
