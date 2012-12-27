@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer;
     using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
@@ -82,6 +84,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.NotNull(storeItemCollection);
             Assert.NotNull(storeItemCollection.GetItem<EntityType>("AdventureWorksModel.Store.Entities"));
             Assert.Equal(0, errors.Count);
+        }
+        
+        [Fact]
+        public void Can_initialize_from_ssdl_model_and_items_set_read_only_and_added_to_collection()
+        {
+            var context = new ShopContext_v1();
+            var compiledModel = context.InternalContext.CodeFirstModel;
+
+            var builder = compiledModel.CachedModelBuilder.Clone();
+
+            var databaseMapping
+                = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+
+            var storeItemCollection = new StoreItemCollection(databaseMapping.Database);
+
+            Assert.Equal(3.0, storeItemCollection.StoreSchemaVersion);
+
+            foreach (var globalItem in databaseMapping.Database.GlobalItems)
+            {
+                Assert.True(storeItemCollection.Contains(globalItem));
+                Assert.True(globalItem.IsReadOnly);
+            }
+        }
+
+        [Fact]
+        public void Can_initialize_and_provider_fields_set()
+        {
+            var model 
+                = new EdmModel
+                            {
+                                ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
+                                ProviderManifest = new SqlProviderManifest("2008"),
+                                Version = 3.0
+                            };
+
+            var itemCollection = new StoreItemCollection(model);
+
+            Assert.Same(model.ProviderInfo.ProviderManifestToken, itemCollection.StoreProviderManifestToken);
+            Assert.NotNull(itemCollection.StoreProviderFactory);
+            Assert.Same(model.ProviderManifest, itemCollection.StoreProviderManifest);
         }
     }
 }

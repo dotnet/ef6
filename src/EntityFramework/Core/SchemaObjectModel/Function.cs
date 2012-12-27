@@ -480,8 +480,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 }
             }
 
-            if (Schema.DataModel
-                == SchemaDataModelOption.ProviderDataModel)
+            if (Schema.DataModel == SchemaDataModelOption.ProviderDataModel)
             {
                 // In SSDL function may return a primitive value or a collection of rows with scalar props.
                 // It is not possible to encode "collection of rows" in the ReturnType attribute, so the only check needed here is to make sure that the type is scalar and not a collection.

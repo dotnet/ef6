@@ -773,10 +773,8 @@ namespace System.Data.Entity.Core.Mapping
             var errors = new List<EdmSchemaError>();
 
             if (m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
-                &&
-                m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
-                &&
-                m_edmCollection.EdmVersion != m_storeItemCollection.StoreSchemaVersion)
+                && m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
+                && m_edmCollection.EdmVersion != m_storeItemCollection.StoreSchemaVersion)
             {
                 errors.Add(
                     new EdmSchemaError(

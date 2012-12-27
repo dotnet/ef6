@@ -363,9 +363,7 @@ namespace FunctionalTests
                         .WithMany(e => e.Suppliers)
                         .Map(m => m.ToTable("Foo"));
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -877,9 +875,7 @@ namespace FunctionalTests
                 .Property(sid => sid.Id)
                 .HasColumnType("nvarchar");
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -1375,9 +1371,7 @@ namespace FunctionalTests
                                     mc.MapRightKey("ProductId");
                                 });
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -1711,8 +1705,7 @@ namespace FunctionalTests
                         .HasForeignKey(d => d.Id);
 
             Assert.Throws<ModelValidationException>(
-                () =>
-                modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
         [Fact]
@@ -1965,7 +1958,7 @@ namespace FunctionalTests
                         .WithRequired(p => p.SpecialOffer)
                         .Map(mc => mc.MapKey("SpecialOfferID"));
 
-            Assert.Throws<MetadataException>(
+            Assert.Throws<ModelValidationException>(
                 () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
         }
 
@@ -1978,11 +1971,13 @@ namespace FunctionalTests
             modelBuilder.Entity<CDPrin>().HasMany(p => p.CDDeps).WithRequired(d => d.CDPrin).WillCascadeOnDelete(false);
 
             var databaseMapping = BuildMapping(modelBuilder);
+
             databaseMapping.AssertValid();
 
-            var aset = databaseMapping.Model.Containers.Single().AssociationSets[0];
-            Assert.Equal(OperationAction.None, aset.ElementType.SourceEnd.DeleteBehavior);
-            Assert.Equal(OperationAction.None, aset.ElementType.TargetEnd.DeleteBehavior);
+            var associationSet = databaseMapping.Model.Containers.Single().AssociationSets[0];
+
+            Assert.Equal(OperationAction.None, associationSet.ElementType.SourceEnd.DeleteBehavior);
+            Assert.Equal(OperationAction.None, associationSet.ElementType.TargetEnd.DeleteBehavior);
         }
 
         [Fact]

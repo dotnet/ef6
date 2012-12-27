@@ -9,6 +9,7 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -169,9 +170,7 @@ namespace FunctionalTests
                 .Property(c => c.Property)
                 .HasColumnName("Foo");
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]

@@ -195,8 +195,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
 
             if (Schema.DataModel != SchemaDataModelOption.ProviderDataModel
-                &&
-                Utils.CompareNames(newMember.Name, Name) == 0)
+                && Utils.CompareNames(newMember.Name, Name) == 0)
             {
                 newMember.AddError(
                     ErrorCode.BadProperty, EdmSchemaErrorSeverity.Error,

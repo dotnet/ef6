@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Linq;
     using Xunit;
 
@@ -12,12 +11,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Name_should_return_association_type_name()
         {
-            var foreignKeyBuilder = new ForeignKeyBuilder(
-                new EdmModel
-                    {
-                        Version = 3.0
-                    },
-                "FK");
+            var database
+                = new EdmModel
+                      {
+                          Version = 3.0
+                      }.InitializeStore();
+
+            var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             Assert.Equal("FK", foreignKeyBuilder.Name);
         }
@@ -25,14 +25,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_and_set_principal_table()
         {
-            var foreignKeyBuilder = new ForeignKeyBuilder(
-                new EdmModel
-                    {
-                        Version = 3.0
-                    },
-                "FK");
+            var database
+                = new EdmModel
+                      {
+                          Version = 3.0
+                      }.InitializeStore();
 
-            var principalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
+
+            var principalTable = database.AddTable("P");
 
             foreignKeyBuilder.PrincipalTable = principalTable;
 
@@ -47,13 +48,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       {
                           Version = 3.0
                       }.InitializeStore();
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var principalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var principalTable = database.AddTable("P");
 
             foreignKeyBuilder.PrincipalTable = principalTable;
 
-            var dependentTable = new EntityType("D", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var dependentTable = database.AddTable("D");
 
             foreignKeyBuilder.SetOwner(dependentTable);
 
@@ -70,6 +72,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var associationSet = database.GetAssociationSet(associationType);
 
             Assert.NotNull(associationSet);
+            Assert.NotNull(associationSet.SourceSet);
+            Assert.NotNull(associationSet.TargetSet);
+            
         }
 
         [Fact]
@@ -80,13 +85,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       {
                           Version = 3.0
                       }.InitializeStore();
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var principalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var principalTable = database.AddTable("P");
 
             foreignKeyBuilder.PrincipalTable = principalTable;
 
-            var dependentTable = new EntityType("D", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var dependentTable = database.AddTable("D");
 
             foreignKeyBuilder.SetOwner(dependentTable);
 
@@ -107,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var table = database.AddTable("T");
 
             foreignKeyBuilder.PrincipalTable = table;
             foreignKeyBuilder.SetOwner(table);
@@ -130,9 +136,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var table = database.AddTable("T");
 
-            foreignKeyBuilder.PrincipalTable = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            foreignKeyBuilder.PrincipalTable = database.AddTable("P");
             foreignKeyBuilder.SetOwner(table);
 
             var associationType = database.GetAssociationType("FK");
@@ -158,7 +164,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var table = database.AddTable("T");
 
             foreignKeyBuilder.PrincipalTable = table;
             foreignKeyBuilder.SetOwner(table);
@@ -195,7 +201,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       }.InitializeStore();
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
-            var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
+            var table = database.AddTable("T");
 
             foreignKeyBuilder.PrincipalTable = table;
             foreignKeyBuilder.SetOwner(table);

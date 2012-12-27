@@ -11,10 +11,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Xml;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -22,39 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     {
         public const string DefaultSchema = "dbo";
         public const string DefaultModelNamespace = "CodeFirstNamespace";
-
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public static StoreItemCollection ToStoreItemCollection(this EdmModel database)
-        {
-            // Provider information should be first class in EDM when we ship
-            // but for now we use our annotation
-            var providerInfo = database.ProviderInfo;
-
-            Debug.Assert(providerInfo != null);
-
-            var stringBuilder = new StringBuilder();
-
-            using (var xmlWriter = XmlWriter.Create(
-                stringBuilder, new XmlWriterSettings
-                                   {
-                                       Indent = true
-                                   }))
-            {
-                new SsdlSerializer()
-                    .Serialize(
-                        database,
-                        providerInfo.ProviderInvariantName,
-                        providerInfo.ProviderManifestToken,
-                        xmlWriter);
-            }
-
-            var xml = stringBuilder.ToString();
-
-            using (var xmlReader = XmlReader.Create(new StringReader(xml)))
-            {
-                return new StoreItemCollection(new[] { xmlReader });
-            }
-        }
+        public const string DefaultStoreNamespace = "CodeFirstDatabaseSchema";
 
         public static EntityType AddTable(this EdmModel database, string name)
         {
@@ -65,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var table
                 = new EntityType(
                     uniqueIdentifier,
-                    "CodeFirstDatabaseSchema",
+                    DefaultStoreNamespace,
                     DataSpace.SSpace);
 
             database.AddItem(table);

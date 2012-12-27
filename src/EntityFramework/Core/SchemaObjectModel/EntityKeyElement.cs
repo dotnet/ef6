@@ -138,8 +138,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         // Binary keys are only supported for V2.0 CSDL, Spatial keys are not supported.
                         if ((primitivePropertyType.PrimitiveTypeKind == PrimitiveTypeKind.Binary
                              && Schema.SchemaVersion < XmlConstants.EdmVersionForV2)
-                            ||
-                            Helper.IsSpatialType(primitivePropertyType))
+                            || Helper.IsSpatialType(primitivePropertyType))
                         {
                             AddError(
                                 ErrorCode.EntityKeyTypeCurrentlyNotSupported,
@@ -155,8 +154,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         // Binary keys are only supported for V2.0 SSDL, Spatial keys are not supported.
                         if ((primitivePropertyType.PrimitiveTypeKind == PrimitiveTypeKind.Binary
                              && Schema.SchemaVersion < XmlConstants.StoreVersionForV2)
-                            ||
-                            Helper.IsSpatialType(primitivePropertyType))
+                            || Helper.IsSpatialType(primitivePropertyType))
                         {
                             AddError(
                                 ErrorCode.EntityKeyTypeCurrentlyNotSupported,

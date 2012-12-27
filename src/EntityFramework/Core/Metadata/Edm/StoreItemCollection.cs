@@ -128,6 +128,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 out _cachedCTypeFunction);
         }
 
+        public StoreItemCollection(EdmModel model)
+            : base(DataSpace.SSpace)
+        {
+            Check.NotNull(model, "model");
+            DebugCheck.NotNull(model.ProviderInfo);
+            DebugCheck.NotNull(model.ProviderManifest);
+            Debug.Assert(model.Version > 0);
+
+            _providerManifest = model.ProviderManifest;
+            _providerFactory = DbProviderFactories.GetFactory(model.ProviderInfo.ProviderInvariantName);
+            _providerManifestToken = model.ProviderInfo.ProviderManifestToken;
+
+            LoadProviderManifest(_providerManifest);
+
+            _schemaVersion = model.Version;
+
+            model.Validate();
+
+            foreach (var globalItem in model.GlobalItems)
+            {
+                globalItem.SetReadOnly();
+
+                AddInternal(globalItem);
+            }
+        }
+
         /// <summary>
         ///     Constructs the new instance of StoreItemCollection
         ///     with the list of CDM files provided.

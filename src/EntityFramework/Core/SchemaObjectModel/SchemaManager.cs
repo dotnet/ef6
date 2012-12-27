@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 dataModel,
                 NoOpAttributeValueNotification,
                 NoOpAttributeValueNotification,
-                delegate { return providerManifest == null ? MetadataItem.EdmProviderManifest : providerManifest; },
+                error => providerManifest ?? MetadataItem.EdmProviderManifest,
                 out schemaCollection);
         }
 
@@ -148,8 +148,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     location = filePathList[index];
                 }
 
-                Schema schema;
-                schema = new Schema(schemaManager);
+                var schema = new Schema(schemaManager);
 
                 var errorsForCurrentSchema = schema.Parse(xmlReader, location);
 

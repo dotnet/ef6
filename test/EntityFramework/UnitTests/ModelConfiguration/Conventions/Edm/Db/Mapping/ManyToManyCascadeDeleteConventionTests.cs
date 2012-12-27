@@ -2,12 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using Xunit;
 
     public sealed class ManyToManyCascadeDeleteConventionTests
@@ -17,13 +13,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeConceptual());
+                    .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeStore());
 
             var foreignKeyConstraint
                 = new ForeignKeyBuilder(databaseMapping.Database, "FK")
                       {
-                          PrincipalTable
-                              = new EntityType("P", XmlConstants.TargetNamespace_3, DataSpace.SSpace)
+                          PrincipalTable = databaseMapping.Database.AddTable("P")
                       };
 
             Assert.Equal(OperationAction.None, foreignKeyConstraint.DeleteAction);
@@ -40,7 +35,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                       };
 
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
-
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(

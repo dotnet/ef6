@@ -4,9 +4,11 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -58,7 +60,7 @@ namespace System.Data.Entity
         internal static void AssertValid(this DbDatabaseMapping databaseMapping, bool shouldThrow)
         {
             var storageItemMappingCollection = databaseMapping.ToStorageMappingItemCollection();
-            IList<EdmSchemaError> errors = new List<EdmSchemaError>();
+            IList<EdmSchemaError> errors;
 
             storageItemMappingCollection.GenerateEntitySetViews(out errors);
 
@@ -76,11 +78,18 @@ namespace System.Data.Entity
                 {
                     throw new MappingException(errorMessage.ToString());
                 }
-                else
-                {
-                    Assert.True(false, errorMessage.ToString());
-                }
+
+                Assert.True(false, errorMessage.ToString());
             }
+        }
+
+        internal static StorageMappingItemCollection ToStorageMappingItemCollection(this DbDatabaseMapping databaseMapping)
+        {
+            DebugCheck.NotNull(databaseMapping);
+
+            return databaseMapping.ToStorageMappingItemCollection(
+                new EdmItemCollection(databaseMapping.Model),
+                new StoreItemCollection(databaseMapping.Database));
         }
     }
 }
