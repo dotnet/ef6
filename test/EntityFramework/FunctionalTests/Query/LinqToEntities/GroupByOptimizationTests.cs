@@ -94,7 +94,9 @@ FROM ( SELECT
         {
             var expectedSql =
 @"SELECT 
-[GroupBy1].[A1] AS [C1]
+1 AS [C1], 
+[GroupBy1].[K1] AS [CategoryId], 
+[GroupBy1].[A1] AS [C2]
 FROM ( SELECT 
 	[Extent1].[CategoryId] AS [K1], 
 	MAX([Extent1].[Id]) AS [A1]
@@ -105,7 +107,7 @@ FROM ( SELECT
 
             using (var context = new SimpleLocalDbModelContextWithNoData())
             {
-                var query = context.Products.GroupBy(p => p.CategoryId).Select(g => g.Max(p => p.Id));
+                var query = context.Products.GroupBy(p => p.CategoryId).Select(g => new { Key = g.Key, Aggregate = g.Max(p => p.Id) });
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
