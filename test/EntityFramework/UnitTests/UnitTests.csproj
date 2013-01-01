@@ -146,6 +146,7 @@
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
+    <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageAssociationSetMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageComplexTypeMappingTests.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
+    <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />

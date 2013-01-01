@@ -65,9 +65,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        /// encountered during load as the out parameter errors.
+        /// </summary> 
+        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param> 
+        /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
+        /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param> 
+        private StoreItemCollection(IEnumerable<XmlReader> xmlReaders,
+                                     ReadOnlyCollection<string> filePaths,
+                                     out IList<EdmSchemaError> errors)
+            : base(DataSpace.SSpace)
+        {
+            DebugCheck.NotNull(xmlReaders);
+
+            errors = this.Init(xmlReaders, filePaths, false,
+                out _providerManifest,
+                out _providerFactory,
+                out _providerManifestToken,
+                out _cachedCTypeFunction);
+        }
+
+        /// <summary>
         ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
         ///     encountered during load as the out parameter errors.
-        ///     Publicly available from System.Data.Entity.Desgin.dll
         /// </summary>
         /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
         /// <param name="filePaths"> the paths where the files can be found that match the xml readers collection </param>
@@ -372,9 +392,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             return edmFunction;
         }
+
+        /// <summary>
+        /// Factory method that creates a <see cref="StoreItemCollection"/>. 
+        /// </summary>
+        /// <param name="xmlReaders">SSDL artifacts to load. Must not be <c>null</c>.</param>
+        /// <param name="filePaths">
+        /// Paths to SSDL artifacts. Used in error messages. Can be <c>null</c> in which case 
+        /// the base Uri of the XmlReader will be used as a path.
+        /// </param>
+        /// <param name="errors">
+        /// The collection of errors encountered while loading.
+        /// </param>
+        /// <returns>
+        /// <see cref="StoreItemCollection"/> instance if no errors encountered. Otherwise <c>null</c>.
+        /// </returns>
+        public static StoreItemCollection Create(
+            IEnumerable<XmlReader> xmlReaders,
+            ReadOnlyCollection<string> filePaths,
+            out IList<EdmSchemaError> errors)
+        {
+            Check.NotNull(xmlReaders, "xmlReaders");
+            EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
+            EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReaders");
+
+            var storeItemCollection = new StoreItemCollection(xmlReaders, filePaths, out errors);
+
+            return errors != null && errors.Count > 0 ? null : storeItemCollection;
+        }
     }
-
-//---- ItemCollection
 }
-
-//---- 

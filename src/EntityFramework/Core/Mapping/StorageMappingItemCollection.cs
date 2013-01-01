@@ -16,7 +16,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -704,30 +703,24 @@ namespace System.Data.Entity.Core.Mapping
         ///     constructor that takes in a list of XmlReaders and creates metadata for mapping
         ///     in all the files.
         /// </summary>
-        /// <param name="edmCollection"> The edm metadata collection that this mapping is to use </param>
-        /// <param name="storeCollection"> The store metadata collection that this mapping is to use </param>
+        /// <param name="edmItemCollection"> The edm metadata collection that this mapping is to use </param>
+        /// <param name="storeItemCollection"> The store metadata collection that this mapping is to use </param>
         /// <param name="filePaths"> Mapping URIs </param>
         /// <param name="xmlReaders"> The XmlReaders to load mapping from </param>
         /// <param name="errors"> a list of errors for each file loaded </param>
-        // referenced by System.Data.Entity.Design.dll
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal StorageMappingItemCollection(
-            EdmItemCollection edmCollection,
-            StoreItemCollection storeCollection,
+        private StorageMappingItemCollection(
+            EdmItemCollection edmItemCollection,
+            StoreItemCollection storeItemCollection,
             IEnumerable<XmlReader> xmlReaders,
-            List<string> filePaths,
+            IList<string> filePaths,
             out IList<EdmSchemaError> errors)
             : base(DataSpace.CSSpace)
         {
-            // we will check the parameters for this internal ctor becuase
-            // it is pretty much publicly exposed through the MetadataItemCollectionFactory
-            // in System.Data.Entity.Design
+            DebugCheck.NotNull(edmItemCollection);
+            DebugCheck.NotNull(storeItemCollection);
             DebugCheck.NotNull(xmlReaders);
-            EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
-            // filePaths is allowed to be null
 
-            errors = Init(edmCollection, storeCollection, xmlReaders, filePaths, false /*throwOnError*/);
+            errors = Init(edmItemCollection, storeItemCollection, xmlReaders, filePaths, false /*throwOnError*/);
         }
 
         /// <summary>
@@ -743,7 +736,7 @@ namespace System.Data.Entity.Core.Mapping
             EdmItemCollection edmCollection,
             StoreItemCollection storeCollection,
             IEnumerable<XmlReader> xmlReaders,
-            List<string> filePaths)
+            IList<string> filePaths)
             : base(DataSpace.CSSpace)
         {
             Init(edmCollection, storeCollection, xmlReaders, filePaths, true /*throwOnError*/);
@@ -762,7 +755,7 @@ namespace System.Data.Entity.Core.Mapping
             EdmItemCollection edmCollection,
             StoreItemCollection storeCollection,
             IEnumerable<XmlReader> xmlReaders,
-            List<string> filePaths,
+            IList<string> filePaths,
             bool throwOnError)
         {
             DebugCheck.NotNull(xmlReaders);
@@ -1334,7 +1327,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns> A list of schema errors </returns>
         private List<EdmSchemaError> LoadItems(
             IEnumerable<XmlReader> xmlReaders,
-            List<string> mappingSchemaUris,
+            IList<string> mappingSchemaUris,
             Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
             Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
             double expectedVersion)
@@ -1522,5 +1515,45 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
         }
+
+        /// <summary>
+        /// Factory method that creates a <see cref="StorageMappingItemCollection"/>. 
+        /// </summary>
+        /// <param name="edmItemCollection"> 
+        /// The edm metadata collection to map. Must not be <c>null</c>.
+        /// </param>
+        /// <param name="storeItemCollection"> 
+        /// The store metadata collection to map. Must not be <c>null</c>.
+        /// </param>
+        /// <param name="xmlReaders">MSL artifacts to load. Must not be <c>null</c>.</param>
+        /// <param name="filePaths">
+        /// Paths to MSL artifacts. Used in error messages. Can be <c>null</c> in which case 
+        /// the base Uri of the XmlReader will be used as a path.
+        /// </param>
+        /// <param name="errors">
+        /// The collection of errors encountered while loading.
+        /// </param>
+        /// <returns>
+        /// <see cref="EdmItemCollection"/> instance if no errors encountered. Otherwise <c>null</c>.
+        /// </returns>
+        public static StorageMappingItemCollection Create(
+            EdmItemCollection edmItemCollection,
+            StoreItemCollection storeItemCollection,
+            IEnumerable<XmlReader> xmlReaders,
+            IList<string> filePaths,
+            out IList<EdmSchemaError> errors)
+        {
+            Check.NotNull(edmItemCollection, "edmItemCollection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+            Check.NotNull(xmlReaders, "xmlReaders");
+            EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
+            // filePaths is allowed to be null
+
+            var storageMappingItemCollection
+                = new StorageMappingItemCollection(edmItemCollection, storeItemCollection, xmlReaders, filePaths, out errors);
+
+            return errors != null && errors.Count > 0 ? null : storageMappingItemCollection;
+        }
+
     }
 }
