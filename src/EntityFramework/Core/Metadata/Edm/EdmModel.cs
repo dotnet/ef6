@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Edm.Validation;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
@@ -19,6 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly List<EnumType> _enumTypes = new List<EnumType>();
 
         private DbProviderInfo _providerInfo;
+        private DbProviderManifest _providerManifest;
 
         public double Version { get; set; }
 
@@ -95,6 +97,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 DebugCheck.NotNull(value);
 
                 _providerInfo = value;
+            }
+        }
+
+        public DbProviderManifest ProviderManifest
+        {
+            get { return _providerManifest; }
+            set
+            {
+                DebugCheck.NotNull(value);
+
+                _providerManifest = value;
             }
         }
 

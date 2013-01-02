@@ -5,15 +5,37 @@ namespace System.Data.Entity.Edm.Validation
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
-    /// <summary>
-    ///     The RuleSet for EdmModel
-    /// </summary>
     internal abstract class EdmModelRuleSet : DataModelValidationRuleSet
     {
+        public static EdmModelRuleSet CreateEdmModelRuleSet(double version, bool validateSyntax)
+        {
+            if (Equals(version, XmlConstants.EdmVersionForV1))
+            {
+                return new V1RuleSet(validateSyntax);
+            }
+
+            if (Equals(version, XmlConstants.EdmVersionForV1_1))
+            {
+                return new V1_1RuleSet(validateSyntax);
+            }
+
+            if (Equals(version, XmlConstants.EdmVersionForV2))
+            {
+                return new V2RuleSet(validateSyntax);
+            }
+
+            if (Equals(version, XmlConstants.EdmVersionForV3))
+            {
+                return new V3RuleSet(validateSyntax);
+            }
+
+            Debug.Fail("Added new version?");
+
+            return null;
+        }
+
         private EdmModelRuleSet(bool validateSyntax)
         {
-            #region Common Syntax Rules
-
             if (validateSyntax)
             {
                 AddRule(EdmModelSyntacticValidationRules.EdmAssociationConstraint_DependentEndMustNotBeNull);
@@ -32,16 +54,13 @@ namespace System.Data.Entity.Edm.Validation
                 AddRule(EdmModelSyntacticValidationRules.EdmTypeReference_TypeNotValid);
             }
 
-            #endregion
-
-            #region Common Semantic Rules
-
             AddRule(EdmModelSemanticValidationRules.EdmType_SystemNamespaceEncountered);
 
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_SimilarRelationshipEnd);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_InvalidEntitySetNameReference);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_ConcurrencyRedefinedOnSubTypeOfEntitySetType);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_DuplicateEntityContainerMemberName);
+            AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_DuplicateEntitySetTable);
 
             AddRule(EdmModelSemanticValidationRules.EdmEntitySet_EntitySetTypeHasNoKeys);
 
@@ -71,8 +90,6 @@ namespace System.Data.Entity.Edm.Validation
             AddRule(EdmModelSemanticValidationRules.EdmComplexType_InvalidMemberNameMatchesTypeName);
 
             AddRule(EdmModelSemanticValidationRules.EdmNamespace_TypeNameAlreadyDefinedDuplicate);
-
-            #endregion
         }
 
         private abstract class NonV1_1RuleSet : EdmModelRuleSet
@@ -126,33 +143,6 @@ namespace System.Data.Entity.Edm.Validation
                 RemoveRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType);
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType_V3);
             }
-        }
-
-        internal static EdmModelRuleSet CreateEdmModelRuleSet(double version, bool validateSyntax)
-        {
-            if (Equals(version, XmlConstants.EdmVersionForV1))
-            {
-                return new V1RuleSet(validateSyntax);
-            }
-
-            if (Equals(version, XmlConstants.EdmVersionForV1_1))
-            {
-                return new V1_1RuleSet(validateSyntax);
-            }
-
-            if (Equals(version, XmlConstants.EdmVersionForV2))
-            {
-                return new V2RuleSet(validateSyntax);
-            }
-
-            if (Equals(version, XmlConstants.EdmVersionForV3))
-            {
-                return new V3RuleSet(validateSyntax);
-            }
-
-            Debug.Fail("Added new version?");
-
-            return null;
         }
     }
 }

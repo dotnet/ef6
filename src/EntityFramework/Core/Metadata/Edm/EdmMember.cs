@@ -63,7 +63,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                       .Any(c => string.Equals(Identity, c.Identity, StringComparison.Ordinal))))
                 {
                     // Duplicate configured name, uniquify the identity so that
-                    // a validation exception can be generated later on.
+                    // a validation exception can be generated later on. For valid
+                    // models, we sync it back up in SetReadOnly()
                     _identity = _declaringType.Members.UniquifyName(Identity);
                 }
             }
@@ -112,6 +113,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (!IsReadOnly)
             {
                 base.SetReadOnly();
+
+                _identity = Name;
 
                 // TypeUsage is always readonly, no need to set it
             }

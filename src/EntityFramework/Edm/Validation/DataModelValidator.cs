@@ -8,13 +8,18 @@ namespace System.Data.Entity.Edm.Validation
     {
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
-        public void Validate(EdmModel root, bool validateSyntax)
+        public void Validate(EdmModel model, bool validateSyntax)
         {
-            var context = new EdmModelValidationContext(validateSyntax);
+            var context = new EdmModelValidationContext(model, validateSyntax);
 
             context.OnError += OnError;
 
-            context.Validate(root);
+            var modelVisitor
+                = new EdmModelValidationVisitor(
+                    context,
+                    EdmModelRuleSet.CreateEdmModelRuleSet(model.Version, validateSyntax));
+
+            modelVisitor.Visit(model);
         }
     }
 }

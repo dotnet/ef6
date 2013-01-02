@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -221,9 +222,7 @@ namespace FunctionalTests
             modelBuilder.Entity<EntityWithDescB>().Property(e => e.Description).HasColumnName("Description");
             modelBuilder.Entity<EntityWithDescC>().Property(e => e.Description).HasColumnName("Description");
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -399,35 +398,6 @@ namespace FunctionalTests
             var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.True(databaseMapping.Model.Containers.Single().EntitySets.Any(es => es.Name == "Foos"));
-        }
-
-        [Fact]
-        public void Build_model_with_dotted_table_name_configured()
-        {
-            var modelBuilder = new AdventureWorksModelBuilder();
-
-            modelBuilder.Entity<SalesPerson>().Map(mc => mc.ToTable("sales.tbl_sp"));
-
-            modelBuilder.Entity<Customer>();
-
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
-
-            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales"));
-            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
-        }
-
-        [Fact]
-        public void Build_model_with_dotted_table_name_and_dotted_schema_configured()
-        {
-            var modelBuilder = new AdventureWorksModelBuilder();
-
-            modelBuilder.Entity<SalesPerson>().Map(mc => mc.ToTable("tbl_sp", "sales.A.B"));
-            modelBuilder.Entity<Customer>();
-
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
-
-            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales.A.B"));
-            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
         }
     }
 

@@ -4,53 +4,43 @@ namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     internal sealed class EdmModelValidationContext
     {
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
-        private EdmModel _model;
+        private readonly EdmModel _model;
+        private readonly bool _validateSyntax;
 
-        public EdmModelValidationContext(bool validateSyntax)
-        {
-            ValidateSyntax = validateSyntax;
-        }
-
-        public bool ValidateSyntax { get; set; }
-        public double ValidationContextVersion { get; set; }
-
-        public void RaiseDataModelValidationEvent(DataModelErrorEventArgs error)
-        {
-            if (OnError != null)
-            {
-                OnError(this, error);
-            }
-        }
-
-        public void Validate(EdmModel model)
+        public EdmModelValidationContext(EdmModel model, bool validateSyntax)
         {
             DebugCheck.NotNull(model);
 
             _model = model;
+            _validateSyntax = validateSyntax;
+        }
 
-            ValidationContextVersion = model.Version;
-
-            EdmModelValidator.Validate(model, this);
+        public bool ValidateSyntax
+        {
+            get { return _validateSyntax; }
         }
 
         public EdmModel Model
         {
             get { return _model; }
-            set
-            {
-                DebugCheck.NotNull(value);
+        }
 
-                _model = value;
-            }
+        public bool IsCSpace
+        {
+            get { return _model.Containers.First().DataSpace == DataSpace.CSpace; }
         }
 
         public void AddError(IMetadataItem item, string propertyName, string errorMessage)
         {
+            DebugCheck.NotNull(item);
+            DebugCheck.NotEmpty(errorMessage);
+
             RaiseDataModelValidationEvent(
                 new DataModelErrorEventArgs
                     {
@@ -59,6 +49,16 @@ namespace System.Data.Entity.Edm.Validation
                         PropertyName = propertyName,
                     }
                 );
+        }
+
+        private void RaiseDataModelValidationEvent(DataModelErrorEventArgs error)
+        {
+            DebugCheck.NotNull(error);
+
+            if (OnError != null)
+            {
+                OnError(this, error);
+            }
         }
     }
 }

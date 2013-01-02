@@ -481,9 +481,7 @@ namespace FunctionalTests
             modelBuilder.Entity<OffSiteEmployee>()
                 .HasKey(e => e.CTEmployeeId);
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            Assert.Throws<MetadataException>(() => databaseMapping.AssertValid());
+            Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]

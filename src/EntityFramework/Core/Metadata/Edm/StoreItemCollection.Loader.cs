@@ -65,15 +65,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private void LoadItems(IEnumerable<XmlReader> xmlReaders, IEnumerable<string> sourceFilePaths)
             {
                 Debug.Assert(_errors == null, "we are expecting this to be the location that sets _errors for the first time");
-                _errors = SchemaManager.ParseAndValidate(
-                    xmlReaders,
-                    sourceFilePaths,
-                    SchemaDataModelOption.ProviderDataModel,
-                    OnProviderNotification,
-                    OnProviderManifestTokenNotification,
-                    OnProviderManifestNeeded,
-                    out _schemas
-                    );
+
+                _errors
+                    = SchemaManager.ParseAndValidate(
+                        xmlReaders,
+                        sourceFilePaths,
+                        SchemaDataModelOption.ProviderDataModel,
+                        OnProviderNotification,
+                        OnProviderManifestTokenNotification,
+                        OnProviderManifestNeeded,
+                        out _schemas);
+
                 if (_throwOnError)
                 {
                     ThrowOnNonWarningErrors();

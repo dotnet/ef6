@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.ModelConfiguration;
+    using System.Data.Entity.SqlServer;
     using System.Linq;
     using Xunit;
 
@@ -26,6 +27,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
             model.AddItem(new EntityType());
 
             Assert.Throws<ModelValidationException>(() => model.Validate());
+        }
+
+        [Fact]
+        public void Can_get_and_set_provider_manifest()
+        {
+            var model = new EdmModel();
+
+            Assert.Null(model.ProviderManifest);
+
+            var providerManifest = new SqlProviderManifest("2008");
+
+            model.ProviderManifest = providerManifest;
+
+            Assert.Same(providerManifest, model.ProviderManifest);
+        }
+
+        [Fact]
+        public void Can_get_and_set_provider_info()
+        {
+            var model = new EdmModel();
+
+            Assert.Null(model.ProviderInfo);
+
+            var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
+
+            model.ProviderInfo = providerInfo;
+
+            Assert.Same(providerInfo, model.ProviderInfo);
         }
     }
 }

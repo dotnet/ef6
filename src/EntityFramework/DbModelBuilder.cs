@@ -264,7 +264,7 @@ namespace System.Data.Entity
         /// <typeparam name="T"> The type of the properties that the convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
         /// <remarks>
-        ///     The convention will apply to both nullable and non-nullable properties of the 
+        ///     The convention will apply to both nullable and non-nullable properties of the
         ///     specified type.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -279,12 +279,12 @@ namespace System.Data.Entity
 
             return config.Where(
                 p =>
-                {
-                    Type propertyType;
-                    p.PropertyType.TryUnwrapNullableType(out propertyType);
+                    {
+                        Type propertyType;
+                        p.PropertyType.TryUnwrapNullableType(out propertyType);
 
-                    return propertyType == typeof(T);
-                });
+                        return propertyType == typeof(T);
+                    });
         }
 
         /// <summary>
@@ -366,13 +366,18 @@ namespace System.Data.Entity
 
             var databaseMapping = model.GenerateDatabaseMapping(providerManifest);
 
-            //Running the PluralizingTableNameConvention first so that the new table name is available for configuration
+            // Run the PluralizingTableNameConvention first so that the new table name is available for configuration
             _conventionsConfiguration.ApplyPluralizingTableNameConvention(databaseMapping.Database);
+
             _modelConfiguration.Configure(databaseMapping, providerManifest);
+
             _conventionsConfiguration.ApplyDatabase(databaseMapping.Database);
             _conventionsConfiguration.ApplyMapping(databaseMapping);
 
+            databaseMapping.Database.ProviderManifest = providerManifest;
             databaseMapping.Database.ProviderInfo = providerInfo;
+
+            databaseMapping.Database.Validate();
 
             return new DbModel(databaseMapping, Clone());
         }

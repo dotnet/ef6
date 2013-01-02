@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class EdmItemCollectionTests
     {
         [Fact]
-        public void Can_initialize_from_edm_model_and_items_set_read_only()
+        public void Can_initialize_from_edm_model_and_items_set_read_only_and_added_to_collection()
         {
             var context = new ShopContext_v1();
             var compiledModel = context.InternalContext.CodeFirstModel;

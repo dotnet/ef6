@@ -211,7 +211,8 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
-    <Compile Include="Edm\EdmModelSemanticValidationRulesTests.cs" />
+    <Compile Include="Edm\Validation\EdmModelSemanticValidationRulesTests.cs" />
+    <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />

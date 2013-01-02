@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private const string SelfRefSuffix = "Self";
 
         private readonly EdmModel _database;
-        private readonly AssociationType _assocationType;
+        private readonly AssociationType _associationType;
         private readonly AssociationSet _associationSet;
 
         internal ForeignKeyBuilder()
@@ -26,37 +26,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _database = database;
 
-            _assocationType
+            _associationType
                 = new AssociationType(
                     name,
-                    XmlConstants.GetSsdlNamespace(database.Version),
+                    EdmModelExtensions.DefaultStoreNamespace,
                     true,
                     DataSpace.SSpace);
 
             _associationSet
-                = new AssociationSet(_assocationType.Name, _assocationType);
+                = new AssociationSet(_associationType.Name, _associationType);
         }
 
         public string Name
         {
-            get { return _assocationType.Name; }
+            get { return _associationType.Name; }
         }
 
         public virtual EntityType PrincipalTable
         {
-            get { return _assocationType.SourceEnd.GetEntityType(); }
+            get { return _associationType.SourceEnd.GetEntityType(); }
             set
             {
                 Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
-                _assocationType.SourceEnd
+                _associationType.SourceEnd
                     = new AssociationEndMember(value.Name, value);
 
-                if ((_assocationType.TargetEnd != null)
-                    && (value.Name == _assocationType.TargetEnd.Name))
+                _associationSet.SourceSet
+                    = _database.GetEntitySet(value);
+
+                if ((_associationType.TargetEnd != null)
+                    && (value.Name == _associationType.TargetEnd.Name))
                 {
-                    _assocationType.TargetEnd.Name = value.Name + SelfRefSuffix;
+                    _associationType.TargetEnd.Name = value.Name + SelfRefSuffix;
                 }
             }
         }
@@ -67,18 +70,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (owner == null)
             {
-                _database.RemoveAssociationType(_assocationType);
+                _database.RemoveAssociationType(_associationType);
             }
             else
             {
-                _assocationType.TargetEnd
+                _associationType.TargetEnd
                     = new AssociationEndMember(
                         owner != PrincipalTable ? owner.Name : owner.Name + SelfRefSuffix,
                         owner);
 
-                if (!_database.AssociationTypes.Contains(_assocationType))
+                _associationSet.TargetSet
+                    = _database.GetEntitySet(owner);
+
+                if (!_database.AssociationTypes.Contains(_associationType))
                 {
-                    _database.AddAssociationType(_assocationType);
+                    _database.AddAssociationType(_associationType);
                     _database.AddAssociationSet(_associationSet);
                 }
             }
@@ -88,8 +94,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                return _assocationType.Constraint != null
-                           ? _assocationType.Constraint.ToProperties
+                return _associationType.Constraint != null
+                           ? _associationType.Constraint.ToProperties
                            : Enumerable.Empty<EdmProperty>();
             }
             set
@@ -97,10 +103,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
 
-                _assocationType.Constraint
+                _associationType.Constraint
                     = new ReferentialConstraint(
-                        _assocationType.SourceEnd,
-                        _assocationType.TargetEnd,
+                        _associationType.SourceEnd,
+                        _associationType.TargetEnd,
                         PrincipalTable.DeclaredKeyProperties,
                         value);
 
@@ -112,34 +118,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                return _assocationType.SourceEnd != null
-                           ? _assocationType.SourceEnd.DeleteBehavior
+                return _associationType.SourceEnd != null
+                           ? _associationType.SourceEnd.DeleteBehavior
                            : default(OperationAction);
             }
             set
             {
                 Util.ThrowIfReadOnly(this);
 
-                _assocationType.SourceEnd.DeleteBehavior = value;
+                _associationType.SourceEnd.DeleteBehavior = value;
             }
         }
 
         private void SetMultiplicities()
         {
-            _assocationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
-            _assocationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
+            _associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
+            _associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
-            var dependentTable = _assocationType.TargetEnd.GetEntityType();
+            var dependentTable = _associationType.TargetEnd.GetEntityType();
 
             if (dependentTable.DeclaredKeyProperties.Count() == DependentColumns.Count()
                 && dependentTable.DeclaredKeyProperties.All(DependentColumns.Contains))
             {
-                _assocationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
-                _assocationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
+                _associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+                _associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
             }
             else if (!DependentColumns.Any(p => p.Nullable))
             {
-                _assocationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
+                _associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             }
         }
 

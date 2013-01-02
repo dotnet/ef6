@@ -38,6 +38,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void Identity_synced_when_member_goes_readonly()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var property1 = EdmProperty.Primitive("Foo", primitiveType);
+            var property2 = EdmProperty.Primitive("Bar", primitiveType);
+
+            var entityType = new EntityType("T", "S", DataSpace.CSpace);
+
+            entityType.AddMember(property1);
+            entityType.AddMember(property2);
+
+            property2.Name = "Foo";
+
+            Assert.Equal("Foo1", property2.Identity);
+
+            property2.SetReadOnly();
+
+            Assert.Equal("Foo", property2.Identity);
+        }
+
+        [Fact]
         public void IsPrimaryKeyColumn_should_return_true_when_parent_key_members_contains_member()
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);

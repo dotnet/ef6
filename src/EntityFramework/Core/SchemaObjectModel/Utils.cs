@@ -145,8 +145,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Debug.Assert(
                 reader.SchemaInfo.Validity != XmlSchemaValidity.Invalid, "This method should not be called when the schema is invalid");
 
-            if (schema.DataModel
-                == SchemaDataModelOption.EntityDataModel)
+            if (schema.DataModel == SchemaDataModelOption.EntityDataModel)
             {
                 // each part of the dotted name needs to be a valid name
                 foreach (var namePart in name.Split('.'))
@@ -174,8 +173,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             DebugCheck.NotNull(schema);
             DebugCheck.NotNull(reader);
 
-            if (reader.SchemaInfo.Validity
-                == XmlSchemaValidity.Invalid)
+            if (reader.SchemaInfo.Validity == XmlSchemaValidity.Invalid)
             {
                 // the xsd already put in an error
                 name = null;
@@ -192,8 +190,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
 
             if (schema.DataModel == SchemaDataModelOption.EntityDataModel
-                &&
-                !ValidUndottedName(name))
+                && !ValidUndottedName(name))
             {
                 schema.AddError(
                     ErrorCode.InvalidName, EdmSchemaErrorSeverity.Error, reader,

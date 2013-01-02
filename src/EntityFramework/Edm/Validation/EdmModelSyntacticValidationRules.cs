@@ -60,7 +60,8 @@ namespace System.Data.Entity.Edm.Validation
                             // max length is hard coded in the xsd
                             if (item.Name.Length < 480)
                             {
-                                if (!(item is IQualifiedNameMetadataItem
+                                if (context.IsCSpace
+                                    && !(item is IQualifiedNameMetadataItem
                                           ? IsValidQualifiedItemName(item.Name)
                                           : IsValidDataModelItemName(item.Name)))
                                 {
@@ -200,7 +201,7 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
-                        if (edmAssociationSet.SourceSet == null)
+                        if (context.IsCSpace && edmAssociationSet.SourceSet == null)
                         {
                             context.AddError(
                                 edmAssociationSet,
@@ -215,7 +216,7 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
-                        if (edmAssociationSet.TargetSet == null)
+                        if (context.IsCSpace && edmAssociationSet.TargetSet == null)
                         {
                             context.AddError(
                                 edmAssociationSet,

@@ -19,12 +19,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             this DbDatabaseMapping databaseMapping, EdmModel model, EdmModel database)
         {
             DebugCheck.NotNull(databaseMapping);
-            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(database);
 
             databaseMapping.Model = model;
             databaseMapping.Database = database;
-            var entityContainerMapping = new StorageEntityContainerMapping(model.Containers.Single());
-            databaseMapping.EntityContainerMappings.Add(entityContainerMapping);
+
+            databaseMapping.EntityContainerMappings.Add(new StorageEntityContainerMapping(model.Containers.Single()));
 
             return databaseMapping;
         }
@@ -40,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 = new EdmItemCollection(databaseMapping.Model);
 
             var storeItemCollection
-                = databaseMapping.Database.ToStoreItemCollection();
+                = new StoreItemCollection(databaseMapping.Database);
 
             var storageMappingItemCollection
                 = databaseMapping.ToStorageMappingItemCollection(itemCollection, storeItemCollection);
@@ -52,18 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return metadataWorkspace;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
-        public static StorageMappingItemCollection ToStorageMappingItemCollection(this DbDatabaseMapping databaseMapping)
-        {
-            DebugCheck.NotNull(databaseMapping);
-
-            return databaseMapping.ToStorageMappingItemCollection(
-                new EdmItemCollection(databaseMapping.Model),
-                databaseMapping.Database.ToStoreItemCollection());
-        }
-
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private static StorageMappingItemCollection ToStorageMappingItemCollection(
+        public static StorageMappingItemCollection ToStorageMappingItemCollection(
             this DbDatabaseMapping databaseMapping, EdmItemCollection itemCollection,
             StoreItemCollection storeItemCollection)
         {
@@ -94,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entityType);
 
-            var mappings = databaseMapping.GetEntityTypeMappings(entityType);
+            var mappings = databaseMapping.GetEntityTypeMappings(entityType).ToList();
 
             if (mappings.Count() <= 1)
             {

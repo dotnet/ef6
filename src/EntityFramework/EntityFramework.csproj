@@ -1405,7 +1405,6 @@
     <Compile Include="Edm\Validation\EdmModelValidationContext.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationRule.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationVisitor.cs" />
-    <Compile Include="Edm\Validation\EdmModelValidator.cs" />
     <Compile Include="CreateDatabaseIfNotExists`.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbContext.cs" />
