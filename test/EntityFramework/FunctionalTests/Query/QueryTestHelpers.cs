@@ -11,6 +11,7 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
@@ -65,6 +66,11 @@ namespace System.Data.Entity.Query
         public static void VerifyDbQuery<TElement>(IEnumerable<TElement> query, string expectedSql)
         {
             Assert.IsType(typeof(DbQuery<TElement>), query);
+            Assert.Equal(StripFormatting(expectedSql), StripFormatting(query.ToString()));
+        }
+
+        public static void VerifyQuery<T>(IQueryable<T> query, string expectedSql)
+        {
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(query.ToString()));
         }
 

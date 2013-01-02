@@ -336,17 +336,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            //
-            // If the tables participating in the join are not visible at this node,
-            // then simply return. We will not add the join edge
-            //
-            if (leftTableNode.LastVisibleId < joinNode.Id
-                ||
-                rightTableNode.LastVisibleId < joinNode.Id)
-            {
-                return false;
-            }
-
             // 
             // Check to see if there is already an "edge" between the 2 tables. 
             // If there is, then simply add a predicate to that edge. Otherwise, create
@@ -566,6 +555,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool GenerateTransitiveEdge(JoinEdge edge1, JoinEdge edge2)
         {
             PlanCompiler.Assert(edge1.Right == edge2.Left, "need a common table for transitive predicate generation");
+
+            // Ignore join edges with restricted elimination.
+            if (edge1.RestrictedElimination || edge2.RestrictedElimination)
+            {
+                return false;
+            }
 
             // Ignore the "mirror" image.
             if (edge2.Right
@@ -1371,6 +1366,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns> tur, if we did eliminate the self-join </returns>
         private bool EliminateSelfJoin(JoinEdge joinEdge)
         {
+            // Ignore join edges with restricted elimination.
+            if (joinEdge.RestrictedElimination)
+            {
+                return false;
+            }
+
             // Nothing further to do, if the right-side has already been eliminated
             if (joinEdge.IsEliminated)
             {
@@ -1801,6 +1802,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateParentChildJoin(JoinEdge joinEdge)
         {
+            // Ignore join edges with restricted elimination.
+            if (joinEdge.RestrictedElimination)
+            {
+                return;
+            }
+
             List<ForeignKeyConstraint> fkConstraints;
 
             // Is there a foreign key constraint between these 2 tables?
