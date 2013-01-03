@@ -95,7 +95,6 @@
     </Compile>
     <Compile Include="ADP1.cs" />
     <Compile Include="AliasGenerator.cs" />
-    <Compile Include="BasicExpressionVisitor.cs" />
     <Compile Include="CommandTreeUtils.cs" />
     <Compile Include="CommonUtils.cs" />
     <Compile Include="GlobalSuppressions.cs" />

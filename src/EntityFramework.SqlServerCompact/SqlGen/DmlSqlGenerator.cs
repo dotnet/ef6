@@ -10,7 +10,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
     using System.Text;
-    using BasicExpressionVisitor = System.Data.Entity.SqlServerCompact.BasicExpressionVisitor;
 
     /// <summary>
     ///     Class generating SQL for a DML command tree.
