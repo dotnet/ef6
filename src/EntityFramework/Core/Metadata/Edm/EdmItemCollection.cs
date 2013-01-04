@@ -508,5 +508,3 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
     }
 }
-
-

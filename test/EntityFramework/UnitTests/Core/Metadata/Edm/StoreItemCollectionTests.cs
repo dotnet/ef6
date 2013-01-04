@@ -4,17 +4,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
+    using Moq;
     using Xunit;
 
     public class StoreItemCollectionTests
     {
-        private const string Ssdl = 
-            "<Schema Namespace='AdventureWorksModel.Store' Provider='System.Data.SqlClient' ProviderManifestToken='2008' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>" +
+        private const string Ssdl =
+            "<Schema Namespace='AdventureWorksModel.Store' ProviderManifestToken='2008' Provider='System.Data.SqlClient' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>" +
             "  <EntityContainer Name='AdventureWorksModelStoreContainer'>" +
             "    <EntitySet Name='Entities' EntityType='AdventureWorksModel.Store.Entities' Schema='dbo' />" +
             "  </EntityContainer>" +
@@ -35,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("xmlReaders",
                 Assert.Throws<ArgumentNullException>(
-                    () => StoreItemCollection.Create(null, null, out errors)).ParamName);
+                    () => StoreItemCollection.Create(null, null, null, out errors)).ParamName);
         }
 
         [Fact]
@@ -45,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(Strings.StoreItemCollectionMustHaveOneArtifact("xmlReaders"),
                 Assert.Throws<ArgumentException>(
-                    () => StoreItemCollection.Create(new XmlReader[0], null, out errors)).Message);
+                    () => StoreItemCollection.Create(new XmlReader[0], null, null, out errors)).Message);
             
         }
 
@@ -56,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(Strings.CheckArgumentContainsNullFailed("xmlReaders"),
                 Assert.Throws<ArgumentException>(
-                    () => StoreItemCollection.Create(new XmlReader[1], null, out errors)).Message);
+                    () => StoreItemCollection.Create(new XmlReader[1], null, null, out errors)).Message);
         }
 
         [Fact]
@@ -68,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 .Remove();
 
             IList<EdmSchemaError> errors;
-            var storeItemCollection = StoreItemCollection.Create(new[] { invalidSsdl.CreateReader() }, null, out errors);
+            var storeItemCollection = StoreItemCollection.Create(new[] { invalidSsdl.CreateReader() }, null, null, out errors);
 
             Assert.Null(storeItemCollection);
             Assert.Equal(1, errors.Count);
@@ -79,11 +82,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void StoreItemCollection_Create_factory_method_returns_StoreItemCollection_instance_for_valid_ssdl()
         {
             IList<EdmSchemaError> errors;
-            var storeItemCollection = StoreItemCollection.Create(new[] { XDocument.Parse(Ssdl).CreateReader() }, null, out errors);
+            var storeItemCollection = StoreItemCollection.Create(new[] { XDocument.Parse(Ssdl).CreateReader() }, null, null, out errors);
 
             Assert.NotNull(storeItemCollection);
             Assert.NotNull(storeItemCollection.GetItem<EntityType>("AdventureWorksModel.Store.Entities"));
             Assert.Equal(0, errors.Count);
+        }
+
+        [Fact]
+        public void Custom_resolver_is_used_to_resolve_DbProviderServices_when_loading_StoreItemCollection()
+        {
+            var mockResolver = new Mock<IDbDependencyResolver>();
+            mockResolver
+                .Setup(
+                    m => m.GetService(
+                        It.Is<Type>(t => t == typeof(DbProviderServices)),
+                        It.Is<object>(key => (string)key == "System.Data.SqlClient")))
+                .Returns(SqlProviderServices.Instance);
+
+            IList<EdmSchemaError> errors;
+            var storeItemCollection = 
+                StoreItemCollection.Create(
+                    new[] { XDocument.Parse(Ssdl).CreateReader() }, 
+                    null, 
+                    mockResolver.Object, 
+                    out errors);
+
+            Assert.NotNull(storeItemCollection);
+            Assert.NotNull(storeItemCollection.GetItem<EntityType>("AdventureWorksModel.Store.Entities"));
+            Assert.Equal(0, errors.Count);
+
+            mockResolver.Verify(                   
+                m => m.GetService(
+                        It.Is<Type>(t => t == typeof(DbProviderServices)),
+                        It.Is<object>(key => (string)key == "System.Data.SqlClient")), Times.Once());
         }
         
         [Fact]
@@ -111,13 +143,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_initialize_and_provider_fields_set()
         {
-            var model 
+            var model
                 = new EdmModel
-                            {
-                                ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
-                                ProviderManifest = new SqlProviderManifest("2008"),
-                                Version = 3.0
-                            };
+                      {
+                          ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
+                          ProviderManifest = new SqlProviderManifest("2008"),
+                          Version = 3.0
+                      };
 
             var itemCollection = new StoreItemCollection(model);
 

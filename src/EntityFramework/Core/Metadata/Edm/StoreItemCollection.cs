@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
@@ -73,12 +74,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param> 
         private StoreItemCollection(IEnumerable<XmlReader> xmlReaders,
                                      ReadOnlyCollection<string> filePaths,
+                                     IDbDependencyResolver resolver,
                                      out IList<EdmSchemaError> errors)
             : base(DataSpace.SSpace)
         {
             DebugCheck.NotNull(xmlReaders);
 
-            errors = this.Init(xmlReaders, filePaths, false,
+            errors = this.Init(xmlReaders, filePaths, /* throwOnError */ false, resolver,
                 out _providerManifest,
                 out _providerFactory,
                 out _providerManifestToken,
@@ -100,7 +102,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReader");
 
             Init(
-                xmlReaders, filePaths, true,
+                xmlReaders, filePaths, /* throwOnError */ true, /* resolver */ null,
                 out _providerManifest,
                 out _providerFactory,
                 out _providerManifestToken,
@@ -121,7 +123,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var composite = MetadataArtifactLoader.CreateCompositeFromXmlReaders(xmlReaders);
             Init(
                 composite.GetReaders(),
-                composite.GetPaths(), true,
+                composite.GetPaths(), 
+                /* throwOnError */ true,
+                /* resolver */ null,
                 out _providerManifest,
                 out _providerFactory,
                 out _providerManifestToken,
@@ -186,7 +190,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 Init(
                     readers,
-                    composite.GetPaths(DataSpace.SSpace), true,
+                    composite.GetPaths(DataSpace.SSpace), /* throwOnError */ true, /* resolver */ null,
                     out _providerManifest,
                     out _providerFactory,
                     out _providerManifestToken,
@@ -203,7 +207,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private IList<EdmSchemaError> Init(
             IEnumerable<XmlReader> xmlReaders,
-            IEnumerable<string> filePaths, bool throwOnError,
+            IEnumerable<string> filePaths, 
+            bool throwOnError,
+            IDbDependencyResolver resolver,
             out DbProviderManifest providerManifest,
             out DbProviderFactory providerFactory,
             out string providerManifestToken,
@@ -214,7 +220,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
 
-            var loader = new Loader(xmlReaders, filePaths, throwOnError);
+            var loader = new Loader(xmlReaders, filePaths, throwOnError, resolver);
             providerFactory = loader.ProviderFactory;
             providerManifest = loader.ProviderManifest;
             providerManifestToken = loader.ProviderManifestToken;
@@ -430,19 +436,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="errors">
         /// The collection of errors encountered while loading.
         /// </param>
+        /// <param name="resolver">
+        /// Custom resolver. Currently used to resolve DbProviderServices implementation. If <c>null</c>
+        /// the default resolver will be used.
+        /// </param>
         /// <returns>
         /// <see cref="StoreItemCollection"/> instance if no errors encountered. Otherwise <c>null</c>.
         /// </returns>
         public static StoreItemCollection Create(
             IEnumerable<XmlReader> xmlReaders,
             ReadOnlyCollection<string> filePaths,
+            IDbDependencyResolver resolver, 
             out IList<EdmSchemaError> errors)
         {
             Check.NotNull(xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentContainsNull(ref xmlReaders, "xmlReaders");
             EntityUtil.CheckArgumentEmpty(ref xmlReaders, Strings.StoreItemCollectionMustHaveOneArtifact, "xmlReaders");
 
-            var storeItemCollection = new StoreItemCollection(xmlReaders, filePaths, out errors);
+            var storeItemCollection = new StoreItemCollection(xmlReaders, filePaths, resolver, out errors);
 
             return errors != null && errors.Count > 0 ? null : storeItemCollection;
         }

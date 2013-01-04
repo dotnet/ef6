@@ -4,12 +4,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Utilities;
+    using System.Data.Entity.Utilities;   
     using System.Diagnostics;
     using System.Text;
     using System.Xml;
@@ -25,10 +26,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private IList<EdmSchemaError> _errors;
             private IList<Schema> _schemas;
             private readonly bool _throwOnError;
+            private readonly IDbDependencyResolver _resolver;
 
-            public Loader(IEnumerable<XmlReader> xmlReaders, IEnumerable<string> sourceFilePaths, bool throwOnError)
+            public Loader(IEnumerable<XmlReader> xmlReaders, IEnumerable<string> sourceFilePaths, bool throwOnError, IDbDependencyResolver resolver)
             {
                 _throwOnError = throwOnError;
+                _resolver = resolver == 
+                    null 
+                    ? DbConfiguration.DependencyResolver
+                    : new CompositeResolver<IDbDependencyResolver, IDbDependencyResolver>(resolver, DbConfiguration.DependencyResolver);
+
                 LoadItems(xmlReaders, sourceFilePaths);
             }
 
@@ -140,7 +147,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     try
                     {
-                        var services = factory.GetProviderServices();
+                        var services = _resolver.GetService<DbProviderServices>(_provider);
+                        DebugCheck.NotNull(services);
                         _providerManifest = services.GetProviderManifest(_providerManifestToken);
                         _providerFactory = factory;
                         if (_providerManifest is EdmProviderManifest)
