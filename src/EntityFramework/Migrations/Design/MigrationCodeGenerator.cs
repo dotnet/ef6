@@ -68,15 +68,16 @@ namespace System.Data.Entity.Migrations.Design
 
             if (designer)
             {
+                namespaces.Add("System.CodeDom.Compiler");
                 namespaces.Add("System.Data.Entity.Migrations.Infrastructure");
                 namespaces.Add("System.Resources");
             }
             else
             {
-                namespaces.Insert(0, "System");
+                namespaces.Add("System");
             }
 
-            return namespaces;
+            return namespaces.OrderBy(n => n);
         }
     }
 }

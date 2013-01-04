@@ -240,6 +240,13 @@ namespace System.Data.Entity.Migrations.Design
                 writer.Indent++;
             }
 
+            if (designer)
+            {
+                writer.WriteLine(
+                    "<GeneratedCode(\"EntityFramework.Migrations\", \"{0}\")>",
+                    GetType().Assembly.GetInformationalVersion());
+            }
+
             writer.Write("Public ");
 
             if (designer)

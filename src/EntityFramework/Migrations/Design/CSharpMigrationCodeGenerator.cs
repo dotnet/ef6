@@ -239,6 +239,13 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.WriteLine();
 
+            if (designer)
+            {
+                writer.WriteLine(
+                    "[GeneratedCode(\"EntityFramework.Migrations\", \"{0}\")]",
+                    GetType().Assembly.GetInformationalVersion());
+            }
+
             writer.Write("public ");
 
             if (designer)

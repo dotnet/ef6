@@ -32,6 +32,7 @@ namespace System.Data.Entity.Migrations.Design
                     .SequenceEqual(
                         new[]
                             {
+                                "System.CodeDom.Compiler",
                                 "System.Data.Entity.Migrations",
                                 "System.Data.Entity.Migrations.Infrastructure",
                                 "System.Resources"
