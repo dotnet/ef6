@@ -2,62 +2,92 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
+    using System.IO;
     using System.Linq;
 
     internal class AddMigrationCommand : MigrationsDomainCommand
     {
+        public AddMigrationCommand()
+        {
+            // Testing
+        }
+
         public AddMigrationCommand(string name, bool force, bool ignoreChanges)
         {
             DebugCheck.NotEmpty(name);
 
-            Execute(
-                () =>
+            Execute(() => Execute(name, force, ignoreChanges));
+        }
+
+        public void Execute(string name, bool force, bool ignoreChanges)
+        {
+            DebugCheck.NotEmpty(name);
+
+            var rescaffolding = false;
+
+            using (var facade = GetFacade())
+            {
+                var pendingMigrations = facade.GetPendingMigrations().ToList();
+
+                if (pendingMigrations.Any())
+                {
+                    var lastMigration = pendingMigrations.Last();
+
+                    if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
+                        && !string.Equals(lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
                     {
-                        var rescaffolding = false;
+                        throw Error.MigrationsPendingException(pendingMigrations.Join());
+                    }
 
-                        using (var facade = GetFacade())
-                        {
-                            var pendingMigrations = facade.GetPendingMigrations();
+                    rescaffolding = true;
+                    name = lastMigration;
+                }
 
-                            if (pendingMigrations.Any())
-                            {
-                                var lastMigration = pendingMigrations.Last();
+                WriteLine(!rescaffolding ? Strings.ScaffoldingMigration(name) : Strings.RescaffoldingMigration(name));
 
-                                if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
-                                    &&
-                                    !string.Equals(
-                                        lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    throw Error.MigrationsPendingException(pendingMigrations.Join());
-                                }
+                var scaffoldedMigration
+                    = facade.Scaffold(
+                        name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
 
-                                rescaffolding = true;
-                                name = lastMigration;
-                            }
+                var userCodePath
+                    = WriteMigration(name, force, scaffoldedMigration, rescaffolding);
 
-                            WriteLine(Strings.LoggingGenerate(name));
+                if (!rescaffolding)
+                {
+                    WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
 
-                            var scaffoldedMigration = facade.Scaffold(
-                                name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
-                            var userCodePath = new MigrationWriter(this)
-                                .Write(
-                                    scaffoldedMigration,
-                                    rescaffolding,
-                                    force,
-                                    name);
+                    var databaseMigrations
+                        = facade.GetDatabaseMigrations().Take(2).ToList();
 
-                            if (!rescaffolding)
-                            {
-                                WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
-                            }
+                    var lastDatabaseMigration = databaseMigrations.FirstOrDefault();
 
-                            Project.OpenFile(userCodePath);
-                        }
-                    });
+                    if ((lastDatabaseMigration != null)
+                        && string.Equals(lastDatabaseMigration.MigrationName(), name, StringComparison.Ordinal))
+                    {
+                        var revertTargetMigration
+                            = databaseMigrations.ElementAtOrDefault(1);
+
+                        WriteWarning(
+                            Environment.NewLine
+                            + Strings.DidYouMeanToRescaffold(
+                                name,
+                                revertTargetMigration ?? "$InitialDatabase",
+                                Path.GetFileName(userCodePath)));
+                    }
+                }
+
+                Project.OpenFile(userCodePath);
+            }
+        }
+
+        protected virtual string WriteMigration(string name, bool force, ScaffoldedMigration scaffoldedMigration, bool rescaffolding)
+        {
+            return new MigrationWriter(this).Write(scaffoldedMigration, rescaffolding, force, name);
         }
     }
 }

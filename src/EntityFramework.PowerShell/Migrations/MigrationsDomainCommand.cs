@@ -52,7 +52,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        public void WriteLine(string message)
+        public virtual void WriteLine(string message)
         {
             DebugCheck.NotEmpty(message);
 
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Migrations
             _dispatcher.WriteVerbose(message);
         }
 
-        public ToolingFacade GetFacade(string configurationTypeName = null)
+        public virtual ToolingFacade GetFacade(string configurationTypeName = null)
         {
             if (configurationTypeName == null)
             {

@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    extern alias powershell;
     using System.Collections;
     using System.Data.Entity.Migrations.Design;
     using System.IO;
@@ -103,11 +102,11 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         private void TestWrite(
-            Func<powershell::System.Data.Entity.Migrations.Utilities.MigrationWriter, ScaffoldedMigration, string> action,
+            Func<System.Data.Entity.Migrations.Utilities.MigrationWriter, ScaffoldedMigration, string> action,
             bool skipUserCodeVerification = false)
         {
             var command = CreateCommand(_projectDir);
-            var writer = new powershell::System.Data.Entity.Migrations.Utilities.MigrationWriter(command);
+            var writer = new System.Data.Entity.Migrations.Utilities.MigrationWriter(command);
             var scaffoldedMigration = new ScaffoldedMigration
                                           {
                                               MigrationId = MigrationId,
@@ -145,7 +144,7 @@ namespace System.Data.Entity.Migrations.Utilities
             }
         }
 
-        private static powershell::System.Data.Entity.Migrations.MigrationsDomainCommand CreateCommand(string projectDir)
+        private static System.Data.Entity.Migrations.MigrationsDomainCommand CreateCommand(string projectDir)
         {
             var fullPathProperty = new Mock<Property>();
             fullPathProperty.SetupGet(p => p.Value).Returns(projectDir);
@@ -157,7 +156,7 @@ namespace System.Data.Entity.Migrations.Utilities
 
             var projectItems = new Mock<ProjectItems>();
             projectItems.SetupGet(pi => pi.Kind).Returns(
-                powershell::System.Data.Entity.Migrations.Extensions.ProjectExtensions.VsProjectItemKindPhysicalFolder);
+                System.Data.Entity.Migrations.Extensions.ProjectExtensions.VsProjectItemKindPhysicalFolder);
             projectItems.Setup(pi => pi.AddFromDirectory(It.IsAny<string>())).Returns(
                 () =>
                     {
@@ -175,7 +174,7 @@ namespace System.Data.Entity.Migrations.Utilities
             project.SetupGet(p => p.DTE).Returns(dte.Object);
             project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
 
-            var command = new Mock<powershell::System.Data.Entity.Migrations.MigrationsDomainCommand>();
+            var command = new Mock<System.Data.Entity.Migrations.MigrationsDomainCommand>();
             command.SetupGet(c => c.Project).Returns(project.Object);
             command.Setup(c => c.WriteWarning(It.IsAny<string>())).Callback(() => { });
 

@@ -15,6 +15,11 @@ namespace System.Data.Entity.Migrations.Utilities
         private readonly PSCmdlet _cmdlet;
         private readonly DTE _dte;
 
+        public DomainDispatcher()
+        {
+            // Testing    
+        }
+
         public DomainDispatcher(PSCmdlet cmdlet)
         {
             // Not using Check here because this assembly is very small and without resources
@@ -60,7 +65,7 @@ namespace System.Data.Entity.Migrations.Utilities
             _cmdlet.WriteVerbose(text);
         }
 
-        public void OpenFile(string fileName)
+        public virtual void OpenFile(string fileName)
         {
             // Not using Check here because this assembly is very small and without resources
             if (string.IsNullOrWhiteSpace(fileName))
