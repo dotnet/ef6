@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
+namespace System.Data.Entity.Infrastructure.Pluralization
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -11,10 +11,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
     using System.Text;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    ///     Default pluralization service implementation to be used by Entity Framework. This pluralization
+    ///     service is based on English locale.
+    /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
-    internal class EnglishPluralizationService : PluralizationService, ICustomPluralizationMapping
+    public sealed class EnglishPluralizationService : IPluralizationService
     {
-        private readonly BidirectionalDictionary<string, string> _userDictionary;
+        private readonly BidirectionalDictionary<String, String> _userDictionary;
         private readonly StringBidirectionalDictionary _irregularPluralsPluralizationService;
         private readonly StringBidirectionalDictionary _assimilatedClassicalInflectionPluralizationService;
         private readonly StringBidirectionalDictionary _oSuffixPluralizationService;
@@ -25,6 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
         private readonly List<string> _knownSingluarWords;
         private readonly List<string> _knownPluralWords;
+        private readonly CultureInfo _culture = new CultureInfo("en-US");
 
         private readonly string[] _uninflectiveSuffixes =
             new[] { "fish", "ois", "sheep", "deer", "pos", "itis", "ism" };
@@ -514,12 +519,14 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                     { "symbiosis", "symbioses" }
                 };
 
-        internal EnglishPluralizationService()
+        /// <summary>
+        ///     Constructs a new  instance  of default pluralization service
+        ///     used in Entity Framework.
+        /// </summary>
+        public EnglishPluralizationService()
         {
-            Culture = new CultureInfo("en");
-
-            _userDictionary = new BidirectionalDictionary<string, string>();
-
+            _userDictionary =
+                new BidirectionalDictionary<string, string>();
             _irregularPluralsPluralizationService =
                 new StringBidirectionalDictionary(_irregularPluralsList);
             _assimilatedClassicalInflectionPluralizationService =
@@ -550,7 +557,23 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         _classicalInflectionList.Values).Concat(_irregularVerbList.Values).Concat(_uninflectiveWords));
         }
 
-        public override bool IsPlural(string word)
+        /// <summary>
+        ///     Constructs a new  instance  of default pluralization service
+        ///     used in Entity Framework.
+        ///     <param name="userDictionaryEntries">
+        ///         A collection of user dictionary entries to be used by this service.These inputs
+        ///         can  customize the service according the user needs.
+        ///     </param>
+        /// </summary>
+        public EnglishPluralizationService(IEnumerable<CustomPluralizationEntry> userDictionaryEntries)
+            : this()
+        {
+            Check.NotNull(userDictionaryEntries, "userDictionaryEntries");
+
+            userDictionaryEntries.Each(entry => _userDictionary.AddValue(entry.Singular, entry.Plural));
+        }
+
+        public bool IsPlural(string word)
         {
             if (_userDictionary.ExistsInSecond(word))
             {
@@ -562,7 +585,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
 
             if (IsUninflective(word)
-                || _knownPluralWords.Contains(word.ToLower(Culture)))
+                || _knownPluralWords.Contains(word.ToLower(_culture)))
             {
                 return true;
             }
@@ -576,7 +599,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
         }
 
-        public override bool IsSingular(string word)
+        public bool IsSingular(string word)
         {
             if (_userDictionary.ExistsInFirst(word))
             {
@@ -588,7 +611,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
 
             if (IsUninflective(word)
-                || _knownSingluarWords.Contains(word.ToLower(Culture)))
+                || _knownSingluarWords.Contains(word.ToLower(_culture)))
             {
                 return true;
             }
@@ -604,7 +627,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         }
 
         // CONSIDER optimize the algorithm by collecting all the special cases to one single dictionary
-        public override string Pluralize(string word)
+        public string Pluralize(string word)
         {
             return Capitalize(word, InternalPluralize);
         }
@@ -661,7 +684,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "man"
                     },
                 (s) => s.Remove(s.Length - 2, 2) + "en",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -675,7 +698,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "mouse"
                     },
                 (s) => s.Remove(s.Length - 4, 4) + "ice",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -688,7 +711,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "tooth"
                     },
                 (s) => s.Remove(s.Length - 4, 4) + "eeth",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -700,7 +723,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "goose"
                     },
                 (s) => s.Remove(s.Length - 4, 4) + "eese",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -712,7 +735,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "foot"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "eet",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -724,7 +747,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "zoon"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "oa",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -738,7 +761,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "xis"
                     },
                 (s) => s.Remove(s.Length - 2, 2) + "es",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -764,7 +787,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "trix"
                     },
                 (s) => s.Remove(s.Length - 1, 1) + "ces",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -778,7 +801,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "ieu"
                     },
                 (s) => s + "x",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -793,7 +816,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "ynx"
                     },
                 (s) => s.Remove(s.Length - 1, 1) + "ges",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -806,7 +829,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                                     "ch",
                                     "sh",
                                     "ss"
-                                }, (s) => s + "es", Culture, out newSuffixWord))
+                                }, (s) => s + "es", _culture, out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }
@@ -822,8 +845,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "eaf",
                         "arf"
                     },
-                (s) => s.EndsWith("deaf", true, Culture) ? s : s.Remove(s.Length - 1, 1) + "ves",
-                Culture,
+                (s) => s.EndsWith("deaf", true, _culture) ? s : s.Remove(s.Length - 1, 1) + "ves",
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -838,7 +861,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "wife"
                     },
                 (s) => s.Remove(s.Length - 2, 2) + "ves",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -856,7 +879,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "uy"
                     },
                 (s) => s + "s",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -864,7 +887,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             // CONSIDER proper noun handling, Marys, Tonys, ignore for now
 
-            if (suffixWord.EndsWith("y", true, Culture))
+            if (suffixWord.EndsWith("y", true, _culture))
             {
                 return prefixWord + suffixWord.Remove(suffixWord.Length - 1, 1) + "ies";
             }
@@ -886,18 +909,18 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "uo"
                     },
                 (s) => s + "s",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }
 
-            if (suffixWord.EndsWith("o", true, Culture))
+            if (suffixWord.EndsWith("o", true, _culture))
             {
                 return prefixWord + suffixWord + "es";
             }
 
-            if (suffixWord.EndsWith("x", true, Culture))
+            if (suffixWord.EndsWith("x", true, _culture))
             {
                 return prefixWord + suffixWord + "es";
             }
@@ -906,7 +929,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             return prefixWord + suffixWord + "s";
         }
 
-        public override string Singularize(string word)
+        public string Singularize(string word)
         {
             return Capitalize(word, InternalSingularize);
         }
@@ -982,7 +1005,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "men"
                     },
                 (s) => s.Remove(s.Length - 2, 2) + "an",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -996,7 +1019,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "mice"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "ouse",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1009,7 +1032,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "teeth"
                     },
                 (s) => s.Remove(s.Length - 4, 4) + "ooth",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1021,7 +1044,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "geese"
                     },
                 (s) => s.Remove(s.Length - 4, 4) + "oose",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1033,7 +1056,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "feet"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "oot",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1045,7 +1068,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "zoa"
                     },
                 (s) => s.Remove(s.Length - 2, 2) + "oon",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1061,7 +1084,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "sses"
                     },
                 (s) => s.Remove(s.Length - 2, 2),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1087,7 +1110,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "trices"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "x",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1101,7 +1124,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "ieux"
                     },
                 (s) => s.Remove(s.Length - 1, 1),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1116,7 +1139,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "ynges"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "x",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1134,7 +1157,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "arves"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "f",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1149,7 +1172,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "wives"
                     },
                 (s) => s.Remove(s.Length - 3, 3) + "fe",
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1167,7 +1190,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "uys"
                     },
                 (s) => s.Remove(s.Length - 1, 1),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1175,7 +1198,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
 
             // CONSIDER proper noun handling, Marys, Tonys, ignore for now
 
-            if (suffixWord.EndsWith("ies", true, Culture))
+            if (suffixWord.EndsWith("ies", true, _culture))
             {
                 return prefixWord + suffixWord.Remove(suffixWord.Length - 3, 3) + "y";
             }
@@ -1197,7 +1220,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "uos"
                     },
                 (s) => suffixWord.Remove(suffixWord.Length - 1, 1),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1215,7 +1238,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "ces"
                     },
                 (s) => s.Remove(s.Length - 1, 1),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
@@ -1230,23 +1253,23 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                         "xes"
                     },
                 (s) => s.Remove(s.Length - 2, 2),
-                Culture,
+                _culture,
                 out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }
 
-            if (suffixWord.EndsWith("oes", true, Culture))
+            if (suffixWord.EndsWith("oes", true, _culture))
             {
                 return prefixWord + suffixWord.Remove(suffixWord.Length - 2, 2);
             }
 
-            if (suffixWord.EndsWith("ss", true, Culture))
+            if (suffixWord.EndsWith("ss", true, _culture))
             {
                 return prefixWord + suffixWord;
             }
 
-            if (suffixWord.EndsWith("s", true, Culture))
+            if (suffixWord.EndsWith("s", true, _culture))
             {
                 return prefixWord + suffixWord.Remove(suffixWord.Length - 1, 1);
             }
@@ -1330,8 +1353,8 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
         {
             DebugCheck.NotEmpty(word);
 
-            if (PluralizationServiceUtil.DoesWordContainSuffix(word, _uninflectiveSuffixes, Culture)
-                || (!word.ToLower(Culture).Equals(word) && word.EndsWith("ese", false, Culture))
+            if (PluralizationServiceUtil.DoesWordContainSuffix(word, _uninflectiveSuffixes, _culture)
+                || (!word.ToLower(_culture).Equals(word) && word.EndsWith("ese", false, _culture))
                 || _uninflectiveWords.Contains(word.ToLowerInvariant()))
             {
                 return true;
@@ -1362,35 +1385,6 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             else
             {
                 return false;
-            }
-        }
-
-        #endregion
-
-        #region ICustomPluralizationMapping Members
-
-        /// <summary>
-        ///     This method allow you to add word to internal PluralizationService of English.
-        ///     If the singluar or the plural value was already added by this method, then an ArgumentException will be thrown.
-        /// </summary>
-        /// <param name="singular"> </param>
-        /// <param name="plural"> </param>
-        public void AddWord(string singular, string plural)
-        {
-            DebugCheck.NotEmpty(singular);
-            DebugCheck.NotEmpty(plural);
-
-            if (_userDictionary.ExistsInSecond(plural))
-            {
-                throw new ArgumentException(Strings.DuplicateEntryInUserDictionary("plural", plural), "plural");
-            }
-            else if (_userDictionary.ExistsInFirst(singular))
-            {
-                throw new ArgumentException(Strings.DuplicateEntryInUserDictionary("singular", singular), "singular");
-            }
-            else
-            {
-                _userDictionary.AddValue(singular, plural);
             }
         }
 

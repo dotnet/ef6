@@ -4,6 +4,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
@@ -135,6 +136,41 @@ namespace System.Data.Entity.Config
                 new DbConfiguration(mockInternalConfiguration.Object).SetDefaultConnectionFactory(connectionFactory);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(connectionFactory, null));
+            }
+        }
+
+        public class SetPluralizationService
+        {
+            [Fact]
+            public void Setting_PluralizationService_throws_if_given_a_null_service()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    "pluralizationService",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetPluralizationService(null)).ParamName);
+            }
+
+            [Fact]
+            public void Setting_PluralizationService_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetPluralizationService"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetPluralizationService(new Mock<IPluralizationService>().Object)).Message);
+            }
+
+            [Fact]
+            public void SetPluralizationService_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var pluralizationService = new Mock<IPluralizationService>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetPluralizationService(pluralizationService);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(pluralizationService, null));
             }
         }
 

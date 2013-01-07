@@ -2,11 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Design.PluralizationServices;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
-    using System.Globalization;
     using System.Linq;
 
     /// <summary>
@@ -14,8 +14,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class PluralizingEntitySetNameConvention : IEdmConvention<EntitySet>
     {
-        private static readonly PluralizationService _pluralizationService
-            = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en"));
+        private static readonly IPluralizationService _pluralizationService
+            = DbConfiguration.GetService<IPluralizationService>();
 
         public void Apply(EntitySet edmDataModelItem, EdmModel model)
         {

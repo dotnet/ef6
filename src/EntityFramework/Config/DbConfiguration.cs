@@ -5,6 +5,7 @@ namespace System.Data.Entity.Config
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
@@ -146,6 +147,21 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
             _internalConfiguration.RegisterSingleton(connectionFactory, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
+        ///     set the pluralization service.
+        /// </summary>
+        /// <param name="pluralizationService"> The pluralization service to use. </param>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "pluralization")]
+        protected internal void SetPluralizationService(IPluralizationService pluralizationService)
+        {
+            Check.NotNull(pluralizationService, "pluralizationService");
+
+            _internalConfiguration.CheckNotLocked("SetPluralizationService");
+            _internalConfiguration.RegisterSingleton(pluralizationService, null);
         }
 
         /// <summary>
