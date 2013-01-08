@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Metadata
 {
-    using System;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Reflection;
@@ -10,8 +9,9 @@ namespace System.Data.Entity.Metadata
 
     public class MetadataCachingTests
     {
-        private static readonly string connectionString =
-            @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+        private static readonly string connectionString = string.Format(
+            @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+            ModelHelpers.SimpleConnectionString("tempdb"));
 
         [Fact]
         public void Verify_that_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_same_connection_strings()
@@ -46,8 +46,9 @@ namespace System.Data.Entity.Metadata
             Verify_that_conceptual_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_reordered_metadata_in_connection_strings
             ()
         {
-            var connectionString2 =
-                @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+            var connectionString2 = string.Format(
+                 @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+                ModelHelpers.SimpleConnectionString("tempdb"));
 
             var connection1 = new EntityConnection(connectionString);
             var connection2 = new EntityConnection(connectionString2);

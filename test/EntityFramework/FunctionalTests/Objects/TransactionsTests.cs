@@ -8,7 +8,6 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using System.Transactions;
@@ -46,8 +45,9 @@ namespace System.Data.Entity.Objects
         {
             globalConnection = data.GlobalConnection;
 
-            connectionString =
-                @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+            connectionString = string.Format(
+                @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+                ModelHelpers.SimpleConnectionString("tempdb"));
         }
 
         [Fact]
@@ -794,11 +794,11 @@ namespace System.Data.Entity.Objects
                 new SqlCommand(
                     @"
     CREATE TABLE [dbo].[##TransactionLog](
-	    [ID] [int] IDENTITY(1,1) NOT NULL,
-	    [TransactionCount] [int] NOT NULL,
+        [ID] [int] IDENTITY(1,1) NOT NULL,
+        [TransactionCount] [int] NOT NULL,
      CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED 
     (
-	    [ID] ASC
+        [ID] ASC
     )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
     ) ON [PRIMARY]", GlobalConnection).ExecuteNonQuery();
 
@@ -808,8 +808,8 @@ namespace System.Data.Entity.Objects
     AS
     BEGIN
         DECLARE @tranCount AS int = @@TRANCOUNT  -- assigning to a variable prevents from counting an implicit transaction created for insert
-	    INSERT INTO ##TransactionLog Values(@tranCount)
-	    SELECT ID, TransactionCount 
+        INSERT INTO ##TransactionLog Values(@tranCount)
+        SELECT ID, TransactionCount 
         FROM ##TransactionLog
         WHERE ID = SCOPE_IDENTITY()
     END", GlobalConnection).ExecuteNonQuery();

@@ -3,13 +3,14 @@
 namespace FunctionalTests.TestHelpers
 {
     using System;
+    using System.Data.Entity;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
 
     public class DefaultConnectionFactoryResolver : IDbDependencyResolver
     {
         private static readonly DefaultConnectionFactoryResolver _instance = new DefaultConnectionFactoryResolver();
-        private volatile IDbConnectionFactory _connectionFactory = new SqlConnectionFactory();
+        private volatile IDbConnectionFactory _connectionFactory = new SqlConnectionFactory(ModelHelpers.BaseConnectionString);
 
         public static DefaultConnectionFactoryResolver Instance
         {

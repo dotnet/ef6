@@ -211,6 +211,30 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Returns a simple SQL Server connection string with the specified credentials.
+        /// </summary>
+        /// <param name="databaseName"> The database name. </param>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        protected static string SimpleConnectionStringWithCredentials(
+            string databaseName,
+            string userId,
+            string password,
+            bool persistSecurityInfo = false)
+        {
+            return ModelHelpers.SimpleConnectionStringWithCredentials(
+                databaseName,
+                userId,
+                password,
+                persistSecurityInfo);
+        }
+
+        /// <summary>
         ///     Returns the default name that will be created for the context of the given type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a name for. </typeparam>

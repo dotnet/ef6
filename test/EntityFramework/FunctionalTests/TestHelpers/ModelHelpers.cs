@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -90,6 +91,14 @@ namespace System.Data.Entity
 
         #region Connection helpers
 
+        private static string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"]
+            ?? @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
+
+        public static string BaseConnectionString
+        {
+            get { return _baseConnectionString; }
+        }
+
         /// <summary>
         ///     Returns a simple SQL Server connection string to the local machine with the given database name.
         /// </summary>
@@ -97,10 +106,12 @@ namespace System.Data.Entity
         /// <returns> The connection string. </returns>
         public static string SimpleConnectionString(string databaseName)
         {
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};Integrated Security=True;Application Name=EntityFrameworkMUE;",
-                databaseName);
+            return new SqlConnectionStringBuilder(_baseConnectionString)
+                    {
+                        InitialCatalog = databaseName,
+                        ApplicationName = "EntityFrameworkMUE"
+                    }
+                .ConnectionString;
         }
 
         /// <summary>
@@ -112,10 +123,42 @@ namespace System.Data.Entity
         {
             var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName + ".mdf");
 
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                @"Data Source=.\SQLEXPRESS;Initial Catalog={0};AttachDBFilename={1};Integrated Security=True;",
-                databaseName, databasePath);
+            return new SqlConnectionStringBuilder(_baseConnectionString)
+                    {
+                        InitialCatalog = databaseName,
+                        AttachDBFilename = databasePath
+                    }
+                .ConnectionString;
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string with the specified credentials.
+        /// </summary>
+        /// <param name="databaseName"> The database name. </param>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleConnectionStringWithCredentials(
+            string databaseName,
+            string userId,
+            string password,
+            bool persistSecurityInfo = false)
+        {
+            var builder = new SqlConnectionStringBuilder(_baseConnectionString)
+                {
+                    InitialCatalog = databaseName,
+                    ApplicationName = "EntityFrameworkMUE",
+                    UserID = userId,
+                    Password = password,
+                    PersistSecurityInfo = persistSecurityInfo
+                };
+            builder.Remove("Integrated Security");
+
+            return builder.ConnectionString;
         }
 
         /// <summary>
