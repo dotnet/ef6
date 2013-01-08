@@ -225,6 +225,7 @@
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
+    <Compile Include="ProductivityApi\DbConfigurationTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
@@ -241,6 +242,8 @@
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultConnectionFactoryResolver.cs" />
+    <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
+    <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
     <Compile Include="TestHelpers\EnumeratorExtensions.cs" />

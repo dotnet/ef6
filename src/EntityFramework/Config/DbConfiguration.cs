@@ -21,7 +21,7 @@ namespace System.Data.Entity.Config
     ///     The type to use can also be registered in the config file of the application.
     ///     See http://go.microsoft.com/fwlink/?LinkId=260883 for more information about Entity Framework configuration.
     /// </summary>
-    public class DbConfiguration
+    public class DbConfiguration : IDbConfiguration
     {
         private readonly InternalConfiguration _internalConfiguration;
 
@@ -56,6 +56,50 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
+        ///     Occurs during EF initialization after the DbConfiguration has been constructed but just before
+        ///     it is locked ready for use. Use this event to inspect and/or override services that have been
+        ///     registered before the configuration is locked. Note that this event should be used carefully
+        ///     since it may prevent tooling from discovering the same configuration that is used at runtime.
+        /// </summary>
+        /// <remarks>
+        ///     Handlers can only be added before EF starts to use the configuration and so handlers should
+        ///     generally be added as part of application initialization. Do not access the DbConfiguration
+        ///     static methods inside the handler; instead use the the members of <see cref="IDbConfiguration" />
+        ///     to get current services and/or add overrides. An instance of IDbConfiguration is provided
+        ///     in the the <see cref="DbConfigurationEventArgs" />.
+        /// </remarks>
+        public static event EventHandler<DbConfigurationEventArgs> OnLockingConfiguration
+        {
+            add
+            {
+                Check.NotNull(value, "value");
+
+                DbConfigurationManager.Instance.AddOnLockingHandler(value);
+            }
+            remove
+            {
+                Check.NotNull(value, "value");
+
+                DbConfigurationManager.Instance.RemoveOnLockingHandler(value);
+            }
+        }
+
+        /// <inheritdoc />
+        IDbDependencyResolver IDbConfiguration.DependencyResolver
+        {
+            get { return _internalConfiguration.DependencyResolver; }
+        }
+
+        /// <inheritdoc />
+        void IDbConfiguration.AddDependencyResolver(IDbDependencyResolver resolver, bool overrideConfigFile)
+        {
+            Check.NotNull(resolver, "resolver");
+
+            _internalConfiguration.CheckNotLocked("AddDependencyResolver");
+            _internalConfiguration.AddDependencyResolver(resolver, overrideConfigFile);
+        }
+
+        /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
         ///     add a <see cref="IDbDependencyResolver" /> instance to the Chain of Responsibility of resolvers that
         ///     are used to resolve dependencies needed by the Entity Framework.
@@ -72,8 +116,7 @@ namespace System.Data.Entity.Config
         {
             Check.NotNull(resolver, "resolver");
 
-            _internalConfiguration.CheckNotLocked("AddDependencyResolver");
-            _internalConfiguration.AddDependencyResolver(resolver);
+            ((IDbConfiguration)this).AddDependencyResolver(resolver, overrideConfigFile: false);
         }
 
         /// <summary>

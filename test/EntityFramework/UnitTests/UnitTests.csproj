@@ -123,6 +123,7 @@
     <Compile Include="Config\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Config\CachingDependencyResolverTests.cs" />
     <Compile Include="Config\CompositeResolverTests.cs" />
+    <Compile Include="Config\DbConfigurationEventArgsTests.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolverTests.cs" />
     <Compile Include="Config\DatabaseInitializerResolverTests.cs" />
     <Compile Include="Config\DbConfigurationFinderTests.cs" />

@@ -99,6 +99,8 @@
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\DbConfigurationEventArgs.cs" />
+    <Compile Include="Config\IDbConfiguration.cs" />
     <Compile Include="Config\TransientDependencyResolver.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolver.cs" />
     <Compile Include="Config\DatabaseInitializerResolver.cs" />

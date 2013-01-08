@@ -15,6 +15,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Linq;
     using FunctionalTests.TestHelpers;
     using Moq;
     using Xunit;
@@ -445,7 +446,7 @@ namespace ProductivityApiUnitTests
         }
 
         [Fact]
-        public void Should_use_DefaultConnectionFactory_from_supplied_config()
+        public void Should_obtain_DefaultConnectionFactory_from_supplied_config_but_this_can_be_overriden()
         {
             RunTestWithConnectionFactory(
                 Database.ResetDefaultConnectionFactory,
@@ -457,8 +458,10 @@ namespace ProductivityApiUnitTests
 
                         var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
 
+                        Assert.IsType<FakeDbContextInfoConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories.Last());
+
                         Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                        Assert.Equal("Database=foo", contextInfo.ConnectionString);
+                        Assert.Equal(@"Data Source=.\SQLEXPRESS;Initial Catalog=foo;Integrated Security=True;Application Name=EntityFrameworkMUE", contextInfo.ConnectionString);
                         Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
                     });
         }
