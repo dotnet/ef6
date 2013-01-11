@@ -1566,7 +1566,10 @@ namespace System.Data.Entity.Objects
         {
             // hack - we have to create context that uses StoredProcedure to for inserts. DbModelBuilder does not support that.
             // Instead, we use reflection to inject MetadataWorkspace created using csdl/ssdl/msl into a DbCompiledModel
-            var connectionString = @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""Data Source=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True""";
+            var connectionString = string.Format(
+                @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+                ModelHelpers.SimpleConnectionString("tempdb"));
+
             var ctx = new TransactionDbContext(connectionString);
             ctx.LogEntries.Count();
             var objectContext = ((IObjectContextAdapter)ctx).ObjectContext;
