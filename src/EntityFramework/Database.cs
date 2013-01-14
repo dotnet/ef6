@@ -290,7 +290,7 @@ namespace System.Data.Entity
             )]
         public static IDbConnectionFactory DefaultConnectionFactory
         {
-            get { return _defaultConnectionFactory.Value; }
+            get { return DbConfiguration.GetService<IDbConnectionFactory>(); }
             set
             {
                 Check.NotNull(value, "value");
@@ -300,7 +300,16 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Checks wether or not the DefaultConnectionFactory has been set to something other than its default value.
+        ///     The actual connection factory that was set, rather than the one that is returned by the resolver,
+        ///     which may have come from another source.
+        /// </summary>
+        internal static IDbConnectionFactory SetDefaultConnectionFactory
+        {
+            get { return _defaultConnectionFactory.Value; }
+        }
+
+        /// <summary>
+        ///     Checks whether or not the DefaultConnectionFactory has been set to something other than its default value.
         /// </summary>
         internal static bool DefaultConnectionFactoryChanged
         {
@@ -389,7 +398,9 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbRawSqlQuery<TElement>(new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, /*streaming:*/ false, parameters));
+            return
+                new DbRawSqlQuery<TElement>(
+                    new InternalSqlNonSetQuery(_internalContext, typeof(TElement), sql, /*streaming:*/ false, parameters));
         }
 
         /// <summary>

@@ -52,8 +52,29 @@ namespace System.Data.Entity.Config
 
             if (type == typeof(IDbConnectionFactory))
             {
-                var connectionFactory = _appConfig.TryGetDefaultConnectionFactory();
-                return () => connectionFactory;
+                // This is convoluted to avoid breaking changes from EF5. The behavior is:
+                // 1. If the app has already set the Database.DefaultConnectionFactory property, then
+                //    whatever it is set to should be returned.
+                // 2. If not, but an connection factory was set in app.config, then set the
+                //    DefaultConnectionFactory property to the one from the app.config so that in
+                //    the future it will always be used, unless...
+                // 3. The app later changes the DefaultConnectionFactory property in which case
+                //    the later one will be used instead of the one from app.config
+                // Note that this means that the app.config and DefaultConnectionFactory will override
+                // any other resolver in the chain (since this class is at the top of the chain)
+                // unless IDbConfiguration was used to add an overriding resolver.
+                if (!Database.DefaultConnectionFactoryChanged)
+                {
+                    var connectionFactory = _appConfig.TryGetDefaultConnectionFactory();
+                    if (connectionFactory != null)
+                    {
+#pragma warning disable 612,618
+                        Database.DefaultConnectionFactory = connectionFactory;
+#pragma warning restore 612,618
+                    }
+                }
+
+                return () => Database.DefaultConnectionFactoryChanged ? Database.SetDefaultConnectionFactory : null;
             }
 
             var contextType = type.TryGetElementType(typeof(IDatabaseInitializer<>));
