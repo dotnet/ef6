@@ -19,6 +19,20 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class DbMigratorTests : DbTestCase
     {
+        [MigrationsTheory]
+        public void Scaffold_throws_when_pending_migrations()
+        {
+            var migrator = CreateMigrator<ShopContext_v1>();
+            var migration = new MigrationScaffolder(migrator.Configuration).Scaffold("M1");
+
+            Assert.Equal(
+                Strings.MigrationsPendingException(migration.MigrationId),
+                Assert.Throws<MigrationsPendingException>(
+                    () => CreateMigrator<ShopContext_v1>(
+                        scaffoldedMigrations: new[] { migration })
+                              .Scaffold("M2", "N", false)).Message);
+        }
+
         private class ContextWithNonDefaultCtor : ShopContext_v1
         {
             public ContextWithNonDefaultCtor(string nameOrConnectionString)
@@ -34,18 +48,18 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                    Assert.Equal(
-                        @"'MigrationsTest' (DataSource: .\SQLEXPRESS, Provider: System.Data.SqlClient, Origin: Explicit)",
-                        migrator.TargetDatabase));
+                Assert.Equal(
+                    @"'MigrationsTest' (DataSource: .\SQLEXPRESS, Provider: System.Data.SqlClient, Origin: Explicit)",
+                    migrator.TargetDatabase));
 
             WhenSqlCe(
                 () =>
                 Assert.Equal(
                     "'"
-                        + AppDomain.CurrentDomain.BaseDirectory
-                        + @"\MigrationsTest.sdf' (DataSource: "
-                        + AppDomain.CurrentDomain.BaseDirectory
-                        + @"\MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
+                    + AppDomain.CurrentDomain.BaseDirectory
+                    + @"\MigrationsTest.sdf' (DataSource: "
+                    + AppDomain.CurrentDomain.BaseDirectory
+                    + @"\MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
                     migrator.TargetDatabase));
         }
 
@@ -110,7 +124,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -144,7 +158,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -190,7 +204,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -224,7 +238,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
- EdmMetadata.TryGetModelHash(context));
+                        EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -319,7 +333,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(
                 generatedMigration.DesignerCode
-                    .Contains("IMigrationMetadata.Source\r\n        {\r\n            get { return null; }"));
+                                  .Contains("IMigrationMetadata.Source\r\n        {\r\n            get { return null; }"));
         }
 
         [MigrationsTheory]

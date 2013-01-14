@@ -329,6 +329,26 @@ namespace System.Data.Entity.Migrations
 
         internal ScaffoldedMigration Scaffold(string migrationName, string @namespace, bool ignoreChanges)
         {
+            string migrationId = null;
+            var rescaffolding = false;
+
+            var pendingMigrations = GetPendingMigrations().ToList();
+
+            if (pendingMigrations.Any())
+            {
+                var lastMigration = pendingMigrations.Last();
+
+                if (!lastMigration.EqualsIgnoreCase(migrationName)
+                    && !lastMigration.MigrationName().EqualsIgnoreCase(migrationName))
+                {
+                    throw Error.MigrationsPendingException(pendingMigrations.Join());
+                }
+
+                rescaffolding = true;
+                migrationId = lastMigration;
+                migrationName = lastMigration.MigrationName();
+            }
+
             XDocument sourceModel = null;
             CheckLegacyCompatibility(() => sourceModel = _currentModel);
 
@@ -342,20 +362,13 @@ namespace System.Data.Entity.Migrations
                       : _modelDiffer.Diff(sourceModel, _currentModel, false)
                                     .ToList();
 
-            string migrationId;
-
-            if (migrationName.IsValidMigrationId())
-            {
-                migrationId = migrationName;
-                migrationName = migrationName.MigrationName();
-            }
-            else
+            if (!rescaffolding)
             {
                 migrationName = _migrationAssembly.UniquifyName(migrationName);
                 migrationId = MigrationAssembly.CreateMigrationId(migrationName);
             }
 
-            var generatedMigration
+            var scaffoldedMigration
                 = _configuration.CodeGenerator.Generate(
                     migrationId,
                     migrationOperations,
@@ -368,10 +381,11 @@ namespace System.Data.Entity.Migrations
                     @namespace,
                     migrationName);
 
-            generatedMigration.MigrationId = migrationId;
-            generatedMigration.Directory = _configuration.MigrationsDirectory;
+            scaffoldedMigration.MigrationId = migrationId;
+            scaffoldedMigration.Directory = _configuration.MigrationsDirectory;
+            scaffoldedMigration.IsRescaffold = rescaffolding;
 
-            return generatedMigration;
+            return scaffoldedMigration;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -687,7 +701,7 @@ namespace System.Data.Entity.Migrations
             bool? includeSystemOps = null;
             var isFirstMigration = ReferenceEquals(lastModel, _emptyModel.Value);
 
-            if (isFirstMigration && !_historyRepository.IsShared())
+            if (isFirstMigration && !base.HistoryExists())
             {
                 includeSystemOps = true;
 
@@ -705,6 +719,11 @@ namespace System.Data.Entity.Migrations
             migration.Up();
 
             ExecuteOperations(migrationMetadata.Id, targetModel, migration.Operations.Concat(systemOperations), false);
+        }
+
+        internal override bool HistoryExists()
+        {
+            return _historyRepository.Exists();
         }
 
         internal override void AutoMigrate(

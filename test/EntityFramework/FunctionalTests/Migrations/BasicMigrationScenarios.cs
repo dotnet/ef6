@@ -138,7 +138,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(
                 generatedMigration.DesignerCode
-                    .Contains("Resources.GetString(\"Source\")"));
+                                  .Contains("Resources.GetString(\"Source\")"));
         }
 
         [MigrationsTheory]
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Migrations
                     scaffoldedMigrations: generatedMigration);
 
             Assert.Throws<AutomaticDataLossException>(() => migrator.Update())
-                .ValidateMessage("AutomaticDataLoss");
+                  .ValidateMessage("AutomaticDataLoss");
         }
 
         [MigrationsTheory]
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.Throws<MigrationsException>(() => migrator.Update("balony"))
-                .ValidateMessage("MigrationNotFound", "balony");
+                  .ValidateMessage("MigrationNotFound", "balony");
         }
 
         [MigrationsTheory]
@@ -643,5 +643,51 @@ namespace System.Data.Entity.Migrations
 
             Assert.False(TableExists("OrderLines"));
         }
+
+        [MigrationsTheory]
+        public void Update_when_new_earlier_migration_should_throw_auto_disabled_exception()
+        {
+            ResetDatabase();
+
+            var migratorA = CreateMigrator<MultiUserContextA>();
+            var m1 = new MigrationScaffolder(migratorA.Configuration).Scaffold("M1");
+
+            var migratorB = CreateMigrator<MultiUserContextB>();
+            var m2 = new MigrationScaffolder(migratorB.Configuration).Scaffold("M2");
+
+            CreateMigrator<MultiUserContextB>(scaffoldedMigrations: m2).Update();
+
+            Assert.Throws<AutomaticMigrationsDisabledException>(
+                () => CreateMigrator<MultiUserContextAB>(
+                    scaffoldedMigrations: new[] { m1, m2 },
+                    automaticMigrationsEnabled: false)
+                          .Update());
+        }
+    }
+
+    public class MultiUserContextA : DbContext
+    {
+        public DbSet<MultiUserA> As { get; set; }
+    }
+
+    public class MultiUserContextB : DbContext
+    {
+        public DbSet<MultiUserB> Bs { get; set; }
+    }
+
+    public class MultiUserContextAB : DbContext
+    {
+        public DbSet<MultiUserA> As { get; set; }
+        public DbSet<MultiUserB> Bs { get; set; }
+    }
+
+    public class MultiUserA
+    {
+        public int Id { get; set; }
+    }
+
+    public class MultiUserB
+    {
+        public int Id { get; set; }
     }
 }

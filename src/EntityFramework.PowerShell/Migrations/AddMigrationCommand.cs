@@ -28,38 +28,23 @@ namespace System.Data.Entity.Migrations
         {
             DebugCheck.NotEmpty(name);
 
-            var rescaffolding = false;
-
             using (var facade = GetFacade())
             {
-                var pendingMigrations = facade.GetPendingMigrations().ToList();
-
-                if (pendingMigrations.Any())
-                {
-                    var lastMigration = pendingMigrations.Last();
-
-                    if (!string.Equals(lastMigration, name, StringComparison.OrdinalIgnoreCase)
-                        && !string.Equals(lastMigration.MigrationName(), name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        throw Error.MigrationsPendingException(pendingMigrations.Join());
-                    }
-
-                    rescaffolding = true;
-                    name = lastMigration;
-                }
-
-                WriteLine(!rescaffolding ? Strings.ScaffoldingMigration(name) : Strings.RescaffoldingMigration(name));
-
                 var scaffoldedMigration
                     = facade.Scaffold(
                         name, Project.GetLanguage(), Project.GetRootNamespace(), ignoreChanges);
 
-                var userCodePath
-                    = WriteMigration(name, force, scaffoldedMigration, rescaffolding);
+                WriteLine(
+                    !scaffoldedMigration.IsRescaffold
+                        ? Strings.ScaffoldingMigration(name)
+                        : Strings.RescaffoldingMigration(name));
 
-                if (!rescaffolding)
+                var userCodePath
+                    = WriteMigration(name, force, scaffoldedMigration, scaffoldedMigration.IsRescaffold);
+
+                if (!scaffoldedMigration.IsRescaffold)
                 {
-                    WriteWarning(Strings.SnapshotBehindWarning(scaffoldedMigration.MigrationId));
+                    WriteWarning(Strings.SnapshotBehindWarning(name));
 
                     var databaseMigrations
                         = facade.GetDatabaseMigrations().Take(2).ToList();

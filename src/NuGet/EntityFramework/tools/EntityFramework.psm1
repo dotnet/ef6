@@ -6,7 +6,7 @@ $knownExceptions = @(
     'System.Data.Entity.Migrations.Infrastructure.MigrationsException',
     'System.Data.Entity.Migrations.Infrastructure.AutomaticMigrationsDisabledException',
     'System.Data.Entity.Migrations.Infrastructure.AutomaticDataLossException',
-    'System.Data.Entity.Migrations.MigrationsPendingException',
+    'System.Data.Entity.Migrations.Infrastructure.MigrationsPendingException',
     'System.Data.Entity.Migrations.ProjectTypeNotSupportedException'
 )
 

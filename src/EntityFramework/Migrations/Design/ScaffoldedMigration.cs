@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents a code-based migration that has been scaffolded and is ready to be written to a file.
@@ -97,5 +98,11 @@ namespace System.Data.Entity.Migrations.Design
         {
             get { return _resources; }
         }
+
+        /// <summary>
+        ///     Gets or sets whether the migration was re-scaffolded.
+        /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Rescaffold")]
+        public bool IsRescaffold { get; set; }
     }
 }

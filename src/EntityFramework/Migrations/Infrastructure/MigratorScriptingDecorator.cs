@@ -96,5 +96,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal override void SeedDatabase()
         {
         }
+
+        internal override bool HistoryExists()
+        {
+            return false;
+        }
     }
 }

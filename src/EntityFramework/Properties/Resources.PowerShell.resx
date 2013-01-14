@@ -135,10 +135,6 @@
   <data name="SnapshotBehindWarning" xml:space="preserve">
     <value>The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again.</value>
   </data>
-  <data name="MigrationsPendingException" xml:space="preserve">
-    <value>Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.</value>
-    <comment>## ExceptionType=Migrations.MigrationsPendingException</comment>
-  </data>
   <data name="AutomaticMigrationDisabledInfo" xml:space="preserve">
     <value>You can use the Add-Migration command to write the pending model changes to a code-based migration.</value>
   </data>

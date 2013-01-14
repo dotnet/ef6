@@ -14,20 +14,6 @@ namespace System.Data.Entity.Migrations
     public class AddMigrationCommandTests
     {
         [Fact]
-        public void Throws_when_pending_migrations()
-        {
-            var command = new TestableAddMigrationCommand();
-
-            command.MockToolingFacade.Setup(f => f.GetPendingMigrations()).Returns(new[] { "201301040020540_Pending" });
-
-            Assert.Equal(
-                Strings.MigrationsPendingException("201301040020540_Pending"),
-                Assert.Throws<MigrationsPendingException>(
-                    () => command.Execute("M", false, false))
-                      .Message);
-        }
-
-        [Fact]
         public void Writes_scaffolding_message_when_new_migration()
         {
             var command = new TestableAddMigrationCommand();
@@ -52,11 +38,17 @@ namespace System.Data.Entity.Migrations
         {
             var command = new TestableAddMigrationCommand();
 
-            command.MockToolingFacade.Setup(f => f.GetPendingMigrations()).Returns(new[] { "201301040020540_M" });
+            command.MockToolingFacade
+                   .Setup(f => f.Scaffold("M", It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
+                   .Returns(
+                       new ScaffoldedMigration
+                       {
+                           IsRescaffold = true
+                       });
 
             command.Execute("M", false, false);
 
-            Assert.Equal(Strings.RescaffoldingMigration("201301040020540_M"), command.Messages.Single());
+            Assert.Equal(Strings.RescaffoldingMigration("M"), command.Messages.Single());
         }
 
         [Fact]
@@ -74,7 +66,7 @@ namespace System.Data.Entity.Migrations
 
             command.Execute("M", false, false);
 
-            Assert.Equal(Strings.SnapshotBehindWarning("Foo"), command.Warnings.Single());
+            Assert.Equal(Strings.SnapshotBehindWarning("M"), command.Warnings.Single());
         }
 
         [Fact]

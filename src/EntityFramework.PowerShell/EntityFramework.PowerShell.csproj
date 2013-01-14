@@ -126,7 +126,6 @@
     <Compile Include="Migrations\Extensions\XContainerExtensions.cs" />
     <Compile Include="Migrations\MigrationsDomainCommand.cs" />
     <Compile Include="Migrations\GetMigrationsCommand.cs" />
-    <Compile Include="Migrations\MigrationsPendingException.cs" />
     <Compile Include="Migrations\ProjectTypeNotSupportedException.cs" />
     <Compile Include="Migrations\UpdateDatabaseCommand.cs" />
     <Compile Include="Migrations\Utilities\MigrationWriter.cs" />

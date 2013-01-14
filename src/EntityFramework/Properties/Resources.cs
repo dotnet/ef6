@@ -13428,6 +13428,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.EntityClient_CannotReopenConnection); }
         }
+
+        /// <summary>
+        /// A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
+        /// </summary>
+        internal static string MigrationsPendingException(object p0)
+        {
+            return EntityRes.GetString(EntityRes.MigrationsPendingException, p0);
+        }
     } 
 
     /// <summary>
@@ -15074,6 +15082,14 @@ namespace System.Data.Entity.Resources
         internal static Exception LightweightEntityConfiguration_NonScalarProperty(object p0)
         {
             return new InvalidOperationException(Strings.LightweightEntityConfiguration_NonScalarProperty(p0));
+        }
+
+        /// <summary>
+        /// Migrations.Infrastructure.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
+        /// </summary>
+        internal static Exception MigrationsPendingException(object p0)
+        {
+            return new Migrations.Infrastructure.MigrationsPendingException(Strings.MigrationsPendingException(p0));
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16785,6 +16801,7 @@ namespace System.Data.Entity.Resources
         internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
         internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
+        internal const string MigrationsPendingException = "MigrationsPendingException";
         
         static EntityRes loader = null;
         ResourceManager resources;

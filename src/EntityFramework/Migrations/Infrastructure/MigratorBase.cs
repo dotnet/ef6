@@ -186,5 +186,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             get { return _this.TargetDatabase; }
         }
+
+        internal virtual bool HistoryExists()
+        {
+            return _this.HistoryExists();
+        }
     }
 }

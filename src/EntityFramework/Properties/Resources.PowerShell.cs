@@ -62,14 +62,6 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
-        /// A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
-        /// </summary>
-        internal static string MigrationsPendingException(object p0)
-        {
-            return EntityRes.GetString(EntityRes.MigrationsPendingException, p0);
-        }
-
-        /// <summary>
         /// A string like "You can use the Add-Migration command to write the pending model changes to a code-based migration."
         /// </summary>
         internal static string AutomaticMigrationDisabledInfo
@@ -165,14 +157,6 @@ namespace System.Data.Entity.Migrations.Resources
     internal static class Error
     {
         /// <summary>
-        /// Migrations.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
-        /// </summary>
-        internal static Exception MigrationsPendingException(object p0)
-        {
-            return new Migrations.MigrationsPendingException(Strings.MigrationsPendingException(p0));
-        }
-
-        /// <summary>
         /// Migrations.ProjectTypeNotSupportedException with message like "Code First Migrations does not support web site projects."
         /// </summary>
         internal static Exception WebSiteProjectNotSupported()
@@ -242,7 +226,6 @@ namespace System.Data.Entity.Migrations.Resources
         internal const string ScaffoldingMigration = "ScaffoldingMigration";
         internal const string RescaffoldNoForce = "RescaffoldNoForce";
         internal const string SnapshotBehindWarning = "SnapshotBehindWarning";
-        internal const string MigrationsPendingException = "MigrationsPendingException";
         internal const string AutomaticMigrationDisabledInfo = "AutomaticMigrationDisabledInfo";
         internal const string EnableMigrations_Success = "EnableMigrations_Success";
         internal const string EnableMigrations_BeginInitialScaffold = "EnableMigrations_BeginInitialScaffold";
