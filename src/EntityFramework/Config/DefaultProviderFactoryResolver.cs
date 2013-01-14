@@ -2,14 +2,14 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
+    using System.Data.Common;
     using System.Data.Entity.Resources;
 
-    internal class DefaultProviderServicesResolver : IDbDependencyResolver
+    internal class DefaultProviderFactoryResolver : IDbDependencyResolver
     {
         public virtual object GetService(Type type, object key)
         {
-            if (type == typeof(DbProviderServices))
+            if (type == typeof(DbProviderFactory))
             {
                 var name = key as string;
 
@@ -18,7 +18,14 @@ namespace System.Data.Entity.Config
                     throw new ArgumentException(Strings.ProviderInvariantNotPassedToResolver);
                 }
 
-                return new ProviderServicesFactory().GetInstanceByConvention(name);
+                try
+                {
+                    return DbProviderFactories.GetFactory(name);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e);
+                }
             }
 
             return null;

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <inheritdoc />
         protected override DbConnection CreateConnection()
         {
-            return DbProviderFactories.GetFactory("System.Data.SqlServerCe.4.0").CreateConnection();
+            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
         }
 
         /// <inheritdoc />

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -10,6 +11,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
+    using System.Data.SqlClient;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -116,6 +118,22 @@ namespace System.Data.Entity.Config
         public void The_root_resolver_returns_default_provider_factory_service()
         {
             Assert.IsType<DefaultDbProviderFactoryService>(new RootDependencyResolver().GetService<IDbProviderFactoryService>());
+        }
+
+        [Fact]
+        public void The_root_resolver_uses_the_default_invariant_name_resolver_to_return_an_invariant_name()
+        {
+            Assert.Equal(
+                "System.Data.SqlClient",
+                new RootDependencyResolver().GetService<IProviderInvariantName>(SqlClientFactory.Instance).Name);
+        }
+
+        [Fact]
+        public void The_root_resolver_uses_the_default_DbProviderFactory_resolver_to_return_a_provider_factory()
+        {
+            Assert.Same(
+                SqlClientFactory.Instance,
+                new RootDependencyResolver().GetService<DbProviderFactory>("System.Data.SqlClient"));
         }
 
         /// <summary>

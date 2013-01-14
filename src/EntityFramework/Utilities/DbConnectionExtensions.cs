@@ -15,7 +15,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(connection);
 
-            return DbProviderServices.GetProviderFactory(connection).GetProviderInvariantName();
+            return DbConfiguration.GetService<IProviderInvariantName>(DbProviderServices.GetProviderFactory(connection)).Name;
         }
 
         public static DbProviderInfo GetProviderInfo(

@@ -382,7 +382,7 @@ namespace System.Data.Entity.Internal
 
         private void CreateConnectionFromProviderName(string providerInvariantName)
         {
-            var factory = DbProviderFactories.GetFactory(providerInvariantName);
+            var factory = DbConfiguration.GetService<DbProviderFactory>(providerInvariantName);
             Debug.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
 
             UnderlyingConnection = factory.CreateConnection();

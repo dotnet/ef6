@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -124,49 +125,96 @@ namespace System.Data.Entity.Config
             
         }
 
-        public class AddProvider
+        public class AddDbProviderServices
         {
             [Fact]
-            public void AddProvider_throws_if_given_a_null_provider_or_bad_invariant_name()
+            public void AddDbProviderServices_throws_if_given_a_null_provider_or_bad_invariant_name()
             {
                 Assert.Equal(
                     "provider",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddProvider("Karl", null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddDbProviderServices("Karl", null)).ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddProvider(null, new Mock<DbProviderServices>().Object)).Message);
+                        () => new DbConfiguration().AddDbProviderServices(null, new Mock<DbProviderServices>().Object)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddProvider("", new Mock<DbProviderServices>().Object)).Message);
+                        () => new DbConfiguration().AddDbProviderServices("", new Mock<DbProviderServices>().Object)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddProvider(" ", new Mock<DbProviderServices>().Object)).Message);
+                        () => new DbConfiguration().AddDbProviderServices(" ", new Mock<DbProviderServices>().Object)).Message);
             }
 
             [Fact]
-            public void AddProvider_delegates_to_internal_configuration()
+            public void AddDbProviderServices_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>();
                 var providerServices = new Mock<DbProviderServices>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).AddProvider("900.FTW", providerServices);
+                new DbConfiguration(mockInternalConfiguration.Object).AddDbProviderServices("900.FTW", providerServices);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.FTW"));
             }
 
             [Fact]
-            public void AddProvider_throws_if_the_configuation_is_locked()
+            public void AddDbProviderServices_throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
                 Assert.Equal(
-                    Strings.ConfigurationLocked("AddProvider"),
+                    Strings.ConfigurationLocked("AddDbProviderServices"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddProvider("Karl", new Mock<DbProviderServices>().Object)).Message);
+                        () => configuration.AddDbProviderServices("Karl", new Mock<DbProviderServices>().Object)).Message);
+            }
+        }
+
+        public class AddDbProviderFactory
+        {
+            [Fact]
+            public void AddDbProviderFactory_throws_if_given_a_null_provider_or_bad_invariant_name()
+            {
+                Assert.Equal(
+                    "providerFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddDbProviderFactory("Karl", null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().AddDbProviderFactory(null, new Mock<DbProviderFactory>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().AddDbProviderFactory("", new Mock<DbProviderFactory>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().AddDbProviderFactory(" ", new Mock<DbProviderFactory>().Object)).Message);
+            }
+
+            [Fact]
+            public void AddDbProviderFactory_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var providerFactory = new Mock<DbProviderFactory>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).AddDbProviderFactory("920.FTW", providerFactory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerFactory, "920.FTW"));
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new InvariantNameResolver(providerFactory, "920.FTW"), false));
+            }
+
+            [Fact]
+            public void AddDbProviderFactory_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddDbProviderFactory"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.AddDbProviderFactory("Karl", new Mock<DbProviderFactory>().Object)).Message);
             }
         }
 

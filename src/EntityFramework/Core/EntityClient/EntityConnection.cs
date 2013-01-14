@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
@@ -955,7 +956,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var providerName = ValidateValueForTheKeyword(
                     effectiveConnectionOptions, EntityConnectionStringBuilder.ProviderParameterName);
                 // Get the correct provider factory
-                factory = GetFactory(providerName);
+                factory = DbConfiguration.GetService<DbProviderFactory>(providerName);
 
                 // Create the underlying provider specific connection and give it the connection string from the DbConnectionOptions object
                 storeConnection = GetStoreConnection(factory);
@@ -1276,21 +1277,6 @@ namespace System.Data.Entity.Core.EntityClient
             if (_initialized)
             {
                 throw new InvalidOperationException(Strings.EntityClient_SettingsCannotBeChangedOnOpenConnection);
-            }
-        }
-
-        /// <summary>
-        ///     Returns the DbProviderFactory associated with specified provider string
-        /// </summary>
-        private static DbProviderFactory GetFactory(string providerString)
-        {
-            try
-            {
-                return DbProviderFactories.GetFactory(providerString);
-            }
-            catch (ArgumentException e)
-            {
-                throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e);
             }
         }
 

@@ -13110,11 +13110,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices dependency."
+        /// A string like "No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices or DbProviderFactory dependency."
         /// </summary>
         internal static string ProviderInvariantNotPassedToResolver
         {
             get { return EntityRes.GetString(EntityRes.ProviderInvariantNotPassedToResolver); }
+        }
+
+        /// <summary>
+        /// A string like "No DbProviderFactory instance was passed to the IDbDependencyResolver.Get method. A DbProviderFactory instance must be supplied when attempting to resolve an IProviderInvariantName dependency."
+        /// </summary>
+        internal static string DbProviderFactoryNotPassedToResolver
+        {
+            get { return EntityRes.GetString(EntityRes.DbProviderFactoryNotPassedToResolver); }
         }
 
         /// <summary>
@@ -16762,6 +16770,7 @@ namespace System.Data.Entity.Resources
         internal const string EF6Providers_NotDbProviderServices = "EF6Providers_NotDbProviderServices";
         internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
         internal const string ProviderInvariantNotPassedToResolver = "ProviderInvariantNotPassedToResolver";
+        internal const string DbProviderFactoryNotPassedToResolver = "DbProviderFactoryNotPassedToResolver";
         internal const string DefaultConfigurationUsedBeforeSet = "DefaultConfigurationUsedBeforeSet";
         internal const string AddHandlerToInUseConfiguration = "AddHandlerToInUseConfiguration";
         internal const string ConfigurationSetTwice = "ConfigurationSetTwice";

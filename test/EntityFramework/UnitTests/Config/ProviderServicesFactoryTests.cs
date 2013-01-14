@@ -21,7 +21,7 @@ namespace System.Data.Entity.Config
             {
                 Assert.Same(
                     SqlProviderServices.Instance,
-                    new ProviderServicesFactory().GetInstanceByConvention(SqlClientFactory.Instance.GetProviderInvariantName()));
+                    new ProviderServicesFactory().GetInstanceByConvention("System.Data.SqlClient"));
             }
 
             [Fact]

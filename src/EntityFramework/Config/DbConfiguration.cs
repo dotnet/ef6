@@ -154,7 +154,7 @@ namespace System.Data.Entity.Config
         ///     an Entity Framework provider.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -162,13 +162,37 @@ namespace System.Data.Entity.Config
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
         [CLSCompliant(false)]
-        protected internal void AddProvider(string providerInvariantName, DbProviderServices provider)
+        protected internal void AddDbProviderServices(string providerInvariantName, DbProviderServices provider)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(provider, "provider");
 
-            _internalConfiguration.CheckNotLocked("AddProvider");
+            _internalConfiguration.CheckNotLocked("AddDbProviderServices");
             _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
+        ///     an ADO.NET provider.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolvers for
+        ///     <see cref="DbProviderFactory" /> and <see cref="IProviderInvariantName"/>. This means that, if desired, 
+        ///     the same functionality can be achieved using a custom resolver or a resolved backed by an
+        ///     Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
+        /// <param name="providerFactory"> The provider instance. </param>
+        [CLSCompliant(false)]
+        protected internal void AddDbProviderFactory(string providerInvariantName, DbProviderFactory providerFactory)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(providerFactory, "providerFactory");
+
+            _internalConfiguration.CheckNotLocked("AddDbProviderFactory");
+            _internalConfiguration.RegisterSingleton(providerFactory, providerInvariantName);
+            _internalConfiguration.AddDependencyResolver(new InvariantNameResolver(providerFactory, providerInvariantName));
         }
 
         /// <summary>
@@ -178,7 +202,7 @@ namespace System.Data.Entity.Config
         ///     the default connection factory being used.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbConnectionFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -215,7 +239,7 @@ namespace System.Data.Entity.Config
         /// </summary>
         /// <remarks>
         ///     Calling this method is equivalent to calling <see cref="Database.SetInitializer{TContext}" />.
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDatabaseInitializer{TContext}" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -237,7 +261,7 @@ namespace System.Data.Entity.Config
         ///     It is different from setting the generator in the <see cref="DbMigrationsConfiguration" /> because it allows
         ///     EF to use the Migrations pipeline to create a database even when there is no Migrations configuration in the project
         ///     and/or Migrations are not being explicitly used.
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="MigrationSqlGenerator" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -260,7 +284,7 @@ namespace System.Data.Entity.Config
         ///     be obtained from connections without necessarily opening the connection.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IManifestTokenService" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -281,7 +305,7 @@ namespace System.Data.Entity.Config
         ///     sufficient.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbProviderFactoryService" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -301,7 +325,7 @@ namespace System.Data.Entity.Config
         ///     model behind a <see cref="DbContext" /> to be changed.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -321,7 +345,7 @@ namespace System.Data.Entity.Config
         ///     internal Migrations <see cref="HistoryContext" /> for a given <see cref="DbMigrationsConfiguration" />.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IHistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
@@ -352,7 +376,7 @@ namespace System.Data.Entity.Config
         ///     for different EF/ADO.NET providers.
         /// </summary>
         /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the entity framework.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolved backed by an Inversion-of-Control container.

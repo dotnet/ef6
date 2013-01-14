@@ -7,6 +7,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -43,10 +44,10 @@ namespace System.Data.Entity.Utilities
                 return EntityProviderServices.Instance;
             }
 
-            var invariantName = factory.GetProviderInvariantName();
+            var invariantName = DbConfiguration.GetService<IProviderInvariantName>(factory);
             Debug.Assert(invariantName != null);
 
-            return DbConfiguration.GetService<DbProviderServices>(invariantName);
+            return DbConfiguration.GetService<DbProviderServices>(invariantName.Name);
         }
     }
 }

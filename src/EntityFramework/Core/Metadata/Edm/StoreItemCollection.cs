@@ -146,8 +146,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(model.Version > 0);
 
             _providerManifest = model.ProviderManifest;
-            _providerFactory = DbProviderFactories.GetFactory(model.ProviderInfo.ProviderInvariantName);
             _providerInvariantName = model.ProviderInfo.ProviderInvariantName;
+            _providerFactory = DbConfiguration.GetService<DbProviderFactory>(_providerInvariantName);
             _providerManifestToken = model.ProviderInfo.ProviderManifestToken;
 
             LoadProviderManifest(_providerManifest);

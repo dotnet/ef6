@@ -313,21 +313,6 @@ namespace System.Data.Entity.Core.Common
             return GetProviderFactory(connection).GetProviderServices();
         }
 
-        internal static DbProviderFactory GetProviderFactory(string providerInvariantName)
-        {
-            DebugCheck.NotNull(providerInvariantName);
-            DbProviderFactory factory;
-            try
-            {
-                factory = DbProviderFactories.GetFactory(providerInvariantName);
-            }
-            catch (ArgumentException e)
-            {
-                throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e);
-            }
-            return factory;
-        }
-
         /// <summary>
         ///     Retrieve the DbProviderFactory based on the specified DbConnection
         /// </summary>

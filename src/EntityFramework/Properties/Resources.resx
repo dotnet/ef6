@@ -5220,7 +5220,10 @@
     <value>The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider.</value>
   </data>
   <data name="ProviderInvariantNotPassedToResolver" xml:space="preserve">
-    <value>No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices dependency.</value>
+    <value>No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices or DbProviderFactory dependency.</value>
+  </data>
+  <data name="DbProviderFactoryNotPassedToResolver" xml:space="preserve">
+    <value>No DbProviderFactory instance was passed to the IDbDependencyResolver.Get method. A DbProviderFactory instance must be supplied when attempting to resolve an IProviderInvariantName dependency.</value>
   </data>
   <data name="DefaultConfigurationUsedBeforeSet" xml:space="preserve">
     <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>

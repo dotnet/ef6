@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Sql
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
@@ -72,7 +73,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> </returns>
         protected virtual DbConnection CreateConnection()
         {
-            return new SqlConnection();
+            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
         }
 
         /// <summary>

@@ -568,8 +568,7 @@ namespace ProductivityApiTests
         public void DbContext_construction_does_not_throw_but_subsequent_calls_using_connection_throw_for_invalid_provider_keyword()
         {
             var context = new SimpleModelContextWithNoData("InvalidProviderNameConnectionString");
-            Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage(
-                typeof(DbConnection).Assembly, "ConfigProviderNotFound", null);
+            Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage("EntityClient_InvalidStoreProvider");
         }
 
         [Fact]

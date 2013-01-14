@@ -46,6 +46,8 @@ namespace System.Data.Entity.Config
                     () => new SqlCeMigrationSqlGenerator(), "System.Data.SqlServerCe.4.0"));
 
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
+            _resolvers.Add(new CachingDependencyResolver(new DefaultProviderFactoryResolver()));
+            _resolvers.Add(new CachingDependencyResolver(new DefaultInvariantNameResolver()));
             _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenService>(new DefaultManifestTokenService()));

@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     DbProviderFactory factory = null;
                     try
                     {
-                        factory = DbProviderServices.GetProviderFactory(_provider);
+                        factory = DbConfiguration.GetService<DbProviderFactory>(_provider);
                     }
                     catch (ArgumentException e)
                     {
