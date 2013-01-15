@@ -60,5 +60,27 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
         }
+
+        private class CreateClusteredIndexMigration : DbMigration
+        {
+            public override void Up()
+            {
+                CreateIndex("OrderLines", "OrderId", name: "IX_Custom_Name", clustered: true);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_create_clustered_index()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new CreateClusteredIndexMigration());
+
+            migrator.Update();
+        }
     }
 }

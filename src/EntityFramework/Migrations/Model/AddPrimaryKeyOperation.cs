@@ -41,5 +41,10 @@ namespace System.Data.Entity.Migrations.Model
                 return dropPrimaryKeyOperation;
             }
         }
+
+        /// <summary>
+        ///     Gets or sets whether this is a clustered primary key.
+        /// </summary>
+        public bool IsClustered { get; set; }
     }
 }

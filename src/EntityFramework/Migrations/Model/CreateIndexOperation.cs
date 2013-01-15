@@ -52,5 +52,10 @@ namespace System.Data.Entity.Migrations.Model
         {
             get { return false; }
         }
+
+        /// <summary>
+        ///     Gets or sets whether this is a clustered index.
+        /// </summary>
+        public bool IsClustered { get; set; }
     }
 }

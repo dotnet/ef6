@@ -31,7 +31,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         [Fact]
-        public void PrimaryKey_should_set_key_columns_and_name()
+        public void PrimaryKey_should_set_key_columns_name_and_clustered()
         {
             var createTableOperation = new CreateTableOperation("T");
             createTableOperation.Columns.Add(
@@ -57,12 +57,13 @@ namespace System.Data.Entity.Migrations.Builders
                          {
                              c.Bar,
                              c.Foo
-                         }, name: "PK_Custom");
+                         }, name: "PK_Custom", clustered: false);
 
             Assert.Equal(2, createTableOperation.PrimaryKey.Columns.Count());
             Assert.Equal("Bar", createTableOperation.PrimaryKey.Columns.First());
             Assert.Equal("Foo", createTableOperation.PrimaryKey.Columns.Last());
             Assert.Equal("PK_Custom", createTableOperation.PrimaryKey.Name);
+            Assert.False(createTableOperation.PrimaryKey.IsClustered);
         }
 
         [Fact]
@@ -124,7 +125,7 @@ namespace System.Data.Entity.Migrations.Builders
                          {
                              c.Foo,
                              c.Bar
-                         }, unique: true);
+                         }, unique: true, clustered: false);
 
             Assert.Equal(1, migration.Operations.Count());
 
@@ -135,6 +136,7 @@ namespace System.Data.Entity.Migrations.Builders
             Assert.True(createIndexOperation.IsUnique);
             Assert.Equal("Foo", createIndexOperation.Columns.First());
             Assert.Equal("Bar", createIndexOperation.Columns.Last());
+            Assert.False(createIndexOperation.IsClustered);
         }
     }
 }

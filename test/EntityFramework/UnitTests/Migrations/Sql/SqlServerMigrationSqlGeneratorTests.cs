@@ -126,7 +126,8 @@ namespace System.Data.Entity.Migrations.Sql
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation
                                              {
-                                                 Table = "T"
+                                                 Table = "T",
+                                                 IsClustered = true
                                              };
 
             addPrimaryKeyOperation.Columns.Add("c1");
@@ -135,6 +136,25 @@ namespace System.Data.Entity.Migrations.Sql
             var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY ([c1], [c2])"));
+        }
+
+        [Fact]
+        public void Generate_can_output_non_clustered_add_primary_key_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var addPrimaryKeyOperation = new AddPrimaryKeyOperation
+                                             {
+                                                 Table = "T",
+                                                 IsClustered = false
+                                             };
+
+            addPrimaryKeyOperation.Columns.Add("c1");
+            addPrimaryKeyOperation.Columns.Add("c2");
+
+            var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.True(sql.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY NONCLUSTERED ([c1], [c2])"));
         }
 
         [Fact]
@@ -195,7 +215,13 @@ namespace System.Data.Entity.Migrations.Sql
                         Name = "Name",
                         IsNullable = false
                     });
-            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
+
+            createTableOperation.PrimaryKey
+                = new AddPrimaryKeyOperation
+                      {
+                          IsClustered = true
+                      };
+
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
@@ -212,6 +238,48 @@ CREATE TABLE [foo].[Customers] (
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY ([Id])
 )"));
         }
+
+        [Fact]
+        public void Generate_can_output_create_table_statement_with_non_clustered_pk()
+        {
+            var createTableOperation = new CreateTableOperation("foo.Customers");
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+            {
+                Name = "Id",
+                IsNullable = true,
+                IsIdentity = true
+            };
+            createTableOperation.Columns.Add(idColumn);
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                {
+                    Name = "Name",
+                    IsNullable = false
+                });
+
+            createTableOperation.PrimaryKey
+                = new AddPrimaryKeyOperation
+                {
+                    IsClustered = false
+                };
+
+            createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.True(
+                sql.Contains(
+                    @"IF schema_id('foo') IS NULL
+    EXECUTE('CREATE SCHEMA [foo]')
+CREATE TABLE [foo].[Customers] (
+    [Id] [int] IDENTITY,
+    [Name] [nvarchar](max) NOT NULL,
+    CONSTRAINT [PK_foo.Customers] PRIMARY KEY NONCLUSTERED ([Id])
+)"));
+        }
+
 
         [Fact]
         public void Generate_can_output_create_table_as_system_object_statement()
@@ -343,6 +411,50 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             Assert.True(
                 sql.Contains(
                     @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])"));
+        }
+
+        [Fact]
+        public void Generate_can_output_create_index_statement_clustered()
+        {
+            var createTableOperation = new CreateTableOperation("Customers");
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
+            {
+                Name = "Id",
+                IsNullable = true,
+                IsIdentity = true
+            };
+            createTableOperation.Columns.Add(idColumn);
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.String)
+                {
+                    Name = "Name",
+                    IsNullable = false
+                });
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
+            createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var createIndexOperation = new CreateIndexOperation
+            {
+                Table = createTableOperation.Name,
+                IsUnique = true,
+                IsClustered = true
+            };
+
+            createIndexOperation.Columns.Add(idColumn.Name);
+
+            var sql
+                = migrationSqlGenerator.Generate(
+                    new[]
+                        {
+                            createIndexOperation
+                        },
+                    "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.True(
+                sql.Contains(
+                    @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])"));
         }
 
         [Fact]
@@ -734,7 +846,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 }.Each(c => operation.Columns.Add(c));
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008")
-                .Join(s => s.Sql, Environment.NewLine);
+                                                          .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Equal(@"CREATE TABLE [T] (
     [A] [geography] NOT NULL DEFAULT 'SRID=4326;POINT (6 7)',

@@ -365,18 +365,20 @@ namespace System.Data.Entity.Migrations
         /// <param name="table"> The table that contains the primary key column. Schema name is optional, if no schema is specified then dbo is assumed. </param>
         /// <param name="column"> The primary key column. </param>
         /// <param name="name"> The name of the primary key in the database. If no value is supplied a unique name will be generated. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered primary key. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddPrimaryKey(
             string table,
             string column,
             string name = null,
+            bool clustered = true,
             object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
             Check.NotEmpty(column, "column");
 
-            AddPrimaryKey(table, new[] { column }, name, anonymousArguments);
+            AddPrimaryKey(table, new[] { column }, name, clustered, anonymousArguments);
         }
 
         /// <summary>
@@ -385,12 +387,14 @@ namespace System.Data.Entity.Migrations
         /// <param name="table"> The table that contains the primary key columns. Schema name is optional, if no schema is specified then dbo is assumed. </param>
         /// <param name="columns"> The primary key columns. </param>
         /// <param name="name"> The name of the primary key in the database. If no value is supplied a unique name will be generated. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered primary key. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AddPrimaryKey(
             string table,
             string[] columns,
             string name = null,
+            bool clustered = true,
             object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
@@ -405,7 +409,8 @@ namespace System.Data.Entity.Migrations
                 = new AddPrimaryKeyOperation(anonymousArguments)
                       {
                           Table = table,
-                          Name = name
+                          Name = name,
+                          IsClustered = clustered
                       };
 
             columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
@@ -461,6 +466,7 @@ namespace System.Data.Entity.Migrations
         /// <param name="column"> The name of the column to create the index on. </param>
         /// <param name="unique"> A value indicating if this is a unique index. If no value is supplied a non-unique index will be created. </param>
         /// <param name="name"> The name to use for the index in the database. If no value is supplied a unique name will be generated. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered index. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void CreateIndex(
@@ -468,12 +474,13 @@ namespace System.Data.Entity.Migrations
             string column,
             bool unique = false,
             string name = null,
+            bool clustered = false,
             object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
             Check.NotEmpty(column, "column");
 
-            CreateIndex(table, new[] { column }, unique, name, anonymousArguments);
+            CreateIndex(table, new[] { column }, unique, name, clustered, anonymousArguments);
         }
 
         /// <summary>
@@ -483,6 +490,7 @@ namespace System.Data.Entity.Migrations
         /// <param name="columns"> The name of the columns to create the index on. </param>
         /// <param name="unique"> A value indicating if this is a unique index. If no value is supplied a non-unique index will be created. </param>
         /// <param name="name"> The name to use for the index in the database. If no value is supplied a unique name will be generated. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered index. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void CreateIndex(
@@ -490,6 +498,7 @@ namespace System.Data.Entity.Migrations
             string[] columns,
             bool unique = false,
             string name = null,
+            bool clustered = false,
             object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
@@ -505,7 +514,8 @@ namespace System.Data.Entity.Migrations
                       {
                           Table = table,
                           IsUnique = unique,
-                          Name = name
+                          Name = name,
+                          IsClustered = clustered
                       };
 
             columns.Each(c => createIndexOperation.Columns.Add(c));

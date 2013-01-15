@@ -38,6 +38,7 @@ namespace System.Data.Entity.Migrations.Builders
         /// </summary>
         /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
         /// <param name="name"> The name of the primary key. If null is supplied, a default name will be generated. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered primary key. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         /// <returns> Itself, so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
@@ -46,13 +47,16 @@ namespace System.Data.Entity.Migrations.Builders
         public TableBuilder<TColumns> PrimaryKey(
             Expression<Func<TColumns, object>> keyExpression,
             string name = null,
+            bool clustered = true,
             object anonymousArguments = null)
         {
             Check.NotNull(keyExpression, "keyExpression");
 
-            var addPrimaryKeyOperation = new AddPrimaryKeyOperation(anonymousArguments)
+            var addPrimaryKeyOperation 
+                = new AddPrimaryKeyOperation(anonymousArguments)
                                              {
-                                                 Name = name
+                                                 Name = name,
+                                                 IsClustered = clustered
                                              };
 
             keyExpression
@@ -70,13 +74,17 @@ namespace System.Data.Entity.Migrations.Builders
         /// </summary>
         /// <param name="indexExpression"> A lambda expression representing the property to be indexed. C#: t => t.PropertyOne VB.Net: Function(t) t.PropertyOne If multiple properties are to be indexed then specify an anonymous type including the properties. C#: t => new { t.PropertyOne, t.PropertyTwo } VB.Net: Function(t) New With { t.PropertyOne, t.PropertyTwo } </param>
         /// <param name="unique"> A value indicating whether or not this is a unique index. </param>
+        /// <param name="clustered"> A value indicating whether or not this is a clustered index. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         /// <returns> Itself, so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> Index(
-            Expression<Func<TColumns, object>> indexExpression, bool unique = false, object anonymousArguments = null)
+            Expression<Func<TColumns, object>> indexExpression, 
+            bool unique = false,
+            bool clustered = false, 
+            object anonymousArguments = null)
         {
             Check.NotNull(indexExpression, "indexExpression");
 
@@ -84,7 +92,8 @@ namespace System.Data.Entity.Migrations.Builders
                 = new CreateIndexOperation(anonymousArguments)
                       {
                           Table = _createTableOperation.Name,
-                          IsUnique = unique
+                          IsUnique = unique,
+                          IsClustered = clustered
                       };
 
             indexExpression

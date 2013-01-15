@@ -92,7 +92,7 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1>(new CreateOobTableInvalidFkMigration());
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("PartialFkOperation", "Oob_Dependent", "Fk");
+                  .ValidateMessage("PartialFkOperation", "Oob_Dependent", "Fk");
         }
 
         private class CreateCustomColumnNameMigration : DbMigration
@@ -121,6 +121,31 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.True(ColumnExists("Foo", "12 Foo Id"));
+        }
+
+        private class CreateCustomClusteredIndex : DbMigration
+        {
+            public override void Up()
+            {
+                CreateTable(
+                    "Foo", t => new
+                                    {
+                                        Id = t.Int(nullable: false),
+                                        Ix = t.Int()
+                                    })
+                    .PrimaryKey(t => t.Id, clustered: false)
+                    .Index(t => t.Ix, clustered: true);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_create_table_with_custom_clustered_index()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>(new CreateCustomClusteredIndex());
+
+            migrator.Update();
         }
     }
 }

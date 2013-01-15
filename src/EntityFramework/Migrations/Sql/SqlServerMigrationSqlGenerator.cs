@@ -132,7 +132,14 @@ namespace System.Data.Entity.Migrations.Sql
                 writer.WriteLine(",");
                 writer.Write("CONSTRAINT ");
                 writer.Write(Quote(createTableOperation.PrimaryKey.Name));
-                writer.Write(" PRIMARY KEY (");
+                writer.Write(" PRIMARY KEY ");
+
+                if (!createTableOperation.PrimaryKey.IsClustered)
+                {
+                    writer.Write("NONCLUSTERED ");
+                }
+                
+                writer.Write("(");
                 writer.Write(createTableOperation.PrimaryKey.Columns.Join(Quote));
                 writer.WriteLine(")");
             }
@@ -265,6 +272,11 @@ namespace System.Data.Entity.Migrations.Sql
                     writer.Write("UNIQUE ");
                 }
 
+                if (createIndexOperation.IsClustered)
+                {
+                    writer.Write("CLUSTERED ");
+                }
+
                 writer.Write("INDEX ");
                 writer.Write(Quote(createIndexOperation.Name));
                 writer.Write(" ON ");
@@ -312,7 +324,14 @@ namespace System.Data.Entity.Migrations.Sql
                 writer.Write(Name(addPrimaryKeyOperation.Table));
                 writer.Write(" ADD CONSTRAINT ");
                 writer.Write(Quote(addPrimaryKeyOperation.Name));
-                writer.Write(" PRIMARY KEY (");
+                writer.Write(" PRIMARY KEY ");
+
+                if (!addPrimaryKeyOperation.IsClustered)
+                {
+                    writer.Write("NONCLUSTERED ");
+                }
+
+                writer.Write("(");
                 writer.Write(addPrimaryKeyOperation.Columns.Select(Quote).Join());
                 writer.Write(")");
 
