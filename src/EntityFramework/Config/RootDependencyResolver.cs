@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
@@ -51,6 +52,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IHistoryContextFactory>(new DefaultHistoryContextFactory()));
             _resolvers.Add(new ThreadLocalDependencyResolver<IDbCommandInterceptor>(() => new DefaultCommandInterceptor()));
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new DefaultDbProviderFactoryService()));
+            _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

@@ -68,6 +68,19 @@ namespace System.Data.Entity.Config
 
                 mockNormalChain.Verify(m => m.Add(resolver));
             }
+
+            [Fact]
+            public void AddDependencyResolver_adds_a_resolver_to_the_app_config_chain_when_override_flag_is_used()
+            {
+                var mockAppConfigChain = new Mock<ResolverChain>();
+                var resolver = new Mock<IDbDependencyResolver>().Object;
+
+                new InternalConfiguration(
+                    mockAppConfigChain.Object, new Mock<ResolverChain>().Object,
+                    new RootDependencyResolver()).AddDependencyResolver(resolver, overrideConfigFile: true);
+
+                mockAppConfigChain.Verify(m => m.Add(resolver));
+            }
         }
 
         public class DependencyResolver
@@ -119,7 +132,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SwitchInRootResolver_swicthes_in_given_root_resolver()
             {
-                var configuration = new InternalConfiguration();
+                var configuration = new DbConfiguration().InternalConfiguration;
                 var mockRootResolver = new Mock<RootDependencyResolver>();
                 configuration.SwitchInRootResolver(mockRootResolver.Object);
 
@@ -132,7 +145,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SwitchInRootResolver_leaves_other_resolvers_intact()
             {
-                var configuration = new InternalConfiguration();
+                var configuration = new DbConfiguration().InternalConfiguration;
                 var mockResolver = new Mock<IDbDependencyResolver>();
                 configuration.AddDependencyResolver(mockResolver.Object);
 

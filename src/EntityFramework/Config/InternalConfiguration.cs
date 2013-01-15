@@ -60,6 +60,7 @@ namespace System.Data.Entity.Config
 
         public virtual void Lock()
         {
+            DbConfigurationManager.Instance.OnLocking(Owner);
             _isLocked = true;
         }
 
@@ -70,13 +71,14 @@ namespace System.Data.Entity.Config
             _resolvers.First.Add(resolver);
         }
 
-        public virtual void AddDependencyResolver(IDbDependencyResolver resolver)
+        public virtual void AddDependencyResolver(IDbDependencyResolver resolver, bool overrideConfigFile = false)
         {
             DebugCheck.NotNull(resolver);
             Debug.Assert(!_isLocked);
 
             // New resolvers always run after the config resolvers so that config always wins over code
-            _resolvers.Second.Add(resolver);
+            // unless the override flag is used, in which case we add the new resolver right at the top.
+            (overrideConfigFile ? _resolvers.First : _resolvers.Second).Add(resolver);
         }
 
         public virtual void RegisterSingleton<TService>(TService instance, object key)

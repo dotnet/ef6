@@ -12,7 +12,6 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
     using Xunit;
@@ -50,7 +49,7 @@ namespace System.Data.Entity.Query
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
 
-        public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql)
+        public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql, params EntityParameter[] entityParameters)
         {
             var providerServices =
                 (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
@@ -59,9 +58,14 @@ namespace System.Data.Entity.Query
 
             var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
             entityCommand.Connection = connection;
+            if (entityParameters != null && entityParameters.Length > 0)
+            {
+                entityCommand.Parameters.AddRange(entityParameters);
+            }
 
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
+
 
         public static void VerifyDbQuery<TElement>(IEnumerable<TElement> query, string expectedSql)
         {
@@ -107,7 +111,7 @@ namespace System.Data.Entity.Query
         {
             if (exception == null)
             {
-                return exception;
+                return null;
             }
 
             var currectException = exception;

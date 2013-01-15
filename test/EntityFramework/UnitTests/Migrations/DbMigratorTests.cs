@@ -34,14 +34,18 @@ namespace System.Data.Entity.Migrations
 
             WhenNotSqlCe(
                 () =>
-                Assert.Equal(
-                    @"'MigrationsTest' (DataSource: .\sqlexpress, Provider: System.Data.SqlClient, Origin: Explicit)",
-                    migrator.TargetDatabase));
+                    Assert.Equal(
+                        @"'MigrationsTest' (DataSource: .\SQLEXPRESS, Provider: System.Data.SqlClient, Origin: Explicit)",
+                        migrator.TargetDatabase));
 
             WhenSqlCe(
                 () =>
                 Assert.Equal(
-                    @"'MigrationsTest.sdf' (DataSource: MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
+                    "'"
+                        + AppDomain.CurrentDomain.BaseDirectory
+                        + @"\MigrationsTest.sdf' (DataSource: "
+                        + AppDomain.CurrentDomain.BaseDirectory
+                        + @"\MigrationsTest.sdf, Provider: System.Data.SqlServerCe.4.0, Origin: Explicit)",
                     migrator.TargetDatabase));
         }
 
@@ -106,7 +110,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
-                        EdmMetadata.TryGetModelHash(context));
+ EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -140,7 +144,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
-                        EdmMetadata.TryGetModelHash(context));
+ EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -186,7 +190,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
-                        EdmMetadata.TryGetModelHash(context));
+ EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));
@@ -220,7 +224,7 @@ namespace System.Data.Entity.Migrations
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
 #pragma warning disable 612,618
-                        EdmMetadata.TryGetModelHash(context));
+ EdmMetadata.TryGetModelHash(context));
 #pragma warning restore 612,618
 
                     Assert.True(TableExists("EdmMetadata"));

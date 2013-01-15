@@ -65,14 +65,11 @@ namespace System.Data.Entity.Migrations
     {
         private readonly string _name;
 
-        private const string ConnectionStringFormat
-            = "Data Source=.\\sqlexpress;Initial Catalog={0};Integrated Security=True;";
-
         public SqlTestDatabase(string name)
         {
             _name = name;
 
-            ConnectionString = string.Format(ConnectionStringFormat, name);
+            ConnectionString = ModelHelpers.SimpleConnectionString(name);
             ProviderName = "System.Data.SqlClient";
             ProviderManifestToken = "2008";
             SqlGenerator = new SqlServerMigrationSqlGenerator();
@@ -85,7 +82,7 @@ namespace System.Data.Entity.Migrations
                 = "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'" + _name + "') "
                   + "CREATE DATABASE [" + _name + "]";
 
-            ExecuteNonQuery(sql, string.Format(ConnectionStringFormat, "master"));
+            ExecuteNonQuery(sql, ModelHelpers.SimpleConnectionString("master"));
 
             ResetDatabase();
         }
@@ -111,8 +108,8 @@ namespace System.Data.Entity.Migrations
                   DEALLOCATE history_cursor;
  
                   DECLARE @constraint_name NVARCHAR(256),
-		                  @table_schema NVARCHAR(100),
-		                  @table_name NVARCHAR(100);
+                          @table_schema NVARCHAR(100),
+                          @table_name NVARCHAR(100);
                  
                   DECLARE constraint_cursor CURSOR FOR
                   SELECT constraint_name, table_schema, table_name
@@ -157,15 +154,13 @@ namespace System.Data.Entity.Migrations
 
     public class SqlCeTestDatabase : TestDatabase
     {
-        private const string ConnectionStringFormat = "Data Source={0}.sdf";
-
         private readonly string _name;
 
         public SqlCeTestDatabase(string name)
         {
             _name = name;
 
-            ConnectionString = string.Format(ConnectionStringFormat, name);
+            ConnectionString = ModelHelpers.SimpleCeConnectionString(name);
             ProviderName = "System.Data.SqlServerCe.4.0";
             ProviderManifestToken = "4.0";
             SqlGenerator = new SqlCeMigrationSqlGenerator();

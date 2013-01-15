@@ -2,8 +2,6 @@
 
 namespace EntityFramework.PowerShell.UnitTests
 {
-    // An alias is required because Error, Strings, IEnumerableExtensions etc. are defined in EntityFramework.dll and EntityFramework.PowerShell.dll
-    extern alias powershell;
     using System;
     using System.Collections.Generic;
     using System.Data.Common;
@@ -53,14 +51,14 @@ namespace EntityFramework.PowerShell.UnitTests
             RunTestWithTempFilename(
                 tempFileName =>
                     {
-                        var mockManipulator = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator>();
+                        var mockManipulator = new Mock<System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator>();
 
                         mockManipulator
                             .Setup(
                                 m =>
                                 m.AddConnectionFactoryToConfig(
                                     It.IsAny<XDocument>(),
-                                    It.IsAny<powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>())).
+                                    It.IsAny<System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>())).
                             Returns(true);
 
                         mockManipulator
@@ -72,7 +70,7 @@ namespace EntityFramework.PowerShell.UnitTests
                         var mockedItem = new Mock<ProjectItem>();
                         mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
 
-                        new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileProcessor()
+                        new System.Data.Entity.ConnectionFactoryConfig.ConfigFileProcessor()
                             .ProcessConfigFile(
                                 mockedItem.Object, new Func<XDocument, bool>[]
                                                        {
@@ -81,7 +79,7 @@ namespace EntityFramework.PowerShell.UnitTests
                                                            c =>
                                                            mockManipulator.Object.AddConnectionFactoryToConfig(
                                                                c,
-                                                               new powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                               new System.Data.Entity.ConnectionFactoryConfig.
                                                                ConnectionFactorySpecification("F"))
                                                        });
 
@@ -89,7 +87,7 @@ namespace EntityFramework.PowerShell.UnitTests
                             m =>
                             m.AddConnectionFactoryToConfig(
                                 It.IsAny<XDocument>(),
-                                It.IsAny<powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>()));
+                                It.IsAny<System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>()));
                         mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), _net45EntityFrameworkVersion));
                     });
         }
@@ -98,22 +96,22 @@ namespace EntityFramework.PowerShell.UnitTests
         public void AddSqlCompactConnectionFactoryToConfig_does_nothing_if_correct_SQL_Compact_entry_already_exists()
         {
             var config = CreateConnectionFactoryConfigDoc(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName);
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName);
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.False(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -122,19 +120,19 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = CreateConnectionFactoryConfigDoc(null);
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -143,21 +141,21 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config =
                 new XDocument(
-                    new XElement(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
+                    new XElement(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -166,19 +164,19 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = new XDocument();
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -187,19 +185,19 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = CreateConnectionFactoryConfigDoc("SomeConnectionFactory");
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -208,22 +206,22 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config =
                 CreateConnectionFactoryConfigDoc(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
                     "Database=Bob");
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName));
 
             Assert.True(factoryAdded);
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCeConnectionFactoryName,
                 GetFactoryName(config));
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
         }
 
@@ -232,10 +230,10 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = CreateConnectionFactoryConfigDoc("SomeConnectionFactory");
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
                         "NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.False(factoryAdded);
@@ -247,10 +245,10 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = CreateConnectionFactoryConfigDoc(null);
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
                         "NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
@@ -263,12 +261,12 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config =
                 new XDocument(
-                    new XElement(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
+                    new XElement(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
                         "NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
@@ -281,10 +279,10 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = new XDocument();
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
                         "NewConnectionFactory", "NewBaseConnectionString"));
 
             Assert.True(factoryAdded);
@@ -297,20 +295,20 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = new XDocument();
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification("NewConnectionFactory"));
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification("NewConnectionFactory"));
 
             Assert.True(factoryAdded);
             Assert.Equal("NewConnectionFactory", GetFactoryName(config));
 
             Assert.Null(
-                config.Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
-                    .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
+                config.Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
+                    .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
                     .Element(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
-                    .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName));
+                        System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
+                    .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName));
         }
 
         [Fact]
@@ -318,10 +316,10 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config = new XDocument();
 
-            var factoryAdded = new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
+            var factoryAdded = new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().
                 AddConnectionFactoryToConfig(
                     config,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
+                    new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification(
                         "NewConnectionFactory", "1", "2", "3"));
 
             Assert.True(factoryAdded);
@@ -335,12 +333,12 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             return new XDocument(
                 new XElement(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
                     new XElement(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
                         factoryName != null
                             ? new XElement(
-                                  powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.
+                                  System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.
                                   DefaultConnectionFactoryElementName, new XAttribute("type", factoryName))
                             : null)));
         }
@@ -349,24 +347,24 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             return new XDocument(
                 new XElement(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
                     new XElement(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
                         new XElement(
-                            powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName,
+                            System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName,
                             new XAttribute("type", factoryName),
                             new XElement(
-                                powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName,
+                                System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName,
                                 new XElement(
-                                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParameterElementName,
+                                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParameterElementName,
                                     new XAttribute("value", param)))))));
         }
 
         private string GetFactoryName(XDocument config)
         {
-            return config.Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
+            return config.Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
                 .Attribute("type")
                 .Value;
         }
@@ -378,11 +376,11 @@ namespace EntityFramework.PowerShell.UnitTests
 
         private IEnumerable<string> GetArguments(XDocument config)
         {
-            return config.Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName)
-                .Elements(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParameterElementName)
+            return config.Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.DefaultConnectionFactoryElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParametersElementName)
+                .Elements(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ParameterElementName)
                 .Select(e => e.Attribute("value").Value);
         }
 
@@ -392,7 +390,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = CreateConfigSectionDoc(_net45EntityFrameworkSectionName, addRequirePermission: true);
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.False(sectionModified);
@@ -405,7 +403,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = new XDocument();
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -417,10 +415,10 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var config =
                 new XDocument(
-                    new XElement(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
+                    new XElement(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName));
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -433,11 +431,11 @@ namespace EntityFramework.PowerShell.UnitTests
             var config =
                 new XDocument(
                     new XElement(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
-                        new XElement(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName)));
+                        System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
+                        new XElement(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName)));
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -450,7 +448,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = CreateConfigSectionDoc(assemblyName: null);
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -463,7 +461,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = CreateConfigSectionDoc(_net40EntityFrameworkSectionName);
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net45EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -476,7 +474,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = CreateConfigSectionDoc(_net40EntityFrameworkSectionName, addRequirePermission: true);
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net40EntityFrameworkVersion);
 
             Assert.False(sectionModified);
@@ -489,7 +487,7 @@ namespace EntityFramework.PowerShell.UnitTests
             var config = CreateConfigSectionDoc(_net45EntityFrameworkSectionName);
 
             var sectionModified =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+                new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                     config, _net40EntityFrameworkVersion);
 
             Assert.True(sectionModified);
@@ -501,7 +499,7 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             AddOrUpdateConfigSection_result_can_load_in_partial_trust(
                 new XDocument(
-                    new XElement(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)));
+                    new XElement(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)));
         }
 
         [Fact]
@@ -513,12 +511,12 @@ namespace EntityFramework.PowerShell.UnitTests
 
         private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
         {
-            new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
+            new System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator().AddOrUpdateConfigSection(
                 config, _net45EntityFrameworkVersion);
 
-            config.Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName).Add(
+            config.Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName).Add(
                 new XElement(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName,
                     new XAttribute("codeConfigurationType", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName)));
 
             var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
@@ -550,7 +548,7 @@ namespace EntityFramework.PowerShell.UnitTests
         private XDocument CreateConfigSectionDoc(string assemblyName, bool addRequirePermission = false)
         {
             var dummyElement = new XElement(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName,
+                System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName,
                 new XAttribute("name", "SamVimes"),
                 new XAttribute("type", "Treacle Mine Road"));
             XElement sectionElement;
@@ -562,9 +560,9 @@ namespace EntityFramework.PowerShell.UnitTests
             else
             {
                 sectionElement = new XElement(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName,
                     new XAttribute(
-                        "name", powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName),
+                        "name", System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName),
                     new XAttribute("type", assemblyName));
 
                 if (addRequirePermission)
@@ -575,23 +573,23 @@ namespace EntityFramework.PowerShell.UnitTests
 
             return new XDocument(
                 new XElement(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName,
                     new XElement(
-                        powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName,
+                        System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName,
                         dummyElement,
                         sectionElement)));
         }
 
         private string GetEfSectionName(XDocument config)
         {
-            return config.Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
-                .Element(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName)
-                .Elements(powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName)
+            return config.Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigurationElementName)
+                .Element(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.ConfigSectionsElementName)
+                .Elements(System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.SectionElementName)
                 .Where(
                     e =>
                     e.Attributes("name").Any(
                         a =>
-                        a.Value == powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName))
+                        a.Value == System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator.EntityFrameworkElementName))
                 .Select(e => e.Attribute("type").Value)
                 .Single();
         }
@@ -605,7 +603,7 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             var items = new List<ProjectItem>();
 
-            new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileFinder()
+            new System.Data.Entity.ConnectionFactoryConfig.ConfigFileFinder()
                 .FindConfigFiles(
                     CreateMockedItems("app.config", "App.config", "Foo.config", "web.config", "Web.config", "Bar"),
                     i => items.Add(i));
@@ -686,20 +684,20 @@ namespace EntityFramework.PowerShell.UnitTests
                         var mockedItem = new Mock<ProjectItem>();
                         mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
 
-                        var mockedManipulator = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator>();
+                        var mockedManipulator = new Mock<System.Data.Entity.ConnectionFactoryConfig.ConfigFileManipulator>();
                         mockedManipulator
                             .Setup(
                                 m =>
                                 m.AddConnectionFactoryToConfig(
                                     It.IsAny<XDocument>(),
-                                    It.IsAny<powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>()))
+                                    It.IsAny<System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification>()))
                             .Callback(
-                                (XDocument config, powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification _)
+                                (XDocument config, System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification _)
                                 => config.Element("fake").Add(new XElement("modified")))
                             .Returns(shouldSave);
 
                         Assert.ThrowsDelegate test =
-                            () => new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileProcessor()
+                            () => new System.Data.Entity.ConnectionFactoryConfig.ConfigFileProcessor()
                                       .ProcessConfigFile(
                                           mockedItem.Object,
                                           new Func<XDocument, bool>[]
@@ -708,14 +706,14 @@ namespace EntityFramework.PowerShell.UnitTests
                                                   c =>
                                                   mockedManipulator.Object.AddConnectionFactoryToConfig(
                                                       c,
-                                                      new powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                      new System.Data.Entity.ConnectionFactoryConfig.
                                                       ConnectionFactorySpecification("F"))
                                               });
 
                         if (shouldSave && writeProtectFile)
                         {
                             Assert.Equal(
-                                powershell::System.Data.Entity.Migrations.Resources.Strings.SaveConnectionFactoryInConfigFailed(
+                                System.Data.Entity.Migrations.Resources.Strings.SaveConnectionFactoryInConfigFailed(
                                     tempFileName), Assert.Throws<IOException>(test).Message);
                         }
                         else
@@ -736,8 +734,8 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_detects_SQL_Express_when_service_is_running()
         {
             Assert.True(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
                     CreateMockedController()).IsSqlExpressInstalled());
         }
 
@@ -745,8 +743,8 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_detects_no_SQL_Express_when_service_is_present_but_not_running()
         {
             Assert.False(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
                     CreateMockedController(ServiceControllerStatus.Stopped)).IsSqlExpressInstalled());
         }
 
@@ -754,15 +752,15 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_detects_no_SQL_Express_when_service_is_not_found()
         {
             Assert.False(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
                     CreateMockedController(status: null)).IsSqlExpressInstalled());
         }
 
-        private powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy CreateMockedController(
+        private System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy CreateMockedController(
             ServiceControllerStatus? status = ServiceControllerStatus.Running)
         {
-            var mockController = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>();
+            var mockController = new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>();
 
             if (status != null)
             {
@@ -781,9 +779,9 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             Assert.Equal(
                 "some version",
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("some version"),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
@@ -794,9 +792,9 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             Assert.Equal(
                 "12.0",
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("11.0", "12.0", "11.5"),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
@@ -805,9 +803,9 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             Assert.Equal(
                 "100",
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("20", "100"),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
@@ -816,9 +814,9 @@ namespace EntityFramework.PowerShell.UnitTests
         {
             Assert.Equal(
                 "12.0",
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("11.0", "12.0", "dingo", "11.5"),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
@@ -826,9 +824,9 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_returns_null_if_multiple_non_numeric_LocalDB_versions_are_installed()
         {
             Assert.Null(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("kangaroo", "dingo", "wallaby"),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
@@ -836,15 +834,15 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_returns_null_if_LocalDB_registry_exists_but_no_version_keys_are_found()
         {
             Assert.Null(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey(new string[0]),
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
-        private powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy CreatedMockedRegistryKey(params string[] versions)
+        private System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy CreatedMockedRegistryKey(params string[] versions)
         {
-            var mockedRegistryKey = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
+            var mockedRegistryKey = new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
 
             mockedRegistryKey.Setup(k => k.OpenSubKey("SOFTWARE")).Returns(mockedRegistryKey.Object);
             mockedRegistryKey.Setup(k => k.OpenSubKey("Microsoft")).Returns(mockedRegistryKey.Object);
@@ -855,7 +853,7 @@ namespace EntityFramework.PowerShell.UnitTests
             mockedRegistryKey.Setup(k => k.GetSubKeyNames()).Returns(versions);
 
             mockedRegistryKey.Setup(k => k.OpenSubKey("Wow6432Node")).Returns(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
+                new System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
 
             return mockedRegistryKey.Object;
         }
@@ -863,33 +861,33 @@ namespace EntityFramework.PowerShell.UnitTests
         [Fact]
         public void SqlServerDetector_returns_null_if_LocalDB_registry_keys_do_not_exist()
         {
-            var mockedRegistryKey = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
+            var mockedRegistryKey = new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
 
             mockedRegistryKey.Setup(k => k.OpenSubKey("SOFTWARE")).Returns(mockedRegistryKey.Object);
             mockedRegistryKey.Setup(k => k.OpenSubKey("Microsoft")).Returns(mockedRegistryKey.Object);
             mockedRegistryKey.Setup(k => k.OpenSubKey("Microsoft SQL Server Local DB")).Returns(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
+                new System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
             mockedRegistryKey.Setup(k => k.OpenSubKey("Wow6432Node")).Returns(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
+                new System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
 
             Assert.Null(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     mockedRegistryKey.Object,
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
         [Fact]
         public void SqlServerDetector_detects_LocalDB_installation_in_Wow6432Node_if_not_found_in_normal_hive()
         {
-            var mockedRegistryKey = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
+            var mockedRegistryKey = new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
 
             mockedRegistryKey.Setup(k => k.OpenSubKey("SOFTWARE")).Returns(mockedRegistryKey.Object);
             mockedRegistryKey.Setup(k => k.OpenSubKey("Microsoft")).Returns(mockedRegistryKey.Object);
             mockedRegistryKey.Setup(k => k.OpenSubKey("Microsoft SQL Server Local DB")).Returns(
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
+                new System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy(null));
 
-            var mockedWow64RegistryKey = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
+            var mockedWow64RegistryKey = new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
             mockedRegistryKey.Setup(k => k.OpenSubKey("Wow6432Node")).Returns(mockedWow64RegistryKey.Object);
 
             mockedWow64RegistryKey.Setup(k => k.OpenSubKey("Microsoft")).Returns(mockedWow64RegistryKey.Object);
@@ -901,19 +899,19 @@ namespace EntityFramework.PowerShell.UnitTests
 
             Assert.Equal(
                 "64BitVersion",
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     mockedRegistryKey.Object,
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                     .TryGetLocalDBVersionInstalled());
         }
 
         [Fact]
         public void SqlServerDetector_disposes_RegisterKey_and_ManagementObjectSearcher_when_it_is_disposed()
         {
-            var mockedRegistryKey = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
-            var mockedSearcher = new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>();
+            var mockedRegistryKey = new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>();
+            var mockedSearcher = new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>();
 
-            new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(mockedRegistryKey.Object, mockedSearcher.Object).
+            new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(mockedRegistryKey.Object, mockedSearcher.Object).
                 Dispose();
 
             mockedRegistryKey.Verify(k => k.Dispose());
@@ -924,12 +922,12 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_generates_SQL_Express_base_connection_string_if_both_Express_and_LocalDB_are_installed()
         {
             var specification =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("11.0"), CreateMockedController())
                     .BuildConnectionFactorySpecification();
 
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
                 specification.ConnectionFactoryName);
             Assert.Empty(specification.ConstructorArguments);
         }
@@ -938,12 +936,12 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_generates_SQL_Express_base_connection_string_if_Express_is_installed_and_LocalDB_is_not()
         {
             var specification =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey(new string[0]), CreateMockedController())
                     .BuildConnectionFactorySpecification();
 
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
                 specification.ConnectionFactoryName);
             Assert.Empty(specification.ConstructorArguments);
         }
@@ -952,12 +950,12 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_generates_LocalDB_base_connection_string_if_LocalDB_is_installed_and_Express_is_not()
         {
             var specification =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey("12.0"), CreateMockedController(status: null))
                     .BuildConnectionFactorySpecification();
 
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.LocalDbConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.LocalDbConnectionFactoryName,
                 specification.ConnectionFactoryName);
             Assert.Equal("v12.0", specification.ConstructorArguments.Single());
         }
@@ -966,12 +964,12 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_generates_LocalDB_11_base_connection_string_if_neither_LocalDB_or_Express_are_installed()
         {
             var specification =
-                new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     CreatedMockedRegistryKey(new string[0]), CreateMockedController(status: null))
                     .BuildConnectionFactorySpecification();
 
             Assert.Equal(
-                powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.LocalDbConnectionFactoryName,
+                System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.LocalDbConnectionFactoryName,
                 specification.ConnectionFactoryName);
             Assert.Equal("v11.0", specification.ConstructorArguments.Single());
         }
@@ -980,9 +978,9 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_detects_SQL_Express_on_dev_machine()
         {
             using (
-                var detector = new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
-                    new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy(
+                var detector = new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                    new Mock<System.Data.Entity.ConnectionFactoryConfig.RegistryKeyProxy>().Object,
+                    new System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy(
                         new ServiceController("MSSQL$SQLEXPRESS"))))
             {
                 Assert.True(detector.IsSqlExpressInstalled());
@@ -995,8 +993,8 @@ namespace EntityFramework.PowerShell.UnitTests
         public void SqlServerDetector_detects_LocalDB_v11_0_on_dev_machine()
         {
             using (
-                var detector = new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
-                    Registry.LocalMachine, new Mock<powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
+                var detector = new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                    Registry.LocalMachine, new Mock<System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy>().Object)
                 )
             {
                 Assert.Equal("11.0", detector.TryGetLocalDBVersionInstalled());
@@ -1009,15 +1007,15 @@ namespace EntityFramework.PowerShell.UnitTests
         public void Base_connection_string_on_dev_box_with_SQL_Express_installed_has_SQL_Express_connection_string()
         {
             using (
-                var detector = new powershell::System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
+                var detector = new System.Data.Entity.ConnectionFactoryConfig.SqlServerDetector(
                     Registry.LocalMachine,
-                    new powershell::System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy(
+                    new System.Data.Entity.ConnectionFactoryConfig.ServiceControllerProxy(
                         new ServiceController("MSSQL$SQLEXPRESS"))))
             {
                 var specification = detector.BuildConnectionFactorySpecification();
 
                 Assert.Equal(
-                    powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
+                    System.Data.Entity.ConnectionFactoryConfig.ConnectionFactorySpecification.SqlConnectionFactoryName,
                     specification.ConnectionFactoryName);
                 Assert.Empty(specification.ConstructorArguments);
             }
@@ -1029,7 +1027,7 @@ namespace EntityFramework.PowerShell.UnitTests
             Assert.Equal(
                 "project",
                 Assert.Throws<ArgumentNullException>(
-                    () => new powershell::System.Data.Entity.ConnectionFactoryConfig.ConnectionFactoryConfigurator(null)).ParamName);
+                    () => new System.Data.Entity.ConnectionFactoryConfig.ConnectionFactoryConfigurator(null)).ParamName);
         }
 
         #endregion
@@ -1044,7 +1042,7 @@ namespace EntityFramework.PowerShell.UnitTests
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
                     {
-                        new powershell::System.Data.Entity.ConnectionFactoryConfig.ConfigFileFinder().FindConfigFiles(
+                        new System.Data.Entity.ConnectionFactoryConfig.ConfigFileFinder().FindConfigFiles(
                             p.ProjectItems, i =>
                                                 {
                                                     configFilesFound.Add(i.Name);
@@ -1052,19 +1050,19 @@ namespace EntityFramework.PowerShell.UnitTests
                                                     var config = XDocument.Load(i.FileNames[0]);
 
                                                     // Checked in app.config for unit tests has no connection factory, so one should be added
-                                                    var modified = new powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                    var modified = new System.Data.Entity.ConnectionFactoryConfig.
                                                         ConfigFileManipulator().AddConnectionFactoryToConfig(
                                                             config,
-                                                            new powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                            new System.Data.Entity.ConnectionFactoryConfig.
                                                                 ConnectionFactorySpecification(
-                                                                powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                                System.Data.Entity.ConnectionFactoryConfig.
                                                                     ConnectionFactorySpecification.SqlConnectionFactoryName,
                                                                 "SomeConnectionString"));
 
                                                     Assert.True(modified);
 
                                                     Assert.Equal(
-                                                        powershell::System.Data.Entity.ConnectionFactoryConfig.
+                                                        System.Data.Entity.ConnectionFactoryConfig.
                                                             ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
                                                     Assert.Equal("SomeConnectionString", GetArgument(config));
                                                 });
@@ -1080,7 +1078,7 @@ namespace EntityFramework.PowerShell.UnitTests
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
                     {
-                        var types = powershell::System.Data.Entity.Migrations.Extensions.ProjectExtensions.GetProjectTypes(p);
+                        var types = System.Data.Entity.Migrations.Extensions.ProjectExtensions.GetProjectTypes(p);
                         Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
                     });
         }

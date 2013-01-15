@@ -4,12 +4,14 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using FunctionalTests.TestHelpers;
     using Moq;
     using Xunit;
 
@@ -55,8 +57,71 @@ namespace System.Data.Entity.Config
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddDependencyResolver(resolver);
 
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver));
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver, false));
             }
+        }
+
+        public class IDbConfiguration_AddDependencyResolver
+        {
+            [Fact]
+            public void AddDependencyResolver_throws_if_given_a_null_resolver()
+            {
+                Assert.Equal(
+                    "resolver",
+                    Assert.Throws<ArgumentNullException>(
+                        () => ((IDbConfiguration)new DbConfiguration()).AddDependencyResolver(null, false)).ParamName);
+            }
+
+            [Fact]
+            public void AddDependencyResolver_throws_if_the_configuation_is_locked()
+            {
+                var configuration = (IDbConfiguration)CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddDependencyResolver"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object, false)).Message);
+            }
+
+            [Fact]
+            public void AddDependencyResolver_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var resolver = new Mock<IDbDependencyResolver>().Object;
+
+                ((IDbConfiguration)new DbConfiguration(mockInternalConfiguration.Object)).AddDependencyResolver(resolver, true);
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver, true));
+            }
+        }
+
+        public class IDbConfiguration_DependencyResolver
+        {
+            [Fact]
+            public void DependencyResolver_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var resolver = new Mock<IDbDependencyResolver>().Object;
+                mockInternalConfiguration.Setup(m => m.DependencyResolver).Returns(resolver);
+
+                Assert.Same(resolver, ((IDbConfiguration)new DbConfiguration(mockInternalConfiguration.Object)).DependencyResolver);
+            }
+        }
+
+        public class OnLockingConfiguration
+        {
+            [Fact]
+            public void OnLockingConfiguration_throws_when_attempting_to_add_or_remove_a_null_handler()
+            {
+                Assert.Equal(
+                    "value",
+                    Assert.Throws<ArgumentNullException>(() => DbConfiguration.OnLockingConfiguration += null).ParamName);
+
+                Assert.Equal(
+                    "value",
+                    Assert.Throws<ArgumentNullException>(() => DbConfiguration.OnLockingConfiguration -= null).ParamName);
+            }
+            
         }
 
         public class AddProvider
@@ -105,7 +170,7 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class SetDefaultConnectionFactory
+        public class SetDefaultConnectionFactory : TestBase
         {
             [Fact]
             public void Setting_DefaultConnectionFactory_throws_if_given_a_null_factory()
@@ -135,6 +200,48 @@ namespace System.Data.Entity.Config
                 new DbConfiguration(mockInternalConfiguration.Object).SetDefaultConnectionFactory(connectionFactory);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(connectionFactory, null));
+            }
+
+            [Fact]
+            public void DefaultConnectionFactory_set_in_code_can_be_overriden_before_config_is_locked()
+            {
+                Assert.IsType<SqlConnectionFactory>(DbConfiguration.GetService<IDbConnectionFactory>());
+                Assert.IsType<DefaultUnitTestsConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories[0]);
+            }
+        }
+
+        public class SetPluralizationService
+        {
+            [Fact]
+            public void Setting_PluralizationService_throws_if_given_a_null_service()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    "pluralizationService",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetPluralizationService(null)).ParamName);
+            }
+
+            [Fact]
+            public void Setting_PluralizationService_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetPluralizationService"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetPluralizationService(new Mock<IPluralizationService>().Object)).Message);
+            }
+
+            [Fact]
+            public void SetPluralizationService_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var pluralizationService = new Mock<IPluralizationService>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetPluralizationService(pluralizationService);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(pluralizationService, null));
             }
         }
 
@@ -235,7 +342,7 @@ namespace System.Data.Entity.Config
                 new DbConfiguration(mockInternalConfiguration.Object).AddMigrationSqlGenerator("Karl", generator);
 
                 mockInternalConfiguration.Verify(
-                    m => m.AddDependencyResolver(It.IsAny<TransientDependencyResolver<MigrationSqlGenerator>>()));
+                    m => m.AddDependencyResolver(It.IsAny<TransientDependencyResolver<MigrationSqlGenerator>>(), false));
             }
         }
 
@@ -409,9 +516,9 @@ namespace System.Data.Entity.Config
 
         private static DbConfiguration CreatedLockedConfiguration()
         {
-            var internalConfiguration = new InternalConfiguration();
-            internalConfiguration.Lock();
-            return new DbConfiguration(internalConfiguration);
+            var configuration = new DbConfiguration();
+            configuration.InternalConfiguration.Lock();
+            return configuration;
         }
     }
 }

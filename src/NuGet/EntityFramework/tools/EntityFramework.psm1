@@ -80,9 +80,9 @@ function Enable-Migrations
 
     try
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent ) @{ 'ContextTypeName' = $ContextTypeName; 'MigrationsDirectory' = $MigrationsDirectory }
-        $error = Get-RunnerError $runner
-        
+        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent ) @{ 'ContextTypeName' = $ContextTypeName; 'MigrationsDirectory' = $MigrationsDirectory }        		
+		$error = Get-RunnerError $runner					
+
         if ($error)
         {
             if ($knownExceptions -notcontains $error.TypeName)
@@ -92,10 +92,12 @@ function Enable-Migrations
 
             throw $error.Message
         }
+
+		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
-    {
-        Remove-Runner $runner
+    {				
+        Remove-Runner $runner		
     }
 }
 
@@ -171,8 +173,8 @@ function Add-Migration
     try
     {
         Invoke-RunnerCommand $runner System.Data.Entity.Migrations.AddMigrationCommand @( $Name, $Force.IsPresent, $IgnoreChanges.IsPresent )
-        $error = Get-RunnerError $runner
-        
+        $error = Get-RunnerError $runner       		
+
         if ($error)
         {
             if ($knownExceptions -notcontains $error.TypeName)
@@ -181,12 +183,13 @@ function Add-Migration
             }
 
             throw $error.Message
-        }
+        }		
+		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
-    {
-        Remove-Runner $runner
-    }
+    {			
+        Remove-Runner $runner		
+    }	
 }
 
 <#
@@ -272,11 +275,12 @@ function Update-Database
             }
 
             throw $error.Message
-        }
+        }		
+		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
-    {
-        Remove-Runner $runner
+    {		     
+	    Remove-Runner $runner
     }
 }
 

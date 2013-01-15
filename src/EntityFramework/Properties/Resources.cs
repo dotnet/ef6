@@ -13126,6 +13126,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'OnLockingConfiguration' event handler. 'OnLockingConfiguration' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        /// </summary>
+        internal static string AddHandlerToInUseConfiguration
+        {
+            get { return EntityRes.GetString(EntityRes.AddHandlerToInUseConfiguration); }
+        }
+
+        /// <summary>
         /// A string like "An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string ConfigurationSetTwice(object p0, object p1)
@@ -16739,6 +16747,7 @@ namespace System.Data.Entity.Resources
         internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
         internal const string ProviderInvariantNotPassedToResolver = "ProviderInvariantNotPassedToResolver";
         internal const string DefaultConfigurationUsedBeforeSet = "DefaultConfigurationUsedBeforeSet";
+        internal const string AddHandlerToInUseConfiguration = "AddHandlerToInUseConfiguration";
         internal const string ConfigurationSetTwice = "ConfigurationSetTwice";
         internal const string ConfigurationNotDiscovered = "ConfigurationNotDiscovered";
         internal const string SetConfigurationNotDiscovered = "SetConfigurationNotDiscovered";

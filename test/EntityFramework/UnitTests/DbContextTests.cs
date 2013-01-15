@@ -12,7 +12,6 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
@@ -75,7 +74,7 @@ namespace ProductivityApiUnitTests
         {
             // Ensure the basic-auth test user exists
 
-            using (var connection = new SqlConnection(@"Server=.\SQLEXPRESS;Trusted_Connection=True;"))
+            using (var connection = new SqlConnection(SimpleConnectionString("master")))
             {
                 connection.Open();
 
@@ -645,17 +644,13 @@ END";
         [Fact]
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_lazy_connection()
         {
-            var connectionStringBuilder
-                = new SqlConnectionStringBuilder
-                      {
-                          DataSource = ".\\sqlexpress",
-                          UserID = "EFTestUser",
-                          Password = "Password1",
-                          InitialCatalog = "PersistSecurityInfoContext",
-                          PersistSecurityInfo = false
-                      };
+            var connectionString
+                = SimpleConnectionStringWithCredentials(
+                    "PersistSecurityInfoContext",
+                    "EFTestUser",
+                    "Password1");
 
-            var context = new PersistSecurityInfoContext(connectionStringBuilder.ToString());
+            var context = new PersistSecurityInfoContext(connectionString);
 
             context.Database.Initialize(true);
 
@@ -665,17 +660,13 @@ END";
         [Fact]
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_eager_connection()
         {
-            var connectionStringBuilder
-                = new SqlConnectionStringBuilder
-                      {
-                          DataSource = ".\\sqlexpress",
-                          UserID = "EFTestUser",
-                          Password = "Password1",
-                          InitialCatalog = "PersistSecurityInfoContext",
-                          PersistSecurityInfo = false
-                      };
+            var connectionString
+                = SimpleConnectionStringWithCredentials(
+                    "PersistSecurityInfoContext",
+                    "EFTestUser",
+                    "Password1");
 
-            var context = new PersistSecurityInfoContext(new SqlConnection(connectionStringBuilder.ToString()), true);
+            var context = new PersistSecurityInfoContext(new SqlConnection(connectionString), true);
 
             context.Database.Delete();
 
@@ -687,21 +678,17 @@ END";
         [Fact]
         public void Can_use_ddl_ops_when_using_secure_connection_string_with_sql_server_authentication_and_eager_context()
         {
-            var connectionStringBuilder
-                = new SqlConnectionStringBuilder
-                      {
-                          DataSource = ".\\sqlexpress",
-                          UserID = "EFTestUser",
-                          Password = "Password1",
-                          InitialCatalog = "PersistSecurityInfoContext",
-                          PersistSecurityInfo = false
-                      };
+            var connectionString
+                = SimpleConnectionStringWithCredentials(
+                    "PersistSecurityInfoContext",
+                    "EFTestUser",
+                    "Password1");
 
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<PersistEntity>().ToTable(DateTime.Now.Ticks.ToString());
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
             var entityConnection
-                = new EntityConnection(model.DatabaseMapping.ToMetadataWorkspace(), new SqlConnection(connectionStringBuilder.ToString()));
+                = new EntityConnection(model.DatabaseMapping.ToMetadataWorkspace(), new SqlConnection(connectionString));
 
             var objectContext = new ObjectContext(entityConnection);
 

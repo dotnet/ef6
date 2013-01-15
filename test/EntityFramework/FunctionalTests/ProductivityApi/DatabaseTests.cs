@@ -71,12 +71,12 @@ namespace ProductivityApiTests
         {
             AttachableDatabaseTest(
                 (context) =>
-                    {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                {
+                    // Ensure database is initialized
+                    context.Database.Initialize(force: true);
 
-                        Assert.True(context.Database.Exists());
-                    });
+                    Assert.True(context.Database.Exists());
+                });
         }
 
         [Fact]
@@ -303,13 +303,13 @@ namespace ProductivityApiTests
         {
             AttachableDatabaseTest(
                 (context) =>
-                    {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                {
+                    // Ensure database is initialized
+                    context.Database.Initialize(force: true);
 
-                        Assert.True(context.Database.Delete());
-                        Assert.False(context.Database.Exists());
-                    });
+                    Assert.True(context.Database.Delete());
+                    Assert.False(context.Database.Exists());
+                });
         }
 
         [Fact]
@@ -400,10 +400,10 @@ namespace ProductivityApiTests
         {
             AttachableDatabaseTest(
                 (context) =>
-                    {
-                        // NOTE: Database has not been initialized/created
-                        Assert.False(context.Database.Delete());
-                    });
+                {
+                    // NOTE: Database has not been initialized/created
+                    Assert.False(context.Database.Delete());
+                });
         }
 
         [Fact]
@@ -505,12 +505,12 @@ namespace ProductivityApiTests
         {
             AttachableDatabaseTest(
                 (context) =>
-                    {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                {
+                    // Ensure database is initialized
+                    context.Database.Initialize(force: true);
 
-                        Can_create_database(context.Database);
-                    });
+                    Can_create_database(context.Database);
+                });
         }
 
         private void Can_create_database(Database database)
@@ -785,8 +785,6 @@ namespace ProductivityApiTests
             }
         }
 
-        private const string ConnectionStringTemplate = @"Data Source={0};Initial Catalog={1};Integrated Security=True";
-
         public class MutatingConnectionContext4a : MutatingConnectionContext4<MutatingConnectionContext4a>
         {
             public MutatingConnectionContext4a(string connectionString)
@@ -801,7 +799,7 @@ namespace ProductivityApiTests
         {
             If_connection_is_changed_then_operations_that_use_OriginalConnectionString_pick_up_this_change(
                 c => new MutatingConnectionContext4a(c),
-                string.Format(ConnectionStringTemplate, @".\SQLEXPRESS", "MutatingConnectionContext4_Mutated"));
+                SimpleConnectionString("MutatingConnectionContext4_Mutated"));
         }
 
         public class MutatingConnectionContext4b : MutatingConnectionContext4<MutatingConnectionContext4b>
@@ -820,7 +818,7 @@ namespace ProductivityApiTests
         {
             If_connection_is_changed_then_operations_that_use_OriginalConnectionString_pick_up_this_change(
                 c => new MutatingConnectionContext4b(c),
-                string.Format(ConnectionStringTemplate, @"(localdb)\v11.0", "MutatingConnectionContext4"));
+                @"Data Source=(localdb)\v11.0;Initial Catalog=MutatingConnectionContext4;Integrated Security=True");
         }
 
 #endif
@@ -828,9 +826,7 @@ namespace ProductivityApiTests
         private void If_connection_is_changed_then_operations_that_use_OriginalConnectionString_pick_up_this_change(
             Func<string, DbContext> createContext, string changedConnectionString)
         {
-            var startingConnectionString = string.Format(
-                ConnectionStringTemplate, @".\SQLEXPRESS",
-                "MutatingConnectionContext4");
+            var startingConnectionString = SimpleConnectionString("MutatingConnectionContext4");
 
             Database.Delete(startingConnectionString);
             Database.Delete(changedConnectionString);

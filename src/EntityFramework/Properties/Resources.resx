@@ -5225,6 +5225,9 @@
   <data name="DefaultConfigurationUsedBeforeSet" xml:space="preserve">
     <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
+  <data name="AddHandlerToInUseConfiguration" xml:space="preserve">
+    <value>The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'OnLockingConfiguration' event handler. 'OnLockingConfiguration' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
+  </data>
   <data name="ConfigurationSetTwice" xml:space="preserve">
     <value>An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>

@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
+namespace System.Data.Entity.Infrastructure.Pluralization
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -10,14 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
     {
         internal static bool DoesWordContainSuffix(string word, IEnumerable<string> suffixes, CultureInfo culture)
         {
-            if (suffixes.Any(s => word.EndsWith(s, true, culture)))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return suffixes.Any(s => word.EndsWith(s, true, culture));
         }
 
         internal static bool TryGetMatchedSuffixForWord(
@@ -29,10 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                 matchedSuffix = suffixes.First(s => word.EndsWith(s, true, culture));
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         internal static bool TryInflectOnSuffixInWord(
@@ -51,10 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
                 newWord = operationOnWord(word);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

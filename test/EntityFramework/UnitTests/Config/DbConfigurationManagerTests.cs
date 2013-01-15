@@ -625,6 +625,76 @@ namespace System.Data.Entity.Config
             }
         }
 
+        public class AddOnLockingHandler
+        {
+            [Fact]
+            public void Adding_handler_after_configuration_is_in_use_throws()
+            {
+                var manager = CreateManager();
+                manager.GetConfiguration();
+
+                Assert.Equal(
+                    Strings.AddHandlerToInUseConfiguration,
+                    Assert.Throws<InvalidOperationException>(() => manager.AddOnLockingHandler((_, __) => { })).Message);
+            }
+        }
+
+        public class OnLocking
+        {
+            private readonly DbConfiguration _configuration = new DbConfiguration();
+
+            [Fact]
+            public void OnLocking_calls_all_added_handlers_and_passes_in_correct_configuration()
+            {
+                var manager = CreateManager();
+
+                manager.OnLocking(_configuration); // No throw when no handlers registered
+
+                manager.AddOnLockingHandler(Handler1);
+                manager.AddOnLockingHandler(Handler2);
+                manager.AddOnLockingHandler(Handler3);
+
+                manager.OnLocking(_configuration);
+                Assert.Equal(1, Handler1Called);
+                Assert.Equal(1, Handler2Called);
+                Assert.Equal(1, Handler3Called);
+
+                manager.RemoveOnLockingHandler(Handler2);
+
+                manager.OnLocking(_configuration);
+                Assert.Equal(2, Handler1Called);
+                Assert.Equal(1, Handler2Called);
+                Assert.Equal(2, Handler3Called);
+            }
+
+            private int Handler1Called { get; set; }
+
+            private void Handler1(object sender, DbConfigurationEventArgs args)
+            {
+                Assert.Same(_configuration, sender);
+                Assert.Same(_configuration, args.Configuration);
+                Handler1Called++;
+            }
+
+            private int Handler2Called { get; set; }
+
+            private void Handler2(object sender, DbConfigurationEventArgs args)
+            {
+                Assert.Same(_configuration, sender);
+                Assert.Same(_configuration, args.Configuration);
+                Handler2Called++;
+            }
+
+            private int Handler3Called { get; set; }
+
+            private void Handler3(object sender, DbConfigurationEventArgs args)
+            {
+                Assert.Same(_configuration, sender);
+                Assert.Same(_configuration, args.Configuration);
+                Handler3Called++;
+            }
+        }
+
         private static DbConfigurationManager CreateManager(
             Mock<DbConfigurationLoader> mockLoader = null,
             Mock<DbConfigurationFinder> mockFinder = null)

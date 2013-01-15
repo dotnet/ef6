@@ -99,6 +99,8 @@
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
+    <Compile Include="Config\DbConfigurationEventArgs.cs" />
+    <Compile Include="Config\IDbConfiguration.cs" />
     <Compile Include="Config\TransientDependencyResolver.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolver.cs" />
     <Compile Include="Config\DatabaseInitializerResolver.cs" />
@@ -335,6 +337,10 @@
     <Compile Include="Infrastructure\IDbModelCacheKeyProvider.cs" />
     <Compile Include="Infrastructure\IDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\IManifestTokenService.cs" />
+    <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntry.cs" />
+    <Compile Include="Infrastructure\Pluralization\EnglishPluralizationService.cs" />
+    <Compile Include="Infrastructure\Pluralization\IPluralizationService.cs" />
+    <Compile Include="Infrastructure\Pluralization\PluralizationServiceUtil.cs" />
     <Compile Include="Internal\CommandTracer.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
@@ -1626,11 +1632,7 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\TypeNameForeignKeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\IConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\V1ConventionSet.cs" />
-    <Compile Include="ModelConfiguration\Design\BidirectionalDictionary.cs" />
-    <Compile Include="ModelConfiguration\Design\EnglishPluralizationService.cs" />
-    <Compile Include="ModelConfiguration\Design\ICustomPluralizationMapping.cs" />
-    <Compile Include="ModelConfiguration\Design\PluralizationService.cs" />
-    <Compile Include="ModelConfiguration\Design\PluralizationServiceUtil.cs" />
+    <Compile Include="Infrastructure\Pluralization\BidirectionalDictionary.cs" />
     <Compile Include="ModelConfiguration\Edm\DataModelAnnotationExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\DataModelErrorEventArgsExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\INamedDataModelItemExtensions.cs" />

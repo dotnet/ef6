@@ -1,9 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
+namespace System.Data.Entity.Infrastructure.Pluralization
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     This class provide service for both the singularization and pluralization, it takes the word pairs
@@ -81,6 +80,13 @@ namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
             }
         }
     }
+}
+
+namespace System.Data.Entity.ModelConfiguration.Design.PluralizationServices
+{
+    using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Pluralization;
+    using System.Diagnostics.CodeAnalysis;
 
     internal class StringBidirectionalDictionary : BidirectionalDictionary<string, string>
     {

@@ -97,6 +97,11 @@ namespace System.Data.Entity.Migrations.Design
             }
         }
 
+        internal ToolingFacade()
+        {
+            // For testing
+        }
+
         /// <summary>
         ///     Releases all unmanaged resources used by the facade.
         /// </summary>
@@ -143,7 +148,7 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <returns> Ids of applied migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public IEnumerable<string> GetDatabaseMigrations()
+        public virtual IEnumerable<string> GetDatabaseMigrations()
         {
             var runner = new GetDatabaseMigrationsRunner();
             ConfigureRunner(runner);
@@ -158,7 +163,7 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <returns> Ids of pending migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public IEnumerable<string> GetPendingMigrations()
+        public virtual IEnumerable<string> GetPendingMigrations()
         {
             var runner = new GetPendingMigrationsRunner();
             ConfigureRunner(runner);
@@ -216,7 +221,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="rootNamespace"> The root namespace of the project the migration will be added to. </param>
         /// <param name="ignoreChanges"> Whether or not to include model changes. </param>
         /// <returns> The scaffolded migration. </returns>
-        public ScaffoldedMigration Scaffold(
+        public virtual ScaffoldedMigration Scaffold(
             string migrationName, string language, string rootNamespace, bool ignoreChanges)
         {
             var runner

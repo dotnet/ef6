@@ -375,7 +375,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context(
-            
+
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -2370,7 +2370,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change(
-            
+
             )
         {
             using (var context = new F1Context())
@@ -3337,7 +3337,7 @@ namespace ProductivityApiTests
             {
                 using (var newConnection = new LazyInternalConnection(
                     new DbConnectionInfo(
-                        @"Server=.\SQLEXPRESS;Database=NewReplaceConnectionContextDatabase;Trusted_Connection=True;",
+                        SimpleConnectionString("NewReplaceConnectionContextDatabase"),
                         "System.Data.SqlClient")))
                 {
                     Can_replace_connection_implementation(context, newConnection);
@@ -3420,7 +3420,7 @@ namespace ProductivityApiTests
                 entityConnection.StoreConnection.Close();
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
-                    
+
                 // verify that the open and close events have been fired once and only once on both EntityConnection and underlying DbConnection
                 dbConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
                 entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();

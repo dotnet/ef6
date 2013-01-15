@@ -5,6 +5,7 @@ namespace System.Data.Entity.Config
     using System.Collections.Concurrent;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
@@ -57,6 +58,12 @@ namespace System.Data.Entity.Config
         {
             Assert.IsType<SqlConnectionFactory>(
                 new RootDependencyResolver().GetService<IDbConnectionFactory>());
+        }
+
+        [Fact]
+        public void The_root_resolver_returns_default_pluralization_service()
+        {
+            Assert.IsType<EnglishPluralizationService>(new RootDependencyResolver().GetService<IPluralizationService>());
         }
 
         [Fact]

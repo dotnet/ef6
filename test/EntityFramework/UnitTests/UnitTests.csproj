@@ -123,6 +123,7 @@
     <Compile Include="Config\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Config\CachingDependencyResolverTests.cs" />
     <Compile Include="Config\CompositeResolverTests.cs" />
+    <Compile Include="Config\DbConfigurationEventArgsTests.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolverTests.cs" />
     <Compile Include="Config\DatabaseInitializerResolverTests.cs" />
     <Compile Include="Config\DbConfigurationFinderTests.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
+    <Compile Include="Migrations\AddMigrationCommandTests.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilterTests.cs" />
@@ -259,6 +261,8 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionWithHavingTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
+    <Compile Include="ModelConfiguration\Design\CustomPluralizationEntryTests.cs" />
+    <Compile Include="ModelConfiguration\Design\EnglishPluralizationServiceTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />
@@ -565,10 +569,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell.Utility\EntityFramework.PowerShell.Utility.csproj">
+      <Project>{73636c32-5633-4d12-aa7b-88dcc26acdb7}</Project>
+      <Name>EntityFramework.PowerShell.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj">
       <Project>{1F3817E9-8070-4429-B134-9674698DD78C}</Project>
       <Name>EntityFramework.PowerShell</Name>
-      <Aliases>powershell</Aliases>
+      <Aliases>global</Aliases>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
       <Project>{1ef9c524-7122-4677-b111-dd14bb2a9ea2}</Project>

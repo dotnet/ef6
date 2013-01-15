@@ -22,6 +22,8 @@ namespace System.Data.Entity.Config
         private static readonly DbConfigurationManager _configManager
             = new DbConfigurationManager(new DbConfigurationLoader(), new DbConfigurationFinder());
 
+        private EventHandler<DbConfigurationEventArgs> _onLockingConfiguration;
+
         private readonly DbConfigurationLoader _loader;
         private readonly DbConfigurationFinder _finder;
 
@@ -57,6 +59,36 @@ namespace System.Data.Entity.Config
             get { return _configManager; }
         }
 
+        public virtual void AddOnLockingHandler(EventHandler<DbConfigurationEventArgs> handler)
+        {
+            DebugCheck.NotNull(handler);
+
+            if (ConfigurationSet)
+            {
+                throw new InvalidOperationException(Strings.AddHandlerToInUseConfiguration);
+            }
+            _onLockingConfiguration += handler;
+        }
+
+        public virtual void RemoveOnLockingHandler(EventHandler<DbConfigurationEventArgs> handler)
+        {
+            DebugCheck.NotNull(handler);
+
+            _onLockingConfiguration -= handler;
+        }
+
+        public virtual void OnLocking(DbConfiguration configuration)
+        {
+            DebugCheck.NotNull(configuration);
+
+            var handler = _onLockingConfiguration;
+
+            if (handler != null)
+            {
+                handler(configuration, new DbConfigurationEventArgs(configuration));
+            }
+        }
+
         public virtual InternalConfiguration GetConfiguration()
         {
             // The common case is that no overrides have ever been set so we don't take the time to do
@@ -86,11 +118,9 @@ namespace System.Data.Entity.Config
 
             _newConfiguration = configuration.Owner;
 
-            if (_configuration.Value.Owner.GetType()
-                != configuration.Owner.GetType())
+            if (_configuration.Value.Owner.GetType() != configuration.Owner.GetType())
             {
-                if (_configuration.Value.Owner.GetType()
-                    == typeof(DbConfiguration))
+                if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
                 {
                     throw new InvalidOperationException(Strings.DefaultConfigurationUsedBeforeSet(configuration.Owner.GetType().Name));
                 }
@@ -124,7 +154,7 @@ namespace System.Data.Entity.Config
                 }
             }
 
-            if (!_configuration.IsValueCreated)
+            if (!ConfigurationSet)
             {
                 var foundConfiguration =
                     _loader.TryLoadFromConfig(AppConfig.DefaultInstance) ??
@@ -141,8 +171,7 @@ namespace System.Data.Entity.Config
                 var foundType = _finder.TryFindConfigurationType(contextType);
                 if (foundType != null)
                 {
-                    if (_configuration.Value.Owner.GetType()
-                        == typeof(DbConfiguration))
+                    if (_configuration.Value.Owner.GetType() == typeof(DbConfiguration))
                     {
                         throw new InvalidOperationException(Strings.ConfigurationNotDiscovered(foundType.Name));
                     }
@@ -157,6 +186,11 @@ namespace System.Data.Entity.Config
             _knownAssemblies.TryAdd(contextAssembly, null);
         }
 
+        private bool ConfigurationSet
+        {
+            get { return _configuration.IsValueCreated; }
+        }
+
         public virtual void PushConfiguration(AppConfig config, Type contextType)
         {
             DebugCheck.NotNull(config);
@@ -165,16 +199,17 @@ namespace System.Data.Entity.Config
 
             var configuration = _loader.TryLoadFromConfig(config)
                                 ?? _finder.TryCreateConfiguration(contextType)
-                                ?? new InternalConfiguration();
+                                ?? new DbConfiguration().InternalConfiguration;
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config));
-            configuration.Lock();
 
             lock (_lock)
             {
                 _configurationOverrides.Value.Add(Tuple.Create(config, configuration));
             }
+
+            configuration.Lock();
         }
 
         public virtual void PopConfiguration(AppConfig config)

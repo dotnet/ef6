@@ -126,7 +126,7 @@
   <data name="GetMigrationsCommand_NoHistory" xml:space="preserve">
     <value>No migrations have been applied to the target database.</value>
   </data>
-  <data name="LoggingGenerate" xml:space="preserve">
+  <data name="ScaffoldingMigration" xml:space="preserve">
     <value>Scaffolding migration '{0}'.</value>
   </data>
   <data name="RescaffoldNoForce" xml:space="preserve">
@@ -165,5 +165,15 @@
   <data name="SaveConnectionFactoryInConfigFailed" xml:space="preserve">
     <value>Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details.</value>
     <comment>## ExceptionType=System.IO.IOException</comment>
+  </data>
+  <data name="RescaffoldingMigration" xml:space="preserve">
+    <value>Re-scaffolding migration '{0}'.</value>
+  </data>
+  <data name="DidYouMeanToRescaffold" xml:space="preserve">
+    <value>A previous migration called '{0}' was already applied to the target database. If you meant to re-scaffold '{0}', revert it by running 'Update-Database -TargetMigration {1}', then delete '{2}' and run 'Add-Migration {0}' again.</value>
+  </data>
+  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
+    <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
   </data>
 </root>
