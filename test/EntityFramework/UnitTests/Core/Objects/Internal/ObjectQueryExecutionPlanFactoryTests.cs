@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             metadataWorkspace.RegisterItemCollection(edmItemCollection);
             metadataWorkspace.RegisterItemCollection(new ObjectItemCollection());
             var fakeSqlProviderManifest = FakeSqlProviderServices.Instance.GetProviderManifest("2008");
-            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, fakeSqlProviderManifest, "2008");
+            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, fakeSqlProviderManifest, "System.Data.SqlClient", "2008");
             metadataWorkspace.RegisterItemCollection(storeItemCollection);
             metadataWorkspace.RegisterItemCollection(
                 new StorageMappingItemCollection(edmItemCollection, storeItemCollection, Enumerable.Empty<XmlReader>()));

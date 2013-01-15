@@ -64,6 +64,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 get { return _providerManifestToken; }
             }
 
+            public string ProviderInvariantName
+            {
+                get { return _provider; }
+            }
+
             public bool HasNonWarningErrors
             {
                 get { return !MetadataHelper.CheckIfAllErrorsAreWarnings(_errors); }

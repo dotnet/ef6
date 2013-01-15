@@ -30,6 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly Memoizer<EdmFunction, EdmFunction> _cachedCTypeFunction;
 
         private readonly DbProviderManifest _providerManifest;
+        private readonly string _providerInvariantName;
         private readonly string _providerManifestToken;
         private readonly DbProviderFactory _providerFactory;
 
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // used by EntityStoreSchemaGenerator to start with an empty (primitive types only) StoreItemCollection and 
         // add types discovered from the database
-        internal StoreItemCollection(DbProviderFactory factory, DbProviderManifest manifest, string providerManifestToken)
+        internal StoreItemCollection(DbProviderFactory factory, DbProviderManifest manifest, string providerInvariantName, string providerManifestToken)
             : base(DataSpace.SSpace)
         {
             DebugCheck.NotNull(factory);
@@ -60,6 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _providerFactory = factory;
             _providerManifest = manifest;
+            _providerInvariantName = providerInvariantName;
             _providerManifestToken = providerManifestToken;
             _cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
             LoadProviderManifest(_providerManifest);
@@ -83,6 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             errors = this.Init(xmlReaders, filePaths, /* throwOnError */ false, resolver,
                 out _providerManifest,
                 out _providerFactory,
+                out _providerInvariantName,
                 out _providerManifestToken,
                 out _cachedCTypeFunction);
         }
@@ -105,6 +108,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 xmlReaders, filePaths, /* throwOnError */ true, /* resolver */ null,
                 out _providerManifest,
                 out _providerFactory,
+                out _providerInvariantName,
                 out _providerManifestToken,
                 out _cachedCTypeFunction);
         }
@@ -128,6 +132,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 /* resolver */ null,
                 out _providerManifest,
                 out _providerFactory,
+                out _providerInvariantName,
                 out _providerManifestToken,
                 out _cachedCTypeFunction);
         }
@@ -142,6 +147,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _providerManifest = model.ProviderManifest;
             _providerFactory = DbProviderFactories.GetFactory(model.ProviderInfo.ProviderInvariantName);
+            _providerInvariantName = model.ProviderInfo.ProviderInvariantName;
             _providerManifestToken = model.ProviderInfo.ProviderManifestToken;
 
             LoadProviderManifest(_providerManifest);
@@ -193,6 +199,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     composite.GetPaths(DataSpace.SSpace), /* throwOnError */ true, /* resolver */ null,
                     out _providerManifest,
                     out _providerFactory,
+                    out _providerInvariantName,
                     out _providerManifestToken,
                     out _cachedCTypeFunction);
             }
@@ -212,6 +219,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IDbDependencyResolver resolver,
             out DbProviderManifest providerManifest,
             out DbProviderFactory providerFactory,
+            out string providerInvariantName,
             out string providerManifestToken,
             out Memoizer<EdmFunction, EdmFunction> cachedCTypeFunction)
         {
@@ -224,6 +232,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             providerFactory = loader.ProviderFactory;
             providerManifest = loader.ProviderManifest;
             providerManifestToken = loader.ProviderManifestToken;
+            providerInvariantName = loader.ProviderInvariantName;
 
             // load the items into the colleciton
             if (!loader.HasNonWarningErrors)
@@ -265,6 +274,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string StoreProviderManifestToken
         {
             get { return _providerManifestToken; }
+        }
+
+        public string StoreProviderInvariantName
+        {
+            get { return _providerInvariantName;  }
         }
 
         /// <summary>

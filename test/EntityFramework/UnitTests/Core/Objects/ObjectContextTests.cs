@@ -1457,7 +1457,7 @@ namespace System.Data.Entity.Core.Objects
             providerManifestMock.Setup(m => m.GetStoreTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType>()));
             providerManifestMock.Setup(m => m.GetStoreFunctions()).Returns(new ReadOnlyCollection<EdmFunction>(new List<EdmFunction>()));
 
-            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, providerManifestMock.Object, "token");
+            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, providerManifestMock.Object, "providerInvariantName", "token");
 
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OSpace, It.IsAny<bool>()))
                                  .Returns(new ObjectItemCollection());

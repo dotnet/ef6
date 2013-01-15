@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Linq;
@@ -156,6 +157,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Same(model.ProviderInfo.ProviderManifestToken, itemCollection.StoreProviderManifestToken);
             Assert.NotNull(itemCollection.StoreProviderFactory);
             Assert.Same(model.ProviderManifest, itemCollection.StoreProviderManifest);
+            Assert.Same(model.ProviderInfo.ProviderInvariantName, itemCollection.StoreProviderInvariantName);
+        }
+
+        [Fact]
+        public void Can_get_ProviderInvariantName_from_StoreItemCollection_loaded_from_SSDL()
+        {
+            IList<EdmSchemaError> errors;
+            var storeItemCollection = 
+                StoreItemCollection.Create(new[] { XDocument.Parse(Ssdl).CreateReader() }, null, null, out errors);
+
+            Assert.Equal("System.Data.SqlClient", storeItemCollection.StoreProviderInvariantName);
+        }
+
+        [Fact]
+        public void ProviderInvariantName_passed_in_StoreItemCollection_ctor_set_correctly()
+        {
+            var fakeSqlProviderManifest = FakeSqlProviderServices.Instance.GetProviderManifest("2008");
+
+            var storeItemCollection = 
+                new StoreItemCollection(
+                    FakeSqlProviderFactory.Instance,
+                    fakeSqlProviderManifest, 
+                    "providerInvariantName", 
+                    "token");
+
+            Assert.Equal("providerInvariantName", storeItemCollection.StoreProviderInvariantName);
+            Assert.Equal("token", storeItemCollection.StoreProviderManifestToken);
         }
     }
 }
