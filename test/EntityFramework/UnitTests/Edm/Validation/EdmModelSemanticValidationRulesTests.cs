@@ -33,7 +33,7 @@ namespace System.Data.Entity.Edm
 
             parentEntity.AddMember(navigationProperty);
 
-            var model = new EdmModel();
+            var model = new EdmModel(DataSpace.CSpace);
 
             model.AddItem(parentEntity);
 
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Edm
         [Fact]
         public void EdmEntityContainer_DuplicateEntitySetTable()
         {
-            var model = new EdmModel().InitializeStore();
+            var model = new EdmModel(DataSpace.SSpace);
 
             model.Containers.Single().AddEntitySetBase(
                 new EntitySet("Foo", "S", "T", null, new EntityType()));

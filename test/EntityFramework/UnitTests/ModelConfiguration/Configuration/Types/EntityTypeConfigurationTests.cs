@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
                                  };
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            entityTypeConfiguration.Configure(entityType, new EdmModel());
+            entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Same(entityTypeConfiguration, entityType.GetConfiguration());
         }
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
         [Fact]
         public void Configure_should_configure_entity_set_name()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType
                                  {
                                      Name = "E"
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             property.SetClrPropertyInfo(mockPropertyInfo);
             entityTypeConfiguration.Property(new PropertyPath(mockPropertyInfo), () => mockPropertyConfiguration.Object);
 
-            entityTypeConfiguration.Configure(entityType, new EdmModel());
+            entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
             mockPropertyConfiguration.Verify(p => p.Configure(property));
         }
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.PropertyNotFound(("P"), "E"),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             entityTypeConfiguration.Property(new PropertyPath(mockPropertyInfo1)).ColumnOrder = 0;
             (entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetClrPropertyInfo(mockPropertyInfo1);
 
-            entityTypeConfiguration.Configure(entityType, new EdmModel());
+            entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(2, entityType.DeclaredKeyProperties.Count);
             Assert.Equal("P1", entityType.DeclaredKeyProperties.First().Name);
@@ -188,7 +188,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.KeyRegisteredOnDerivedType(typeof(object), typeof(string)),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.KeyPropertyNotFound(("Id"), "E"),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel())).Message);
+                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]

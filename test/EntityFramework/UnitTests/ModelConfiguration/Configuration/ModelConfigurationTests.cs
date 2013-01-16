@@ -34,12 +34,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var modelConfiguration = new ModelConfiguration();
 
-            var databaseMetadata = new EdmModel().InitializeConceptual();
+            var databaseMetadata = new EdmModel(DataSpace.CSpace);
             databaseMetadata.AddEntitySet("ES", new EntityType());
 
             var databaseMapping
                 = new DbDatabaseMapping().Initialize(
-                    new EdmModel().InitializeConceptual(),
+                    new EdmModel(DataSpace.CSpace),
                     databaseMetadata);
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -56,12 +56,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                           DefaultSchema = "foo"
                       };
 
-            var databaseMetadata = new EdmModel().InitializeConceptual();
+            var databaseMetadata = new EdmModel(DataSpace.CSpace);
             databaseMetadata.AddEntitySet("ES", new EntityType());
 
             var databaseMapping
                 = new DbDatabaseMapping().Initialize(
-                    new EdmModel().InitializeConceptual(),
+                    new EdmModel(DataSpace.CSpace),
                     databaseMetadata);
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -103,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var mockEntityType = new MockType();
             var mockComplexType = new MockType();
 
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
 
             entityType.Annotations.SetClrType(mockEntityType);

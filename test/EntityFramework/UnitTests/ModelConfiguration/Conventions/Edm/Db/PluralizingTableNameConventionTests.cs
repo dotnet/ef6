@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_set_pluralized_table_name_as_identitier()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customer";
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignored_configured_tables()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             table.SetTableName(new DatabaseName("Foo"));
             var entitySet = database.AddEntitySet("ES", table);
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_ignore_current_table()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var table = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customers";
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_uniquify_names()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var tableA = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             var tableB = new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace);
             var entitySetA = database.AddEntitySet("ESA", tableA);

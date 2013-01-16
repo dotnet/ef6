@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
             Assert.False(property.IsMaxLength);
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
         }
@@ -77,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -93,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -140,7 +140,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -157,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
             Assert.False(property.IsMaxLength);
@@ -171,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddMember(property);
 
             ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -217,7 +217,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                     new[] { dependentProperty });
 
             ((IEdmConvention<AssociationType>)new PropertyMaxLengthConvention())
-                .Apply(associationType, new EdmModel());
+                .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(23, dependentProperty.MaxLength);
         }

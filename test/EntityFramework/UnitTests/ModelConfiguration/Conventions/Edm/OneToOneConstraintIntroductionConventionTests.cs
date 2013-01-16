@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             associationType.MarkPrincipalConfigured();
 
             ((IEdmConvention<AssociationType>)new OneToOneConstraintIntroductionConvention())
-                .Apply(associationType, new EdmModel());
+                .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
             Assert.Equal(1, associationType.Constraint.ToProperties.Count);

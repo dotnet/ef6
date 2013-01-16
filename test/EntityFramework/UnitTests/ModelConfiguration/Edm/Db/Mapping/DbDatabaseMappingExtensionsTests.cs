@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void GetComplexPropertyMappings_should_return_all_complex_property_mappings_for_type()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entitySet = new EntitySet
                                 {
                                     Name = "ES"
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void GetEntitySetMappings_should_return_mappings()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", new AssociationType()), new EntitySet());
 
@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void AddEntitySetMapping_should_add_mapping()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entitySet = new EntitySet
                                 {
                                     Name = "ES"
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void Initialize_should_add_default_entity_container_mapping()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Count);
         }
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void AddAssociationSetMapping_should_add_mapping()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var associationSet = new AssociationSet("AS", new AssociationType());
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(associationSet, new EntitySet());
@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void GetEntityTypeMapping_should_return_mapping_for_type()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entityType = new EntityType();
             var entityTypeMapping = new StorageEntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
@@ -127,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void GetEntityTypeMapping_should_return_mapping_for_type_by_clrType()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entityType = new EntityType
                                  {
                                      Name = "Foo"
@@ -151,7 +151,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping.UnitTests
         public void Can_get_and_set_mapping_for_entity_set()
         {
             var databaseMapping = new DbDatabaseMapping()
-                .Initialize(new EdmModel().InitializeConceptual(), new EdmModel());
+                .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entitySet = new EntitySet
                                 {
                                     Name = "ES"

@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization.UnitTests
 
         private static DbDatabaseMapping CreateSimpleModel(double version)
         {
-            var model = new EdmModel().InitializeConceptual(version);
+            var model = new EdmModel(DataSpace.CSpace, version);
 
             var entityType = model.AddEntityType("E");
             var type = typeof(object);

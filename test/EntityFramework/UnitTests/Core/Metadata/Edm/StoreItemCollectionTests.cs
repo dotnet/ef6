@@ -145,11 +145,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_initialize_and_provider_fields_set()
         {
             var model
-                = new EdmModel
+                = new EdmModel(DataSpace.SSpace, 3.0)
                       {
                           ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
                           ProviderManifest = new SqlProviderManifest("2008"),
-                          Version = 3.0
                       };
 
             var itemCollection = new StoreItemCollection(model);

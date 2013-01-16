@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
     public class EdmModelValidationContextTests
@@ -11,11 +12,11 @@ namespace System.Data.Entity.Edm
         [Fact]
         public void IsCSpace_returns_true_when_cspace()
         {
-            var validationContext = new EdmModelValidationContext(new EdmModel().InitializeConceptual(), true);
+            var validationContext = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
 
             Assert.True(validationContext.IsCSpace);
 
-            validationContext = new EdmModelValidationContext(new EdmModel().InitializeStore(), true);
+            validationContext = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
 
             Assert.False(validationContext.IsCSpace);
         }

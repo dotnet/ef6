@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         [Fact]
         public void InitializeStore_should_set_latest_version()
         {
-            var database = new EdmModel().InitializeStore();
+            var database = new EdmModel(DataSpace.SSpace);
 
             Assert.Equal(3.0, database.Version);
         }
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         [Fact]
         public void AddTable_should_create_and_add_table_to_default_schema()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.SSpace);
             var table = database.AddTable("T");
 
             
@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         [Fact]
         public void Can_get_and_set_provider_annotation()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var providerInfo = new DbProviderInfo("Foo", "Bar");
 
             database.ProviderInfo = providerInfo;

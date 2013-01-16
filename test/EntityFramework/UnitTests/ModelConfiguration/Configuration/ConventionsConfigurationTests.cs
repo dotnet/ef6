@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyModel_should_run_model_conventions()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var mockConvention = new Mock<IEdmConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
 
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyDatabase_should_run_database_conventions()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var mockConvention = new Mock<IDbConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
 
@@ -111,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyModel_should_run_targeted_model_conventions()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var mockConvention = new Mock<IEdmConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyDatabase_should_run_targeted_model_conventions()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.SSpace);
             var table = database.AddTable("T");
             var mockConvention = new Mock<IDbConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
@@ -136,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     {
                         mockConvention.Object
                     });
-
+            
             conventionsConfiguration.ApplyDatabase(database);
 
             mockConvention.Verify(c => c.Apply(table, database), Times.AtMostOnce());

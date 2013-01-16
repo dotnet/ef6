@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Can_get_and_set_provider_info_annotation()
         {
-            var model = new EdmModel();
+            var model = new EdmModel(DataSpace.SSpace);
             var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
 
             model.ProviderInfo = providerInfo;
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void HasCascadeDeletePath_should_return_true_for_simple_cascade()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityTypeA = model.AddEntityType("A");
             var entityTypeB = model.AddEntityType("B");
             var associationType
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void HasCascadeDeletePath_should_return_true_for_transitive_cascade()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityTypeA = model.AddEntityType("A");
             var entityTypeB = model.AddEntityType("B");
             var entityTypeC = model.AddEntityType("B");
@@ -75,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void HasCascadeDeletePath_should_return_true_for_self_ref_cascade()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("A");
             var associationType
                 = new AssociationType
@@ -93,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetClrTypes_should_return_ospace_types()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var type1 = typeof(object);
             var tempQualifier1 = model.AddEntityType("A");
 
@@ -108,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Validate_should_throw()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             model.AddEntitySet("S", new EntityType());
 
             Assert.Throws<ModelValidationException>(() => model.Validate());
@@ -117,7 +117,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetEntitySets_should_return_all_sets()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             model.AddEntitySet("S", new EntityType());
             model.AddEntitySet("T", new EntityType());
 
@@ -127,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GenerateDatabaseMapping_should_return_mapping()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             Assert.NotNull(model.GenerateDatabaseMapping(ProviderRegistry.Sql2008_ProviderManifest));
         }
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetEntitySet_should_return_entity_set()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
             model.AddEntitySet("FooSet", entityType);
 
@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetAssociationSet_should_return_association_set()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
             model.AddEntitySet("FooESet", entityType);
             var associationType
@@ -169,7 +169,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetStructuralType_should_return_entity_or_complex_type()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var complexType = model.AddComplexType("C");
 
@@ -180,7 +180,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void ReplaceEntitySet_should_remove_set_with_type()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
             model.AddEntitySet("FooSet", entityType);
 
@@ -193,7 +193,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void Initialize_should_create_default_container_and_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             Assert.Equal(1, model.Containers.Count());
             Assert.NotNull(model.Containers.Single().Name);
@@ -202,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetAssociationsBetween_should_return_matching_associations()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var entityTypeA = model.AddEntityType("Foo");
             var entityTypeB = model.AddEntityType("Bar");
@@ -227,7 +227,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddEntityType_should_create_and_add_with_default_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var entityType = model.AddEntityType("Foo");
 
@@ -240,7 +240,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddEntityType_should_create_and_add_when_custom_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var entityType = model.AddEntityType("Foo", "Bar");
 
@@ -253,7 +253,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddEnumType_should_create_and_add_with_default_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var enumType = model.AddEnumType("Foo");
 
@@ -266,7 +266,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddEnumType_should_create_and_add_when_custom_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var enumType = model.AddEnumType("Foo", "Bar");
 
@@ -279,7 +279,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddComplexType_should_create_and_add_with_default_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var complexType = model.AddComplexType("Foo");
 
@@ -292,7 +292,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddComplexType_should_create_and_add_when_custom_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var complexType = model.AddComplexType("Foo", "Bar");
 
@@ -305,7 +305,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetEntityTypes_should_return_correct_types()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             Assert.Same(model.EntityTypes, model.EntityTypes);
         }
@@ -313,7 +313,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetComplexTypes_should_return_correct_types()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             Assert.Same(model.ComplexTypes, model.ComplexTypes);
         }
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetAssociationType_should_return_correct_type()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var associationType
                 = new AssociationType
@@ -338,7 +338,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetAssociationTypes_should_return_correct_types()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             Assert.Same(model.AssociationTypes, model.AssociationTypes);
         }
@@ -346,7 +346,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetEntityType_should_return_correct_type()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
 
             var foundEntityType = model.GetEntityType("Foo");
@@ -358,7 +358,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetComplexType_should_return_correct_type()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var complexType = model.AddComplexType("Foo");
 
             var foundComplexType = model.GetComplexType("Foo");
@@ -370,7 +370,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddEntitySet_should_create_and_add_to_default_container()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
 
             var entitySet = model.AddEntitySet("FooSet", entityType);
@@ -384,7 +384,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddAssociationSet_should_create_and_add_to_default_container_explicit_overload()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var associationSet = new AssociationSet("AS", new AssociationType());
 
             model.AddAssociationSet(associationSet);
@@ -395,7 +395,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void RemoveEntityType_should_remove_type_and_set()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("Foo");
             model.AddEntitySet("FooSet", entityType);
 
@@ -408,7 +408,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void RemoveAssociationType_should_remove_type_and_set()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var sourceEntityType = new EntityType();
             var targetEntityType = new EntityType();
@@ -433,7 +433,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddAssociationType_should_create_and_add_with_default_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var sourceEntityType = model.AddEntityType("Source");
             var targetEntityType = model.AddEntityType("Target");
@@ -456,7 +456,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddAssociationType_should_create_and_add_with_custom_namespace()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var sourceEntityType = model.AddEntityType("Source");
             var targetEntityType = model.AddEntityType("Target");
@@ -480,7 +480,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void AddAssociationSet_should_create_and_add_to_default_container()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             var sourceEntityType = model.AddEntityType("Source");
             var targetEntityType = model.AddEntityType("Target");
@@ -505,7 +505,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         [Fact]
         public void GetDerivedTypes_must_return_list_of_direct_descendants()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entity1 = model.AddEntityType("E1");
             var entity2 = model.AddEntityType("E2");
             var entity3 = model.AddEntityType("E3");

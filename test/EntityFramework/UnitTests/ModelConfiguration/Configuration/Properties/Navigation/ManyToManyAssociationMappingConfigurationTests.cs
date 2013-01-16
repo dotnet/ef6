@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_table_when_table_configured()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.SSpace);
             var table = database.AddTable("OriginalName");
 
             var associationSetMapping
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_columns_when_left_keys_configured()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             var associationSetMapping
                 = new StorageAssociationSetMapping(
                     new AssociationSet("AS", new AssociationType()), new EntitySet())
@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_rename_columns_when_right_keys_configured()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(
@@ -100,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_throw_when_incorrect_number_of_columns_configured()
         {
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(

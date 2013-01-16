@@ -350,7 +350,7 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model = new EdmModel().InitializeConceptual(_modelBuilderVersion.GetEdmVersion());
+            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion());
 
             model.ProviderInfo = providerInfo;
 

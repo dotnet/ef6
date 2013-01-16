@@ -972,6 +972,12 @@
   <data name="EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid" xml:space="preserve">
     <value>The type is not a valid EdmTypeReference.</value>
   </data>
+  <data name="EdmModel_InvalidDataSpace">
+    <value>'{0}' is not valid data space for EdmModel. EdmModel supports only DataSpace.CSpace and DataSpace.SSpace.</value>
+  </data>
+  <data name="EdmModel_AddItem_NonMatchingNamespace">
+    <value>The data space of the item does not match the data space of the EdmModel.</value>
+  </data>
   <data name="Serializer_OneNamespaceAndOneContainer" xml:space="preserve">
     <value>Serializer can only serialize an EdmModel that has one EdmNamespace and one EdmEntityContainer.</value>
   </data>

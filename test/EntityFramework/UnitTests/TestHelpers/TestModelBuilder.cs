@@ -18,7 +18,7 @@ namespace System.Data.Entity
 
         public TestModelBuilder()
         {
-            _model = new EdmModel().InitializeConceptual();
+            _model = new EdmModel(DataSpace.CSpace);
         }
 
         public TestModelBuilder Entities(params string[] names)

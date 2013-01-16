@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping.UnitTests
             entityTypeMapping.AddType(new EntityType());
 
             var databaseMapping =
-                new DbDatabaseMapping().Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeConceptual());
+                new DbDatabaseMapping().Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             var table = databaseMapping.Database.AddTable("foo");
             var entitySet = databaseMapping.Database.GetEntitySet(table);

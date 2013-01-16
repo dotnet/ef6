@@ -7,7 +7,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Edm.Validation;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -19,29 +21,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly List<EntityType> _entityTypes = new List<EntityType>();
         private readonly List<EnumType> _enumTypes = new List<EnumType>();
 
+        private readonly DataSpace _dataSpace;
+
         private DbProviderInfo _providerInfo;
         private DbProviderManifest _providerManifest;
 
         public double Version { get; set; }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel InitializeConceptual(double version = XmlConstants.EdmVersionForV3)
+        // Using XmlConstants.EdmVersionForV3 as a "general" EF model version concept 
+        // to avoid adding another constant with a value we already have.
+        public EdmModel(DataSpace dataSpace, string entityContainerName, double version = XmlConstants.EdmVersionForV3)
         {
+            Check.NotEmpty(entityContainerName, "entityContainerName");
+            if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
+            {
+                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
+            }
+
+            _dataSpace = dataSpace;
             Version = version;
-
-            _containers.Add(new EntityContainer("CodeFirstContainer", DataSpace.CSpace));
-
-            return this;
+            _containers.Add(new EntityContainer(entityContainerName, dataSpace));
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel InitializeStore(double version = XmlConstants.StoreVersionForV3)
+        public EdmModel(DataSpace dataSpace, double version = 3.0)
+            : this(dataSpace, dataSpace == DataSpace.CSpace ? "CodeFirstContainer" : "CodeFirstDatabase", version)
         {
-            Version = version;
-
-            _containers.Add(new EntityContainer("CodeFirstDatabase", DataSpace.SSpace));
-
-            return this;
         }
 
         internal virtual void Validate()
@@ -134,6 +140,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void AddItem(AssociationType associationType)
         {
             Check.NotNull(associationType, "associationType");
+            ValidateSpace(associationType, "associationType");
 
             _associationTypes.Add(associationType);
         }
@@ -148,6 +155,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void AddItem(ComplexType complexType)
         {
             Check.NotNull(complexType, "complexType");
+            ValidateSpace(complexType, "complexType");
 
             _complexTypes.Add(complexType);
         }
@@ -155,6 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void AddItem(EntityType entityType)
         {
             Check.NotNull(entityType, "entityType");
+            ValidateSpace(entityType, "entityType");
 
             _entityTypes.Add(entityType);
         }
@@ -162,15 +171,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void RemoveItem(EntityType entityType)
         {
             Check.NotNull(entityType, "entityType");
-
+            
             _entityTypes.Remove(entityType);
         }
 
         public void AddItem(EnumType enumType)
         {
             Check.NotNull(enumType, "enumType");
+            ValidateSpace(enumType, "enumType");
 
             _enumTypes.Add(enumType);
+        }
+
+        private void ValidateSpace(GlobalItem item, string parameterName)
+        {
+            if (item.DataSpace != _dataSpace)
+            {
+                throw new ArgumentException(Strings.EdmModel_AddItem_NonMatchingNamespace, parameterName);
+            }
         }
     }
 }

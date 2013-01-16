@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                          };
 
             ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, new EdmModel());
+                .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
 
             Assert.Same(associationConstraint, navigationProperty.Association.Constraint);
         }
@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                                          };
 
             ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, new EdmModel());
+                .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(navigationProperty.Association.Constraint);
         }
@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_is_noop_when_unknown_dependent()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var associationType = new AssociationType();
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_generates_constraint_when_simple_fk()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var associationType = model.AddAssociationType(
                 "A",
@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_generates_constraint_when_composite_fk()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var associationType = model.AddAssociationType(
                 "A",
@@ -130,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_throws_when_cannot_find_foreign_key_properties()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
 
@@ -153,7 +153,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_throws_with_empty_foreign_key_properties()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
 

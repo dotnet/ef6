@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
-                .Apply(entityType, new EdmModel().InitializeConceptual());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
-                .Apply(entityType, new EdmModel().InitializeConceptual());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
-                .Apply(entityType, new EdmModel().InitializeConceptual());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_not_match_key_that_is_also_an_fk()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         [Fact]
         public void Apply_should_match_key_that_is_an_fk_used_in_table_splitting()
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
@@ -130,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(property);
 
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
-                .Apply(entityType, new EdmModel().InitializeConceptual());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
         }
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             entityType.AddKeyMember(EdmProperty.Primitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
-                .Apply(entityType, new EdmModel().InitializeConceptual());
+                .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
                 0,

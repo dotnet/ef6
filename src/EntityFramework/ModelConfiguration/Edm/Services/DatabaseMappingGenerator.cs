@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(model, new EdmModel().InitializeStore(model.Version));
+                    .Initialize(model, new EdmModel(DataSpace.SSpace, model.Version));
 
             return databaseMapping;
         }

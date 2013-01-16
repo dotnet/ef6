@@ -1894,6 +1894,22 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "'{0}' is not valid data space for EdmModel. EdmModel supports only DataSpace.CSpace and DataSpace.SSpace."
+        /// </summary>
+        internal static string EdmModel_InvalidDataSpace(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EdmModel_InvalidDataSpace, p0);
+        }
+
+        /// <summary>
+        /// A string like "The data space of the item does not match the data space of the EdmModel."
+        /// </summary>
+        internal static string EdmModel_AddItem_NonMatchingNamespace
+        {
+            get { return EntityRes.GetString(EntityRes.EdmModel_AddItem_NonMatchingNamespace); }
+        }
+
+        /// <summary>
         /// A string like "Serializer can only serialize an EdmModel that has one EdmNamespace and one EdmEntityContainer."
         /// </summary>
         internal static string Serializer_OneNamespaceAndOneContainer
@@ -15367,6 +15383,8 @@ namespace System.Data.Entity.Resources
         internal const string EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid = "EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid";
+        internal const string EdmModel_InvalidDataSpace = "EdmModel_InvalidDataSpace";
+        internal const string EdmModel_AddItem_NonMatchingNamespace = "EdmModel_AddItem_NonMatchingNamespace";
         internal const string Serializer_OneNamespaceAndOneContainer = "Serializer_OneNamespaceAndOneContainer";
         internal const string MaxLengthAttribute_ValidationError = "MaxLengthAttribute_ValidationError";
         internal const string MaxLengthAttribute_InvalidMaxLength = "MaxLengthAttribute_InvalidMaxLength";

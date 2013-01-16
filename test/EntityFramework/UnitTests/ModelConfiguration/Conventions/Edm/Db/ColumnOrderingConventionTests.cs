@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             columnB.SetOrder(1);
             table.AddColumn(columnB);
 
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
             ((IDbConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                     ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(
                         TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)))));
 
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
             ((IDbConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                     ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(
                         TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)))));
 
-            var database = new EdmModel().InitializeConceptual();
+            var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
             ((IDbConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);

@@ -180,7 +180,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         private static EdmModel CreateEdmModel()
         {
             var model
-                = new EdmModel
+                = new EdmModel(DataSpace.SSpace)
                       {
                           ProviderInfo = ProviderRegistry.SqlCe4_ProviderInfo
                       };

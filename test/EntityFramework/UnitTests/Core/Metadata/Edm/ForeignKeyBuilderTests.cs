@@ -12,10 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Name_should_return_association_type_name()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
 
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
@@ -26,10 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_principal_table()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
 
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
@@ -44,10 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_set_owner_and_corresponding_association_added_to_model()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
 
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
@@ -81,10 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void SetOwner_when_null_should_remove_association_type_from_model()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
 
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
@@ -107,10 +95,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void SetOwner_when_self_ref_should_differentiate_target_end_name()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = database.AddTable("T");
@@ -130,10 +116,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Set_principal_table_when_self_ref_should_differentiate_target_end_name()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = database.AddTable("T");
@@ -158,10 +142,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_dependent_columns_and_multiplicities_assigned()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = database.AddTable("T");
@@ -195,10 +177,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_delete_action()
         {
             var database
-                = new EdmModel
-                      {
-                          Version = 3.0
-                      }.InitializeStore();
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
             var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
 
             var table = database.AddTable("T");

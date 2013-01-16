@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
                                          {
                                              ModelNamespace = "Foo"
                                          };
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_set_default_association_multiplicity_to_collection_to_optional()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -63,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_create_association_sets_for_associations()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType
                                  {
                                      Name = "Source"
@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_detect_collection_associations_and_set_correct_end_kinds()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -112,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_not_detect_arrays_as_collection_associations()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_create_navigation_property_for_association()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -151,7 +151,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
         public void Map_should_set_clr_property_info_on_assocation_source_end()
         {
             var modelConfiguration = new ModelConfiguration();
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType();
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);

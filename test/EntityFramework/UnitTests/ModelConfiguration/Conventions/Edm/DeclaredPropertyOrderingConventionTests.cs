@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 
             entityType.AddKeyMember(property6);
 
-            new DeclaredPropertyOrderingConvention().Apply(entityType, new EdmModel());
+            new DeclaredPropertyOrderingConvention().Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.True(
                 entityType.DeclaredProperties.Select(e => e.Name)

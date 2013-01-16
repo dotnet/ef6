@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             navigationProperty.Association.SourceEnd = new AssociationEndMember("S", new EntityType());
             navigationProperty.Association.TargetEnd = new AssociationEndMember("T", new EntityType());
 
-            navigationPropertyConfiguration.Configure(navigationProperty, new EdmModel(), new EntityTypeConfiguration(typeof(object)));
+            navigationPropertyConfiguration.Configure(navigationProperty, new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
 
             Assert.NotNull(navigationProperty.GetConfiguration());
             Assert.NotNull(navigationProperty.Association.GetConfiguration());
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     {
                         RelationshipType = associationType
                     },
-                new EdmModel(), new EntityTypeConfiguration(typeof(object)));
+                new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(RelationshipMultiplicity.Many, associationType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationType.TargetEnd.RelationshipMultiplicity);
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var inverseAssociationType = new AssociationType();
             inverseAssociationType.SourceEnd = new AssociationEndMember("S", new EntityType());
             inverseAssociationType.TargetEnd = new AssociationEndMember("T", new EntityType());
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
             model.AddAssociationType(inverseAssociationType);
             var inverseNavigationProperty
                 = model.AddEntityType("T")
@@ -125,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     {
                         RelationshipType = associationType
                     },
-                new EdmModel(), new EntityTypeConfiguration(typeof(object)));
+                new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.SourceEnd, associationType.Constraint.ToRole);
@@ -154,7 +154,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     {
                         RelationshipType = associationType
                     },
-                new EdmModel(), new EntityTypeConfiguration(typeof(object)));
+                new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(OperationAction.Cascade, associationType.TargetEnd.DeleteBehavior);
         }
@@ -175,7 +175,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeConceptual());
+                    .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(
                 new AssociationSet("AS", new AssociationType()), new EntitySet());
@@ -219,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                             {
                                 RelationshipType = associationType
                             },
-                        new EdmModel(), new EntityTypeConfiguration(typeof(object)))).Message);
+                        new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                             {
                                 RelationshipType = associationType
                             },
-                        new EdmModel(), new EntityTypeConfiguration(typeof(object)))).Message);
+                        new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]
@@ -279,7 +279,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                             {
                                 RelationshipType = associationType
                             },
-                        new EdmModel(), new EntityTypeConfiguration(typeof(object)))).Message);
+                        new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]
@@ -316,7 +316,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                             {
                                 RelationshipType = associationType
                             },
-                        new EdmModel(), new EntityTypeConfiguration(typeof(object)))).Message);
+                        new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]
@@ -349,7 +349,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                             {
                                 RelationshipType = associationType
                             },
-                        new EdmModel(), new EntityTypeConfiguration(typeof(object)))).Message);
+                        new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]
@@ -369,7 +369,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     {
                         RelationshipType = associationType
                     },
-                new EdmModel(), new EntityTypeConfiguration(typeof(object)));
+                new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
         }
     }
 }

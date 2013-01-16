@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         {
             var databaseMapping
                 = new DbDatabaseMapping()
-                    .Initialize(new EdmModel().InitializeConceptual(), new EdmModel().InitializeStore());
+                    .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             var foreignKeyConstraint
                 = new ForeignKeyBuilder(databaseMapping.Database, "FK")

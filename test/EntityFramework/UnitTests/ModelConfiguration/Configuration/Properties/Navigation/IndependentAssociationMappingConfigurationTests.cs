@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void Configure_should_split_key_constraint_when_to_table_configuration()
         {
-            var database = new EdmModel().InitializeStore();
+            var database = new EdmModel(DataSpace.SSpace);
             var sourceTable = database.AddTable("Source");
             var principalTable = database.AddTable("P");
 
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                     new EntitySet())
                     .Initialize();
 
-            var database = new EdmModel().InitializeStore();
+            var database = new EdmModel(DataSpace.SSpace);
 
             Assert.Equal(
                 Strings.TableNotFound("Split"),

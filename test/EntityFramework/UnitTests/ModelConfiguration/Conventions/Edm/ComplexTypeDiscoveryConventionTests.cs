@@ -262,7 +262,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         private static EdmModel CreateModelFixture(
             out EntityType declaringEntityType, out EntityType complexEntityType)
         {
-            var model = new EdmModel().InitializeConceptual();
+            var model = new EdmModel(DataSpace.CSpace);
 
             declaringEntityType = model.AddEntityType("E");
             complexEntityType = model.AddEntityType("C");

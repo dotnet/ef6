@@ -344,7 +344,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         private void VerifyKeyProperty(EntityTypeConfiguration configuration, string expectedKeyName, params PropertyInfo[] props)
         {
             var entityType = CreateEntityTypeWithProperties(props);
-            configuration.Configure(entityType, new EdmModel());
+            configuration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(1, entityType.DeclaredKeyProperties.Count);
             Assert.Equal(expectedKeyName, entityType.DeclaredKeyProperties.Single().Name);
