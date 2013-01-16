@@ -179,5 +179,16 @@ namespace System.Data.Entity.Internal.Linq
 
             return new InternalSet<TEntity>(internalContextMock.Object);
         }
+
+        [Fact]
+        public void AsStreaming_sets_Streaming_on_internal_query()
+        {
+            var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<string>());
+            var internalSet = CreateInternalSet(objectContextMock, "foo");
+            
+            Assert.False(internalSet.ObjectQuery.Streaming);
+            var streamingQuery = internalSet.AsStreaming();
+            Assert.True(streamingQuery.ObjectQuery.Streaming);
+        }
     }
 }

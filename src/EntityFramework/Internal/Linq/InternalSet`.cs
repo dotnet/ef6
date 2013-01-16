@@ -560,7 +560,7 @@ namespace System.Data.Entity.Internal.Linq
                 DbHelpers.QuoteIdentifier(_entitySet.EntityContainer.Name),
                 DbHelpers.QuoteIdentifier(_entitySet.Name));
 
-            InitializeQuery(CreateObjectQuery(asNoTracking: false));
+            InitializeQuery(CreateObjectQuery(asNoTracking: false, streaming: false));
         }
 
         /// <summary>
@@ -570,7 +570,7 @@ namespace System.Data.Entity.Internal.Linq
         ///     if set to <c>true</c> then the query is set to be no-tracking.
         /// </param>
         /// <returns> The query. </returns>
-        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking)
+        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking, bool streaming)
         {
             var objectQuery = InternalContext.ObjectContext.CreateQuery<TEntity>(_quotedEntitySetName);
             if (_baseType != typeof(TEntity))
@@ -582,6 +582,8 @@ namespace System.Data.Entity.Internal.Linq
             {
                 objectQuery.MergeOption = MergeOption.NoTracking;
             }
+
+            objectQuery.Streaming = streaming;
 
             return objectQuery;
         }
@@ -650,7 +652,25 @@ namespace System.Data.Entity.Internal.Linq
             // AsNoTracking called directly on the DbSet (as opposed to a DbQuery) is special-cased so that
             // it doesn't result in a LINQ query being created where one is not needed. This adds a perf boost
             // for simple no-tracking queries such as context.Products.AsNoTracking().
-            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: true));
+            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: true, streaming: false));
+        }
+
+        #endregion
+
+        #region AsStreaming
+
+        /// <summary>
+        ///     Returns a new query that will stream the results instead of buffering.
+        /// </summary>
+        /// <returns> A new query with AsStreaming applied. </returns>
+        public override IInternalQuery<TEntity> AsStreaming()
+        {
+            Initialize();
+
+            // AsStreaming called directly on the DbSet (as opposed to a DbQuery) is special-cased so that
+            // it doesn't result in a LINQ query being created where one is not needed. This adds a perf boost
+            // for simple streaming queries such as context.Products.AsStreaming().
+            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: false, streaming: true));
         }
 
         #endregion

@@ -900,7 +900,7 @@ namespace ProductivityApiTests
                                };
                 context.Products.Add(prod);
 
-                Assert.Throws<DbUpdateException>(() => context.SaveChanges()).ValidateMessage(
+                Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
                     "Update_GeneralExecutionException");
             }
         }
@@ -942,7 +942,7 @@ namespace ProductivityApiTests
 
                 // Accept will fail because of PK violation
                 // (cat1 doesn't actually exist in the store so update pipeline will succeed)
-                Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
+                Assert.Throws<InvalidOperationException>(() => saveChanges(context)).ValidateMessage(
                     "ObjectContext_AcceptAllChangesFailure");
             }
         }
