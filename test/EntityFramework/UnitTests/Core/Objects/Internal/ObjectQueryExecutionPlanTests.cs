@@ -92,6 +92,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                            {
                                                reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                    new[] { new object[] { "Bar" } });
+                                               Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
                                                return reader;
                                            });
 
@@ -176,7 +177,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             Assert.Equal(true, reader.IsClosed);
             var readerMock = Mock.Get(reader);
-            readerMock.Verify(m => m.GetValue(It.IsAny<int>()), streaming ? Times.Never() : Times.Once());
+            readerMock.Verify(m => m.GetValues(It.IsAny<object[]>()), streaming ? Times.Never() : Times.Once());
         }
 
 #if !NET40
@@ -264,6 +265,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                            {
                                                reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
+                                               Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
                                                return Task.FromResult(reader);
                                            });
 

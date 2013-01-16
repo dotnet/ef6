@@ -142,7 +142,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                 using (var entityCommand = PrepareEntityCommand(context, parameterValues))
                 {
                     // acquire store reader
-                    storeReader = entityCommand.GetCommandDefinition().ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
+                    storeReader = entityCommand.GetCommandDefinition().ExecuteStoreCommands(entityCommand,
+                        Streaming
+                            ? CommandBehavior.Default
+                            : CommandBehavior.SequentialAccess);
                 }
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
@@ -158,7 +161,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                     shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
                 }
-                
+
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
                 if (ResultType.EdmType.BuiltInTypeKind
@@ -205,7 +208,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                     // acquire store reader
                     storeReader = await
                                   entityCommand.GetCommandDefinition()
-                                               .ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, cancellationToken)
+                                               .ExecuteStoreCommandsAsync(entityCommand,
+                        Streaming
+                            ? CommandBehavior.Default
+                            : CommandBehavior.SequentialAccess
+                        , cancellationToken)
                                                .ConfigureAwait(continueOnCapturedContext: false);
                 }
 

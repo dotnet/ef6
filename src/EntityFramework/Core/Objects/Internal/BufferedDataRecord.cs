@@ -15,9 +15,11 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     internal class BufferedDataRecord : DbDataRecord
     {
-        private int _currentRow = -1;
+        private int _currentRowNumber = -1;
+        private object[] _currentRow;
 
         private readonly List<object[]> _resultSet;
+        private readonly int _resultSetCount;
         private readonly string[] _dataTypeNames;
         private readonly Type[] _fieldTypes;
         private readonly string[] _columnNames;
@@ -33,6 +35,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Debug.Assert(fieldTypes.Length == columnNames.Length);
 
             _resultSet = resultSet;
+            _resultSetCount = _resultSet.Count;
             _dataTypeNames = dataTypeNames;
             _fieldTypes = fieldTypes;
             _columnNames = columnNames;
@@ -48,17 +51,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get { return GetValue(ordinal); }
         }
-        
-        public bool HasData
-        {
-            get { return 0 <= _currentRow && _currentRow < _resultSet.Count; }
-        }
+
+        public bool IsDataReady { get; private set; }
 
         public bool HasRows
         {
             get
             {
-                return _resultSet.Count > 0;
+                return _resultSetCount > 0;
             }
         }
 
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public T GetFieldValue<T>(int ordinal)
         {
-            return (T)_resultSet[_currentRow][ordinal];
+            return (T)_currentRow[ordinal];
         }
 
 #if !NET40
@@ -147,7 +147,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
-            return Task.FromResult((T)_resultSet[_currentRow][ordinal]);
+            return Task.FromResult((T)_currentRow[ordinal]);
         }
 
 #endif
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override bool IsDBNull(int ordinal)
         {
-            return DBNull.Value.Equals(_resultSet[_currentRow][ordinal]);
+            return DBNull.Value.Equals(_currentRow[ordinal]);
         }
 
 #if !NET40
@@ -204,7 +204,18 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public bool Read()
         {
-            return ++_currentRow < _resultSet.Count;
+            if (++_currentRowNumber < _resultSetCount)
+            {
+                _currentRow = _resultSet[_currentRowNumber];
+                IsDataReady = true;
+            }
+            else
+            {
+                _currentRow = null;
+                IsDataReady = false;
+            }
+
+            return IsDataReady;
         }
 
 #if !NET40
@@ -212,7 +223,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
         public Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(++_currentRow < _resultSet.Count);
+            return Task.FromResult(Read());
         }
 
 #endif

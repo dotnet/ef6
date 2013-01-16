@@ -107,6 +107,19 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     underlyingEnumerators[currentResultSet].Current[ordinal]);
 
             dbDataReaderMock
+                .Setup(m => m.GetValues(It.IsAny<object[]>()))
+                .Returns(
+                    (object[] result) =>
+                        {
+                            int i = 0;
+                            for (; i < result.Length && i < underlyingEnumerators[currentResultSet].Current.Length; i++ )
+                            {
+                                result[i] = underlyingEnumerators[currentResultSet].Current[i];
+                            }
+                            return i;
+                        });
+
+            dbDataReaderMock
                 .Setup(m => m.IsDBNull(It.IsAny<int>()))
                 .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal] == null);
 

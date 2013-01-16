@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,9 +22,11 @@ namespace System.Data.Entity.Core.Objects.Internal
     {
         private DbDataReader _underlyingReader;
         private List<BufferedDataRecord> _bufferedDataRecords = new List<BufferedDataRecord>();
-        private int _currentResultSet;
+        private BufferedDataRecord _currentResultSet;
+        private int _currentResultSetNumber;
         private int _recordsAffected;
         private bool _disposed;
+        private bool _isClosed;
 
         public BufferedDataReader(DbDataReader reader)
         {
@@ -39,8 +42,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
+                Check.NotNull(name, "name");
                 AssertReaderIsOpenWithData();
-                return _bufferedDataRecords[_currentResultSet][name];
+                return _currentResultSet[name];
             }
         }
 
@@ -48,8 +52,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
-                AssertReaderIsOpenWithData();
-                return _bufferedDataRecords[_currentResultSet][ordinal];
+                AssertFieldIsReady(ordinal);
+                return _currentResultSet[ordinal];
             }
         }
 
@@ -63,7 +67,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             get
             {
                 AssertReaderIsOpen();
-                return _bufferedDataRecords[_currentResultSet].FieldCount;
+                return _currentResultSet.FieldCount;
             }
         }
 
@@ -72,20 +76,20 @@ namespace System.Data.Entity.Core.Objects.Internal
             get
             {
                 AssertReaderIsOpen();
-                return _bufferedDataRecords[_currentResultSet].HasRows;
+                return _currentResultSet.HasRows;
             }
         }
 
         public override bool IsClosed
         {
-            get { return _bufferedDataRecords == null; }
+            get { return _isClosed; }
         }
 
         private void AssertReaderIsOpen()
         {
             Debug.Assert(_underlyingReader == null, "The reader wasn't initialized");
 
-            if (IsClosed)
+            if (_isClosed)
             {
                 throw Error.ADP_ClosedDataReaderError();
             }
@@ -93,11 +97,37 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private void AssertReaderIsOpenWithData()
         {
-            AssertReaderIsOpen();
+            Debug.Assert(_underlyingReader == null, "The reader wasn't initialized");
 
-            if (!_bufferedDataRecords[_currentResultSet].HasData)
+            if (_isClosed)
+            {
+                throw Error.ADP_ClosedDataReaderError();
+            }
+
+            if (!_currentResultSet.IsDataReady)
             {
                 throw Error.ADP_NoData();
+            }
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
+        private void AssertFieldIsReady(int ordinal)
+        {
+            Debug.Assert(_underlyingReader == null, "The reader wasn't initialized");
+
+            if (_isClosed)
+            {
+                throw Error.ADP_ClosedDataReaderError();
+            }
+
+            if (!_currentResultSet.IsDataReady)
+            {
+                throw Error.ADP_NoData();
+            }
+
+            if (0 > ordinal || ordinal > _currentResultSet.FieldCount)
+            {
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -114,10 +144,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 do
                 {
-                    var dataTypeNames = new string[reader.FieldCount];
-                    var types = new Type[reader.FieldCount];
-                    var columnNames = new string[reader.FieldCount];
-                    for (var i = 0; i < reader.FieldCount; i++)
+                    var fieldCount = reader.FieldCount;
+                    var dataTypeNames = new string[fieldCount];
+                    var types = new Type[fieldCount];
+                    var columnNames = new string[fieldCount];
+                    for (var i = 0; i < fieldCount; i++)
                     {
                         dataTypeNames[i] = reader.GetDataTypeName(i);
                         types[i] = reader.GetFieldType(i);
@@ -127,11 +158,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var resultSet = new List<object[]>();
                     while (reader.Read())
                     {
-                        var row = new object[reader.FieldCount];
-                        for (var i = 0; i < reader.FieldCount; i++)
-                        {
-                            row[i] = reader.GetValue(i);
-                        }
+                        var row = new object[fieldCount];
+                        reader.GetValues(row);
                         resultSet.Add(row);
                     }
 
@@ -140,6 +168,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 while (reader.NextResult());
 
                 _recordsAffected = reader.RecordsAffected;
+                _currentResultSet = _bufferedDataRecords[_currentResultSetNumber];
             }
             finally
             {
@@ -162,10 +191,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 do
                 {
-                    var dataTypeNames = new string[reader.FieldCount];
-                    var types = new Type[reader.FieldCount];
-                    var columnNames = new string[reader.FieldCount];
-                    for (var i = 0; i < reader.FieldCount; i++)
+                    var fieldCount = reader.FieldCount;
+                    var dataTypeNames = new string[fieldCount];
+                    var types = new Type[fieldCount];
+                    var columnNames = new string[fieldCount];
+                    for (var i = 0; i < fieldCount; i++)
                     {
                         dataTypeNames[i] = reader.GetDataTypeName(i);
                         types[i] = reader.GetFieldType(i);
@@ -175,8 +205,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var resultSet = new List<object[]>();
                     while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                     {
-                        var row = new object[reader.FieldCount];
-                        for (var i = 0; i < reader.FieldCount; i++)
+                        var row = new object[fieldCount];
+                        for (var i = 0; i < fieldCount; i++)
                         {
                             row[i] =
                                 await
@@ -190,6 +220,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false));
 
                 _recordsAffected = reader.RecordsAffected;
+                _currentResultSet = _bufferedDataRecords[_currentResultSetNumber];
             }
             finally
             {
@@ -202,6 +233,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         public override void Close()
         {
             _bufferedDataRecords = null;
+            _isClosed = true;
 
             var reader = _underlyingReader;
             if (reader != null)
@@ -224,14 +256,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override bool GetBoolean(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetBoolean(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetBoolean(ordinal);
         }
 
         public override byte GetByte(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetByte(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetByte(ordinal);
         }
 
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
@@ -241,8 +273,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override char GetChar(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetChar(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetChar(ordinal);
         }
 
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
@@ -252,56 +284,56 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override DateTime GetDateTime(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetDateTime(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetDateTime(ordinal);
         }
 
         public override decimal GetDecimal(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetDecimal(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetDecimal(ordinal);
         }
 
         public override double GetDouble(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetDouble(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetDouble(ordinal);
         }
 
         public override float GetFloat(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetFloat(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetFloat(ordinal);
         }
 
         public override Guid GetGuid(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetGuid(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetGuid(ordinal);
         }
 
         public override short GetInt16(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetInt16(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetInt16(ordinal);
         }
 
         public override int GetInt32(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetInt32(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetInt32(ordinal);
         }
 
         public override long GetInt64(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetInt64(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetInt64(ordinal);
         }
 
         public override string GetString(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetString(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetString(ordinal);
         }
 
 #if NET40
@@ -310,70 +342,70 @@ namespace System.Data.Entity.Core.Objects.Internal
         public override T GetFieldValue<T>(int ordinal)
 #endif
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetFieldValue<T>(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetFieldValue<T>(ordinal);
         }
 
 #if !NET40
 
         public override Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetFieldValueAsync<T>(ordinal, cancellationToken);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetFieldValueAsync<T>(ordinal, cancellationToken);
         }
 
 #endif
 
         public override object GetValue(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetValue(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.GetValue(ordinal);
         }
 
         public override int GetValues(object[] values)
         {
             Check.NotNull(values, "values");
             AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].GetValues(values);
+            return _currentResultSet.GetValues(values);
         }
 
         public override string GetDataTypeName(int ordinal)
         {
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].GetDataTypeName(ordinal);
+            return _currentResultSet.GetDataTypeName(ordinal);
         }
 
         public override Type GetFieldType(int ordinal)
         {
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].GetFieldType(ordinal);
+            return _currentResultSet.GetFieldType(ordinal);
         }
 
         public override string GetName(int ordinal)
         {
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].GetName(ordinal);
+            return _currentResultSet.GetName(ordinal);
         }
 
         public override int GetOrdinal(string name)
         {
             Check.NotNull(name, "name");
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].GetOrdinal(name);
+            return _currentResultSet.GetOrdinal(name);
         }
 
         public override bool IsDBNull(int ordinal)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].IsDBNull(ordinal);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.IsDBNull(ordinal);
         }
 
 #if !NET40
 
         public override Task<bool> IsDBNullAsync(int ordinal, CancellationToken cancellationToken)
         {
-            AssertReaderIsOpenWithData();
-            return _bufferedDataRecords[_currentResultSet].IsDBNullAsync(ordinal, cancellationToken);
+            AssertFieldIsReady(ordinal);
+            return _currentResultSet.IsDBNullAsync(ordinal, cancellationToken);
         }
 
 #endif
@@ -391,15 +423,23 @@ namespace System.Data.Entity.Core.Objects.Internal
         public override bool NextResult()
         {
             AssertReaderIsOpen();
-            return ++_currentResultSet < _bufferedDataRecords.Count;
+            if (++_currentResultSetNumber < _bufferedDataRecords.Count)
+            {
+                _currentResultSet = _bufferedDataRecords[_currentResultSetNumber];
+                return true;
+            }
+            else
+            {
+                _currentResultSet = null;
+                return false;
+            }
         }
 
 #if !NET40
 
         public override Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
-            AssertReaderIsOpen();
-            return Task.FromResult(++_currentResultSet < _bufferedDataRecords.Count);
+            return Task.FromResult(NextResult());
         }
 
 #endif
@@ -407,7 +447,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         public override bool Read()
         {
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].Read();
+            return _currentResultSet.Read();
         }
 
 #if !NET40
@@ -415,7 +455,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             AssertReaderIsOpen();
-            return _bufferedDataRecords[_currentResultSet].ReadAsync(cancellationToken);
+            return _currentResultSet.ReadAsync(cancellationToken);
         }
 
 #endif
