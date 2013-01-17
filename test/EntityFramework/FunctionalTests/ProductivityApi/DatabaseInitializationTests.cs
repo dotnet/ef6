@@ -20,6 +20,7 @@ namespace ProductivityApiTests
     using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
+    using Blog = SimpleModel.Blog;
 
     public class DatabaseInitializationTests : FunctionalTestBase
     {
@@ -1502,6 +1503,54 @@ namespace ProductivityApiTests
                 var expectedScript = (sqlVersion >= SqlVersion.Sql9) ? sql9Script : sql8Script;
                 var script = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
                 Assert.Equal(expectedScript, script);
+            }
+        }
+
+        [Fact]
+        public void Initializer_when_no_tables_found_should_throw_when_model_changes()
+        {
+            Database.Delete(SimpleConnection<DataLossContextContext>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<DataLossContextContext>());
+
+            using (var context = new DataLossContextContext())
+            {
+                context.Database.Initialize(force: true);
+            }
+
+            using (var context = new DataLossContextContext
+                                     {
+                                         V2 = true
+                                     })
+            {
+                Assert.Throws<InvalidOperationException>(
+                    () => context.Database.Initialize(force: true))
+                      .ValidateMessage("DatabaseInitializationStrategy_ModelMismatch", context.GetType().Name);
+            }
+        }
+
+        public class DataLossContextContext : DbContext, IDbModelCacheKeyProvider
+        {
+            public bool V2 { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                if (V2)
+                {
+                    modelBuilder.Ignore<Blog>();
+                    modelBuilder.Entity<Login>();
+                }
+                else
+                {
+                    modelBuilder.Ignore<Login>();
+                    modelBuilder.Entity<Blog>();
+                }
+            }
+
+            public string CacheKey
+            {
+                get { return V2 ? "SingleTableContext_v2" : "SingleTableContext"; }
             }
         }
     }

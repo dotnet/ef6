@@ -288,12 +288,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual XDocument QueryForModel()
         {
-            return new HistoryRepository(
-                OriginalConnectionString,
-                DbProviderServices.GetProviderFactory(Connection),
-                ContextKey,
-                new[] { DefaultSchema })
-                .GetLastModel();
+            return CreateHistoryRepository().GetLastModel();
         }
 
         /// <summary>
@@ -304,13 +299,22 @@ namespace System.Data.Entity.Internal
             if (CodeFirstModel != null)
             {
                 PerformInitializationAction(
-                    () =>
-                    new HistoryRepository(
-                        OriginalConnectionString,
-                        DbProviderServices.GetProviderFactory(Connection),
-                        ContextKey)
-                        .BootstrapUsingEFProviderDdl(Owner.GetModel()));
+                    () => CreateHistoryRepository().BootstrapUsingEFProviderDdl(Owner.GetModel()));
             }
+        }
+
+        public virtual bool HasHistoryTableEntry()
+        {
+            return CreateHistoryRepository().HasMigrations();
+        }
+
+        private HistoryRepository CreateHistoryRepository()
+        {
+            return new HistoryRepository(
+                OriginalConnectionString,
+                DbProviderServices.GetProviderFactory(Connection),
+                ContextKey,
+                new[] { DefaultSchema });
         }
 
         /// <summary>
@@ -824,8 +828,9 @@ namespace System.Data.Entity.Internal
                               Initialize();
 
                               var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                                  sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters).ConfigureAwait(
-                                      continueOnCapturedContext: false);
+                                  sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters)
+                                                                            .ConfigureAwait(
+                                                                                continueOnCapturedContext: false);
 
                               try
                               {

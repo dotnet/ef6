@@ -258,6 +258,24 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
+        public virtual bool HasMigrations()
+        {
+            if (!Exists())
+            {
+                return false;
+            }
+
+            if (!_contextKeyColumnExists)
+            {
+                return true;
+            }
+
+            using (var context = CreateContext())
+            {
+                return context.History.Any(hr => hr.ContextKey == _contextKey);
+            }
+        }
+
         public virtual bool Exists(string contextKey = null)
         {
             if (_exists == null)

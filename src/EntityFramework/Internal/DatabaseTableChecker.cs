@@ -42,6 +42,12 @@ namespace System.Data.Entity.Internal
                         return true;
                 }
 
+                // Check for a history entry before we query the DB metadata
+                if (internalContext.HasHistoryTableEntry())
+                {
+                    return true;
+                }
+
                 var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
 
                 if (!modelTables.Any())

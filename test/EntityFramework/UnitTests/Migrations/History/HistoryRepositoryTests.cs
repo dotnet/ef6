@@ -98,6 +98,50 @@ namespace System.Data.Entity.Migrations.History
             Assert.Equal(2, migrations.Count());
             Assert.Equal("Migration2", migrations.First());
         }
+        
+        [MigrationsTheory]
+        public void HasMigrations_should_return_true_when_table_has_migrations_for_key()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+
+            var model = CreateContext<ShopContext_v1>().GetModel();
+
+            ExecuteOperations(
+                new[]
+                    {
+                        GetCreateHistoryTableOperation(),
+                        historyRepository.CreateInsertOperation("Migration1", model)
+                    });
+
+            Assert.True(historyRepository.HasMigrations());
+        }
+
+        [MigrationsTheory]
+        public void HasMigrations_should_return_false_when_context_key_not_matching()
+        {
+            ResetDatabase();
+
+            var historyRepository1
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1");
+
+            var historyRepository2
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2");
+
+            ExecuteOperations(GetCreateHistoryTableOperation());
+
+            var model = CreateContext<ShopContext_v1>().GetModel();
+
+            ExecuteOperations(
+                new[]
+                    {
+                        historyRepository2.CreateInsertOperation("Migration2", model)
+                    });
+
+            Assert.False(historyRepository1.HasMigrations());
+        }
 
         [MigrationsTheory]
         public void GetMigrationId_should_match_on_name()

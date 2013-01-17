@@ -566,7 +566,9 @@ namespace System.Data.Entity.Migrations
                         _calledByCreateDatabase
                             ? Strings.InitialCreate
                             : Strings.AutomaticMigration),
-                    GetLastModel(lastMigration),
+                    _calledByCreateDatabase
+                        ? _emptyModel.Value
+                        : GetLastModel(lastMigration),
                     _currentModel,
                     false);
             }
