@@ -213,7 +213,7 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var xmlNamespace = XmlConstants.GetSsdlNamespace(_version);
             _xmlWriter.WriteStartElement(XmlConstants.Schema, xmlNamespace);
-            _xmlWriter.WriteAttributeString(XmlConstants.Namespace, schemaNamespace + "Schema");
+            _xmlWriter.WriteAttributeString(XmlConstants.Namespace, schemaNamespace);
             _xmlWriter.WriteAttributeString(XmlConstants.Provider, provider);
             _xmlWriter.WriteAttributeString(XmlConstants.ProviderManifestToken, providerManifestToken);
             _xmlWriter.WriteAttributeString(XmlConstants.Alias, XmlConstants.Self);

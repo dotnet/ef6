@@ -35,8 +35,11 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void Visit(EdmModel edmModel, string provider, string providerManifestToken)
         {
-            var namespaceName = edmModel.Containers.Single().Name;
+            Visit(edmModel, edmModel.Containers.Single().Name + "Schema", provider, providerManifestToken);
+        }
 
+        internal void Visit(EdmModel edmModel, string namespaceName, string provider, string providerManifestToken)
+        {
             _schemaWriter.WriteSchemaElementHeader(namespaceName, provider, providerManifestToken);
 
             VisitEdmModel(edmModel);
