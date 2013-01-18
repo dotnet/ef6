@@ -172,11 +172,18 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_returns_connection_factory_set_in_config()
         {
-            Assert.IsType<FakeConnectionFactory>(
-                new AppConfigDependencyResolver(
-                    new AppConfig(
-                        CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName)))
-                    .GetService<IDbConnectionFactory>());
+            try
+            {
+                Assert.IsType<FakeConnectionFactory>(
+                    new AppConfigDependencyResolver(
+                        new AppConfig(
+                            CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName)))
+                        .GetService<IDbConnectionFactory>());
+            }
+            finally
+            {
+                Database.ResetDefaultConnectionFactory();
+            }
         }
 
         [Fact]
@@ -188,16 +195,23 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_caches_connection_factory()
         {
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns(new FakeConnectionFactory());
-            var resolver = new AppConfigDependencyResolver(mockConfig.Object);
+            try
+            {
+                var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
+                mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns(new FakeConnectionFactory());
+                var resolver = new AppConfigDependencyResolver(mockConfig.Object);
 
-            var factoryInstance = resolver.GetService<IDbConnectionFactory>();
+                var factoryInstance = resolver.GetService<IDbConnectionFactory>();
 
-            Assert.NotNull(factoryInstance);
-            mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
-            Assert.Same(factoryInstance, resolver.GetService<IDbConnectionFactory>());
-            mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
+                Assert.NotNull(factoryInstance);
+                mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
+                Assert.Same(factoryInstance, resolver.GetService<IDbConnectionFactory>());
+                mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
+            }
+            finally
+            {
+                Database.ResetDefaultConnectionFactory();
+            }
         }
 
         [Fact]
@@ -399,18 +413,25 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_can_be_accessed_from_multiple_threads_concurrently()
         {
-            var appConfig = new AppConfig(
-                CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName));
-
-            for (var i = 0; i < 30; i++)
+            try
             {
-                var bag = new ConcurrentBag<IDbConnectionFactory>();
-                var resolver = new AppConfigDependencyResolver(appConfig);
+                var appConfig = new AppConfig(
+                    CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName));
 
-                ExecuteInParallel(() => bag.Add(resolver.GetService<IDbConnectionFactory>()));
+                for (var i = 0; i < 30; i++)
+                {
+                    var bag = new ConcurrentBag<IDbConnectionFactory>();
+                    var resolver = new AppConfigDependencyResolver(appConfig);
 
-                Assert.Equal(20, bag.Count);
-                Assert.True(bag.All(c => resolver.GetService<IDbConnectionFactory>() == c));
+                    ExecuteInParallel(() => bag.Add(resolver.GetService<IDbConnectionFactory>()));
+
+                    Assert.Equal(20, bag.Count);
+                    Assert.True(bag.All(c => resolver.GetService<IDbConnectionFactory>() == c));
+                }
+            }
+            finally
+            {
+                Database.ResetDefaultConnectionFactory();
             }
         }
     }
