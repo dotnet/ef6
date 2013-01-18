@@ -60,7 +60,7 @@ namespace System.Data.Entity.Config
 
         public virtual void Lock()
         {
-            DbConfigurationManager.Instance.OnLocking(Owner);
+            DbConfigurationManager.Instance.OnLocking(this);
             _isLocked = true;
         }
 
@@ -125,6 +125,17 @@ namespace System.Data.Entity.Config
 
             _rootResolver = value;
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(_resolvers.First, newChain);
+        }
+
+        public virtual IDbDependencyResolver ResolverSnapshot
+        {
+            get
+            {
+                var newChain = new ResolverChain();
+                _resolvers.Second.Resolvers.Each(newChain.Add);
+                _resolvers.First.Resolvers.Each(newChain.Add);
+                return newChain;
+            }
         }
 
         public virtual DbConfiguration Owner { get; set; }

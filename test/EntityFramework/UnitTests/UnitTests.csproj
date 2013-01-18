@@ -142,6 +142,7 @@
     <Compile Include="Config\ResolverChainTests.cs" />
     <Compile Include="Config\RootDependencyResolverTests.cs" />
     <Compile Include="Config\SingletonDependencyResolverTests.cs" />
+    <Compile Include="Config\WrappingDependencyResolverTests.cs" />
     <Compile Include="ConnectionFactoryConfigTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionBuilderTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\CodeGenEmitterTests.cs" />

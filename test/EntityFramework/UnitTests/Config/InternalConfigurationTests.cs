@@ -155,5 +155,53 @@ namespace System.Data.Entity.Config
                 mockResolver.Verify(m => m.GetService(typeof(object), "Foo"));
             }
         }
+
+        public class ResolverSnapshot
+        {
+            [Fact]
+            public void ResolverSnapshot_returns_copy_of_resolver_chain()
+            {
+                var configuration = new DbConfiguration().InternalConfiguration;
+                var resolver1 = new Mock<IDbDependencyResolver>();
+                configuration.AddDependencyResolver(resolver1.Object);
+
+                var snapshot = configuration.ResolverSnapshot;
+
+                var resolver2 = new Mock<IDbDependencyResolver>();
+                configuration.AddDependencyResolver(resolver2.Object);
+
+                snapshot.GetService<object>("Foo");
+                resolver1.Verify(m => m.GetService(typeof(object), "Foo"), Times.Once());
+                resolver2.Verify(m => m.GetService(typeof(object), "Foo"), Times.Never());
+            }
+
+            [Fact]
+            public void ResolverSnapshot_returns_resolvers_in_correct_order()
+            {
+                var callOrder = "";
+
+                var configResolver = new Mock<IDbDependencyResolver>();
+                configResolver.Setup(m => m.GetService(typeof(object), "Foo")).Callback(() => callOrder += " Config");
+                var configChain = new ResolverChain();
+                configChain.Add(configResolver.Object);
+
+                var rootResolver = new Mock<RootDependencyResolver>();
+                rootResolver.Setup(m => m.GetService(typeof(object), "Foo")).Callback(() => callOrder += " Root");
+
+                var configuration = new DbConfiguration(new InternalConfiguration(configChain, new ResolverChain(), rootResolver.Object)).InternalConfiguration;
+
+                var normalResolver = new Mock<IDbDependencyResolver>();
+                normalResolver.Setup(m => m.GetService(typeof(object), "Foo")).Callback(() => callOrder += " Normal");
+                configuration.AddDependencyResolver(normalResolver.Object);
+
+                var overrideResolver = new Mock<IDbDependencyResolver>();
+                overrideResolver.Setup(m => m.GetService(typeof(object), "Foo")).Callback(() => callOrder += " Override");
+                configuration.AddDependencyResolver(overrideResolver.Object, overrideConfigFile: true);
+
+                configuration.ResolverSnapshot.GetService<object>("Foo");
+
+                Assert.Equal(" Override Config Normal Root", callOrder);
+            }
+        }
     }
 }

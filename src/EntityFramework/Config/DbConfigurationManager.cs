@@ -77,7 +77,7 @@ namespace System.Data.Entity.Config
             _onLockingConfiguration -= handler;
         }
 
-        public virtual void OnLocking(DbConfiguration configuration)
+        public virtual void OnLocking(InternalConfiguration configuration)
         {
             DebugCheck.NotNull(configuration);
 
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Config
 
             if (handler != null)
             {
-                handler(configuration, new DbConfigurationEventArgs(configuration));
+                handler(configuration.Owner, new DbConfigurationEventArgs(configuration));
             }
         }
 

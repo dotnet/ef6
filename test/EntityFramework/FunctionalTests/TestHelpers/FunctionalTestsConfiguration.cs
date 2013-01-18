@@ -29,13 +29,13 @@ namespace FunctionalTests.TestHelpers
             OnLockingConfiguration +=
                 (s, a) =>
                     {
-                        var currentFactory = a.Configuration.DependencyResolver.GetService<IDbConnectionFactory>();
+                        var currentFactory = a.ResolverSnapshot.GetService<IDbConnectionFactory>();
                         if (currentFactory != OriginalConnectionFactories.LastOrDefault())
                         {
                             OriginalConnectionFactories.Add(currentFactory);
                         }
 
-                        a.Configuration.AddDependencyResolver(DefaultConnectionFactoryResolver.Instance, overrideConfigFile: true);
+                        a.AddDependencyResolver(DefaultConnectionFactoryResolver.Instance, overrideConfigFile: true);
                     };
         }
 

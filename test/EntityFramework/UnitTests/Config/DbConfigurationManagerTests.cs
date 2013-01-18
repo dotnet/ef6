@@ -330,7 +330,7 @@ namespace System.Data.Entity.Config
                 var configuration = mockInternalConfiguration.Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryFindConfigurationType(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()))
-                    .Returns(configuration.Owner.GetType());
+                          .Returns(configuration.Owner.GetType());
                 var manager = CreateManager(null, mockFinder);
 
                 manager.SetConfiguration(configuration);
@@ -349,7 +349,7 @@ namespace System.Data.Entity.Config
 
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryFindConfigurationType(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()))
-                    .Returns(typeof(FakeConfiguration));
+                          .Returns(typeof(FakeConfiguration));
                 var manager = CreateManager(null, mockFinder);
 
                 manager.SetConfiguration(mockInternalConfiguration.Object);
@@ -366,7 +366,7 @@ namespace System.Data.Entity.Config
                 var configuration = new Mock<DbConfiguration>().Object;
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 mockFinder.Setup(m => m.TryFindConfigurationType(typeof(FakeContext), It.IsAny<IEnumerable<Type>>()))
-                    .Returns(configuration.GetType());
+                          .Returns(configuration.GetType());
                 var manager = CreateManager(null, mockFinder);
 
                 manager.GetConfiguration();
@@ -641,27 +641,34 @@ namespace System.Data.Entity.Config
 
         public class OnLocking
         {
-            private readonly DbConfiguration _configuration = new DbConfiguration();
+            private readonly IDbDependencyResolver _snapshot;
+            private readonly Mock<InternalConfiguration> _configuration;
+
+            public OnLocking()
+            {
+                _snapshot = new Mock<IDbDependencyResolver>().Object;
+                _configuration = CreateMockInternalConfiguration(null, _snapshot);
+            }
 
             [Fact]
             public void OnLocking_calls_all_added_handlers_and_passes_in_correct_configuration()
             {
                 var manager = CreateManager();
 
-                manager.OnLocking(_configuration); // No throw when no handlers registered
+                manager.OnLocking(_configuration.Object); // No throw when no handlers registered
 
                 manager.AddOnLockingHandler(Handler1);
                 manager.AddOnLockingHandler(Handler2);
                 manager.AddOnLockingHandler(Handler3);
 
-                manager.OnLocking(_configuration);
+                manager.OnLocking(_configuration.Object);
                 Assert.Equal(1, Handler1Called);
                 Assert.Equal(1, Handler2Called);
                 Assert.Equal(1, Handler3Called);
 
                 manager.RemoveOnLockingHandler(Handler2);
 
-                manager.OnLocking(_configuration);
+                manager.OnLocking(_configuration.Object);
                 Assert.Equal(2, Handler1Called);
                 Assert.Equal(1, Handler2Called);
                 Assert.Equal(2, Handler3Called);
@@ -671,8 +678,8 @@ namespace System.Data.Entity.Config
 
             private void Handler1(object sender, DbConfigurationEventArgs args)
             {
-                Assert.Same(_configuration, sender);
-                Assert.Same(_configuration, args.Configuration);
+                Assert.Same(_configuration.Object.Owner, sender);
+                Assert.Same(_snapshot, args.ResolverSnapshot);
                 Handler1Called++;
             }
 
@@ -680,8 +687,8 @@ namespace System.Data.Entity.Config
 
             private void Handler2(object sender, DbConfigurationEventArgs args)
             {
-                Assert.Same(_configuration, sender);
-                Assert.Same(_configuration, args.Configuration);
+                Assert.Same(_configuration.Object.Owner, sender);
+                Assert.Same(_snapshot, args.ResolverSnapshot);
                 Handler2Called++;
             }
 
@@ -689,8 +696,8 @@ namespace System.Data.Entity.Config
 
             private void Handler3(object sender, DbConfigurationEventArgs args)
             {
-                Assert.Same(_configuration, sender);
-                Assert.Same(_configuration, args.Configuration);
+                Assert.Same(_configuration.Object.Owner, sender);
+                Assert.Same(_snapshot, args.ResolverSnapshot);
                 Handler3Called++;
             }
         }
@@ -712,7 +719,8 @@ namespace System.Data.Entity.Config
         {
         }
 
-        private static Mock<InternalConfiguration> CreateMockInternalConfiguration(DbConfiguration dbConfiguration = null)
+        private static Mock<InternalConfiguration> CreateMockInternalConfiguration(
+            DbConfiguration dbConfiguration = null, IDbDependencyResolver snapshot = null)
         {
             var mockInternalConfiguration = new Mock<InternalConfiguration>();
 
@@ -724,6 +732,8 @@ namespace System.Data.Entity.Config
             }
 
             mockInternalConfiguration.Setup(m => m.Owner).Returns(dbConfiguration);
+            mockInternalConfiguration.Setup(m => m.ResolverSnapshot).Returns(snapshot);
+
             return mockInternalConfiguration;
         }
 

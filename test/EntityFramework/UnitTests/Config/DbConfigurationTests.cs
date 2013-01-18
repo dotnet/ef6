@@ -62,53 +62,6 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class IDbConfiguration_AddDependencyResolver
-        {
-            [Fact]
-            public void AddDependencyResolver_throws_if_given_a_null_resolver()
-            {
-                Assert.Equal(
-                    "resolver",
-                    Assert.Throws<ArgumentNullException>(
-                        () => ((IDbConfiguration)new DbConfiguration()).AddDependencyResolver(null, false)).ParamName);
-            }
-
-            [Fact]
-            public void AddDependencyResolver_throws_if_the_configuation_is_locked()
-            {
-                var configuration = (IDbConfiguration)CreatedLockedConfiguration();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("AddDependencyResolver"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddDependencyResolver(new Mock<IDbDependencyResolver>().Object, false)).Message);
-            }
-
-            [Fact]
-            public void AddDependencyResolver_delegates_to_internal_configuration()
-            {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
-                var resolver = new Mock<IDbDependencyResolver>().Object;
-
-                ((IDbConfiguration)new DbConfiguration(mockInternalConfiguration.Object)).AddDependencyResolver(resolver, true);
-
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver, true));
-            }
-        }
-
-        public class IDbConfiguration_DependencyResolver
-        {
-            [Fact]
-            public void DependencyResolver_delegates_to_internal_configuration()
-            {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
-                var resolver = new Mock<IDbDependencyResolver>().Object;
-                mockInternalConfiguration.Setup(m => m.DependencyResolver).Returns(resolver);
-
-                Assert.Same(resolver, ((IDbConfiguration)new DbConfiguration(mockInternalConfiguration.Object)).DependencyResolver);
-            }
-        }
-
         public class OnLockingConfiguration
         {
             [Fact]

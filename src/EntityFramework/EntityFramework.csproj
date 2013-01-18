@@ -102,7 +102,6 @@
     <Compile Include="Config\DbConfigurationEventArgs.cs" />
     <Compile Include="Config\DefaultInvariantNameResolver.cs" />
     <Compile Include="Config\DefaultProviderFactoryResolver.cs" />
-    <Compile Include="Config\IDbConfiguration.cs" />
     <Compile Include="Config\InvariantNameResolver.cs" />
     <Compile Include="Config\TransientDependencyResolver.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolver.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="Config\ResolverChain.cs" />
     <Compile Include="Config\RootDependencyResolver.cs" />
     <Compile Include="Config\SingletonDependencyResolver.cs" />
+    <Compile Include="Config\WrappingDependencyResolver`.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAndExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbApplyExpression.cs" />

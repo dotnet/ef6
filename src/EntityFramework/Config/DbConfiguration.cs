@@ -21,7 +21,7 @@ namespace System.Data.Entity.Config
     ///     The type to use can also be registered in the config file of the application.
     ///     See http://go.microsoft.com/fwlink/?LinkId=260883 for more information about Entity Framework configuration.
     /// </summary>
-    public class DbConfiguration : IDbConfiguration
+    public class DbConfiguration
     {
         private readonly InternalConfiguration _internalConfiguration;
 
@@ -64,9 +64,8 @@ namespace System.Data.Entity.Config
         /// <remarks>
         ///     Handlers can only be added before EF starts to use the configuration and so handlers should
         ///     generally be added as part of application initialization. Do not access the DbConfiguration
-        ///     static methods inside the handler; instead use the the members of <see cref="IDbConfiguration" />
-        ///     to get current services and/or add overrides. An instance of IDbConfiguration is provided
-        ///     in the the <see cref="DbConfigurationEventArgs" />.
+        ///     static methods inside the handler; instead use the the members of <see cref="DbConfigurationEventArgs" />
+        ///     to get current services and/or add overrides.
         /// </remarks>
         public static event EventHandler<DbConfigurationEventArgs> OnLockingConfiguration
         {
@@ -82,21 +81,6 @@ namespace System.Data.Entity.Config
 
                 DbConfigurationManager.Instance.RemoveOnLockingHandler(value);
             }
-        }
-
-        /// <inheritdoc />
-        IDbDependencyResolver IDbConfiguration.DependencyResolver
-        {
-            get { return _internalConfiguration.DependencyResolver; }
-        }
-
-        /// <inheritdoc />
-        void IDbConfiguration.AddDependencyResolver(IDbDependencyResolver resolver, bool overrideConfigFile)
-        {
-            Check.NotNull(resolver, "resolver");
-
-            _internalConfiguration.CheckNotLocked("AddDependencyResolver");
-            _internalConfiguration.AddDependencyResolver(resolver, overrideConfigFile);
         }
 
         /// <summary>
@@ -116,7 +100,8 @@ namespace System.Data.Entity.Config
         {
             Check.NotNull(resolver, "resolver");
 
-            ((IDbConfiguration)this).AddDependencyResolver(resolver, overrideConfigFile: false);
+            _internalConfiguration.CheckNotLocked("AddDependencyResolver");
+            _internalConfiguration.AddDependencyResolver(resolver, overrideConfigFile: false);
         }
 
         /// <summary>
