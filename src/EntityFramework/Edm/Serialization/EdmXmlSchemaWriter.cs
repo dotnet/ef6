@@ -6,6 +6,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
@@ -650,6 +651,46 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.Table, entitySet.Table);
             }
+
+            WriteExtendedProperties(entitySet);
         }
+
+        internal void WriteDefiningQuery(EntitySet entitySet)
+        {
+            if (!string.IsNullOrWhiteSpace(entitySet.DefiningQuery))
+            {
+                _xmlWriter.WriteElementString(XmlConstants.DefiningQuery, entitySet.DefiningQuery);
+            }          
+        }
+
+        private void WriteExtendedProperties(MetadataItem item)
+        {
+            foreach (var extendedProperty in item.MetadataProperties.Where(p => p.PropertyKind == PropertyKind.Extended))
+            {
+                string xmlNamespaceUri, attributeName;
+                if (TrySplitExtendedMetadataPropertyName(extendedProperty.Name, out xmlNamespaceUri, out attributeName))
+                {
+                    DebugCheck.NotNull(extendedProperty.Value);
+
+                    _xmlWriter.WriteAttributeString(attributeName, xmlNamespaceUri, extendedProperty.Value.ToString());
+                }
+            }
+        }
+
+        private static bool TrySplitExtendedMetadataPropertyName(string name, out string xmlNamespaceUri, out string attributeName)
+        {
+            int pos = name.LastIndexOf(':');
+            if (pos < 1 || name.Length <= pos + 1)
+            {
+                xmlNamespaceUri = null;
+                attributeName = null;
+                return false;
+            }
+
+            xmlNamespaceUri = name.Substring(0, pos);
+            attributeName = name.Substring(pos + 1, (name.Length - 1) - pos);
+            return true;
+        }
+
     }
 }

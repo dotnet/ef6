@@ -31,23 +31,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         // Using XmlConstants.EdmVersionForV3 as a "general" EF model version concept 
         // to avoid adding another constant with a value we already have.
-        public EdmModel(DataSpace dataSpace, string entityContainerName, double version = XmlConstants.EdmVersionForV3)
+        public EdmModel(EntityContainer entityContainer, double version = XmlConstants.EdmVersionForV3)
         {
-            Check.NotEmpty(entityContainerName, "entityContainerName");
+            Check.NotNull(entityContainer, "entityContainer");
+
+            _dataSpace = entityContainer.DataSpace;
+            _containers.Add(entityContainer);
+            Version = version;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public EdmModel(DataSpace dataSpace, double version = XmlConstants.EdmVersionForV3)
+        {
             if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
             {
                 throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
             }
 
+            _containers.Add(
+                new EntityContainer(
+                    dataSpace == DataSpace.CSpace 
+                    ? "CodeFirstContainer" 
+                    : "CodeFirstDatabase", 
+                    dataSpace));
+
             _dataSpace = dataSpace;
             Version = version;
-            _containers.Add(new EntityContainer(entityContainerName, dataSpace));
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(DataSpace dataSpace, double version = 3.0)
-            : this(dataSpace, dataSpace == DataSpace.CSpace ? "CodeFirstContainer" : "CodeFirstDatabase", version)
-        {
         }
 
         internal virtual void Validate()

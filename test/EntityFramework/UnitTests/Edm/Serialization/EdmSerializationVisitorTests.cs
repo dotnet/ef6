@@ -1,0 +1,97 @@
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
+using System.Linq;
+
+namespace System.Data.Entity.Edm.Serialization
+{
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Text;
+    using System.Xml;
+    using System.Xml.Linq;
+    using Xunit;
+
+    public class EdmSerializationVisitorTests
+    {
+        [Fact]
+        public void EdmSerializationVisitor_writes_extended_annotations_for_entity_set()
+        {
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
+            entitySet.AddMetadataProperties(
+                CreateMetadataProperties(new string[] { "http://tempuri.org:extended-property" }));
+
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+            {
+                new EdmSerializationVisitor(writer, 3.0).VisitEdmEntitySet(entitySet);
+            }
+
+            var xml = XDocument.Parse(sb.ToString());
+            Assert.Equal(
+                "ytreporp-dednetxe:gro.irupmet//:ptth",
+                (string)xml.Root.Attribute("{http://tempuri.org}extended-property"));
+        }
+
+        [Fact]
+        public void EdmSerializationVisitor_does_not_write_incorrectly_named_extended_properties()
+        {
+            var incorrectNames =
+                new[]
+                    {
+                        "extended-property-without-namespace",
+                        ":extended-property-starts-with-colon",
+                        "extended-property-ends-with-colon:"
+                    };
+
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
+
+            entitySet.AddMetadataProperties(CreateMetadataProperties(incorrectNames));
+
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+            {
+                new EdmSerializationVisitor(writer, 3.0).VisitEdmEntitySet(entitySet);
+            }
+
+            var xml = XDocument.Parse(sb.ToString());
+            Assert.False(xml.Root.Attributes().Any(a => incorrectNames.Contains(a.Name.LocalName)));
+            Assert.False(xml.Root.Attributes().Any(a => a.Name.Namespace != XNamespace.None));
+        }
+
+        private static List<MetadataProperty> CreateMetadataProperties(IEnumerable<string> names)
+        {
+            var edmString = EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String);
+            var metadataProperties = new List<MetadataProperty>();
+            foreach (var name in names)
+            {
+                metadataProperties.Add(
+                    new MetadataProperty(
+                        name, 
+                        TypeUsage.CreateDefaultTypeUsage(edmString), 
+                        new string(name.Reverse().ToArray())));
+            }
+            return metadataProperties;
+        }
+
+        [Fact]
+        public void EdmSerializationVisitor_writes_defining_query_for_entity_set()
+        {
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", "Defining Query", entityType);
+
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+            {
+                new EdmSerializationVisitor(writer, 3.0).VisitEdmEntitySet(entitySet);
+            }
+
+            var xml = XDocument.Parse(sb.ToString());
+            Assert.Equal(
+                "Defining Query",
+                (string)xml.Root.Element("DefiningQuery"));
+        }
+    }
+}

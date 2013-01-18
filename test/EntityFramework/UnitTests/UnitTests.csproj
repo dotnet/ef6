@@ -215,6 +215,7 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
+    <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
     <Compile Include="Edm\Serialization\SsdlSerializerTests.cs" />
     <Compile Include="Edm\Validation\EdmModelSemanticValidationRulesTests.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />

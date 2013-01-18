@@ -72,6 +72,7 @@ namespace System.Data.Entity.Edm.Serialization
         public override void VisitEdmEntitySet(EntitySet item)
         {
             _schemaWriter.WriteEntitySetElementHeader(item);
+            _schemaWriter.WriteDefiningQuery(item);
             base.VisitEdmEntitySet(item);
             _schemaWriter.WriteEndElement();
         }

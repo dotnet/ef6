@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
     public class SsdlSerializer
@@ -16,13 +17,16 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         /// <returns> </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
         public virtual bool Serialize(
-            EdmModel dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter)
+            EdmModel dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter, bool serializeDefaultNullability = true)
         {
             Check.NotNull(dbDatabase, "dbDatabase");
             Check.NotNull(xmlWriter, "xmlWriter");
 
-            CreateVisitor(xmlWriter, dbDatabase).Visit(dbDatabase, provider, providerManifestToken);
+            CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
+                .Visit(dbDatabase, provider, providerManifestToken);
 
             return true;
         }
@@ -36,21 +40,24 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         /// <returns> </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
         public virtual bool Serialize(
-            EdmModel dbDatabase, string namespaceName, string provider, string providerManifestToken, XmlWriter xmlWriter)
+            EdmModel dbDatabase, string namespaceName, string provider, string providerManifestToken, XmlWriter xmlWriter, bool serializeDefaultNullability = true)
         {
             Check.NotNull(dbDatabase, "dbDatabase");
             Check.NotNull(xmlWriter, "xmlWriter");
             Check.NotEmpty(namespaceName, "namespaceName");
 
-            CreateVisitor(xmlWriter, dbDatabase).Visit(dbDatabase, namespaceName, provider, providerManifestToken);
+            CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
+                .Visit(dbDatabase, namespaceName, provider, providerManifestToken);
 
             return true;
         }
 
-        private static EdmSerializationVisitor CreateVisitor(XmlWriter xmlWriter, EdmModel dbDatabase)
+        private static EdmSerializationVisitor CreateVisitor(XmlWriter xmlWriter, EdmModel dbDatabase, bool serializeDefaultNullability)
         {
-            return new EdmSerializationVisitor(xmlWriter, dbDatabase.Version, serializeDefaultNullability: true);
+            return new EdmSerializationVisitor(xmlWriter, dbDatabase.Version, serializeDefaultNullability);
         }
     }
 }

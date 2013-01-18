@@ -22,21 +22,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Assert.Equal("dataSpace", exception.ParamName);
                     Assert.True(exception.Message.StartsWith(Strings.EdmModel_InvalidDataSpace(dataSpace)));
                 }
+                else
+                {
+                    Assert.NotNull(new EdmModel(dataSpace));
+                }
             }
         }
 
         [Fact]
-        public void Custom_container_name_set_correctly()
+        public void Custom_container_set_correctly()
         {
-            Assert.Equal(
-                "Unicorns420", 
-                new EdmModel(DataSpace.CSpace, "Unicorns420").Containers.Single().Name);
+            var container= new EntityContainer("MyContainer", DataSpace.CSpace);
+
+            Assert.Same(
+                container,
+                new EdmModel(container).Containers.Single());
         }
 
         [Fact]
         public void EdmModel_version_correctly()
         {
             Assert.Equal(2.0, new EdmModel(DataSpace.CSpace, 2.0).Version);
+            Assert.Equal(2.0, new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), 2.0).Version);
         }
 
         [Fact]
