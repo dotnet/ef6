@@ -573,59 +573,7 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             userDictionaryEntries.Each(entry => _userDictionary.AddValue(entry.Singular, entry.Plural));
         }
 
-        public bool IsPlural(string word)
-        {
-            if (_userDictionary.ExistsInSecond(word))
-            {
-                return true;
-            }
-            if (_userDictionary.ExistsInFirst(word))
-            {
-                return false;
-            }
-
-            if (IsUninflective(word)
-                || _knownPluralWords.Contains(word.ToLower(_culture)))
-            {
-                return true;
-            }
-            else if (Singularize(word).Equals(word))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        public bool IsSingular(string word)
-        {
-            if (_userDictionary.ExistsInFirst(word))
-            {
-                return true;
-            }
-            if (_userDictionary.ExistsInSecond(word))
-            {
-                return false;
-            }
-
-            if (IsUninflective(word)
-                || _knownSingluarWords.Contains(word.ToLower(_culture)))
-            {
-                return true;
-            }
-            else if (!IsNoOpWord(word)
-                     && Singularize(word).Equals(word))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
+      
         // CONSIDER optimize the algorithm by collecting all the special cases to one single dictionary
         public string Pluralize(string word)
         {
@@ -1276,6 +1224,28 @@ namespace System.Data.Entity.Infrastructure.Pluralization
 
             // word is a singlar
             return prefixWord + suffixWord;
+        }
+
+        private bool IsPlural(string word)
+        {
+            if (_userDictionary.ExistsInSecond(word))
+            {
+                return true;
+            }
+            if (_userDictionary.ExistsInFirst(word))
+            {
+                return false;
+            }
+
+            if (IsUninflective(word)
+                || _knownPluralWords.Contains(word.ToLower(_culture)))
+            {
+                return true;
+            }
+            else
+            {
+                return !Singularize(word).Equals(word);
+            }
         }
 
         #region Utils

@@ -285,6 +285,34 @@ namespace System.Data.Entity
             }
             return null;
         }
+        /// <summary>
+        ///     Get the table name for entity set. 
+        /// </summary>
+        /// <param name="objectContext"> The object context to look in. </param>
+        /// <param name="clrType"> The type to look up. </param>
+        /// <returns> The table name of entity set with given CLR type. </returns>
+        public static string GetEntitySetTableName(ObjectContext objectContext, Type clrType)
+        {
+            var container = objectContext.MetadataWorkspace
+                .GetItems<EntityContainer>(DataSpace.SSpace)
+                .SingleOrDefault();
+
+            if (container == null)
+            {
+                return null;
+            }
+
+            var entitySet = container.BaseEntitySets
+                .Where(bes => bes.ElementType.Name == clrType.Name)
+                .SingleOrDefault();
+
+            if (entitySet == null)
+            {
+                return null;
+            }
+
+            return entitySet.Table;
+        }
 
         #endregion
 

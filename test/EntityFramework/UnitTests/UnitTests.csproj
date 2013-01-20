@@ -273,8 +273,8 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConventionWithHavingTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
-    <Compile Include="ModelConfiguration\Design\CustomPluralizationEntryTests.cs" />
-    <Compile Include="ModelConfiguration\Design\EnglishPluralizationServiceTests.cs" />
+    <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntryTests.cs" />
+    <Compile Include="Infrastructure\Pluralization\EnglishPluralizationServiceTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="Utilities\AppConfigTestBase.cs" />

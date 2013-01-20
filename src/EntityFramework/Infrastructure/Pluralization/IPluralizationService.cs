@@ -14,20 +14,6 @@ namespace System.Data.Entity.Infrastructure.Pluralization
     public interface IPluralizationService
     {
         /// <summary>
-        ///     Check if a word is plural.
-        /// </summary>
-        /// <param name="word">The word to check.</param>
-        /// <returns>True if word is plural; false otherwise..</returns>
-        bool IsPlural(string word);
-
-        /// <summary>
-        ///     Check if a word is singular.
-        /// </summary>
-        /// <param name="word">The word to check.</param>
-        /// <returns>True if word is singular; false otherwise.</returns>
-        bool IsSingular(string word);
-
-        /// <summary>
         ///     Pluralize a word using the service.
         /// </summary>
         /// <param name="word">The word to pluralize.</param>

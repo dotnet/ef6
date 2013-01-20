@@ -229,6 +229,7 @@
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbConfigurationTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
+    <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
     <Compile Include="Query\FunctionTests.cs" />
@@ -258,6 +259,9 @@
     <Compile Include="TestHelpers\ListExtensions.cs" />
     <Compile Include="TestHelpers\FunctionalTestsConfiguration.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
+
+    <Compile Include="TestHelpers\FakePluralizationService.cs" />
+
     <Compile Include="TestHelpers\PartialTrustFactAttribute.cs" />
     <Compile Include="TestHelpers\PartialTrustClassCommand.cs" />
     <Compile Include="TestHelpers\PartialTrustCommand.cs" />
@@ -275,6 +279,7 @@
     <Compile Include="TestModels\ArubaModel\ArubaTask.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTaskInfo.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTestFailure.cs" />
+    <Compile Include="TestHelpers\DefaultPluralizationServiceResolver.cs" />
     <Compile Include="TestModels\SimpleModel\LocalDbLoginsContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContextWithNoData.cs" />
