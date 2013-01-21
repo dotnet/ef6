@@ -235,6 +235,8 @@
     <Compile Include="Query\JoinEliminationTests.cs" />
     <Compile Include="Query\LinqToEntities\ContainsTests.cs" />
     <Compile Include="Query\LinqToEntities\DefaultIfEmptyTests.cs" />
+    <Compile Include="Query\LinqToEntities\EnumTests.cs" />
+    <Compile Include="Query\LinqToEntities\FuncletizationTests.cs" />
     <Compile Include="Query\LinqToEntities\GroupByOptimizationTests.cs" />
     <Compile Include="Query\LinqToEntities\OrderByLiftingTests.cs" />
     <Compile Include="Query\ModelDefinedFunctionTests.cs" />

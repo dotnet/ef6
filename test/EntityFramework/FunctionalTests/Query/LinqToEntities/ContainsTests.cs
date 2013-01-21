@@ -3,11 +3,8 @@
 namespace System.Data.Entity.Query.LinqToEntities
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using System.Text;
     using Xunit;
 
     public enum Genre 
@@ -293,6 +290,30 @@ String p__linq__0 = ""Title3""
                 var query = context.Books.Where(b => names.Contains(b.Title));
 
                 Assert.Throws<NotSupportedException>(() => query.ToString());
+            }
+        }
+
+        [Fact] 
+        public static void Contains_on_non_static_collection_of_enums()
+        {
+            const string expectedSql =
+@"SELECT 
+CASE WHEN ( EXISTS (SELECT 
+	1 AS [C1]
+	FROM [dbo].[Books] AS [Extent2]
+	WHERE 0 = [Extent2].[Genre]
+)) THEN cast(1 as bit) WHEN ( NOT EXISTS (SELECT 
+	1 AS [C1]
+	FROM [dbo].[Books] AS [Extent3]
+	WHERE 0 = [Extent3].[Genre]
+)) THEN cast(0 as bit) END AS [C1]
+FROM [dbo].[Books] AS [Extent1]";
+
+            using (var context = new UnicodeContext())
+            {
+                var query = context.Books.Select(q => context.Books.Select(b => b.Genre).Contains(Genre.Action));
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
     }
