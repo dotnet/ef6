@@ -339,6 +339,7 @@
     <Compile Include="DataAnnotations\Schema\InversePropertyAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\NotMappedAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
+    <Compile Include="DbContextTransaction.cs" />
     <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
     <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />

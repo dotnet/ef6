@@ -13564,6 +13564,38 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ConflictingFunctionsMapping, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "The transaction passed in is not associated with the current connection. Only transactions associated with the current connection may be used."
+        /// </summary>
+        internal static string DbContext_InvalidTransactionForConnection
+        {
+            get { return EntityRes.GetString(EntityRes.DbContext_InvalidTransactionForConnection); }
+        }
+
+        /// <summary>
+        /// A string like "The transaction passed in must have a non-null connection. A null connection indicates the transaction has already been completed."
+        /// </summary>
+        internal static string DbContext_InvalidTransactionNoConnection
+        {
+            get { return EntityRes.GetString(EntityRes.DbContext_InvalidTransactionNoConnection); }
+        }
+
+        /// <summary>
+        /// A string like "The connection is already participating in a transaction. The first transaction should be committed or rolled back before attempting to engage the connection in another transaction."
+        /// </summary>
+        internal static string DbContext_TransactionAlreadyStarted
+        {
+            get { return EntityRes.GetString(EntityRes.DbContext_TransactionAlreadyStarted); }
+        }
+
+        /// <summary>
+        /// A string like "The connection is already enlisted in a user transaction. The first transaction should be completed before attempting to engage the connection in another transaction."
+        /// </summary>
+        internal static string DbContext_TransactionAlreadyEnlistedInUserTransaction
+        {
+            get { return EntityRes.GetString(EntityRes.DbContext_TransactionAlreadyEnlistedInUserTransaction); }
+        }
     } 
 
     /// <summary>
@@ -17066,6 +17098,10 @@ namespace System.Data.Entity.Resources
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
         internal const string NoRowsAffectedParameter = "NoRowsAffectedParameter";
         internal const string ConflictingFunctionsMapping = "ConflictingFunctionsMapping";
+        internal const string DbContext_InvalidTransactionForConnection = "DbContext_InvalidTransactionForConnection";
+        internal const string DbContext_InvalidTransactionNoConnection = "DbContext_InvalidTransactionNoConnection";
+        internal const string DbContext_TransactionAlreadyStarted = "DbContext_TransactionAlreadyStarted";
+        internal const string DbContext_TransactionAlreadyEnlistedInUserTransaction = "DbContext_TransactionAlreadyEnlistedInUserTransaction";
         
         static EntityRes loader = null;
         ResourceManager resources;

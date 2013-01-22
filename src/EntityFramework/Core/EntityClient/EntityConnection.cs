@@ -794,6 +794,52 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
+        /// Enables the user to pass in a database transaction created outside of the Entity Framework
+        /// if you want the framework to execute commands within that external transaction.
+        /// Or pass in null to clear the Framework's knowledge of the current transaction.
+        /// </summary>
+        /// <returns>the EntityTransaction wrapping the DbTransaction or null if cleared</returns>
+        /// <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already enlisted in a <see cref="System.Transactions.TransactionScope"/> transaction</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already participating in a transaction</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
+        /// <summary>
+        internal EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
+        {
+            if (storeTransaction == null)
+            {
+                this.ClearCurrentTransaction();
+            }
+            else
+            {
+
+                if (CurrentTransaction != null)
+                {
+                    throw new InvalidOperationException(Strings.DbContext_TransactionAlreadyStarted);
+                }
+
+                if (EnlistedInUserTransaction)
+                {
+                    throw new InvalidOperationException(Strings.DbContext_TransactionAlreadyEnlistedInUserTransaction);
+                }
+
+                if (storeTransaction.Connection == null)
+                {
+                    throw new InvalidOperationException(Strings.DbContext_InvalidTransactionNoConnection);
+                }
+
+                if (storeTransaction.Connection != this.StoreConnection)
+                {
+                    throw new InvalidOperationException(Strings.DbContext_InvalidTransactionForConnection);
+                }
+
+                _currentTransaction = new EntityTransaction(this, storeTransaction);
+            }
+
+            return _currentTransaction;
+        }
+
+        /// <summary>
         ///     Enlist in the given transaction
         /// </summary>
         /// <param name="transaction"> The transaction object to enlist into </param>

@@ -229,6 +229,7 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
+    <Compile Include="DbContextTransactionTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmXmlSchemaWriterTests.cs" />

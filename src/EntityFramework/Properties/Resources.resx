@@ -5420,4 +5420,16 @@
     <value>The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="DbContext_InvalidTransactionForConnection" xml:space="preserve">
+    <value>The transaction passed in is not associated with the current connection. Only transactions associated with the current connection may be used.</value>
+  </data>
+  <data name="DbContext_InvalidTransactionNoConnection" xml:space="preserve">
+    <value>The transaction passed in must have a non-null connection. A null connection indicates the transaction has already been completed.</value>
+  </data>
+  <data name="DbContext_TransactionAlreadyStarted" xml:space="preserve">
+    <value>The connection is already participating in a transaction. The first transaction should be committed or rolled back before attempting to engage the connection in another transaction.</value>
+  </data>
+  <data name="DbContext_TransactionAlreadyEnlistedInUserTransaction" xml:space="preserve">
+    <value>The connection is already enlisted in a user transaction. The first transaction should be completed before attempting to engage the connection in another transaction.</value>
+  </data>
 </root>

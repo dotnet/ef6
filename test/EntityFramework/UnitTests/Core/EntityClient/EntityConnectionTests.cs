@@ -1052,5 +1052,140 @@ namespace System.Data.Entity.Core.EntityClient
                 executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<DbTransaction>>()), Times.Once());
             }
         }
+
+        public class UseTransaction : TestBase
+        {
+            [Fact]
+            public void Passing_null_to_UseStoreTransaction_on_EntityConnection_Clears_Current_Transaction()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                // note: entityConnection will already appear open to mock transaction since underlying connection is open
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+
+                var dbTransactionMock = new Mock<DbTransaction>();
+                dbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => entityConnection.StoreConnection);
+
+                entityConnection.UseStoreTransaction(dbTransactionMock.Object);
+
+                Assert.NotNull(entityConnection.CurrentTransaction);
+
+                entityConnection.UseStoreTransaction(null);
+
+                Assert.Null(entityConnection.CurrentTransaction);
+            }
+
+            [Fact]
+            public void Passing_a_transaction_to_UseStoreTransaction_when_it_is_already_using_a_transaction_throws_InvalidOperationException()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+
+                // set up and use a transaction from the same underlying store connection
+                var dbTransactionMock = new Mock<DbTransaction>();
+                dbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => dbConnectionMock.Object);
+                entityConnection.UseStoreTransaction(dbTransactionMock.Object);
+
+                // set up a different transaction
+                var dbTransactionMock2 = new Mock<DbTransaction>();
+
+                Assert.Equal(
+                    System.Data.Entity.Resources.Strings.DbContext_TransactionAlreadyStarted,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(dbTransactionMock2.Object)).Message);
+            }
+
+            [Fact]
+            public void Passing_a_transaction_to_UseStoreTransaction_when_it_is_already_enlisted_in_a_TransactionScope_Transaction_throws_InvalidOperationException()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+                dbConnectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Verifiable();
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                using (var txnScope = new TransactionScope())
+                {
+                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+                    entityConnection.EnlistTransaction(Transaction.Current);
+
+                    var dbTransactionMock = new Mock<DbTransaction>();
+                    dbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => dbConnectionMock.Object);
+                    Assert.Equal(
+                        System.Data.Entity.Resources.Strings.DbContext_TransactionAlreadyEnlistedInUserTransaction,
+                        Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(dbTransactionMock.Object)).Message);
+                }
+            }
+
+            [Fact]
+            public void Passing_a_transaction_with_no_connection_to_UseStoreTransaction_throws_InvalidOperationException()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+
+                // set up a transaction with no underlying store connection
+                var otherDbTransactionMock = new Mock<DbTransaction>();
+                otherDbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => null);
+
+                Assert.Equal(
+                    System.Data.Entity.Resources.Strings.DbContext_InvalidTransactionNoConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object)).Message);
+            }
+
+            [Fact]
+            public void Passing_a_transaction_from_a_different_connection_to_UseStoreTransaction_throws_InvalidOperationException()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+
+                // set up a transaction from a different underlying store connection
+                var otherDbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                otherDbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+                var otherDbTransactionMock = new Mock<DbTransaction>();
+                otherDbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => otherDbConnectionMock.Object);
+
+                Assert.Equal(
+                    System.Data.Entity.Resources.Strings.DbContext_InvalidTransactionForConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object)).Message);
+            }
+
+            [Fact]
+            public void Passing_a_valid_transaction_to_UseStoreTransaction_sets_CurrentTransaction()
+            {
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+
+                var dbTransactionMock = new Mock<DbTransaction>();
+                dbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => dbConnectionMock.Object);
+                entityConnection.UseStoreTransaction(dbTransactionMock.Object);
+
+                Assert.Equal(dbTransactionMock.Object, entityConnection.CurrentTransaction.StoreTransaction);
+            }
+
+        }
     }
 }

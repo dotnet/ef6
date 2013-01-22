@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -44,6 +45,43 @@ namespace System.Data.Entity
             DebugCheck.NotNull(internalContext);
 
             _internalContext = internalContext;
+        }
+
+        #endregion
+
+        #region Transactions
+
+        /// <summary>
+        /// Enables the user to pass in a database transaction created outside of the <see cref="Database"/> object
+        /// if you want the Entity Framework to execute commands within that external transaction.
+        /// Alternatively, pass in null to clear the framework's knowledge of that transaction.
+        /// </summary>
+        /// <param name="transaction">the external transaction</param>
+        /// <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already enlisted in a <see cref="System.Transactions.TransactionScope"/> transaction</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already participating in a transaction</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
+        public void UseTransaction(DbTransaction transaction)
+        {
+            ((EntityConnection)_internalContext.ObjectContext.Connection).UseStoreTransaction(transaction);
+        }
+
+        /// <summary>
+        ///    Begins a transaction on the underlying store connection
+        /// </summary>
+        /// <returns>a <see cref="DbContextTransaction"/> object wrapping access to the underlying store's transaction object</returns>
+        public DbContextTransaction BeginTransaction()
+        {
+            return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection);
+        }
+
+        /// <summary>
+        ///    Begins a transaction on the underlying store connection using the specified isolation level
+        /// </summary>
+        /// <returns>a <see cref="DbContextTransaction"/> object wrapping access to the underlying store's transaction object</returns>
+        public DbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection, isolationLevel);
         }
 
         #endregion

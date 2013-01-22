@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Objects
 {
+    using System.Data;
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
@@ -201,6 +202,549 @@ namespace System.Data.Entity.Objects
                 ResetTables();
             }
         }
+
+        #region Database.Transaction tests
+
+        [Fact]
+        public void Passing_null_to_UseStoreTransaction_Clears_Current_Transaction()
+        {
+            using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+            {
+                sqlConnection.Open();
+
+                using (var sqlTransaction = sqlConnection.BeginTransaction())
+                {
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    {
+                        // set up EntityConnection with a transaction which we test we can subsequently clear below
+                        ctx.Database.UseTransaction(sqlTransaction);
+                        var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                        Assert.NotNull(entityConnection.CurrentTransaction);
+
+                        ctx.Database.UseTransaction(null);
+                        Assert.Null(entityConnection.CurrentTransaction);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Entity_Framework_uses_transaction_set_by_using_Database_BeginTransaction()
+        {
+            using (var ctx = CreateTransactionDbContext())
+            {
+                var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                Assert.Null(entityConnection.CurrentTransaction);
+                using (var transaction = ctx.Database.BeginTransaction())
+                {
+                    Assert.Equal(transaction.StoreTransaction, entityConnection.CurrentTransaction.StoreTransaction);
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_simple_commit_DbContextTransaction_works()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    using (var txn = ctx.Database.BeginTransaction())
+                    {
+                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                        AddLogEntryToDatabase(ctx);
+                        txn.Commit();
+                    }
+
+                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    Assert.Equal(1, LogEntriesCount());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_simple_rollback_DbContextTransaction_works()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    using (var txn = ctx.Database.BeginTransaction())
+                    {
+                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                        AddLogEntryToDatabase(ctx);
+                        txn.Rollback();
+                    }
+
+                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    Assert.Equal(0, LogEntriesCount());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Entity_Framework_uses_transaction_isolation_level_set_by_using_Database_BeginTransaction()
+        {
+            using (var ctx = CreateTransactionDbContext())
+            {
+                var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                Assert.Null(entityConnection.CurrentTransaction);
+                using (var transaction = ctx.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                {
+                    Assert.Equal(transaction.StoreTransaction, entityConnection.CurrentTransaction.StoreTransaction);
+                    Assert.Equal(System.Data.IsolationLevel.Serializable, entityConnection.CurrentTransaction.StoreTransaction.IsolationLevel);
+                }
+            }
+        }
+
+        [Fact]
+        public void Verify_SaveChanges_commits_when_using_UseTransaction_with_open_external_connection()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        // add entry using the external SqlConnection
+                        AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
+
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        {
+                            ctx.Database.UseTransaction(sqlTransaction);
+                            // add entry using the DbContext
+                            AddLogEntryToDatabase(ctx);
+                            Assert.Equal<DbTransaction>(sqlTransaction, ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection).CurrentTransaction.StoreTransaction);
+                        }
+
+                        sqlTransaction.Commit();
+                    }
+
+                    // check that both entries were inserted on the DB
+                    Assert.Equal(2, CountLogEntriesUsingAdoNet(sqlConnection));
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_SaveChanges_rolls_back_when_using_UseTransaction_with_open_external_connection()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        // add entry using the external SqlConnection
+                        AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
+
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        {
+                            ctx.Database.UseTransaction(sqlTransaction);
+                            // add entry using the DbContext
+                            AddLogEntryToDatabase(ctx);
+                            Assert.Equal<DbTransaction>(sqlTransaction, ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection).CurrentTransaction.StoreTransaction);
+                        }
+
+                        sqlTransaction.Rollback();
+                    }
+
+                    // check that neither entry was inserted on the DB
+                    Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_ExecuteStoreCommand_works_when_using_UseTransaction_with_open_external_connection()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        {
+                            ctx.Database.UseTransaction(sqlTransaction);
+
+                            var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
+                            var commandText = @"INSERT INTO ##TransactionLog Values(-1)";
+                            Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
+                            Assert.Equal<DbTransaction>(sqlTransaction, ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection).CurrentTransaction.StoreTransaction);
+                        }
+
+                        sqlTransaction.Commit();
+                    }
+
+                    Assert.Equal(1, CountLogEntriesUsingAdoNet(sqlConnection));
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_ExecuteStoreCommand_works_if_external_transaction_is_already_committed()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        {
+                            ctx.Database.UseTransaction(sqlTransaction);
+
+                            sqlTransaction.Commit();
+
+                            Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
+
+                            Assert.Null(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection).CurrentTransaction);
+                        
+                            var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
+                            var commandText = @"INSERT INTO ##TransactionLog Values(-1)";
+                            Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
+                        }
+                    }
+
+                    Assert.Equal(1, CountLogEntriesUsingAdoNet(sqlConnection));
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_ExecuteStoreCommand_works_if_external_transaction_is_already_rolled_back()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlTransaction = sqlConnection.BeginTransaction())
+                    {
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        {
+                            ctx.Database.UseTransaction(sqlTransaction);
+
+                            sqlTransaction.Rollback();
+
+                            Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
+
+                            Assert.Null(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection).CurrentTransaction);
+                        
+                            var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
+                            var commandText = @"INSERT INTO ##TransactionLog Values(-1)";
+                            Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
+                        }
+                    }
+
+                    Assert.Equal(1, CountLogEntriesUsingAdoNet(sqlConnection));
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_can_commit_a_transaction_and_still_use_connection_without_transaction_afterwards()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.Connection.Open();
+                    using (var txn = ctx.Database.BeginTransaction())
+                    {
+                        AddLogEntryToDatabase(ctx);
+                        txn.Commit();
+                    }
+
+                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    Assert.Equal(1, LogEntriesCount());
+
+                    AddLogEntryToDatabase(ctx);
+                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    Assert.Equal(2, LogEntriesCount());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_can_rollback_a_transaction_and_still_use_connection_without_transaction_afterwards()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.Connection.Open();
+                    using (var txn = ctx.Database.BeginTransaction())
+                    {
+                        AddLogEntryToDatabase(ctx);
+                        txn.Rollback();
+                    }
+
+                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    Assert.Equal(0, LogEntriesCount());
+
+                    AddLogEntryToDatabase(ctx);
+                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    Assert.Equal(1, LogEntriesCount());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_SaveChanges_works_when_using_its_own_connection_to_open_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.Connection.Open();
+                    using (var txn = ctx.Database.Connection.BeginTransaction()) 
+                    {
+                        ctx.Database.UseTransaction(txn);
+                        AddLogEntryToDatabase(ctx);
+                        txn.Commit();
+                    }
+
+                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    Assert.Equal(1, LogEntriesCount());
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_calling_UseTransaction_throws_when_passed_committed_transaction()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    var sqlTransaction = sqlConnection.BeginTransaction();
+                    AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
+                    sqlTransaction.Commit();
+
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    {
+                        Assert.Equal(
+                            Strings.DbContext_InvalidTransactionNoConnection,
+                            Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction)).Message);
+                    }
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_calling_UseTransaction_throws_when_passed_rolled_back_transaction()
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(globalConnection.ConnectionString))
+                {
+                    sqlConnection.Open();
+
+                    var sqlTransaction = sqlConnection.BeginTransaction();
+                    AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
+                    sqlTransaction.Rollback();
+
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    {
+                        Assert.Equal(
+                            Strings.DbContext_InvalidTransactionNoConnection,
+                            Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction)).Message);
+                    }
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_committed_DbContextTransaction_inside_completed_TransactionScope_commits()
+        {
+            try
+            {
+                using (var txnScope = new TransactionScope())
+                {
+                    using (var ctx = CreateTransactionDbContext())
+                    {
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                        using (var txn = ctx.Database.BeginTransaction())
+                        {
+                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                            AddLogEntryToDatabase(ctx);
+                            txn.Commit();
+                        }
+
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    }
+
+                    txnScope.Complete();
+                }
+
+                Assert.Equal(1, LogEntriesCount());
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_committed_DbContextTransaction_inside_uncompleted_TransactionScope_rolls_back()
+        {
+            try
+            {
+                using (var txnScope = new TransactionScope())
+                {
+                    using (var ctx = CreateTransactionDbContext())
+                    {
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                        using (var txn = ctx.Database.BeginTransaction())
+                        {
+                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                            AddLogEntryToDatabase(ctx);
+                            txn.Commit();
+                        }
+
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    }
+
+                    // here do not call txnScope.Complete() - so TransactionScope will roll back
+                }
+
+                Assert.Equal(0, LogEntriesCount());
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_rolled_back_DbContextTransaction_inside_completed_TransactionScope_throws_TransactionAbortedException()
+        {
+            try
+            {
+                Assert.Throws<TransactionAbortedException>(() =>
+                    {
+                        using (var txnScope = new TransactionScope())
+                        {
+                            using (var ctx = CreateTransactionDbContext())
+                            {
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                using (var txn = ctx.Database.BeginTransaction())
+                                {
+                                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                    AddLogEntryToDatabase(ctx);
+                                    txn.Rollback();
+                                }
+
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                            }
+
+                            txnScope.Complete();
+                        }
+                    }
+                );
+
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void Verify_rolled_back_DbContextTransaction_inside_uncompleted_TransactionScope_rolls_back()
+        {
+            try
+            {
+                using (var txnScope = new TransactionScope())
+                {
+                    using (var ctx = CreateTransactionDbContext())
+                    {
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                        using (var txn = ctx.Database.BeginTransaction())
+                        {
+                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                            AddLogEntryToDatabase(ctx);
+                            txn.Rollback();
+                        }
+
+                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                    }
+
+                    // here do not call txnScope.Complete() - so TransactionScope will roll back
+                }
+
+                Assert.Equal(0, LogEntriesCount());
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        #endregion
 
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
@@ -1336,7 +1880,7 @@ namespace System.Data.Entity.Objects
             return transactionLogEntry;
         }
 
-        private void AddLogEntryUsingAdoNet(SqlConnection connection)
+        private void AddLogEntryUsingAdoNet(SqlConnection connection, SqlTransaction sqlTransaction = null)
         {
             bool shouldCloseConnection = false;
             if (connection.State == ConnectionState.Closed)
@@ -1347,6 +1891,10 @@ namespace System.Data.Entity.Objects
 
             var command = new SqlCommand();
             command.Connection = connection;
+            if (sqlTransaction != null)
+            {
+                command.Transaction = sqlTransaction;
+            }
             command.CommandText = @"INSERT INTO ##TransactionLog Values(-1)";
             command.ExecuteNonQuery();
 
@@ -1354,6 +1902,39 @@ namespace System.Data.Entity.Objects
             {
                 connection.Close();
             }
+        }
+
+        private int CountLogEntriesUsingAdoNet(SqlConnection connection, SqlTransaction sqlTransaction = null)
+        {
+            bool shouldCloseConnection = false;
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+                shouldCloseConnection = true;
+            }
+
+            var command = new SqlCommand();
+            command.Connection = connection;
+            if (sqlTransaction != null)
+            {
+                command.Transaction = sqlTransaction;
+            }
+            command.CommandText = @"SELECT COUNT(*) FROM ##TransactionLog";
+            int count = -1;
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read() && false == reader.IsDBNull(0))
+                {
+                    count = reader.GetInt32(0);
+                }
+            }
+
+            if (shouldCloseConnection)
+            {
+                connection.Close();
+            }
+
+            return count;
         }
 
         /// <summary>
