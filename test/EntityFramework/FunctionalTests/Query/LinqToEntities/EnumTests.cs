@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
+    using System.Data.Entity.TestModels.ArubaModel;
+    using System.Text;
+    using System.Xml;
     using SimpleModel;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
