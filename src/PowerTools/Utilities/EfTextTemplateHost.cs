@@ -75,7 +75,7 @@ namespace Microsoft.DbContextPackage.Utilities
                         typeof(Enumerable).Assembly.Location,
                         typeof(ObjectContext).Assembly.Location,
 
-                        // HACK: Because of the issue in ResolveAssemblyReference, these are not being
+                        //       Because of the issue in ResolveAssemblyReference, these are not being
                         //       loaded but are required by the default templates
                         typeof(System.Data.AcceptRejectRule).Assembly.Location,
                         typeof(System.Data.Entity.Design.EdmToObjectNamespaceMap).Assembly.Location,

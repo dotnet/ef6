@@ -130,4 +130,7 @@ When right-clicking on a file containing a derived DbContext class, the followin
 3) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Package.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

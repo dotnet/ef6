@@ -97,6 +97,7 @@
 
       <Button guid="guidDbContextPackageCmdSet" id="cmdidViewEntityDataModel" priority="0x0100" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmViewMenuItemsGroup" />
+        <Icon guid="guidImage1" id="bmpPic1" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidViewEntityDataModel</CommandName>
@@ -106,6 +107,7 @@
 
       <Button guid="guidDbContextPackageCmdSet" id="cmdidViewEntityDataModelXml" priority="0x0100" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmViewMenuItemsGroup" />
+        <Icon guid="guidImage2" id="bmpPic2" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidViewEntityDataModelXml</CommandName>
@@ -115,6 +117,7 @@
 
       <Button guid="guidDbContextPackageCmdSet" id="cmdidPrecompileEntityDataModelViews" priority="0x0200" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmMenuItemsGroup" />
+        <Icon guid="guidImage3" id="bmpPic3" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidPrecompileEntityDataModelViews</CommandName>
@@ -124,6 +127,7 @@
 
       <Button guid="guidDbContextPackageCmdSet" id="cmdidViewEntityModelDdl" priority="0x0100" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmViewMenuItemsGroup" />
+        <Icon guid="guidImage4" id="bmpPic4" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidViewEntityModelDdl</CommandName>
@@ -133,6 +137,7 @@
 
       <Button guid="guidDbContextPackageCmdSet" id="cmdidReverseEngineerCodeFirst" priority="0x0100" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuItemsGroup" />
+        <Icon guid="guidImage5" id="bmpPic5" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidReverseEngineerCodeFirst</CommandName>
@@ -150,6 +155,21 @@
       </Button>
 
     </Buttons>
+
+    <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
+    <Bitmaps>
+      <!--  The bitmap id is defined in a way that is a little bit different from the others: 
+            the declaration starts with a guid for the bitmap strip, then there is the resource id of the 
+            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used 
+            inside a button definition. An important aspect of this declaration is that the element id 
+            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <Bitmap guid="guidImage1" href="Resources\1.png" usedList="bmpPic1" />
+      <Bitmap guid="guidImage2" href="Resources\2.png" usedList="bmpPic2" />
+      <Bitmap guid="guidImage3" href="Resources\3.png" usedList="bmpPic3" />
+      <Bitmap guid="guidImage4" href="Resources\4.png" usedList="bmpPic4" />
+      <Bitmap guid="guidImage5" href="Resources\5.png" usedList="bmpPic5" />
+
+    </Bitmaps>
 
   </Commands>
 
@@ -189,6 +209,26 @@
       <IDSymbol name="cmdidEdmProjectMenuGroup" value="0x0004" />
       <IDSymbol name="cmdidAddCustomTemplates" value="0x0005" />
 
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage1" value="{92a8e017-4f3b-4613-b78c-179f86113adb}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage2" value="{92a8e017-4f3b-4613-b78c-179f86177adb}">
+      <IDSymbol name="bmpPic2" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage3" value="{92a8e017-4f3b-4613-b78c-179f86199adb}">
+      <IDSymbol name="bmpPic3" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage4" value="{92a8e017-4f3b-4613-b78c-179f86009adb}">
+      <IDSymbol name="bmpPic4" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage5" value="{146f17c2-c8e3-4cfd-9fe2-49cc07c6d4d3}">
+      <IDSymbol name="bmpPic5" value="1" />
     </GuidSymbol>
   </Symbols>
 
