@@ -14,7 +14,6 @@ namespace System.Data.Entity.Utilities
 
     internal static class DbProviderFactoryExtensions
     {
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static string GetProviderInvariantName(this DbProviderFactory factory)
         {
             DebugCheck.NotNull(factory);

@@ -127,6 +127,7 @@
     <Compile Include="Config\DefaultInvariantNameResolverTests.cs" />
     <Compile Include="Config\DefaultProviderFactoryResolverTests.cs" />
     <Compile Include="Config\InvariantNameResolverTests.cs" />
+    <Compile Include="Config\ExecutionStrategyResolverTests.cs" />
     <Compile Include="Config\ThreadLocalDependencyResolverTests.cs" />
     <Compile Include="Config\DatabaseInitializerResolverTests.cs" />
     <Compile Include="Config\DbConfigurationFinderTests.cs" />
@@ -227,10 +228,14 @@
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
+    <Compile Include="Infrastructure\ExecutionStrategyTests.cs" />
+    <Compile Include="Infrastructure\ExponentialRetryDelayStrategyTests.cs" />
+    <Compile Include="Infrastructure\NonRetryingExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />
     <Compile Include="Infrastructure\ProviderInvariantNameTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
+    <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
     <Compile Include="Internal\InterceptedCommandTests.cs" />
     <Compile Include="Internal\DefaultCommandInterceptorTests.cs" />

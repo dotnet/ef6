@@ -2,12 +2,14 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -25,6 +27,7 @@ namespace System.Data.Entity.Config
         {
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Reliability", "CA2000: Dispose objects before losing scope")]
         public RootDependencyResolver(
             DefaultProviderServicesResolver defaultProviderServicesResolver,
@@ -45,6 +48,7 @@ namespace System.Data.Entity.Config
                 new TransientDependencyResolver<MigrationSqlGenerator>(
                     () => new SqlCeMigrationSqlGenerator(), "System.Data.SqlServerCe.4.0"));
 
+            _resolvers.Add(new ExecutionStrategyResolver());
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new CachingDependencyResolver(new DefaultProviderFactoryResolver()));
             _resolvers.Add(new CachingDependencyResolver(new DefaultInvariantNameResolver()));

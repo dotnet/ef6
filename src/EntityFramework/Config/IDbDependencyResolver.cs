@@ -47,6 +47,10 @@ namespace System.Data.Entity.Config
     ///     Object returned: an EF spatial provider
     ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
     ///     Key is not used; will be null
+    ///     <see cref="ExecutionStrategy" />
+    ///     Object returned: An execution strategy for store operations
+    ///     Lifetime of returned service: Transient—a new object should be returned each time GetService is called
+    ///     Key is <see cref="ExecutionStrategyKey"/> consisting of the ADO.NET provider invariant name string and the database server address.
     /// </remarks>
     public interface IDbDependencyResolver
     {

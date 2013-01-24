@@ -21,6 +21,7 @@
             <Word>scaffolder</Word>
             <Word>srid</Word>
             <Word>ssdl</Word>
+            <Word>retriable</Word>
         </Recognized>
         <Compound>
             <Term CompoundAlternate="MultiLine">multiline</Term>

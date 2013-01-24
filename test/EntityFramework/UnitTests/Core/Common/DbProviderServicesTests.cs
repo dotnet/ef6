@@ -2,12 +2,16 @@
 
 namespace System.Data.Entity.Core.Common
 {
+    using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
+    using FunctionalTests.TestHelpers;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -137,6 +141,50 @@ namespace System.Data.Entity.Core.Common
                 Assert.Same(
                     FakeSqlProviderServices.Instance,
                     DbProviderServices.GetProviderServices(new FakeSqlConnection()));
+            }
+        }
+
+        public class GetExecutionStrategy : TestBase
+        {
+            [Fact]
+            public void Instance_method_returns_SimpleExecutionStrategy()
+            {
+                var mockProviderServices = new Mock<DbProviderServices>
+                                              {
+                                                  CallBase = true
+                                              }.Object;
+
+                Assert.IsType<NonRetryingExecutionStrategy>(mockProviderServices.GetExecutionStrategy());
+            }
+
+            [Fact]
+            public void Static_method_returns_the_ExecutionStrategy_from_resolver()
+            {
+                var connectionMock = new Mock<DbConnection>();
+                connectionMock.Setup(m => m.DataSource).Returns("FooSource");
+                connectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(FakeSqlProviderFactory.Instance);
+
+                var entityConnection = new EntityConnection(
+                    workspace: null, connection: connectionMock.Object, skipInitialization: true, entityConnectionOwnsStoreConnection: false);
+
+                var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
+                MutableResolver.AddResolver<IExecutionStrategy>(
+                    k =>
+                        {
+                            var key = k as ExecutionStrategyKey;
+                            Assert.Equal("System.Data.FakeSqlClient", key.InvariantProviderName);
+                            Assert.Equal("FooSource", key.DataSourceName);
+                            return mockExecutionStrategy;
+                        });
+                try
+                {
+                    Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(connectionMock.Object));
+                    Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(entityConnection));
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
             }
         }
 

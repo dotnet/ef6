@@ -36,6 +36,7 @@ namespace FunctionalTests.TestHelpers
                         }
 
                         a.AddDependencyResolver(DefaultConnectionFactoryResolver.Instance, overrideConfigFile: true);
+                        a.AddDependencyResolver(MutableResolver.Instance, overrideConfigFile: true);
                     };
         }
 

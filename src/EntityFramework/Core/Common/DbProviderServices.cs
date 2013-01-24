@@ -5,8 +5,10 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -210,6 +212,35 @@ namespace System.Data.Entity.Core.Common
         }
 
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
+
+        /// <summary>
+        ///     Returns the provider-specific execution strategy. This method will only be invoked if there's no 
+        ///     <see cref="IDbDependencyResolver"/> registered for <see cref="ExecutionStrategy"/> that handles this provider.
+        /// </summary>
+        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        public virtual IExecutionStrategy GetExecutionStrategy()
+        {
+            return new NonRetryingExecutionStrategy();
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="IExecutionStrategy"/> that will be used to execute methods that use the specified connection.
+        /// </summary>
+        /// <param name="connection">The database connection</param>
+        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        public static IExecutionStrategy GetExecutionStrategy(DbConnection connection)
+        {
+            var entityConnection = connection as EntityConnection;
+            if (entityConnection != null)
+            {
+                connection = entityConnection.StoreConnection;
+            }
+
+            var providerInvariantName = GetProviderFactory(connection).GetProviderInvariantName();
+
+            return DbConfiguration.GetService<IExecutionStrategy>(
+                new ExecutionStrategyKey(providerInvariantName, connection.DataSource));
+        }
 
         public DbSpatialDataReader GetSpatialDataReader(DbDataReader fromReader, string manifestToken)
         {

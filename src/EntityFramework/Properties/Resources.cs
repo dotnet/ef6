@@ -13460,6 +13460,46 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.MigrationsPendingException, p0);
         }
+
+        /// <summary>
+        /// A string like "Already called Execute on this instance."
+        /// </summary>
+        internal static string ExecutionStrategy_AlreadyExecuted
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_AlreadyExecuted); }
+        }
+
+        /// <summary>
+        /// A string like "Existing transactions are not supported with the current execution strategy."
+        /// </summary>
+        internal static string ExecutionStrategy_ExistingTransaction
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_ExistingTransaction); }
+        }
+
+        /// <summary>
+        /// A string like "The minimum delay must be less than or equal to the maximum delay."
+        /// </summary>
+        internal static string ExecutionStrategy_MinimumMustBeLessThanMaximum
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_MinimumMustBeLessThanMaximum); }
+        }
+
+        /// <summary>
+        /// A string like "Negative delays are invalid."
+        /// </summary>
+        internal static string ExecutionStrategy_NegativeDelay
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_NegativeDelay); }
+        }
+
+        /// <summary>
+        /// A string like "Retry limit exceeded."
+        /// </summary>
+        internal static string ExecutionStrategy_RetryLimitExceeded
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_RetryLimitExceeded); }
+        }
     } 
 
     /// <summary>
@@ -15114,6 +15154,30 @@ namespace System.Data.Entity.Resources
         internal static Exception MigrationsPendingException(object p0)
         {
             return new Migrations.Infrastructure.MigrationsPendingException(Strings.MigrationsPendingException(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Already called Execute on this instance."
+        /// </summary>
+        internal static Exception ExecutionStrategy_AlreadyExecuted()
+        {
+            return new InvalidOperationException(Strings.ExecutionStrategy_AlreadyExecuted);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Existing transactions are not supported with the current execution strategy."
+        /// </summary>
+        internal static Exception ExecutionStrategy_ExistingTransaction()
+        {
+            return new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "Negative delays are invalid."
+        /// </summary>
+        internal static Exception ExecutionStrategy_NegativeDelay()
+        {
+            return new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay);
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16829,6 +16893,11 @@ namespace System.Data.Entity.Resources
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
         internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
         internal const string MigrationsPendingException = "MigrationsPendingException";
+        internal const string ExecutionStrategy_AlreadyExecuted = "ExecutionStrategy_AlreadyExecuted";
+        internal const string ExecutionStrategy_ExistingTransaction = "ExecutionStrategy_ExistingTransaction";
+        internal const string ExecutionStrategy_MinimumMustBeLessThanMaximum = "ExecutionStrategy_MinimumMustBeLessThanMaximum";
+        internal const string ExecutionStrategy_NegativeDelay = "ExecutionStrategy_NegativeDelay";
+        internal const string ExecutionStrategy_RetryLimitExceeded = "ExecutionStrategy_RetryLimitExceeded";
         
         static EntityRes loader = null;
         ResourceManager resources;

@@ -972,10 +972,10 @@
   <data name="EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid" xml:space="preserve">
     <value>The type is not a valid EdmTypeReference.</value>
   </data>
-  <data name="EdmModel_InvalidDataSpace">
+  <data name="EdmModel_InvalidDataSpace" xml:space="preserve">
     <value>'{0}' is not valid data space for EdmModel. EdmModel supports only DataSpace.CSpace and DataSpace.SSpace.</value>
   </data>
-  <data name="EdmModel_AddItem_NonMatchingNamespace">
+  <data name="EdmModel_AddItem_NonMatchingNamespace" xml:space="preserve">
     <value>The data space of the item does not match the data space of the EdmModel.</value>
   </data>
   <data name="Serializer_OneNamespaceAndOneContainer" xml:space="preserve">
@@ -5365,5 +5365,23 @@
   <data name="MigrationsPendingException" xml:space="preserve">
     <value>Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsPendingException</comment>
+  </data>
+  <data name="ExecutionStrategy_AlreadyExecuted" xml:space="preserve">
+    <value>Already called Execute on this instance.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ExecutionStrategy_ExistingTransaction" xml:space="preserve">
+    <value>Existing transactions are not supported with the current execution strategy.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ExecutionStrategy_MinimumMustBeLessThanMaximum" xml:space="preserve">
+    <value>The minimum delay must be less than or equal to the maximum delay.</value>
+  </data>
+  <data name="ExecutionStrategy_NegativeDelay" xml:space="preserve">
+    <value>Negative delays are invalid.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ExecutionStrategy_RetryLimitExceeded" xml:space="preserve">
+    <value>Retry limit exceeded.</value>
   </data>
 </root>
