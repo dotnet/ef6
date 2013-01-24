@@ -6,7 +6,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     using System.Linq;
     using Xunit;
 
-    public class GroupByOptimizationTests
+    public class GroupByOptimizationTests : FunctionalTestBase
     {
         [Fact]
         public void GroupBy_is_optimized_when_projecting_group_key()

@@ -948,7 +948,7 @@ namespace FunctionalTests
             public Product Product { get; set; }
         }
 
-        public class Test324763
+        public class Test324763 : FunctionalTestBase
         {
             [Fact]
             public void Repro324763_Build_Is_Not_Idempotent()

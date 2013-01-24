@@ -14,13 +14,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class PluralizingTableNameConvention : IDbConvention<EntityType>
     {
-        private static readonly IPluralizationService _pluralizationService
+        private IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();
 
         public void Apply(EntityType dbDataModelItem, EdmModel model)
         {
             Check.NotNull(dbDataModelItem, "dbDataModelItem");
             Check.NotNull(model, "model");
+
+            _pluralizationService = DbConfiguration.GetService<IPluralizationService>();
 
             if (dbDataModelItem.GetTableName() == null)
             {

@@ -47,7 +47,7 @@ namespace System.Data.Entity.Query.LinqToEntities
         public DbSet<Product> Products { get; set; }
     }
 
-    public class EnumTests
+    public class EnumTests : FunctionalTestBase
     {
         [Fact]
         public void Cast_property_to_enum()

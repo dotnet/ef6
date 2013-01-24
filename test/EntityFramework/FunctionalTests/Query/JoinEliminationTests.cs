@@ -39,7 +39,7 @@ namespace System.Data.Entity.Query
         public Document Document { get; set; }
     }
 
-    public class JoinEliminationTests
+    public class JoinEliminationTests : FunctionalTestBase
     {
         [Fact]
         public static void LeftOuterJoin_duplicates_are_eliminated()

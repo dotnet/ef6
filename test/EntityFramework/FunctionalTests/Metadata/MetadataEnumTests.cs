@@ -15,7 +15,7 @@ namespace System.Data.Entity.Metadata
     using Xunit;
     using Xunit.Sdk;
 
-    public class MetadataEnumTests : IUseFixture<MetadataEnumFixture>
+    public class MetadataEnumTests : FunctionalTestBase, IUseFixture<MetadataEnumFixture>
     {
         private const string enumCsdl =
 @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumTestModel"">

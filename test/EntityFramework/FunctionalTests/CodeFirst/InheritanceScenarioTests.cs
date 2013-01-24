@@ -997,7 +997,7 @@ namespace FunctionalTests
             public DbSet<ITEmployee> Employees { get; set; }
         }
 
-        public sealed class Bug223284Test
+        public sealed class Bug223284Test : FunctionalTestBase
         {
             [Fact]
             public void Duplicate_entity_name_different_namespace_should_throw()
@@ -1038,7 +1038,7 @@ namespace FunctionalTests
             public int Key1 { get; set; }
         }
 
-        public sealed class Bug175804Test
+        public sealed class Bug175804Test : FunctionalTestBase
         {
             [Fact]
             public void TPC_Ordering_Of_Configuration_Between_Related_Types()
@@ -1134,7 +1134,7 @@ namespace FunctionalTests
 
         #endregion
 
-        public sealed class Bug178590Test
+        public sealed class Bug178590Test : FunctionalTestBase
         {
             [Fact]
             public void AbstractClasses_TPC()
@@ -1226,7 +1226,7 @@ namespace FunctionalTests
             public decimal PrincipalDerivedProperty1 { get; set; }
         }
 
-        public sealed class Bug165027Repro
+        public sealed class Bug165027Repro : FunctionalTestBase
         {
             [Fact]
             public void Bug165027Test()

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     using System.Linq;
     using Xunit;
 
-    public class FuncletizationTests
+    public class FuncletizationTests : FunctionalTestBase
     {
         [Fact]
         public void Funcletize_ICollection_count_when_passed_as_parameter()

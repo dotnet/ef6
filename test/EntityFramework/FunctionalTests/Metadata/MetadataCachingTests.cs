@@ -7,7 +7,7 @@ namespace System.Data.Entity.Metadata
     using System.Reflection;
     using Xunit;
 
-    public class MetadataCachingTests
+    public class MetadataCachingTests : FunctionalTestBase
     {
         private static readonly string connectionString = string.Format(
             @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",

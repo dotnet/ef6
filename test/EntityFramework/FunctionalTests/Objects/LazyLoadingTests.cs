@@ -7,7 +7,7 @@ namespace System.Data.Entity.Objects
     using System.Linq;
     using Xunit;
 
-    public class LazyLoadingTests
+    public class LazyLoadingTests : FunctionalTestBase
     {
         [Fact]
         public void Lazy_loading_of_entity_reference_does_not_work_on_detached_entity()

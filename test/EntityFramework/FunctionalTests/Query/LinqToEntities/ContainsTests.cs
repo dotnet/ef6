@@ -28,7 +28,7 @@ namespace System.Data.Entity.Query.LinqToEntities
         public string Last { get; set; }
     }
 
-    public class EnumerableContainsTests
+    public class EnumerableContainsTests : FunctionalTestBase
     {
         public class UnicodeContext : DbContext
         {

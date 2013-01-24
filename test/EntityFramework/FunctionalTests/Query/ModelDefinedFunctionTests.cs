@@ -7,7 +7,7 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Resources;
     using Xunit;
 
-    public class ModelDefinedFunctionTests
+    public class ModelDefinedFunctionTests : FunctionalTestBase
     {
         private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
             ProductModel.csdlWithFunctions, ProductModel.ssdl, ProductModel.msl);

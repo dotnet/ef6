@@ -7,7 +7,7 @@ namespace System.Data.Entity.Query
     using System.Linq;
     using Xunit;
 
-    public class QueryEnumTests
+    public class QueryEnumTests : FunctionalTestBase
     {
         private static readonly string csdl =
             @"<?xml version=""1.0"" encoding=""utf-8""?>

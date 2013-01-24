@@ -60,7 +60,7 @@ namespace System.Data.Entity.Objects
         public DbSet<TransactionLogEntry> LogEntries { get; set; }
     }
 
-    public class TransactionsTests : IUseFixture<TransactionFixture>
+    public class TransactionsTests : FunctionalTestBase, IUseFixture<TransactionFixture>
     {
         private string connectionString;
         private string modelDirectory;

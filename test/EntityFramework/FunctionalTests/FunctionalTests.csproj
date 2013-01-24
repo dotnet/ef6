@@ -194,6 +194,7 @@
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataFunctionsTests.cs" />
     <Compile Include="Metadata\MetadataSpatialTests.cs" />
+    <Compile Include="MetaTests.cs" />
     <Compile Include="Migrations\AddColumnScenarios.cs" />
     <Compile Include="Migrations\AddForeignKeyScenarios.cs" />
     <Compile Include="Migrations\AlterColumnScenarios.cs" />

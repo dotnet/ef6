@@ -8,7 +8,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     using System.Linq;
     using Xunit;
 
-    public class OrderByLiftingTests
+    public class OrderByLiftingTests : FunctionalTestBase
     {
         [Fact]
         public void OrderBy_ThenBy_lifted_above_projection()

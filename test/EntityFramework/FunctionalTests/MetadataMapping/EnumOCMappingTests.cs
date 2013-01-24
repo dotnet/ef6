@@ -13,7 +13,7 @@ namespace System.Data.Entity.MetadataMapping
     using System.Xml.Linq;
     using Xunit;
 
-    public class EnumOCMappingTests
+    public class EnumOCMappingTests : FunctionalTestBase
     {
         private static XDocument EnumCsdl()
         {

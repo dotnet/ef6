@@ -9,7 +9,7 @@ namespace System.Data.Entity.Query
     using System.Linq;
     using Xunit;
 
-    public class GroupAggregateTests
+    public class GroupAggregateTests : FunctionalTestBase
     {
         private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
             ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);

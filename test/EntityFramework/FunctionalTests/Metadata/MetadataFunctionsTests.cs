@@ -11,7 +11,7 @@ namespace System.Data.Entity.Metadata
     using System.Xml;
     using Xunit;
 
-    public class MetadataFunctionsTests
+    public class MetadataFunctionsTests : FunctionalTestBase
     {
         [Fact]
         public void Exception_thrown_when_loading_ssdl_containing_functions_with_duplicate_overloads()

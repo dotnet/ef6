@@ -10,7 +10,7 @@ namespace System.Data.Entity.Metadata
     using System.Xml;
     using Xunit;
 
-    public class MetadataSpatialTests
+    public class MetadataSpatialTests : FunctionalTestBase
     {
         private static readonly string SpatialEntityPropertyCSDLTemplate = @"<?xml version=""1.0""?>
 <Schema Namespace=""SpatialEntityPropertyTest"" {3} xmlns=""{0}"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"">

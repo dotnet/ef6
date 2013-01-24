@@ -7,7 +7,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     using System.Linq;
     using Xunit;
     
-    public class DefaultIfEmptyTests
+    public class DefaultIfEmptyTests : FunctionalTestBase
     {
         [Fact]
         public void SelectMany_with_DefaultIfEmpty_translates_into_left_outer_join()

@@ -13,7 +13,7 @@ namespace FunctionalTests.ProductivityApi
 
     public class DbFunctionScenarios : FunctionalTestBase
     {
-        public class StandardDeviation
+        public class StandardDeviation : FunctionalTestBase
         {
             [Fact]
             public void StandardDeviation_for_decimal_can_be_bootstrapped_from_DbContext_or_ObjectContext()
@@ -129,7 +129,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class StandardDeviationP
+        public class StandardDeviationP : FunctionalTestBase
         {
             [Fact]
             public void StandardDeviationP_for_decimal_can_be_bootstrapped_from_DbContext_or_ObjectContext()
@@ -245,7 +245,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class Var
+        public class Var : FunctionalTestBase
         {
             [Fact]
             public void Var_for_decimal_can_be_bootstrapped_from_DbContext_or_ObjectContext()
@@ -349,7 +349,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class VarP
+        public class VarP : FunctionalTestBase
         {
             [Fact]
             public void VarP_for_decimal_can_be_bootstrapped_from_DbContext_or_ObjectContext()
@@ -455,7 +455,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class StringFunctions
+        public class StringFunctions : FunctionalTestBase
         {
             [Fact]
             public void Left_can_be_used_in_DbQuery_or_ObjectQuery()
@@ -537,7 +537,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class DateTimeFunctions
+        public class DateTimeFunctions : FunctionalTestBase
         {
             private const long EF41Ticks = 634380912600000000;
             private static readonly DateTime _ef43DateTime = new DateTime(2012, 2, 29, 4, 3, 1, 0, DateTimeKind.Utc);
@@ -1427,7 +1427,7 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
-        public class Truncate
+        public class Truncate : FunctionalTestBase
         {
             [Fact]
             public void Truncate_on_double_can_be_used_in_DbQuery_or_ObjectQuery()
