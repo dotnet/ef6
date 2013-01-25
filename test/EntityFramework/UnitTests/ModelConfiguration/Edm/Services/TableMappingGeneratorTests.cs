@@ -2,15 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Linq;
     using Xunit;
 
-    public sealed class EntityTypeMappingGeneratorTests
+    public sealed class TableMappingGeneratorTests
     {
         [Fact]
         public void Generate_should_add_set_mapping_and_table_and_set_clr_type()
@@ -25,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             entityType.Annotations.SetClrType(type);
 
-            new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
+            new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
             Assert.NotNull(databaseMapping.GetEntitySetMapping(entitySet));
             Assert.Same(entityType, databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().EntityType);
@@ -52,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             entityType.Annotations.SetClrType(type);
 
-            new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
+            new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
             var entityTypeMappingFragment
                 = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().MappingFragments.Single();
@@ -83,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             entityType.Annotations.SetClrType(type);
 
-            new EntityTypeMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
+            new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
             var entityTypeMappingFragment
                 = databaseMapping.GetEntitySetMapping(entitySet).EntityTypeMappings.Single().MappingFragments.Single();

@@ -4,9 +4,7 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Core.Metadata;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Linq.Expressions;
@@ -146,6 +144,75 @@ namespace System.Data.Entity
             return new MappingFragmentAssertions(fragment);
         }
 
+        internal static void AssertFunctionMapping<TStructuralType>(this DbDatabaseMapping databaseMapping)
+        {
+            var entityType
+                = databaseMapping.Model.EntityTypes.Single(
+                    i => i.Annotations.Any(
+                        a => a.Name == "ClrType"
+                             && (Type)a.Value == typeof(TStructuralType)));
+
+            databaseMapping
+                .EntityContainerMappings
+                .Single()
+                .EntitySetMappings
+                .Where(esm => esm.EntitySet.ElementType == entityType.GetRootType())
+                .Select(esm => esm.ModificationFunctionMappings)
+                .Single();
+        }
+
+        internal static CompositeParameterAssertions AssertFunctionMapping<TStructuralType>(
+            this DbDatabaseMapping databaseMapping, Expression<Func<TStructuralType, object>> propertyExpression)
+        {
+            var property
+                = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
+                                 .Where(
+                                     i => i.Annotations.Any(
+                                         a => a.Name == "ClrType"
+                                              && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
+                                 .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
+                                     i => i.Annotations.Any(
+                                         a => a.Name == "ClrPropertyInfo"
+                                              && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)));
+
+            var parameterBindings
+                = databaseMapping
+                    .EntityContainerMappings
+                    .Single()
+                    .EntitySetMappings
+                    .SelectMany(esm => esm.ModificationFunctionMappings)
+                    .SelectMany(
+                        mfm => mfm.InsertFunctionMapping.ParameterBindings
+                                  .Concat(mfm.UpdateFunctionMapping.ParameterBindings)
+                                  .Concat(mfm.DeleteFunctionMapping.ParameterBindings))
+                    .Where(p => p.MemberPath.Members.Contains(property))
+                    .ToList();
+
+            return new CompositeParameterAssertions(parameterBindings);
+        }
+
+        internal class CompositeParameterAssertions
+        {
+            private readonly IList<StorageModificationFunctionParameterBinding> _parameterBindings;
+
+            public CompositeParameterAssertions(IList<StorageModificationFunctionParameterBinding> parameterBindings)
+            {
+                Xunit.Assert.NotEmpty(parameterBindings);
+
+                _parameterBindings = parameterBindings;
+            }
+
+            public CompositeParameterAssertions ParameterEqual(object expected, Func<FunctionParameter, object> facet)
+            {
+                foreach (var parameterBinding in _parameterBindings)
+                {
+                    Xunit.Assert.Equal(expected, facet(parameterBinding.Parameter));
+                }
+                
+                return this;
+            }
+        }
+
         internal static void AssertNoMapping<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
@@ -263,7 +330,8 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.Equal(
                     expected, _property.MetadataProperties
-                        .Single(a => a.Name.Equals(XmlConstants.AnnotationNamespace + ":" + annotation, StringComparison.Ordinal))
+                                       .Single(
+                                           a => a.Name.Equals(XmlConstants.AnnotationNamespace + ":" + annotation, StringComparison.Ordinal))
                         .Value);
 
                 return this;

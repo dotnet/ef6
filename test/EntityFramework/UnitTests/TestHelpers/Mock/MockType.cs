@@ -25,6 +25,7 @@ namespace System.Data.Entity
         public MockType(string typeName, bool hasDefaultCtor = true, string @namespace = null)
         {
             SetupGet(t => t.Name).Returns(typeName);
+            SetupGet(t => t.FullName).Returns(typeName);
             SetupGet(t => t.BaseType).Returns(typeof(Object));
             SetupGet(t => t.Assembly).Returns(typeof(object).Assembly);
             Setup(t => t.GetProperties(It.IsAny<BindingFlags>())).Returns(() => _propertyInfos.ToArray());

@@ -54,6 +54,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return table;
         }
 
+        public static EdmFunction AddFunction(this EdmModel database, string name, EdmFunctionPayload functionPayload)
+        {
+            DebugCheck.NotNull(database);
+            DebugCheck.NotEmpty(name);
+
+            var uniqueIdentifier = database.Functions.UniquifyName(name);
+
+            var function
+                = new EdmFunction(
+                    uniqueIdentifier,
+                    DefaultStoreNamespace,
+                    DataSpace.SSpace,
+                    functionPayload);
+
+            database.AddItem(function);
+
+            return function;
+        }
+
         public static EntityType FindTableByName(this EdmModel database, DatabaseName tableName)
         {
             DebugCheck.NotNull(tableName);

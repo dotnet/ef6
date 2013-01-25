@@ -6,15 +6,13 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Transactions;
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class InheritanceScenarioTests : TestBase
+    public class InheritanceScenarioTests : TestBase
     {
         [Fact]
         public void Orphaned_configured_table_should_throw()
@@ -43,7 +41,7 @@ namespace FunctionalTests
                                 });
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                   .ValidateMessage("OrphanedConfiguredTableDetected", "BaseDependent");
         }
 
@@ -196,7 +194,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ColoredProduct>().ToTable("ColoredProducts");
             modelBuilder.Entity<StyledProduct>().ToTable("StyledProducts");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -223,7 +221,7 @@ namespace FunctionalTests
                                     m.ToTable("StyledProducts");
                                 });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -238,7 +236,7 @@ namespace FunctionalTests
             modelBuilder.Entity<StyledProduct>().ToTable("StyledProducts");
             modelBuilder.Entity<ColoredProduct>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -259,7 +257,7 @@ namespace FunctionalTests
                                 });
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -272,7 +270,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ConcreteType1_1_1>().ToTable("ConcreteType1_1_1");
             modelBuilder.Entity<ConcreteType1_2>().ToTable("ConcreteType1_2");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -284,9 +282,8 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AbstractType1>().HasKey(a => a.Property1_ID);
             modelBuilder.Entity<AbstractType1_1>().ToTable("AbstractType1_1");
-            modelBuilder.IgnoreAll();
-
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -323,7 +320,7 @@ namespace FunctionalTests
                                     m.ToTable("VendorDetails");
                                 });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -361,7 +358,7 @@ namespace FunctionalTests
                                     m.ToTable("VendorDetails");
                                 });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -399,7 +396,7 @@ namespace FunctionalTests
                                     m.ToTable("ProductDescriptionExtended");
                                 });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -705,7 +702,7 @@ namespace FunctionalTests
 
         private void ValidateTPTOrTPCWithRenamedColumns(AdventureWorksModelBuilder modelBuilder)
         {
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -1043,38 +1040,38 @@ namespace FunctionalTests
             [Fact]
             public void TPC_Ordering_Of_Configuration_Between_Related_Types()
             {
-                var builder = new DbModelBuilder();
+                var modelBuilder = new DbModelBuilder();
 
-                builder.Entity<Dependent>().HasRequired(e => e.PrincipalNavigation);
-                builder.Entity<BasePrincipal>().HasKey(e => e.Key1);
+                modelBuilder.Entity<Dependent>().HasRequired(e => e.PrincipalNavigation);
+                modelBuilder.Entity<BasePrincipal>().HasKey(e => e.Key1);
 
-                builder.Entity<DerivedDependent>().Map(
+                modelBuilder.Entity<DerivedDependent>().Map(
                     mapping =>
                         {
                             mapping.MapInheritedProperties();
                             mapping.ToTable("DerivedDependent");
                         });
-                builder.Entity<Principal>().Map(
+                modelBuilder.Entity<Principal>().Map(
                     mapping =>
                         {
                             mapping.MapInheritedProperties();
                             mapping.ToTable("Principal");
                         });
 
-                builder.Entity<Dependent>().Map(
+                modelBuilder.Entity<Dependent>().Map(
                     mapping =>
                         {
                             mapping.MapInheritedProperties();
                             mapping.ToTable("Dependent");
                         });
-                builder.Entity<BasePrincipal>().Map(
+                modelBuilder.Entity<BasePrincipal>().Map(
                     mapping =>
                         {
                             mapping.MapInheritedProperties();
                             mapping.ToTable("BasePrincipal");
                         });
 
-                var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var databaseMapping = BuildMapping(modelBuilder);
 
                 databaseMapping.AssertValid();
 
@@ -1139,22 +1136,23 @@ namespace FunctionalTests
             [Fact]
             public void AbstractClasses_TPC()
             {
-                var builder = new DbModelBuilder();
+                var modelBuilder = new DbModelBuilder();
 
                 // add .ToTable("B", "dbo") as workaround
-                builder.Entity<A>();
-                builder
+                modelBuilder.Entity<A>();
+                modelBuilder
                     .Entity<B>()
                     .Map(mapping => mapping.MapInheritedProperties())
                     ;
 
-                builder
+                modelBuilder
                     .Entity<C>()
                     .Map(mapping => mapping.MapInheritedProperties())
                     .ToTable("C", "dbo")
                     ;
 
-                var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var databaseMapping = BuildMapping(modelBuilder);
+
                 databaseMapping.AssertValid();
 
                 var typeMappings = databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings;
@@ -1168,31 +1166,33 @@ namespace FunctionalTests
             [Fact]
             public void AbstractClasses_TPT()
             {
-                var builder = new DbModelBuilder();
+                var modelBuilder = new DbModelBuilder();
 
-                builder.Entity<A>();
-                builder
+                modelBuilder.Entity<A>();
+                modelBuilder
                     .Entity<B>()
                     .Map(mapping => mapping.MapInheritedProperties());
 
-                builder
+                modelBuilder
                     .Entity<C>()
                     .ToTable("C", "dbo");
 
-                var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var databaseMapping = BuildMapping(modelBuilder);
+
                 databaseMapping.AssertValid();
             }
 
             [Fact]
             public void SubClasses_NoProperties()
             {
-                var builder = new DbModelBuilder();
+                var modelBuilder = new DbModelBuilder();
 
-                builder.Entity<D>();
-                builder.Entity<E>();
-                builder.Entity<F>();
+                modelBuilder.Entity<D>();
+                modelBuilder.Entity<E>();
+                modelBuilder.Entity<F>();
 
-                var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var databaseMapping = BuildMapping(modelBuilder);
+
                 databaseMapping.AssertValid();
             }
         }
@@ -1231,23 +1231,24 @@ namespace FunctionalTests
             [Fact]
             public void Bug165027Test()
             {
-                var builder = new DbModelBuilder();
+                var modelBuilder = new DbModelBuilder();
 
-                builder.Entity<BasePrincipal1>().ToTable("BasePrincipal");
-                builder.Entity<BasePrincipal1>().HasKey(e => e.Key1);
-                builder.Entity<Principal1>().HasOptional(e => e.DependentNavigation).WithRequired(
+                modelBuilder.Entity<BasePrincipal1>().ToTable("BasePrincipal");
+                modelBuilder.Entity<BasePrincipal1>().HasKey(e => e.Key1);
+                modelBuilder.Entity<Principal1>().HasOptional(e => e.DependentNavigation).WithRequired(
                     e => e.PrincipalNavigation);
 
-                builder.Entity<DerivedPrincipal1>().Map(
+                modelBuilder.Entity<DerivedPrincipal1>().Map(
                     mapping =>
                         {
                             mapping.MapInheritedProperties();
                             mapping.ToTable("DerivedPrincipal");
                         });
 
-                builder.Entity<Dependent1>().HasKey(e => e.key1);
+                modelBuilder.Entity<Dependent1>().HasKey(e => e.key1);
 
-                var databaseMapping = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var databaseMapping = BuildMapping(modelBuilder);
+
                 databaseMapping.AssertValid();
             }
         }
@@ -1302,7 +1303,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("TPC_Identity_ShouldPropagate.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<B>("B")
@@ -1324,7 +1325,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("TPC_IdentityNotExplicit_ShouldNotPropagate.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<B>("B")
@@ -1353,7 +1354,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("TPT_Identity_ShouldNotPropagate.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1406,7 +1407,7 @@ namespace FunctionalTests
                                     });
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("EntitySplitting_Identity_ShouldNotPropagate.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<C>("CX")
@@ -1462,7 +1463,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("Bug336566Repro.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1488,7 +1489,7 @@ namespace FunctionalTests
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("NoIdentityExplicit.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1510,7 +1511,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("TPT_Identity_ShouldKickIn.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1557,7 +1558,7 @@ namespace FunctionalTests
                                     });
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("EntitySplitting_Identity_ShouldNotPropagate.xml");
+                
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<C>("CX")
@@ -1795,7 +1796,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<C>().ToTable("C");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                //databaseMapping.ShellEdmx("SimpleTest.xml");
+                
                 databaseMapping.AssertValid();
             }
         }
@@ -1841,7 +1842,6 @@ namespace FunctionalTests
                                .HasForeignKeyColumn("PrincipalNavigationId")
                                .DbEqual(false, t => t.Properties.Single(c => c.Name == "PrincipalNavigationId").Nullable);
 
-                //databaseMapping.ShellEdmx("TPH_with_self_ref_FK_on_derived_type_has_non_nullable_FK_when_base_type_is_abstract.xml");
                 databaseMapping.AssertValid();
             }
         }

@@ -171,8 +171,10 @@
     <Compile Include="CodeFirst\DataAnnotationScenarioTests.cs" />
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
+    <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
     <Compile Include="CodeFirst\PropertyConfigurationScenarioTests.cs" />
+    <Compile Include="CodeFirst\SpatialScenarioTests.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataEnumTests.cs" />

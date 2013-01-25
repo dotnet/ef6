@@ -4,22 +4,30 @@ namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Xml;
 
     internal sealed class EdmSerializationVisitor : EdmModelVisitor
     {
-        private readonly double _edmVersion;
         private readonly EdmXmlSchemaWriter _schemaWriter;
 
-        internal EdmSerializationVisitor(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability = false)
+        public EdmSerializationVisitor(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability = false)
+            : this(new EdmXmlSchemaWriter(xmlWriter, edmVersion, serializeDefaultNullability))
         {
-            _edmVersion = edmVersion;
-            _schemaWriter = new EdmXmlSchemaWriter(xmlWriter, _edmVersion, serializeDefaultNullability);
         }
 
-        internal void Visit(EdmModel edmModel)
+        public EdmSerializationVisitor(EdmXmlSchemaWriter schemaWriter)
         {
+            DebugCheck.NotNull(schemaWriter);
+
+            _schemaWriter = schemaWriter;
+        }
+
+        public void Visit(EdmModel edmModel)
+        {
+            DebugCheck.NotNull(edmModel);
+
             var namespaceName
                 = edmModel
                     .NamespaceNames
@@ -33,13 +41,22 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        internal void Visit(EdmModel edmModel, string provider, string providerManifestToken)
+        public void Visit(EdmModel edmModel, string provider, string providerManifestToken)
         {
+            DebugCheck.NotNull(edmModel);
+            DebugCheck.NotEmpty(provider);
+            DebugCheck.NotEmpty(providerManifestToken);
+
             Visit(edmModel, edmModel.Containers.Single().Name + "Schema", provider, providerManifestToken);
         }
 
-        internal void Visit(EdmModel edmModel, string namespaceName, string provider, string providerManifestToken)
+        public void Visit(EdmModel edmModel, string namespaceName, string provider, string providerManifestToken)
         {
+            DebugCheck.NotNull(edmModel);
+            DebugCheck.NotEmpty(namespaceName);
+            DebugCheck.NotEmpty(provider);
+            DebugCheck.NotEmpty(providerManifestToken);
+
             _schemaWriter.WriteSchemaElementHeader(namespaceName, provider, providerManifestToken);
 
             VisitEdmModel(edmModel);
@@ -54,7 +71,21 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        public override void VisitEdmAssociationSet(AssociationSet item)
+        protected internal override void VisitEdmFunction(EdmFunction item)
+        {
+            _schemaWriter.WriteFunctionElementHeader(item);
+            base.VisitEdmFunction(item);
+            _schemaWriter.WriteEndElement();
+        }
+
+        protected internal override void VisitFunctionParameter(FunctionParameter functionParameter)
+        {
+            _schemaWriter.WriteFunctionParameterHeader(functionParameter);
+            base.VisitFunctionParameter(functionParameter);
+            _schemaWriter.WriteEndElement();
+        }
+
+        protected override void VisitEdmAssociationSet(AssociationSet item)
         {
             _schemaWriter.WriteAssociationSetElementHeader(item);
             base.VisitEdmAssociationSet(item);
@@ -69,7 +100,7 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        public override void VisitEdmEntitySet(EntitySet item)
+        protected internal override void VisitEdmEntitySet(EntitySet item)
         {
             _schemaWriter.WriteEntitySetElementHeader(item);
             _schemaWriter.WriteDefiningQuery(item);
@@ -77,7 +108,7 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        public override void VisitEdmEntityType(EntityType item)
+        protected override void VisitEdmEntityType(EntityType item)
         {
             _schemaWriter.WriteEntityTypeElementHeader(item);
             base.VisitEdmEntityType(item);
@@ -98,8 +129,7 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        protected override void VisitDeclaredKeyProperties(
-            EntityType entityType, IEnumerable<EdmProperty> properties)
+        protected override void VisitDeclaredKeyProperties(EntityType entityType, IList<EdmProperty> properties)
         {
             if (properties.Any())
             {
@@ -135,7 +165,7 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        public override void VisitEdmAssociationType(AssociationType item)
+        protected override void VisitEdmAssociationType(AssociationType item)
         {
             _schemaWriter.WriteAssociationTypeElementHeader(item);
             base.VisitEdmAssociationType(item);
@@ -145,8 +175,7 @@ namespace System.Data.Entity.Edm.Serialization
         protected override void VisitEdmAssociationEnd(RelationshipEndMember item)
         {
             _schemaWriter.WriteAssociationEndElementHeader(item);
-            if (item.DeleteBehavior
-                != OperationAction.None)
+            if (item.DeleteBehavior != OperationAction.None)
             {
                 _schemaWriter.WriteOperationActionElement(XmlConstants.OnDelete, item.DeleteBehavior);
             }

@@ -18,6 +18,114 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
     public sealed class ModelConfigurationTests
     {
         [Fact]
+        public void Configure_when_base_entity_mapped_to_function_should_map_sub_types_to_functions()
+        {
+            var modelConfiguration = new ModelConfiguration();
+
+            var rootType = new MockType();
+            var middleType = new MockType().BaseType(rootType);
+            var leafType = new MockType().BaseType(middleType);
+
+            modelConfiguration.Entity(rootType).MapToFunctions();
+            modelConfiguration.Entity(middleType);
+            modelConfiguration.Entity(leafType);
+
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var rootEntity = model.AddEntityType("Root");
+            rootEntity.Annotations.SetClrType(rootType);
+
+            var middleEntity = model.AddEntityType("Middle");
+            middleEntity.Annotations.SetClrType(middleType);
+            middleEntity.BaseType = rootEntity;
+
+            var leafEntity = model.AddEntityType("Leaf");
+            leafEntity.Annotations.SetClrType(leafType);
+            leafEntity.BaseType = middleEntity;
+
+            modelConfiguration.Configure(model);
+
+            Assert.True(modelConfiguration.Entity(rootType).IsMappedToFunctions);
+            Assert.True(modelConfiguration.Entity(middleType).IsMappedToFunctions);
+            Assert.True(modelConfiguration.Entity(leafType).IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void Configure_should_throw_when_only_derived_type_mapped_to_functions()
+        {
+            var modelConfiguration = new ModelConfiguration();
+
+            var baseType = new MockType("B");
+            var derivedType = new MockType("D").BaseType(baseType);
+
+            modelConfiguration.Entity(baseType);
+            modelConfiguration.Entity(derivedType).MapToFunctions();
+
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var baseEntity = model.AddEntityType("Base");
+            baseEntity.Annotations.SetClrType(baseType);
+
+            var derivedEntity = model.AddEntityType("Derived");
+            derivedEntity.Annotations.SetClrType(derivedType);
+            derivedEntity.BaseType = baseEntity;
+
+            Assert.Equal(
+                Strings.BaseTypeNotMappedToFunctions("B", "D"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modelConfiguration.Configure(model)).Message);
+        }
+
+        [Fact]
+        public void Configure_should_not_throw_when_only_derived_type_mapped_to_function_but_base_is_abstract()
+        {
+            var modelConfiguration = new ModelConfiguration();
+
+            var baseType = new MockType("B");
+            var derivedType = new MockType("D").BaseType(baseType);
+
+            modelConfiguration.Entity(baseType);
+            modelConfiguration.Entity(derivedType).MapToFunctions();
+
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var baseEntity = model.AddEntityType("Base");
+            baseEntity.Annotations.SetClrType(baseType);
+            baseEntity.Abstract = true;
+            
+            var derivedEntity = model.AddEntityType("Derived");
+            derivedEntity.Annotations.SetClrType(derivedType);
+            derivedEntity.BaseType = baseEntity;
+
+            modelConfiguration.Configure(model);
+
+            Assert.True(modelConfiguration.Entity(baseType).IsMappedToFunctions);
+            Assert.True(modelConfiguration.Entity(derivedType).IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void Configure_should_configure_default_schema_on_functions()
+        {
+            var modelConfiguration
+                = new ModelConfiguration
+                      {
+                          DefaultSchema = "foo"
+                      };
+
+            var databaseMetadata = new EdmModel(DataSpace.SSpace);
+            databaseMetadata.AddFunction("F", new EdmFunctionPayload());
+
+            var databaseMapping
+                = new DbDatabaseMapping().Initialize(
+                    new EdmModel(DataSpace.CSpace),
+                    databaseMetadata);
+
+            modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal("foo", databaseMapping.Database.Functions.Single().Schema);
+        }
+
+        [Fact]
         public void Can_get_and_set_model_namespace()
         {
             var modelConfiguration = new ModelConfiguration();

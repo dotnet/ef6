@@ -287,12 +287,14 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.ToTable("Table");
             configuration.IsExplicitEntity = true;
             configuration.EntitySetName = "ESN";
+            configuration.MapToFunctions();
 
             var clone = configuration.Clone();
 
             Assert.True(clone.IsReplaceable);
             Assert.True(clone.IsTableNameConfigured);
             Assert.True(clone.IsExplicitEntity);
+            Assert.True(clone.IsMappedToFunctions);
             Assert.Equal("ESN", clone.EntitySetName);
             Assert.Same(typeof(object), clone.ClrType);
         }
@@ -300,7 +302,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void EntityTypeConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityTypeConfiguration>(11);
+            VerifyFieldCount<EntityTypeConfiguration>(12);
         }
 
         [Fact]

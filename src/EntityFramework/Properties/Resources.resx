@@ -5384,6 +5384,10 @@
   <data name="ExecutionStrategy_RetryLimitExceeded" xml:space="preserve">
     <value>Retry limit exceeded.</value>
   </data>
+  <data name="BaseTypeNotMappedToFunctions" xml:space="preserve">
+    <value>The base type '{0}' must be mapped to functions because its derived type '{1}' is mapped to functions. When mapping an inheritance hierarchy to functions, ensure that the root type of the hierarchy is also mapped to functions.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
   <data name="InvalidResourceName" xml:space="preserve">
     <value>'{0}' is not a valid resource name.</value>
     <comment>## ExceptionType=ArgumentException</comment>

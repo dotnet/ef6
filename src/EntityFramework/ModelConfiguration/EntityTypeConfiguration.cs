@@ -113,6 +113,13 @@ namespace System.Data.Entity.ModelConfiguration
             _entityTypeConfiguration.ToTable(tableName, schemaName);
         }
 
+        public EntityTypeConfiguration<TEntityType> MapToFunctions()
+        {
+            _entityTypeConfiguration.MapToFunctions();
+
+            return this;
+        }
+
         /// <summary>
         ///     Allows advanced configuration related to how this entity type is mapped to the database schema.
         ///     By default, any configuration will also apply to any type derived from this entity type.

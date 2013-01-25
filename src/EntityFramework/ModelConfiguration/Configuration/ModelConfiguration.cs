@@ -284,13 +284,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var entityTypeConfiguration in ActiveEntityConfigurations)
             {
-                var structuralType = entityTypeConfiguration.ClrType;
-                var entityType = model.GetEntityType(structuralType);
+                var entityType = model.GetEntityType(entityTypeConfiguration.ClrType);
 
                 Debug.Assert(entityType != null);
 
+                ConfigureFunctionMappings(model, entityTypeConfiguration, entityType);
+
                 entityTypeConfiguration.Configure(entityType, model);
             }
+        }
+
+        private void ConfigureFunctionMappings(EdmModel model, EntityTypeConfiguration entityTypeConfiguration, EntityType entityType)
+        {
+            if (!entityTypeConfiguration.IsMappedToFunctions)
+            {
+                return;
+            }
+
+            while (entityType.BaseType != null)
+            {
+                EntityTypeConfiguration baseTypeConfiguration;
+
+                var baseClrType = ((EntityType)entityType.BaseType).GetClrType();
+
+                Debug.Assert(baseClrType != null);
+
+                if (!entityType.BaseType.Abstract
+                    && (!_entityConfigurations
+                             .TryGetValue(baseClrType, out baseTypeConfiguration)
+                        || !baseTypeConfiguration.IsMappedToFunctions))
+                {
+                    throw Error.BaseTypeNotMappedToFunctions(
+                        baseClrType.FullName,
+                        entityTypeConfiguration.ClrType.FullName);
+                }
+
+                entityType = (EntityType)entityType.BaseType;
+            }
+
+            // Propagate function mapping down hierarchy
+            model.GetSelfAndAllDerivedTypes(entityType)
+                 .Each(e => Entity(e.GetClrType()).MapToFunctions());
         }
 
         private void ConfigureComplexTypes(EdmModel model)
@@ -337,6 +371,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             databaseMapping.Database.GetEntitySets()
                            .Where(es => string.IsNullOrWhiteSpace(es.Schema))
                            .Each(es => es.Schema = DefaultSchema ?? EdmModelExtensions.DefaultSchema);
+
+            databaseMapping.Database.Functions
+                           .Where(f => string.IsNullOrWhiteSpace(f.Schema))
+                           .Each(f => f.Schema = DefaultSchema ?? EdmModelExtensions.DefaultSchema);
         }
 
         private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)

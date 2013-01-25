@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -20,6 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly List<ComplexType> _complexTypes = new List<ComplexType>();
         private readonly List<EntityType> _entityTypes = new List<EntityType>();
         private readonly List<EnumType> _enumTypes = new List<EnumType>();
+        private readonly List<EdmFunction> _functions = new List<EdmFunction>();
 
         private readonly DataSpace _dataSpace;
 
@@ -43,16 +43,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public EdmModel(DataSpace dataSpace, double version = XmlConstants.EdmVersionForV3)
         {
-            if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
+            if (dataSpace != DataSpace.CSpace
+                && dataSpace != DataSpace.SSpace)
             {
                 throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
             }
 
             _containers.Add(
                 new EntityContainer(
-                    dataSpace == DataSpace.CSpace 
-                    ? "CodeFirstContainer" 
-                    : "CodeFirstDatabase", 
+                    dataSpace == DataSpace.CSpace
+                        ? "CodeFirstContainer"
+                        : "CodeFirstDatabase",
                     dataSpace));
 
             _dataSpace = dataSpace;
@@ -95,7 +96,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return _associationTypes
                     .Concat<EdmType>(_complexTypes)
                     .Concat(_entityTypes)
-                    .Concat(_enumTypes);
+                    .Concat(_enumTypes)
+                    .Concat(_functions);
             }
         }
 
@@ -146,6 +148,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _enumTypes; }
         }
 
+        public IEnumerable<EdmFunction> Functions
+        {
+            get { return _functions; }
+        }
+
         public void AddItem(AssociationType associationType)
         {
             Check.NotNull(associationType, "associationType");
@@ -180,7 +187,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void RemoveItem(EntityType entityType)
         {
             Check.NotNull(entityType, "entityType");
-            
+
             _entityTypes.Remove(entityType);
         }
 
@@ -190,6 +197,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ValidateSpace(enumType, "enumType");
 
             _enumTypes.Add(enumType);
+        }
+
+        public void AddItem(EdmFunction function)
+        {
+            Check.NotNull(function, "function");
+            ValidateSpace(function, "function");
+
+            _functions.Add(function);
         }
 
         private void ValidateSpace(GlobalItem item, string parameterName)

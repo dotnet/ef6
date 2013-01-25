@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using System.Linq;
-
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Linq;
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
+    using Moq;
     using Xunit;
 
     public class EdmSerializationVisitorTests
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Edm.Serialization
             var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
             var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
             entitySet.AddMetadataProperties(
-                CreateMetadataProperties(new string[] { "http://tempuri.org:extended-property" }));
+                CreateMetadataProperties(new[] { "http://tempuri.org:extended-property" }));
 
             var sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
@@ -69,8 +69,8 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 metadataProperties.Add(
                     new MetadataProperty(
-                        name, 
-                        TypeUsage.CreateDefaultTypeUsage(edmString), 
+                        name,
+                        TypeUsage.CreateDefaultTypeUsage(edmString),
                         new string(name.Reverse().ToArray())));
             }
             return metadataProperties;
@@ -92,6 +92,30 @@ namespace System.Data.Entity.Edm.Serialization
             Assert.Equal(
                 "Defining Query",
                 (string)xml.Root.Element("DefiningQuery"));
+        }
+
+        [Fact]
+        public void VisitEdmFunction_should_write_start_and_end_elements()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var function = new EdmFunction();
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitEdmFunction(function);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionElementHeader(function), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
+        }
+
+        [Fact]
+        public void VisitFunctionParameter_should_write_start_and_end_elements()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var functionParameter = new FunctionParameter();
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionParameter(functionParameter);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionParameterHeader(functionParameter), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
         }
     }
 }

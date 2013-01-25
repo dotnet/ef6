@@ -53,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
             }
 
-            protected override void VisitEdmModel(EdmModel item)
+            protected internal override void VisitEdmModel(EdmModel item)
             {
                 if (_dataSpace == DataSpace.CSpace)
                 {
@@ -108,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmProperty(item);
             }
 
-            protected override void VisitMetadataItem(MetadataItem item)
+            protected internal override void VisitMetadataItem(MetadataItem item)
             {
                 Dispatch(item);
 
@@ -122,14 +122,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmEntityContainer(item);
             }
 
-            public override void VisitEdmEntitySet(EntitySet item)
+            protected internal override void VisitEdmEntitySet(EntitySet item)
             {
                 Dispatch(item);
 
                 base.VisitEdmEntitySet(item);
             }
 
-            public override void VisitEdmAssociationSet(AssociationSet item)
+            protected override void VisitEdmAssociationSet(AssociationSet item)
             {
                 Dispatch(item);
 
@@ -150,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitComplexType(item);
             }
 
-            public override void VisitEdmEntityType(EntityType item)
+            protected override void VisitEdmEntityType(EntityType item)
             {
                 Dispatch(item);
 
@@ -163,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
             }
 
-            public override void VisitEdmAssociationType(AssociationType item)
+            protected override void VisitEdmAssociationType(AssociationType item)
             {
                 Dispatch(item);
 

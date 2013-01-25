@@ -538,7 +538,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             if (entityTypeMapping == null)
             {
                 Debug.Assert(entityType.Abstract);
-                new EntityTypeMappingGenerator(providerManifest).
+                new TableMappingGenerator(providerManifest).
                     Generate(entityType, databaseMapping);
                 entityTypeMapping = databaseMapping.GetEntityTypeMapping(entityType);
                 configurationIndex = 0;

@@ -17,7 +17,7 @@ namespace System.Data.Entity.Edm.Validation
             _ruleSet = ruleSet;
         }
 
-        protected override void VisitMetadataItem(MetadataItem item)
+        protected internal override void VisitMetadataItem(MetadataItem item)
         {
             if (_visitedItems.Add(item))
             {

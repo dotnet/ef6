@@ -46,6 +46,17 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         }
 
         [Fact]
+        public void MapToFunctions_should_call_method_on_internal_configuration()
+        {
+            var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(Fixture));
+            var entityConfiguration = new EntityTypeConfiguration<Fixture>(mockEntityTypeConfiguration.Object);
+
+            entityConfiguration.MapToFunctions();
+
+            mockEntityTypeConfiguration.Verify(e => e.MapToFunctions());
+        }
+
+        [Fact]
         public void HasKey_should_throw_when_invalid_key_expression()
         {
             var entityConfiguration = new EntityTypeConfiguration<object>();

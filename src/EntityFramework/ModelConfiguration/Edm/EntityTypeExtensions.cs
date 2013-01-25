@@ -146,14 +146,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(entityType);
 
-            var rootType = entityType;
+            EdmType rootType = entityType;
 
             while (rootType.BaseType != null)
             {
-                rootType = (EntityType)rootType.BaseType;
+                rootType = rootType.BaseType;
             }
 
-            return rootType;
+            return (EntityType)rootType;
         }
 
         public static bool IsAncestorOf(this EntityType ancestor, EntityType entityType)

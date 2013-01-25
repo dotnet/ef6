@@ -411,6 +411,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
+        public void MapToFunctions_configures_when_unset()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            config.MapToFunctions();
+
+            Assert.True(innerConfig.IsMappedToFunctions);
+        }
+
+        [Fact]
         public void ClrType_returns_type()
         {
             var type = new MockType();

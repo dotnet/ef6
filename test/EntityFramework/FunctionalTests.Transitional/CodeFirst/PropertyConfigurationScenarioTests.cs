@@ -13,7 +13,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class PropertyConfigurationScenarioTests : TestBase
+    public class PropertyConfigurationScenarioTests : TestBase
     {
         [Fact]
         public void Binary_fixed_length_properties_get_correct_length_in_store()
@@ -39,7 +39,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<BillOfMaterials>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<BillOfMaterials>(b => b.PerAssemblyQty).FacetEqual((byte)18, f => f.Precision);
             databaseMapping.Assert<BillOfMaterials>(b => b.PerAssemblyQty).FacetEqual((byte)2, f => f.Scale);
@@ -52,7 +52,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<DuplicatePropNames>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<DuplicatePropNames>().HasColumns("Id", "name", "NAME");
         }
@@ -64,7 +64,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().Property(c => c.CustomerType).IsMaxLength();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Customer>(c => c.CustomerType).FacetEqual(true, f => f.IsMaxLength);
         }
@@ -130,7 +130,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().Property(c => c.CustomerType).HasMaxLength(40);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<Customer>(c => c.CustomerType).FacetEqual(40, f => f.MaxLength);
@@ -143,7 +143,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().Property(c => c.CustomerType).HasColumnType("ntext");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<Customer>(c => c.CustomerType).DbEqual("ntext", f => f.TypeName);
@@ -156,7 +156,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Location>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<Location>(l => l.LocationID).IsFalse(t => t.Nullable);
@@ -171,7 +171,7 @@ namespace FunctionalTests
                 .Entity<Location>()
                 .HasKey(l => l.Name);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<Location>(l => l.LocationID).IsTrue(t => t.Nullable);
@@ -187,7 +187,7 @@ namespace FunctionalTests
                 .Property(s => s.MaxQty)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<SpecialOffer>(s => s.MaxQty)
@@ -243,7 +243,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Product>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Product>(p => p.SellEndDate).IsFalse(t => t.Nullable);
         }
@@ -255,7 +255,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Product>().Property(p => p.ProductSubcategoryID).IsRequired();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Product>(p => p.ProductSubcategoryID).IsFalse(t => t.Nullable);
         }
@@ -270,7 +270,7 @@ namespace FunctionalTests
                 .Property(w => w.OrderQty)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<WorkOrder>(w => w.OrderQty)
                 .MetadataPropertyEqual("Identity", "StoreGeneratedPattern");
@@ -288,7 +288,7 @@ namespace FunctionalTests
                 .Property(w => w.OrderQty)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(
                 "Identity",
@@ -332,7 +332,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+                BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -348,7 +348,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+                BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -367,7 +367,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+                BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -378,7 +378,7 @@ namespace FunctionalTests
             modelBuilder.Entity<UnitMeasure>().HasKey(u => u.UnitMeasureCode);
             modelBuilder.Entity<UnitMeasure>().Property(u => u.UnitMeasureCode).HasColumnName("Code");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<UnitMeasure>("UnitMeasures").HasColumns("Code", "Name");

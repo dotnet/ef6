@@ -15,7 +15,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class AdvancedMappingScenarioTests : TestBase
+    public class AdvancedMappingScenarioTests : TestBase
     {
         [Fact]
         public void Sql_ce_should_get_explicit_max_lengths_for_string_and_binary_properties_by_convention()
@@ -264,7 +264,7 @@ namespace FunctionalTests
             Assert.Equal(
                 Strings.UnmappedAbstractType(typeof(SingleAbstract)),
                 Assert.Throws<InvalidOperationException>(
-                    () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo)).Message);
+                    () => BuildMapping(modelBuilder)).Message);
         }
 
         [Fact]
@@ -365,7 +365,7 @@ namespace FunctionalTests
                             m.ToTable("VendorDetails", "details");
                         });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "vendors"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "details"));
@@ -379,7 +379,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Customer>().ToTable("tbl");
             modelBuilder.Entity<Product>().ToTable("tbl", "other");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "other"));
@@ -395,7 +395,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<TransactionHistoryArchive>().HasEntitySetName("Foos");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Model.Containers.Single().EntitySets.Any(es => es.Name == "Foos"));
         }

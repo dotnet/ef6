@@ -171,6 +171,7 @@
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmFunctionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelTests.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
+    <Compile Include="Core\Metadata\Edm\FunctionParameterTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
@@ -219,7 +221,10 @@
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
+    <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
+    <Compile Include="Edm\Serialization\EdmXmlSchemaWriterTests.cs" />
+    <Compile Include="Edm\Serialization\MslXmlSchemaWriterTests.cs" />
     <Compile Include="Edm\Serialization\SsdlSerializerTests.cs" />
     <Compile Include="Edm\Validation\EdmModelSemanticValidationRulesTests.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
@@ -277,6 +282,8 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
     <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntryTests.cs" />
     <Compile Include="Infrastructure\Pluralization\EnglishPluralizationServiceTests.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />
     <Compile Include="SqlServer\SqlSpatialServicesForConversionsTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
@@ -502,7 +509,7 @@
     <Compile Include="ModelConfiguration\Edm\EdmPropertyExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Serialization\EdmxSerializerTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\DatabaseMappingGeneratorTests.cs" />
-    <Compile Include="ModelConfiguration\Edm\Services\EntityTypeMappingGeneratorTests.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\TableMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Mappers\AttributeMapperTests.cs" />
     <Compile Include="ModelConfiguration\Mappers\NavigationPropertyMapperTests.cs" />
     <Compile Include="ModelConfiguration\Mappers\PropertyFilterTests.cs" />

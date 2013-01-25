@@ -248,6 +248,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        public void MapToFunctions()
+        {
+            _configuration().MapToFunctions();
+        }
+
         /// <summary>
         ///     Configures the table name that this entity type is mapped to.
         /// </summary>

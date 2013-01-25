@@ -13502,6 +13502,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The base type '{0}' must be mapped to functions because its derived type '{1}' is mapped to functions. When mapping an inheritance hierarchy to functions, ensure that the root type of the hierarchy is also mapped to functions."
+        /// </summary>
+        internal static string BaseTypeNotMappedToFunctions(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.BaseTypeNotMappedToFunctions, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "'{0}' is not a valid resource name."
         /// </summary>
         internal static string InvalidResourceName(object p0)
@@ -15188,6 +15196,13 @@ namespace System.Data.Entity.Resources
             return new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay);
         }
 
+        /// <summary>
+        /// InvalidOperationException with message like "The base type '{0}' must be mapped to functions because its derived type '{1}' is mapped to functions. When mapping an inheritance hierarchy to functions, ensure that the root type of the hierarchy is also mapped to functions."
+        /// </summary>
+        internal static Exception BaseTypeNotMappedToFunctions(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.BaseTypeNotMappedToFunctions(p0, p1));
+        }
         /// <summary>
         /// ArgumentException with message like "'{0}' is not a valid resource name."
         /// </summary>
@@ -16914,6 +16929,7 @@ namespace System.Data.Entity.Resources
         internal const string ExecutionStrategy_MinimumMustBeLessThanMaximum = "ExecutionStrategy_MinimumMustBeLessThanMaximum";
         internal const string ExecutionStrategy_NegativeDelay = "ExecutionStrategy_NegativeDelay";
         internal const string ExecutionStrategy_RetryLimitExceeded = "ExecutionStrategy_RetryLimitExceeded";
+        internal const string BaseTypeNotMappedToFunctions = "BaseTypeNotMappedToFunctions";
         internal const string InvalidResourceName = "InvalidResourceName";
         
         static EntityRes loader = null;

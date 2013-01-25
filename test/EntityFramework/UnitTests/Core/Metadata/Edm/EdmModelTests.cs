@@ -15,7 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             foreach (DataSpace dataSpace in Enum.GetValues(typeof(DataSpace)))
             {
-                if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
+                if (dataSpace != DataSpace.CSpace
+                    && dataSpace != DataSpace.SSpace)
                 {
                     var exception = Assert.Throws<ArgumentException>(() => new EdmModel(dataSpace));
 
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Custom_container_set_correctly()
         {
-            var container= new EntityContainer("MyContainer", DataSpace.CSpace);
+            var container = new EntityContainer("MyContainer", DataSpace.CSpace);
 
             Assert.Same(
                 container,
@@ -52,7 +53,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal("CodeFirstContainer", new EdmModel(DataSpace.CSpace).Containers.Single().Name);
             Assert.Equal("CodeFirstDatabase", new EdmModel(DataSpace.SSpace).Containers.Single().Name);
         }
-
 
         [Fact]
         public void GlobalItems_should_return_namespace_items_and_containers()
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var exception =
                 Assert.Throws<ArgumentException>(
                     () => new EdmModel(DataSpace.CSpace)
-                        .AddItem(new EntityType("Entity", "Model", DataSpace.SSpace)));
+                              .AddItem(new EntityType("Entity", "Model", DataSpace.SSpace)));
 
             Assert.Equal("entityType", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
@@ -120,7 +120,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var exception =
                 Assert.Throws<ArgumentException>(
                     () => new EdmModel(DataSpace.SSpace)
-                        .AddItem(new EnumType() { DataSpace = DataSpace.CSpace }));
+                              .AddItem(
+                                  new EnumType
+                                      {
+                                          DataSpace = DataSpace.CSpace
+                                      }));
 
             Assert.Equal("enumType", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
@@ -132,7 +136,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var exception =
                 Assert.Throws<ArgumentException>(
                     () => new EdmModel(DataSpace.SSpace)
-                        .AddItem(new ComplexType("ComplexType", "Model", DataSpace.CSpace)));
+                              .AddItem(new ComplexType("ComplexType", "Model", DataSpace.CSpace)));
 
             Assert.Equal("complexType", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
@@ -144,10 +148,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var exception =
                 Assert.Throws<ArgumentException>(
                     () => new EdmModel(DataSpace.SSpace)
-                        .AddItem(new AssociationType("AssociationType", "Model", /*foreignKey*/ false, DataSpace.CSpace)));
+                              .AddItem(new AssociationType("AssociationType", "Model", /*foreignKey*/ false, DataSpace.CSpace)));
 
             Assert.Equal("associationType", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
+        }
+
+        [Fact]
+        public void Cannot_add_function_from_different_data_space()
+        {
+            var exception =
+                Assert.Throws<ArgumentException>(
+                    () => new EdmModel(DataSpace.SSpace)
+                              .AddItem(new EdmFunction("F", "N", DataSpace.CSpace, new EdmFunctionPayload())));
+
+            Assert.Equal("function", exception.ParamName);
+            Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
+        }
+
+        [Fact]
+        public void AddItem_can_add_function()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var function = new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload());
+
+            model.AddItem(function);
+
+            Assert.True(model.Functions.Contains(function));
+            Assert.True(model.NamespaceItems.Contains(function));
         }
     }
 }

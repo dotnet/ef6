@@ -258,7 +258,6 @@
     <Compile Include="TestModels\UnSpecifiedOrderingModel\NoOrderingContext.cs" />
     <Compile Include="ProductivityApi\ValidationTests.cs" />
     <Compile Include="ProductivityApi\WriteEdmxTests.cs" />
-    <Compile Include="CodeFirst\SpatialScenarioTests.cs" />
     <Compile Include="TestHelpers\EntityTypeConfigurationExtensions.cs" />
     <Compile Include="TestHelpers\GenericConnection.cs">
       <SubType>Component</SubType>
@@ -268,7 +267,9 @@
     <Compile Include="Migrations\TestHelpers\DbProviders.cs" />
     <Compile Include="TestHelpers\PartialTrustSandbox.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CodeFirst\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)x86" md "$(TargetDir)x86"

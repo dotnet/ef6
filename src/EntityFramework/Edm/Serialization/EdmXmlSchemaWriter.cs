@@ -187,8 +187,15 @@ namespace System.Data.Entity.Edm.Serialization
                       SyndicationXmlConstants.SyndContentKindXHtml
                   };
 
+        public EdmXmlSchemaWriter()
+        {
+            // testing
+        }
+
         internal EdmXmlSchemaWriter(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability)
         {
+            DebugCheck.NotNull(xmlWriter);
+
             _serializeDefaultNullability = serializeDefaultNullability;
             _xmlWriter = xmlWriter;
             _version = edmVersion;
@@ -196,6 +203,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteSchemaElementHeader(string schemaNamespace)
         {
+            DebugCheck.NotEmpty(schemaNamespace);
+
             var xmlNamespace = XmlConstants.GetCsdlNamespace(_version);
 
             _xmlWriter.WriteStartElement(XmlConstants.Schema, xmlNamespace);
@@ -212,6 +221,10 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteSchemaElementHeader(string schemaNamespace, string provider, string providerManifestToken)
         {
+            DebugCheck.NotEmpty(schemaNamespace);
+            DebugCheck.NotEmpty(provider);
+            DebugCheck.NotEmpty(providerManifestToken);
+
             var xmlNamespace = XmlConstants.GetSsdlNamespace(_version);
             _xmlWriter.WriteStartElement(XmlConstants.Schema, xmlNamespace);
             _xmlWriter.WriteAttributeString(XmlConstants.Namespace, schemaNamespace);
@@ -222,6 +235,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         private void WritePolymorphicTypeAttributes(EdmType edmType)
         {
+            DebugCheck.NotNull(edmType);
+
             if (edmType.BaseType != null)
             {
                 _xmlWriter.WriteAttributeString(
@@ -235,8 +250,35 @@ namespace System.Data.Entity.Edm.Serialization
             }
         }
 
+        public virtual void WriteFunctionElementHeader(EdmFunction function)
+        {
+            DebugCheck.NotNull(function);
+
+            _xmlWriter.WriteStartElement(XmlConstants.Function);
+            _xmlWriter.WriteAttributeString(XmlConstants.Name, function.Name);
+            _xmlWriter.WriteAttributeString(XmlConstants.AggregateAttribute, GetLowerCaseStringFromBoolValue(function.AggregateAttribute));
+            _xmlWriter.WriteAttributeString(XmlConstants.BuiltInAttribute, GetLowerCaseStringFromBoolValue(function.BuiltInAttribute));
+            _xmlWriter.WriteAttributeString(
+                XmlConstants.NiladicFunction, GetLowerCaseStringFromBoolValue(function.NiladicFunctionAttribute));
+            _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, GetLowerCaseStringFromBoolValue(function.IsComposableAttribute));
+            _xmlWriter.WriteAttributeString(XmlConstants.ParameterTypeSemantics, function.ParameterTypeSemanticsAttribute.ToString());
+            _xmlWriter.WriteAttributeString(XmlConstants.Schema, function.Schema);
+        }
+
+        public virtual void WriteFunctionParameterHeader(FunctionParameter functionParameter)
+        {
+            DebugCheck.NotNull(functionParameter);
+
+            _xmlWriter.WriteStartElement(XmlConstants.Parameter);
+            _xmlWriter.WriteAttributeString(XmlConstants.Name, functionParameter.Name);
+            _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, functionParameter.TypeName);
+            _xmlWriter.WriteAttributeString(XmlConstants.Mode, functionParameter.Mode.ToString());
+        }
+
         internal void WriteEntityTypeElementHeader(EntityType entityType)
         {
+            DebugCheck.NotNull(entityType);
+
             _xmlWriter.WriteStartElement(XmlConstants.EntityType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, entityType.Name);
 
@@ -285,6 +327,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteEnumTypeElementHeader(EnumType enumType)
         {
+            DebugCheck.NotNull(enumType);
+
             _xmlWriter.WriteStartElement(XmlConstants.EnumType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, enumType.Name);
             _xmlWriter.WriteAttributeString(
@@ -300,6 +344,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteEnumTypeMemberElementHeader(EnumMember enumTypeMember)
         {
+            DebugCheck.NotNull(enumTypeMember);
+
             _xmlWriter.WriteStartElement(XmlConstants.Member);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, enumTypeMember.Name);
             _xmlWriter.WriteAttributeString(XmlConstants.Value, enumTypeMember.Value.ToString());
@@ -330,6 +376,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteComplexTypeElementHeader(ComplexType complexType)
         {
+            DebugCheck.NotNull(complexType);
+
             _xmlWriter.WriteStartElement(XmlConstants.ComplexType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, complexType.Name);
             WritePolymorphicTypeAttributes(complexType);
@@ -337,12 +385,16 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteAssociationTypeElementHeader(AssociationType associationType)
         {
+            DebugCheck.NotNull(associationType);
+
             _xmlWriter.WriteStartElement(XmlConstants.Association);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, associationType.Name);
         }
 
         internal void WriteAssociationEndElementHeader(RelationshipEndMember associationEnd)
         {
+            DebugCheck.NotNull(associationEnd);
+
             _xmlWriter.WriteStartElement(XmlConstants.End);
             _xmlWriter.WriteAttributeString(XmlConstants.Role, associationEnd.Name);
 
@@ -355,6 +407,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteOperationActionElement(string elementName, OperationAction operationAction)
         {
+            DebugCheck.NotEmpty(elementName);
+
             _xmlWriter.WriteStartElement(elementName);
             _xmlWriter.WriteAttributeString(XmlConstants.Action, operationAction.ToString());
             _xmlWriter.WriteEndElement();
@@ -372,6 +426,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteDelaredKeyPropertyRefElement(EdmProperty property)
         {
+            DebugCheck.NotNull(property);
+
             _xmlWriter.WriteStartElement(XmlConstants.PropertyRef);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, property.Name);
             _xmlWriter.WriteEndElement();
@@ -379,6 +435,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WritePropertyElementHeader(EdmProperty property)
         {
+            DebugCheck.NotNull(property);
+
             _xmlWriter.WriteStartElement(XmlConstants.Property);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, property.Name);
             _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, GetTypeReferenceName(property));
@@ -553,6 +611,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         private static string GetTypeReferenceName(EdmProperty property)
         {
+            DebugCheck.NotNull(property);
+
             if (property.IsPrimitiveType)
             {
                 return property.TypeName;
@@ -613,12 +673,16 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteEntityContainerElementHeader(EntityContainer container)
         {
+            DebugCheck.NotNull(container);
+
             _xmlWriter.WriteStartElement(XmlConstants.EntityContainer);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, container.Name);
         }
 
         internal void WriteAssociationSetElementHeader(AssociationSet associationSet)
         {
+            DebugCheck.NotNull(associationSet);
+
             _xmlWriter.WriteStartElement(XmlConstants.AssociationSet);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, associationSet.Name);
             _xmlWriter.WriteAttributeString(
@@ -628,6 +692,9 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteAssociationSetEndElement(EntitySet end, string roleName)
         {
+            DebugCheck.NotNull(end);
+            DebugCheck.NotEmpty(roleName);
+
             _xmlWriter.WriteStartElement(XmlConstants.End);
             _xmlWriter.WriteAttributeString(XmlConstants.Role, roleName);
             _xmlWriter.WriteAttributeString(XmlConstants.EntitySet, end.Name);
@@ -636,6 +703,8 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteEntitySetElementHeader(EntitySet entitySet)
         {
+            DebugCheck.NotNull(entitySet);
+
             _xmlWriter.WriteStartElement(XmlConstants.EntitySet);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, entitySet.Name);
             _xmlWriter.WriteAttributeString(
@@ -657,14 +726,18 @@ namespace System.Data.Entity.Edm.Serialization
 
         internal void WriteDefiningQuery(EntitySet entitySet)
         {
+            DebugCheck.NotNull(entitySet);
+
             if (!string.IsNullOrWhiteSpace(entitySet.DefiningQuery))
             {
                 _xmlWriter.WriteElementString(XmlConstants.DefiningQuery, entitySet.DefiningQuery);
-            }          
+            }
         }
 
         private void WriteExtendedProperties(MetadataItem item)
         {
+            DebugCheck.NotNull(item);
+
             foreach (var extendedProperty in item.MetadataProperties.Where(p => p.PropertyKind == PropertyKind.Extended))
             {
                 string xmlNamespaceUri, attributeName;
@@ -679,8 +752,9 @@ namespace System.Data.Entity.Edm.Serialization
 
         private static bool TrySplitExtendedMetadataPropertyName(string name, out string xmlNamespaceUri, out string attributeName)
         {
-            int pos = name.LastIndexOf(':');
-            if (pos < 1 || name.Length <= pos + 1)
+            var pos = name.LastIndexOf(':');
+            if (pos < 1
+                || name.Length <= pos + 1)
             {
                 xmlNamespaceUri = null;
                 attributeName = null;
@@ -691,6 +765,5 @@ namespace System.Data.Entity.Edm.Serialization
             attributeName = name.Substring(pos + 1, (name.Length - 1) - pos);
             return true;
         }
-
     }
 }

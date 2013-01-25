@@ -11,7 +11,7 @@ namespace System.Data.Entity.Edm.Serialization
         protected XmlWriter _xmlWriter;
         protected double _version;
 
-        internal void WriteEndElement()
+        internal virtual void WriteEndElement()
         {
             _xmlWriter.WriteEndElement();
         }

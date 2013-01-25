@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -15,7 +16,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class EdmFunction : EdmType
     {
         internal EdmFunction()
+            : base("F", "N", DataSpace.SSpace)
         {
+            // testing only
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -27,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _schemaName = payload.Schema;
             _fullName = NamespaceName + "." + Name;
 
-            var returnParameters = payload.ReturnParameters;
+            var returnParameters = payload.ReturnParameters ?? new FunctionParameter[0];
 
             Debug.Assert(returnParameters.All((returnParameter) => returnParameter != null), "All return parameters must be non-null");
             Debug.Assert(
@@ -134,7 +137,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _storeFunctionNameAttribute;
         private readonly ParameterTypeSemantics _parameterTypeSemantics;
         private readonly string _commandTextAttribute;
-        private readonly string _schemaName;
+        private string _schemaName;
         private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
         private readonly string _fullName;
 
@@ -278,6 +281,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string Schema
         {
             get { return _schemaName; }
+            set
+            {
+                Check.NotEmpty(value, "value");
+                Util.ThrowIfReadOnly(this);
+
+                _schemaName = value;
+            }
         }
 
         /// <summary>

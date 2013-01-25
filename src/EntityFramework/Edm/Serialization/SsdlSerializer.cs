@@ -23,6 +23,8 @@ namespace System.Data.Entity.Edm.Serialization
             EdmModel dbDatabase, string provider, string providerManifestToken, XmlWriter xmlWriter, bool serializeDefaultNullability = true)
         {
             Check.NotNull(dbDatabase, "dbDatabase");
+            Check.NotEmpty(provider, "provider");
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
             Check.NotNull(xmlWriter, "xmlWriter");
 
             CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
@@ -46,9 +48,11 @@ namespace System.Data.Entity.Edm.Serialization
             EdmModel dbDatabase, string namespaceName, string provider, string providerManifestToken, XmlWriter xmlWriter, bool serializeDefaultNullability = true)
         {
             Check.NotNull(dbDatabase, "dbDatabase");
-            Check.NotNull(xmlWriter, "xmlWriter");
             Check.NotEmpty(namespaceName, "namespaceName");
-
+            Check.NotEmpty(provider, "provider");
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
+            Check.NotNull(xmlWriter, "xmlWriter");
+            
             CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
                 .Visit(dbDatabase, namespaceName, provider, providerManifestToken);
 

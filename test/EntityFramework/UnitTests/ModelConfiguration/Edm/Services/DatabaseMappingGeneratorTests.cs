@@ -3,8 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Linq;
     using Xunit;
 
@@ -418,6 +417,63 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var table = entityType1Mapping.MappingFragments.Single().Table;
 
             Assert.Equal(5, table.Properties.Count);
+        }
+
+        [Fact]
+        public void Generate_can_generate_modification_function_mappings()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType = model.AddEntityType("E");
+            entityType.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("ESet", entityType);
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityTypeConfiguration.MapToFunctions();
+            entityType.SetConfiguration(entityTypeConfiguration);
+
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+        
+            Assert.Equal(3, databaseMapping.Database.Functions.Count());
+    }
+
+        [Fact]
+        public void Generate_can_generate_modification_function_mappings_when_base_type_mapped_to_functions()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType1 = model.AddEntityType("E1");
+            entityType1.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E1Set", entityType1);
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityTypeConfiguration.MapToFunctions();
+            entityType1.SetConfiguration(entityTypeConfiguration);
+
+            var entityType2 = model.AddEntityType("E2");
+            entityType2.BaseType = entityType1;
+            entityType2.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E2Set", entityType2);
+
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+
+            Assert.Equal(6, databaseMapping.Database.Functions.Count());
+        }
+
+        [Fact]
+        public void Generate_should_not_generate_modification_function_mappings_when_entity_abstract()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType = model.AddEntityType("E");
+            entityType.Abstract = true;
+            entityType.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("ESet", entityType);
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityTypeConfiguration.MapToFunctions();
+            entityType.SetConfiguration(entityTypeConfiguration);
+
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+
+            Assert.Equal(0, databaseMapping.Database.Functions.Count());
         }
     }
 }

@@ -100,6 +100,7 @@ namespace System.Data.Entity.Core.Mapping
         internal const string ParameterNameAttribute = "ParameterName";
         internal const string ParameterVersionAttribute = "Version";
         internal const string ParameterVersionAttributeCurrentValue = "Current";
+        internal const string ParameterVersionAttributeOriginalValue = "Original";
         internal const string AssociationSetAttribute = "AssociationSet";
         internal const string FromAttribute = "From";
         internal const string ToAttribute = "To";

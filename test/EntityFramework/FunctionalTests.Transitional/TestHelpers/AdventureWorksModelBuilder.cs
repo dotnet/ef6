@@ -2,19 +2,27 @@
 
 namespace System.Data.Entity
 {
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
 
     public sealed class AdventureWorksModelBuilder : DbModelBuilder
     {
-        internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo, params Type[] unignoredTypes)
+        private readonly Type[] _unignoredTypes;
+
+        public AdventureWorksModelBuilder(params Type[] unignoredTypes)
         {
-            return BuildAndValidate(providerInfo, false, unignoredTypes);
+            _unignoredTypes = unignoredTypes;
         }
 
-        internal void IgnoreAll(params Type[] unignoredTypes)
+        public override DbModel Build(DbProviderInfo providerInfo)
+        {
+            IgnoreAll(_unignoredTypes);
+
+            return base.Build(providerInfo);
+        }
+
+        private void IgnoreAll(params Type[] unignoredTypes)
         {
             Ignore(
                 Assembly.GetExecutingAssembly().GetTypes()
@@ -23,24 +31,5 @@ namespace System.Data.Entity
                                  && t.Namespace.Contains("Model")).Except(
                                      Configurations.GetConfiguredTypes().Union(unignoredTypes)));
         }
-
-        internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo, bool throwOnError, params Type[] unignoredTypes)
-        {
-            IgnoreAll(unignoredTypes);
-
-            // Build and clone multiple times to check for idempotency issues.
-
-            Build(providerInfo);
-
-            var cloned = Clone();
-
-            var databaseMapping = cloned.Build(providerInfo).DatabaseMapping;
-
-            //databaseMapping.ShellEdmx();
-
-            databaseMapping.AssertValid(throwOnError);
-
-            return databaseMapping;
         }
-    }
 }

@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Common;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -16,6 +15,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
     public sealed class EntityTypeConfigurationTests
     {
+        [Fact]
+        public void MapToFunctions_should_set_configuration_flag()
+        {
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+
+            Assert.False(entityTypeConfiguration.IsMappedToFunctions);
+
+            entityTypeConfiguration.MapToFunctions();
+
+            Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+        }
+
         [Fact]
         public void Configure_should_set_configuration()
         {
@@ -86,7 +97,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.PropertyNotFound(("P"), "E"),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
+                Assert.Throws<InvalidOperationException>(
+                    () => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]
@@ -188,7 +200,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.KeyRegisteredOnDerivedType(typeof(object), typeof(string)),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
+                Assert.Throws<InvalidOperationException>(
+                    () => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]
@@ -204,7 +217,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.Equal(
                 Strings.KeyPropertyNotFound(("Id"), "E"),
-                Assert.Throws<InvalidOperationException>(() => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
+                Assert.Throws<InvalidOperationException>(
+                    () => entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]

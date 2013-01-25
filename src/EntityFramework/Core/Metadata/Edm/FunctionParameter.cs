@@ -11,6 +11,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         internal static Func<FunctionParameter, SafeLink<EdmFunction>> DeclaringFunctionLinker = fp => fp._declaringFunction;
 
+        internal FunctionParameter()
+        {
+            // testing
+        }
+
         /// <summary>
         ///     The constructor for FunctionParameter taking in a name and a TypeUsage object
         /// </summary>
@@ -76,6 +81,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public TypeUsage TypeUsage
         {
             get { return _typeUsage; }
+        }
+
+        public string TypeName
+        {
+            get { return TypeUsage.EdmType.Name; }
         }
 
         /// <summary>

@@ -21,7 +21,11 @@ namespace System.Data.Entity.Edm.Serialization
             using (var writer = XmlWriter.Create(sb))
             {
                 new SsdlSerializer()
-                    .Serialize(new EdmModel(DataSpace.SSpace), null, null, writer);
+                    .Serialize(
+                    new EdmModel(DataSpace.SSpace),
+                    ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                    ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken, 
+                    writer);
             }
 
             Assert.Equal(
@@ -86,7 +90,13 @@ namespace System.Data.Entity.Edm.Serialization
             using (var writer = XmlWriter.Create(sb))
             {
                 new SsdlSerializer()
-                    .Serialize(model, schemaNamespace, null, null, writer, serializeDefaultNullability);
+                    .Serialize(
+                    model, 
+                    schemaNamespace, 
+                    ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName, 
+                    ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken, 
+                    writer, 
+                    serializeDefaultNullability);
             }
 
             return XDocument.Parse(sb.ToString());

@@ -13,7 +13,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class DataAnnotationScenarioTests : TestBase
+    public class DataAnnotationScenarioTests : TestBase
     {
         [Fact]
         public void Duplicate_column_order_should_not_throw_when_v1_convention_set()
@@ -35,7 +35,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Entity_10558>();
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                 .ValidateMessage("DuplicateConfiguredColumnOrder", "Entity_10558");
         }
 
@@ -65,7 +65,7 @@ namespace FunctionalTests
             modelBuilder.Entity<NotMappedDerived>();
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                 .ValidateMessage("InvalidEntityType", typeof(NotMappedDerived));
         }
 
@@ -179,7 +179,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<Unit>();
                 modelBuilder.Entity<BaseEntity>();
 
-                Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                     .ValidateMessage(
                         "CannotIgnoreMappedBaseProperty",
                         "VirtualBaseClassProperty", "FunctionalTests.Unit",
@@ -512,7 +512,7 @@ namespace FunctionalTests
             modelBuilder.Entity<StyledProduct>();
             modelBuilder.Entity<Product>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<StyledProduct>(s => s.Style).FacetEqual(150, f => f.MaxLength);
         }
@@ -535,7 +535,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
@@ -560,7 +560,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
@@ -586,7 +586,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Login), typeof(Profile));
                 }
             }
@@ -607,7 +607,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
@@ -628,7 +628,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
@@ -650,7 +650,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
@@ -702,7 +702,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Profile>();
 
                     Assert.Throws<InvalidOperationException>(
-                        () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                        () => BuildMapping(modelBuilder))
                         .ValidateMessage("UnableToDeterminePrincipal", typeof(Profile), typeof(Login));
                 }
             }
@@ -716,7 +716,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TNAttrBase>()
                 .Map<TNAttrDerived>(mc => mc.ToTable("B"));
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<TNAttrBase>("A");
             databaseMapping.Assert<TNAttrDerived>("B");
@@ -731,7 +731,7 @@ namespace FunctionalTests
                 .Map(mc => mc.Requires("disc").HasValue("A"))
                 .Map<TNAttrDerived>(mc => mc.Requires("disc").HasValue("B"));
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<TNAttrBase>("A");
             databaseMapping.AssertMapping<TNAttrBase>("A", false).HasColumnCondition("disc", "A");
@@ -962,8 +962,8 @@ namespace FunctionalTests
 
             private void ValidateBuildIsIdempotent(DbModelBuilder modelBuilder)
             {
-                var mapping1 = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
-                var mapping2 = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+                var mapping1 = BuildMapping(modelBuilder);
+                var mapping2 = BuildMapping(modelBuilder);
                 Assert.True(mapping1.EdmxIsEqualTo(mapping2));
             }
 

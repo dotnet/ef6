@@ -26,8 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
 
         private readonly Dictionary<PropertyInfo, NavigationPropertyConfiguration> _navigationPropertyConfigurations
-            =
-            new Dictionary<PropertyInfo, NavigationPropertyConfiguration>(
+            = new Dictionary<PropertyInfo, NavigationPropertyConfiguration>(
                 new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
 
         private readonly List<EntityMappingConfiguration> _entityMappingConfigurations
@@ -41,6 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private bool _isKeyConfigured;
         private bool _isKeyConfiguredByAttributes;
         private string _entitySetName;
+        private bool _mappedToFunctions;
 
         internal EntityTypeConfiguration(Type structuralType)
             : base(structuralType)
@@ -65,6 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = source._isKeyConfigured;
             _isKeyConfiguredByAttributes = source._isKeyConfiguredByAttributes;
             _entitySetName = source._entitySetName;
+            _mappedToFunctions = source._mappedToFunctions;
 
             IsReplaceable = source.IsReplaceable;
             IsTableNameConfigured = source.IsTableNameConfigured;
@@ -110,6 +111,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal bool IsKeyConfigured
         {
             get { return _isKeyConfigured; }
+        }
+
+        internal bool IsMappedToFunctions
+        {
+            get { return _mappedToFunctions; }
         }
 
         internal IEnumerable<PropertyInfo> KeyProperties
@@ -290,6 +296,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                       : new DatabaseName(tableName, schemaName);
 
             UpdateTableNameForSubTypes();
+        }
+
+        internal virtual void MapToFunctions()
+        {
+            _mappedToFunctions = true;
         }
 
         private void UpdateTableNameForSubTypes()

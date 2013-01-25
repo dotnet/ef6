@@ -117,6 +117,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             column.Annotations.SetAnnotation(AllowOverrideAnnotation, allowOverride);
         }
 
+        public static bool HasStoreGeneratedPattern(this EdmProperty property)
+        {
+            DebugCheck.NotNull(property);
+
+            var storeGeneratedPattern = property.GetStoreGeneratedPattern();
+
+            return storeGeneratedPattern != null
+                   && storeGeneratedPattern != StoreGeneratedPattern.None;
+        }
+
         public static StoreGeneratedPattern? GetStoreGeneratedPattern(this EdmProperty property)
         {
             DebugCheck.NotNull(property);

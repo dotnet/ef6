@@ -2,10 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -23,11 +21,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         public void AddTable_should_create_and_add_table_to_default_schema()
         {
             var database = new EdmModel(DataSpace.SSpace);
+
             var table = database.AddTable("T");
 
-            
             Assert.True(database.EntityTypes.Contains(table));
-            
             Assert.Equal("T", database.EntityTypes.First().Name);
         }
 
@@ -40,6 +37,29 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
             database.ProviderInfo = providerInfo;
 
             Assert.Same(providerInfo, database.ProviderInfo);
+        }
+
+        [Fact]
+        public void AddFunction_should_create_and_add_function_to_model()
+        {
+            var database = new EdmModel(DataSpace.SSpace);
+
+            var function = database.AddFunction("F", new EdmFunctionPayload());
+
+            Assert.True(database.Functions.Contains(function));
+            Assert.Equal("F", database.Functions.First().Name);
+        }
+
+        [Fact]
+        public void AddFunction_should_uniquify_namee()
+        {
+            var database = new EdmModel(DataSpace.SSpace);
+            database.AddFunction("F", new EdmFunctionPayload());
+
+            var function = database.AddFunction("F", new EdmFunctionPayload());
+
+            Assert.True(database.Functions.Contains(function));
+            Assert.Equal("F1", database.Functions.Last().Name);
         }
     }
 }

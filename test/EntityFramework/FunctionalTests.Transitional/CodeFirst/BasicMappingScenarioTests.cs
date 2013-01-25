@@ -1333,7 +1333,7 @@ namespace FunctionalTests
 
     #endregion
 
-    public sealed class BasicMappingScenarioTests : TestBase
+    public class BasicMappingScenarioTests : TestBase
     {
         [Fact]
         public void Can_specify_default_schema()
@@ -1448,7 +1448,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Unit>().Ignore(b => b.BaseClassProperty);
             modelBuilder.Entity<Unit>().Ignore(b => b.VirtualBaseClassProperty);
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
                     "BaseClassProperty", "FunctionalTests.Unit",
@@ -1481,7 +1481,7 @@ namespace FunctionalTests
             modelBuilder.Entity<BaseEntity>();
             modelBuilder.Entity<Unit>().Ignore(u => u.BaseClassProperty);
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
                     "BaseClassProperty", "FunctionalTests.Unit",
@@ -1518,7 +1518,7 @@ namespace FunctionalTests
             modelBuilder.Entity<BaseEntity>();
             modelBuilder.Entity<DifferentUnit>().Ignore(u => u.VirtualBaseClassProperty);
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
                     "VirtualBaseClassProperty", "FunctionalTests.DifferentUnit",
@@ -1533,7 +1533,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Unit>().Ignore(u => u.VirtualBaseClassProperty);
             modelBuilder.Entity<BaseEntity>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
                     "VirtualBaseClassProperty", "FunctionalTests.Unit",
@@ -1583,7 +1583,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().HasEntitySetName("Customer");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal("Customer", databaseMapping.Model.Containers.Single().EntitySets.Single().Name);
         }
@@ -1596,7 +1596,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Customer>().HasEntitySetName("Foo");
             modelBuilder.Entity<Product>().HasEntitySetName("Foo");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal("Foo", databaseMapping.Model.Containers.Single().EntitySets.First().Name);
             Assert.Equal("Foo1", databaseMapping.Model.Containers.Single().EntitySets.Last().Name);
@@ -1611,7 +1611,7 @@ namespace FunctionalTests
 
             // WPF classes invalid
             Assert.Throws<ModelValidationException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -1623,7 +1623,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TransactionHistory>()
                 .HasKey(th => th.TransactionID);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
@@ -1631,14 +1631,14 @@ namespace FunctionalTests
         [Fact]
         public void Build_model_for_type_with_configured_internal_members()
         {
-            var modelBuilder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder(typeof(Product));
 
             modelBuilder.Entity<TransactionHistory>()
                 .HasKey(th => th.TransactionID);
             modelBuilder.Entity<TransactionHistory>()
                 .HasRequired(th => th.Product);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, typeof(Product));
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
         }
@@ -1650,7 +1650,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<TransactionHistoryArchive>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1662,7 +1662,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().Property(c => c.AccountNumber).HasColumnName("acc_no");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1674,7 +1674,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().Property(c => c.AccountNumber).HasColumnType("NVARCHAR");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1686,7 +1686,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Location>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1703,7 +1703,7 @@ namespace FunctionalTests
                               sc.CustomerID
                           });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1715,7 +1715,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Culture>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1728,7 +1728,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Product>();
             modelBuilder.Entity<DiscontinuedProduct>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -1744,7 +1744,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SalesPerson>().ToTable("tbl_sp");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<SalesPerson>("tbl_sp");
         }
@@ -1757,7 +1757,7 @@ namespace FunctionalTests
             modelBuilder.Entity<SalesPerson>().ToTable("tbl_sp");
             modelBuilder.Entity<Employee>().HasOptional(o => o.SalesPerson).WithRequired(e => e.Employee);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<SalesPerson>("tbl_sp");
         }
@@ -1774,7 +1774,7 @@ namespace FunctionalTests
             modelBuilder.Entity<SalesPerson>().ToTable("tbl_sp", "sales");
             modelBuilder.Entity<Customer>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
@@ -1788,7 +1788,7 @@ namespace FunctionalTests
             modelBuilder.Entity<SalesPerson>().ToTable("sales.tbl_sp");
             modelBuilder.Entity<Customer>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
@@ -1802,7 +1802,7 @@ namespace FunctionalTests
             modelBuilder.Entity<SalesPerson>().ToTable("tbl_sp", "sales.A.B");
             modelBuilder.Entity<Customer>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "sales.A.B"));
             Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
@@ -1842,7 +1842,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b"); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue("c"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -1868,7 +1868,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AbsAtBase>().ToTable("Foo");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -1887,7 +1887,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<TPHDerived>().Map(mc => { mc.Requires("MyDisc").HasValue("b").HasColumnType("ntext"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -1917,7 +1917,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b"); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue("c"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -1947,7 +1947,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b").IsOptional(); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue("c"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -1977,7 +1977,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b").IsOptional(); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue("c"); });
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -1994,7 +1994,7 @@ namespace FunctionalTests
                     .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b"); })
                     .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue("c"); });
 
-                var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+                var databaseMapping = BuildMapping(modelBuilder);
 
                 Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
                 databaseMapping.Assert<TPHBase>()
@@ -2050,7 +2050,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue(b); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue(c); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -2076,7 +2076,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue(false); });
             modelBuilder.Ignore<TPHLeaf>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -2168,7 +2168,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("yo"); });
             modelBuilder.Ignore<TPHLeaf>();
 
-            Assert.Throws<MappingException>(() => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<MappingException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -2181,7 +2181,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("2"); });
             modelBuilder.Ignore<TPHLeaf>();
 
-            Assert.Throws<MappingException>(() => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<MappingException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -2194,9 +2194,9 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("yo"); });
             modelBuilder.Ignore<TPHLeaf>();
 
-            Assert.Throws<MappingException>(
-                () =>
-                modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
         }
 
         [Fact]
@@ -2209,7 +2209,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("yo").HasColumnType("ntext"); });
             modelBuilder.Ignore<TPHLeaf>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         private void Requires_value_can_change_discriminator_column_name<T>(T a, T b, T c) where T : struct
@@ -2221,9 +2221,12 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue(b); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue(c); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid(true);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+
             databaseMapping.Assert<TPHBase>()
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData", "LeafData", "MyDisc");
             databaseMapping.AssertMapping<TPHBase>("TPHBases", false)
@@ -2247,7 +2250,7 @@ namespace FunctionalTests
                 .Map<TPHDerived>(mc => { mc.Requires("MyDisc").HasValue("b"); })
                 .Map<TPHLeaf>(mc => { mc.Requires("MyDisc").HasValue(null); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHBase>()
@@ -2275,7 +2278,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TPHDerived>().Map(mc => mc.Requires(b => b.DerivedData).HasValue());
             modelBuilder.Ignore<TPHLeaf>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.False(
@@ -2305,7 +2308,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TPHDerived>().Property(b => b.DerivedData).IsRequired();
             modelBuilder.Ignore<TPHLeaf>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.False(
@@ -2334,7 +2337,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsAtBaseL1>().Property(b => b.L1Data);
             modelBuilder.Ignore<AbsAtBaseL2>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2352,7 +2355,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TPHDerived>().Property(b => b.DerivedData).IsOptional();
             modelBuilder.Ignore<TPHLeaf>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -2381,7 +2384,7 @@ namespace FunctionalTests
                         });
             modelBuilder.Ignore<TPHNodeC>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHRoot>("Woof")
@@ -2409,7 +2412,7 @@ namespace FunctionalTests
                 .Map(mc => { mc.ToTable("Woof"); });
             modelBuilder.Ignore<TPHNodeC>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHRoot>("Woof")
@@ -2436,7 +2439,7 @@ namespace FunctionalTests
             modelBuilder.Entity<IsolatedIsland>()
                 .Map(mc => { mc.Requires("disc").HasValue(null); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<IsolatedIsland>()
@@ -2455,7 +2458,7 @@ namespace FunctionalTests
             modelBuilder.Entity<IsolatedIsland>()
                 .Map(mc => { mc.Requires("disc").HasValue(null).HasMaxLength(100); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<IsolatedIsland>()
@@ -2490,7 +2493,7 @@ namespace FunctionalTests
                                      });
             modelBuilder.Entity<Repro136322_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2523,7 +2526,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro136322_DerivedDependent>().Map(
                 mapping => { mapping.Requires(e => e.Discriminator1).HasValue(); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2573,7 +2576,7 @@ namespace FunctionalTests
                             .HasValue("authenticode");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2613,7 +2616,7 @@ namespace FunctionalTests
                 .WithOptional()
                 .Map(m => m.MapKey(new[] { "IndependentColumn1" }));
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2651,7 +2654,7 @@ namespace FunctionalTests
                              e.Key2,
                          });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2683,7 +2686,7 @@ namespace FunctionalTests
                             HasColumnType("nvarchar").HasMaxLength(40).IsUnicode().IsVariableLength();
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2715,7 +2718,7 @@ namespace FunctionalTests
                             HasColumnType("nvarchar").HasMaxLength(40).IsUnicode().IsVariableLength();
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -2736,7 +2739,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro143236_DerivedDependent>().Map(
                 mapping => { mapping.Requires(e => e.DiscriminatorNotNull).HasValue(); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
         }
 
         [Fact]
@@ -2753,7 +2756,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro142666_DerivedDependent>().Map(
                 mapping => { mapping.Requires("DiscriminatorValue").HasValue("1"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro142666_DerivedDependent>()
                 .DbEqual("nchar", t => t.Properties.Single(c => c.Name == "DiscriminatorValue").TypeName)
@@ -2779,7 +2782,7 @@ namespace FunctionalTests
                     });
             modelBuilder.Entity<Repro142682_Principal>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
         }
 
         [Fact]
@@ -2794,7 +2797,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro150248_BasePrincipal_2>().Map(mapping => { mapping.ToTable("BasePrincipal"); });
             modelBuilder.Entity<Repro150248_Principal_2>().Map(mapping => { mapping.ToTable("Principal"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
         }
 
         [Fact]
@@ -2809,7 +2812,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro135563_2_BaseDependent>().HasKey(e => e.Key1);
             modelBuilder.Ignore<Repro135563_2_Other>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro135563_2_Dependent>()
                 .HasColumns("Key1", "BaseProperty", "PrincipalNavigation_Key1", "DiscriminatorValue")
@@ -2831,7 +2834,7 @@ namespace FunctionalTests
                 e => e.DependentNavigation).Map(m => { });
             modelBuilder.Entity<Repro135563_2_BaseDependent>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro135563_2_Dependent>()
                 .HasColumns("Key1", "BaseProperty", "OtherData", "PrincipalNavigation_Key1", "DiscriminatorValue")
@@ -2852,7 +2855,7 @@ namespace FunctionalTests
                 e => e.DependentNavigation).Map(m => { });
             modelBuilder.Entity<Repro135563_3_BaseDependent>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro135563_3_Dependent>()
                 .HasColumns("Key1", "BaseProperty", "PrincipalNavigation_Key1", "DiscriminatorValue")
@@ -2876,7 +2879,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(
@@ -2896,7 +2899,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1");
             modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(
@@ -2916,7 +2919,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1");
             modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(
@@ -2942,7 +2945,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("Bases");
@@ -2963,7 +2966,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("Bases");
@@ -2985,7 +2988,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("Bases");
@@ -3007,7 +3010,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("Bases");
@@ -3032,7 +3035,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.Deriveds);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("Bases");
@@ -3052,7 +3055,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TPHDerived>().ToTable("B");
             modelBuilder.Entity<TPHLeaf>().ToTable("C");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<TPHDerived>("B").HasForeignKeyColumn("Id", "A")
                 .DbEqual(1, t => t.ForeignKeyBuilders.Count());
@@ -3097,7 +3100,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<CKDerivedProduct2>().Map(mapping => { mapping.ToTable("DerivedDependent2"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<CKCategory>()
                 .DbEqual(0, t => t.ForeignKeyBuilders.Count());
@@ -3130,7 +3133,7 @@ namespace FunctionalTests
                              d.DependentKey1
                          }).WillCascadeOnDelete(false);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<SelfRefBase>()
                 .DbEqual(0, t => t.ForeignKeyBuilders.Count());
@@ -3152,7 +3155,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro136761_C>().HasRequired(c => c.Repro136761_B).WithMany().HasForeignKey(
                 c => c.Repro136761_BId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro136761_A>()
                 .DbEqual(0, t => t.ForeignKeyBuilders.Count());
@@ -3177,7 +3180,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro136855_Principal>().Property(p => p.Key1).HasColumnType("smalldatetime");
             modelBuilder.Entity<Repro136855_Principal>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3196,7 +3199,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro136855_Principal>().Property(p => p.Key1).HasColumnType("smalldatetime");
             modelBuilder.Entity<Repro136855_Principal>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3217,7 +3220,7 @@ namespace FunctionalTests
             modelBuilder.Entity<THABS_BasePrincipal>().Map(mapping => { mapping.ToTable("BasePrincipal"); });
             modelBuilder.Entity<THABS_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3253,7 +3256,7 @@ namespace FunctionalTests
             modelBuilder.Entity<SRDerived>().HasMany(e => e.Navigation).WithMany();
             modelBuilder.Entity<SRDerived>().Map(mapping => { mapping.ToTable("Derived"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3289,7 +3292,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro137329_A2>().ToTable("A1");
             modelBuilder.Entity<Repro137329_A3>().ToTable("A1");
             modelBuilder.Entity<Repro137329_A4>().ToTable("A1");
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertMapping<Repro137329_A1>("A1", false)
                 .HasColumnCondition("Discriminator", "Repro137329_A1");
@@ -3305,7 +3308,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro109944_Entity1>().Ignore(x => x.Repro109944_Entity2ID);
             modelBuilder.Entity<Repro109944_Entity2>().ToTable("Entity2s");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro109944_BaseEntity>()
                 .HasNoForeignKeyColumns();
@@ -3325,7 +3328,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro109944_Entity1>().ToTable("Entity1s");
             modelBuilder.Entity<Repro109944_Entity2>().ToTable("Entity2s");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro109944_BaseEntity>()
                 .HasNoForeignKeyColumns();
@@ -3348,7 +3351,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro142961_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
             modelBuilder.Entity<Repro142961_Principal>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro142961_Dependent>("Dependent")
                 .HasForeignKeyColumn("Key1", "Principal");
@@ -3367,7 +3370,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro142961_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
             modelBuilder.Entity<Repro142961_Principal>().HasKey(e => e.Key1);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro142961_Dependent>("Dependent")
                 .HasForeignKeyColumn("PrincipalNavigation_Key1", "Principal");
@@ -3382,76 +3385,76 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro109916_SomeEntity>().ToTable("SomeEntities");
             modelBuilder.Entity<Repro109916_SomeMore>().ToTable("SomeMores");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            BuildMapping(modelBuilder);
         }
 
         [Fact]
         public void TPT_with_asociation_between_middle_types()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro150248_Principal>().HasMany(e => e.DependentNavigation);
+            modelBuilder.Entity<Repro150248_Principal>().HasMany(e => e.DependentNavigation);
             // Works if this line is commented out.
-            builder.Entity<Repro150248_DerivedPrincipal>().Property(p => p.DerivedProperty1).HasColumnType(
+            modelBuilder.Entity<Repro150248_DerivedPrincipal>().Property(p => p.DerivedProperty1).HasColumnType(
                 "nvarchar(max)").IsUnicode();
-            builder.Entity<Repro150248_Dependent>().HasRequired(e => e.PrincipalNavigation);
-            builder.Entity<Repro150248_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
-            builder.Entity<Repro150248_DerivedDependent>().Map(mapping => { mapping.ToTable("DerivedDependent"); });
-            builder.Entity<Repro150248_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
-            builder.Entity<Repro150248_BaseDependent>().Property(p => p.BaseProperty).HasColumnType("date");
-            builder.Entity<Repro150248_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
-            builder.Entity<Repro150248_DerivedDependent>().Property(p => p.DerivedProperty1).HasColumnType("smallmoney");
-            builder.Entity<Repro150248_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
-            builder.Entity<Repro150248_BaseDependent>().HasKey(e => e.Key1);
-            builder.Entity<Repro150248_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
+            modelBuilder.Entity<Repro150248_Dependent>().HasRequired(e => e.PrincipalNavigation);
+            modelBuilder.Entity<Repro150248_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
+            modelBuilder.Entity<Repro150248_DerivedDependent>().Map(mapping => { mapping.ToTable("DerivedDependent"); });
+            modelBuilder.Entity<Repro150248_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
+            modelBuilder.Entity<Repro150248_BaseDependent>().Property(p => p.BaseProperty).HasColumnType("date");
+            modelBuilder.Entity<Repro150248_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
+            modelBuilder.Entity<Repro150248_DerivedDependent>().Property(p => p.DerivedProperty1).HasColumnType("smallmoney");
+            modelBuilder.Entity<Repro150248_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
+            modelBuilder.Entity<Repro150248_BaseDependent>().HasKey(e => e.Key1);
+            modelBuilder.Entity<Repro150248_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            BuildMapping(modelBuilder);
         }
 
         [Fact]
         public void TPT_with_no_asociation_between_middle_types()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro150248_Principal>().Ignore(e => e.DependentNavigation);
+            modelBuilder.Entity<Repro150248_Principal>().Ignore(e => e.DependentNavigation);
             // Works if this line is commented out.
-            builder.Entity<Repro150248_DerivedPrincipal>().Property(p => p.DerivedProperty1).HasColumnType(
+            modelBuilder.Entity<Repro150248_DerivedPrincipal>().Property(p => p.DerivedProperty1).HasColumnType(
                 "nvarchar(max)").IsUnicode();
-            builder.Entity<Repro150248_Dependent>().Ignore(e => e.PrincipalNavigation);
-            builder.Entity<Repro150248_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
-            builder.Entity<Repro150248_DerivedDependent>().Map(mapping => { mapping.ToTable("DerivedDependent"); });
-            builder.Entity<Repro150248_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
-            builder.Entity<Repro150248_BaseDependent>().Property(p => p.BaseProperty).HasColumnType("date");
-            builder.Entity<Repro150248_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
-            builder.Entity<Repro150248_DerivedDependent>().Property(p => p.DerivedProperty1).HasColumnType("smallmoney");
-            builder.Entity<Repro150248_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
-            builder.Entity<Repro150248_BaseDependent>().HasKey(e => e.Key1);
-            builder.Entity<Repro150248_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
+            modelBuilder.Entity<Repro150248_Dependent>().Ignore(e => e.PrincipalNavigation);
+            modelBuilder.Entity<Repro150248_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
+            modelBuilder.Entity<Repro150248_DerivedDependent>().Map(mapping => { mapping.ToTable("DerivedDependent"); });
+            modelBuilder.Entity<Repro150248_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
+            modelBuilder.Entity<Repro150248_BaseDependent>().Property(p => p.BaseProperty).HasColumnType("date");
+            modelBuilder.Entity<Repro150248_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
+            modelBuilder.Entity<Repro150248_DerivedDependent>().Property(p => p.DerivedProperty1).HasColumnType("smallmoney");
+            modelBuilder.Entity<Repro150248_DerivedPrincipal>().Map(mapping => { mapping.ToTable("DerivedPrincipal"); });
+            modelBuilder.Entity<Repro150248_BaseDependent>().HasKey(e => e.Key1);
+            modelBuilder.Entity<Repro150248_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            BuildMapping(modelBuilder);
         }
 
         [Fact]
         public void TPT_with_required_to_optional_IA_on_derived_type_creates_non_nullable_FK()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro150634_BaseDependent>().HasKey(
+            modelBuilder.Entity<Repro150634_BaseDependent>().HasKey(
                 e => new
                          {
                              e.Key1,
                              e.Key2,
                          });
-            builder.Entity<Repro150634_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
-            builder.Entity<Repro150634_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
-            builder.Entity<Repro150634_Dependent>().HasRequired(e => e.PrincipalNavigation).WithOptional(
+            modelBuilder.Entity<Repro150634_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
+            modelBuilder.Entity<Repro150634_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
+            modelBuilder.Entity<Repro150634_Dependent>().HasRequired(e => e.PrincipalNavigation).WithOptional(
                 e => e.DependentNavigation)
                 .Map(_ => { }).WillCascadeOnDelete(false);
 
-            builder.Entity<Repro150634_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
-            builder.Ignore<Repro150634_DerivedDependent>();
+            modelBuilder.Entity<Repro150634_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
+            modelBuilder.Ignore<Repro150634_DerivedDependent>();
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro150634_Dependent>("Dependent")
                 .DbEqual(false, t => t.Properties.Single(x => x.Name == "PrincipalNavigation_Id").Nullable);
@@ -3460,24 +3463,24 @@ namespace FunctionalTests
         [Fact]
         public void TPT_with_required_to_optional_IA_on_derived_middle_type_creates_non_nullable_FK()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro150634_BaseDependent>().HasKey(
+            modelBuilder.Entity<Repro150634_BaseDependent>().HasKey(
                 e => new
                          {
                              e.Key1,
                              e.Key2,
                          });
-            builder.Entity<Repro150634_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
-            builder.Entity<Repro150634_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
-            builder.Entity<Repro150634_Dependent>().HasRequired(e => e.PrincipalNavigation).WithOptional(
+            modelBuilder.Entity<Repro150634_Dependent>().Map(mapping => { mapping.ToTable("Dependent"); });
+            modelBuilder.Entity<Repro150634_BaseDependent>().Map(mapping => { mapping.ToTable("BaseDependent"); });
+            modelBuilder.Entity<Repro150634_Dependent>().HasRequired(e => e.PrincipalNavigation).WithOptional(
                 e => e.DependentNavigation)
                 .Map(_ => { }).WillCascadeOnDelete(false);
 
-            builder.Entity<Repro150634_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
-            builder.Entity<Repro150634_DerivedDependent>().ToTable("DerivedDependent");
+            modelBuilder.Entity<Repro150634_Principal>().Map(mapping => { mapping.ToTable("Principal"); });
+            modelBuilder.Entity<Repro150634_DerivedDependent>().ToTable("DerivedDependent");
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Repro150634_Dependent>("Dependent")
                 .DbEqual(false, t => t.Properties.Single(x => x.Name == "PrincipalNavigation_Id").Nullable);
@@ -3536,7 +3539,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(
@@ -3590,7 +3593,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(
@@ -3618,7 +3621,7 @@ namespace FunctionalTests
         //    modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1");
         //    modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2");
 
-        //    var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+        //    var databaseMapping = BuildMapping(modelBuilder).DatabaseMapping;
 
         //    Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         //    Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.Count);
@@ -3635,7 +3638,7 @@ namespace FunctionalTests
         //    modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1");
         //    modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2");
 
-        //    var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+        //    var databaseMapping = BuildMapping(modelBuilder).DatabaseMapping;
 
         //    Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         //    Assert.Equal(3, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.Count);
@@ -3663,7 +3666,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3694,7 +3697,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3725,7 +3728,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3771,7 +3774,7 @@ namespace FunctionalTests
                         mapping.ToTable("DerivedDependent2");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<CKCategory>()
                 .DbEqual(0, t => t.ForeignKeyBuilders.Count());
@@ -3810,7 +3813,7 @@ namespace FunctionalTests
                             mc.ToTable("Derived2");
                             mc.MapInheritedProperties();
                         });
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.Assert<ByteDerived>().DbEqual(
                 "image",
                 t => t.Properties.Single(c => c.Name == "DerivedData").TypeName);
@@ -3858,7 +3861,7 @@ namespace FunctionalTests
                         mapping.ToTable("Repro165020_DerivedDependent");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.Assert<Repro165020_DerivedDependent>().DbEqual(
                 "date", t => t.Properties.Single(c => c.Name == "PrincipalNavigation_Key1").TypeName);
             databaseMapping.Assert<Repro165020_DerivedDependent>().DbEqual(
@@ -3880,7 +3883,7 @@ namespace FunctionalTests
                             m.ToTable("OldDepartment");
                         });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<AssocBase_Employee>().HasNoForeignKeyColumns();
             databaseMapping.Assert<AssocBase_Department>().HasNoForeignKeyColumns();
@@ -3907,7 +3910,7 @@ namespace FunctionalTests
                         mapping.ToTable("Derived");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3949,7 +3952,7 @@ namespace FunctionalTests
                             m.ToTable("People");
                         });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -3975,7 +3978,7 @@ namespace FunctionalTests
                         m.ToTable("Table3");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -3997,7 +4000,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro144459_DiscontinuedProduct>().Map(mapping => { mapping.MapInheritedProperties(); })
                 .ToTable("DiscontinuedProduct");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4026,7 +4029,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro110459_Order>().HasRequired(o => o.BillToCustomer).WithMany(c => c.Orders).
                 HasForeignKey(o => o.BillToCustomerId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
         }
 
         #endregion
@@ -4041,7 +4044,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TPHRoot>().ToTable("Woof");
             modelBuilder.Entity<TPHNodeC>().ToTable("TableC");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TPHRoot>("Woof")
@@ -4076,7 +4079,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL1B>().ToTable("L1B");
             modelBuilder.Entity<HybridL2>().ToTable("L2");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<HybridBase>("Base")
@@ -4107,7 +4110,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridBase>().ToTable("Base");
             modelBuilder.Entity<HybridL1A>().ToTable("A");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4141,7 +4144,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL1A>().ToTable("A");
             modelBuilder.Entity<HybridL2>().Map(mc => { });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4177,7 +4180,7 @@ namespace FunctionalTests
                 .Map<Repro143351_A4>(mapping => { mapping.Requires("luqkau").HasValue("3"); })
                 .ToTable("A1");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -4199,7 +4202,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL2>();
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4225,7 +4228,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL2>();
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4246,7 +4249,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL2>();
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4260,7 +4263,7 @@ namespace FunctionalTests
             modelBuilder.Entity<HybridL1B>();
             modelBuilder.Entity<HybridL2>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<HybridBase>("HybridBases")
@@ -4295,7 +4298,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ECrazy>();
             modelBuilder.Ignore<XCrazy>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4328,7 +4331,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ECrazy>();
             modelBuilder.Entity<XCrazy>().ToTable("Tx");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4418,7 +4421,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Entity5>().Property(p => p.Entity5_Col4).HasColumnType("decimal").HasPrecision(28, 4);
             modelBuilder.Entity<Entity5>().Property(p => p.Entity5_Col5).HasColumnType("date");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -4433,7 +4436,7 @@ namespace FunctionalTests
                 .Map<Repro137329_A3>(mapping => { mapping.ToTable("A3"); })
                 .Map<Repro137329_A4>(mapping => { mapping.ToTable("A4"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -4456,7 +4459,7 @@ namespace FunctionalTests
                             });
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4472,7 +4475,7 @@ namespace FunctionalTests
                     }).Map<Repro137329_A4>(mapping => { mapping.ToTable("A4"); });
 
             Assert.Throws<NotSupportedException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo));
+                () => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4490,7 +4493,7 @@ namespace FunctionalTests
                         mapping.MapInheritedProperties();
                     });
 
-            Assert.Throws<NotSupportedException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<NotSupportedException>(() => BuildMapping(modelBuilder));
         }
 
         #endregion
@@ -4519,7 +4522,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4558,7 +4561,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("NameTbl")
@@ -4630,7 +4633,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4684,7 +4687,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4731,7 +4734,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4747,7 +4750,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<AssocBase>()
                     .Map<AssocDerived>(mc => { }));
 
-            modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            BuildMapping(modelBuilder);
         }
 
         [Fact]
@@ -4761,7 +4764,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>()
                 .Map(mc => mc.ToTable("deriveds"));
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4797,7 +4800,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4833,7 +4836,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4848,7 +4851,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4874,7 +4877,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -4918,7 +4921,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -4974,7 +4977,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Ignore<AssocDerived>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>("NameTbl").HasColumns("Id", "Name");
@@ -5016,7 +5019,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>().HasColumns("Id", "Name", "BaseData");
@@ -5058,7 +5061,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocDerived>().HasColumns("Id", "DerivedData1", "DerivedData2");
@@ -5101,7 +5104,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocBase>().HasColumns("Id", "Name", "BaseData");
@@ -5149,7 +5152,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AssocDerived>().HasColumns("Id", "Name", "BaseData", "DerivedData1", "DerivedData2");
@@ -5182,7 +5185,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro147822_EntityB>().Map(mapping => { mapping.ToTable("Table3"); });
             modelBuilder.Entity<Repro147822_EntityC>().Map(mapping => { mapping.ToTable("Table4"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5231,7 +5234,7 @@ namespace FunctionalTests
                         mapping.Properties(e => e.Property6);
                     });
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -5266,7 +5269,7 @@ namespace FunctionalTests
                         mapping.Properties(e => e.Property6);
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5310,7 +5313,7 @@ namespace FunctionalTests
                         mapping.Requires("d").HasValue("EntityC1_1");
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5336,22 +5339,22 @@ namespace FunctionalTests
         [Fact]
         public void Entity_split_middle_type_in_TPH()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro147929_EntityB1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Requires("d").HasValue("EntityB1");
                     });
-            builder.Entity<Repro147929_EntityB1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Properties(e => e.Property1);
                         mapping.Requires("d").HasValue("EntityB1_1");
                     });
-            builder.Entity<Repro147929_EntityB1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5362,35 +5365,37 @@ namespace FunctionalTests
                                          e.Property3
                                      });
                     });
-            builder.Entity<Repro147929_EntityB1_1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Requires("d").HasValue("EntityB1_1_1");
                     });
 
-            builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, true);
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
         }
 
         [Fact]
         public void Entity_split_middle_type_in_TPH2()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<Repro147929_EntityB1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Requires("d").HasValue("EntityB1");
                     });
-            builder.Entity<Repro147929_EntityB1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Properties(e => e.Property1);
                         mapping.Requires("d").HasValue("EntityB1_1");
                     });
-            builder.Entity<Repro147929_EntityB1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5401,14 +5406,14 @@ namespace FunctionalTests
                                          e.Property3
                                      });
                     });
-            builder.Entity<Repro147929_EntityB1_1_1>().Map(
+            modelBuilder.Entity<Repro147929_EntityB1_1_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Requires("d").HasValue("EntityB1_1_1");
                     });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -5416,28 +5421,28 @@ namespace FunctionalTests
         [Fact]
         public void Entity_splitting_maintains_configured_composite_key_ordering()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<EntityWithCompositePK>().Map(
+            modelBuilder.Entity<EntityWithCompositePK>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table1");
                         mapping.Properties(e => e.Property1);
                     });
-            builder.Entity<EntityWithCompositePK>().Map(
+            modelBuilder.Entity<EntityWithCompositePK>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
                         mapping.Properties(e => e.Property2);
                     });
-            builder.Entity<EntityWithCompositePK>().HasKey(
+            modelBuilder.Entity<EntityWithCompositePK>().HasKey(
                 e => new
                          {
                              e.Key2,
                              e.Key1,
                          });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5451,10 +5456,10 @@ namespace FunctionalTests
         [Fact]
         public void Entity_splitting_derived_table_creates_FK_to_first_table()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5466,14 +5471,14 @@ namespace FunctionalTests
                                      });
                         mapping.Properties(e => e.Property3);
                     });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table3");
                         mapping.Properties(e => e.Property4);
                     });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5490,10 +5495,10 @@ namespace FunctionalTests
         [Fact]
         public void Entity_splitting_derived_TPC_creates_FK_to_first_table()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5504,7 +5509,7 @@ namespace FunctionalTests
                                          e.Property3
                                      });
                     });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table3");
@@ -5516,7 +5521,7 @@ namespace FunctionalTests
                                      });
                     });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5533,10 +5538,10 @@ namespace FunctionalTests
         [Fact]
         public void Entity_splitting_all_inherited_props_in_derived_TPC_creates_FK_to_first_table()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5547,7 +5552,7 @@ namespace FunctionalTests
                                          e.Property4
                                      });
                     });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table3");
@@ -5559,7 +5564,7 @@ namespace FunctionalTests
                                      });
                     });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5576,10 +5581,10 @@ namespace FunctionalTests
         [Fact]
         public void Entity_splitting_derived_TPT_creates_FK_to_first_table()
         {
-            var builder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            builder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL>().Map(mapping => { mapping.ToTable("Table1"); });
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table2");
@@ -5589,7 +5594,7 @@ namespace FunctionalTests
                                          e.Property3
                                      });
                     });
-            builder.Entity<EntityL_1>().Map(
+            modelBuilder.Entity<EntityL_1>().Map(
                 mapping =>
                     {
                         mapping.ToTable("Table3");
@@ -5600,7 +5605,7 @@ namespace FunctionalTests
                                      });
                     });
 
-            var databaseMapping = builder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
 
@@ -5654,7 +5659,7 @@ namespace FunctionalTests
                                     mc.ToTable("Tbl3");
                                 });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             var mws = databaseMapping.ToMetadataWorkspace();
 
@@ -5680,7 +5685,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetail>().ToTable("Items");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetail).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TSItem>("Items").DbEqual(3, t => t.Properties.Count);
@@ -5718,7 +5723,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+                BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -5734,7 +5739,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetail>().Property(i => i.Id).HasColumnType("ntext");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetail).WithRequiredPrincipal();
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -5749,7 +5754,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetailDiffKey>().ToTable("Items");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetailDiffKey).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TSItem>("Items").DbEqual(3, t => t.Properties.Count);
@@ -5770,7 +5775,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetailDiffKey>().ToTable("Items");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetailDiffKey).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TSItem>("Items").DbEqual(3, t => t.Properties.Count);
@@ -5791,7 +5796,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetailDiffKey>().ToTable("Items");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetailDiffKey).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TSItem>("Items").DbEqual(3, t => t.Properties.Count);
@@ -5810,7 +5815,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetailOverlappingProperty>().ToTable("Items");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetailOverlappingProperty).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<TSItem>("Items").HasColumns("Id", "Name", "Name1");
         }
@@ -5827,7 +5832,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSItemDetailOverlappingProperty>().Property(x => x.Name).HasColumnName("OtherName");
             modelBuilder.Entity<TSItem>().HasRequired(i => i.TSItemDetailOverlappingProperty).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<TSItem>("Items").DbEqual(3, t => t.Properties.Count);
@@ -5845,7 +5850,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSIAItem>().HasRequired(i => i.Detail).WithRequiredPrincipal();
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                 .ValidateMessage("EntityMappingConfiguration_InvalidTableSharing", "TSIAItemDetail", "TSIAItem", "Items");
         }
 
@@ -5870,7 +5875,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSBaseDetail>().Map(mc => { mc.ToTable("TS"); });
             modelBuilder.Entity<TSBase>().HasRequired(i => i.BaseDetail).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.Assert<TSBase>("TS").HasColumns("Id", "BaseData", "DerivedData", "disc", "BaseDetail");
             databaseMapping.Assert<TSDerived>("TS").HasColumns("Id", "BaseData", "DerivedData", "disc", "BaseDetail");
             databaseMapping.Assert<TSBaseDetail>("TS").HasColumns("Id", "BaseData", "DerivedData", "disc", "BaseDetail");
@@ -5887,7 +5892,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSBaseDetail>().Map(mc => { mc.ToTable("TSBase"); });
             modelBuilder.Entity<TSBase>().HasRequired(i => i.BaseDetail).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.Assert<TSBase>("TSBase").HasColumns(
                 "Id", "BaseData", "DerivedData", "Discriminator",
                 "BaseDetail");
@@ -5910,7 +5915,7 @@ namespace FunctionalTests
             modelBuilder.Entity<TSDerived>().Ignore(x => x.Detail);
             modelBuilder.Entity<TSBase>().HasRequired(i => i.BaseDetail).WithRequiredPrincipal();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.Assert<TSBase>("A").HasColumns("Id", "BaseData", "BaseDetail");
             databaseMapping.Assert<TSDerived>("B").HasColumns("Id", "DerivedData");
             databaseMapping.Assert<TSBaseDetail>("A").HasColumns("Id", "BaseData", "BaseDetail");
@@ -5934,7 +5939,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro140107_Model>().Property(p => p.Repro140107_ModelId).HasColumnType("int");
             modelBuilder.Entity<Repro140107_Model>().Property(p => p.Description).HasColumnType("bit");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
         }
 
         [Fact]
@@ -5955,8 +5960,9 @@ namespace FunctionalTests
 
             modelBuilder.Entity<TSBase>().HasRequired(i => i.BaseDetail).WithRequiredPrincipal();
 
-            Assert.Throws<MappingException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, true));
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
         }
 
         [Fact]
@@ -5986,8 +5992,9 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro140106_Model>().Property(p => p.Description).HasColumnType("numeric").HasPrecision(
                 15, 5);
 
-            Assert.Throws<MappingException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, true));
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
         }
 
         [Fact]
@@ -6014,8 +6021,9 @@ namespace FunctionalTests
                 HasMaxLength(40).IsUnicode().IsVariableLength();
             modelBuilder.Entity<TPCModel>().Property(p => p.Description).HasColumnType("numeric").HasPrecision(15, 5);
 
-            Assert.Throws<MappingException>(
-                () => modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo, true));
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
         }
 
         #endregion
@@ -6053,7 +6061,7 @@ namespace FunctionalTests
                             mc.ToTable("Work");
                         });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<CTBase>("Home").HasColumns("Id", "HomeAddress_Street", "HomeAddress_City");
@@ -6092,7 +6100,7 @@ namespace FunctionalTests
                             mc.ToTable("HomeCity");
                         });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<CTBase>("HomeStreet").HasColumns("Id", "HomeAddress_Street");
@@ -6112,7 +6120,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsInMiddleL1>();
             modelBuilder.Entity<AbsInMiddleL2>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AbsInMiddle>("AbsInMiddles").HasColumns(
                 "Id", "Data", "L1Data", "L2Data",
@@ -6132,7 +6140,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsInMiddleL1>().ToTable("L1");
             modelBuilder.Entity<AbsInMiddleL2>().ToTable("L2");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.Assert<AbsInMiddle>("Base").HasColumns("Id", "Data");
             databaseMapping.Assert<AbsInMiddleL1>("L1").HasColumns("Id", "L1Data");
@@ -6140,24 +6148,22 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Abstract_in_middle_of_hierarchy_with_TPC()
+        public virtual void Abstract_in_middle_of_hierarchy_with_TPC()
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<AbsInMiddle>().ToTable("Base");
-            modelBuilder.Entity<AbsInMiddleL2>(
-                
-                ).Map(
+            modelBuilder.Entity<AbsInMiddleL2>()
+                .Map(
                     mc =>
                         {
                             mc.ToTable("L2");
                             mc.MapInheritedProperties();
                         });
-
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-
             Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
             databaseMapping.Assert<AbsInMiddle>("Base").HasColumns("Id", "Data");
             databaseMapping.Assert<AbsInMiddleL2>("L2").HasColumns("Id", "Data", "L1Data", "L2Data");
@@ -6191,7 +6197,7 @@ namespace FunctionalTests
                     });
             modelBuilder.Entity<EntityN_1_1>().Map(mapping => { mapping.ToTable("Table4"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -6227,7 +6233,7 @@ namespace FunctionalTests
                                      });
                     });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -6246,7 +6252,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsAtBaseL1>().Property(p => p.L1Data).IsRequired();
             modelBuilder.Ignore<AbsAtBaseL2>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.AssertMapping<AbsAtBase>("AbsAtBases", true).HasNoColumnConditions();
             databaseMapping.AssertMapping<AbsAtBaseL1>("AbsAtBases").HasNullabilityColumnCondition("L1Data", false);
@@ -6262,7 +6268,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AbsAtBaseL1>().Property(p => p.L1Data).IsRequired();
             modelBuilder.Ignore<AbsAtBaseL2>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.AssertMapping<AbsAtBase>("AbsAtBases").HasNoColumnConditions();
             databaseMapping.AssertMapping<AbsAtBaseL1>("AbsAtBases").HasNullabilityColumnCondition("L1Data", false);
@@ -6297,7 +6303,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AbsDerivedSplit>().Map(mc => { mc.ToTable("Derived"); });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -6329,7 +6335,7 @@ namespace FunctionalTests
                                              });
                             });
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }

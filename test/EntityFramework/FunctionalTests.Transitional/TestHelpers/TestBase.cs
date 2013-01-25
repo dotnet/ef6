@@ -30,6 +30,8 @@ namespace System.Data.Entity
 
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
         {
+            OnModelCreating(modelBuilder);
+
             // Build and clone to check for idempotency issues.
 
             modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -37,6 +39,11 @@ namespace System.Data.Entity
             var clone = modelBuilder.Clone();
 
             return clone.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+        }
+
+        protected virtual void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // For fixture wide configuration
         }
 
         internal DbDatabaseMapping BuildCeMapping(DbModelBuilder modelBuilder)

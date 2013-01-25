@@ -80,5 +80,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.UnitTests
             Assert.NotNull(property.TypeUsage);
             Assert.True(property.IsEnumType);
         }
+
+        [Fact]
+        public void HasStoreGeneratedPattern_should_return_true_when_not_null_or_none()
+        {
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            Assert.False(property.HasStoreGeneratedPattern());
+
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
+
+            Assert.False(property.HasStoreGeneratedPattern());
+
+            property.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
+
+            Assert.True(property.HasStoreGeneratedPattern());
+        }
     }
 }

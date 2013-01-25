@@ -16,7 +16,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class ComplexTypeScenarioTests : TestBase
+    public class ComplexTypeScenarioTests : TestBase
     {
         [Fact]
         public void Can_configure_complex_column_name_after_entity_splitting()
@@ -198,7 +198,7 @@ namespace FunctionalTests
             modelBuilder.ComplexType<ComplexType>();
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                 .ValidateMessage("CircularComplexTypeHierarchy");
         }
 
@@ -211,7 +211,7 @@ namespace FunctionalTests
                 .HasKey(th => th.TransactionID);
             modelBuilder.ComplexType<RowDetails>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<TransactionHistory>(th => th.RowDetails);
         }
@@ -224,7 +224,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ProductDescription>();
             modelBuilder.ComplexType<RowDetails>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
@@ -233,13 +233,11 @@ namespace FunctionalTests
         [Fact]
         public void Build_model_containing_a_complex_type_with_annotations()
         {
-            var modelBuilder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder(typeof(RowDetails));
 
             modelBuilder.Entity<ProductDescription>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(
-                ProviderRegistry.Sql2008_ProviderInfo,
-                typeof(RowDetails));
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
@@ -248,13 +246,11 @@ namespace FunctionalTests
         [Fact]
         public void Build_model_containing_a_complex_type_by_convention()
         {
-            var modelBuilder = new AdventureWorksModelBuilder();
+            var modelBuilder = new AdventureWorksModelBuilder(typeof(UnitMeasure));
 
             modelBuilder.Entity<BillOfMaterials>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(
-                ProviderRegistry.Sql2008_ProviderInfo,
-                typeof(UnitMeasure));
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
@@ -272,7 +268,7 @@ namespace FunctionalTests
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
                 .HasColumnName("ROW_GUID");
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -290,7 +286,7 @@ namespace FunctionalTests
                 .HasColumnName("row_guid");
             modelBuilder.Entity<Contact>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -306,7 +302,7 @@ namespace FunctionalTests
             modelBuilder.ComplexType<RowDetails>();
             modelBuilder.Entity<Contact>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -322,7 +318,7 @@ namespace FunctionalTests
                 .HasColumnType("binary")
                 .HasMaxLength(42);
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<LargePhoto>(l => l.Photo)
                 .FacetEqual(42, f => f.MaxLength)
@@ -341,7 +337,7 @@ namespace FunctionalTests
                 .Property(rd => rd.rowguid)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-            Assert.Throws<InvalidOperationException>(() => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo));
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]

@@ -4,7 +4,6 @@ namespace FunctionalTests
 {
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Services;
     using System.Data.Services.Common;
@@ -15,28 +14,17 @@ namespace FunctionalTests
         [Fact]
         public void Validate_Basic_DataServices_Attributes()
         {
-            var modelBuilder = new DataServicesModelBuilder();
+            var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<DataServiceFoo>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             var mws = databaseMapping.ToMetadataWorkspace();
 
             var edmCollection = mws.GetItemCollection(DataSpace.CSpace);
+
             edmCollection.GetItem<EntityType>("CodeFirstNamespace.DataServiceFoo");
-        }
-    }
-
-    public sealed class DataServicesModelBuilder : DbModelBuilder
-    {
-        internal DbDatabaseMapping BuildAndValidate(DbProviderInfo providerInfo)
-        {
-            var databaseMapping = base.Build(providerInfo).DatabaseMapping;
-
-            databaseMapping.AssertValid();
-
-            return databaseMapping;
         }
     }
 

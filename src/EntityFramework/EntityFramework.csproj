@@ -402,6 +402,8 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionBase.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHaving.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGenerator.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGenerator.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
@@ -1670,7 +1672,7 @@
     <Compile Include="ModelConfiguration\Edm\Serialization\EdmxSerializer.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\AssociationTypeMappingGenerator.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\DatabaseMappingGenerator.cs" />
-    <Compile Include="ModelConfiguration\Edm\Services\EntityTypeMappingGenerator.cs" />
+    <Compile Include="ModelConfiguration\Edm\Services\TableMappingGenerator.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\PropertyMappingGenerator.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\StructuralTypeMappingGenerator.cs" />
     <Compile Include="ModelConfiguration\EntityTypeConfiguration.cs" />

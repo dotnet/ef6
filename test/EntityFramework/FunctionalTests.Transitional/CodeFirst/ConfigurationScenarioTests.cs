@@ -12,7 +12,7 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    public sealed class ConfigurationScenarioTests : TestBase
+    public class ConfigurationScenarioTests : TestBase
     {
         [Fact]
         public void Can_set_store_type_with_column_annotation_on_base_property()
@@ -162,7 +162,7 @@ namespace FunctionalTests
             modelBuilder.Entity<CompositeKeyNoOrder>();
 
             Assert.Throws<InvalidOperationException>(
-                () => modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                () => BuildMapping(modelBuilder))
                 .ValidateMessage("ModelGeneration_UnableToDetermineKeyOrder", typeof(CompositeKeyNoOrder));
         }
 
@@ -209,7 +209,7 @@ namespace FunctionalTests
                 .Add(new ProductCategoryConfiguration())
                 .Add(new ProductSubcategoryConfiguration());
 
-            modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            BuildMapping(modelBuilder);
         }
 
         private class ProductCategoryConfiguration : EntityTypeConfiguration<ProductCategory>
@@ -281,7 +281,7 @@ namespace FunctionalTests
 
             modelBuilder.Configurations.Add(new CreditCard.CreditCardConfiguration());
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<CreditCard>().HasColumn("CardNumber");
         }

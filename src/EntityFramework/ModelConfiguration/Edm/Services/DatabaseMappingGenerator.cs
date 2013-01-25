@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -34,9 +35,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var databaseMapping = InitializeDatabaseMapping(model);
 
-            GenerateEntityTypes(model, databaseMapping);
+            GenerateEntityTypes(databaseMapping);
             GenerateDiscriminators(databaseMapping);
-            GenerateAssociationTypes(model, databaseMapping);
+            GenerateAssociationTypes(databaseMapping);
+            GenerateModificationFunctions(databaseMapping);
 
             return databaseMapping;
         }
@@ -52,16 +54,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             return databaseMapping;
         }
 
-        private void GenerateEntityTypes(EdmModel model, DbDatabaseMapping databaseMapping)
+        private void GenerateEntityTypes(DbDatabaseMapping databaseMapping)
         {
-            DebugCheck.NotNull(model);
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var entityType in model.EntityTypes)
+            foreach (var entityType in databaseMapping.Model.EntityTypes)
             {
                 if (!entityType.Abstract)
                 {
-                    new EntityTypeMappingGenerator(_providerManifest).
+                    new TableMappingGenerator(_providerManifest).
                         Generate(entityType, databaseMapping);
                 }
             }
@@ -73,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var entitySetMapping in databaseMapping.GetEntitySetMappings())
             {
-                if (entitySetMapping.EntityTypeMappings.Count() == 1)
+                if (entitySetMapping.EntityTypeMappings.Count() <= 1)
                 {
                     continue;
                 }
@@ -107,15 +108,32 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             }
         }
 
-        private void GenerateAssociationTypes(EdmModel model, DbDatabaseMapping databaseMapping)
+        private void GenerateAssociationTypes(DbDatabaseMapping databaseMapping)
         {
-            DebugCheck.NotNull(model);
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var associationType in model.AssociationTypes)
+            foreach (var associationType in databaseMapping.Model.AssociationTypes)
             {
                 new AssociationTypeMappingGenerator(_providerManifest)
                     .Generate(associationType, databaseMapping);
+            }
+        }
+
+        private void GenerateModificationFunctions(DbDatabaseMapping databaseMapping)
+        {
+            foreach (var entityType in databaseMapping.Model.EntityTypes)
+            {
+                if (!entityType.Abstract)
+                {
+                    var configuration = entityType.GetRootType().GetConfiguration() as EntityTypeConfiguration;
+
+                    if ((configuration != null)
+                        && configuration.IsMappedToFunctions)
+                    {
+                        new ModificationFunctionMappingGenerator(_providerManifest).
+                            Generate(entityType, databaseMapping);
+                    }
+                }
             }
         }
     }

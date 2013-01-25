@@ -10,7 +10,7 @@ namespace FunctionalTests
     using FunctionalTests.Fixtures;
     using Xunit;
 
-    public sealed class EnumsScenarioTests : TestBase
+    public class EnumsScenarioTests : TestBase
     {
         [Fact]
         public void Simple_enum_mapping_scenario()
@@ -59,7 +59,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Enum_Product_PK>();
 
-            var databaseMapping = modelBuilder.BuildAndValidate(ProviderRegistry.Sql2008_ProviderInfo);
+            var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -165,7 +165,7 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("UnsupportedUseOfV3Type", "Enum_Product", "CategoryId");
         }
 
@@ -178,7 +178,7 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("UnsupportedUseOfV3Type", "Enum_Nullable", "CategoryId");
         }
 
@@ -191,7 +191,7 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("UnsupportedUseOfV3Type", "Enum_ComplexType", "Enum");
         }
 
@@ -204,7 +204,7 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("UnsupportedUseOfV3Type", "Enum_Product", "CategoryId");
         }
 
@@ -222,7 +222,7 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () =>
-                modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("UnsupportedUseOfV3Type", "Enum_Product", "CategoryId");
         }
 
@@ -240,8 +240,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () =>
-                modelBuilder.Build(
-                    ProviderRegistry.Sql2008_ProviderInfo))
+                BuildMapping(modelBuilder))
                 .ValidateMessage("EntityMappingConfiguration_CannotMapIgnoredProperty", "Enum_Product", "CategoryId");
         }
     }
