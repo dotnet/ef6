@@ -37,11 +37,11 @@ namespace System.Data.Entity.Meta
         private bool IsTypeTestClass(Type type)
         {
             return type.GetMethods()
-                .Any(method => method.GetCustomAttributes()
+                .Any(method => method.GetCustomAttributes(inherit: true)
                     .Any(attribute =>
                     {
-                        var attribType = attribute.TypeId as Type;
-
+                        var attribType = (attribute as Attribute).TypeId as Type;
+                        
                         return attribType != null 
                             ? attribType.Namespace == "Xunit"
                             : false;    
