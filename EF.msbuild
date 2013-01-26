@@ -17,6 +17,7 @@
     <Target Name="PreRestorePackages">
         <ItemGroup>
             <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
+            <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests.Transitional\*.csproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
     </Target>

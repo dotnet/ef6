@@ -610,6 +610,10 @@
       <Name>Migrate</Name>
       <Aliases>migrate</Aliases>
     </ProjectReference>
+    <ProjectReference Include="..\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
+      <Project>{3d65611f-e8fb-4a33-9196-7836969d6378}</Project>
+      <Name>FunctionalTests.Transitional</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj">
       <Project>{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}</Project>
       <Name>FunctionalTests</Name>

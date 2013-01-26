@@ -126,7 +126,7 @@ namespace ProductivityApiTests
             // Create a derived type in a new assembly
             var provider = new CSharpCodeProvider();
             var result = provider.CompileAssemblyFromSource(
-                new CompilerParameters(new[] { GetType().Assembly.Location }),
+                new CompilerParameters(new[] { typeof(Category).Assembly.Location }),
                 "public class DerivedCategory : SimpleModel.Category { }");
 
             var derivedCategoryType = result.CompiledAssembly.GetTypes().Single();
