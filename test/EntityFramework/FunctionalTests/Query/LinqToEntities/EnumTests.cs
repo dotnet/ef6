@@ -2,387 +2,408 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
-    using System.Data.Entity.TestModels.ArubaModel;
-    using System.Text;
-    using System.Xml;
-    using SimpleModel;
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestModels.ArubaModel;
     using System.Data.Entity.Resources;
     using System.IO;
     using System.Linq;
     using Xunit;
-
-    public enum Category
-    {
-        Beverages = 1,
-        Condiments = 2,
-        Confections = 3,
-        DairyProducts = 4,
-        GrainsCereals = 5,
-        MeatPoultry = 6,
-        Produce = 7,
-    };
-
-    public enum ByteBasedColor : byte
-    {
-        Red = 1,
-        Blue = 2,
-        Green = 3,
-        Black = 4,
-        White = 5,
-    };
-
-    public class Product
-    {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
-        public byte Code { get; set; }
-        public Category ProductCategory { get; set; }
-        public ByteBasedColor Color { get; set; }
-    }
-
-    public class ProductWithEnumsContext : DbContext
-    {
-        public DbSet<Product> Products { get; set; }
-    }
 
     public class EnumTests : FunctionalTestBase
     {
         [Fact]
         public void Cast_property_to_enum()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 1 =  CAST( [Extent1].[ProductId] AS int)";
+[Extent1].[c33_enum] AS [c33_enum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE 1 =  CAST( [Extent1].[c33_enum] AS int)";
 
-                var query = context.Products.Where(p => (Category)p.ProductId == Category.Beverages).Select(p => p.ProductName);
-
+                var query = context.AllTypes.Where(a => a.c33_enum == ArubaEnum.EnumValue1).Select(a => a.c33_enum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out (verify count and value)
+                var results = query.ToList();
+                var expectedCount = context.AllTypes.ToList().Count(a => a.c33_enum == ArubaEnum.EnumValue1);
+                Assert.True(results.All(r => r == ArubaEnum.EnumValue1));
+                Assert.Equal(expectedCount, results.Count);
             }
         }
 
         [Fact]
         public void Cast_property_to_byte_enum()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 4 =  CAST( [Extent1].[Code] AS int)";
+[Extent1].[c34_byteenum] AS [c34_byteenum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
 
-                var query = context.Products.Where(p => (ByteBasedColor)p.Code == ByteBasedColor.Black).Select(p => p.ProductName);
-
+                var query = context.AllTypes.Where(a => a.c34_byteenum == ArubaByteEnum.ByteEnumValue2).Select(a => a.c34_byteenum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out (verify count and value)
+                var results = query.ToList();
+                var expectedCount = context.AllTypes.ToList().Count(a => a.c34_byteenum == ArubaByteEnum.ByteEnumValue2);
+                Assert.True(results.All(r => r == ArubaByteEnum.ByteEnumValue2));
+                Assert.Equal(expectedCount, results.Count);
             }
         }
 
         [Fact]
         public void Cast_constant_to_enum()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 1 =  CAST( [Extent1].[ProductCategory] AS int)";
+[Extent1].[c33_enum] AS [c33_enum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE 1 =  CAST( [Extent1].[c33_enum] AS int)";
 
-                var query = context.Products.Where(p => p.ProductCategory == (Category)1).Select(p => p.ProductName);
-
+                var query = context.AllTypes.Where(a => a.c33_enum == (ArubaEnum)1).Select(a => a.c33_enum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out (verify count and value)
+                var results = query.ToList();
+                var expectedCount = context.AllTypes.ToList().Count(a => a.c33_enum == (ArubaEnum)1);
+                Assert.True(results.All(r => r == ArubaEnum.EnumValue1));
+                Assert.Equal(expectedCount, results.Count);
             }
         }
 
         [Fact]
         public void Cast_constant_to_byte_enum()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 2 =  CAST( [Extent1].[Color] AS int)";
+[Extent1].[c34_byteenum] AS [c34_byteenum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
 
-                var query = context.Products.Where(p => p.Color == (ByteBasedColor)2).Select(p => p.ProductName);
-
+                var query = context.AllTypes.Where(a => a.c34_byteenum == (ArubaByteEnum)2).Select(a => a.c34_byteenum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out (verify count and value)
+                var results = query.ToList();
+                var expectedCount = context.AllTypes.ToList().Count(a => a.c34_byteenum == (ArubaByteEnum)2);
+                Assert.True(results.All(r => r == ArubaByteEnum.ByteEnumValue2));
+                Assert.Equal(expectedCount, results.Count);
             }
         }
 
         [Fact]
         public void Is_on_enum_not_supported()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var message = Assert.Throws<NotSupportedException>(() =>
-                    context.Products.Select(p => (Category?)p.ProductCategory is Category).ToList()).Message;
+                    context.AllTypes.Select(a => (ArubaEnum?)a.c33_enum is ArubaEnum).ToList()).Message;
 
                 Assert.True(
                     message.Contains(
-                        Strings.ELinq_UnsupportedIsOrAs("TypeIs", "System.Nullable`1", "System.Data.Entity.Query.LinqToEntities.Category")));
+                        Strings.ELinq_UnsupportedIsOrAs("TypeIs", "System.Nullable`1", "System.Data.Entity.TestModels.ArubaModel.ArubaEnum")));
             }
         }
 
         [Fact]
         public void As_on_enum_not_supported()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var message = Assert.Throws<NotSupportedException>(() =>
-                    context.Products.Select(p => p.ProductCategory as Nullable<Category>).ToList()).Message;
+                    context.AllTypes.Select(a => a.c33_enum as Nullable<ArubaEnum>).ToList()).Message;
 
                 Assert.True(
                     message.Contains(
-                        Strings.ELinq_UnsupportedIsOrAs("TypeAs", "System.Data.Entity.Query.LinqToEntities.Category", "System.Nullable`1")));
-            }
-        }
-
-        [Fact]
-        public void Enum_property_in_Where_clause()
-        {
-            using (var context = new ProductWithEnumsContext())
-            {
-                var expectedSql =
-@"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 1 =  CAST( [Extent1].[ProductCategory] AS int)";
-
-                var query = context.Products.Where(p => p.ProductCategory == Category.Beverages).Select(p => p.ProductName);
-
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-            }
-        }
-
-        [Fact]
-        public void Byte_enum_property_in_Where_clause()
-        {
-            using (var context = new ProductWithEnumsContext())
-            {
-                var expectedSql =
-@"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 4 =  CAST( [Extent1].[Color] AS int)";
-
-                var query = context.Products.Where(p => p.Color == ByteBasedColor.Black).Select(p => p.ProductName);
-
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+                        Strings.ELinq_UnsupportedIsOrAs("TypeAs", "System.Data.Entity.TestModels.ArubaModel.ArubaEnum", "System.Nullable`1")));
             }
         }
 
         [Fact]
         public void Unnamed_enum_constant_in_Where_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE 42 =  CAST( [Extent1].[ProductCategory] AS int)";
+[Extent1].[c33_enum] AS [c33_enum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE 42 =  CAST( [Extent1].[c33_enum] AS int)";
 
-                var query = context.Products.Where(p => p.ProductCategory == (Category)42).Select(p => p.ProductName);
-
+                var query = context.AllTypes.Where(a => a.c33_enum == (ArubaEnum)42).Select(p => p.c33_enum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify all results are filtered out
+                var results = query.ToList();
+                Assert.False(results.Any());
             }
         }
 
         [Fact]
         public void Enum_in_OrderBy_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-ORDER BY [Extent1].[ProductCategory] ASC";
+[Extent1].[c33_enum] AS [c33_enum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+ORDER BY [Extent1].[c33_enum] ASC";
 
-                var query = context.Products.OrderBy(p => p.ProductCategory).Select(p => p.ProductName);
-
+                var query = context.AllTypes.OrderBy(a => a.c33_enum).Select(a => a.c33_enum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify order is correct
+                var results = query.ToList();
+                var highest = (int)results[0];
+                foreach (var result in results)
+                {
+                    Assert.True((int)result >= highest);
+                    highest = (int)result;
+                }
             }
         }
 
         [Fact]
         public void Byte_based_enum_in_OrderByDescending_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-ORDER BY [Extent1].[Color] DESC";
+[Extent1].[c34_byteenum] AS [c34_byteenum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+ORDER BY [Extent1].[c34_byteenum] DESC";
 
-                var query = context.Products.OrderByDescending(p => p.Color).Select(p => p.ProductName);
-
+                var query = context.AllTypes.OrderByDescending(a => a.c34_byteenum).Select(a => a.c34_byteenum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify order is correct
+                var results = query.ToList();
+                var lowest = (int)results[0];
+                foreach (var result in results)
+                {
+                    Assert.True((int)result <= lowest);
+                    lowest = (int)result;
+                }
             }
         }
 
         [Fact]
         public void Enum_in_OrderByThenBy_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-ORDER BY [Extent1].[ProductCategory] ASC, [Extent1].[Color] DESC";
+[Extent1].[c33_enum] AS [c33_enum], 
+[Extent1].[c34_byteenum] AS [c34_byteenum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+ORDER BY [Extent1].[c33_enum] ASC, [Extent1].[c34_byteenum] DESC";
 
-                var query = context.Products.OrderBy(p => p.ProductCategory).ThenByDescending(p => p.Color).Select(p => p.ProductName);
-
+                var query = context.AllTypes.OrderBy(p => p.c33_enum).ThenByDescending(a => a.c34_byteenum).Select(a => new { a.c33_enum, a.c34_byteenum });
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList();
+                var expected = context.AllTypes.Select(a => new { a.c33_enum, a.c34_byteenum }).ToList()
+                    .OrderBy(p => p.c33_enum).ThenByDescending(a => a.c34_byteenum).ToList();
+
+                Assert.Equal(results.Count, expected.Count());
+                for (int i = 0; i < results.Count; i++)
+                {
+                    Assert.Equal(results[i].c33_enum, expected[i].c33_enum);
+                    Assert.Equal(results[i].c34_byteenum, expected[i].c34_byteenum);
+                }
             }
         }
 
         [Fact]
         public void Enum_in_GroupBy_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[GroupBy1].[K1] AS [ProductCategory], 
+[GroupBy1].[K1] AS [c33_enum], 
 [GroupBy1].[A1] AS [C1]
 FROM ( SELECT 
-	[Extent1].[ProductCategory] AS [K1], 
+	[Extent1].[c33_enum] AS [K1], 
 	COUNT(1) AS [A1]
-	FROM [dbo].[Products] AS [Extent1]
-	GROUP BY [Extent1].[ProductCategory]
+	FROM [dbo].[ArubaAllTypes] AS [Extent1]
+	GROUP BY [Extent1].[c33_enum]
 )  AS [GroupBy1]";
 
-                var query = context.Products.GroupBy(p => p.ProductCategory).Select(g => new { g.Key, Count = g.Count() });
-
+                var query = context.AllTypes.GroupBy(a => a.c33_enum).Select(g => new { g.Key, Count = g.Count() });
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList().OrderBy(r => r.Key).ToList();
+                var expected = context.AllTypes.ToList().GroupBy(a => a.c33_enum).Select(g => new { g.Key, Count = g.Count() }).OrderBy(r => r.Key).ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Key == i.Key && o.Count == i.Count);
             }
         }
 
         [Fact]
         public void Byte_based_enum_in_GroupBy_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
 1 AS [C1], 
-[GroupBy1].[K1] AS [Color], 
+[GroupBy1].[K1] AS [c34_byteenum], 
 [GroupBy1].[A1] AS [C2]
 FROM ( SELECT 
-	[Extent1].[Color] AS [K1], 
+	[Extent1].[c34_byteenum] AS [K1], 
 	COUNT(1) AS [A1]
-	FROM [dbo].[Products] AS [Extent1]
-	GROUP BY [Extent1].[Color]
+	FROM [dbo].[ArubaAllTypes] AS [Extent1]
+	GROUP BY [Extent1].[c34_byteenum]
 )  AS [GroupBy1]";
 
-                var query = context.Products.GroupBy(p => p.Color).Select(g => new { g.Key, Count = g.Count() });
-
+                var query = context.AllTypes.GroupBy(p => p.c34_byteenum).Select(g => new { g.Key, Count = g.Count() });
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList().OrderBy(r => r.Key).ToList();
+                var expected = context.AllTypes.ToList().GroupBy(a => a.c34_byteenum).Select(g => new { g.Key, Count = g.Count() }).OrderBy(r => r.Key).ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Key == i.Key && o.Count == i.Count);
             }
         }
 
         [Fact]
         public void Enum_in_Join_clause()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Limit1].[ProductCategory] AS [ProductCategory], 
-[Limit1].[ProductName] AS [ProductName], 
-[Extent2].[Color] AS [Color]
-FROM   (SELECT TOP (1) [c].[ProductName] AS [ProductName], [c].[ProductCategory] AS [ProductCategory]
-	FROM [dbo].[Products] AS [c] ) AS [Limit1]
-INNER JOIN [dbo].[Products] AS [Extent2] ON [Limit1].[ProductCategory] = [Extent2].[ProductCategory]";
+[Limit1].[c1_int] AS [c1_int], 
+[Limit1].[c33_enum] AS [c33_enum], 
+[Extent2].[c1_int] AS [c1_int1], 
+[Extent2].[c33_enum] AS [c33_enum1]
+FROM   (SELECT TOP (1) [c].[c1_int] AS [c1_int], [c].[c33_enum] AS [c33_enum]
+	FROM [dbo].[ArubaAllTypes] AS [c] ) AS [Limit1]
+INNER JOIN [dbo].[ArubaAllTypes] AS [Extent2] ON [Limit1].[c33_enum] = [Extent2].[c33_enum]";
 
-                var query = context.Products.Take(1).Join(context.Products, o => o.ProductCategory, i => i.ProductCategory, (o, i) => new { o.ProductName, i.Color });
-
+                var query = context.AllTypes.Take(1).Join(context.AllTypes, o => o.c33_enum, i => i.c33_enum, (o, i) => new { OuterKey = o.c1_int, OuterEnum = o.c33_enum, InnerKey = i.c1_int, InnerEnum = i.c33_enum });
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that all all entities with matching enum values are joined
+                // and that correct enum values get joined
+                var firstEnum = context.AllTypes.ToList().Take(1).First().c33_enum;
+                var allTypesWithFirstEnumIds = context.AllTypes.ToList().Where(a => a.c33_enum == firstEnum).Select(a => a.c1_int).ToList();
+                var results = query.ToList();
+                Assert.Equal(allTypesWithFirstEnumIds.Count(), results.Count());
+                foreach (var result in results)
+                {
+                    Assert.Equal(firstEnum, result.InnerEnum);
+                    Assert.Equal(firstEnum, result.OuterEnum);
+                    Assert.True(allTypesWithFirstEnumIds.Contains(result.OuterKey));
+                }
             }
         }
 
         [Fact]
         public void Enum_with_arithmetic_operations()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
-                    // TODO: too many casts here!
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE ( CAST(  CAST(  CAST( [Extent1].[Color] AS int) - 1 AS tinyint) AS int) <>  CAST(  CAST(  CAST( [Extent1].[Color] AS int) + 2 AS tinyint) AS int)) AND ( CAST(  CAST( [Extent1].[ProductCategory] AS int) + 1 AS int) <>  CAST(  CAST( [Extent1].[ProductCategory] AS int) - 2 AS int))";
+[Extent1].[c1_int] AS [c1_int]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE ( CAST( [Extent1].[c34_byteenum] AS int) <>  CAST(  CAST(  CAST( [Extent1].[c34_byteenum] AS int) + 2 AS tinyint) AS int)) AND ( CAST(  CAST( [Extent1].[c33_enum] AS int) + 1 AS int) <>  CAST(  CAST( [Extent1].[c33_enum] AS int) - 2 AS int))";
 
-                var query = context.Products
-                    .Where(p => p.Color - 1 != p.Color + 2)
-                    .Where(p => p.ProductCategory + 1 != p.ProductCategory - 2)
-                    .Select(p => p.ProductName);
+                var query = context.AllTypes
+                    .Where(a => a.c34_byteenum != a.c34_byteenum + 2)
+                    .Where(a => a.c33_enum + 1 != a.c33_enum - 2)
+                    .Select(a => a.c1_int);
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that no results are filtered out (sanity)
+                var results = query.ToList();
+                var allTypesCount = context.AllTypes.Select(a => a.c1_int).ToList().Count();
+                Assert.Equal(allTypesCount, results.Count);
             }
         }
 
         [Fact]
         public void Enum_with_bitwise_operations()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductName] AS [ProductName]
-FROM [dbo].[Products] AS [Extent1]
-WHERE ( CAST(  CAST( ( CAST( [Extent1].[Color] AS int)) & (2) AS tinyint) AS int) > 0) AND (6 =  CAST( ( CAST( [Extent1].[ProductCategory] AS int)) | (1) AS int))";
+[Extent1].[c33_enum] AS [c33_enum], 
+[Extent1].[c34_byteenum] AS [c34_byteenum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE ( CAST(  CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint) AS int) > 0) AND (3 =  CAST( ( CAST( [Extent1].[c33_enum] AS int)) | (1) AS int))";
 
-                var query = context.Products
-                    .Where(p => (p.Color & ByteBasedColor.Blue) > 0)
-                    .Where(p => (p.ProductCategory | (Category)1) == (Category)6)
-                    .Select(p => p.ProductName);
+                var query = context.AllTypes
+                    .Where(a => (a.c34_byteenum & ArubaByteEnum.ByteEnumValue1) > 0)
+                    .Where(a => (a.c33_enum | (ArubaEnum)1) == (ArubaEnum)3)
+                    .Select(a => new { a.c33_enum, a.c34_byteenum });
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out
+                var results = query.ToList();
+                foreach (var result in results)
+                {
+                    Assert.Equal((ArubaEnum)3, result.c33_enum);
+                    Assert.Equal(ArubaByteEnum.ByteEnumValue1, result.c34_byteenum);
+                }
             }
         }
 
         [Fact]
         public void Enum_with_coalesce_operator()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-CASE WHEN (CASE WHEN (0 = ([Extent1].[ProductId] % 2)) THEN [Extent1].[ProductCategory] END IS NULL) THEN 3 WHEN (0 = ([Extent1].[ProductId] % 2)) THEN [Extent1].[ProductCategory] END AS [C1]
-FROM [dbo].[Products] AS [Extent1]";
+CASE WHEN (CASE WHEN (0 = ([Extent1].[c1_int] % 2)) THEN [Extent1].[c33_enum] END IS NULL) THEN 1 WHEN (0 = ([Extent1].[c1_int] % 2)) THEN [Extent1].[c33_enum] END AS [C1]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]";
 
-                var query = context.Products.Select(p => p.ProductId % 2 == 0 ? p.ProductCategory : (Category?)null)
-                    .Select(p => p ?? Category.Confections); 
-
+                var query = context.AllTypes.Select(p => p.c1_int % 2 == 0 ? p.c33_enum : (ArubaEnum?)null)
+                    .Select(a => a ?? ArubaEnum.EnumValue1);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList();
+                var expected = context.AllTypes.ToList().Select(p => p.c1_int % 2 == 0 ? p.c33_enum : (ArubaEnum?)null)
+                    .Select(a => a ?? ArubaEnum.EnumValue1).ToList();
+
+                Assert.Equal(expected.Count, results.Count);
+                for (var i = 0; i < results.Count; i++)
+                {
+                    Assert.Equal(expected[i], results[i]);
+                }
             }
         }
 
         [Fact]
         public void Casting_to_enum_undeclared_in_model_works()
         {
-            using (var context = new ProductWithEnumsContext())
+            using (var context = new ArubaContext())
             {
                 var expectedSql =
 @"SELECT 
-[Extent1].[ProductId] AS [ProductId]
-FROM [dbo].[Products] AS [Extent1]";
+[Extent1].[c1_int] AS [c1_int]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]";
 
-                var query = context.Products.Select(p => (FileAccess)p.ProductId);
-
+                var query = context.AllTypes.Select(a => (FileAccess)a.c1_int);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // not much to verify here, just make sure we don't throw
+                query.ToList();
             }
         }
     }

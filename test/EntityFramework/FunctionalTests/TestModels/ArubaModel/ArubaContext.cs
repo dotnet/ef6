@@ -4,6 +4,11 @@ namespace System.Data.Entity.TestModels.ArubaModel
 {
     public class ArubaContext : DbContext
     {
+        static ArubaContext()
+        {
+            Database.SetInitializer(new ArubaInitializer());
+        }
+
         public DbSet<ArubaAllTypes> AllTypes { get; set; }
         public DbSet<ArubaBaseline> Baselines { get; set; }
         public DbSet<ArubaBug> Bugs { get; set; }
