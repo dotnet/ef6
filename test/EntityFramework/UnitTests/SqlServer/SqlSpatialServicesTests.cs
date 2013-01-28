@@ -4,8 +4,9 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
+    using System.IO;
     using System.Reflection;
-    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
     using Moq;
     using Xunit;
 
@@ -108,7 +109,9 @@ namespace System.Data.Entity.SqlServer
         public void GeographyFromProviderValue_returns_null_for_null_value()
         {
             var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType
-                .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+                                                               .GetProperty(
+                                                                   "Null",
+                                                                   BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeography);
@@ -130,7 +133,9 @@ namespace System.Data.Entity.SqlServer
         public void GeometryFromProviderValue_returns_null_for_null_value()
         {
             var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType
-                .GetProperty("Null", BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+                                                              .GetProperty(
+                                                                  "Null",
+                                                                  BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeometry);
@@ -159,21 +164,12 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void SqlSpatialServices_does_not_throw_until_attempt_is_made_to_use_missing_SQL_types_assembly()
         {
-            var services = new SqlSpatialServices(new SqlTypesAssemblyLoader(new[] { "SomeMissingAssembly" }), l => l.GetSqlTypesAssembly());
+            var services = new SqlSpatialServices(new SqlTypesAssemblyLoader(new[] { "SomeMissingAssembly" }));
 
             Assert.Equal(
                 Strings.SqlProvider_SqlTypesAssemblyNotFound,
                 Assert.Throws<InvalidOperationException>(
                     () => services.GeometryFromText("POINT (90 50)")).Message);
-        }
-
-        [Fact]
-        public void SqlSpatialServices_serializaion_constructor_takes_loader_and_assembly_values_from_Singleton()
-        {
-            Assert.Equal(
-                "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                new SqlSpatialServices(null, new StreamingContext()).GeometryFromText("POINT (90 50)").ProviderValue.GetType().
-                    AssemblyQualifiedName);
         }
 
         [Fact]
@@ -188,16 +184,52 @@ namespace System.Data.Entity.SqlServer
             var mockLoader = new Mock<SqlTypesAssemblyLoader>(null);
             mockLoader.Setup(m => m.TryGetSqlTypesAssembly()).Returns(new Mock<SqlTypesAssembly>().Object);
 
-            Assert.True(new SqlSpatialServices(mockLoader.Object, l => l.GetSqlTypesAssembly()).NativeTypesAvailable);
+            Assert.True(new SqlSpatialServices(mockLoader.Object).NativeTypesAvailable);
         }
 
         [Fact]
         public void NativeTypesAvailable_returns_false_if_loader_does_not_find_native_types()
         {
-            Assert.False(
-                new SqlSpatialServices(
-                    new Mock<SqlTypesAssemblyLoader>(null).Object,
-                    l => l.GetSqlTypesAssembly()).NativeTypesAvailable);
+            Assert.False(new SqlSpatialServices(new Mock<SqlTypesAssemblyLoader>(null).Object).NativeTypesAvailable);
+        }
+
+        [Fact]
+        public void SqlTypes_returns_default_SQL_types_assembly_on_dev_machine()
+        {
+            Assert.Same(SqlSpatialServices.Instance.SqlTypes, SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly());
+        }
+
+        [Fact]
+        public void SqlTypes_returns_assembly_from_loader()
+        {
+            var mockLoader = new Mock<SqlTypesAssemblyLoader>(null);
+            var sqlTypesAssembly = new Mock<SqlTypesAssembly>().Object;
+            mockLoader.Setup(m => m.GetSqlTypesAssembly()).Returns(sqlTypesAssembly);
+
+            Assert.Same(sqlTypesAssembly, new SqlSpatialServices(mockLoader.Object).SqlTypes);
+        }
+
+        [Fact]
+        public void SqlSpatialServices_can_be_serialized()
+        {
+            var formatter = new BinaryFormatter();
+
+            using (var stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, SqlSpatialServices.Instance);
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                var deserialized = (SqlSpatialServices)formatter.Deserialize(stream);
+
+                var geometry = deserialized.GeometryFromText("POINT (90 50)");
+
+                Assert.Equal(90, geometry.XCoordinate);
+                Assert.Equal(50, geometry.YCoordinate);
+                Assert.Equal(
+                    "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
+                    geometry.ProviderValue.GetType().AssemblyQualifiedName);
+            }
         }
     }
 }

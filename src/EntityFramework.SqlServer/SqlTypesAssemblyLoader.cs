@@ -11,6 +11,13 @@ namespace System.Data.Entity.SqlServer
 
     internal class SqlTypesAssemblyLoader
     {
+        private static readonly SqlTypesAssemblyLoader _instance = new SqlTypesAssemblyLoader();
+
+        public static SqlTypesAssemblyLoader DefaultInstance
+        {
+            get { return _instance; }
+        }
+
         private readonly IEnumerable<string> _preferredSqlTypesAssemblies;
 
         private readonly Lazy<SqlTypesAssembly> _latestVersion;
