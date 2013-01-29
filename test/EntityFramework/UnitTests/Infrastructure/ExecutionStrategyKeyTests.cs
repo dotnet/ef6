@@ -13,9 +13,10 @@ namespace System.Data.Entity.Infrastructure
                   .ValidateMessage("ArgumentIsNullOrWhitespace", "invariantProviderName");
             Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("", "b"))
                   .ValidateMessage("ArgumentIsNullOrWhitespace", "invariantProviderName");
-            Assert.Equal(
-                "dataSource",
-                Assert.Throws<ArgumentNullException>(() => new ExecutionStrategyKey("a", null)).ParamName);
+            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", null))
+                  .ValidateMessage("ArgumentIsNullOrWhitespace", "dataSource");
+            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", ""))
+                  .ValidateMessage("ArgumentIsNullOrWhitespace", "dataSource");
         }
 
         [Fact]
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Infrastructure
                     new ExecutionStrategyKey("a2", "b")));
             Assert.False(
                 equals(
-                    new ExecutionStrategyKey("a", ""),
+                    new ExecutionStrategyKey("a", "b"),
                     null));
         }
 

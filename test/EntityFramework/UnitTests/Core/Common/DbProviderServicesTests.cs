@@ -162,7 +162,6 @@ namespace System.Data.Entity.Core.Common
             {
                 var connectionMock = new Mock<DbConnection>();
                 connectionMock.Setup(m => m.DataSource).Returns("FooSource");
-                connectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(FakeSqlProviderFactory.Instance);
 
                 var entityConnection = new EntityConnection(
                     workspace: null, connection: connectionMock.Object, skipInitialization: true, entityConnectionOwnsStoreConnection: false);
@@ -176,6 +175,12 @@ namespace System.Data.Entity.Core.Common
                             Assert.Equal("FooSource", key.DataSourceName);
                             return mockExecutionStrategy;
                         });
+
+                var providerFactoryServiceMock = new Mock<IDbProviderFactoryService>();
+                providerFactoryServiceMock.Setup(m => m.GetProviderFactory(It.IsAny<DbConnection>()))
+                                          .Returns(FakeSqlProviderFactory.Instance);
+
+                MutableResolver.AddResolver<IDbProviderFactoryService>(k => providerFactoryServiceMock.Object);
                 try
                 {
                     Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(connectionMock.Object));

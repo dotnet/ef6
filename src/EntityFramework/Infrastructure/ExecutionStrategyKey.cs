@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
         public ExecutionStrategyKey(string invariantProviderName, string dataSource)
         {
             Check.NotEmpty(invariantProviderName, "invariantProviderName");
-            Check.NotNull(dataSource, "dataSource");
+            Check.NotEmpty(dataSource, "dataSource");
 
             InvariantProviderName = invariantProviderName;
             DataSourceName = dataSource;
