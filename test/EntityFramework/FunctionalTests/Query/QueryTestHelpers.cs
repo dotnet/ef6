@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Query
 {
-    using System.Linq.Expressions;
     using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
@@ -78,33 +77,6 @@ namespace System.Data.Entity.Query
         {
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(query.ToString()));
         }
-
-        //public static void VerifyQueryResult<TElement, TSelector>(
-        //    IEnumerable<TElement> outer, 
-        //    IEnumerable<TElement> inner, 
-        //    Func<TElement, TSelector>  selector)
-        //{
-        //    var outerSelected = outer.Select(selector).ToList();
-        //    var innerSelected = inner.Select(selector).ToList();
-        //    foreach (var result in outerSelected.Zip(innerSelected, (o, i) => new { o, i }))
-        //    {
-        //        Assert.Equal(result.o, result.i);
-        //    }
-        //}
-
-        //public static void VerifyQueryResult<TOuter, TInner, TSelector>(
-        //    IEnumerable<TOuter> outer,
-        //    IEnumerable<TInner> inner,
-        //    Func<TOuter, TSelector> outerSelector,
-        //    Func<TInner, TSelector> innerSelector)
-        //{
-        //    var outerSelected = outer.Select(outerSelector).ToList();
-        //    var innerSelected = inner.Select(innerSelector).ToList();
-        //    foreach (var result in outerSelected.Zip(innerSelected, (o, i) => new { o, i }))
-        //    {
-        //        Assert.Equal(result.o, result.i);
-        //    }
-        //}
 
         public static void VerifyQueryResult<TOuter, TInner>(
             IList<TOuter> outer,

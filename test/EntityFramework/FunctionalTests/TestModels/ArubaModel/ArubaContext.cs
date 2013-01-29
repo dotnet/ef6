@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.TestModels.ArubaModel
 {
+    using System.Data.Entity.Infrastructure;
+
     public class ArubaContext : DbContext
     {
         static ArubaContext()
@@ -20,6 +22,8 @@ namespace System.Data.Entity.TestModels.ArubaModel
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.ModelConfiguration.ModelNamespace = "ArubaModel";
+            modelBuilder.Conventions.Remove<ModelNamespaceConvention>();
             modelBuilder.Entity<ArubaRun>().HasRequired(r => r.RunOwner).WithRequiredDependent(o => o.OwnedRun);
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c6_smalldatetime).HasColumnType("smalldatetime");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c7_decimal_28_4).HasColumnType("decimal").HasPrecision(28, 4);
