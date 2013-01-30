@@ -60,11 +60,11 @@ namespace System.Data.Entity.Edm.Serialization
             base.VisitEdmAssociationSet(item);
             if (item.SourceSet != null)
             {
-                _schemaWriter.WriteAssociationSetEndElement(item.SourceSet, item.ElementType.SourceEnd.Name);
+                _schemaWriter.WriteAssociationSetEndElement(item.SourceSet, item.SourceEnd.Name);
             }
             if (item.TargetSet != null)
             {
-                _schemaWriter.WriteAssociationSetEndElement(item.TargetSet, item.ElementType.TargetEnd.Name);
+                _schemaWriter.WriteAssociationSetEndElement(item.TargetSet, item.TargetEnd.Name);
             }
             _schemaWriter.WriteEndElement();
         }

@@ -100,6 +100,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal AssociationEndMember SourceEnd
+        {
+            get
+            {
+                var associationSetEnd = AssociationSetEnds.FirstOrDefault();
+                return
+                    associationSetEnd != null
+                        ? ElementType.AssociationEndMembers.SingleOrDefault(e => e.Name == associationSetEnd.Name)
+                        : null;
+            }
+        }
+
+        internal AssociationEndMember TargetEnd
+        {
+            get
+            {
+                var associationSetEnd = AssociationSetEnds.ElementAtOrDefault(1);
+                return
+                    associationSetEnd != null
+                        ? ElementType.AssociationEndMembers.SingleOrDefault(e => e.Name == associationSetEnd.Name)
+                        : null;
+            }
+        }
+
         /// <summary>
         ///     Returns the kind of the type
         /// </summary>
