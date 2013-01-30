@@ -13500,6 +13500,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.ExecutionStrategy_RetryLimitExceeded); }
         }
+
+        /// <summary>
+        /// A string like "'{0}' is not a valid resource name."
+        /// </summary>
+        internal static string InvalidResourceName(object p0)
+        {
+            return EntityRes.GetString(EntityRes.InvalidResourceName, p0);
+        }
     } 
 
     /// <summary>
@@ -15178,6 +15186,14 @@ namespace System.Data.Entity.Resources
         internal static Exception ExecutionStrategy_NegativeDelay()
         {
             return new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay);
+        }
+
+        /// <summary>
+        /// ArgumentException with message like "'{0}' is not a valid resource name."
+        /// </summary>
+        internal static Exception InvalidResourceName(object p0)
+        {
+            return new ArgumentException(Strings.InvalidResourceName(p0));
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16898,6 +16914,7 @@ namespace System.Data.Entity.Resources
         internal const string ExecutionStrategy_MinimumMustBeLessThanMaximum = "ExecutionStrategy_MinimumMustBeLessThanMaximum";
         internal const string ExecutionStrategy_NegativeDelay = "ExecutionStrategy_NegativeDelay";
         internal const string ExecutionStrategy_RetryLimitExceeded = "ExecutionStrategy_RetryLimitExceeded";
+        internal const string InvalidResourceName = "InvalidResourceName";
         
         static EntityRes loader = null;
         ResourceManager resources;

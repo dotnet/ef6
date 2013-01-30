@@ -367,15 +367,25 @@ namespace System.Data.Entity.Core.Common
         ///     Return an XML reader which represents the CSDL description
         /// </summary>
         /// <returns> An XmlReader that represents the CSDL description </returns>
-        internal static XmlReader GetConceptualSchemaDefinition(string csdlName)
+        public static XmlReader GetConceptualSchemaDefinition(string csdlName)
         {
+            Check.NotEmpty(csdlName, "csdlName");
+
             return GetXmlResource("System.Data.Resources.DbProviderServices." + csdlName + ".csdl");
         }
 
         internal static XmlReader GetXmlResource(string resourceName)
         {
+            DebugCheck.NotEmpty(resourceName);
+
             var executingAssembly = Assembly.GetExecutingAssembly();
             var stream = executingAssembly.GetManifestResourceStream(resourceName);
+
+            if (stream == null)
+            {
+                throw Error.InvalidResourceName(resourceName);
+            }
+
             return XmlReader.Create(stream, null, resourceName);
         }
 

@@ -269,6 +269,41 @@ namespace System.Data.Entity.Core.Common
                     Strings.ProviderDidNotReturnSpatialServices,
                     Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
             }
+
+        }
+
+        public class GetConceptualSchemaDefinition
+        {
+            [Fact]
+            public void GetConceptualSchemaDefinition_throws_ArgumentNullException_for_null_or_empty_resource_name()
+            {
+                foreach (var csdlName in new[] { null, string.Empty })
+                {
+                    Assert.Throws<ArgumentException>(
+                        () => DbProviderServices.GetConceptualSchemaDefinition(csdlName));
+                }
+            }
+
+            [Fact]
+            public void GetConceptualSchemaDefinition_throws_ArgumentException_for_invalid_resource_name()
+            {
+                Assert.Equal(
+                    string.Format(Strings.InvalidResourceName("resource")),
+                    Assert.Throws<ArgumentException>(
+                        () => DbProviderServices.GetXmlResource("resource")).Message);
+            }
+
+            [Fact]
+            public void GetConceptualSchemaDefinition_returns_non_null_XmlReader_for_valid_resource_names()
+            {
+                foreach (var csdlName in new[] { "ConceptualSchemaDefinition", "ConceptualSchemaDefinitionVersion3" })
+                {
+                    using (var reader = DbProviderServices.GetConceptualSchemaDefinition(csdlName))
+                    {
+                        Assert.NotNull(reader);
+                    }
+                }
+            }
         }
     }
 }

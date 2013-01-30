@@ -5384,4 +5384,8 @@
   <data name="ExecutionStrategy_RetryLimitExceeded" xml:space="preserve">
     <value>Retry limit exceeded.</value>
   </data>
+  <data name="InvalidResourceName" xml:space="preserve">
+    <value>'{0}' is not a valid resource name.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
 </root>
