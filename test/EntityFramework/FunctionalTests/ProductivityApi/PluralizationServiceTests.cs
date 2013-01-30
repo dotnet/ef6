@@ -2,7 +2,11 @@
 {
     using FunctionalTests.TestHelpers;
     using SimpleModel;
+    using System;
+    using System.Linq;    
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using Xunit;
 
     /// <summary>
@@ -34,6 +38,31 @@
             {
                 DefaultPluralizationServiceResolver.Instance.PluralizationService = previousPluralizationService;
             }
+        }
+
+        private string GetEntitySetTableName(DbContext dbContext, Type clrType)
+        {
+            var objectContext = dbContext.InternalContext.ObjectContext;
+
+            var container = objectContext.MetadataWorkspace
+                .GetItems<EntityContainer>(DataSpace.SSpace)
+                .SingleOrDefault();
+
+            if (container == null)
+            {
+                return null;
+            }
+
+            var entitySet = container.BaseEntitySets
+                .Where(bes => bes.ElementType.Name == clrType.Name)
+                .SingleOrDefault();
+
+            if (entitySet == null)
+            {
+                return null;
+            }
+
+            return entitySet.Table;
         }
 
         private class PluralizationServiceContext : DbContext

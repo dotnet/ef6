@@ -404,17 +404,6 @@ namespace System.Data.Entity
             return ModelHelpers.GetEntitySetName(objetContext, clrType);
         }
 
-        /// <summary>
-        ///     Gets the table name for entity set for the given CLR type.
-        /// </summary>
-        /// <param name="dbContext"> The context to look in. </param>
-        /// <param name="clrType"> The type to lookup. </param>
-        /// <returns> The table name for entity set of given CLR type. </returns>
-        protected static string GetEntitySetTableName(DbContext dbContext, Type clrType)
-        {
-            return ModelHelpers.GetEntitySetTableName(dbContext.InternalContext.ObjectContext, clrType);
-        }
-
         #endregion
 
         #region Entity Type helpers
