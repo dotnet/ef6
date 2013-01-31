@@ -4,10 +4,14 @@ namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Resources;
+    using System.Reflection;
     using Xunit;
 
     public class EntitySqlExceptionTests
     {
+        private static readonly PropertyInfo _hResultProperty = typeof(Exception).GetProperty(
+            "HResult", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
         private const int HResultInvalidQuery = -2146232006;
 
         [Fact]
@@ -24,7 +28,7 @@ namespace System.Data.Entity.Core
             var exception = new EntitySqlException();
 
             Assert.Equal(Strings.GeneralQueryError, exception.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -33,7 +37,7 @@ namespace System.Data.Entity.Core
             exception = ExceptionHelpers.SerializeAndDeserialize(exception);
 
             Assert.Equal(Strings.GeneralQueryError, exception.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -46,7 +50,7 @@ namespace System.Data.Entity.Core
             var exception = new EntitySqlException("What is this eSQL of which you speak?");
 
             Assert.Equal("What is this eSQL of which you speak?", exception.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -55,7 +59,7 @@ namespace System.Data.Entity.Core
             exception = ExceptionHelpers.SerializeAndDeserialize(exception);
 
             Assert.Equal("What is this eSQL of which you speak?", exception.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -70,7 +74,7 @@ namespace System.Data.Entity.Core
 
             Assert.Equal("I knoweth not, good sir.", exception.Message);
             Assert.Same(innerException, exception.InnerException);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -80,7 +84,7 @@ namespace System.Data.Entity.Core
 
             Assert.Equal("I knoweth not, good sir.", exception.Message);
             Assert.Equal(innerException.Message, exception.InnerException.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("", exception.ErrorContext);
             Assert.Equal("", exception.ErrorDescription);
             Assert.Equal(0, exception.Line);
@@ -93,19 +97,19 @@ namespace System.Data.Entity.Core
             var innerException = new Exception("Ho Ho Ho");
             var exception = EntitySqlException.Create(
                 new ErrorContext
-                {
-                    CommandText = "select redHook\n from\n breweries",
-                    ErrorContextInfo = "Hubcap emotional barometer is peaking",
-                    InputPosition = 22,
-                    UseContextInfoAsResourceIdentifier = false
-                },
+                    {
+                        CommandText = "select redHook\n from\n breweries",
+                        ErrorContextInfo = "Hubcap emotional barometer is peaking",
+                        InputPosition = 22,
+                        UseContextInfoAsResourceIdentifier = false
+                    },
                 "Why not use LINQ like everyone else?",
                 innerException);
 
             Assert.Equal(
                 "Why not use LINQ like everyone else? Near Hubcap emotional barometer is peaking, line 3, column 2.", exception.Message);
             Assert.Same(innerException, exception.InnerException);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("Hubcap emotional barometer is peaking, line 3, column 2", exception.ErrorContext);
             Assert.Equal("Why not use LINQ like everyone else?", exception.ErrorDescription);
             Assert.Equal(3, exception.Line);
@@ -116,7 +120,7 @@ namespace System.Data.Entity.Core
             Assert.Equal(
                 "Why not use LINQ like everyone else? Near Hubcap emotional barometer is peaking, line 3, column 2.", exception.Message);
             Assert.Equal(innerException.Message, exception.InnerException.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("Hubcap emotional barometer is peaking, line 3, column 2", exception.ErrorContext);
             Assert.Equal("Why not use LINQ like everyone else?", exception.ErrorDescription);
             Assert.Equal(3, exception.Line);
@@ -137,7 +141,7 @@ namespace System.Data.Entity.Core
 
             Assert.Equal("This isn't the vodka I ordered. Near line 2, column 4.", exception.Message);
             Assert.Same(innerException, exception.InnerException);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("line 2, column 4", exception.ErrorContext);
             Assert.Equal("This isn't the vodka I ordered.", exception.ErrorDescription);
             Assert.Equal(2, exception.Line);
@@ -147,11 +151,16 @@ namespace System.Data.Entity.Core
 
             Assert.Equal("This isn't the vodka I ordered. Near line 2, column 4.", exception.Message);
             Assert.Equal(innerException.Message, exception.InnerException.Message);
-            Assert.Equal(HResultInvalidQuery, exception.HResult);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
             Assert.Equal("line 2, column 4", exception.ErrorContext);
             Assert.Equal("This isn't the vodka I ordered.", exception.ErrorDescription);
             Assert.Equal(2, exception.Line);
             Assert.Equal(4, exception.Column);
+        }
+
+        private static int GetHResult(Exception ex)
+        {
+            return (int)_hResultProperty.GetValue(ex, null);
         }
     }
 }
