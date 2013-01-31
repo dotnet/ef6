@@ -40,19 +40,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _path; }
         }
 
-        [ResourceExposure(ResourceScope.Machine)] //Exposes the file paths which are a Machine resource
-        public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
-        {
-            IList<MetadataArtifactLoaderFile> files;
-            if (TryGetListForSpace(spaceToGet, out files))
-            {
-                foreach (var loader in files)
-                {
-                    loader.CollectFilePermissionPaths(paths, spaceToGet);
-                }
-            }
-        }
-
         public override bool IsComposite
         {
             get { return true; }

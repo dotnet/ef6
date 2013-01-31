@@ -54,14 +54,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return true; }
         }
 
-        public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
-        {
-            foreach (var loader in _children)
-            {
-                loader.CollectFilePermissionPaths(paths, spaceToGet);
-            }
-        }
-
         /// <summary>
         ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded
         ///     form.

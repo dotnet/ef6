@@ -85,11 +85,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _reader.GetHashCode();
         }
 
-        public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
-        {
-            // no op
-        }
-
         /// <summary>
         ///     Get paths to artifacts for a specific DataSpace.
         /// </summary>

@@ -84,15 +84,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _path.GetHashCode();
         }
 
-        public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
-        {
-            if (!_alreadyLoaded
-                && IsArtifactOfDataSpace(_path, spaceToGet))
-            {
-                paths.Add(_path);
-            }
-        }
-
         /// <summary>
         ///     Get paths to artifacts for a specific DataSpace.
         /// </summary>

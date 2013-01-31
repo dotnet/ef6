@@ -39,14 +39,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return string.Empty; }
         }
 
-        public override void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet)
-        {
-            foreach (var loader in _children)
-            {
-                loader.CollectFilePermissionPaths(paths, spaceToGet);
-            }
-        }
-
         public override bool IsComposite
         {
             get { return true; }

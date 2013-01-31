@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Versioning;
-    using System.Security.Permissions;
     using System.Threading;
     using System.Xml;
 
@@ -352,8 +351,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // For that reason, we have this lock on the entry itself to make sure that this happens. Its okay to
             // update the item collection outside the lock, since assignment are guarantees to be atomic and no two
             // thread are updating this at the same time
-            var isItemCollectionAlreadyLoaded = true;
-
             if (!entry.IsLoaded)
             {
                 lock (entry)
@@ -361,19 +358,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     if (!entry.IsLoaded)
                     {
                         itemCollectionLoader.LoadItemCollection(entry);
-                        isItemCollectionAlreadyLoaded = false;
                     }
                 }
             }
 
             Debug.Assert(entry.IsLoaded, "The entry must be loaded at this point");
-
-            // Making sure that the thread which loaded the item collection is not checking for file permisssions
-            // again
-            if (isItemCollectionAlreadyLoaded)
-            {
-                entry.CheckFilePermission();
-            }
         }
 
         /// <summary>
@@ -420,7 +409,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private ItemCollection _itemCollection;
             private readonly WeakReference _weakReferenceItemCollection;
             private bool _markEntryForCleanup;
-            private FileIOPermission _filePermissions;
 
             /// <summary>
             ///     The constructor for constructing this MetadataEntry
@@ -444,16 +432,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ///     Update the entry with the given item collection
             /// </summary>
             /// <param name="itemCollection"> </param>
-            protected void UpdateMetadataEntry(ItemCollection itemCollection, FileIOPermission filePermissions)
+            protected void UpdateMetadataEntry(ItemCollection itemCollection)
             {
                 Debug.Assert(_entryTokenReference.IsAlive, "You must call Ensure token before you call this method");
                 Debug.Assert(_markEntryForCleanup == false, "The entry must not be marked for cleanup");
                 Debug.Assert(_itemCollection == null, "Item collection must be null");
-                Debug.Assert(_filePermissions == null, "filePermissions must be null");
 
                 // Update strong and weak reference for item collection
                 _weakReferenceItemCollection.Target = itemCollection;
-                _filePermissions = filePermissions;
 
                 // do this last, because it signals that we are loaded
                 _itemCollection = itemCollection;
@@ -496,7 +482,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     else if (!_weakReferenceItemCollection.IsAlive)
                     {
                         // GEN 3
-                        _filePermissions = null;
                         // this entry must be removed from the cache
                         return true;
                     }
@@ -563,13 +548,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         // Initialize the strong reference to item collection
                         _itemCollection = itemCollection;
                     }
-                    else
-                    {
-                        // no more references to the collection
-                        // are available, so get rid of the permissions
-                        // object.  We will get a new one when we get a new collection
-                        _filePermissions = null;
-                    }
                 }
                 // Even if the _weakReferenceItemCollection is no longer alive, we will reuse this entry. Assign a new entry token and set mark for cleanup to false
                 // so that this entry is not cleared by the cleanup thread
@@ -578,24 +556,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _entryTokenReference.Target = entryToken;
                 _markEntryForCleanup = false;
                 return entryToken;
-            }
-
-            /// <summary>
-            ///     Check if the thread has appropriate permissions to use the already loaded metadata
-            /// </summary>
-            [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
-            internal void CheckFilePermission()
-            {
-                Debug.Assert(_itemCollection != null, "Item collection must be present since we want to reuse the metadata");
-                Debug.Assert(_entryTokenReference.IsAlive, "This entry must be in use");
-                Debug.Assert(_markEntryForCleanup == false, "The entry must not marked for cleanup");
-                Debug.Assert(_weakReferenceItemCollection.IsAlive, "Weak reference to item collection must be alive");
-
-                // we will have an empty ItemCollection (no files were used to load it)
-                if (_filePermissions != null)
-                {
-                    _filePermissions.Demand();
-                }
             }
 
             /// <summary>
@@ -647,15 +607,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         loader.GetPaths(DataSpace.CSpace)
                         );
 
-                    var permissionPaths = new List<string>();
-                    loader.CollectFilePermissionPaths(permissionPaths, DataSpace.CSpace);
-                    FileIOPermission filePermissions = null;
-                    if (permissionPaths.Count > 0)
-                    {
-                        filePermissions = new FileIOPermission(FileIOPermissionAccess.Read, permissionPaths.ToArray());
-                    }
-
-                    UpdateMetadataEntry(itemCollection, filePermissions);
+                    UpdateMetadataEntry(itemCollection);
                 }
                 finally
                 {
@@ -729,15 +681,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Helper.DisposeXmlReaders(csSpaceXmlReaders);
                 }
 
-                var permissionPaths = new List<string>();
-                loader.CollectFilePermissionPaths(permissionPaths, DataSpace.SSpace);
-                loader.CollectFilePermissionPaths(permissionPaths, DataSpace.CSSpace);
-                FileIOPermission filePermissions = null;
-                if (permissionPaths.Count > 0)
-                {
-                    filePermissions = new FileIOPermission(FileIOPermissionAccess.Read, permissionPaths.ToArray());
-                }
-                UpdateMetadataEntry(storageMappingItemCollection, filePermissions);
+                UpdateMetadataEntry(storageMappingItemCollection);
             }
 
             /// <summary>

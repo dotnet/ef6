@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     /// <summary>
     ///     This is the base class for the resource metadata artifact loader; derived
-    ///     classes enacpsulate a single resource as well as collections of resources,
+    ///     classes encapsulate a single resource as well as collections of resources,
     ///     along the lines of the Composite pattern.
     /// </summary>
     internal abstract class MetadataArtifactLoader
@@ -27,8 +27,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Read-only access to the resource/file path
         /// </summary>
         public abstract string Path { get; }
-
-        public abstract void CollectFilePermissionPaths(List<string> paths, DataSpace spaceToGet);
 
         /// <summary>
         ///     This enum is used to indicate the level of extension check to be perfoemed
