@@ -349,6 +349,14 @@ namespace System.Data.Entity.SqlServer.Resources
         {
             get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt); }
         }
+
+        /// <summary>
+        ///     A string like "An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using the SQL Azure executionStrategy, see SqlAzureDbConfiguration."
+        /// </summary>
+        internal static string TransientExceptionDetected
+        {
+            get { return EntityRes.GetString(EntityRes.TransientExceptionDetected); }
+        }
     }
 
     /// <summary>
@@ -440,6 +448,7 @@ namespace System.Data.Entity.SqlServer.Resources
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt";
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid";
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt";
+        internal const string TransientExceptionDetected = "TransientExceptionDetected";
         
         private static EntityRes loader;
         private readonly ResourceManager resources;

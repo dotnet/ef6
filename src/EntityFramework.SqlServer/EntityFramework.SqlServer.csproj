@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="DbGeographyAdapter.cs" />
     <Compile Include="DbGeometryAdapter.cs" />
+    <Compile Include="DefaultSqlExecutionStrategy.cs" />
     <Compile Include="Expressions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IDbSpatialValue.cs" />
@@ -101,7 +102,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
+    <Compile Include="SqlAzureDbConfiguration.cs" />
+    <Compile Include="SqlAzureExecutionStrategy.cs" />
+    <Compile Include="SqlAzureRetriableExceptionDetector.cs" />
     <Compile Include="SqlDdlBuilder.cs" />
+    <Compile Include="SqlExecutionStrategyResolver.cs" />
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
     <Compile Include="SqlSpatialServicesForConversions.cs" />

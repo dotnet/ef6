@@ -75,6 +75,5 @@ namespace System.Data.Entity.Infrastructure
         }
 
 #endif
-
     }
 }

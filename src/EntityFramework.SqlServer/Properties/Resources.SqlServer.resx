@@ -244,4 +244,7 @@
   <data name="SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt" xml:space="preserve">
     <value>The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text.</value>
   </data>
+  <data name="TransientExceptionDetected" xml:space="preserve">
+    <value>An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using the SQL Azure executionStrategy, see SqlAzureDbConfiguration.</value>
+  </data>
 </root>

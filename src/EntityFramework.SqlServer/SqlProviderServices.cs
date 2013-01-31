@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
@@ -730,6 +731,12 @@ namespace System.Data.Entity.SqlServer
             // Specific type depends on whether the binary value is fixed length. By default, assume variable length.
 
             return type.IsFixedLength() ? SqlDbType.Binary : SqlDbType.VarBinary;
+        }
+
+        /// <inheritdoc/>
+        public override IExecutionStrategy GetExecutionStrategy()
+        {
+            return new DefaultSqlExecutionStrategy();
         }
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
