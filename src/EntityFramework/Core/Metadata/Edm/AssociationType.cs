@@ -61,6 +61,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
+                Debug.Assert(
+                    IsReadOnly,
+                    "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to read-only");
+            
                 if (null == _associationEndMembers)
                 {
                     Interlocked.CompareExchange(

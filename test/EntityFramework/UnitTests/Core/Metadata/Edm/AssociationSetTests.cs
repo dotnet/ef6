@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Can_get_ends_via_wrapper_properties()
+        public void Can_get_association_ends_from_association_set()
         {
             var sourceEnd = new AssociationEndMember("S", new EntityType());
             var targetEnd = new AssociationEndMember("T", new EntityType());
@@ -52,8 +52,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(new EntitySet(), associationSet, sourceEnd));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(new EntitySet(), associationSet, targetEnd));
-
-            associationType.SetReadOnly();
 
             Assert.Same(sourceEnd, associationSet.SourceEnd);
             Assert.Same(targetEnd, associationSet.TargetEnd);
