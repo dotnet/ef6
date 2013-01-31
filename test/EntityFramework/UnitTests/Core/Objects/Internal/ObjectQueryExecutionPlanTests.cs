@@ -45,7 +45,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
@@ -99,7 +98,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
@@ -152,7 +150,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
@@ -213,7 +210,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
@@ -272,7 +268,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
@@ -330,7 +325,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                null,
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();

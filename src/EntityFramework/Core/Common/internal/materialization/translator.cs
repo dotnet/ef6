@@ -21,7 +21,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Security.Permissions;
 
     /// <summary>
     ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the
@@ -72,15 +71,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // delegates for the expressions we generated.
             var coordinatorFactory = (CoordinatorFactory<T>)translatorVisitor.RootCoordinatorScratchpad.Compile();
 
-            // Along the way we constructed a nice delegate to perform runtime permission 
-            // checks (e.g. for LinkDemand and non-public members).  We need that now.
-            var checkPermissionsDelegate = translatorVisitor.GetCheckPermissionsDelegate();
-
             // Finally, take everything we've produced, and create the ShaperFactory to
             // contain it all, then add it to the query cache so we don't need to do this
             // for this query again.
             result = new ShaperFactory<T>(
-                translatorVisitor.StateSlotCount, coordinatorFactory, checkPermissionsDelegate, mergeOption);
+                translatorVisitor.StateSlotCount, coordinatorFactory, mergeOption);
             var cacheEntry = new QueryCacheEntry(cacheKey, result);
             if (queryCacheManager.TryLookupAndAdd(cacheEntry, out cacheEntry))
             {
@@ -147,13 +142,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             private CoordinatorScratchpad _currentCoordinatorScratchpad;
 
             /// <summary>
-            ///     Set to true if any Entity/Complex type/property for which we're emitting a
-            ///     handler is non-public. Used to determine which security checks are necessary
-            ///     when invoking the delegate.
-            /// </summary>
-            private bool _hasNonPublicMembers;
-
-            /// <summary>
             ///     Local cache of ObjectTypeMappings for EdmTypes (to prevent expensive lookups).
             /// </summary>
             private readonly Dictionary<EdmType, ObjectTypeMapping> _objectTypeMappings = new Dictionary<EdmType, ObjectTypeMapping>();
@@ -189,18 +177,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             ///     values during materialization)
             /// </summary>
             public int StateSlotCount { get; private set; }
-
-            /// <summary>
-            ///     Returns a delegate performing necessary permission checks identified
-            ///     by this translator.  This delegate must be called every time a row is
-            ///     read from the ObjectResult enumerator, since the enumerator can be
-            ///     passed across security contexts.
-            /// </summary>
-            public Action GetCheckPermissionsDelegate()
-            {
-                // Emit an action to check runtime permissions.
-                return _hasNonPublicMembers ? (Action)DemandMemberAccess : null;
-            }
 
             // utility accept that looks up CLR type
             private static TranslatorResult AcceptWithMappedType(TranslatorVisitor translatorVisitor, ColumnMap columnMap)
@@ -447,12 +423,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     var propertyAccessor = edmProperty.PropertyInfo.GetSetMethod(nonPublic: true);
                     var propertyType = edmProperty.PropertyInfo.PropertyType;
 
-                    // determine if any security checks are required
-                    if (!IsPublic(propertyAccessor))
-                    {
-                        _hasNonPublicMembers = true;
-                    }
-
                     // get translation of property value
                     var valueReader = columnMap.Properties[i].Accept(this, new TranslatorArg(propertyType)).Expression;
 
@@ -471,16 +441,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     result.Add(binding);
                 }
                 return result;
-            }
-
-            private static bool IsPublic(MethodBase method)
-            {
-                return (method.IsPublic && IsPublic(method.DeclaringType));
-            }
-
-            private static bool IsPublic(Type type)
-            {
-                return ((null == type) || (type.IsPublic && IsPublic(type.DeclaringType)));
             }
 
             /// <summary>
@@ -1295,12 +1255,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 return StateSlotCount++;
             }
 
-            [SuppressMessage("Microsoft.Security", "CA2143:TransparentMethodsShouldNotDemandFxCopRule")]
-            private static void DemandMemberAccess()
-            {
-                new ReflectionPermission(ReflectionPermissionFlag.MemberAccess).Demand();
-            }
-
             /// <summary>
             ///     Return the CLR type we're supposed to materialize for the TypeUsage
             /// </summary>
@@ -1412,20 +1366,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             ///     Get the ConstructorInfo for the type specified, and ensure we keep track
             ///     of any security requirements that the type has.
             /// </summary>
-            private ConstructorInfo GetConstructor(Type type)
+            private static ConstructorInfo GetConstructor(Type type)
             {
-                ConstructorInfo result = null;
-                if (!type.IsAbstract)
-                {
-                    result = DelegateFactory.GetConstructorForType(type);
-
-                    // remember security requirements for this constructor
-                    if (!IsPublic(result))
-                    {
-                        _hasNonPublicMembers = true;
-                    }
-                }
-                return result;
+                return type.IsAbstract ? null : DelegateFactory.GetConstructorForType(type);
             }
 
             /// <summary>

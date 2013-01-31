@@ -42,7 +42,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 MergeOption.AppendOnly,
                 /*stateCount*/ 1,
                 coordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true
@@ -113,7 +112,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 MergeOption.AppendOnly,
                 /*stateCount*/ 3,
                 rootCoordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true
@@ -202,7 +200,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 MergeOption.AppendOnly,
                 /*stateCount*/ 6,
                 rootCoordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true

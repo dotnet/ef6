@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq.Expressions;
-    using System.Security;
-    using System.Security.Permissions;
     using System.Text;
 
     /// <summary>
@@ -127,13 +125,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 .ToString();
         }
 
-        // Asserts MemberAccess to skip visbility check.  
-        // This means that that security checks are skipped. Before calling this
-        // method you must ensure that you've done a TestComple on expressions provided
-        // by the user to ensure the compilation doesn't violate them.
-        //[SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         public CoordinatorFactory(
             int depth,
             int stateSlot,

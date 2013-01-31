@@ -13,12 +13,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using System.Security;
-    using System.Security.Permissions;
 
     internal static class CodeGenEmitter
     {
@@ -179,14 +176,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         ///     Compiles a delegate taking a Shaper instance and returning values. Used to compile
         ///     Expressions produced by the emitter.
-        ///     Asserts MemberAccess to skip visbility check.
-        ///     This means that that security checks are skipped. Before calling this
-        ///     method you must ensure that you've done a TestComple on expressions provided
-        ///     by the user to ensure the compilation doesn't violate them.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         internal static Func<Shaper, TResult> Compile<TResult>(Expression body)
         {
             return BuildShaperLambda<TResult>(body).Compile();

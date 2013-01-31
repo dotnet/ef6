@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var typeUsageMock = new Mock<TypeUsage>();
 
             var expectedShaperFactory = new ShaperFactory<object>(
-                0, Objects.MockHelper.CreateCoordinatorFactory<object>(), null,
+                0, Objects.MockHelper.CreateCoordinatorFactory<object>(),
                 MergeOption.AppendOnly);
 
             var translatorMock = new Mock<Translator>();

@@ -6,8 +6,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
-    using System.Security;
-    using System.Security.Permissions;
 
     /// <summary>
     ///     An immutable class used to generate new RecordStates, which are used
@@ -130,13 +128,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             IsColumnNested = new ReadOnlyCollection<bool>(isColumnNested);
         }
 
-        // Asserts MemberAccess to skip visbility check.  
-        // This means that that security checks are skipped. Before calling this
-        // method you must ensure that you've done a TestComple on expressions provided
-        // by the user to ensure the compilation doesn't violate them.
-        //[SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         public RecordStateFactory(
             int stateSlotNumber, int columnCount, RecordStateFactory[] nestedRecordStateFactories, DataRecordInfo dataRecordInfo,
             Expression gatherData, string[] propertyNames, TypeUsage[] typeUsages)

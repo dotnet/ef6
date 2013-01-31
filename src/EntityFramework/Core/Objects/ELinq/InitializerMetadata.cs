@@ -26,9 +26,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
     {
         internal readonly Type ClrType;
 
-        internal static readonly MethodInfo UserExpressionMarker = typeof(InitializerMetadata).GetMethod(
-            "MarkAsUserExpression", BindingFlags.NonPublic | BindingFlags.Static);
-
         private static long s_identifier;
         internal readonly string Identity;
         private static readonly string _identifierPrefix = typeof(InitializerMetadata).Name;
@@ -86,13 +83,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             EdmItemCollection itemCollection, Type type, NavigationProperty navigationProperty)
         {
             return itemCollection.GetCanonicalInitializerMetadata(new EntityCollectionInitializerMetadata(type, navigationProperty));
-        }
-
-        private static T MarkAsUserExpression<T>(T value)
-        {
-            // No op. This is used as a marker inside of an expression tree to indicate
-            // that the input expression is not trusted.
-            return value;
         }
 
         internal virtual void AppendColumnMapKey(ColumnMapKeyBuilder builder)
@@ -324,10 +314,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Expression nullProjection = Expression.Constant(null, ClrType);
 
                 // _newExpression with members rebound
-                Expression newProjection = Expression.New(_newExpression.Constructor, GetPropertyReaders(propertyTranslatorResults));
-
-                // Indicate that this expression is provided by the user and should not be trusted.
-                return Expression.Call(UserExpressionMarker.MakeGenericMethod(newProjection.Type), newProjection);
+                return Expression.New(_newExpression.Constructor, GetPropertyReaders(propertyTranslatorResults));
             }
 
             internal override IEnumerable<Type> GetChildTypes()
@@ -430,10 +417,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     constantMemberBindings[i] = constantBinding;
                 }
 
-                Expression newProjection = Expression.MemberInit(_initExpression.NewExpression, memberBindings);
-
-                // Indicate that this expression is provided by the user and should not be trusted.
-                return Expression.Call(UserExpressionMarker.MakeGenericMethod(newProjection.Type), newProjection);
+                return Expression.MemberInit(_initExpression.NewExpression, memberBindings);
             }
 
             internal override IEnumerable<Type> GetChildTypes()

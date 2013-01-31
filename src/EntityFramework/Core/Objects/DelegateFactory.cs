@@ -70,11 +70,6 @@ namespace System.Data.Entity.Core.Objects
         ///     to property type.
         /// </exception>
         /// <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
-        /// <permission cref="System.Security.Permissions.ReflectionPermission">If the property setter is not public or declaring class is not public.</permission>
-        /// <permission cref="System.Security.NamedPermissionSet">
-        ///     Demand for FullTrust if the property setter or declaring class has a
-        ///     <see cref="System.Security.Permissions.SecurityAction.LinkDemand" />
-        /// </permission>
         internal static void SetValue(EdmProperty property, object target, object value)
         {
             var setter = GetSetterDelegateForProperty(property);

@@ -35,7 +35,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true
@@ -136,7 +135,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true
@@ -244,7 +242,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                  {
                                      CallBase = true
@@ -264,7 +261,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory2,
-                /*checkPermissions*/ null,
                 /*readerOwned*/ false)
                                   {
                                       CallBase = true

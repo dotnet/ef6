@@ -22,7 +22,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 2,
                 Objects.MockHelper.CreateCoordinatorFactory<object, RecordState>(
                     0, 0, 0, new CoordinatorFactory[0], new List<RecordState>()),
-                null,
                 MergeOption.NoTracking);
 
             var translatorMock = new Mock<Translator>();
@@ -39,7 +38,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var shaperFactory = new ShaperFactory<T>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory<object, T>(0, 0, 0, new CoordinatorFactory[0], new List<T>()),
-                null,
                 MergeOption.AppendOnly);
 
             var translatorMock = new Mock<Translator>();
