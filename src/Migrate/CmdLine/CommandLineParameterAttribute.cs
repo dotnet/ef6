@@ -9,6 +9,7 @@ namespace CmdLine
     using System.Reflection;
 
     [AttributeUsage(AttributeTargets.Property)]
+    [Serializable]
     public class CommandLineParameterAttribute : Attribute
     {
         private int parameterIndex = -1;

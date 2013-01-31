@@ -108,6 +108,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
+    <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineParameterAttributeTests.cs" />
     <Compile Include="CommandLine\_TestHelpers\BadPositionArgMissingTwo.cs" />
     <Compile Include="CommandLine\_TestHelpers\BadPositionArgNoOne.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />

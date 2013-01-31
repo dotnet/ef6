@@ -198,9 +198,8 @@ namespace System.Data.Entity
 
             formatter.Serialize(stream, exception);
             stream.Seek(0, SeekOrigin.Begin);
-            var deserializedException = (TException)formatter.Deserialize(stream);
 
-            return deserializedException;
+            return (TException)formatter.Deserialize(stream);
         }
 
         /// <summary>
@@ -222,10 +221,10 @@ namespace System.Data.Entity
         {
             UnwrapAggregateExceptions<object>(
                 () =>
-                    {
-                        executor();
-                        return null;
-                    });
+                {
+                    executor();
+                    return null;
+                });
         }
 
         /// <summary>

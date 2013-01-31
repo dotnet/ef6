@@ -3,24 +3,27 @@
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
-    using System.Security;
-    using System.Security.Permissions;
 
     /// <summary>
     ///     Property constraint exception class. Note that this class has state - so if you change even
     ///     its internals, it can be a breaking change
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public sealed class PropertyConstraintException : ConstraintException
     {
-        private readonly string _propertyName;
+        [NonSerialized]
+        private PropertyConstraintExceptionState _state;
 
         /// <summary>
         ///     constructor with default message
         /// </summary>
         public PropertyConstraintException() // required ctor
         {
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -30,6 +33,7 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message) // required ctor
             : base(message)
         {
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -40,6 +44,7 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -50,7 +55,9 @@ namespace System.Data.Entity.Core
             : base(message)
         {
             Check.NotEmpty(propertyName, "propertyName");
-            _propertyName = propertyName;
+            _state.PropertyName = propertyName;
+
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -62,35 +69,9 @@ namespace System.Data.Entity.Core
             : base(message, innerException)
         {
             Check.NotEmpty(propertyName, "propertyName");
-            _propertyName = propertyName;
-        }
+            _state.PropertyName = propertyName;
 
-        /// <summary>
-        ///     constructor for deserialization
-        /// </summary>
-        /// <param name="info"> </param>
-        /// <param name="context"> </param>
-        private PropertyConstraintException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            if (info != null)
-            {
-                _propertyName = info.GetString("PropertyName");
-            }
-        }
-
-        /// <summary>
-        ///     sets the System.Runtime.Serialization.SerializationInfo
-        ///     with information about the exception.
-        /// </summary>
-        /// <param name="info"> The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown. </param>
-        /// <param name="context"> </param>
-        [SecurityCritical]
-        [PermissionSet(SecurityAction.LinkDemand, Unrestricted = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("PropertyName", _propertyName);
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -98,7 +79,23 @@ namespace System.Data.Entity.Core
         /// </summary>
         public string PropertyName
         {
-            get { return _propertyName; }
+            get { return _state.PropertyName; }
+        }
+
+        private void SubscribeToSerializeObjectState()
+        {
+            SerializeObjectState += (_, a) => a.AddSerializedState(_state);
+        }
+
+        [Serializable]
+        private struct PropertyConstraintExceptionState : ISafeSerializationData
+        {
+            public string PropertyName { get; set; }
+
+            public void CompleteDeserialization(object deserialized)
+            {
+                ((PropertyConstraintException)deserialized)._state = this;
+            }
         }
     }
 }

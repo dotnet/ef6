@@ -4,25 +4,25 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
-    using System.Security;
 
     /// <summary>
     ///     Represents an exception that occurred while running an operation in another AppDomain in the
-    ///     <see
-    ///         cref="ToolingFacade" />
-    ///     .
+    ///     <see cref="ToolingFacade" />.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public class ToolingException : Exception
     {
-        private readonly string _innerType;
-        private readonly string _innerStackTrace;
+        [NonSerialized]
+        private ToolingExceptionState _state;
 
         /// <summary>
         ///     Initializes a new instance of the ToolingException class.
         /// </summary>
         public ToolingException()
         {
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -32,6 +32,7 @@ namespace System.Data.Entity.Migrations.Design
         public ToolingException(string message)
             : base(message)
         {
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -43,8 +44,10 @@ namespace System.Data.Entity.Migrations.Design
         public ToolingException(string message, string innerType, string innerStackTrace)
             : base(message)
         {
-            _innerType = innerType;
-            _innerStackTrace = innerStackTrace;
+            _state.InnerType = innerType;
+            _state.InnerStackTrace = innerStackTrace;
+
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -55,14 +58,7 @@ namespace System.Data.Entity.Migrations.Design
         public ToolingException(string message, Exception innerException)
             : base(message, innerException)
         {
-        }
-
-        /// <inheritdoc />
-        protected ToolingException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            _innerType = info.GetString("InnerType");
-            _innerStackTrace = info.GetString("InnerStackTrace");
+            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -70,7 +66,7 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         public string InnerType
         {
-            get { return _innerType; }
+            get { return _state.InnerType; }
         }
 
         /// <summary>
@@ -78,19 +74,24 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         public string InnerStackTrace
         {
-            get { return _innerStackTrace; }
+            get { return _state.InnerStackTrace; }
         }
 
-        /// <inheritdoc />
-        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-        [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
-        [SecurityCritical]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        private void SubscribeToSerializeObjectState()
         {
-            base.GetObjectData(info, context);
+            SerializeObjectState += (_, a) => a.AddSerializedState(_state);
+        }
 
-            info.AddValue("InnerType", _innerType);
-            info.AddValue("InnerStackTrace", _innerStackTrace);
+        [Serializable]
+        private struct ToolingExceptionState : ISafeSerializationData
+        {
+            public string InnerType { get; set; }
+            public string InnerStackTrace { get; set; }
+
+            public void CompleteDeserialization(object deserialized)
+            {
+                ((ToolingException)deserialized)._state = this;
+            }
         }
     }
 }

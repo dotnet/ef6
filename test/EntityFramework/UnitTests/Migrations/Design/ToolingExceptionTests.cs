@@ -2,42 +2,86 @@
 
 namespace System.Data.Entity.Migrations.Design
 {
-    using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
     using Xunit;
 
     public class ToolingExceptionTests
     {
         [Fact]
-        public void Can_set_properties()
+        public void Constructors_allow_for_nulls()
         {
-            var ex = new ToolingException("message", "innerType", "innerStackTrace");
-
-            Assert.Equal("message", ex.Message);
-            Assert.Equal("innerType", ex.InnerType);
-            Assert.Equal("innerStackTrace", ex.InnerStackTrace);
+            Assert.True(new ToolingException(null).Message.Contains("'System.Data.Entity.Migrations.Design.ToolingException'"));
+            Assert.True(new ToolingException(null, null).Message.Contains("'System.Data.Entity.Migrations.Design.ToolingException'"));
+            Assert.Null(new ToolingException(null, null).InnerException);
+            Assert.Null(new ToolingException(null, null, null).InnerType);
+            Assert.Null(new ToolingException(null, null, null).InnerStackTrace);
+            Assert.True(new ToolingException(null, null, null).Message.Contains("'System.Data.Entity.Migrations.Design.ToolingException'"));
         }
 
         [Fact]
-        public void Can_serialize()
+        public void Parameterless_constructor_uses_default_message_and_sets_up_serialization()
         {
-            var formatter = new BinaryFormatter();
-            var originalException = new ToolingException("message", "innerType", "innerStackTrace");
+            var exception = new ToolingException();
 
-            ToolingException exception;
+            Assert.True(exception.Message.Contains("'System.Data.Entity.Migrations.Design.ToolingException'"));
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
 
-            using (var stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, originalException);
+            exception = ExceptionHelpers.SerializeAndDeserialize(exception);
 
-                stream.Seek(0, SeekOrigin.Begin);
+            Assert.True(exception.Message.Contains("'System.Data.Entity.Migrations.Design.ToolingException'"));
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
+        }
 
-                exception = (ToolingException)formatter.Deserialize(stream);
-            }
+        [Fact]
+        public void Constructor_uses_given_message_and_sets_up_serialization()
+        {
+            var exception = new ToolingException("It's Tool Time!");
 
-            Assert.Equal(originalException.Message, exception.Message);
-            Assert.Equal(originalException.InnerType, exception.InnerType);
-            Assert.Equal(originalException.InnerStackTrace, exception.InnerStackTrace);
+            Assert.Equal("It's Tool Time!", exception.Message);
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
+
+            exception = ExceptionHelpers.SerializeAndDeserialize(exception);
+
+            Assert.Equal("It's Tool Time!", exception.Message);
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
+        }
+
+        [Fact]
+        public void Constructor_uses_given_message_and_inner_exception_and_sets_up_serialization()
+        {
+            var innerException = new Exception("Hello? Hello?");
+            var exception = new ToolingException("Can somebody let me out?", innerException);
+
+            Assert.Equal("Can somebody let me out?", exception.Message);
+            Assert.Same(innerException, exception.InnerException);
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
+
+            exception = ExceptionHelpers.SerializeAndDeserialize(exception);
+
+            Assert.Equal("Can somebody let me out?", exception.Message);
+            Assert.Equal(innerException.Message, exception.InnerException.Message);
+            Assert.Null(exception.InnerType);
+            Assert.Null(exception.InnerStackTrace);
+        }
+
+        [Fact]
+        public void Constructor_uses_given_detailed_information_and_sets_up_serialization()
+        {
+            var exception = new ToolingException("Really?", "INTP", "Where's my tracing paper?");
+
+            Assert.Equal("Really?", exception.Message);
+            Assert.Equal("INTP", exception.InnerType);
+            Assert.Equal("Where's my tracing paper?", exception.InnerStackTrace);
+
+            exception = ExceptionHelpers.SerializeAndDeserialize(exception);
+
+            Assert.Equal("Really?", exception.Message);
+            Assert.Equal("INTP", exception.InnerType);
+            Assert.Equal("Where's my tracing paper?", exception.InnerStackTrace);
         }
     }
 }

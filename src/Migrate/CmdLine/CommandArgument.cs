@@ -2,12 +2,14 @@
 
 namespace CmdLine
 {
+    using System;
     using System.Text;
     using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Represents a command line argument
     /// </summary>
+    [Serializable]
     public class CommandArgument
     {
         private const int TokenGroup = 0;

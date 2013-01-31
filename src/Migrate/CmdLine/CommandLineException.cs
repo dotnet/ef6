@@ -3,40 +3,68 @@
 namespace CmdLine
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
-    using System.Security.Permissions;
 
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "SerializeObjectState used instead")]
+    [Serializable]
     public class CommandLineException : Exception
     {
+        [NonSerialized]
+        private CommandLineExceptionState _state;
+
         public CommandLineException(string message)
             : base(message)
         {
+            SubscribeToSerializeObjectState();
         }
 
         public CommandLineException(CommandArgumentHelp argumentHelp)
-            : base(argumentHelp.Message)
+            : base(CheckNotNull(argumentHelp).Message)
         {
             ArgumentHelp = argumentHelp;
+
+            SubscribeToSerializeObjectState();
         }
 
         public CommandLineException(CommandArgumentHelp argumentHelp, Exception inner)
-            : base(argumentHelp.Message, inner)
+            : base(CheckNotNull(argumentHelp).Message, inner)
         {
             ArgumentHelp = argumentHelp;
+
+            SubscribeToSerializeObjectState();
         }
 
-        protected CommandLineException(SerializationInfo info, StreamingContext context)
+        public CommandArgumentHelp ArgumentHelp
         {
-            ArgumentHelp = (CommandArgumentHelp)info.GetValue("ArgumentHelp", typeof(CommandArgumentHelp));
+            get { return _state.ArgumentHelp; }
+            set { _state.ArgumentHelp = value; }
         }
 
-        public CommandArgumentHelp ArgumentHelp { get; set; }
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        private static CommandArgumentHelp CheckNotNull(CommandArgumentHelp argumentHelp)
         {
-            base.GetObjectData(info, context);
-            info.AddValue("ArgumentHelp", ArgumentHelp);
+            if (argumentHelp == null)
+            {
+                throw new ArgumentNullException("argumentHelp");
+            }
+            return argumentHelp;
+        }
+
+        private void SubscribeToSerializeObjectState()
+        {
+            SerializeObjectState += (_, a) => a.AddSerializedState(_state);
+        }
+
+        [Serializable]
+        private struct CommandLineExceptionState : ISafeSerializationData
+        {
+            public CommandArgumentHelp ArgumentHelp { get; set; }
+
+            public void CompleteDeserialization(object deserialized)
+            {
+                ((CommandLineException)deserialized)._state = this;
+            }
         }
     }
 }
