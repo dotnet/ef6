@@ -227,7 +227,7 @@ namespace System.Data.Entity.Migrations.Sql
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
-
+            // tmp
             Assert.True(
                 sql.Contains(
                     @"IF schema_id('foo') IS NULL
