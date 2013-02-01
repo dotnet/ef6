@@ -6,7 +6,7 @@ namespace FunctionalTests.TestHelpers
     using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Infrastructure.Pluralization;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
 
     public class FunctionalTestsConfiguration : DbConfiguration
@@ -36,6 +36,15 @@ namespace FunctionalTests.TestHelpers
                             OriginalConnectionFactories.Add(currentFactory);
                         }
                         a.AddDependencyResolver(DefaultConnectionFactoryResolver.Instance, overrideConfigFile: true);
+
+                        var currentProviderFactory = a.ResolverSnapshot.GetService<IDbProviderFactoryService>();
+                        a.AddDependencyResolver(
+                            new SingletonDependencyResolver<IDbProviderFactoryService>(
+                                new FakeProviderFactoryService(currentProviderFactory))
+                            , overrideConfigFile: true);
+
+                        a.AddDependencyResolver(new FakeProviderServicesResolver(), overrideConfigFile: true);
+
                         a.AddDependencyResolver(MutableResolver.Instance, overrideConfigFile: true);
                     };
         }

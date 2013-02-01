@@ -12,13 +12,13 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
+    using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Transactions;
     using System.Xml.Linq;
-    using System.Linq;
     using FunctionalTests.TestHelpers;
 
     public class TestBase : MarshalByRefObject
@@ -31,7 +31,6 @@ namespace System.Data.Entity
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
         {
             OnModelCreating(modelBuilder);
-
             // Build and clone to check for idempotency issues.
 
             modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -93,6 +92,14 @@ namespace System.Data.Entity
         public static Assembly SystemComponentModelDataAnnotationsAssembly
         {
             get { return typeof(ValidationAttribute).Assembly; }
+        }
+
+        /// <summary>
+        ///     EntityFramework.SqlServer
+        /// </summary>
+        public static Assembly EntityFrameworkSqlServerAssembly
+        {
+            get { return typeof(SqlProviderServices).Assembly; }
         }
 
         /// <summary>

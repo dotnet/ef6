@@ -200,10 +200,17 @@
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
+    <Compile Include="TestHelpers\FakeProviderFactoryService.cs" />
+    <Compile Include="TestHelpers\FakeProviderServicesResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
     <Compile Include="TestHelpers\FunctionalTestsManifestTokenService.cs" />
     <Compile Include="TestHelpers\FunctionalTestsConfiguration.cs" />
+    <Compile Include="TestHelpers\GenericConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
+    <Compile Include="TestHelpers\GenericProviderServices.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\FakePluralizationService.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaAllTypes.cs" />

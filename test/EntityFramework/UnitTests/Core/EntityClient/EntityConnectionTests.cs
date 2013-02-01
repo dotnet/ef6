@@ -7,19 +7,19 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Transactions;
+    using FunctionalTests.TestHelpers;
+    using Moq;
+    using Moq.Protected;
+    using Xunit;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Transactions;
-    using Moq;
-    using Xunit;
-
-#if !NET40
-    using Moq.Protected;
 #endif
 
     public class EntityConnectionTests
     {
-        public class Open
+        public class Open : TestBase
         {
             [Fact]
             public void Exception_is_thrown_if_dbConnection_is_null()
@@ -40,6 +40,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -47,7 +48,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
-                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                dbConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -59,6 +61,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -66,7 +69,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
-                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                dbConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.Open(), Times.Once());
             }
@@ -78,6 +82,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -85,7 +90,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
-                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                dbConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(
                     Strings.EntityClient_CannotReopenConnection,
@@ -100,6 +106,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -118,6 +125,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.Open()).Verifiable();
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -138,6 +146,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.Open()).Verifiable();
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -146,6 +155,42 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Throws<InvalidOperationException>(() => entityConnection.Open());
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
+            }
+
+            [Fact]
+            public void ExecutionStrategy_is_used()
+            {
+                var storeConnectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(
+                    a =>
+                    {
+                        storeConnectionMock.Verify(m => m.Open(), Times.Never());
+                        a();
+                        storeConnectionMock.Verify(m => m.Open(), Times.Once());
+                    });
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    entityConnection.Open();
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Action>()), Times.Once());
             }
 
             [Fact]
@@ -158,6 +203,7 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -168,14 +214,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open entityConnection (automatically opens store connection)
                     entityConnection.Open();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // close entityConnection without explicitly closing underlying store connection 
                     entityConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -190,6 +238,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -200,14 +249,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open entityConnection (automatically opens store connection)
                 entityConnection.Open();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // close entityConnection without explicitly closing underlying store connection 
                 entityConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -223,6 +274,7 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
@@ -231,14 +283,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open underlying store connection without explicitly opening entityConnection
                     entityConnection.StoreConnection.Open();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                     // now close underlying store connection (without explicitly closing entityConnection)
                     entityConnection.StoreConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State);
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -253,6 +307,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
@@ -261,14 +316,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open underlying store connection without explicitly opening entityConnection
                 entityConnection.StoreConnection.Open();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // now close underlying store connection (without explicitly closing entityConnection)
                 entityConnection.StoreConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -285,6 +342,7 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -292,20 +350,23 @@ namespace System.Data.Entity.Core.EntityClient
                     // open entityConnection - both entityConnection and store connection should now be open
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
                     entityConnection.Open();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // now close the underlying store connection without explicitly closing entityConnection
                     entityConnection.StoreConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                     // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                     entityConnection.StoreConnection.Open();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State);
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
                 }
@@ -320,6 +381,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -327,26 +389,30 @@ namespace System.Data.Entity.Core.EntityClient
                 // open entityConnection - both entityConnection and store connection should now be open
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
                 entityConnection.Open();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // now close the underlying store connection without explicitly closing entityConnection
                 entityConnection.StoreConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                 entityConnection.StoreConnection.Open();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
         }
 
-#if !NET40 // These tests rely on being able to mock DbConnection, which is very complicated on .NET 4, so disabling these tests on that platform
+#if !NET40
+        // These tests rely on being able to mock DbConnection, which is very complicated on .NET 4, so disabling these tests on that platform
         public class Dispose
         {
             [Fact]
@@ -356,6 +422,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
@@ -370,12 +437,15 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void EntityConnection_does_not_dispose_underlying_StoreConnection_if_entityConnectionShouldDisposeStoreConnection_flag_is_not_set()
+            public void
+                EntityConnection_does_not_dispose_underlying_StoreConnection_if_entityConnectionShouldDisposeStoreConnection_flag_is_not_set
+                ()
             {
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
@@ -390,12 +460,15 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void EntityConnection_does_not_dispose_underlying_StoreConnection_if_the_entityConnectionShouldDisposeStoreConnection_flag_is_not_specified()
+            public void
+                EntityConnection_does_not_dispose_underlying_StoreConnection_if_the_entityConnectionShouldDisposeStoreConnection_flag_is_not_specified
+                ()
             {
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
@@ -413,7 +486,7 @@ namespace System.Data.Entity.Core.EntityClient
 
 #if !NET40
 
-        public class OpenAsync
+        public class OpenAsync : TestBase
         {
             [Fact]
             public void Exception_is_thrown_if_dbConnection_is_null()
@@ -434,13 +507,15 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
                     () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
-                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                dbConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -453,13 +528,15 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
                     () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
-                dbConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                dbConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -469,6 +546,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -487,6 +565,7 @@ namespace System.Data.Entity.Core.EntityClient
                     () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -504,6 +583,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -528,6 +608,7 @@ namespace System.Data.Entity.Core.EntityClient
                     Task.FromResult(1));
                 dbConnectionMock.Setup(m => m.Close()).Verifiable();
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Throws<InvalidOperationException>();
@@ -545,8 +626,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Throws(
                     new AggregateException(new InvalidOperationException()));
-
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -560,6 +641,51 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
+            public void ExecutionStrategy_is_used()
+            {
+                var storeConnectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                storeConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                    {
+                        storeConnectionState =
+                            ConnectionState.Open;
+
+                        return Task.FromResult(true);
+                    });
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
+                                     .Returns<Func<Task>, CancellationToken>(
+                                         (f, c) =>
+                                         {
+                                             storeConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Never());
+                                             f().Wait();
+                                             storeConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
+                                             return Task.FromResult(true);
+                                         });
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    entityConnection.OpenAsync().Wait();
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                executionStrategyMock.Verify(m => m.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()), Times.Once());
+            }
+
+            [Fact]
             public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_with_ambient_txn()
             {
                 using (var transaction = new TransactionScope())
@@ -570,6 +696,7 @@ namespace System.Data.Entity.Core.EntityClient
                         () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -580,14 +707,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open entityConnection (automatically opens store connection)
                     entityConnection.OpenAsync().Wait();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // close entityConnection without explicitly closing underlying store connection 
                     entityConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -603,6 +732,7 @@ namespace System.Data.Entity.Core.EntityClient
                     () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -613,14 +743,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open entityConnection (automatically opens store connection)
                 entityConnection.OpenAsync().Wait();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // close entityConnection without explicitly closing underlying store connection 
                 entityConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
@@ -637,6 +769,7 @@ namespace System.Data.Entity.Core.EntityClient
                         () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
@@ -645,14 +778,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                     // open underlying store connection without explicitly opening entityConnection
                     entityConnection.StoreConnection.OpenAsync().Wait();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                     // now close underlying store connection (without explicitly closing entityConnection)
                     entityConnection.StoreConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State);
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -668,6 +803,7 @@ namespace System.Data.Entity.Core.EntityClient
                     () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
@@ -676,14 +812,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                 // open underlying store connection without explicitly opening entityConnection
                 entityConnection.StoreConnection.OpenAsync().Wait();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state is automatically updated
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // now close underlying store connection (without explicitly closing entityConnection)
                 entityConnection.StoreConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
@@ -700,6 +838,7 @@ namespace System.Data.Entity.Core.EntityClient
                         () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                    storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                     var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                     metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -707,20 +846,23 @@ namespace System.Data.Entity.Core.EntityClient
                     // open entityConnection - both entityConnection and store connection should now be open
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
                     entityConnection.OpenAsync().Wait();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                     // now close the underlying store connection without explicitly closing entityConnection
                     entityConnection.StoreConnection.Close();
-                    storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                     // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                     entityConnection.StoreConnection.OpenAsync().Wait();
-                    storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    storeConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                     Assert.Equal(ConnectionState.Open, entityConnection.State);
                     Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
                 }
@@ -735,6 +877,7 @@ namespace System.Data.Entity.Core.EntityClient
                     () => storeConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
                 storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -742,20 +885,23 @@ namespace System.Data.Entity.Core.EntityClient
                 // open entityConnection - both entityConnection and store connection should now be open
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
                 entityConnection.OpenAsync().Wait();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 // now close the underlying store connection without explicitly closing entityConnection
                 entityConnection.StoreConnection.Close();
-                storeConnectionMock.Raise(conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange -= null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state automatically updated
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State);
 
                 // now re-open the store connection and EntityConnection is "resurrected" to an Open state
                 entityConnection.StoreConnection.OpenAsync().Wait();
-                storeConnectionMock.Raise(conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                storeConnectionMock.Raise(
+                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
@@ -774,5 +920,72 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
+
+        public class Begin : TestBase
+        {
+            [Fact]
+            public void ExecutionStrategy_is_used_to_recover_from_a_transient_error()
+            {
+                var storeConnectionState = ConnectionState.Open;
+                var transientExceptionThrown = false;
+                var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
+                storeConnectionMock.Setup(m => m.Open()).Callback(() => storeConnectionState = ConnectionState.Open);
+                storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
+                storeConnectionMock.Protected().Setup<DbTransaction>("BeginDbTransaction", Data.IsolationLevel.Unspecified)
+                                   .Returns<Data.IsolationLevel>(
+                                       il =>
+                                       {
+                                           if (!transientExceptionThrown)
+                                           {
+                                               transientExceptionThrown = true;
+                                               storeConnectionState = ConnectionState.Broken;
+                                               throw new TimeoutException();
+                                           }
+                                           return new Mock<DbTransaction>().Object;
+                                       });
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<DbTransaction>>())).Returns<Func<DbTransaction>>(
+                    a =>
+                    {
+                        storeConnectionMock.Protected()
+                                           .Verify<DbTransaction>(
+                                               "BeginDbTransaction", Times.Never(), Data.IsolationLevel.Unspecified);
+
+                        Assert.Throws<TimeoutException>(() => a());
+
+                        storeConnectionMock.Protected()
+                                           .Verify<DbTransaction>(
+                                               "BeginDbTransaction", Times.Once(), Data.IsolationLevel.Unspecified);
+
+                        var result = a();
+
+                        storeConnectionMock.Protected()
+                                           .Verify<DbTransaction>(
+                                               "BeginDbTransaction", Times.Exactly(2), Data.IsolationLevel.Unspecified);
+
+                        return result;
+                    });
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    entityConnection.BeginTransaction();
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<DbTransaction>>()), Times.Once());
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
@@ -28,12 +29,12 @@ namespace System.Data.Entity.Core.EntityClient
     /// </summary>
     public class EntityConnection : DbConnection
     {
-        private const string s_metadataPathSeparator = "|";
-        private const string s_semicolonSeparator = ";";
-        private const string s_entityClientProviderName = "System.Data.EntityClient";
-        private const string s_providerInvariantName = "provider";
-        private const string s_providerConnectionString = "provider connection string";
-        private const string s_readerPrefix = "reader://";
+        private const string MetadataPathSeparator = "|";
+        private const string SemicolonSeparator = ";";
+        private const string EntityClientProviderName = "System.Data.EntityClient";
+        private const string ProviderInvariantName = "provider";
+        private const string ProviderConnectionString = "provider connection string";
+        private const string ReaderPrefix = "reader://";
 
         private readonly object _connectionStringLock = new object();
         private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
@@ -120,7 +121,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     This constructor allows to skip the initialization code for testing purposes.
         /// </summary>
-        internal EntityConnection(MetadataWorkspace workspace, DbConnection connection, bool skipInitialization, bool entityConnectionOwnsStoreConnection)
+        internal EntityConnection(
+            MetadataWorkspace workspace, DbConnection connection, bool skipInitialization, bool entityConnectionOwnsStoreConnection)
         {
             if (!skipInitialization)
             {
@@ -139,7 +141,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 // Verify that a factory can be retrieved
-                if (connection.GetProviderFactory() == null)    
+                if (connection.GetProviderFactory() == null)
                 {
                     throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
                 }
@@ -208,9 +210,9 @@ namespace System.Data.Entity.Core.EntityClient
                         CultureInfo.InvariantCulture,
                         "{0}={3}{4};{1}={5};{2}=\"{6}\";",
                         EntityConnectionStringBuilder.MetadataParameterName,
-                        s_providerInvariantName,
-                        s_providerConnectionString,
-                        s_readerPrefix,
+                        ProviderInvariantName,
+                        ProviderConnectionString,
+                        ReaderPrefix,
                         _metadataWorkspace.MetadataWorkspaceId,
                         _storeConnection.GetProviderInvariantName(),
                         FormatProviderString(_storeConnection.ConnectionString));
@@ -324,10 +326,7 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override ConnectionState State
         {
-            get
-            {
-                return _entityClientConnectionState;
-            }
+            get { return _entityClientConnectionState; }
         }
 
         /// <summary>
@@ -558,7 +557,8 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (_storeConnection.State != ConnectionState.Open)
                 {
-                    _storeConnection.Open();
+                    DbProviderServices.GetExecutionStrategy(_storeConnection).Execute(_storeConnection.Open);
+
                     closeStoreConnectionOnFailure = true;
                 }
 
@@ -612,7 +612,9 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (_storeConnection.State != ConnectionState.Open)
                 {
-                    await _storeConnection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection);
+                    await executionStrategy.ExecuteAsync(() => _storeConnection.OpenAsync(cancellationToken), cancellationToken)
+                                           .ConfigureAwait(continueOnCapturedContext: false);
                     closeStoreConnectionOnFailure = true;
                 }
 
@@ -770,7 +772,22 @@ namespace System.Data.Entity.Core.EntityClient
             DbTransaction storeTransaction = null;
             try
             {
-                storeTransaction = _storeConnection.BeginTransaction(isolationLevel);
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection);
+                storeTransaction = executionStrategy.Execute(
+                    () =>
+                        {
+                            if (_storeConnection.State == ConnectionState.Broken)
+                            {
+                                _storeConnection.Close();
+                            }
+
+                            if (_storeConnection.State == ConnectionState.Closed)
+                            {
+                                _storeConnection.Open();
+                            }
+
+                            return _storeConnection.BeginTransaction(isolationLevel);
+                        });
             }
             catch (Exception e)
             {
@@ -933,7 +950,7 @@ namespace System.Data.Entity.Core.EntityClient
                     // Find the named connection from the configuration, then extract the settings
                     var setting = ConfigurationManager.ConnectionStrings[namedConnection];
                     if (setting == null
-                        || setting.ProviderName != s_entityClientProviderName)
+                        || setting.ProviderName != EntityClientProviderName)
                     {
                         throw new ArgumentException(Strings.EntityClient_InvalidNamedConnection);
                     }
@@ -1149,7 +1166,7 @@ namespace System.Data.Entity.Core.EntityClient
                 if (buildResult)
                 {
                     keyString.Append(providerName);
-                    keyString.Append(s_semicolonSeparator);
+                    keyString.Append(SemicolonSeparator);
                 }
             }
 
@@ -1164,7 +1181,7 @@ namespace System.Data.Entity.Core.EntityClient
                             resultCount++;
                             if (buildResult)
                             {
-                                keyString.Append(s_metadataPathSeparator);
+                                keyString.Append(MetadataPathSeparator);
                             }
                         }
 
@@ -1179,7 +1196,7 @@ namespace System.Data.Entity.Core.EntityClient
                 resultCount++;
                 if (buildResult)
                 {
-                    keyString.Append(s_semicolonSeparator);
+                    keyString.Append(SemicolonSeparator);
                 }
             }
 
