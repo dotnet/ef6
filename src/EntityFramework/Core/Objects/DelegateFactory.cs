@@ -262,9 +262,6 @@ namespace System.Data.Entity.Core.Objects
         ///     If the method is missing or static or has indexed parameters.
         ///     Or if the declaring type is a value type.
         ///     Or if the parameter type is a pointer.
-        ///     Or if the method or declaring class has a
-        ///     <see cref="System.Security.Permissions.StrongNameIdentityPermissionAttribute" />
-        ///     .
         /// </exception>
         internal static Action<object, object> CreatePropertySetter(Type entityDeclaringType, PropertyInfo propertyInfo, bool allowNull)
         {

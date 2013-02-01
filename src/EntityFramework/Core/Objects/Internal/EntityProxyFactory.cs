@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -16,8 +15,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
-    using System.Security;
-    using System.Security.Permissions;
     using System.Threading;
     using System.Xml.Serialization;
 
@@ -68,23 +65,8 @@ namespace System.Data.Entity.Core.Objects.Internal
                     new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
                 assemblyName.Version = new Version(1, 0, 0, 0);
 
-                // Mark assembly as security transparent, meaning it cannot cause an elevation of privilege.
-                // This also means the assembly cannot satisfy a link demand. Instead link demands become full demands.
-                var securityTransparentAttributeConstructor = typeof(SecurityTransparentAttribute).GetConstructor(Type.EmptyTypes);
-
-                // Mark assembly with [SecurityRules(SecurityRuleSet.Level1)]. In memory, the assembly will inherit
-                // this automatically from SDE, but when persisted it needs this attribute to be considered Level1.
-                var securityRulesAttributeConstructor = typeof(SecurityRulesAttribute).GetConstructor(new[] { typeof(SecurityRuleSet) });
-
-                var attributeBuilders = new[]
-                                            {
-                                                new CustomAttributeBuilder(securityTransparentAttributeConstructor, new object[0]),
-                                                new CustomAttributeBuilder(
-                                                    securityRulesAttributeConstructor, new object[1] { SecurityRuleSet.Level1 })
-                                            };
-
                 var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    assemblyName, s_ProxyAssemblyBuilderAccess, attributeBuilders);
+                    assemblyName, s_ProxyAssemblyBuilderAccess);
 
                 if (s_ProxyAssemblyBuilderAccess == AssemblyBuilderAccess.RunAndSave)
                 {
@@ -421,13 +403,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     since it is not present in a location discoverable by fusion.
         /// </summary>
         /// <param name="assembly"> Proxy assembly to be resolved. </param>
-        [SecuritySafeCritical]
         private static void AddAssemblyToResolveList(Assembly assembly)
         {
-            if (_proxyRuntimeAssemblies.Contains(assembly)) // If the assembly is not a known proxy assembly, ignore it.
+            Debug.Assert(_proxyRuntimeAssemblies.Contains(assembly));
+
+            try
             {
-                ResolveEventHandler resolveHandler = (sender, args) => args.Name == assembly.FullName ? assembly : null;
-                AppDomain.CurrentDomain.AssemblyResolve += resolveHandler;
+                AppDomain.CurrentDomain.AssemblyResolve += (_, args) => args.Name == assembly.FullName ? assembly : null;
+            }
+            catch (MethodAccessException)
+            {
+                // Cannot add the assembly to the resolve list when running in partial trust
             }
         }
 
@@ -463,15 +449,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             AssignInterceptionDelegate(interceptorDelegate, interceptorField);
         }
 
-        /// <summary>
-        ///     Set the interceptor on a proxy member.
-        /// </summary>
-        /// <param name="interceptorDelegate"> Delegate to be set </param>
-        /// <param name="interceptorField"> Field define on the proxy type to store the reference to the interception delegate. </param>
-        [SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void AssignInterceptionDelegate(Delegate interceptorDelegate, FieldInfo interceptorField)
         {
             interceptorField.SetValue(null, interceptorDelegate);

@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection.Emit;
     using System.Runtime.Serialization;
     using System.Security;
-    using System.Security.Permissions;
 
     /// <summary>
     ///     This class determines if the proxied type implements ISerializable with the special serialization constructor.
@@ -79,9 +78,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             if (_baseImplementsISerializable && _canOverride)
             {
-                var serializationFormatterPermissions = new PermissionSet(null);
-                serializationFormatterPermissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
-
                 var parameterTypes = new[] { typeof(SerializationInfo), typeof(StreamingContext) };
                 var getTypeFromHandle = typeof(Type).GetMethod("GetTypeFromHandle", new[] { typeof(RuntimeTypeHandle) });
                 var addValue = typeof(SerializationInfo).GetMethod("AddValue", new[] { typeof(string), typeof(object), typeof(Type) });
@@ -90,7 +86,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 //
                 // Define GetObjectData method override
                 //
-                // [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
+                // [SecurityCritical]
                 // public void GetObjectData(SerializationInfo info, StreamingContext context)
                 //
                 var proxyGetObjectData = typeBuilder.DefineMethod(
@@ -98,7 +94,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                     MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual,
                     null,
                     parameterTypes);
-                proxyGetObjectData.AddDeclarativeSecurity(SecurityAction.Demand, serializationFormatterPermissions);
+
+                proxyGetObjectData.SetCustomAttribute(
+                    new CustomAttributeBuilder(
+                        typeof(SecurityCriticalAttribute).GetConstructor(Type.EmptyTypes), new object[0]));
 
                 {
                     var generator = proxyGetObjectData.GetILGenerator();
@@ -126,7 +125,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 //
                 // Define serialization constructor
                 //
-                // [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
                 // .ctor(SerializationInfo info, StreamingContext context)
                 //
                 var constructorAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
@@ -134,7 +132,6 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 var proxyConstructor = typeBuilder.DefineConstructor(
                     constructorAttributes, CallingConventions.Standard | CallingConventions.HasThis, parameterTypes);
-                proxyConstructor.AddDeclarativeSecurity(SecurityAction.Demand, serializationFormatterPermissions);
 
                 {
                     //Emit call to base serialization constructor

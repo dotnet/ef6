@@ -7,11 +7,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Reflection.Emit;
-    using System.Security;
-    using System.Security.Permissions;
 
     internal class IPOCOImplementor
     {
@@ -170,10 +167,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        // Assert MemberAccess to skip visibility check & ReflectionEmit so we can generate the method (make calls to EF internals).
-        [SuppressMessage("Microsoft.Security", "CA2128")]
-        [SecuritySafeCritical]
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
         private static DynamicMethod CreateDynamicMethod(string name, Type returnType, Type[] parameterTypes)
         {
             // Create a transparent dynamic method (Module not specified) to ensure we do not satisfy any link demands

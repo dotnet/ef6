@@ -3,16 +3,43 @@
 namespace UnitTests
 {
     using System.Data.Entity;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
     using System.Security;
     using Xunit;
 
+    /// <summary>
+    /// The EF assemblies are designed to be bin-deployed. If the assembly is GAC'ed, then
+    /// it is only callable from other full trust assemblies.
+    /// </summary>
     public class TargetAssemblyTests
     {
-        // TODO: [Fact(Skip = "TODO: SDE Merge - Need to make assembly security transparent again")]
-        public void EntityFramework_assembly_is_security_transparent()
+        [Fact]
+        public void EntityFramework_assembly_has_no_security_attributes()
         {
-            Assert.Equal(1, typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Count());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
+        }
+
+        [Fact]
+        public void EntityFramework_SqlServer_assembly_has_no_security_attributes()
+        {
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
+        }
+
+        [Fact]
+        public void EntityFramework_SqlCompact_assembly_has_no_security_attributes()
+        {
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
         }
     }
 }

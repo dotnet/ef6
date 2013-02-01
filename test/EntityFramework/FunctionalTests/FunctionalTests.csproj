@@ -168,6 +168,7 @@
     <Compile Include="Migrations\TransactionScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Objects\LazyLoadingTests.cs" />
+    <Compile Include="Objects\SerializationScenarios.cs" />
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbConfigurationTests.cs" />

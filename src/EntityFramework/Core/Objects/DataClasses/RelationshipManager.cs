@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private IEntityWrapper _wrappedOwner;
 
         [NonSerialized]
-        private readonly EntityWrapperFactory _entityWrapperFactory;
+        private EntityWrapperFactory _entityWrapperFactory;
 
         // ----------
         // Properties
@@ -1481,6 +1481,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             // Note that when deserializing, the context is always null since we never serialize
             // the context with the entity.
+            _entityWrapperFactory = new EntityWrapperFactory();
             _wrappedOwner = EntityWrapperFactory.WrapEntityUsingContext(_owner, null);
         }
 
