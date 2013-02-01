@@ -44,7 +44,7 @@ namespace System.Data.Entity.Edm.Serialization
                     storageModificationFunctionMapping));
 
             fixture.Writer.WriteEntitySetMappingElement(storageEntitySetMapping);
-
+            // tmp
             Assert.Equal(
                 @"<EntitySetMapping Name=""ES"">
   <EntityTypeMapping TypeName="".E"">
