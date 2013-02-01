@@ -539,7 +539,7 @@ namespace System.Data.Entity.Core.Common
             path = fixedRoot + path;
 
             // Verify root folder path is a real path without unexpected "..\"
-            if (!EntityUtil.GetFullPath(path).StartsWith(rootFolderPath, StringComparison.Ordinal))
+            if (rootFolderPath.Contains(".."))
             {
                 throw new ArgumentException(Strings.ExpandingDataDirectoryFailed);
             }

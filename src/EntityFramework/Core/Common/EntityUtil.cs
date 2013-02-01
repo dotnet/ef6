@@ -12,12 +12,8 @@ namespace System.Data.Entity.Core
     using System.Data.SqlTypes;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.Versioning;
-    using System.Security;
-    using System.Security.Permissions;
     using System.Text;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -656,14 +652,5 @@ namespace System.Data.Entity.Core
                                                                           {
                                                                               { "CompilerVersion", "V3.5" }
                                                                           }; //v3.5 required for compiling model files with partial methods.
-
-        [FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery)]
-        [SecuritySafeCritical]
-        [ResourceExposure(ResourceScope.Machine)]
-        [ResourceConsumption(ResourceScope.Machine)]
-        internal static string GetFullPath(string filename)
-        {
-            return Path.GetFullPath(filename);
-        }
     }
 }
