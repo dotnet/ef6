@@ -14,7 +14,7 @@ namespace EntityFramework.PowerShell.UnitTests
     using System.ServiceProcess;
     using System.Xml.Linq;
     using EnvDTE;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Microsoft.Win32;
     using Moq;
     using Xunit;

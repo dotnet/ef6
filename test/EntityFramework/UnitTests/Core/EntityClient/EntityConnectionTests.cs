@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Transactions;
-    using FunctionalTests.TestHelpers;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -954,22 +953,22 @@ namespace System.Data.Entity.Core.EntityClient
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<DbTransaction>>())).Returns<Func<DbTransaction>>(
                     a =>
-                    {
-                        storeConnectionMock.Protected()
-                                           .Verify<DbTransaction>(
-                                               "BeginDbTransaction", Times.Never(), Data.IsolationLevel.Unspecified);
+                        {
+                            storeConnectionMock.Protected()
+                                               .Verify<DbTransaction>(
+                                                   "BeginDbTransaction", Times.Never(), Data.IsolationLevel.Unspecified);
 
                         Assert.Throws<TimeoutException>(() => a());
 
-                        storeConnectionMock.Protected()
-                                           .Verify<DbTransaction>(
-                                               "BeginDbTransaction", Times.Once(), Data.IsolationLevel.Unspecified);
+                            storeConnectionMock.Protected()
+                                               .Verify<DbTransaction>(
+                                                   "BeginDbTransaction", Times.Once(), Data.IsolationLevel.Unspecified);
 
                         var result = a();
 
-                        storeConnectionMock.Protected()
-                                           .Verify<DbTransaction>(
-                                               "BeginDbTransaction", Times.Exactly(2), Data.IsolationLevel.Unspecified);
+                            storeConnectionMock.Protected()
+                                               .Verify<DbTransaction>(
+                                                   "BeginDbTransaction", Times.Exactly(2), Data.IsolationLevel.Unspecified);
 
                         return result;
                     });

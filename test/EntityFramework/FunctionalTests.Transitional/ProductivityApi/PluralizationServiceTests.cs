@@ -1,12 +1,11 @@
 ﻿namespace ProductivityApiTests
 {
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.Infrastructure.Pluralization;
     using SimpleModel;
     using System;
     using System.Linq;    
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
     using Xunit;
 
     /// <summary>
@@ -17,14 +16,11 @@
         [Fact]
         public void PluralizationService_pluralize_names_taken_from_DbSet_property_type_names()
         {
-            var previousPluralizationService = DefaultPluralizationServiceResolver.Instance.PluralizationService;
-
             try
             {
                 // This mocked pluralization service add a 'z' character 
                 // at the end of the word, but, only if the last letter is not 'z'
-                DefaultPluralizationServiceResolver.Instance.PluralizationService =
-                    new FakePluralizationService();
+                MutableResolver.AddResolver<IPluralizationService>(k => new FakePluralizationService());
 
                 using (var context = new PluralizationServiceContext())
                 {
@@ -36,7 +32,7 @@
             }
             finally
             {
-                DefaultPluralizationServiceResolver.Instance.PluralizationService = previousPluralizationService;
+                MutableResolver.ClearResolvers();
             }
         }
 
@@ -71,6 +67,23 @@
             public DbSet<Category> Categories { get; set; }
 
             public PluralizationServiceContext() { }
+        }
+
+        public class FakePluralizationService : IPluralizationService
+        {
+            public string Pluralize(string word)
+            {
+                if (!word.EndsWith("z"))
+                {
+                    return string.Format("{0}z", word);
+                }
+                return word;
+            }
+
+            public string Singularize(string word)
+            {
+                return word;
+            }
         }
     }
 }

@@ -13,13 +13,13 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Transactions;
     using System.Xml.Linq;
-    using FunctionalTests.TestHelpers;
 
     public class TestBase : MarshalByRefObject
     {

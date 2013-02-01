@@ -12,7 +12,6 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -884,12 +883,10 @@ namespace ProductivityApiTests
         // GetProviderManifestTokenChecked method is changed.
         public void Useful_exception_is_thrown_if_model_creation_happens_with_bad_MVC4_connection_string()
         {
-            var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             try
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory =
-                    new SqlConnectionFactory(
-                        "Data Source=(localdb)\v11.0; Integrated Security=True; Connection Timeout=1;");
+                MutableResolver.AddResolver<IDbConnectionFactory>(k => new SqlConnectionFactory(
+                        "Data Source=(localdb)\v11.0; Integrated Security=True; Connection Timeout=1;"));
 
                 using (var context = new BadMvcContext())
                 {
@@ -899,7 +896,7 @@ namespace ProductivityApiTests
             }
             finally
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = previousConnectionFactory;
+                MutableResolver.ClearResolvers();
             }
         }
 

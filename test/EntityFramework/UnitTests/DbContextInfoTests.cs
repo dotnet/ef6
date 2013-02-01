@@ -16,7 +16,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Moq;
     using Xunit;
 

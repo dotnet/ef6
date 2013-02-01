@@ -5,7 +5,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Xunit;
 
     public class DbConfigurationTests : FunctionalTestBase

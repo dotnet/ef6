@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace FunctionalTests.TestHelpers
+namespace System.Data.Entity
 {
     using System;
     using System.Collections.Generic;
@@ -9,6 +9,9 @@ namespace FunctionalTests.TestHelpers
     /// <summary>
     ///     A resolver that allows to add dependency resolvers at runtime.
     /// </summary>
+    /// <remarks>
+    ///     This class isn't thread-safe as the tests using it aren't expected to be run in parallel.
+    /// </remarks>
     public class MutableResolver : IDbDependencyResolver
     {
         private static readonly Dictionary<Type, Func<object, object>> _resolvers = new Dictionary<Type, Func<object, object>>();

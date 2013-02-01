@@ -195,7 +195,6 @@
     <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
-    <Compile Include="TestHelpers\DefaultConnectionFactoryResolver.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
@@ -212,7 +211,6 @@
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
-    <Compile Include="TestHelpers\FakePluralizationService.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaAllTypes.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaBaseline.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaBug.cs" />
@@ -226,7 +224,6 @@
     <Compile Include="TestModels\ArubaModel\ArubaTask.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTaskInfo.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTestFailure.cs" />
-    <Compile Include="TestHelpers\DefaultPluralizationServiceResolver.cs" />
     <Compile Include="TestModels\StoreModel\AbstractType1.cs" />
     <Compile Include="TestModels\StoreModel\AbstractType1_1.cs" />
     <Compile Include="TestModels\StoreModel\Address.cs" />

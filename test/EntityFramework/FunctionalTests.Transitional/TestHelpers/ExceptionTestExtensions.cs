@@ -3,7 +3,6 @@
 namespace System.Data.Entity
 {
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Reflection;
     using Xunit;

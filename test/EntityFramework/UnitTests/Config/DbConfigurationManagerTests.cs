@@ -8,7 +8,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Moq;
     using SimpleModel;
     using Xunit;

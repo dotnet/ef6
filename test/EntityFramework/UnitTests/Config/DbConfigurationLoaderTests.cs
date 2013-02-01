@@ -5,7 +5,7 @@ namespace System.Data.Entity.Config
     using System.Configuration;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Moq;
     using Xunit;
 

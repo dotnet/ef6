@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
-    using FunctionalTests.TestHelpers;
     using Moq;
     using Moq.Protected;
     using Xunit;

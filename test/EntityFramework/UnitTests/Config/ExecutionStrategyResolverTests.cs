@@ -5,7 +5,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
     using Moq;
     using Xunit;
 

@@ -6,7 +6,6 @@ namespace System.Data.Entity
     using System.ComponentModel;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Linq.Expressions;
 

@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-
 #if !NET40
 
 namespace ProductivityApiTests
@@ -11,7 +10,6 @@ namespace ProductivityApiTests
     using System.IO;
     using System.Linq;
     using System.Transactions;
-    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -19,16 +17,14 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        private readonly IDbConnectionFactory _previousConnectionFactory;
         private readonly object _previousDataDirectory;
 
         public SimpleScenariosForLocalDb()
         {
-            _previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
 
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
-            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new LocalDbConnectionFactory("v11.0");
+            MutableResolver.AddResolver<IDbConnectionFactory>(k => new LocalDbConnectionFactory("v11.0"));
         }
 
         public void Dispose()
@@ -50,7 +46,7 @@ namespace ProductivityApiTests
             }
             finally
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = _previousConnectionFactory;
+                MutableResolver.ClearResolvers();
                 AppDomain.CurrentDomain.SetData("DataDirectory", _previousDataDirectory);
             }
         }

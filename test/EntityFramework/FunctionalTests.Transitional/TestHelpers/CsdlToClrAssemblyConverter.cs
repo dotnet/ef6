@@ -1,10 +1,10 @@
-﻿namespace System.Data.Entity.TestHelpers
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
+namespace System.Data.Entity
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
     using System.Reflection;

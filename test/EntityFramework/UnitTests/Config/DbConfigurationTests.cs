@@ -12,7 +12,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
-    using FunctionalTests.TestHelpers;
+    using System.Data.Entity.TestHelpers;
     using Moq;
     using Xunit;
 

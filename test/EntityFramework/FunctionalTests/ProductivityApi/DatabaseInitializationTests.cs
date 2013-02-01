@@ -18,7 +18,6 @@ namespace ProductivityApiTests
     using BadMappingModel;
     using ConcurrencyModel;
     using FunctionalTests.SimpleMigrationsModel;
-    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
     using Blog = SimpleModel.Blog;
@@ -600,12 +599,11 @@ namespace ProductivityApiTests
 
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce(
-            
             )
         {
-            var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
-            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = new SqlCeConnectionFactory(
-                "System.Data.SqlServerCe.4.0", AppDomain.CurrentDomain.BaseDirectory, "");
+            MutableResolver.AddResolver<IDbConnectionFactory>(
+                k => new SqlCeConnectionFactory(
+                         "System.Data.SqlServerCe.4.0", AppDomain.CurrentDomain.BaseDirectory, ""));
 
             try
             {
@@ -629,7 +627,7 @@ namespace ProductivityApiTests
             }
             finally
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = previousConnectionFactory;
+                MutableResolver.ClearResolvers();
             }
         }
 

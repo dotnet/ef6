@@ -10,7 +10,6 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
     using SimpleModel;
     using Xunit;
 
@@ -25,17 +24,14 @@ namespace ProductivityApiTests
 
         public DbContextTestsForSqlCe()
         {
-            _previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
-
-            var sqlCeConnectionFactory = new SqlCeConnectionFactory(
+            MutableResolver.AddResolver<IDbConnectionFactory>(k => new SqlCeConnectionFactory(
                 "System.Data.SqlServerCe.4.0",
-                AppDomain.CurrentDomain.BaseDirectory, "");
-            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = sqlCeConnectionFactory;
+                AppDomain.CurrentDomain.BaseDirectory, ""));
         }
 
         public void Dispose()
         {
-            DefaultConnectionFactoryResolver.Instance.ConnectionFactory = _previousConnectionFactory;
+            MutableResolver.ClearResolvers();
         }
 
         #endregion

@@ -17,7 +17,6 @@ namespace ProductivityApiUnitTests
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using System.Linq;
-    using FunctionalTests.TestHelpers;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -470,12 +469,10 @@ END";
         [Fact]
         public void ApplicationName_not_set_when_not_sql_connection()
         {
-            var previousConnectionFactory = DefaultConnectionFactoryResolver.Instance.ConnectionFactory;
-
             try
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory
-                    = new SqlCeConnectionFactory(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName);
+                MutableResolver.AddResolver<IDbConnectionFactory>(k =>
+                    new SqlCeConnectionFactory(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName));
                 var model = new DbModelBuilder().Build(ProviderRegistry.SqlCe4_ProviderInfo);
                 IObjectContextAdapter objectContextAdapter = new NotSqlAppNameContext(new DbCompiledModel(model));
                 var storeConnection = ((EntityConnection)objectContextAdapter.ObjectContext.Connection).StoreConnection;
@@ -484,7 +481,7 @@ END";
             }
             finally
             {
-                DefaultConnectionFactoryResolver.Instance.ConnectionFactory = previousConnectionFactory;
+                MutableResolver.ClearResolvers();
             }
         }
 

@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace FunctionalTests.TestHelpers
+namespace System.Data.Entity.TestHelpers
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.TestHelpers;
     using System.Linq;
 
     public class FunctionalTestsConfiguration : DbConfiguration
@@ -35,7 +33,9 @@ namespace FunctionalTests.TestHelpers
                         {
                             OriginalConnectionFactories.Add(currentFactory);
                         }
-                        a.AddDependencyResolver(DefaultConnectionFactoryResolver.Instance, overrideConfigFile: true);
+                        a.AddDependencyResolver(
+                            new SingletonDependencyResolver<IDbConnectionFactory>(
+                                new SqlConnectionFactory(ModelHelpers.BaseConnectionString)), overrideConfigFile: true);
 
                         var currentProviderFactory = a.ResolverSnapshot.GetService<IDbProviderFactoryService>();
                         a.AddDependencyResolver(
@@ -58,7 +58,6 @@ namespace FunctionalTests.TestHelpers
         {
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenService>(new FunctionalTestsManifestTokenService()));
-            AddDependencyResolver(DefaultPluralizationServiceResolver.Instance);
         }
     }
 }
