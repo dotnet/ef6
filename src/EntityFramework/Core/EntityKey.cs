@@ -845,7 +845,7 @@ namespace System.Data.Entity.Core
 
         private static void ValidateName(string name)
         {
-            if (!Utils.ValidUndottedName(name))
+            if (!name.IsValidUndottedName())
             {
                 throw new ArgumentException(Strings.EntityKey_InvalidName(name));
             }

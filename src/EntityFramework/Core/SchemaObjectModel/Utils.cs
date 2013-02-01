@@ -2,15 +2,11 @@
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
-    using System.CodeDom.Compiler;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Security;
-    using System.Text.RegularExpressions;
     using System.Xml;
     using System.Xml.Schema;
 
@@ -20,26 +16,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     // make class internal when friend assemblies are available
     internal static class Utils
     {
-        #region Static Fields
-
-        // this is what we should be doing for CDM schemas
-        // the RegEx for valid identifiers are taken from the C# Language Specification (2.4.2 Identifiers)
-        // (except that we exclude _ as a valid starting character).
-        // This results in a somewhat smaller set of identifier from what System.CodeDom.Compiler.CodeGenerator.IsValidLanguageIndependentIdentifier
-        // allows. Not all identifiers allowed by IsValidLanguageIndependentIdentifier are valid in C#.IsValidLanguageIndependentIdentifier allows:
-        //    Mn, Mc, and Pc as a leading character (which the spec and C# (at least for some Mn and Mc characters) do not allow)
-        //    characters that Char.GetUnicodeCategory says are in Nl and Cf but which the RegEx does not accept (and which C# does allow).
-        //
-        // we could create the StartCharacterExp and OtherCharacterExp dynamically to force inclusion of the missing Nl and Cf characters...
-        private const string StartCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}]";
-        private const string OtherCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]";
-        private const string NameExp = StartCharacterExp + OtherCharacterExp + "{0,}";
-        //private static Regex ValidDottedName=new Regex(@"^"+NameExp+@"(\."+NameExp+@"){0,}$",RegexOptions.Singleline);
-        private static readonly Regex _undottedNameValidator = new Regex(
-            @"^" + NameExp + @"$", RegexOptions.Singleline | RegexOptions.Compiled);
-
-        #endregion
-
         #region Static Methods
 
         internal static void ExtractNamespaceAndName(string qualifiedTypeName, out string namespaceName, out string name)
@@ -150,7 +126,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 // each part of the dotted name needs to be a valid name
                 foreach (var namePart in name.Split('.'))
                 {
-                    if (!ValidUndottedName(namePart))
+                    if (!namePart.IsValidUndottedName())
                     {
                         schema.AddError(
                             ErrorCode.InvalidName, EdmSchemaErrorSeverity.Error, reader,
@@ -190,7 +166,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
 
             if (schema.DataModel == SchemaDataModelOption.EntityDataModel
-                && !ValidUndottedName(name))
+                && !name.IsValidUndottedName())
             {
                 schema.AddError(
                     ErrorCode.InvalidName, EdmSchemaErrorSeverity.Error, reader,
@@ -203,25 +179,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 string.Format(CultureInfo.CurrentCulture, "{1} ({0}) is not valid. {1} cannot be qualified.", name, reader.Name));
 
             return true;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
-        internal static bool ValidUndottedName(string name)
-        {
-            // CodeGenerator.IsValidLanguageIndependentIdentifier does demand a FullTrust Link
-            // but this is safe since the function only walks over the string no risk is introduced
-            return !string.IsNullOrEmpty(name) && _undottedNameValidator.IsMatch(name)
-                   && IsValidLanguageIndependentIdentifier(name);
-        }
-
-        [SuppressMessage("Microsoft.Security", "CA2122:DoNotIndirectlyExposeMethodsWithLinkDemands")]
-        [SecuritySafeCritical]
-        private static bool IsValidLanguageIndependentIdentifier(string name)
-        {
-            return CodeGenerator.IsValidLanguageIndependentIdentifier(name);
         }
 
         /// <summary>

@@ -5,20 +5,11 @@ namespace System.Data.Entity.Edm.Validation
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Globalization;
+    using System.Data.Entity.Utilities;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     internal static class EdmModelSyntacticValidationRules
     {
-        private const string StartCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}]";
-        private const string OtherCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]";
-
-        private const string NameExp = StartCharacterExp + OtherCharacterExp + "{0,}";
-
-        private static readonly Regex UndottedNameValidator
-            = new Regex(@"^" + NameExp + @"$", RegexOptions.Singleline | RegexOptions.Compiled);
-
         internal static readonly EdmModelValidationRule<INamedDataModelItem> EdmModel_NameMustNotBeEmptyOrWhiteSpace =
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
@@ -62,8 +53,8 @@ namespace System.Data.Entity.Edm.Validation
                             {
                                 if (context.IsCSpace
                                     && !(item is IQualifiedNameMetadataItem
-                                          ? IsValidQualifiedItemName(item.Name)
-                                          : IsValidDataModelItemName(item.Name)))
+                                             ? IsValidDottedName(item.Name)
+                                             : item.Name.IsValidUndottedName()))
                                 {
                                     context.AddError(
                                         (MetadataItem)item,
@@ -201,7 +192,8 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
-                        if (context.IsCSpace && edmAssociationSet.SourceSet == null)
+                        if (context.IsCSpace
+                            && edmAssociationSet.SourceSet == null)
                         {
                             context.AddError(
                                 edmAssociationSet,
@@ -216,7 +208,8 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<AssociationSet>(
                 (context, edmAssociationSet) =>
                     {
-                        if (context.IsCSpace && edmAssociationSet.TargetSet == null)
+                        if (context.IsCSpace
+                            && edmAssociationSet.TargetSet == null)
                         {
                             context.AddError(
                                 edmAssociationSet,
@@ -261,106 +254,12 @@ namespace System.Data.Entity.Edm.Validation
             return true;
         }
 
-        private static bool IsValidDataModelItemName(string name)
-        {
-            return IsValidUndottedName(name);
-        }
-
-        private static bool IsValidQualifiedItemName(string name)
-        {
-            return IsValidDottedName(name);
-        }
-
-        private static bool IsValidUndottedName(string name)
-        {
-            // CodeGenerator.IsValidLanguageIndependentIdentifier does demand a FullTrust Link
-            // but this is safe since the function only walks over the string no risk is introduced
-            return (!string.IsNullOrEmpty(name) &&
-                    UndottedNameValidator.IsMatch(name) &&
-                    IsValidLanguageIndependentIdentifier(name));
-        }
-
-        private static bool IsValidLanguageIndependentIdentifier(string value)
-        {
-            var isTypeName = false;
-
-            var nextMustBeStartChar = true;
-            if (value.Length == 0)
-            {
-                return false;
-            }
-            for (var i = 0; i < value.Length; i++)
-            {
-                var c = value[i];
-                switch (char.GetUnicodeCategory(c))
-                {
-                    case UnicodeCategory.UppercaseLetter:
-                    case UnicodeCategory.LowercaseLetter:
-                    case UnicodeCategory.TitlecaseLetter:
-                    case UnicodeCategory.ModifierLetter:
-                    case UnicodeCategory.OtherLetter:
-                    case UnicodeCategory.LetterNumber:
-                        {
-                            nextMustBeStartChar = false;
-                            continue;
-                        }
-                    case UnicodeCategory.NonSpacingMark:
-                    case UnicodeCategory.SpacingCombiningMark:
-                    case UnicodeCategory.DecimalDigitNumber:
-                    case UnicodeCategory.ConnectorPunctuation:
-                        if (!nextMustBeStartChar
-                            || (c == '_'))
-                        {
-                            break;
-                        }
-                        return false;
-
-                    default:
-                        goto Label_008C;
-                }
-                nextMustBeStartChar = false;
-                continue;
-                Label_008C:
-                if (!isTypeName
-                    || !IsSpecialTypeChar(c, ref nextMustBeStartChar))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static bool IsSpecialTypeChar(char ch, ref bool nextMustBeStartChar)
-        {
-            switch (ch)
-            {
-                case '[':
-                case ']':
-                case '$':
-                case '&':
-                case '*':
-                case '+':
-                case ',':
-                case '-':
-                case '.':
-                case ':':
-                case '<':
-                case '>':
-                    nextMustBeStartChar = true;
-                    return true;
-
-                case '`':
-                    return true;
-            }
-            return false;
-        }
-
         private static bool IsValidDottedName(string name)
         {
             // each part of the dotted name needs to be a valid name
             foreach (var namePart in name.Split('.'))
             {
-                if (!IsValidUndottedName(namePart))
+                if (!namePart.IsValidUndottedName())
                 {
                     return false;
                 }
