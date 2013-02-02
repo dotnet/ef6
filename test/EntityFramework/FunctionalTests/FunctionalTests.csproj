@@ -141,6 +141,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Compile Include="EntityClient\AsyncScenarios.cs" />
+    <Compile Include="EntityClient\DependencyResolverTests.cs" />
     <Compile Include="MetaTests.cs" />
     <Compile Include="Migrations\AddColumnScenarios.cs" />
     <Compile Include="Migrations\AddForeignKeyScenarios.cs" />

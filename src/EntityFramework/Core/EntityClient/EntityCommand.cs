@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.EntitySql;
@@ -42,6 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _enableQueryPlanCaching;
         private DbCommand _storeProviderCommand;
         private readonly EntityDataReaderFactory _entityDataReaderFactory;
+        private readonly IDbDependencyResolver _dependencyResolver = null;
 
         /// <summary>
         ///     Constructs the EntityCommand object not yet associated to a connection object
@@ -80,6 +82,18 @@ namespace System.Data.Entity.Core.EntityClient
             : this(factory)
         {
             _esqlCommandText = statement;
+        }
+
+        /// <summary>
+        ///     Constructs the EntityCommand object with the given eSQL statement and the connection object to use
+        /// </summary>
+        /// <param name="statement"> The eSQL command text to execute </param>
+        /// <param name="connection"> The connection object </param>
+        /// <param name="resolver>"> Resolver used to resolve DbProviderServices </param>
+        public EntityCommand(string statement, EntityConnection connection, IDbDependencyResolver resolver)
+            : this(statement, connection)
+        {
+            _dependencyResolver = resolver;
         }
 
         /// <summary>
@@ -862,7 +876,7 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
 
-            return EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree);
+            return EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree, _dependencyResolver);
         }
 
         private void CheckConnectionPresent()

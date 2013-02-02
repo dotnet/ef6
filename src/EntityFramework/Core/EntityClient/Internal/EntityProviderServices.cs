@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -35,12 +36,12 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
         }
 
-        internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+        internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree, IDbDependencyResolver resolver = null)
         {
             DebugCheck.NotNull(storeProviderFactory);
             DebugCheck.NotNull(commandTree);
 
-            return new EntityCommandDefinition(storeProviderFactory, commandTree);
+            return new EntityCommandDefinition(storeProviderFactory, commandTree, resolver);
         }
 
         /// <summary>
