@@ -238,5 +238,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
             Assert.Equal(42, property.MaxLength);
         }
+
+        [Fact]
+        public void IsKeyMember_should_return_true_when_part_of_key()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var property = EdmProperty.Primitive("P", primitiveType);
+
+            Assert.False(property.IsKeyMember);
+
+            var entityType = new EntityType();
+
+            entityType.AddMember(property);
+
+            Assert.False(property.IsKeyMember);
+
+            entityType.AddKeyMember(property);
+
+            Assert.True(property.IsKeyMember);
+        }
     }
 }

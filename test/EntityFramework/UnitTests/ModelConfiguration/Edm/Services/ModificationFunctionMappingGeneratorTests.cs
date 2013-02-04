@@ -46,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var function = functionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("InsertE", function.Name);
+            Assert.Equal("E_Insert", function.Name);
             Assert.Equal(2, function.Parameters.Count);
 
             functionMapping = modificationFunctionMapping.UpdateFunctionMapping;
@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             function = functionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("UpdateE", function.Name);
+            Assert.Equal("E_Update", function.Name);
             Assert.Equal(2, function.Parameters.Count);
 
             functionMapping = modificationFunctionMapping.DeleteFunctionMapping;
@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             function = modificationFunctionMapping.DeleteFunctionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("DeleteE", function.Name);
+            Assert.Equal("E_Delete", function.Name);
             Assert.Equal(1, function.Parameters.Count);
         }
 
@@ -114,7 +114,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var function = functionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("InsertE", function.Name);
+            Assert.Equal("E_Insert", function.Name);
             Assert.Equal(0, function.Parameters.Count);
 
             functionMapping = modificationFunctionMapping.UpdateFunctionMapping;
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             function = functionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("UpdateE", function.Name);
+            Assert.Equal("E_Update", function.Name);
             Assert.Equal(1, function.Parameters.Count);
 
             functionMapping = modificationFunctionMapping.DeleteFunctionMapping;
@@ -138,7 +138,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             function = modificationFunctionMapping.DeleteFunctionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("DeleteE", function.Name);
+            Assert.Equal("E_Delete", function.Name);
             Assert.Equal(1, function.Parameters.Count);
         }
     }

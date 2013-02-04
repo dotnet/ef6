@@ -207,6 +207,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal bool IsKeyMember
+        {
+            get
+            {
+                var parentEntityType = DeclaringType as EntityType;
+
+                return (parentEntityType != null) && parentEntityType.KeyMembers.Contains(this);
+            }
+        }
+
         public bool IsCollectionType
         {
             get { return TypeUsage.EdmType is CollectionType; }

@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -18,6 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         public IEnumerable<StorageModificationFunctionParameterBinding> Generate(
+            ModificationOperator modificationOperator,
             IEnumerable<EdmProperty> properties,
             IList<EdmProperty> propertyPath,
             bool useOriginalValues = false)
@@ -39,23 +41,37 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
                 if (property.IsComplexType)
                 {
-                    foreach (var parameterBinding in Generate(property.ComplexType.Properties, propertyPath, useOriginalValues))
+                    foreach (var parameterBinding
+                        in Generate(modificationOperator, property.ComplexType.Properties, propertyPath, useOriginalValues))
                     {
                         yield return parameterBinding;
                     }
                 }
                 else
                 {
-                    var parameterName
-                        = string.Join("_", propertyPath.Select(p => p.Name));
+                    var parameterName = string.Join("_", propertyPath.Select(p => p.Name));
 
-                    var functionParameter = MapFunctionParameter(property, parameterName);
+                    if ((property.GetStoreGeneratedPattern() != StoreGeneratedPattern.Computed)
+                        && ((modificationOperator != ModificationOperator.Delete) || property.IsKeyMember))
+                    {
+                        yield return
+                            new StorageModificationFunctionParameterBinding(
+                                MapFunctionParameter(property, parameterName),
+                                new StorageModificationFunctionMemberPath(propertyPath, null),
+                                isCurrent: !useOriginalValues);
+                    }
 
-                    yield return
-                        new StorageModificationFunctionParameterBinding(
-                            functionParameter,
-                            new StorageModificationFunctionMemberPath(propertyPath, null),
-                            isCurrent: !useOriginalValues);
+                    if (modificationOperator != ModificationOperator.Insert
+                        && property.ConcurrencyMode == ConcurrencyMode.Fixed)
+                    {
+                        yield return
+                            new StorageModificationFunctionParameterBinding(
+                                MapFunctionParameter(property, parameterName + "_Original"),
+                                new StorageModificationFunctionMemberPath(propertyPath, null),
+                                isCurrent: false);
+
+
+                    }
                 }
 
                 propertyPath.Remove(property);

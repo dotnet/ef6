@@ -44,7 +44,7 @@ namespace System.Data.Entity.Edm.Serialization
                     storageModificationFunctionMapping));
 
             fixture.Writer.WriteEntitySetMappingElement(storageEntitySetMapping);
-             
+
             Assert.Equal(
                 @"<EntitySetMapping Name=""ES"">
   <EntityTypeMapping TypeName="".E"">
@@ -59,13 +59,17 @@ namespace System.Data.Entity.Edm.Serialization
         }
 
         [Fact]
-        public void WriteFunctionMapping_should_write_simple_parameter_and_result_bindings()
+        public void WriteFunctionMapping_should_write_simple_parameter_and_result_bindings_and_rows_affected_parameter()
         {
             var fixture = new Fixture();
 
             var entityType = new EntityType();
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
+
+            var property = new EdmProperty("M");
+
+            var typeUsage = TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             var storageModificationFunctionMapping
                 = new StorageModificationFunctionMapping(
@@ -77,24 +81,34 @@ namespace System.Data.Entity.Edm.Serialization
                             new StorageModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
-                                TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                typeUsage,
                                 ParameterMode.In),
                                 new StorageModificationFunctionMemberPath(
-                                new[] { new EdmProperty("M") },
+                                new[] { property },
                                 null),
-                                true)
+                                true),
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(
+                                "P_Original",
+                                typeUsage,
+                                ParameterMode.In),
+                                new StorageModificationFunctionMemberPath(
+                                new[] { property },
+                                null),
+                                false)
                         },
-                    null,
+                    new FunctionParameter("RowsAffected", typeUsage, ParameterMode.Out), 
                     new[]
                         {
-                            new StorageModificationFunctionResultBinding("C", new EdmProperty("M"))
+                            new StorageModificationFunctionResultBinding("C", property)
                         });
 
             fixture.Writer.WriteFunctionMapping("InsertFunction", storageModificationFunctionMapping);
 
             Assert.Equal(
-                @"<InsertFunction FunctionName=""N.F"">
+                @"<InsertFunction FunctionName=""N.F"" RowsAffectedParameter=""RowsAffected"">
   <ScalarProperty Name=""M"" ParameterName=""P"" Version=""Current"" />
+  <ScalarProperty Name=""M"" ParameterName=""P_Original"" Version=""Original"" />
   <ResultBinding Name=""M"" ColumnName=""C"" />
 </InsertFunction>",
                 fixture.ToString());

@@ -269,7 +269,7 @@ namespace FunctionalTests
                 .HasColumnName("ROW_GUID");
 
             var databaseMapping = BuildMapping(modelBuilder);
-
+            
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 

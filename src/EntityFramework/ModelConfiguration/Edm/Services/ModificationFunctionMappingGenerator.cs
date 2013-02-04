@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Mapping.Update.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var insertFunctionMapping
                 = GenerateFunctionMapping(
-                    "Insert" + entityType.Name,
+                    ModificationOperator.Insert,
                     entitySetMapping.EntitySet,
                     entityType,
                     databaseMapping,
@@ -48,13 +49,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var updateFunctionMapping
                 = GenerateFunctionMapping(
-                    "Update" + entityType.Name,
+                    ModificationOperator.Update,
                     entitySetMapping.EntitySet,
                     entityType,
                     databaseMapping,
-                    entityType
-                        .Properties
-                        .Where(p => p.GetStoreGeneratedPattern() != StoreGeneratedPattern.Computed),
+                    entityType.Properties,
                     iaFkProperties,
                     entityType
                         .Properties
@@ -62,11 +61,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var deleteFunctionMapping
                 = GenerateFunctionMapping(
-                    "Delete" + entityType.Name,
+                    ModificationOperator.Delete,
                     entitySetMapping.EntitySet,
                     entityType,
                     databaseMapping,
-                    entityType.KeyProperties(),
+                    entityType.Properties,
                     iaFkProperties,
                     useOriginalValues: true);
 
@@ -101,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 var dependentEntityType = dependentEnd.GetEntityType();
 
                 if (dependentEntityType == entityType
-                    || GetAbstractParents(entityType).Contains(dependentEntityType))
+                    || GetParents(entityType).Contains(dependentEntityType))
                 {
                     var endPropertyMapping
                         = associationSetMapping.TargetEndMapping.EndMember != dependentEnd
@@ -120,10 +119,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             }
         }
 
-        private static IEnumerable<EntityType> GetAbstractParents(EntityType entityType)
+        private static IEnumerable<EntityType> GetParents(EntityType entityType)
         {
-            while (entityType.BaseType != null
-                   /*&& entityType.BaseType.Abstract*/)
+            while (entityType.BaseType != null)
             {
                 yield return (EntityType)entityType.BaseType;
 
@@ -132,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private StorageModificationFunctionMapping GenerateFunctionMapping(
-            string functionName,
+            ModificationOperator modificationOperator,
             EntitySet entitySet,
             EntityType entityType,
             DbDatabaseMapping databaseMapping,
@@ -147,6 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var parameterBindings
                 = parameterMappingGenerator
                     .Generate(
+                        modificationOperator,
                         parameterProperties,
                         new List<EdmProperty>(),
                         useOriginalValues)
@@ -155,15 +154,41 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             .Generate(iaFkProperties, useOriginalValues))
                     .ToList();
 
+            FunctionParameter rowsAffectedParameter = null;
+
+            var parameters
+                = parameterBindings.Select(b => b.Parameter);
+
+            if (parameterBindings
+                .Any(
+                    pb => !pb.IsCurrent
+                          && pb.MemberPath.AssociationSetEnd == null
+                          && ((EdmProperty)pb.MemberPath.Members.Last()).ConcurrencyMode == ConcurrencyMode.Fixed))
+            {
+                rowsAffectedParameter
+                    = new FunctionParameter(
+                        "RowsAffected",
+                        _providerManifest.GetStoreType(
+                            TypeUsage.CreateDefaultTypeUsage(
+                                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                        ParameterMode.Out);
+
+                parameters = parameters.Concat(new[] { rowsAffectedParameter });
+            }
+
             var functionPayload
                 = new EdmFunctionPayload
                       {
                           ReturnParameters = new FunctionParameter[0],
-                          Parameters = parameterBindings.Select(b => b.Parameter).ToArray(),
+                          Parameters = parameters.ToArray(),
                           IsComposable = false
                       };
 
-            var function = databaseMapping.Database.AddFunction(functionName, functionPayload);
+            var function
+                = databaseMapping.Database
+                                 .AddFunction(
+                                     entityType.Name + "_" + modificationOperator.ToString(),
+                                     functionPayload);
 
             var functionMapping
                 = new StorageModificationFunctionMapping(
@@ -171,7 +196,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entityType,
                     function,
                     parameterBindings,
-                    null,
+                    rowsAffectedParameter,
                     resultProperties != null
                         ? resultProperties.Select(p => new StorageModificationFunctionResultBinding(p.Name, p))
                         : null);

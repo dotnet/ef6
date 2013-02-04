@@ -193,6 +193,13 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteStartElement(functionElement);
             _xmlWriter.WriteAttributeString(StorageMslConstructs.FunctionNameAttribute, functionMapping.Function.FullName);
 
+            if (functionMapping.RowsAffectedParameter != null)
+            {
+                _xmlWriter.WriteAttributeString(
+                    StorageMslConstructs.RowsAffectedParameterAttribute, 
+                    functionMapping.RowsAffectedParameter.Name);
+            }
+
             WritePropertyParameterBindings(functionMapping.ParameterBindings);
             WriteAssociationParameterBindings(functionMapping.ParameterBindings);
 
@@ -219,12 +226,7 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 var property = (EdmProperty)group.Key;
 
-                if ((group.Count() == 1)
-                    && (group.Single().MemberPath.Members.Count == level + 1))
-                {
-                    WriteScalarParameterElement(property, group.Single());
-                }
-                else
+                if (property.IsComplexType)
                 {
                     _xmlWriter.WriteStartElement(StorageMslConstructs.ComplexPropertyElement);
                     _xmlWriter.WriteAttributeString(StorageMslConstructs.ComplexPropertyNameAttribute, property.Name);
@@ -235,6 +237,13 @@ namespace System.Data.Entity.Edm.Serialization
                     WritePropertyParameterBindings(group, level + 1);
 
                     _xmlWriter.WriteEndElement();
+                }
+                else
+                {
+                    foreach (var parameterBinding in group)
+                    {
+                        WriteScalarParameterElement(property, parameterBinding);
+                    }
                 }
             }
         }
