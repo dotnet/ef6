@@ -181,6 +181,8 @@
     <Compile Include="Query\LinqToEntities\DefaultIfEmptyTests.cs" />
     <Compile Include="Query\LinqToEntities\FuncletizationTests.cs" />
     <Compile Include="Query\LinqToEntities\GroupByOptimizationTests.cs" />
+    <Compile Include="Query\LinqToEntities\IncludeTests.cs" />
+    <Compile Include="Query\LinqToEntities\MaterializationTests.cs" />
     <Compile Include="Query\LinqToEntities\OrderByLiftingTests.cs" />
     <Compile Include="Query\QueryEnumTests.cs" />
     <Compile Include="TestHelpers\EnumeratorExtensions.cs" />
