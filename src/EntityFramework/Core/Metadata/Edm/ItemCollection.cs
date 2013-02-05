@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
     using System.Threading;
 
     /// <summary>
@@ -204,7 +203,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return returnItems;
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal ICollection InternalGetItems(Type type)
         {
             var mi = typeof(ItemCollection).GetMethod("GenericGetItems", BindingFlags.NonPublic | BindingFlags.Static);

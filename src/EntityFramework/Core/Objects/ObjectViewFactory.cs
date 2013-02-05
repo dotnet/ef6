@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
     using System.Globalization;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Creates instances of ObjectView that provide a binding list for ObjectQuery results and EntityCollections.
@@ -55,7 +54,6 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     <see cref="IBindingList" /> that is suitable for data binding.
         /// </returns>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static IBindingList CreateViewForQuery<TElement>(
             TypeUsage elementEdmTypeUsage, IEnumerable<TElement> queryResults, ObjectContext objectContext, bool forceReadOnly,
             EntitySet singleEntitySet)
@@ -133,7 +131,6 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     <see cref="IBindingList" /> that is suitable for data binding.
         /// </returns>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static IBindingList CreateViewForEntityCollection<TElement>(
             EntityType entityType, EntityCollection<TElement> entityCollection)
             where TElement : class
@@ -211,7 +208,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="viewData"> The IObjectViewData to be used by the ObjectView to access the binding list. </param>
         /// <param name="eventDataSource"> Event source used by ObjectView for entity and membership changes. </param>
         /// <returns> </returns>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static IBindingList CreateObjectView(Type clrElementType, Type objectViewDataType, object viewData, object eventDataSource)
         {
             var objectViewType = _genericObjectViewType.MakeGenericType(clrElementType);

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects
     using Moq.Protected;
     using Xunit;
 
+    [PartialTrustFixture]
     public class DelegateFactoryTests
     {
         public class CreateConstructor

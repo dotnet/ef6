@@ -5,7 +5,6 @@ namespace ProductivityApiTests
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
@@ -217,34 +216,6 @@ namespace ProductivityApiTests
             var results = new ClassWithContextField().Test();
 
             Assert.Equal(7, results.Count);
-        }
-
-        // TODO: Failing on command line build
-        //[Fact]
-        //[FullTrust] // Bespoke test with setup that requires full trust
-        public void PropertyConstraintException_can_be_serialized_and_deserialized_under_partial_trust()
-        {
-            try
-            {
-                // Exception is thrown in partial trust and must be serialized across the app-domain boundry
-                // to get back here.
-                PartialTrustSandbox.Default
-                                   .CreateInstance<PartialTrustTests>()
-                                   .ThrowPropertyConstraintException();
-                Assert.True(false);
-            }
-            catch (PropertyConstraintException ex)
-            {
-                Assert.Equal("Message", ex.Message);
-                Assert.Equal("Property", ex.PropertyName);
-                Assert.Equal("Inner", ex.InnerException.Message);
-            }
-        }
-
-        private void ThrowPropertyConstraintException()
-        {
-            // Serialization is tested by throwing across the app-domain boundry.
-            throw new PropertyConstraintException("Message", "Property", new InvalidOperationException("Inner"));
         }
 
         // Dev11 216491

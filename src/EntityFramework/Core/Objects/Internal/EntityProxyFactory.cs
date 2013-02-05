@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Reflection.Emit;
-    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Threading;
     using System.Xml.Serialization;
@@ -423,7 +422,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="member"> EdmMember that specifies the member to be intercepted. </param>
         /// <param name="proxyType"> Type of the proxy. </param>
         /// <param name="lazyLoadBehavior"> LazyLoadBehavior object that supplies the behavior to load related ends. </param>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void InterceptMember(EdmMember member, Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
             var property = EntityUtil.GetTopProperty(proxyType, member.Name);

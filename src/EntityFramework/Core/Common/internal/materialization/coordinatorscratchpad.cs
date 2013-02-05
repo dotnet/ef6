@@ -141,7 +141,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     Use the information stored on the scratchpad to compile an immutable factory used
         ///     to construct the coordinators used at runtime when materializing results.
         /// </summary>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal CoordinatorFactory Compile()
         {
             RecordStateFactory[] recordStateFactories;

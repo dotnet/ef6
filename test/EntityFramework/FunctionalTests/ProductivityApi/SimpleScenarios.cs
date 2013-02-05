@@ -14,6 +14,7 @@ namespace ProductivityApiTests
     ///     They are here as a good starting point for understanding the functionality and to give some level
     ///     of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
+    [PartialTrustFixture]
     public class SimpleScenarios : FunctionalTestBase
     {
         #region Scenarios for SQL Server

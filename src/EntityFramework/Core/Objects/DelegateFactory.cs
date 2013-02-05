@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
@@ -339,7 +338,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="sourceMember"> source end of the relationship for the requested navigation </param>
         /// <param name="targetMember"> target end of the relationship for the requested navigation </param>
         /// <returns> Delegate that can be used to invoke the corresponding method. </returns>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod(
             AssociationEndMember sourceMember, AssociationEndMember targetMember)
         {

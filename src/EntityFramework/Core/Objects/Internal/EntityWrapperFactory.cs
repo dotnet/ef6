@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Factory class for creating IEntityWrapper instances.
@@ -60,7 +59,6 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         // Creates a delegate that can then be used to create wrappers for a given type.
         // This is slow which is why we only create the delegate once and then cache it.
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static Func<object, IEntityWrapper> CreateWrapperDelegate(Type entityType)
         {
             // For entities that implement all our interfaces we create a special lightweight wrapper that is both

@@ -15,7 +15,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     internal static class CodeGenEmitter
     {
@@ -193,8 +192,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     Non-generic version of Compile (where the result type is passed in as an argument rather
         ///     than a type parameter)
         /// </summary>
-        // The caller might not have the reflection permission, so inlining this method could cause a security exception
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static object Compile(Type resultType, Expression body)
         {
             var compile = CodeGenEmitter_Compile.MakeGenericMethod(resultType);

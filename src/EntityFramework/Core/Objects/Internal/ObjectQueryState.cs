@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     An instance of a class derived from ObjectQueryState is used to model every instance of
@@ -101,14 +100,11 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal bool EffectiveStreamingBehaviour
         {
-            get
-            {
-                return UserSpecifiedStreamingBehaviour ?? false;
-            }
+            get { return UserSpecifiedStreamingBehaviour ?? false; }
         }
 
         internal bool? UserSpecifiedStreamingBehaviour { get; set; }
-        
+
         /// <summary>
         ///     Gets the element type - the type of each result item - for this query as a CLR type instance.
         /// </summary>
@@ -333,7 +329,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <returns>
         ///     A new <see cref="ObjectQuery{TResultType}" /> - typed as <see cref="ObjectQuery" />
         /// </returns>
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public ObjectQuery CreateQuery()
         {
             Debug.Assert(_createObjectQueryMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method");

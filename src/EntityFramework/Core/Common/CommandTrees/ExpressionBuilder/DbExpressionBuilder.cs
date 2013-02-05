@@ -3231,7 +3231,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return new[] { leftBinding, rightBinding };
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static bool TryGetAnonymousTypeValues<TInstance, TRequired>(
             object instance, out List<KeyValuePair<string, TRequired>> values)
         {

@@ -38,27 +38,38 @@ namespace System.Data.Entity.TestHelpers
         {
             object sandboxedClass = null;
 
-            if (testClass != null)
+            try
             {
-                var testClassType = testClass.GetType();
-
-                if (!typeof(MarshalByRefObject).IsAssignableFrom(testClassType))
+                if (testClass != null)
                 {
-                    throw new InvalidOperationException(
-                        string.Format(
-                            "In order to use the partial trust attributes here, '{0}' must derive from MarshalByRefObject.",
-                            testClassType.FullName));
+                    var testClassType = testClass.GetType();
+
+                    if (!typeof(MarshalByRefObject).IsAssignableFrom(testClassType))
+                    {
+                        throw new InvalidOperationException(
+                            string.Format(
+                                "In order to use the partial trust attributes here, '{0}' must derive from MarshalByRefObject.",
+                                testClassType.FullName));
+                    }
+
+                    sandboxedClass = PartialTrustSandbox.Default.CreateInstance(testClassType);
+                    ApplyFixtures(sandboxedClass);
+                }
+                else
+                {
+                    Assert.IsType<SkipCommand>(_command);
                 }
 
-                sandboxedClass = PartialTrustSandbox.Default.CreateInstance(testClassType);
-                ApplyFixtures(sandboxedClass);
+                return _command.Execute(sandboxedClass);
             }
-            else
+            finally
             {
-                Assert.IsType<SkipCommand>(_command);
+                var asDisposable = sandboxedClass as IDisposable;
+                if (asDisposable != null)
+                {
+                    asDisposable.Dispose();
+                }
             }
-
-            return _command.Execute(sandboxedClass);
         }
 
         public XmlNode ToStartXml()

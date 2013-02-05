@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Globalization;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the
@@ -85,7 +84,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             return result;
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static ShaperFactory TranslateColumnMap(
             Translator translator,
             Type elementType,
@@ -534,8 +532,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// <summary>
             ///     Visit(MultipleDiscriminatorPolymorphicColumnMap)
             /// </summary>
-            // The caller might not have the reflection permission, so inlining this method could cause a security exception
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             internal override TranslatorResult Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, TranslatorArg arg)
             {
                 var multipleDiscriminatorPolymorphicColumnMapHelper =
@@ -1437,8 +1433,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// <summary>
             ///     Creates an expression representing an inline delegate of type Func{Shaper, body.Type};
             /// </summary>
-            // The caller might not have the reflection permission, so inlining this method could cause a security exception
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             private LambdaExpression CreateInlineDelegate(Expression body)
             {
                 // Note that we call through to a typed method so that we can call Expression.Lambda<Func> instead

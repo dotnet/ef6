@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq.Expressions;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Used in the Translator to aggregate information about a (nested) record
@@ -29,7 +28,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         private readonly List<RecordStateScratchpad> _nestedRecordStateScratchpads = new List<RecordStateScratchpad>();
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal RecordStateFactory Compile()
         {
             var nestedRecordStateFactories = new RecordStateFactory[_nestedRecordStateScratchpads.Count];

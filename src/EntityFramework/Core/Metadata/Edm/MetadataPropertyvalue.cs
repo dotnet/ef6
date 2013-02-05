@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Utilities;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Class representing a metadata property on an item. Supports
@@ -23,7 +22,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly PropertyInfo _propertyInfo;
         private readonly MetadataItem _item;
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal object GetValue()
         {
             return _propertyInfo.GetValue(_item, new object[] { });

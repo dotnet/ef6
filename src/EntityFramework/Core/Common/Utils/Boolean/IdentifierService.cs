@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    using System.Runtime.CompilerServices;
-
     /// <summary>
     ///     Services related to different identifier types for Boolean expressions.
     /// </summary>
@@ -13,7 +11,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 
         internal static readonly IdentifierService<T_Identifier> Instance = GetIdentifierService();
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static IdentifierService<T_Identifier> GetIdentifierService()
         {
             var identifierType = typeof(T_Identifier);

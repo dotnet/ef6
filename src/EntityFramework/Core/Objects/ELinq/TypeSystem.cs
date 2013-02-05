@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Static utility class. Replica of query\DLinq\TypeSystem.cs
@@ -24,7 +23,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return default(T);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal static object GetDefaultValue(Type type)
         {
             // null is always the default for non value types and Nullable<>
