@@ -32,6 +32,7 @@ namespace System.Data.Entity.Query
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSpace, It.IsAny<bool>())).Returns(edmItemCollection);
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace, It.IsAny<bool>())).Returns(storeItemCollection);
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>())).Returns(storageMappingItemCollection);
+            metadataWorkspaceMock.Setup(m => m.GetQueryCacheManager()).Returns(storeItemCollection.QueryCacheManager);
 
             return metadataWorkspaceMock.Object;
         }
@@ -51,20 +52,11 @@ namespace System.Data.Entity.Query
 
         public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql, params EntityParameter[] entityParameters)
         {
-            var providerServices =
-                (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
+            var entityCommand = new EntityCommand();
+            entityCommand.CommandText = query;
             var connection = new EntityConnection(workspace, new EntityConnection());
-
-            var dbParameters = new DbParameterReferenceExpression[entityParameters.Length];
-            for (var i = 0; i < entityParameters.Length; i++)
-            {
-                dbParameters[i] = new DbParameterReferenceExpression(entityParameters[i].GetTypeUsage(), entityParameters[i].ParameterName);
-            }
-
-            var commandTree = workspace.CreateEntitySqlParser().Parse(query, dbParameters).CommandTree;
-
-            var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
             entityCommand.Connection = connection;
+            entityCommand.Parameters.AddRange(entityParameters);
 
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
