@@ -54,14 +54,17 @@ namespace System.Data.Entity.Query
             var providerServices =
                 (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
             var connection = new EntityConnection(workspace, new EntityConnection());
-            var commandTree = workspace.CreateEntitySqlParser().Parse(query).CommandTree;
+
+            var dbParameters = new DbParameterReferenceExpression[entityParameters.Length];
+            for (var i = 0; i < entityParameters.Length; i++)
+            {
+                dbParameters[i] = new DbParameterReferenceExpression(entityParameters[i].GetTypeUsage(), entityParameters[i].ParameterName);
+            }
+
+            var commandTree = workspace.CreateEntitySqlParser().Parse(query, dbParameters).CommandTree;
 
             var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
             entityCommand.Connection = connection;
-            if (entityParameters != null && entityParameters.Length > 0)
-            {
-                entityCommand.Parameters.AddRange(entityParameters);
-            }
 
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
