@@ -40,7 +40,7 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
                     Assert.NotNull(functionMapping.UpdateFunctionMapping);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
-                }
+                } 
 
                 [Fact]
                 public void Map_to_functions_by_convention_when_complex_type()
@@ -142,6 +142,32 @@ namespace FunctionalTests
                         Assert.NotNull(functionMapping.UpdateFunctionMapping);
                         Assert.NotNull(functionMapping.DeleteFunctionMapping);
                     }
+                }
+
+                [Fact]
+                public void Map_to_functions_by_convention_when_many_to_many()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder.Entity<Tag>().MapToFunctions();
+                    modelBuilder.Entity<ProductA>().MapToFunctions();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Equal(8, databaseMapping.Database.Functions.Count());
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .AssociationSetMappings
+                            .Select(asm => asm.ModificationFunctionMapping)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping);
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping);
                 }
             }
 

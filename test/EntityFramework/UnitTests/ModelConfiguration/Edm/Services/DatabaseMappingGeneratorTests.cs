@@ -432,9 +432,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             entityType.SetConfiguration(entityTypeConfiguration);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
-        
+
             Assert.Equal(3, databaseMapping.Database.Functions.Count());
-    }
+        }
 
         [Fact]
         public void Generate_can_generate_modification_function_mappings_when_base_type_mapped_to_functions()
@@ -472,6 +472,71 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             entityType.SetConfiguration(entityTypeConfiguration);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+
+            Assert.Equal(0, databaseMapping.Database.Functions.Count());
+        }
+
+        [Fact]
+        public void Generate_can_generate_modification_function_mappings_for_association_set_mappings()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var entityType1 = model.AddEntityType("E1");
+            entityType1.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E1Set", entityType1);
+
+            var entityType2 = model.AddEntityType("E2");
+            entityType2.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E2Set", entityType2);
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityTypeConfiguration.MapToFunctions();
+            entityType1.SetConfiguration(entityTypeConfiguration);
+            entityType2.SetConfiguration(entityTypeConfiguration);
+
+            model.AddAssociationSet(
+                "M2MSet",
+                model.AddAssociationType(
+                    "M2M",
+                    entityType1,
+                    RelationshipMultiplicity.Many,
+                    entityType2,
+                    RelationshipMultiplicity.Many));
+
+            var databaseMapping
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+
+            Assert.Equal(8, databaseMapping.Database.Functions.Count());
+        }
+
+        [Fact]
+        public void Generate_should_not_generate_modification_function_mappings_when_ends_not_mapped_to_functions()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var entityType1 = model.AddEntityType("E1");
+            entityType1.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E1Set", entityType1);
+
+            var entityType2 = model.AddEntityType("E2");
+            entityType2.Annotations.SetClrType(typeof(string));
+            model.AddEntitySet("E2Set", entityType2);
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityType1.SetConfiguration(entityTypeConfiguration);
+            entityType2.SetConfiguration(entityTypeConfiguration);
+
+            model.AddAssociationSet(
+                "M2MSet",
+                model.AddAssociationType(
+                    "M2M",
+                    entityType1,
+                    RelationshipMultiplicity.Many,
+                    entityType2,
+                    RelationshipMultiplicity.Many));
+
+            var databaseMapping
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             Assert.Equal(0, databaseMapping.Database.Functions.Count());
         }

@@ -66,8 +66,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entityType,
                     databaseMapping,
                     entityType.Properties,
-                    iaFkProperties,
-                    useOriginalValues: true);
+                    iaFkProperties);
 
             var modificationFunctionMapping
                 = new StorageEntityTypeModificationFunctionMapping(
@@ -79,9 +78,68 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entitySetMapping.AddModificationFunctionMapping(modificationFunctionMapping);
         }
 
+        public void Generate(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
+        {
+            DebugCheck.NotNull(associationSetMapping);
+            DebugCheck.NotNull(databaseMapping);
+
+            var iaFkProperties = GetIndependentFkColumns(associationSetMapping).ToList();
+
+            var insertFunctionMapping
+                = GenerateFunctionMapping(
+                    ModificationOperator.Insert,
+                    associationSetMapping.AssociationSet,
+                    associationSetMapping.AssociationSet.ElementType,
+                    databaseMapping,
+                    Enumerable.Empty<EdmProperty>(),
+                    iaFkProperties);
+
+            var deleteFunctionMapping
+                = GenerateFunctionMapping(
+                    ModificationOperator.Delete,
+                    associationSetMapping.AssociationSet,
+                    associationSetMapping.AssociationSet.ElementType,
+                    databaseMapping,
+                    Enumerable.Empty<EdmProperty>(),
+                    iaFkProperties);
+
+            associationSetMapping.ModificationFunctionMapping
+                = new StorageAssociationSetModificationFunctionMapping(
+                    associationSetMapping.AssociationSet,
+                    deleteFunctionMapping,
+                    insertFunctionMapping);
+        }
+
+        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> GetIndependentFkColumns(
+            StorageAssociationSetMapping associationSetMapping)
+        {
+            DebugCheck.NotNull(associationSetMapping);
+
+            foreach (var propertyMapping in associationSetMapping.SourceEndMapping.PropertyMappings)
+            {
+                yield return
+                    Tuple.Create(
+                        new StorageModificationFunctionMemberPath(
+                            new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.SourceEndMapping.EndMember },
+                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty.Name);
+            }
+
+            foreach (var propertyMapping in associationSetMapping.TargetEndMapping.PropertyMappings)
+            {
+                yield return
+                    Tuple.Create(
+                        new StorageModificationFunctionMemberPath(
+                            new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.TargetEndMapping.EndMember },
+                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty.Name);
+            }
+        }
+
         private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> GetIndependentFkColumns(
             EntityType entityType, DbDatabaseMapping databaseMapping)
         {
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(databaseMapping);
+
             foreach (var associationSetMapping in databaseMapping.GetAssociationSetMappings())
             {
                 var associationType = associationSetMapping.AssociationSet.ElementType;
@@ -121,6 +179,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private static IEnumerable<EntityType> GetParents(EntityType entityType)
         {
+            DebugCheck.NotNull(entityType);
+
             while (entityType.BaseType != null)
             {
                 yield return (EntityType)entityType.BaseType;
@@ -131,14 +191,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private StorageModificationFunctionMapping GenerateFunctionMapping(
             ModificationOperator modificationOperator,
-            EntitySet entitySet,
-            EntityType entityType,
+            EntitySetBase entitySetBase,
+            EntityTypeBase entityTypeBase,
             DbDatabaseMapping databaseMapping,
             IEnumerable<EdmProperty> parameterProperties,
             IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> iaFkProperties,
-            IEnumerable<EdmProperty> resultProperties = null,
-            bool useOriginalValues = false)
+            IEnumerable<EdmProperty> resultProperties = null)
         {
+            DebugCheck.NotNull(entitySetBase);
+            DebugCheck.NotNull(entityTypeBase);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(parameterProperties);
+            DebugCheck.NotNull(iaFkProperties);
+
+            var useOriginalValues = modificationOperator == ModificationOperator.Delete;
+            
             var parameterMappingGenerator
                 = new FunctionParameterMappingGenerator(_providerManifest);
 
@@ -187,13 +254,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var function
                 = databaseMapping.Database
                                  .AddFunction(
-                                     entityType.Name + "_" + modificationOperator.ToString(),
+                                     entityTypeBase.Name + "_" + modificationOperator.ToString(),
                                      functionPayload);
 
             var functionMapping
                 = new StorageModificationFunctionMapping(
-                    entitySet,
-                    entityType,
+                    entitySetBase,
+                    entityTypeBase,
                     function,
                     parameterBindings,
                     rowsAffectedParameter,

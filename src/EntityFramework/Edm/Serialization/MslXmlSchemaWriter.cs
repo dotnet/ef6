@@ -97,20 +97,28 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteAssociationSetMappingElement(StorageAssociationSetMapping set)
+        public void WriteAssociationSetMappingElement(StorageAssociationSetMapping associationSetMapping)
         {
-            DebugCheck.NotNull(set);
+            DebugCheck.NotNull(associationSetMapping);
 
             _xmlWriter.WriteStartElement(StorageMslConstructs.AssociationSetMappingElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.AssociationSetMappingNameAttribute, set.AssociationSet.Name);
+            _xmlWriter.WriteAttributeString(
+                StorageMslConstructs.AssociationSetMappingNameAttribute, associationSetMapping.AssociationSet.Name);
             _xmlWriter.WriteAttributeString(
                 StorageMslConstructs.AssociationSetMappingTypeNameAttribute,
-                _entityTypeNamespace + "." + set.AssociationSet.ElementType.Name);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.AssociationSetMappingStoreEntitySetAttribute, set.Table.Name);
-            WriteAssociationEndMappingElement(set.SourceEndMapping);
-            WriteAssociationEndMappingElement(set.TargetEndMapping);
+                _entityTypeNamespace + "." + associationSetMapping.AssociationSet.ElementType.Name);
+            _xmlWriter.WriteAttributeString(
+                StorageMslConstructs.AssociationSetMappingStoreEntitySetAttribute, associationSetMapping.Table.Name);
 
-            foreach (var conditionColumn in set.ColumnConditions)
+            WriteAssociationEndMappingElement(associationSetMapping.SourceEndMapping);
+            WriteAssociationEndMappingElement(associationSetMapping.TargetEndMapping);
+
+            if (associationSetMapping.ModificationFunctionMapping != null)
+            {
+                WriteModificationFunctionMapping(associationSetMapping.ModificationFunctionMapping);
+            }
+
+            foreach (var conditionColumn in associationSetMapping.ColumnConditions)
             {
                 WriteConditionElement(conditionColumn);
             }
@@ -186,7 +194,27 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteEndElement();
         }
 
-        public void WriteFunctionMapping(string functionElement, StorageModificationFunctionMapping functionMapping)
+        private void WriteModificationFunctionMapping(StorageAssociationSetModificationFunctionMapping modificationFunctionMapping)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            _xmlWriter.WriteStartElement(StorageMslConstructs.ModificationFunctionMappingElement);
+
+            WriteFunctionMapping(
+                StorageMslConstructs.InsertFunctionElement,
+                modificationFunctionMapping.InsertFunctionMapping,
+                associationSetMapping: true);
+
+            WriteFunctionMapping(
+                StorageMslConstructs.DeleteFunctionElement,
+                modificationFunctionMapping.DeleteFunctionMapping,
+                associationSetMapping: true);
+
+            _xmlWriter.WriteEndElement();
+        }
+
+        public void WriteFunctionMapping(
+            string functionElement, StorageModificationFunctionMapping functionMapping, bool associationSetMapping = false)
         {
             DebugCheck.NotNull(functionMapping);
 
@@ -196,19 +224,50 @@ namespace System.Data.Entity.Edm.Serialization
             if (functionMapping.RowsAffectedParameter != null)
             {
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.RowsAffectedParameterAttribute, 
+                    StorageMslConstructs.RowsAffectedParameterAttribute,
                     functionMapping.RowsAffectedParameter.Name);
             }
 
-            WritePropertyParameterBindings(functionMapping.ParameterBindings);
-            WriteAssociationParameterBindings(functionMapping.ParameterBindings);
-
-            if (functionMapping.ResultBindings != null)
+            if (!associationSetMapping)
             {
-                WriteResultBindings(functionMapping.ResultBindings);
+                WritePropertyParameterBindings(functionMapping.ParameterBindings);
+                WriteAssociationParameterBindings(functionMapping.ParameterBindings);
+
+                if (functionMapping.ResultBindings != null)
+                {
+                    WriteResultBindings(functionMapping.ResultBindings);
+                }
+            }
+            else
+            {
+                WriteAssociationSetMappingParameterBindings(functionMapping.ParameterBindings);
             }
 
             _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteAssociationSetMappingParameterBindings(
+            IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings)
+        {
+            DebugCheck.NotNull(parameterBindings);
+
+            var propertyGroups
+                = from pm in parameterBindings
+                  where pm.MemberPath.AssociationSetEnd != null
+                  group pm by pm.MemberPath.AssociationSetEnd;
+
+            foreach (var group in propertyGroups)
+            {
+                _xmlWriter.WriteStartElement(StorageMslConstructs.EndPropertyMappingElement);
+                _xmlWriter.WriteAttributeString(StorageMslConstructs.EndPropertyMappingNameAttribute, group.Key.Name);
+
+                foreach (var functionParameterBinding in group)
+                {
+                    WriteScalarParameterElement(functionParameterBinding.MemberPath.Members.First(), functionParameterBinding);
+                }
+
+                _xmlWriter.WriteEndElement();
+            }
         }
 
         private void WritePropertyParameterBindings(
@@ -248,7 +307,8 @@ namespace System.Data.Entity.Edm.Serialization
             }
         }
 
-        private void WriteAssociationParameterBindings(IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings)
+        private void WriteAssociationParameterBindings(
+            IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings)
         {
             DebugCheck.NotNull(parameterBindings);
 
@@ -266,7 +326,7 @@ namespace System.Data.Entity.Edm.Serialization
                 _xmlWriter.WriteAttributeString(StorageMslConstructs.AssociationSetAttribute, assocationSet.Name);
                 _xmlWriter.WriteAttributeString(StorageMslConstructs.FromAttribute, group.Key.Name);
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.ToAttribute, 
+                    StorageMslConstructs.ToAttribute,
                     assocationSet.AssociationSetEnds.Single(ae => ae != group.Key).Name);
 
                 foreach (var functionParameterBinding in group)

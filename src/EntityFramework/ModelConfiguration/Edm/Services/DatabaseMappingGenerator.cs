@@ -121,20 +121,41 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
         private void GenerateModificationFunctions(DbDatabaseMapping databaseMapping)
         {
+            DebugCheck.NotNull(databaseMapping);
+
+            var functionMappingGenerator
+                = new ModificationFunctionMappingGenerator(_providerManifest);
+
             foreach (var entityType in databaseMapping.Model.EntityTypes)
             {
                 if (!entityType.Abstract)
                 {
-                    var configuration = entityType.GetRootType().GetConfiguration() as EntityTypeConfiguration;
-
-                    if ((configuration != null)
-                        && configuration.IsMappedToFunctions)
+                    if (IsMappedToFunctions(entityType))
                     {
-                        new ModificationFunctionMappingGenerator(_providerManifest).
-                            Generate(entityType, databaseMapping);
+                        functionMappingGenerator.Generate(entityType, databaseMapping);
                     }
                 }
             }
+
+            foreach (var associationSetMapping in databaseMapping.GetAssociationSetMappings())
+            {
+                if (associationSetMapping.AssociationSet.ElementType.IsManyToMany()
+                    && IsMappedToFunctions(associationSetMapping.AssociationSet.SourceSet.ElementType)
+                    && IsMappedToFunctions(associationSetMapping.AssociationSet.TargetSet.ElementType))
+                {
+                    functionMappingGenerator.Generate(associationSetMapping, databaseMapping);
+                }
+            }
+        }
+
+        private static bool IsMappedToFunctions(EntityType entityType)
+        {
+            DebugCheck.NotNull(entityType);
+
+            var configuration = entityType.GetRootType().GetConfiguration() as EntityTypeConfiguration;
+
+            return ((configuration != null)
+                    && configuration.IsMappedToFunctions);
         }
     }
 }

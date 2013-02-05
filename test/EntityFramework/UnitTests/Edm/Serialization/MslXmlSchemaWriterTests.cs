@@ -97,7 +97,7 @@ namespace System.Data.Entity.Edm.Serialization
                                 null),
                                 false)
                         },
-                    new FunctionParameter("RowsAffected", typeUsage, ParameterMode.Out), 
+                    new FunctionParameter("RowsAffected", typeUsage, ParameterMode.Out),
                     new[]
                         {
                             new StorageModificationFunctionResultBinding("C", property)
@@ -209,6 +209,108 @@ namespace System.Data.Entity.Edm.Serialization
     <ScalarProperty Name=""K"" ParameterName=""P"" Version=""Current"" />
   </AssociationEnd>
 </InsertFunction>",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteAssociationSetMapping_should_write_modification_function_mapping()
+        {
+            var fixture = new Fixture();
+
+            var entityType = new EntityType();
+            var entitySet = new EntitySet("ES", "S", null, null, entityType);
+            new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
+            var associationSet = new AssociationSet("AS", new AssociationType());
+
+            var associationEndMember1 = new AssociationEndMember("Source", new EntityType());
+            associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember1));
+
+            var associationEndMember2 = new AssociationEndMember("Target", new EntityType());
+            associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
+
+            var storageModificationFunctionMapping
+                = new StorageModificationFunctionMapping(
+                    associationSet,
+                    associationSet.ElementType,
+                    new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
+                    new[]
+                        {
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(
+                                "P",
+                                TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                ParameterMode.In),
+                                new StorageModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        new EdmProperty("K"),
+                                        associationEndMember1
+                                    },
+                                associationSet),
+                                true),
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(
+                                "P",
+                                TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                ParameterMode.In),
+                                new StorageModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        new EdmProperty("K"),
+                                        associationEndMember2
+                                    },
+                                associationSet),
+                                false)
+                        },
+                    null,
+                    null);
+
+            var associationSetMapping
+                = new StorageAssociationSetMapping(
+                    associationSet,
+                    entitySet)
+                      {
+                          SourceEndMapping
+                              = new StorageEndPropertyMapping(new EdmProperty("S"))
+                                    {
+                                        EndMember = associationEndMember1
+                                    },
+                          TargetEndMapping
+                              = new StorageEndPropertyMapping(new EdmProperty("T"))
+                                    {
+                                        EndMember = associationEndMember2
+                                    },
+                          ModificationFunctionMapping = new StorageAssociationSetModificationFunctionMapping(
+                              associationSet,
+                              storageModificationFunctionMapping,
+                              storageModificationFunctionMapping)
+                      };
+
+            fixture.Writer.WriteAssociationSetMappingElement(associationSetMapping);
+
+            Assert.Equal(
+                @"<AssociationSetMapping Name=""AS"" TypeName="".A"" StoreEntitySet=""E"">
+  <EndProperty Name=""Source"" />
+  <EndProperty Name=""Target"" />
+  <ModificationFunctionMapping>
+    <InsertFunction FunctionName=""N.F"">
+      <EndProperty Name=""Source"">
+        <ScalarProperty Name=""K"" ParameterName=""P"" Version=""Current"" />
+      </EndProperty>
+      <EndProperty Name=""Target"">
+        <ScalarProperty Name=""K"" ParameterName=""P"" Version=""Original"" />
+      </EndProperty>
+    </InsertFunction>
+    <DeleteFunction FunctionName=""N.F"">
+      <EndProperty Name=""Source"">
+        <ScalarProperty Name=""K"" ParameterName=""P"" Version=""Current"" />
+      </EndProperty>
+      <EndProperty Name=""Target"">
+        <ScalarProperty Name=""K"" ParameterName=""P"" Version=""Original"" />
+      </EndProperty>
+    </DeleteFunction>
+  </ModificationFunctionMapping>
+</AssociationSetMapping>",
                 fixture.ToString());
         }
 
