@@ -131,8 +131,6 @@ LEFT OUTER JOIN [dbo].[ArubaBugs] AS [Extent2] ON ([Extent1].[Id] = [Extent2].[A
                     var bugComment = results[i].b;
                     Assert.True(bugComment == "Foo" || bugComment == bugCommentForIdOne);
                 }
-
-                Console.WriteLine(results);
             }
         }
 
