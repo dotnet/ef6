@@ -898,7 +898,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (_connection.StoreProviderFactory == null
                 || _connection.StoreConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
             }
 
             // Make sure the connection is not closed or broken

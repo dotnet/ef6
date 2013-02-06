@@ -368,12 +368,12 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 if (_storeConnection == null)
                 {
-                    throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                    throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
                 }
 
                 if (State != ConnectionState.Open)
                 {
-                    throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+                    throw Error.EntityClient_ConnectionNotOpen();
                 }
 
                 try
@@ -544,12 +544,17 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_storeConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
             }
 
-            if (State != ConnectionState.Closed)
+            if (State == ConnectionState.Broken)
             {
-                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+                throw Error.EntityClient_CannotOpenBrokenConnection();
+            }
+
+            if (State == ConnectionState.Open)
+            {
+                throw Error.EntityClient_CannotReopenConnection();
             }
 
             var closeStoreConnectionOnFailure = false;
@@ -581,7 +586,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (_storeConnection == null
                 || _storeConnection.State != ConnectionState.Open)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+                throw Error.EntityClient_ConnectionNotOpen();
             }
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
@@ -599,12 +604,17 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_storeConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
             }
 
-            if (State != ConnectionState.Closed)
+            if (State == ConnectionState.Broken)
             {
-                throw new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+                throw Error.EntityClient_CannotOpenBrokenConnection();
+            }
+
+            if (State == ConnectionState.Open)
+            {
+                throw Error.EntityClient_CannotReopenConnection();
             }
 
             var closeStoreConnectionOnFailure = false;
@@ -637,7 +647,7 @@ namespace System.Data.Entity.Core.EntityClient
             if (_storeConnection == null
                 || _storeConnection.State != ConnectionState.Open)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+                throw Error.EntityClient_ConnectionNotOpen();
             }
 
             InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
@@ -761,12 +771,12 @@ namespace System.Data.Entity.Core.EntityClient
 
             if (_storeConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
             }
 
             if (State != ConnectionState.Open)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+                throw Error.EntityClient_ConnectionNotOpen();
             }
 
             DbTransaction storeTransaction = null;
@@ -818,12 +828,12 @@ namespace System.Data.Entity.Core.EntityClient
         {
             if (_storeConnection == null)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+                throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
             }
 
             if (State != ConnectionState.Open)
             {
-                throw new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+                throw Error.EntityClient_ConnectionNotOpen();
             }
 
             try

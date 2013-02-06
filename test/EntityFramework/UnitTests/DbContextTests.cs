@@ -471,7 +471,8 @@ END";
         {
             try
             {
-                MutableResolver.AddResolver<IDbConnectionFactory>(k =>
+                MutableResolver.AddResolver<IDbConnectionFactory>(
+                    k =>
                     new SqlCeConnectionFactory(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName));
                 var model = new DbModelBuilder().Build(ProviderRegistry.SqlCe4_ProviderInfo);
                 IObjectContextAdapter objectContextAdapter = new NotSqlAppNameContext(new DbCompiledModel(model));
@@ -649,9 +650,18 @@ END";
 
             var context = new PersistSecurityInfoContext(connectionString);
 
-            context.Database.Initialize(true);
+            try
+            {
+                context.Database.Initialize(true);
+            }
+            finally
+            {
+                context.Database.Delete();
+            }
 
-            context.Database.Delete();
+            Assert.Equal(
+                new SqlConnectionStringBuilder(connectionString).Password,
+                new SqlConnectionStringBuilder(context.Database.Connection.ConnectionString).Password);
         }
 
         [Fact]
@@ -665,11 +675,20 @@ END";
 
             var context = new PersistSecurityInfoContext(new SqlConnection(connectionString), true);
 
-            context.Database.Delete();
+            try
+            {
+                context.Database.Delete();
 
-            context.Database.Initialize(true);
+                context.Database.Initialize(true);
+            }
+            finally
+            {
+                context.Database.Delete();
+            }
 
-            context.Database.Delete();
+            Assert.Equal(
+                new SqlConnectionStringBuilder(connectionString).Password,
+                new SqlConnectionStringBuilder(context.Database.Connection.ConnectionString).Password);
         }
 
         [Fact]
@@ -691,16 +710,24 @@ END";
 
             var context = new PersistSecurityInfoContext(objectContext, true);
 
-            if (context.Database.Exists())
+            try
+            {
+                context.Database.Delete();
+
+                context.Database.Create();
+                
+                Assert.Equal(
+                    new SqlConnectionStringBuilder(connectionString).Password,
+                    new SqlConnectionStringBuilder(context.Database.Connection.ConnectionString).Password);
+
+                context.Set<PersistEntity>().ToList();
+
+                context.Database.Delete();
+            }
+            finally
             {
                 context.Database.Delete();
             }
-
-            context.Database.Create();
-
-            context.Set<PersistEntity>().ToList();
-
-            context.Database.Delete();
         }
 
         #endregion
@@ -808,7 +835,7 @@ END";
                         Assert.Equal(
                             Strings.EagerInternalContext_CannotSetConnectionInfo,
                             Assert.Throws<InvalidOperationException>(() => context.InternalContext.OverrideConnection(newConnection)).
-                                Message);
+                                   Message);
                     }
                 }
             }

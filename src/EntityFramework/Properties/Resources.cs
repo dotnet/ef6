@@ -13516,6 +13516,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.InvalidResourceName, p0);
         }
+
+        /// <summary>
+        /// A string like "The connection could not be opened because it is broken. The connection must be closed before it can be opened."
+        /// </summary>
+        internal static string EntityClient_CannotOpenBrokenConnection
+        {
+            get { return EntityRes.GetString(EntityRes.EntityClient_CannotOpenBrokenConnection); }
+        }
     } 
 
     /// <summary>
@@ -14781,6 +14789,22 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "A connection string must be set on the connection before you attempt this operation."
+        /// </summary>
+        internal static Exception EntityClient_ConnectionStringNeededBeforeOperation()
+        {
+            return new InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The connection is not open."
+        /// </summary>
+        internal static Exception EntityClient_ConnectionNotOpen()
+        {
+            return new InvalidOperationException(Strings.EntityClient_ConnectionNotOpen);
+        }
+
+        /// <summary>
         /// InvalidOperationException with message like "Cannot perform the operation because the adapter does not have a connection."
         /// </summary>
         internal static Exception EntityClient_NoConnectionForAdapter()
@@ -15165,6 +15189,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again."
+        /// </summary>
+        internal static Exception EntityClient_CannotReopenConnection()
+        {
+            return new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
+        }
+
+        /// <summary>
         /// Migrations.Infrastructure.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static Exception MigrationsPendingException(object p0)
@@ -15203,12 +15235,21 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.BaseTypeNotMappedToFunctions(p0, p1));
         }
+
         /// <summary>
         /// ArgumentException with message like "'{0}' is not a valid resource name."
         /// </summary>
         internal static Exception InvalidResourceName(object p0)
         {
             return new ArgumentException(Strings.InvalidResourceName(p0));
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The connection could not be opened because it is broken. The connection must be closed before it can be opened."
+        /// </summary>
+        internal static Exception EntityClient_CannotOpenBrokenConnection()
+        {
+            return new InvalidOperationException(Strings.EntityClient_CannotOpenBrokenConnection);
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16931,6 +16972,7 @@ namespace System.Data.Entity.Resources
         internal const string ExecutionStrategy_RetryLimitExceeded = "ExecutionStrategy_RetryLimitExceeded";
         internal const string BaseTypeNotMappedToFunctions = "BaseTypeNotMappedToFunctions";
         internal const string InvalidResourceName = "InvalidResourceName";
+        internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
         
         static EntityRes loader = null;
         ResourceManager resources;

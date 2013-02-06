@@ -4,13 +4,14 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using System.IO;
 
     public abstract class TestDatabase
     {
-        public string ConnectionString { get; protected set; }
+        public string ConnectionString { get; set; }
         public string ProviderName { get; protected set; }
         public string ProviderManifestToken { get; protected set; }
         public MigrationSqlGenerator SqlGenerator { get; protected set; }
@@ -67,6 +68,7 @@ namespace System.Data.Entity.Migrations
 
         public SqlTestDatabase(string name)
         {
+            Check.NotEmpty(name, "name");
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleConnectionString(name);
@@ -158,6 +160,7 @@ namespace System.Data.Entity.Migrations
 
         public SqlCeTestDatabase(string name)
         {
+            Check.NotEmpty(name, "name");
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleCeConnectionString(name);

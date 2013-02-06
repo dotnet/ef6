@@ -1086,9 +1086,11 @@
   </data>
   <data name="EntityClient_ConnectionStringNeededBeforeOperation" xml:space="preserve">
     <value>A connection string must be set on the connection before you attempt this operation.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_ConnectionNotOpen" xml:space="preserve">
     <value>The connection is not open.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EntityClient_DuplicateParameterNames" xml:space="preserve">
     <value>Parameters must have a unique ParameterName. A second instance of '{0}' was discovered.</value>
@@ -5361,6 +5363,7 @@
   </data>
   <data name="EntityClient_CannotReopenConnection" xml:space="preserve">
     <value>The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="MigrationsPendingException" xml:space="preserve">
     <value>Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.</value>
@@ -5391,5 +5394,9 @@
   <data name="InvalidResourceName" xml:space="preserve">
     <value>'{0}' is not a valid resource name.</value>
     <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="EntityClient_CannotOpenBrokenConnection" xml:space="preserve">
+    <value>The connection could not be opened because it is broken. The connection must be closed before it can be opened.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>

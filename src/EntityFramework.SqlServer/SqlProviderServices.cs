@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Singleton object;
+        ///     Singleton object
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
@@ -1136,12 +1137,24 @@ namespace System.Data.Entity.SqlServer
 
         private static void UsingConnection(SqlConnection sqlConnection, Action<SqlConnection> act)
         {
-            // remember the connection string so that we can reset it credentials are wiped
+            // remember the connection string so that we can reset if credentials are wiped
             var holdConnectionString = sqlConnection.ConnectionString;
             var openingConnection = sqlConnection.State == ConnectionState.Closed;
             if (openingConnection)
             {
-                sqlConnection.Open();
+                DbConfiguration.GetService<IExecutionStrategy>(new ExecutionStrategyKey("System.Data.SqlClient", sqlConnection.DataSource))
+                               .Execute(
+                                   () =>
+                                       {
+                                           // If Open() fails the original credentials need to be restored before retrying
+                                           if (sqlConnection.State == ConnectionState.Closed
+                                               && !sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
+                                           {
+                                               sqlConnection.ConnectionString = holdConnectionString;
+                                           }
+
+                                           sqlConnection.Open();
+                                       });
             }
             try
             {
@@ -1153,8 +1166,14 @@ namespace System.Data.Entity.SqlServer
                 {
                     // if we opened the connection, we should close it
                     sqlConnection.Close();
+
+                    // Can only change the connection string if the connection is closed
+                    if (!sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
+                    {
+                        Debug.Assert(true);
+                        sqlConnection.ConnectionString = holdConnectionString;
+                    }
                 }
-                sqlConnection.ConnectionString = holdConnectionString;
             }
         }
 

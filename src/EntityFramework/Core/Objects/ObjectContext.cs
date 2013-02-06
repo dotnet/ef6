@@ -1440,14 +1440,16 @@ namespace System.Data.Entity.Core.Objects
         ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the
-        ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.
+        ///     If the <see cref="ObjectContext" /> instance has been disposed.
         /// </exception>
         internal virtual void EnsureConnection()
         {
-            if (ConnectionState.Closed
-                == Connection.State)
+            if (Connection.State == ConnectionState.Broken)
+            {
+                Connection.Close();
+            }
+
+            if (Connection.State == ConnectionState.Closed)
             {
                 Connection.Open();
                 _openedConnection = true;
@@ -1456,17 +1458,6 @@ namespace System.Data.Entity.Core.Objects
             if (_openedConnection)
             {
                 _connectionRequestCount++;
-            }
-
-            // Check the connection was opened correctly
-            if (Connection.State == ConnectionState.Closed
-                || Connection.State == ConnectionState.Broken)
-            {
-                var message = Strings.EntityClient_ExecutingOnClosedConnection(
-                    Connection.State == ConnectionState.Closed
-                        ? Strings.EntityClient_ConnectionStateClosed
-                        : Strings.EntityClient_ConnectionStateBroken);
-                throw new InvalidOperationException(message);
             }
 
             try
@@ -1507,14 +1498,16 @@ namespace System.Data.Entity.Core.Objects
         ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the
-        ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.
+        ///     If the <see cref="ObjectContext" /> instance has been disposed.
         /// </exception>
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
-            if (ConnectionState.Closed
-                == Connection.State)
+            if (Connection.State == ConnectionState.Broken)
+            {
+                Connection.Close();
+            }
+
+            if (Connection.State == ConnectionState.Closed)
             {
                 await Connection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 _openedConnection = true;
@@ -1523,17 +1516,6 @@ namespace System.Data.Entity.Core.Objects
             if (_openedConnection)
             {
                 _connectionRequestCount++;
-            }
-
-            // Check the connection was opened correctly
-            if (Connection.State == ConnectionState.Closed
-                || Connection.State == ConnectionState.Broken)
-            {
-                var message = Strings.EntityClient_ExecutingOnClosedConnection(
-                    Connection.State == ConnectionState.Closed
-                        ? Strings.EntityClient_ConnectionStateClosed
-                        : Strings.EntityClient_ConnectionStateBroken);
-                throw new InvalidOperationException(message);
             }
 
             try
@@ -2545,7 +2527,8 @@ namespace System.Data.Entity.Core.Objects
             // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
             if (0 < entriesAffected)
             {
-                entriesAffected = SaveChangesToStore(options);
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+                entriesAffected = executionStrategy.Execute(() => SaveChangesToStore(options));
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -2572,18 +2555,20 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="options"> Describes behavior options of SaveChanges </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
         /// <returns> A task representing the asynchronous operation </returns>
-        public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
+        public virtual async Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
         {
             PrepareToSaveChanges(options);
 
             var entriesAffected =
-                Task.FromResult(
-                    ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified));
+                ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
 
             // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
-            if (0 < entriesAffected.Result)
+            if (0 < entriesAffected)
             {
-                entriesAffected = SaveChangesToStoreAsync(options, cancellationToken);
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+                entriesAffected = await
+                                  executionStrategy.ExecuteAsync(() => SaveChangesToStoreAsync(options, cancellationToken))
+                                                   .ConfigureAwait(continueOnCapturedContext: false);
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -2631,7 +2616,7 @@ namespace System.Data.Entity.Core.Objects
             if (_commandInterceptor == null
                 || !_commandInterceptor.IsEnabled)
             {
-                entriesAffected = ExecuteInTransaction(() => _adapter.Update(ObjectStateManager, true));
+                entriesAffected = ExecuteInTransaction(() => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true));
             }
             else
             {
@@ -2640,8 +2625,6 @@ namespace System.Data.Entity.Core.Objects
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
-                // only accept changes after the local transaction commits
-
                 try
                 {
                     AcceptAllChanges();
@@ -2689,15 +2672,13 @@ namespace System.Data.Entity.Core.Objects
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
-                // only accept changes after the local transaction commits
-
                 try
                 {
                     AcceptAllChanges();
                 }
                 catch (Exception e)
                 {
-                    // If AcceptAllChanges throw - let's inform user that changes in database were committed 
+                    // If AcceptAllChanges throws - let's inform user that changes in database were committed 
                     // and that Context and Database can be in inconsistent state.
                     throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
                 }
@@ -3530,7 +3511,8 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
-        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, ExecutionOptions executionOptions, params object[] parameters)
+        public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
+            string commandText, ExecutionOptions executionOptions, params object[] parameters)
         {
             return ExecuteStoreQueryInternal<TElement>(
                 commandText, /*entitySetName:*/null, executionOptions, parameters);
@@ -3552,7 +3534,8 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, new ExecutionOptions(mergeOption, streaming: false), parameters);
+            return ExecuteStoreQueryInternal<TElement>(
+                commandText, entitySetName, new ExecutionOptions(mergeOption, streaming: false), parameters);
         }
 
         /// <summary>

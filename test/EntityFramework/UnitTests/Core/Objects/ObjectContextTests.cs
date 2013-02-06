@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class SaveChanges
+        public class SaveChanges : TestBase
         {
             [Fact]
             public void Parameterless_SaveChanges_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
 
-                var objectContext = CreateObjectContext(objectStateManagerMock, entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 objectContext.SaveChanges(SaveOptions.DetectChangesBeforeSave);
 
@@ -87,7 +87,10 @@ namespace System.Data.Entity.Core.Objects
                               CallBase = true
                           };
                 mockObjectContext.Setup(oc => oc.ObjectStateManager).Returns(mockObjectStateManager.Object);
-                mockObjectContext.Setup(oc => oc.Connection).Returns(new Mock<EntityConnection>().Object);
+
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
+                mockObjectContext.Setup(oc => oc.Connection).Returns(storeConnectionMock.Object);
 
                 mockObjectContext.Object.SaveChanges(SaveOptions.None);
 
@@ -104,7 +107,7 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
 
-                var objectContext = CreateObjectContext(objectStateManagerMock, entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_CommitWithConceptualNull,
@@ -139,11 +142,14 @@ namespace System.Data.Entity.Core.Objects
                 var entityTransaction = entityTransactionMock.Object;
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
                 entityConnectionMock.Setup(m => m.Open()).Callback(() => connectionState = ConnectionState.Open);
                 entityConnectionMock.Setup(m => m.BeginTransaction()).Returns(() => entityTransaction);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
                 // first time return false to by-pass check in the constructor
                 var enlistedInUserTransactionCallCount = 0;
@@ -151,14 +157,7 @@ namespace System.Data.Entity.Core.Objects
                                      Callback(() => enlistedInUserTransactionCallCount++).
                                      Returns(enlistedInUserTransactionCallCount == 1);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
                 objectContext.SaveChanges(SaveOptions.None);
 
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -175,20 +174,16 @@ namespace System.Data.Entity.Core.Objects
                     Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
                 entityConnectionMock.Setup(m => m.Open()).Callback(() => connectionState = ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
                 objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
 
                 objectStateManagerMock.Verify(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()), Times.AtLeastOnce());
@@ -205,20 +200,16 @@ namespace System.Data.Entity.Core.Objects
                     Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
                 entityConnectionMock.Setup(m => m.Open()).Callback(() => connectionState = ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                entityConnectionMock.Setup(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_AcceptAllChangesFailure(new NotSupportedException().Message),
@@ -263,6 +254,36 @@ namespace System.Data.Entity.Core.Objects
                     () =>
                     mockObjectContext.Object.SaveChanges(SaveOptions.None));
             }
+
+            [Fact]
+            public void Uses_ExecutionStrategy()
+            {
+                var objectStateManagerMock = new Mock<ObjectStateManager>();
+                objectStateManagerMock.Setup(
+                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
+
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>())).Returns<Func<int>>(f => 2);
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    Assert.Equal(2, objectContext.SaveChanges());
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<int>>()), Times.Once());
+            }
         }
 
         public class EnsureConnection
@@ -305,20 +326,28 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void Throws_InvalidOperationException_if_connection_state_is_broken()
+            public void Calls_Open_if_connection_is_closed_or_broken()
             {
-                var connectionMock = new Mock<EntityConnection>();
-                connectionMock.Setup(m => m.State).Returns(ConnectionState.Broken);
-                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                var state = ConnectionState.Broken;
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(m => m.Close()).Callback(() => { state = ConnectionState.Closed; });
+                entityConnectionMock.Setup(m => m.Open()).Callback(
+                    () =>
+                        {
+                            entityConnectionMock.Verify(m => m.Close(), Times.Once());
+                            state = ConnectionState.Open;
+                        });
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
+
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
                                             {
                                                 CallBase = true
                                             };
+                objectContextMock.Setup(m => m.EnsureMetadata());
 
-                Assert.Equal(
-                    Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateBroken),
-                    Assert.Throws<InvalidOperationException>(
-                        () => objectContextMock.Object.EnsureConnection()).Message);
-                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Never());
+                objectContextMock.Object.EnsureConnection();
+
+                entityConnectionMock.Verify(m => m.Open(), Times.Once());
             }
         }
 
@@ -336,7 +365,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommand("Foo");
 
                 dbCommandMock.VerifySet(m => m.CommandText = "Foo", Times.Once());
@@ -355,7 +384,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.CommandTimeout = 10;
                 objectContext.ExecuteStoreCommand("Foo");
 
@@ -380,7 +409,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(entityTransaction);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommand("Foo");
 
                 dbCommandMock.VerifySet(m => m.Transaction = storeTransaction, Times.Once());
@@ -420,7 +449,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommand("Foo", parameter1, parameter2, parameter3);
 
                 Assert.True(correctParameters);
@@ -478,7 +507,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommand("{0} Foo {1} Bar {2} Baz {3}", 1, null, "Bar", DBNull.Value);
 
                 parameterMock1.VerifySet(m => m.ParameterName = "p0", Times.Once());
@@ -511,7 +540,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues,
@@ -547,7 +576,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQuery<object>("{0} Foo", parameterMock.Object);
 
@@ -583,7 +612,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQuery<object>("{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true), parameterMock.Object);
 
@@ -602,7 +631,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQuery<object>("{0} Foo");
             }
@@ -617,7 +646,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 Assert.Equal(
                     "Foo",
@@ -639,7 +668,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 Mock.Get(objectContext.MetadataWorkspace).Setup(m => m.GetQueryCacheManager())
                     .Throws(new InvalidOperationException("Foo"));
@@ -670,7 +699,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityCommandMock = Mock.Get((EntityCommand)entityCommandDefinition.CreateCommand());
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityCommandMock.Object);
+                var objectContext = CreateObjectContext(entityCommandMock.Object);
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
@@ -787,7 +816,7 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        public class SaveChangesAsync
+        public class SaveChangesAsync : TestBase
         {
             [Fact]
             public void Parameterless_SaveChangesAsync_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
@@ -815,7 +844,7 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
 
-                var objectContext = CreateObjectContext(objectStateManagerMock, entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 objectContext.SaveChangesAsync(SaveOptions.DetectChangesBeforeSave).Wait();
 
@@ -841,8 +870,10 @@ namespace System.Data.Entity.Core.Objects
                               CallBase = true
                           };
 
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 mockObjectContext.Setup(oc => oc.ObjectStateManager).Returns(mockObjectStateManager.Object);
-                mockObjectContext.Setup(oc => oc.Connection).Returns(new Mock<EntityConnection>().Object);
+                mockObjectContext.Setup(oc => oc.Connection).Returns(storeConnectionMock.Object);
 
                 mockObjectContext.Object.SaveChangesAsync(SaveOptions.None).Wait();
 
@@ -859,11 +890,16 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
 
-                var objectContext = CreateObjectContext(objectStateManagerMock, entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_CommitWithConceptualNull,
-                    Assert.Throws<InvalidOperationException>(() => objectContext.SaveChangesAsync(SaveOptions.None).Wait()).Message);
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
+                            objectContext.SaveChangesAsync(SaveOptions.None).Wait()))
+                          .Message);
             }
 
             [Fact]
@@ -894,6 +930,8 @@ namespace System.Data.Entity.Core.Objects
                 var entityTransaction = entityTransactionMock.Object;
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
@@ -904,6 +942,7 @@ namespace System.Data.Entity.Core.Objects
                             return Task.FromResult<object>(null);
                         });
                 entityConnectionMock.Setup(m => m.BeginTransaction()).Returns(() => entityTransaction);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
                 // first time return false to by-pass check in the constructor
                 var enlistedInUserTransactionCallCount = 0;
@@ -911,14 +950,7 @@ namespace System.Data.Entity.Core.Objects
                                      Callback(() => enlistedInUserTransactionCallCount++).
                                      Returns(enlistedInUserTransactionCallCount == 1);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
                 objectContext.SaveChangesAsync(SaveOptions.None).Wait();
 
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -935,6 +967,8 @@ namespace System.Data.Entity.Core.Objects
                     Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
@@ -945,6 +979,7 @@ namespace System.Data.Entity.Core.Objects
                             return Task.FromResult<object>(null);
                         });
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
                 metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
@@ -952,8 +987,7 @@ namespace System.Data.Entity.Core.Objects
                 metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
                 metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
 
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock, metadataWorkspace);
                 objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Wait();
 
                 objectStateManagerMock.Verify(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()), Times.AtLeastOnce());
@@ -970,6 +1004,8 @@ namespace System.Data.Entity.Core.Objects
                     Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => connectionState);
@@ -980,15 +1016,9 @@ namespace System.Data.Entity.Core.Objects
                             return Task.FromResult<object>(null);
                         });
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var objectContext = CreateObjectContext(
-                    objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_AcceptAllChangesFailure(new NotSupportedException().Message),
@@ -1037,6 +1067,37 @@ namespace System.Data.Entity.Core.Objects
                         () =>
                         mockObjectContext.Object.SaveChangesAsync(SaveOptions.None).Wait()));
             }
+
+            [Fact]
+            public void Uses_ExecutionStrategy()
+            {
+                var objectStateManagerMock = new Mock<ObjectStateManager>();
+                objectStateManagerMock.Setup(
+                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+
+                var storeConnectionMock = new Mock<DbConnection>();
+                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
+
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>())).Returns<Func<Task<int>>>(
+                    f => Task.FromResult(2));
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    Assert.Equal(2, objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Result);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                executionStrategyMock.Verify(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>()), Times.Once());
+            }
         }
 
         public class EnsureConnectionAsync
@@ -1079,23 +1140,29 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void Throws_InvalidOperationException_if_connection_state_is_broken()
+            public void Calls_Open_if_connection_is_closed_or_broken()
             {
-                var connectionMock = new Mock<EntityConnection>();
-                connectionMock.Setup(m => m.State).Returns(ConnectionState.Broken);
-                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
+                var state = ConnectionState.Broken;
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(m => m.Close()).Callback(() => { state = ConnectionState.Closed; });
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                    {
+                        entityConnectionMock.Verify(m => m.Close(), Times.Once());
+                        state = ConnectionState.Open;
+                        return Task.FromResult(true);
+                    });
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
 
-                Assert.Equal(
-                    Strings.EntityClient_ExecutingOnClosedConnection(Strings.EntityClient_ConnectionStateBroken),
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(
-                            () =>
-                            objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait())).Message);
-                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Never());
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
+                {
+                    CallBase = true
+                };
+                objectContextMock.Setup(m => m.EnsureMetadata());
+
+                objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
+
+                entityConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
             }
         }
 
@@ -1114,7 +1181,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommandAsync("Foo").Wait();
 
                 dbCommandMock.VerifySet(m => m.CommandText = "Foo", Times.Once());
@@ -1134,7 +1201,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.CommandTimeout = 10;
                 objectContext.ExecuteStoreCommandAsync("Foo").Wait();
 
@@ -1160,7 +1227,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(entityTransaction);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommandAsync("Foo").Wait();
 
                 dbCommandMock.VerifySet(m => m.Transaction = storeTransaction, Times.Once());
@@ -1201,7 +1268,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommandAsync("Foo", parameter1, parameter2, parameter3).Wait();
 
                 Assert.True(correctParameters);
@@ -1260,7 +1327,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
                 objectContext.ExecuteStoreCommandAsync("{0} Foo {1} Bar {2} Baz {3}", 1, null, "Bar", DBNull.Value).Wait();
 
                 parameterMock1.VerifySet(m => m.ParameterName = "p0", Times.Once());
@@ -1293,7 +1360,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(entityConnectionMock);
+                var objectContext = CreateObjectContext(entityConnectionMock);
 
                 Assert.Equal(
                     Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues,
@@ -1335,7 +1402,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Wait();
 
@@ -1374,7 +1441,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 objectContext.ExecuteStoreQueryAsync<object>(
                     "{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true),
@@ -1397,7 +1464,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 Assert.Equal(
                     "Foo",
@@ -1422,7 +1489,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => new Mock<DbParameterCollection>().Object);
 
-                var objectContext = CreateObjectContextWithConnectionAndMetadata(dbCommandMock.Object);
+                var objectContext = CreateObjectContext(dbCommandMock.Object);
 
                 Mock.Get(objectContext.MetadataWorkspace).Setup(m => m.GetQueryCacheManager())
                     .Throws(new InvalidOperationException("Foo"));
@@ -1442,7 +1509,7 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        private static ObjectContext CreateObjectContextWithConnectionAndMetadata(DbCommand dbCommand)
+        private static ObjectContext CreateObjectContext(DbCommand dbCommand)
         {
             var dbConnectionMock = new Mock<DbConnection>();
             dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommand);
@@ -1457,7 +1524,8 @@ namespace System.Data.Entity.Core.Objects
             providerManifestMock.Setup(m => m.GetStoreTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType>()));
             providerManifestMock.Setup(m => m.GetStoreFunctions()).Returns(new ReadOnlyCollection<EdmFunction>(new List<EdmFunction>()));
 
-            var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, providerManifestMock.Object, "providerInvariantName", "token");
+            var storeItemCollection = new StoreItemCollection(
+                FakeSqlProviderFactory.Instance, providerManifestMock.Object, "providerInvariantName", "token");
 
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OSpace, It.IsAny<bool>()))
                                  .Returns(new ObjectItemCollection());
@@ -1500,48 +1568,30 @@ namespace System.Data.Entity.Core.Objects
                                 .Returns(collectionColumnMap);
 
             var objectContext = CreateObjectContext(
-                objectStateManagerMock, entityConnectionMock, metadataWorkspaceMock, translator, columnMapFactoryMock.Object);
-
-            return objectContext;
-        }
-
-        private static ObjectContext CreateObjectContextWithConnectionAndMetadata(Mock<EntityConnection> entityConnectionMock)
-        {
-            var objectStateManagerMock = new Mock<ObjectStateManager>();
-            var metadataWorkspace = new Mock<MetadataWorkspace>();
-            metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
-            metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-            metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-            metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-            var objectContext = CreateObjectContext(
-                objectStateManagerMock, entityConnectionMock, metadataWorkspace);
+                entityConnectionMock, objectStateManagerMock, metadataWorkspace: metadataWorkspaceMock, translator: translator,
+                columnMapFactory: columnMapFactoryMock.Object);
 
             return objectContext;
         }
 
         private static ObjectContext CreateObjectContext(
-            Mock<ObjectStateManager> objectStateManagerMock,
-            Mock<EntityConnection> entityConnectionMock)
+            Mock<EntityConnection> entityConnectionMock, Mock<ObjectStateManager> objectStateManagerMock = null,
+            Mock<MetadataWorkspace> metadataWorkspace = null, Translator translator = null, ColumnMapFactory columnMapFactory = null)
         {
-            var entityConnection = entityConnectionMock.Object;
-            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection)
-                                        {
-                                            CallBase = true
-                                        };
+            if (objectStateManagerMock == null)
+            {
+                objectStateManagerMock = new Mock<ObjectStateManager>();
+            }
 
-            objectContextMock.Setup(m => m.ObjectStateManager).Returns(() => objectStateManagerMock.Object);
+            if (metadataWorkspace == null)
+            {
+                metadataWorkspace = new Mock<MetadataWorkspace>();
+                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
+                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
+                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
+                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+            }
 
-            return objectContextMock.Object;
-        }
-
-        private static ObjectContext CreateObjectContext(
-            Mock<ObjectStateManager> objectStateManagerMock,
-            Mock<EntityConnection> entityConnectionMock,
-            Mock<MetadataWorkspace> metadataWorkspace,
-            Translator translator = null,
-            ColumnMapFactory columnMapFactory = null)
-        {
             var objectContextMock = new Mock<ObjectContext>(new ObjectQueryExecutionPlanFactory(), translator, columnMapFactory, null, null)
                                         {
                                             CallBase = true
