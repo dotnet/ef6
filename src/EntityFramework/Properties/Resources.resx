@@ -5395,6 +5395,10 @@
     <value>'{0}' is not a valid resource name.</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
+  <data name="ModificationFunctionParameterNotFound" xml:space="preserve">
+    <value>A parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is valid for this modification operation and that it is not database generated.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
   <data name="EntityClient_CannotOpenBrokenConnection" xml:space="preserve">
     <value>The connection could not be opened because it is broken. The connection must be closed before it can be opened.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

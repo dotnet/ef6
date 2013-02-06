@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 {
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -16,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
     public sealed class EntityTypeConfigurationTests
     {
         [Fact]
-        public void MapToFunctions_should_set_configuration_flag()
+        public void MapToFunctions_should_create_empty_function_mapping_configuration()
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
@@ -25,6 +27,44 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             entityTypeConfiguration.MapToFunctions();
 
             Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void Can_pass_function_mapping_configuration_to_map_to_functions()
+        {
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+
+            Assert.False(entityTypeConfiguration.IsMappedToFunctions);
+
+            entityTypeConfiguration.MapToFunctions(new ModificationFunctionsConfiguration());
+
+            Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void Configure_should_configure_modification_functions()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var entityType = model.AddEntityType("E");
+            entityType.Annotations.SetClrType(typeof(object));
+
+            model.AddEntitySet("ESet", entityType);
+
+            var modificationFunctionsConfigurationMock = new Mock<ModificationFunctionsConfiguration>();
+
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+            entityTypeConfiguration.MapToFunctions(modificationFunctionsConfigurationMock.Object);
+
+            entityType.SetConfiguration(entityTypeConfiguration);
+
+            var databaseMapping
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+
+            entityTypeConfiguration.Configure(entityType, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
+
+            modificationFunctionsConfigurationMock
+                .Verify(m => m.Configure(It.IsAny<StorageEntityTypeModificationFunctionMapping>()), Times.Once());
         }
 
         [Fact]

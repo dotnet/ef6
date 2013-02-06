@@ -324,7 +324,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             // Propagate function mapping down hierarchy
             model.GetSelfAndAllDerivedTypes(entityType)
-                 .Each(e => Entity(e.GetClrType()).MapToFunctions());
+                 .Each(
+                     e =>
+                         {
+                             var entityConfiguration = Entity(e.GetClrType());
+
+                             if (!entityConfiguration.IsMappedToFunctions)
+                             {
+                                 entityConfiguration.MapToFunctions();
+                             }
+                         });
         }
 
         private void ConfigureComplexTypes(EdmModel model)

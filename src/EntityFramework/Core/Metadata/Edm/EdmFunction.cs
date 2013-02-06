@@ -28,7 +28,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //---- name of the 'schema'
             //---- this is used by the SQL Gen utility and update pipeline to support generation of the correct function name in the store
             _schemaName = payload.Schema;
-            _fullName = NamespaceName + "." + Name;
 
             var returnParameters = payload.ReturnParameters ?? new FunctionParameter[0];
 
@@ -139,7 +138,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _commandTextAttribute;
         private string _schemaName;
         private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
-        private readonly string _fullName;
 
         /// <summary>
         ///     Returns the kind of the type
@@ -154,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public override string FullName
         {
-            get { return _fullName; }
+            get { return NamespaceName + "." + Name; }
         }
 
         /// <summary>

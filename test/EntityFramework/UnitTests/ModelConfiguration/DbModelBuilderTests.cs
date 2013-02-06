@@ -287,14 +287,12 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             configuration.ToTable("Table");
             configuration.IsExplicitEntity = true;
             configuration.EntitySetName = "ESN";
-            configuration.MapToFunctions();
-
+            
             var clone = configuration.Clone();
 
             Assert.True(clone.IsReplaceable);
             Assert.True(clone.IsTableNameConfigured);
             Assert.True(clone.IsExplicitEntity);
-            Assert.True(clone.IsMappedToFunctions);
             Assert.Equal("ESN", clone.EntitySetName);
             Assert.Same(typeof(object), clone.ClrType);
         }
@@ -456,6 +454,18 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             configuration.AddSubTypeMappingConfiguration(typeof(int), new EntityMappingConfiguration());
             Assert.False(clone.SubTypeMappingConfigurations.ContainsKey(typeof(int)));
+        }
+
+        [Fact]
+        public void Cloning_an_entity_configuration_clones_its_modification_function_information()
+        {
+            var configuration = new EntityTypeConfiguration(typeof(object));
+
+            configuration.MapToFunctions();
+
+            var clone = configuration.Clone();
+            
+            Assert.True(clone.IsMappedToFunctions);
         }
 
         [Fact]

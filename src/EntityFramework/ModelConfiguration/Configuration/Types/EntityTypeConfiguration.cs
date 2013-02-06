@@ -40,7 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private bool _isKeyConfigured;
         private bool _isKeyConfiguredByAttributes;
         private string _entitySetName;
-        private bool _mappedToFunctions;
+
+        private ModificationFunctionsConfiguration _modificationFunctionsConfiguration;
 
         internal EntityTypeConfiguration(Type structuralType)
             : base(structuralType)
@@ -65,7 +66,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = source._isKeyConfigured;
             _isKeyConfiguredByAttributes = source._isKeyConfiguredByAttributes;
             _entitySetName = source._entitySetName;
-            _mappedToFunctions = source._mappedToFunctions;
+
+            if (source._modificationFunctionsConfiguration != null)
+            {
+                _modificationFunctionsConfiguration = source._modificationFunctionsConfiguration.Clone();
+            }
 
             IsReplaceable = source.IsReplaceable;
             IsTableNameConfigured = source.IsTableNameConfigured;
@@ -115,7 +120,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal bool IsMappedToFunctions
         {
-            get { return _mappedToFunctions; }
+            get { return _modificationFunctionsConfiguration != null; }
         }
 
         internal IEnumerable<PropertyInfo> KeyProperties
@@ -193,6 +198,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal bool IsReplaceable { get; set; }
 
         internal bool IsExplicitEntity { get; set; }
+
+        internal virtual void MapToFunctions()
+        {
+            _modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+        }
+
+        internal virtual void MapToFunctions(
+            ModificationFunctionsConfiguration modificationFunctionsConfiguration)
+        {
+            DebugCheck.NotNull(modificationFunctionsConfiguration);
+
+            _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
+        }
 
         internal void ReplaceFrom(EntityTypeConfiguration existing)
         {
@@ -296,11 +314,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                       : new DatabaseName(tableName, schemaName);
 
             UpdateTableNameForSubTypes();
-        }
-
-        internal virtual void MapToFunctions()
-        {
-            _mappedToFunctions = true;
         }
 
         private void UpdateTableNameForSubTypes()
@@ -555,6 +568,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureAssociationMappings(databaseMapping, entityType);
             ConfigureDependentKeys(databaseMapping, providerManifest);
+
+            if (_modificationFunctionsConfiguration != null)
+            {
+                var modificationFunctionMapping
+                    = databaseMapping.GetEntitySetMappings()
+                                     .SelectMany(esm => esm.ModificationFunctionMappings)
+                                     .SingleOrDefault(mfm => mfm.EntityType == entityType);
+
+                if (modificationFunctionMapping != null)
+                {
+                    _modificationFunctionsConfiguration.Configure(modificationFunctionMapping);
+                }
+            }
         }
 
         private void ConfigurePropertyMappings(

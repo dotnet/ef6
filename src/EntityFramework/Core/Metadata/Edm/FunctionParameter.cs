@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private readonly TypeUsage _typeUsage;
-        private readonly string _name;
+        private string _name;
         private readonly SafeLink<EdmFunction> _declaringFunction = new SafeLink<EdmFunction>();
 
         /// <summary>
@@ -71,6 +71,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public String Name
         {
             get { return _name; }
+            set
+            {
+                Check.NotEmpty(value, "value");
+
+                _name = value;
+            }
         }
 
         /// <summary>

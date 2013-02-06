@@ -120,6 +120,22 @@ namespace System.Data.Entity.ModelConfiguration
             return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public EntityTypeConfiguration<TEntityType> MapToFunctions(
+            Action<ModificationFunctionsConfiguration<TEntityType>> modificationFunctionMappingConfigurationAction)
+        {
+            Check.NotNull(modificationFunctionMappingConfigurationAction, "modificationFunctionMappingConfigurationAction");
+
+            var modificationFunctionMappingConfiguration
+                = new ModificationFunctionsConfiguration<TEntityType>();
+
+            modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
+
+            _entityTypeConfiguration.MapToFunctions(modificationFunctionMappingConfiguration.Configuration);
+
+            return this;
+        }
+
         /// <summary>
         ///     Allows advanced configuration related to how this entity type is mapped to the database schema.
         ///     By default, any configuration will also apply to any type derived from this entity type.

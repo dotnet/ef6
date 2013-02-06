@@ -17,5 +17,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("Foo", function.Schema);
         }
+
+        [Fact]
+        public void Can_get_full_name()
+        {
+            var function = new EdmFunction();
+
+            Assert.Equal("N.F", function.FullName);
+
+            function.Name = "Foo";
+
+            Assert.Equal("N.Foo", function.FullName);
+    }
     }
 }

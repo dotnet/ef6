@@ -18,6 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // For testing only
         internal EntityContainer()
+            : this("C", DataSpace.CSpace)
         {
         }
 

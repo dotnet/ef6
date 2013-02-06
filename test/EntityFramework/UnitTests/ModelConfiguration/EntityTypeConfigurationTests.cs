@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.UnitTests
 {
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
     using Moq;
@@ -54,6 +55,19 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
             entityConfiguration.MapToFunctions();
 
             mockEntityTypeConfiguration.Verify(e => e.MapToFunctions());
+        }
+
+        [Fact]
+        public void MapToFunctions_when_config_action_should_call_method_on_internal_configuration()
+        {
+            var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(Fixture));
+            var entityConfiguration = new EntityTypeConfiguration<Fixture>(mockEntityTypeConfiguration.Object);
+
+            ModificationFunctionsConfiguration<Fixture> configuration = null;
+
+            entityConfiguration.MapToFunctions(c => { configuration = c; });
+            
+            mockEntityTypeConfiguration.Verify(e => e.MapToFunctions(configuration.Configuration));
         }
 
         [Fact]

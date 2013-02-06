@@ -17,5 +17,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("String", function.TypeName);
         }
+
+        [Fact]
+        public void Can_get_and_set_name()
+        {
+            var function
+                = new FunctionParameter(
+                    "P",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.InOut);
+
+            Assert.Equal("P", function.Name);
+
+            function.Name = "Foo";
+
+            Assert.Equal("Foo", function.Name);
+    }
     }
 }

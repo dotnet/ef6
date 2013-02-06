@@ -13518,6 +13518,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "A parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is valid for this modification operation and that it is not database generated."
+        /// </summary>
+        internal static string ModificationFunctionParameterNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ModificationFunctionParameterNotFound, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The connection could not be opened because it is broken. The connection must be closed before it can be opened."
         /// </summary>
         internal static string EntityClient_CannotOpenBrokenConnection
@@ -15244,6 +15252,13 @@ namespace System.Data.Entity.Resources
             return new ArgumentException(Strings.InvalidResourceName(p0));
         }
 
+        /// <summary>
+        /// InvalidOperationException with message like "A parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is valid for this modification operation and that it is not database generated."
+        /// </summary>
+        internal static Exception ModificationFunctionParameterNotFound(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ModificationFunctionParameterNotFound(p0, p1));
+        }
         /// <summary>
         /// InvalidOperationException with message like "The connection could not be opened because it is broken. The connection must be closed before it can be opened."
         /// </summary>
@@ -16972,6 +16987,7 @@ namespace System.Data.Entity.Resources
         internal const string ExecutionStrategy_RetryLimitExceeded = "ExecutionStrategy_RetryLimitExceeded";
         internal const string BaseTypeNotMappedToFunctions = "BaseTypeNotMappedToFunctions";
         internal const string InvalidResourceName = "InvalidResourceName";
+        internal const string ModificationFunctionParameterNotFound = "ModificationFunctionParameterNotFound";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
         
         static EntityRes loader = null;

@@ -7,6 +7,7 @@ namespace FunctionalTests
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using ConcurrencyModel;
     using Xunit;
 
     public class FunctionsScenarioTests
@@ -40,7 +41,7 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
                     Assert.NotNull(functionMapping.UpdateFunctionMapping);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
-                } 
+                }
 
                 [Fact]
                 public void Map_to_functions_by_convention_when_complex_type()
@@ -168,6 +169,106 @@ namespace FunctionalTests
 
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
+                }
+
+                [Fact]
+                public void Map_to_functions_by_convention_when_concurrency()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder.Entity<Engine>().MapToFunctions();
+                    modelBuilder.Ignore<Team>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Equal(3, databaseMapping.Database.Functions.Count());
+
+                    var functionMappings
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings);
+
+                    foreach (var functionMapping in functionMappings)
+                    {
+                        Assert.NotNull(functionMapping.InsertFunctionMapping);
+                        Assert.NotNull(functionMapping.UpdateFunctionMapping);
+                        Assert.NotNull(functionMapping.DeleteFunctionMapping);
+            }
+                }
+            }
+
+            public class Apis : TestBase
+            {
+                [Fact]
+                public void Can_configure_function_names()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToFunctions(
+                            map =>
+                                {
+                                    map.InsertFunction(f => f.HasName("insert_order_line"));
+                                    map.UpdateFunction(f => f.HasName("update_order_line"));
+                                    map.DeleteFunction(f => f.HasName("delete_order_line"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .Single()
+                            .ModificationFunctionMappings
+                            .Single();
+
+                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.Name);
+                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.Name);
+                }
+
+                [Fact]
+                public void Can_configure_parameter_names()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Building>()
+                        .MapToFunctions(
+                            map =>
+                                {
+                                    map.InsertFunction(f => f.Parameter(b => b.Address.Line1).HasName("ins_line1"));
+                                    map.UpdateFunction(f => f.Parameter(b => b.Id).HasName("upd_id"));
+                                    map.DeleteFunction(f => f.Parameter(b => b.Id).HasName("del_id"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    databaseMapping.ShellEdmx();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .Single()
+                            .ModificationFunctionMappings
+                            .Single();
+
+                    Assert.True(functionMapping.InsertFunctionMapping.Function.Parameters.Any(p => p.Name == "ins_line1"));
+                    Assert.True(functionMapping.UpdateFunctionMapping.Function.Parameters.Any(p => p.Name == "upd_id"));
+                    Assert.True(functionMapping.DeleteFunctionMapping.Function.Parameters.Any(p => p.Name == "del_id"));
                 }
             }
 
