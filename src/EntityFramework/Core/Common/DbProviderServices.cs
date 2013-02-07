@@ -235,8 +235,8 @@ namespace System.Data.Entity.Core.Common
             {
                 connection = entityConnection.StoreConnection;
             }
-
-            var providerInvariantName = GetProviderFactory(connection).GetProviderInvariantName();
+            
+            var providerInvariantName = connection.GetProviderInvariantName();
 
             return DbConfiguration.GetService<IExecutionStrategy>(
                 new ExecutionStrategyKey(providerInvariantName, connection.DataSource));
