@@ -3081,19 +3081,25 @@ namespace System.Data.Entity.Core.Objects
 
             if (executionOptions.Streaming)
             {
-                return MaterializedDataRecord<TElement>(entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption);
+                return MaterializedDataRecord<TElement>(entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true);
             }
             else
             {
                 BufferedDataReader bufferedReader = null;
                 try
                 {
+                    var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize();
+                    bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
                 }
                 catch (Exception e)
                 {
-                    bufferedReader.Dispose();
+                    if (bufferedReader != null)
+                    {
+                        bufferedReader.Dispose();
+                    }
                     ReleaseConnection();
 
                     if (e.IsCatchableEntityExceptionType())
@@ -3105,7 +3111,7 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 return MaterializedDataRecord<TElement>(
-                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption);
+                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: false);
             }
         }
 
@@ -3118,7 +3124,8 @@ namespace System.Data.Entity.Core.Objects
             int resultSetIndex,
             ReadOnlyMetadataCollection<EntitySet> entitySets,
             EdmType[] edmTypes,
-            MergeOption mergeOption)
+            MergeOption mergeOption,
+            bool useSpatialReader)
         {
             DebugCheck.NotNull(entityCommand);
             DebugCheck.NotNull(storeReader);
@@ -3139,7 +3146,7 @@ namespace System.Data.Entity.Core.Objects
                 var shaperFactory = _translator.TranslateColumnMap<TElement>(
                     cacheManager, commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
                     false);
-                var shaper = shaperFactory.Create(storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader);
+                var shaper = shaperFactory.Create(storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, useSpatialReader);
 
                 NextResultGenerator nextResultGenerator;
 
@@ -3593,13 +3600,19 @@ namespace System.Data.Entity.Core.Objects
             BufferedDataReader bufferedReader = null;
             try
             {
+                var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+
                 bufferedReader = new BufferedDataReader(reader);
-                bufferedReader.Initialize();
+                bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
                 return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
             }
             catch
             {
-                bufferedReader.Dispose();
+                if (bufferedReader != null)
+                {
+                    bufferedReader.Dispose();
+                }
 
                 ReleaseConnection();
                 throw;
@@ -3775,13 +3788,20 @@ namespace System.Data.Entity.Core.Objects
             BufferedDataReader bufferedReader = null;
             try
             {
+                var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+
                 bufferedReader = new BufferedDataReader(reader);
-                await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
             }
             catch
             {
-                bufferedReader.Dispose();
+                if (bufferedReader != null)
+                {
+                    bufferedReader.Dispose();
+                }
 
                 ReleaseConnection();
                 throw;
@@ -3883,7 +3903,7 @@ namespace System.Data.Entity.Core.Objects
             var cacheManager = MetadataWorkspace.GetQueryCacheManager();
             var shaperFactory = _translator.TranslateColumnMap<TElement>(
                 cacheManager, columnMap, MetadataWorkspace, null, mergeOption, false);
-            var shaper = shaperFactory.Create(reader, this, MetadataWorkspace, mergeOption, readerOwned);
+            var shaper = shaperFactory.Create(reader, this, MetadataWorkspace, mergeOption, readerOwned, useSpatialReader: true);
             return new ObjectResult<TElement>(shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned);
         }
 

@@ -35,7 +35,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*readerOwned*/ false)
+                /*readerOwned*/ false,
+                /*useSpatialReader*/ false)
                                  {
                                      CallBase = true
                                  };
@@ -135,7 +136,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*readerOwned*/ false)
+                /*readerOwned*/ false,
+                /*useSpatialReader*/ false)
                                  {
                                      CallBase = true
                                  };
@@ -242,7 +244,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
-                /*readerOwned*/ false)
+                /*readerOwned*/ false,
+                /*useSpatialReader*/ false)
                                  {
                                      CallBase = true
                                  };
@@ -261,7 +264,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 MergeOption.AppendOnly,
                 /*stateCount*/ 2,
                 rootCoordinatorFactory2,
-                /*readerOwned*/ false)
+                /*readerOwned*/ false,
+                /*useSpatialReader*/ false)
                                   {
                                       CallBase = true
                                   };

@@ -4,12 +4,15 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -152,14 +155,17 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Shaper<TResultType> shaper;
                 if (Streaming)
                 {
-                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true);
                 }
                 else
                 {
+                    var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize();
+                    bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
 
-                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false);
                 }
 
                 // create materializer delegate
@@ -220,14 +226,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Shaper<TResultType> shaper;
                 if (Streaming)
                 {
-                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true);
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true);
                 }
                 else
                 {
-                    bufferedReader = new BufferedDataReader(storeReader);
-                    await bufferedReader.InitializeAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
-                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true);
+                    bufferedReader = new BufferedDataReader(storeReader);
+                    await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
+                        .ConfigureAwait(continueOnCapturedContext: false);
+
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false);
                 }
 
                 // create materializer delegate

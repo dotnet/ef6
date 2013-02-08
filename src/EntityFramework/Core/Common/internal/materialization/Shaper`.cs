@@ -47,8 +47,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         internal Shaper(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, int stateCount,
-            CoordinatorFactory<T> rootCoordinatorFactory, bool readerOwned)
-            : base(reader, context, workspace, mergeOption, stateCount)
+            CoordinatorFactory<T> rootCoordinatorFactory, bool readerOwned, bool useSpatialReader)
+            : base(reader, context, workspace, mergeOption, stateCount, useSpatialReader)
         {
             DebugCheck.NotNull(rootCoordinatorFactory);
 

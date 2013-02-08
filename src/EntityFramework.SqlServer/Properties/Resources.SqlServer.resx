@@ -145,6 +145,9 @@
   <data name="UnableToDetermineStoreVersion" xml:space="preserve">
     <value>Could not determine storage version; a valid storage connection or a version hint is required.</value>
   </data>
+  <data name="SqlProvider_NeedSqlDataReader" xml:space="preserve">
+    <value>Spatial readers can only be produced from readers of type SqlDataReader. A reader of type {0} was provided.</value>
+  </data>
   <data name="SqlProvider_Sql2008RequiredForSpatial" xml:space="preserve">
     <value>Spatial types and functions are only supported by SQL Server 2008 or later.</value>
   </data>

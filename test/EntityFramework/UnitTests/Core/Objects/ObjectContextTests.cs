@@ -549,7 +549,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class ExecuteStoreQuery
+        public class ExecuteStoreQuery : TestBase
         {
             [Fact]
             public void Command_is_executed_with_correct_CommandText_and_parameters()
@@ -1371,7 +1371,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class ExecuteStoreQueryAsync
+        public class ExecuteStoreQueryAsync : TestBase
         {
             [Fact]
             public void Command_is_executed_with_correct_CommandText_and_parameters()
@@ -1523,7 +1523,7 @@ namespace System.Data.Entity.Core.Objects
             providerManifestMock.Setup(m => m.GetStoreFunctions()).Returns(new ReadOnlyCollection<EdmFunction>(new List<EdmFunction>()));
 
             var storeItemCollection = new StoreItemCollection(
-                FakeSqlProviderFactory.Instance, providerManifestMock.Object, "providerInvariantName", "token");
+                FakeSqlProviderFactory.Instance, providerManifestMock.Object, GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008");
 
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OSpace, It.IsAny<bool>()))
                                  .Returns(new ObjectItemCollection());

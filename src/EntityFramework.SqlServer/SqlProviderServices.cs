@@ -39,8 +39,6 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
-        private static readonly SqlTypesAssemblyLoader _sqlTypesAssemblyLoader = new SqlTypesAssemblyLoader();
-
         /// <summary>
         ///     The Singleton instance of the SqlProviderServices type.
         /// </summary>
@@ -263,7 +261,12 @@ namespace System.Data.Entity.SqlServer
         {
             ValidateVersionHint(versionHint);
 
-            return new SqlSpatialDataReader(GetSpatialServices(versionHint), fromReader);
+            var underlyingReader = fromReader as SqlDataReader;
+            if (underlyingReader == null)
+            {
+                throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
+            }
+            return new SqlSpatialDataReader(GetSpatialServices(versionHint), new SqlDataReaderWrapper(underlyingReader));
         }
 
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
@@ -410,9 +413,7 @@ namespace System.Data.Entity.SqlServer
         ///     Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
         ///     Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
         ///     of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
-        ///     <paramref
-        ///         name="value" />
-        ///     .
+        ///     <paramref name="value" />.
         ///     If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
         ///     CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
         ///     DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
@@ -420,10 +421,8 @@ namespace System.Data.Entity.SqlServer
         internal static object EnsureSqlParameterValue(object value)
         {
             if (value != null
-                &&
-                value != DBNull.Value
-                &&
-                Type.GetTypeCode(value.GetType()) == TypeCode.Object)
+                && value != DBNull.Value
+                && Type.GetTypeCode(value.GetType()) == TypeCode.Object)
             {
                 // If the parameter is being created based on an actual value (typically for constants found in DML expressions) then a DbGeography/DbGeometry
                 // value must be replaced by an an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry
@@ -431,14 +430,14 @@ namespace System.Data.Entity.SqlServer
                 var geographyValue = value as DbGeography;
                 if (geographyValue != null)
                 {
-                    value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
+                    value = SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().ConvertToSqlTypesGeography(geographyValue);
                 }
                 else
                 {
                     var geometryValue = value as DbGeometry;
                     if (geometryValue != null)
                     {
-                        value = _sqlTypesAssemblyLoader.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
+                        value = SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
                     }
                 }
             }

@@ -32,12 +32,12 @@ namespace System.Data.Entity.Core.Objects
         private Action<object, EventArgs> _onReaderDispose;
 
         internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType)
-            : this(shaper, singleEntitySet, resultItemType, true)
+            : this(shaper, singleEntitySet, resultItemType, readerOwned: true)
         {
         }
 
         internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned)
-            : this(shaper, singleEntitySet, resultItemType, readerOwned, null, null)
+            : this(shaper, singleEntitySet, resultItemType, readerOwned, nextResultGenerator: null, onReaderDispose: null)
         {
         }
 
