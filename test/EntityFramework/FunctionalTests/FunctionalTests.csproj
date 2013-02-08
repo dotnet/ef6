@@ -180,6 +180,7 @@
     <Compile Include="Query\LinqToEntities\ContainsTests.cs" />
     <Compile Include="Query\LinqToEntities\DefaultIfEmptyTests.cs" />
     <Compile Include="Query\LinqToEntities\FuncletizationTests.cs" />
+    <Compile Include="Query\LinqToEntities\FunctionsTests.cs" />
     <Compile Include="Query\LinqToEntities\GroupByOptimizationTests.cs" />
     <Compile Include="Query\LinqToEntities\IncludeTests.cs" />
     <Compile Include="Query\LinqToEntities\MaterializationTests.cs" />
