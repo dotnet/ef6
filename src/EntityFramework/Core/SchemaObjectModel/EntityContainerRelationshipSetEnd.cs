@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     the End in the parent’s Association that this element refers to
+        ///     the End in the parentâ€™s Association that this element refers to
         /// </summary>
         public IRelationshipEnd RelationshipEnd
         {
