@@ -982,7 +982,6 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
                 var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
                 metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
                 metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
                 metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
@@ -1518,7 +1517,6 @@ namespace System.Data.Entity.Core.Objects
                                             {
                                                 CallBase = true
                                             };
-            metadataWorkspaceMock.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspaceMock.Object);
             var edmItemCollection = new EdmItemCollection();
             var providerManifestMock = new Mock<DbProviderManifest>();
             providerManifestMock.Setup(m => m.GetStoreTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType>()));
@@ -1586,7 +1584,6 @@ namespace System.Data.Entity.Core.Objects
             if (metadataWorkspace == null)
             {
                 metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.ShallowCopy()).Returns(() => metadataWorkspace.Object);
                 metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
                 metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
                 metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);

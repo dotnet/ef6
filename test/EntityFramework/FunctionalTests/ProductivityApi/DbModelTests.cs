@@ -50,7 +50,7 @@ namespace CodeFirstTest
         }
 
         [Fact]
-        public void CreateObjectContext_uses_copy_of_MetadataWorkspace()
+        public void CreateObjectContext_uses_cached_MetadataWorkspace()
         {
             var builder = new DbModelBuilder();
             var model = builder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile();
@@ -76,7 +76,7 @@ namespace CodeFirstTest
 
             Assert.NotNull(workspace1);
             Assert.NotNull(workspace2);
-            Assert.NotSame(workspace1, workspace2);
+            Assert.Same(workspace1, workspace2);
         }
 
         #endregion

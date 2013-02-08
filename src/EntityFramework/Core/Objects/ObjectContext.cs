@@ -218,19 +218,13 @@ namespace System.Data.Entity.Core.Objects
                           : new ArgumentException(Strings.ObjectContext_InvalidConnectionString, "connectionString", e);
             }
 
-            // Register the O and OC metadata
-            if (null != _workspace)
-            {
-                // register the O-Loader
-                if (!_workspace.IsItemCollectionAlreadyRegistered(DataSpace.OSpace))
-                {
-                    var itemCollection = new ObjectItemCollection();
-                    _workspace.RegisterItemCollection(itemCollection);
-                }
+            Debug.Assert(_workspace != null);
 
-                // have the OC-Loader registered by asking for it
-                _workspace.GetItemCollection(DataSpace.OCSpace);
-            }
+            // register the O-Loader
+            _workspace.RegisterDefaultObjectItemCollection();
+
+            // have the OC-Loader registered by asking for it
+            _workspace.GetItemCollection(DataSpace.OCSpace);
 
             // load config file properties
             var value = ConfigurationManager.AppSettings[UseLegacyPreserveChangesBehavior];
@@ -1800,10 +1794,7 @@ namespace System.Data.Entity.Core.Objects
             var connectionWorkspace = ((EntityConnection)Connection).GetMetadataWorkspace(initializeAllCollections: false);
             Debug.Assert(connectionWorkspace != null, "EntityConnection.MetadataWorkspace is null.");
 
-            // Create our own workspace
-            var workspace = connectionWorkspace.ShallowCopy();
-
-            return workspace;
+            return connectionWorkspace;
         }
 
         /// <summary>

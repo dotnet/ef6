@@ -25,11 +25,28 @@ namespace ProductivityApiTests
     {
         #region Context initialization by multiple threads
 
-        public class MultiInitContext1 : DbContext
+        public class MultiInitContext1A : MultiInitContext1<MultiInitContext1A>
+        {
+        }
+
+        public class MultiInitContext1B : MultiInitContext1<MultiInitContext1A>
+        {
+        }
+
+        public class MultiInitContext1C : MultiInitContext1<MultiInitContext1A>
+        {
+        }
+
+        public class MultiInitContext1D : MultiInitContext1<MultiInitContext1A>
+        {
+        }
+
+        public class MultiInitContext1<TContext> : DbContext
+            where TContext : DbContext
         {
             public MultiInitContext1()
             {
-                Database.SetInitializer<MultiInitContext1>(null);
+                Database.SetInitializer<TContext>(null);
             }
 
             public DbSet<Product> Products { get; set; }
@@ -40,7 +57,10 @@ namespace ProductivityApiTests
         {
             // This used to throw consistently when context initialization/model creation
             // was not thread safe. This test verifies that it does not throw anymore.
-            ExecuteInParallel(() => new MultiInitContext1().Products.Add(new Product()));
+            ExecuteInParallel(() => new MultiInitContext1A().Products.Add(new Product()));
+            ExecuteInParallel(() => new MultiInitContext1B().Products.Add(new Product()));
+            ExecuteInParallel(() => new MultiInitContext1C().Products.Add(new Product()));
+            ExecuteInParallel(() => new MultiInitContext1D().Products.Add(new Product()));
         }
 
         public class MultiInitContext2 : DbContext

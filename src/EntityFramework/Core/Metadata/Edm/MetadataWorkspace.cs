@@ -39,6 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool _foundAssemblyWithAttribute;
         private double _schemaVersion = XmlConstants.UndefinedVersion;
         private Guid _metadataWorkspaceId = Guid.Empty;
+        private readonly object _lock = new object();
 
         /// <summary>
         ///     Constructs the new instance of runtime metadata workspace
@@ -922,15 +923,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private ItemCollection RegisterDefaultObjectMappingItemCollection()
         {
-            var edm = _itemsCSpace;
-            var obj = _itemsOSpace;
-            if ((null != edm)
-                && (null != obj))
+            if (_itemsCSpace != null
+                 && _itemsOSpace != null
+                 && _itemsOCSpace == null)
             {
-                RegisterItemCollection(new DefaultObjectMappingItemCollection(edm, obj));
+                lock (_lock)
+                {
+                    if (_itemsOCSpace == null)
+                    {
+                        RegisterItemCollection(new DefaultObjectMappingItemCollection(_itemsCSpace, _itemsOSpace));
+                    }
+                }
             }
 
             return _itemsOCSpace;
+        }
+
+        internal void RegisterDefaultObjectItemCollection()
+        {
+            if (_itemsOSpace == null)
+            {
+                lock (_lock)
+                {
+                    if (_itemsOSpace == null)
+                    {
+                        RegisterItemCollection(new ObjectItemCollection());
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1396,21 +1416,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 cache.Clear();
             }
-        }
-
-        /// <summary>
-        ///     Creates a new Metadata workspace sharing the (currently defined) item collections
-        ///     and tokens for caching purposes.
-        /// </summary>
-        /// <returns> </returns>
-        internal virtual MetadataWorkspace ShallowCopy()
-        {
-            var copy = (MetadataWorkspace)MemberwiseClone();
-            if (null != copy._cacheTokens)
-            {
-                copy._cacheTokens = new List<Object>(copy._cacheTokens);
-            }
-            return copy;
         }
 
         /// <summary>

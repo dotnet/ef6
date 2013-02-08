@@ -34,17 +34,27 @@ namespace System.Data.Entity.Core.Mapping
 
             m_edmCollection = edmCollection;
             m_objectCollection = objectCollection;
-            LoadPrimitiveMaps();
+
+            var cspaceTypes = m_edmCollection.GetPrimitiveTypes();
+            foreach (var type in cspaceTypes)
+            {
+                var ospaceType = m_objectCollection.GetMappedPrimitiveType(type.PrimitiveTypeKind);
+                Debug.Assert(ospaceType != null, "all primitive type must have been loaded");
+
+                AddInternalMapping(new ObjectTypeMapping(ospaceType, type), _clrTypeIndexes, _edmTypeIndexes);
+            }
         }
 
         private readonly ObjectItemCollection m_objectCollection;
         private readonly EdmItemCollection m_edmCollection;
 
-        private readonly Dictionary<string, int> clrTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
         //Indexes into the type mappings collection based on clr type name
+        private Dictionary<string, int> _clrTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
 
-        private readonly Dictionary<string, int> cdmTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
         //Indexes into the type mappings collection based on clr type name
+        private Dictionary<string, int> _edmTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
+
+        private readonly object _lock = new object();
 
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
@@ -90,7 +100,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 int index;
-                if (cdmTypeIndexes.TryGetValue(identity, out index))
+                if (_edmTypeIndexes.TryGetValue(identity, out index))
                 {
                     map = (Map)this[index];
                     return true;
@@ -119,7 +129,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 int index;
-                if (clrTypeIndexes.TryGetValue(identity, out index))
+                if (_clrTypeIndexes.TryGetValue(identity, out index))
                 {
                     map = (Map)this[index];
                     return true;
@@ -247,7 +257,7 @@ namespace System.Data.Entity.Core.Mapping
             var index = -1;
             if (typeSpace != DataSpace.OSpace)
             {
-                if (cdmTypeIndexes.TryGetValue(edmType.Identity, out index))
+                if (_edmTypeIndexes.TryGetValue(edmType.Identity, out index))
                 {
                     return (Map)this[index];
                 }
@@ -259,7 +269,7 @@ namespace System.Data.Entity.Core.Mapping
             }
             else if (typeSpace == DataSpace.OSpace)
             {
-                if (clrTypeIndexes.TryGetValue(edmType.Identity, out index))
+                if (_clrTypeIndexes.TryGetValue(edmType.Identity, out index))
                 {
                     return (Map)this[index];
                 }
@@ -283,10 +293,19 @@ namespace System.Data.Entity.Core.Mapping
                     typeMapping.AddMemberMap(new ObjectPropertyMapping(edmRowType.Properties[idx], clrRowType.Properties[idx]));
                 }
             }
-            if ((!cdmTypeIndexes.ContainsKey(cdmType.Identity))
-                && (!clrTypeIndexes.ContainsKey(clrType.Identity)))
+            if ((!_edmTypeIndexes.ContainsKey(cdmType.Identity))
+                && (!_clrTypeIndexes.ContainsKey(clrType.Identity)))
             {
-                AddInternalMapping(typeMapping);
+                lock (_lock)
+                {
+                    var clrTypeIndexes = new Dictionary<string, int>(_clrTypeIndexes);
+                    var edmTypeIndexes = new Dictionary<string, int>(_edmTypeIndexes);
+
+                    typeMapping = AddInternalMapping(typeMapping, clrTypeIndexes, edmTypeIndexes);
+
+                    _clrTypeIndexes = clrTypeIndexes;
+                    _edmTypeIndexes = edmTypeIndexes;
+                }
             }
             return typeMapping;
         }
@@ -371,65 +390,51 @@ namespace System.Data.Entity.Core.Mapping
             return cdmType;
         }
 
-        /// <summary>
-        ///     checks if the schemaKey refers to the primitive OC mapping schema and if true,
-        ///     loads the maps between primitive types
-        /// </summary>
-        /// <returns> returns the loaded schema if the schema key refers to a primitive schema </returns>
-        private void LoadPrimitiveMaps()
+        private void AddInternalMappings(IEnumerable<ObjectTypeMapping> typeMappings)
         {
-            // Get all the primitive types from the CSpace and create OCMaps for it
-            IEnumerable<PrimitiveType> cspaceTypes = m_edmCollection.GetPrimitiveTypes();
-            foreach (var type in cspaceTypes)
+            lock (_lock)
             {
-                var ospaceType = m_objectCollection.GetMappedPrimitiveType(type.PrimitiveTypeKind);
-                Debug.Assert(ospaceType != null, "all primitive type must have been loaded");
-                AddInternalMapping(new ObjectTypeMapping(ospaceType, type));
+                var clrTypeIndexes = new Dictionary<string, int>(_clrTypeIndexes);
+                var edmTypeIndexes = new Dictionary<string, int>(_edmTypeIndexes);
+
+                foreach (var map in typeMappings)
+                {
+                    AddInternalMapping(map, clrTypeIndexes, edmTypeIndexes);
+                }
+
+                _clrTypeIndexes = clrTypeIndexes;
+                _edmTypeIndexes = edmTypeIndexes;
             }
         }
 
-        // Add to the cache. If it is already present, then throw an exception
-        private void AddInternalMapping(ObjectTypeMapping objectMap)
+        // This method should be called inside a lock unless it is being called from the constructor.
+        private ObjectTypeMapping AddInternalMapping(
+            ObjectTypeMapping objectMap,
+            Dictionary<string, int> clrTypeIndexes,
+            Dictionary<string, int> edmTypeIndexes)
         {
-            var clrName = objectMap.ClrType.Identity;
-            var cdmName = objectMap.EdmType.Identity;
-            var currIndex = Count;
-            //Always assume that the first Map for an associated map being added is
-            //the default map for primitive type. Similarly, row and collection types can collide
-            //because their components are primitive types. For other types,
-            //there should be only one map
-            if (clrTypeIndexes.ContainsKey(clrName))
+            if (Source.ContainsIdentity(objectMap.Identity))
             {
-                if (BuiltInTypeKind.PrimitiveType != objectMap.ClrType.BuiltInTypeKind
-                    &&
-                    BuiltInTypeKind.RowType != objectMap.ClrType.BuiltInTypeKind
-                    &&
-                    BuiltInTypeKind.CollectionType != objectMap.ClrType.BuiltInTypeKind)
-                {
-                    throw new MappingException(Strings.Mapping_Duplicate_Type(clrName));
-                }
+                return (ObjectTypeMapping)Source[objectMap.Identity];
             }
-            else
+
+            objectMap.DataSpace = DataSpace.OCSpace;
+            var currIndex = Count;
+            AddInternal(objectMap);
+
+            var clrName = objectMap.ClrType.Identity;
+            if (!clrTypeIndexes.ContainsKey(clrName))
             {
                 clrTypeIndexes.Add(clrName, currIndex);
             }
-            if (cdmTypeIndexes.ContainsKey(cdmName))
+
+            var edmName = objectMap.EdmType.Identity;
+            if (!edmTypeIndexes.ContainsKey(edmName))
             {
-                if (BuiltInTypeKind.PrimitiveType != objectMap.EdmType.BuiltInTypeKind
-                    &&
-                    BuiltInTypeKind.RowType != objectMap.EdmType.BuiltInTypeKind
-                    &&
-                    BuiltInTypeKind.CollectionType != objectMap.EdmType.BuiltInTypeKind)
-                {
-                    throw new MappingException(Strings.Mapping_Duplicate_Type(clrName));
-                }
+                edmTypeIndexes.Add(edmName, currIndex);
             }
-            else
-            {
-                cdmTypeIndexes.Add(cdmName, currIndex);
-            }
-            objectMap.DataSpace = DataSpace.OCSpace;
-            base.AddInternal(objectMap);
+
+            return objectMap;
         }
 
         /// <summary>
@@ -450,10 +455,7 @@ namespace System.Data.Entity.Core.Mapping
             // If DefaultOCMappingItemCollection is not null, add all the type mappings to the item collection
             if (ocItemCollection != null)
             {
-                foreach (var map in typeMappings.Values)
-                {
-                    ocItemCollection.AddInternalMapping(map);
-                }
+                ocItemCollection.AddInternalMappings(typeMappings.Values);
             }
 
             return typeMapping;
@@ -881,7 +883,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             Debug.Assert(cspaceItem.DataSpace == DataSpace.CSpace, "ContainsMap: It must be a CSpace item");
             int index;
-            if (cdmTypeIndexes.TryGetValue(cspaceItem.Identity, out index))
+            if (_edmTypeIndexes.TryGetValue(cspaceItem.Identity, out index))
             {
                 map = (ObjectTypeMapping)this[index];
                 return true;
