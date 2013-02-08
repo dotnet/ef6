@@ -187,6 +187,7 @@
     <Compile Include="Query\LinqToEntities\OrderByLiftingTests.cs" />
     <Compile Include="Query\QueryEnumTests.cs" />
     <Compile Include="SqlClient\SqlProviderServicesTests.cs" />
+    <Compile Include="Query\SqlGeneratorTests.cs" />
     <Compile Include="TestHelpers\EnumeratorExtensions.cs" />
     <Compile Include="TestHelpers\FullTrustAttribute.cs" />
     <Compile Include="TestHelpers\ListExtensions.cs" />

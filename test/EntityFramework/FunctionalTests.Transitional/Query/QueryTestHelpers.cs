@@ -57,8 +57,13 @@ namespace System.Data.Entity.Query
             var connection = new EntityConnection(workspace, new EntityConnection());
             entityCommand.Connection = connection;
             entityCommand.Parameters.AddRange(entityParameters);
+            var command = entityCommand.ToTraceString();
+            foreach (var entityParameter in entityParameters)
+            {
+                entityCommand.Parameters.Remove(entityParameter);
+            }
 
-            Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
+            Assert.Equal(StripFormatting(expectedSql), StripFormatting(command));
         }
 
 
