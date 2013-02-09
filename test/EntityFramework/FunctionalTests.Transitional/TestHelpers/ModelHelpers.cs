@@ -108,8 +108,7 @@ namespace System.Data.Entity
         {
             return new SqlConnectionStringBuilder(_baseConnectionString)
                     {
-                        InitialCatalog = databaseName,
-                        ApplicationName = "EntityFrameworkMUE"
+                        InitialCatalog = databaseName
                     }
                 .ConnectionString;
         }
@@ -151,7 +150,6 @@ namespace System.Data.Entity
             var builder = new SqlConnectionStringBuilder(_baseConnectionString)
                 {
                     InitialCatalog = databaseName,
-                    ApplicationName = "EntityFrameworkMUE",
                     UserID = userId,
                     Password = password,
                     PersistSecurityInfo = persistSecurityInfo

@@ -461,7 +461,7 @@ namespace ProductivityApiUnitTests
                         Assert.IsType<FakeDbContextInfoConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories.Last());
 
                         Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                        Assert.Equal(@"Data Source=.\SQLEXPRESS;Initial Catalog=foo;Integrated Security=True;Application Name=EntityFrameworkMUE", contextInfo.ConnectionString);
+                        Assert.Equal(@"Data Source=.\SQLEXPRESS;Initial Catalog=foo;Integrated Security=True", contextInfo.ConnectionString);
                         Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
                     });
         }

@@ -175,7 +175,7 @@ namespace System.Data.Entity.Internal
         {
             Debug.Assert(UnderlyingConnection != null);
 
-            _originalConnectionString = AddAppNameCookieToConnectionString(UnderlyingConnection);
+            _originalConnectionString = GetStoreConnectionString(UnderlyingConnection);
 
             try
             {
@@ -194,11 +194,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        ///     Adds a tracking cookie to the connection string for SqlConnections. Returns the
-        ///     possibly modified store connection string.
-        /// </summary>
-        public static string AddAppNameCookieToConnectionString(DbConnection connection)
+        public static string GetStoreConnectionString(DbConnection connection)
         {
             DebugCheck.NotNull(connection);
 
@@ -212,28 +208,8 @@ namespace System.Data.Entity.Internal
                 connectionString = (connection != null) ? connection.ConnectionString : null;
             }
 
-            if ((connection is SqlConnection)
-                && (connection.State == ConnectionState.Closed))
-            {
-                var connectionStringBuilder
-                    = new SqlConnectionStringBuilder(connection.ConnectionString);
-
-                const string defaultAppName = ".Net SqlClient Data Provider";
-
-                if ((string.IsNullOrWhiteSpace(connectionStringBuilder.ApplicationName)
-                     ||
-                     string.Equals(
-                         connectionStringBuilder.ApplicationName, defaultAppName, StringComparison.OrdinalIgnoreCase))
-                    && (connectionStringBuilder.IntegratedSecurity
-                        || !string.IsNullOrEmpty(connectionStringBuilder.Password)))
-                {
-                    connectionStringBuilder.ApplicationName = "EntityFrameworkMUE";
-                    connection.ConnectionString = connectionStringBuilder.ToString();
-                    connectionString = connection.ConnectionString;
-                }
-            }
-
             return connectionString;
         }
+
     }
 }

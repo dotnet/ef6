@@ -50,9 +50,7 @@ namespace System.Data.Entity.Internal
 
             _objectContext = objectContext;
             _objectContextOwned = objectContextOwned;
-
-            _originalConnectionString
-                = InternalConnection.AddAppNameCookieToConnectionString(_objectContext.Connection);
+            _originalConnectionString = InternalConnection.GetStoreConnectionString(_objectContext.Connection);
 
             InitializeEntitySetMappings();
         }

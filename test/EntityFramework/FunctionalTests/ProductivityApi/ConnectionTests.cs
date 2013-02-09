@@ -768,100 +768,100 @@ namespace ProductivityApiTests
             }
         }
 
-        private void Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(DbContext context)
+        private void Connection_can_be_obtained_after_initializing_the_context(DbContext context)
         {
             context.Database.Initialize(force: false);
 
             var readConnection = context.Database.Connection;
 
-            Assert.True(readConnection.ConnectionString.Contains("EntityFrameworkMUE"));
+            Assert.True(readConnection.ConnectionString.Contains("SimpleModel"));
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_existing_store_connection_and_contains_cookie()
+        public void Connection_can_be_obtained_after_initializing_the_context_when_using_existing_store_connection()
         {
             using (var connection = SimpleConnection<SimpleModelContext>())
             {
                 using (var context = new SimpleModelContext(connection))
                 {
-                    Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                    Connection_can_be_obtained_after_initializing_the_context(context);
                 }
             }
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_existing_EntityConnection_and_contains_cookie()
+        public void Connection_can_be_obtained_after_initializing_the_context_when_using_existing_EntityConnection()
         {
             using (var connection = new EntityConnection(SimpleModelEntityConnectionString))
             {
                 using (var context = new SimpleModelContextForModelFirst(connection))
                 {
-                    Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                    Connection_can_be_obtained_after_initializing_the_context(context);
                 }
             }
         }
 
         [Fact]
         public void
-            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_created_by_convention_and_contains_cookie()
+            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_created_by_convention()
         {
             using (var context = new SimpleModelContext())
             {
-                Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                Connection_can_be_obtained_after_initializing_the_context(context);
             }
         }
 
         [Fact]
         public void
-            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_built_from_connection_string_and_contains_cookie
+            Connection_can_be_obtained_after_initializing_the_context_when_using_connection_built_from_connection_string
             ()
         {
             using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
             {
-                Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                Connection_can_be_obtained_after_initializing_the_context(context);
             }
         }
 
         [Fact]
         public void
-            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_built_from_connection_string_and_contains_cookie
+            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_built_from_connection_string
             ()
         {
             using (var context = new SimpleModelContextForModelFirst(SimpleModelEntityConnectionString))
             {
-                Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                Connection_can_be_obtained_after_initializing_the_context(context);
             }
         }
 
         [Fact]
-        public void Connection_can_be_obtained_after_initializing_the_context_when_using_connection_from_app_config_and_contains_cookie()
+        public void Connection_can_be_obtained_after_initializing_the_context_when_using_connection_from_app_config()
         {
             EnsureAppConfigDatabaseExists();
 
             using (var context = new SimpleModelContext("name=SimpleModelInAppConfig"))
             {
-                Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                Connection_can_be_obtained_after_initializing_the_context(context);
             }
         }
 
         [Fact]
         public void
-            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_from_app_config_and_contains_cookie()
+            Connection_can_be_obtained_after_initializing_the_context_when_using_EntityConnection_from_app_config()
         {
             using (var context = new SimpleModelContextForModelFirst("name=EntityConnectionForSimpleModel"))
             {
-                Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                Connection_can_be_obtained_after_initializing_the_context(context);
             }
         }
 
         [Fact]
-        public void Connection_can_be_obtained_from_DbContext_created_with_existing_ObjectContext_and_contains_cookie()
+        public void Connection_can_be_obtained_from_DbContext_created_with_existing_ObjectContext()
         {
             using (var outerContext = new SimpleModelContext())
             {
                 using (var context = new SimpleModelContext(GetObjectContext(outerContext)))
                 {
-                    Connection_can_be_obtained_after_initializing_the_context_and_contains_cookie(context);
+                    Connection_can_be_obtained_after_initializing_the_context(context);
                 }
             }
         }
