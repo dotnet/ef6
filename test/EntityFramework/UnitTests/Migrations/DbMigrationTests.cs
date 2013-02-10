@@ -177,12 +177,12 @@ namespace System.Data.Entity.Migrations
 
             migration.CreateTable(
                 "Foo", cs => new
-                                 {
-                                     Id = cs.Int()
-                                 }, new
-                                        {
-                                            Foo = 123
-                                        });
+                {
+                    Id = cs.Int()
+                }, new
+                {
+                    Foo = 123
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -212,10 +212,10 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(),
-                              Name = cs.String()
-                          });
+                {
+                    Id = cs.Int(),
+                    Name = cs.String()
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -241,9 +241,9 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(name: "Customer Id")
-                          });
+                {
+                    Id = cs.Int(name: "Customer Id")
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -261,16 +261,16 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(),
-                              Name = cs.String()
-                          })
+                {
+                    Id = cs.Int(),
+                    Name = cs.String()
+                })
                      .Index(
                          t => new
-                                  {
-                                      t.Id,
-                                      t.Name
-                                  }, unique: true, clustered: true);
+                         {
+                             t.Id,
+                             t.Name
+                         }, unique: true, clustered: true);
 
             var createIndexOperation = migration.Operations.OfType<CreateIndexOperation>().Single();
 
@@ -358,6 +358,18 @@ namespace System.Data.Entity.Migrations
             migration.Sql("foo");
 
             var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
+
+            Assert.Equal("foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void Explictly_calling_IAddMigrationOperation_should_add_operation()
+        {
+            IAddMigrationOperation migration = new TestMigration();
+
+            migration.AddOperation(new SqlOperation("foo"));
+
+            var sqlOperation = ((TestMigration)migration).Operations.Cast<SqlOperation>().Single();
 
             Assert.Equal("foo", sqlOperation.Sql);
         }

@@ -164,6 +164,8 @@
     <Compile Include="Migrations\MappingScenarios.cs" />
     <Compile Include="Migrations\NoTestInfraScenarios.cs" />
     <Compile Include="Migrations\SeedingScenarios.cs" />
+    <Compile Include="Migrations\TestModel\CustomSqlGenerator.cs" />
+    <Compile Include="Migrations\TestModel\TestMigrationOperation.cs" />
     <Compile Include="Migrations\ToolingScenarios.cs" />
     <Compile Include="Migrations\TransactionScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestMigration.cs" />

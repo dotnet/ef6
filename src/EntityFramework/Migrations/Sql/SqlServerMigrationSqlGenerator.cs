@@ -17,6 +17,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
@@ -64,6 +65,16 @@ namespace System.Data.Entity.Migrations.Sql
             migrationOperations.Each<dynamic>(o => Generate(o));
 
             return _statements;
+        }
+
+        /// <summary>
+        /// Allows generating SQL for custom operations
+        /// Needs to be overridden
+        /// </summary>
+        /// <param name="operation">The custom operation to produce SQL for.</param>
+        protected virtual void Generate(MigrationOperation operation)
+        {
+
         }
 
         /// <summary>
@@ -118,14 +129,14 @@ namespace System.Data.Entity.Migrations.Sql
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                    {
-                        Generate(c, writer);
+                {
+                    Generate(c, writer);
 
-                        if (i < columnCount - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
-                    });
+                    if (i < columnCount - 1)
+                    {
+                        writer.WriteLine(",");
+                    }
+                });
 
             if (createTableOperation.PrimaryKey != null)
             {
@@ -138,7 +149,7 @@ namespace System.Data.Entity.Migrations.Sql
                 {
                     writer.Write("NONCLUSTERED ");
                 }
-                
+
                 writer.Write("(");
                 writer.Write(createTableOperation.PrimaryKey.Columns.Join(Quote));
                 writer.WriteLine(")");
@@ -700,19 +711,19 @@ namespace System.Data.Entity.Migrations.Sql
             {
                 historyOperation.Commands.Each(
                     c =>
-                        {
-                            var sql
-                                = c.CommandText
-                                   .Replace("insert ", "INSERT ")
-                                   .Replace("values ", "VALUES ")
-                                   .Replace("delete ", "DELETE ")
-                                   .Replace("where ", "WHERE "); // prettify
+                    {
+                        var sql
+                            = c.CommandText
+                               .Replace("insert ", "INSERT ")
+                               .Replace("values ", "VALUES ")
+                               .Replace("delete ", "DELETE ")
+                               .Replace("where ", "WHERE "); // prettify
 
-                            // inline params
-                            c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                        // inline params
+                        c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
 
-                            writer.Write(sql);
-                        });
+                        writer.Write(sql);
+                    });
 
                 Statement(writer);
             }
@@ -934,10 +945,10 @@ namespace System.Data.Entity.Migrations.Sql
 
             _statements.Add(
                 new MigrationStatement
-                    {
-                        Sql = sql,
-                        SuppressTransaction = suppressTransaction
-                    });
+                {
+                    Sql = sql,
+                    SuppressTransaction = suppressTransaction
+                });
         }
 
         /// <summary>
