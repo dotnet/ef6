@@ -124,11 +124,6 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
             {
                 using (var context = new ArubaContext())
                 {
-                    var expectedSql =
-                        @"SELECT 
-SUBSTRING([Extent1].[LastName], 1, 2) + SUBSTRING([Extent1].[LastName], 2 + 3 + 1, ( CAST(LEN([Extent1].[LastName]) AS int)) - (2 + 3)) AS [C1]
-FROM [dbo].[ArubaOwners] AS [Extent1]";
-
                     var query = context.Owners.Select(o => o.LastName.Replace("Name", "Foo"));
                     Assert.Contains("REPLACE", query.ToString().ToUpperInvariant());
                 }
