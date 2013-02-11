@@ -255,8 +255,6 @@ namespace FunctionalTests
 
                     databaseMapping.AssertValid();
 
-                    databaseMapping.ShellEdmx();
-
                     var functionMapping
                         = databaseMapping
                             .EntityContainerMappings
