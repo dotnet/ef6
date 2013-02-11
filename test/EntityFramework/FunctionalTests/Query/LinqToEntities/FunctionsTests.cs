@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
+    using System.Data.Entity.Core.Objects.SqlClient;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
     using Xunit;
@@ -513,6 +514,39 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
             {
                 var query = context.Owners.Select(o => Guid.NewGuid());
                 Assert.Contains("NEWID", query.ToString().ToUpperInvariant());
+            }
+        }
+
+        [Fact]
+        public void SqlFunctions_scalar_function_translated_properly_to_sql_function()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query1 = context.AllTypes.Select(a => SqlFunctions.Acos(a.c7_decimal_28_4));
+                var query2 = context.AllTypes.Select(a => SqlFunctions.Acos(a.c10_float));
+                Assert.Contains("ACOS", query1.ToString().ToUpperInvariant());
+                Assert.Contains("ACOS", query2.ToString().ToUpperInvariant());
+            }
+        }
+
+        [Fact]
+        public void SqlFunctions_aggregate_function_translated_properly_to_sql_function()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query = context.AllTypes.Select(a => SqlFunctions.ChecksumAggregate(context.AllTypes.Select(i => i.c1_int)));
+                Assert.Contains("CHECKSUM_AGG", query.ToString().ToUpperInvariant());
+            }
+        }
+
+        [Fact]
+        public void SqlFunction_passing_function_as_argument_to_another_works()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query = context.AllTypes.Select(a => SqlFunctions.Asin(SqlFunctions.Acos(a.c10_float)));
+                Assert.Contains("ASIN", query.ToString().ToUpperInvariant());
+                Assert.Contains("ACOS", query.ToString().ToUpperInvariant());
             }
         }
     }

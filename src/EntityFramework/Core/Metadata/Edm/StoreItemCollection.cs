@@ -149,6 +149,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _providerInvariantName = model.ProviderInfo.ProviderInvariantName;
             _providerFactory = DbConfiguration.GetService<DbProviderFactory>(_providerInvariantName);
             _providerManifestToken = model.ProviderInfo.ProviderManifestToken;
+            _cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
 
             LoadProviderManifest(_providerManifest);
 
