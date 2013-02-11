@@ -5407,4 +5407,8 @@
     <value>An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="ResultBindingNotFound" xml:space="preserve">
+    <value>A result binding for the property '{0}' was not found on the modification function '{1}'. Ensure that the property is database generated.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

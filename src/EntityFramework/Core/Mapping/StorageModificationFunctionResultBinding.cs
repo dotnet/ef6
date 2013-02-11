@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Gets the name of the column to bind from the function result set. We use a string
         ///     value rather than EdmMember, since there is no metadata for function result sets.
         /// </summary>
-        internal readonly string ColumnName;
+        internal string ColumnName;
 
         /// <summary>
         ///     Gets the property to be set on the entity.

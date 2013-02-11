@@ -389,7 +389,8 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfiguration.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Functions\ConcurrencyModificationFunctionConfiguration`.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\InsertModificationFunctionConfiguration`.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\UpdateModificationFunctionConfiguration`.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\FunctionParameterConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfiguration`.cs" />

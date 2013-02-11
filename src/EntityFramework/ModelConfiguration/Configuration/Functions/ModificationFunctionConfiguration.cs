@@ -9,11 +9,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
 
     internal class ModificationFunctionConfiguration
     {
-        private string _name;
-
         internal sealed class ParameterKey
         {
             private readonly PropertyPath _propertyPath;
@@ -72,6 +71,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private readonly Dictionary<ParameterKey, FunctionParameterConfiguration> _parameterConfigurations
             = new Dictionary<ParameterKey, FunctionParameterConfiguration>();
 
+        private readonly Dictionary<PropertyInfo, string> _resultBindings
+            = new Dictionary<PropertyInfo, string>();
+
+        private string _name;
+
         public ModificationFunctionConfiguration()
         {
         }
@@ -84,6 +88,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             source._parameterConfigurations.Each(
                 c => _parameterConfigurations.Add(c.Key, c.Value.Clone()));
+
+            source._resultBindings.Each(
+                r => _resultBindings.Add(r.Key, r.Value));
         }
 
         public virtual ModificationFunctionConfiguration Clone()
@@ -108,6 +115,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _parameterConfigurations; }
         }
 
+        public Dictionary<PropertyInfo, string> ResultBindings
+        {
+            get { return _resultBindings; }
+        }
+
         public FunctionParameterConfiguration Parameter(PropertyPath propertyPath, bool originalValue = false)
         {
             DebugCheck.NotNull(propertyPath);
@@ -124,15 +136,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return parameterConfiguration;
         }
 
+        public void BindResult(PropertyPath propertyPath, string columnName)
+        {
+            DebugCheck.NotNull(propertyPath);
+            DebugCheck.NotEmpty(columnName);
+
+            _resultBindings[propertyPath.Single()] = columnName;
+        }
+
         public virtual void Configure(StorageModificationFunctionMapping modificationFunctionMapping)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
+            ConfigureName(modificationFunctionMapping);
+            ConfigureParameters(modificationFunctionMapping);
+            ConfigureResultBindings(modificationFunctionMapping);
+        }
+
+        private void ConfigureName(StorageModificationFunctionMapping modificationFunctionMapping)
+        {
             if (!string.IsNullOrWhiteSpace(_name))
             {
                 modificationFunctionMapping.Function.Name = _name;
             }
+        }
 
+        private void ConfigureParameters(StorageModificationFunctionMapping modificationFunctionMapping)
+        {
             foreach (var keyValue in _parameterConfigurations)
             {
                 var parameterKey = keyValue.Key;
@@ -164,6 +194,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
 
                 parameterConfiguration.Configure(parameterBinding.Parameter);
+            }
+        }
+
+        private void ConfigureResultBindings(StorageModificationFunctionMapping modificationFunctionMapping)
+        {
+            foreach (var keyValue in _resultBindings)
+            {
+                var propertyInfo = keyValue.Key;
+                var columnName = keyValue.Value;
+
+                var resultBinding
+                    = (modificationFunctionMapping
+                           .ResultBindings ?? Enumerable.Empty<StorageModificationFunctionResultBinding>())
+                        .SingleOrDefault(rb => propertyInfo.IsSameAs(rb.Property.GetClrPropertyInfo()));
+
+                if (resultBinding == null)
+                {
+                    throw Error.ResultBindingNotFound(
+                        propertyInfo.Name,
+                        modificationFunctionMapping.Function.Name);
+                }
+
+                resultBinding.ColumnName = columnName;
             }
         }
     }

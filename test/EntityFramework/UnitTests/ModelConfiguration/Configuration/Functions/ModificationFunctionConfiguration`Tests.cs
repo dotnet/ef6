@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void HasName_should_set_name_on_underlying_configuration()
         {
-            var configuration = new ModificationFunctionConfiguration<Entity>();
+            var configuration = CreateConfiguration();
 
             configuration.HasName("Foo");
 
@@ -31,7 +31,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.NotNull(configuration.Parameter(e => e.ComplexType.Int));
         }
 
-        private class Entity
+        protected virtual ModificationFunctionConfiguration<Entity> CreateConfiguration()
+        {
+            return new ModificationFunctionConfiguration<Entity>();
+        }
+
+        protected class Entity
         {
             public int Int { get; set; }
             public short? Nullable { get; set; }
@@ -42,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             public ComplexType ComplexType { get; set; }
         }
 
-        private class ComplexType
+        protected class ComplexType
         {
             public int Int { get; set; }
         }

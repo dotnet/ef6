@@ -22,12 +22,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo = new MockPropertyInfo();
 
             modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo));
+            modificationFunctionConfiguration.BindResult(new PropertyPath(mockPropertyInfo), "foo");
 
             var clone = modificationFunctionConfiguration.Clone();
 
             Assert.NotSame(modificationFunctionConfiguration, clone);
             Assert.Equal("Foo", clone.Name);
             Assert.Equal(1, clone.ParameterConfigurations.Count);
+            Assert.Equal(1, clone.ResultBindings.Count);
         }
 
         [Fact]
@@ -53,6 +55,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 = modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo));
 
             Assert.Same(parameterConfiguration, modificationFunctionConfiguration.ParameterConfigurations.Single().Value);
+        }
+
+        [Fact]
+        public void Can_set_column_name_for_result_binding()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            modificationFunctionConfiguration.BindResult(new PropertyPath(mockPropertyInfo), "foo");
+
+            Assert.Same("foo", modificationFunctionConfiguration.ResultBindings.Single().Value);
         }
 
         [Fact]
@@ -166,6 +180,67 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               new StorageModificationFunctionParameterBinding[0],
                               null,
                               null))).Message);
+        }
+
+        [Fact]
+        public void Configure_should_throw_when_result_binding_not_found()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo1 = new MockPropertyInfo();
+
+            modificationFunctionConfiguration
+                .BindResult(new PropertyPath(mockPropertyInfo1), "Foo");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            Assert.Equal(
+                Strings.ResultBindingNotFound("P", "F"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modificationFunctionConfiguration.Configure(
+                        new StorageModificationFunctionMapping(
+                              entitySet,
+                              new EntityType(),
+                              new EdmFunction(),
+                              new StorageModificationFunctionParameterBinding[0],
+                              null,
+                              null))).Message);
+        }
+
+        [Fact]
+        public void Can_configure_result_bindings()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            modificationFunctionConfiguration
+                .BindResult(new PropertyPath(mockPropertyInfo), "Foo");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            var property = new EdmProperty("P1");
+            property.SetClrPropertyInfo(mockPropertyInfo);
+
+            var resultBinding = new StorageModificationFunctionResultBinding("Bar", property);
+
+            modificationFunctionConfiguration.Configure(
+                new StorageModificationFunctionMapping(
+                    entitySet,
+                    new EntityType(),
+                    new EdmFunction(),
+                    new[]
+                        {
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new StorageModificationFunctionMemberPath(new[] { property }, null), false)
+                        },
+                    null,
+                    new[] { resultBinding }));
+
+            Assert.Equal("Foo", resultBinding.ColumnName);
         }
     }
 }

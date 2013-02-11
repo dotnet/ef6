@@ -13540,6 +13540,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ModificationFunctionParameterNotFoundOriginal, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "A result binding for the property '{0}' was not found on the modification function '{1}'. Ensure that the property is database generated."
+        /// </summary>
+        internal static string ResultBindingNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ResultBindingNotFound, p0, p1);
+        }
     } 
 
     /// <summary>
@@ -15283,6 +15291,14 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.ModificationFunctionParameterNotFoundOriginal(p0, p1));
         }
+
+        /// <summary>
+        /// InvalidOperationException with message like "A result binding for the property '{0}' was not found on the modification function '{1}'. Ensure that the property is database generated."
+        /// </summary>
+        internal static Exception ResultBindingNotFound(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ResultBindingNotFound(p0, p1));
+        }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -17007,6 +17023,7 @@ namespace System.Data.Entity.Resources
         internal const string ModificationFunctionParameterNotFound = "ModificationFunctionParameterNotFound";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
+        internal const string ResultBindingNotFound = "ResultBindingNotFound";
         
         static EntityRes loader = null;
         ResourceManager resources;

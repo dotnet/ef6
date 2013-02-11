@@ -344,6 +344,67 @@ namespace FunctionalTests
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }
+
+                [Fact]
+                public void Can_configure_result_binding_column_names()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Order>()
+                        .MapToFunctions(
+                            map =>
+                                {
+                                    map.InsertFunction(f => f.BindResult(o => o.OrderId, "order_id"));
+                                    map.UpdateFunction(f => f.BindResult(o => o.Version, "timestamp"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.ResultBindings.Single(rb => rb.ColumnName == "order_id"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.ResultBindings.Single(rb => rb.ColumnName == "timestamp"));
+                }
+
+                [Fact]
+                public void Configuring_binding_for_complex_property_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    Assert.Equal(
+                        Strings.InvalidPropertyExpression("e => e.StorageLocation.Latitude"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => modelBuilder
+                                      .Entity<Engine>()
+                                      .MapToFunctions(
+                                          map => map.UpdateFunction(
+                                              f => f.BindResult(e => e.StorageLocation.Latitude, "boom")))).Message);
+                }
+
+                [Fact]
+                public void Configuring_binding_for_missing_property_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Order>()
+                        .MapToFunctions(
+                            map => map.InsertFunction(f => f.BindResult(o => o.Type, "boom")));
+
+                    Assert.Equal(
+                        Strings.ResultBindingNotFound("Type", "Order_Insert"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
+                }
             }
 
             public class AdvancedMapping : AdvancedMappingScenarioTests
