@@ -14,8 +14,63 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private string _name;
 
-        private readonly Dictionary<PropertyPath, FunctionParameterConfiguration> _parameterConfigurations
-            = new Dictionary<PropertyPath, FunctionParameterConfiguration>();
+        internal sealed class ParameterKey
+        {
+            private readonly PropertyPath _propertyPath;
+            private readonly bool _originalValue;
+
+            public ParameterKey(PropertyPath propertyPath, bool originalValue)
+            {
+                DebugCheck.NotNull(propertyPath);
+
+                _propertyPath = propertyPath;
+                _originalValue = originalValue;
+            }
+
+            public PropertyPath PropertyPath
+            {
+                get { return _propertyPath; }
+            }
+
+            public bool IsOriginalValue
+            {
+                get { return _originalValue; }
+            }
+
+            private bool Equals(ParameterKey other)
+            {
+                return _propertyPath.Equals(other._propertyPath)
+                       && _originalValue.Equals(other._originalValue);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                var parameterKey = obj as ParameterKey;
+
+                return (parameterKey != null) && Equals(parameterKey);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (_propertyPath.GetHashCode() * 397) ^ _originalValue.GetHashCode();
+                }
+            }
+        }
+
+        private readonly Dictionary<ParameterKey, FunctionParameterConfiguration> _parameterConfigurations
+            = new Dictionary<ParameterKey, FunctionParameterConfiguration>();
 
         public ModificationFunctionConfiguration()
         {
@@ -48,20 +103,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _name; }
         }
 
-        public Dictionary<PropertyPath, FunctionParameterConfiguration> ParameterConfigurations
+        public Dictionary<ParameterKey, FunctionParameterConfiguration> ParameterConfigurations
         {
             get { return _parameterConfigurations; }
         }
 
-        public FunctionParameterConfiguration Parameter(PropertyPath propertyPath)
+        public FunctionParameterConfiguration Parameter(PropertyPath propertyPath, bool originalValue = false)
         {
             DebugCheck.NotNull(propertyPath);
 
+            var parameterKey = new ParameterKey(propertyPath, originalValue);
+
             FunctionParameterConfiguration parameterConfiguration;
-            if (!_parameterConfigurations.TryGetValue(propertyPath, out parameterConfiguration))
+            if (!_parameterConfigurations.TryGetValue(parameterKey, out parameterConfiguration))
             {
                 _parameterConfigurations.Add(
-                    propertyPath, parameterConfiguration = new FunctionParameterConfiguration());
+                    parameterKey, parameterConfiguration = new FunctionParameterConfiguration());
             }
 
             return parameterConfiguration;
@@ -78,21 +135,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var keyValue in _parameterConfigurations)
             {
-                var propertyPath = keyValue.Key;
+                var parameterKey = keyValue.Key;
                 var parameterConfiguration = keyValue.Value;
 
-                var parameterBinding
+                var parameterBindings
                     = modificationFunctionMapping
                         .ParameterBindings
-                        .SingleOrDefault(
-                            pb => propertyPath.Equals(
-                                new PropertyPath(pb.MemberPath.Members.Select(m => m.GetClrPropertyInfo()))));
+                        .Where(
+                            pb => parameterKey.PropertyPath.Equals(
+                                new PropertyPath(pb.MemberPath.Members.Select(m => m.GetClrPropertyInfo()))))
+                        .ToList();
+
+                var parameterBinding
+                    = parameterBindings
+                          .SingleOrDefault(pb => pb.IsCurrent != parameterKey.IsOriginalValue)
+                      ?? parameterBindings
+                             .SingleOrDefault(pb => !parameterKey.IsOriginalValue);
 
                 if (parameterBinding == null)
                 {
-                    throw Error.ModificationFunctionParameterNotFound(
-                        propertyPath,
-                        modificationFunctionMapping.Function.Name);
+                    throw !parameterKey.IsOriginalValue
+                              ? Error.ModificationFunctionParameterNotFound(
+                                  parameterKey.PropertyPath,
+                                  modificationFunctionMapping.Function.Name)
+                              : Error.ModificationFunctionParameterNotFoundOriginal(
+                                  parameterKey.PropertyPath,
+                                  modificationFunctionMapping.Function.Name);
                 }
 
                 parameterConfiguration.Configure(parameterBinding.Parameter);

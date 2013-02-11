@@ -13532,6 +13532,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.EntityClient_CannotOpenBrokenConnection); }
         }
+
+        /// <summary>
+        /// A string like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
+        /// </summary>
+        internal static string ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ModificationFunctionParameterNotFoundOriginal, p0, p1);
+        }
     } 
 
     /// <summary>
@@ -15259,12 +15267,21 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.ModificationFunctionParameterNotFound(p0, p1));
         }
+
         /// <summary>
         /// InvalidOperationException with message like "The connection could not be opened because it is broken. The connection must be closed before it can be opened."
         /// </summary>
         internal static Exception EntityClient_CannotOpenBrokenConnection()
         {
             return new InvalidOperationException(Strings.EntityClient_CannotOpenBrokenConnection);
+        }
+
+        /// <summary>
+        /// InvalidOperationException with message like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
+        /// </summary>
+        internal static Exception ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ModificationFunctionParameterNotFoundOriginal(p0, p1));
         }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -16989,6 +17006,7 @@ namespace System.Data.Entity.Resources
         internal const string InvalidResourceName = "InvalidResourceName";
         internal const string ModificationFunctionParameterNotFound = "ModificationFunctionParameterNotFound";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
+        internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         
         static EntityRes loader = null;
         ResourceManager resources;

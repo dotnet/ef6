@@ -38,12 +38,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ModificationFunctionsConfiguration<TEntityType> UpdateFunction(
-            Action<ModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
+            Action<ConcurrencyModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
 
             var modificationFunctionConfiguration
-                = new ModificationFunctionConfiguration<TEntityType>();
+                = new ConcurrencyModificationFunctionConfiguration<TEntityType>();
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 

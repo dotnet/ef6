@@ -5403,4 +5403,8 @@
     <value>The connection could not be opened because it is broken. The connection must be closed before it can be opened.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="ModificationFunctionParameterNotFoundOriginal" xml:space="preserve">
+    <value>An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

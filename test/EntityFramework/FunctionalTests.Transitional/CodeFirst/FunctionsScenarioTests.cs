@@ -197,7 +197,7 @@ namespace FunctionalTests
                         Assert.NotNull(functionMapping.InsertFunctionMapping);
                         Assert.NotNull(functionMapping.UpdateFunctionMapping);
                         Assert.NotNull(functionMapping.DeleteFunctionMapping);
-            }
+                    }
                 }
             }
 
@@ -264,9 +264,85 @@ namespace FunctionalTests
                             .ModificationFunctionMappings
                             .Single();
 
-                    Assert.True(functionMapping.InsertFunctionMapping.Function.Parameters.Any(p => p.Name == "ins_line1"));
-                    Assert.True(functionMapping.UpdateFunctionMapping.Function.Parameters.Any(p => p.Name == "upd_id"));
-                    Assert.True(functionMapping.DeleteFunctionMapping.Function.Parameters.Any(p => p.Name == "del_id"));
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "ins_line1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "upd_id"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "del_id"));
+                }
+
+                [Fact]
+                public void Can_configure_original_value_column_names_when_update()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Engine>()
+                        .MapToFunctions(
+                            map => map.UpdateFunction(
+                                f =>
+                                    {
+                                        f.Parameter(e => e.Name).HasName("name_cur");
+                                        f.Parameter(e => e.Name, originalValue: true).HasName("name_orig");
+                                        f.Parameter(e => e.StorageLocation.Latitude).HasName("lat_cur");
+                                        f.Parameter(e => e.StorageLocation.Latitude, originalValue: true).HasName("lat_orig");
+                                    }));
+                    modelBuilder.Ignore<Team>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var function
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Select(fm => fm.UpdateFunctionMapping.Function)
+                            .Single();
+
+                    Assert.NotNull(function.Parameters.Single(p => p.Name == "name_cur"));
+                    Assert.NotNull(function.Parameters.Single(p => p.Name == "name_orig"));
+                    Assert.NotNull(function.Parameters.Single(p => p.Name == "lat_cur"));
+                    Assert.NotNull(function.Parameters.Single(p => p.Name == "lat_orig"));
+                }
+
+                [Fact]
+                public void Configuring_original_value_for_non_concurrency_token_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Engine>()
+                        .MapToFunctions(
+                            map => map.UpdateFunction(
+                                f => f.Parameter(e => e.Id, originalValue: true).HasName("boom")));
+                    modelBuilder.Ignore<Team>();
+
+                    Assert.Equal(
+                        Strings.ModificationFunctionParameterNotFoundOriginal("Id", "Engine_Update"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
+                }
+
+                [Fact]
+                public void Configuring_parameter_when_not_valid_for_operation_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToFunctions(
+                            map => map.DeleteFunction(
+                                f =>
+                                    {
+                                        f.HasName("del_ol");
+                                        f.Parameter(e => e.IsShipped).HasName("boom");
+                                    }));
+
+                    Assert.Equal(
+                        Strings.ModificationFunctionParameterNotFound("IsShipped", "del_ol"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
                 }
             }
 

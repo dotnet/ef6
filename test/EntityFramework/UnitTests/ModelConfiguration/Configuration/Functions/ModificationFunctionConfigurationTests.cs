@@ -140,5 +140,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               null,
                               null))).Message);
         }
+
+        [Fact]
+        public void Configure_should_throw_when_original_value_parameter_binding_not_found()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo1 = new MockPropertyInfo();
+
+            modificationFunctionConfiguration
+                .Parameter(new PropertyPath(mockPropertyInfo1), originalValue: true)
+                .HasName("P1");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            Assert.Equal(
+                Strings.ModificationFunctionParameterNotFoundOriginal("P", "F"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modificationFunctionConfiguration.Configure(
+                        new StorageModificationFunctionMapping(
+                              entitySet,
+                              new EntityType(),
+                              new EdmFunction(),
+                              new StorageModificationFunctionParameterBinding[0],
+                              null,
+                              null))).Message);
+        }
     }
 }
