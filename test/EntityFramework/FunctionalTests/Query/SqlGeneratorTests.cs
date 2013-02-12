@@ -6,7 +6,6 @@ namespace System.Data.Entity.Query
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
@@ -296,7 +295,7 @@ order by o.Id desc skip @pInt16 LIMIT @pInt64";
 
                     Assert.Equal(expectedResults.Count, 2);
                     var reader = EntityCommandSetup(db, query, null, prm1, prm2);
-                    VerifyIntAgainstBaselineResults(reader, expectedResults);
+                    VerifyAgainstBaselineResults(reader, expectedResults);
                 }
             }
 
@@ -385,7 +384,7 @@ ORDER BY [Filter1].[Id] DESC";
                         .Select(o => o.Id).ToList();
                     var reader = EntityCommandSetup(db, query, expectedSql);
                     Assert.Equal(expectedResults.Count(), 2);
-                    VerifyIntAgainstBaselineResults(reader, expectedResults);
+                    VerifyAgainstBaselineResults(reader, expectedResults);
                 }
             }
 
@@ -448,7 +447,7 @@ ORDER BY [Filter1].[Id] DESC";
                     var expectedResults = db.Configs.OfType<ArubaMachineConfig>().ToList().OrderByDescending(c => c.Id).Skip(1)
                                             .Select(c => c.Id);
                     var reader = EntityCommandSetup(db, query, expectedSql);
-                    VerifyIntAgainstBaselineResults(reader, expectedResults);
+                    VerifyAgainstBaselineResults(reader, expectedResults);
                 }
             }
 
@@ -509,7 +508,7 @@ ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC";
                     var expectedResults = db.Owners.ToList().OrderBy(o => o.FirstName).ThenByDescending(o => o.LastName)
                                             .Skip(3).Take(4).Select(o => o.Id);
                     var reader = EntityCommandSetup(db, query, expectedSql);                                        
-                    VerifyIntAgainstBaselineResults(reader, expectedResults);
+                    VerifyAgainstBaselineResults(reader, expectedResults);
 
                 }
             }
@@ -654,7 +653,7 @@ INTERSECT
                     var intersect = query1.Intersect(query2);
                     var reader = EntityCommandSetup(db, query, expectedSql);
 
-                    VerifyIntAgainstBaselineResults(reader, intersect);                    
+                    VerifyAgainstBaselineResults(reader, intersect);                    
                 }
             }
 
@@ -860,7 +859,7 @@ ORDER BY [Extent1].[Id] DESC";
                 {
                     var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(2).Select(o => o.Id);
                     var reader = EntityCommandSetup(db, query, expectedSql);
-                    VerifyIntAgainstBaselineResults(reader, expectedResults);
+                    VerifyAgainstBaselineResults(reader, expectedResults);
                 }
             }
 
@@ -998,7 +997,7 @@ ORDER BY [UnionAll4].[C1] ASC";
                 {
                     var reader = EntityCommandSetup(db, query, expectedSql);
                     var values = new List<int> { 1, 2, 2 };
-                    VerifyIntAgainstBaselineResults(reader, values);
+                    VerifyAgainstBaselineResults(reader, values);
                 }
             }
 
@@ -1045,6 +1044,68 @@ ORDER BY [Project5].[C1] ASC";
             }
         }
 
+        public class IntersectAndExcept : FunctionalTestBase
+        {
+            [Fact]
+            public void Intersect_with_except_and_sql_verification()
+            {
+                var query = @"
+{0,5,-7} intersect {5, 7, 0} except {7, -4, 5}";
+
+                // verifying that there is { 0 } is returned
+                using (var db = new ArubaContext())
+                {
+                    var reader = EntityCommandSetup(db, query);
+                    VerifyAgainstBaselineResults(reader, new List<int>{0});
+                }
+            }
+
+            [Fact]
+            public void Intersect_with_nulls()
+            {
+                var query = @"
+{1, null, 5} intersect {5, null, 7}";
+
+                // verifying that { DbNull, 5 } is returned
+                using (var db = new ArubaContext())
+                {
+                    var reader = EntityCommandSetup(db, query);
+                    VerifyAgainstBaselineResults(reader, new List<object>{DBNull.Value, 5});
+                }
+            }
+
+            [Fact]
+            public void Except_with_nulls()
+            {
+                var query = @"
+{1, null, null, 5} except {5, null, 7}";
+
+                // verifying that { 1 } is returned
+                using (var db = new ArubaContext())
+                {
+                    var reader = EntityCommandSetup(db, query);
+                    VerifyAgainstBaselineResults(reader, new List<int> {1});
+                }
+            }
+
+            [Fact]
+            public void Table_self_referential_except()
+            {
+                var query = @"
+ArubaContext.Owners
+EXCEPT
+ArubaContext.Owners";
+
+                // verifying that there are no results returned
+                using (var db = new ArubaContext())
+                {
+                    var reader = EntityCommandSetup(db, query);
+                    VerifySortAscAndCountInt(reader, 0);
+                }
+            }
+        }
+
+        #region helpers
         public static EntityDataReader EntityCommandSetup(ArubaContext db, string query, string expectedSql = null, params EntityParameter[] entityParameters)
         {
             var command = new EntityCommand();
@@ -1091,12 +1152,17 @@ ORDER BY [Project5].[C1] ASC";
             Assert.Equal(count, expectedCount);
         }
 
-        private static void VerifyIntAgainstBaselineResults(EntityDataReader reader, IEnumerable<int> expectedResults)
+        private static void VerifyAgainstBaselineResults(EntityDataReader reader, IEnumerable<int> expectedResults)
         {
-            var actualResults = new List<int>();
+            VerifyAgainstBaselineResults(reader, expectedResults.Cast<object>());
+        }
+
+        private static void VerifyAgainstBaselineResults(EntityDataReader reader, IEnumerable<object> expectedResults)
+        {
+            var actualResults = new List<object>();
             while (reader.Read())
             {
-                actualResults.Add(reader.GetInt32(0));
+                actualResults.Add(reader.GetValue(0));
             }
 
             Assert.True(expectedResults.SequenceEqual(actualResults));
@@ -1110,7 +1176,10 @@ ORDER BY [Project5].[C1] ASC";
                 count++;
             }
             Assert.Equal(type, reader.DataRecordInfo.FieldMetadata[0].FieldType.TypeUsage.EdmType.Name);
-            Assert.Equal(count, expectedCount);
+            if (expectedCount >= 0)
+            {
+                Assert.Equal(count, expectedCount);   
+            }            
         }
 
         private static void VerifySortDescAndCountString(EntityDataReader reader, int expectedCount, bool distinct = false)
@@ -1136,5 +1205,6 @@ ORDER BY [Project5].[C1] ASC";
             }
             Assert.Equal(expectedCount, count);
         }
+        #endregion
     }
 }
