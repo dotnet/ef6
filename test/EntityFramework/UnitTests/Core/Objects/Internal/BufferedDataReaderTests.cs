@@ -128,8 +128,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 spatialDataReaderMock.Setup(m => m.IsGeographyColumn(0)).Returns(true);
                 spatialDataReaderMock.Setup(m => m.IsGeometryColumn(1)).Returns(true);
-                spatialDataReaderMock.Setup(m => m.GetGeographyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult((DbGeography)null));
-                spatialDataReaderMock.Setup(m => m.GetGeometryAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult((DbGeometry)null));
+#if !NET40
+                if (async)
+                {
+                    spatialDataReaderMock.Setup(m => m.GetGeographyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                                         .Returns(() => Task.FromResult((DbGeography)null));
+                    spatialDataReaderMock.Setup(m => m.GetGeometryAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                                         .Returns(() => Task.FromResult((DbGeometry)null));
+                }
+#endif
                 providerServicesMock.Protected()
                                     .Setup<DbSpatialDataReader>("GetDbSpatialDataReader", reader, "2008")
                                     .Returns(spatialDataReaderMock.Object);
