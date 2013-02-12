@@ -405,6 +405,52 @@ namespace FunctionalTests
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }
+
+                [Fact]
+                public void Can_configure_rows_affected_column_name()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Order>()
+                        .MapToFunctions(
+                            map =>
+                                {
+                                    map.UpdateFunction(f => f.RowsAffectedParameter("rows_affected1"));
+                                    map.DeleteFunction(f => f.RowsAffectedParameter("rows_affected2"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.Equal("rows_affected1", functionMapping.UpdateFunctionMapping.RowsAffectedParameter.Name);
+                    Assert.Equal("rows_affected2", functionMapping.DeleteFunctionMapping.RowsAffectedParameter.Name);
+                }
+
+                [Fact]
+                public void Configuring_missing_rows_affected_parameter_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToFunctions(
+                            map => map.UpdateFunction(f => f.RowsAffectedParameter("rows_affected")));
+
+                    Assert.Equal(
+                        Strings.NoRowsAffectedParameter("OrderLine_Update"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
+                }
             }
 
             public class AdvancedMapping : AdvancedMappingScenarioTests

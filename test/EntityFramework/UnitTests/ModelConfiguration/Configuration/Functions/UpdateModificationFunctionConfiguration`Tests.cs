@@ -32,13 +32,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Same(configuration, configuration.BindResult(e => e.Geography, "Foo"));
             Assert.Same(configuration, configuration.BindResult(e => e.Geometry, "Foo"));
         }
-
+        
         [Fact]
         public void BindResult_should_throw_when_complex_property_expressions()
         {
             var configuration = new UpdateModificationFunctionConfiguration<Entity>();
 
             Assert.Throws<InvalidOperationException>(() => configuration.BindResult(e => e.ComplexType.Int, "Foo"));
+        }
+
+        [Fact]
+        public void RowsAffectedParameter_should_set_column_name()
+        {
+            var configuration = new UpdateModificationFunctionConfiguration<Entity>();
+
+            configuration.RowsAffectedParameter("Foo");
+
+            Assert.Equal("Foo", configuration.Configuration.RowsAffectedParameterName);
         }
 
         protected override ModificationFunctionConfiguration<Entity> CreateConfiguration()

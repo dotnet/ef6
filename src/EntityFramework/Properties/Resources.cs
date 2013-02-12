@@ -13548,6 +13548,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ResultBindingNotFound, p0, p1);
         }
+
+        /// <summary>
+        /// A string like "A rows affected parameter was not found on the modification function '{0}'. Ensure that the target entity has at least one concurrency token."
+        /// </summary>
+        internal static string NoRowsAffectedParameter(object p0)
+        {
+            return EntityRes.GetString(EntityRes.NoRowsAffectedParameter, p0);
+        }
     } 
 
     /// <summary>
@@ -15299,6 +15307,14 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.ResultBindingNotFound(p0, p1));
         }
+
+        /// <summary>
+        /// InvalidOperationException with message like "A rows affected parameter was not found on the modification function '{0}'. Ensure that the target entity has at least one concurrency token."
+        /// </summary>
+        internal static Exception NoRowsAffectedParameter(object p0)
+        {
+            return new InvalidOperationException(Strings.NoRowsAffectedParameter(p0));
+        }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -17024,6 +17040,7 @@ namespace System.Data.Entity.Resources
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
+        internal const string NoRowsAffectedParameter = "NoRowsAffectedParameter";
         
         static EntityRes loader = null;
         ResourceManager resources;

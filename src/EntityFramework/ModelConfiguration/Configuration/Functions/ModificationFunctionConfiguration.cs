@@ -75,6 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             = new Dictionary<PropertyInfo, string>();
 
         private string _name;
+        private string _rowsAffectedParameter;
 
         public ModificationFunctionConfiguration()
         {
@@ -85,6 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(source);
 
             _name = source._name;
+            _rowsAffectedParameter = source._rowsAffectedParameter;
 
             source._parameterConfigurations.Each(
                 c => _parameterConfigurations.Add(c.Key, c.Value.Clone()));
@@ -108,6 +110,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public string Name
         {
             get { return _name; }
+        }
+
+        public void RowsAffectedParameter(string name)
+        {
+            DebugCheck.NotEmpty(name);
+
+            _rowsAffectedParameter = name;
+        }
+
+        public string RowsAffectedParameterName
+        {
+            get { return _rowsAffectedParameter; }
         }
 
         public Dictionary<ParameterKey, FunctionParameterConfiguration> ParameterConfigurations
@@ -149,6 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(modificationFunctionMapping);
 
             ConfigureName(modificationFunctionMapping);
+            ConfigureRowsAffectedParameter(modificationFunctionMapping);
             ConfigureParameters(modificationFunctionMapping);
             ConfigureResultBindings(modificationFunctionMapping);
         }
@@ -158,6 +173,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if (!string.IsNullOrWhiteSpace(_name))
             {
                 modificationFunctionMapping.Function.Name = _name;
+            }
+        }
+
+        private void ConfigureRowsAffectedParameter(StorageModificationFunctionMapping modificationFunctionMapping)
+        {
+            if (!string.IsNullOrWhiteSpace(_rowsAffectedParameter))
+            {
+                if (modificationFunctionMapping.RowsAffectedParameter == null)
+                {
+                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.Name);
+                }
+
+                modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
             }
         }
 

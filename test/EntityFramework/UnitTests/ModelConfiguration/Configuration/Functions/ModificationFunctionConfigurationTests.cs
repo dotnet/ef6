@@ -23,6 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo));
             modificationFunctionConfiguration.BindResult(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfiguration.RowsAffectedParameter("bar");
 
             var clone = modificationFunctionConfiguration.Clone();
 
@@ -30,6 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal("Foo", clone.Name);
             Assert.Equal(1, clone.ParameterConfigurations.Count);
             Assert.Equal(1, clone.ResultBindings.Count);
+            Assert.Equal("bar", clone.RowsAffectedParameterName);
         }
 
         [Fact]
@@ -40,6 +42,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.HasName("Foo");
 
             Assert.Equal("Foo", modificationFunctionConfiguration.Name);
+        }
+
+        [Fact]
+        public void Can_set_rows_affected_parameter_name()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfiguration.RowsAffectedParameter("Foo");
+
+            Assert.Equal("Foo", modificationFunctionConfiguration.RowsAffectedParameterName);
         }
 
         [Fact]
@@ -241,6 +253,63 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     new[] { resultBinding }));
 
             Assert.Equal("Foo", resultBinding.ColumnName);
+        }
+
+        [Fact]
+        public void Can_configure_rows_affected_parameter_name()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            modificationFunctionConfiguration.RowsAffectedParameter("Foo");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            var property = new EdmProperty("P1");
+            property.SetClrPropertyInfo(mockPropertyInfo);
+
+            var rowsAffectedParameter = new FunctionParameter();
+
+            modificationFunctionConfiguration.Configure(
+                new StorageModificationFunctionMapping(
+                    entitySet,
+                    new EntityType(),
+                    new EdmFunction(),
+                    new[]
+                        {
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new StorageModificationFunctionMemberPath(new[] { property }, null), false)
+                        },
+                    rowsAffectedParameter,
+                    null));
+
+            Assert.Equal("Foo", rowsAffectedParameter.Name);
+        }
+
+        [Fact]
+        public void Configure_should_throw_when_rows_affected_parameter_not_found()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfiguration.RowsAffectedParameter("boom");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            Assert.Equal(
+                Strings.NoRowsAffectedParameter("F"),
+                Assert.Throws<InvalidOperationException>(
+                    () => modificationFunctionConfiguration.Configure(
+                        new StorageModificationFunctionMapping(
+                              entitySet,
+                              new EntityType(),
+                              new EdmFunction(),
+                              new StorageModificationFunctionParameterBinding[0],
+                              null,
+                              null))).Message);
         }
     }
 }

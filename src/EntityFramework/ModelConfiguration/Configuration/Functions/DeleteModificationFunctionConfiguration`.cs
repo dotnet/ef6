@@ -3,50 +3,24 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
-    public class FunctionParameterConfiguration
+    public class DeleteModificationFunctionConfiguration<TEntityType> : ModificationFunctionConfiguration<TEntityType>
+        where TEntityType : class
     {
-        private string _parameterName;
-
-        internal FunctionParameterConfiguration()
+        internal DeleteModificationFunctionConfiguration()
         {
         }
 
-        private FunctionParameterConfiguration(FunctionParameterConfiguration source)
-        {
-            DebugCheck.NotNull(source);
-
-            _parameterName = source.ParameterName;
-        }
-
-        internal string ParameterName
-        {
-            get { return _parameterName; }
-        }
-
-        public void HasName(string parameterName)
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public DeleteModificationFunctionConfiguration<TEntityType> RowsAffectedParameter(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
 
-            _parameterName = parameterName;
-        }
+            Configuration.RowsAffectedParameter(parameterName);
 
-        internal virtual FunctionParameterConfiguration Clone()
-        {
-            return new FunctionParameterConfiguration(this);
-        }
-
-        internal void Configure(FunctionParameter functionParameter)
-        {
-            DebugCheck.NotNull(functionParameter);
-
-            if (!string.IsNullOrWhiteSpace(ParameterName))
-            {
-                functionParameter.Name = ParameterName;
-            }
+            return this;
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

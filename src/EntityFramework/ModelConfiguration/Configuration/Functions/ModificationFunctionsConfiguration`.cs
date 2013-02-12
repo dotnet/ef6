@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.ComponentModel;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
@@ -54,18 +55,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ModificationFunctionsConfiguration<TEntityType> DeleteFunction(
-            Action<ModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
+            Action<DeleteModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
 
             var modificationFunctionConfiguration
-                = new ModificationFunctionConfiguration<TEntityType>();
+                = new DeleteModificationFunctionConfiguration<TEntityType>();
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
             _configuration.DeleteFunction(modificationFunctionConfiguration.Configuration);
 
             return this;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }
