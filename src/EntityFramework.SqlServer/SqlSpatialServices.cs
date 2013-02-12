@@ -40,7 +40,7 @@ namespace System.Data.Entity.SqlServer
 
         // Given an assembly purportedly containing SqlServerTypes for spatial values, attempt to 
         // create a corresponding SQL specific DbSpatialServices value backed by types from that assembly.
-        // Uses a dictionary to ensure that there is at most db spatial service per assembly.   It's important that
+        // Uses a dictionary to ensure that there is at most one db spatial service per assembly.   It's important that
         // this be done in a way that ensures that the underlying SqlTypesAssembly value is also atomized,
         // since that's caching compilation.
         // Relies on SqlTypesAssembly to verify that the assembly is appropriate.
@@ -110,6 +110,11 @@ namespace System.Data.Entity.SqlServer
 
         // Ensure that provider values are from the expected version of the Sql types assembly. If they aren't try to 
         // convert them so that they are.
+        // 
+        // Normally when we obtain values from the store, we try to use the appropriate SqlSpatialDataReader. This will make sure that 
+        // any spatial values are instantiated with the provider type from the appropriate SqlServerTypes assembly. However, 
+        // in one case (output parameter values) we don't have an opportunity to make this happen. There we get whatever value 
+        // the underlying SqlDataReader produces which doesn't necessarily produce values from the assembly we expect.
         private object NormalizeProviderValue(object providerValue, Type expectedSpatialType)
         {
             Debug.Assert(expectedSpatialType == SqlTypes.SqlGeographyType || expectedSpatialType == SqlTypes.SqlGeometryType);
@@ -126,8 +131,9 @@ namespace System.Data.Entity.SqlServer
                             return ConvertToSqlValue(otherServices.GeographyFromProviderValue(providerValue), "providerValue");
                         }
                     }
-                    else // expectedSpatialType == this.SqlTypes.SqlGeometryType
+                    else
                     {
+                        Debug.Assert(expectedSpatialType == SqlTypes.SqlGeometryType);
                         if (providerValueType == otherServices.SqlTypes.SqlGeometryType)
                         {
                             return ConvertToSqlValue(otherServices.GeometryFromProviderValue(providerValue), "providerValue");

@@ -85,7 +85,8 @@ namespace System.Data.Entity.Core.Query
                 MergeOption.AppendOnly,
                 /*stateCount*/ 1,
                 coordinatorFactory,
-                /*readerOwned*/ false)
+                /*readerOwned*/ false,
+                /*useSpatialReader*/ false)
                                  {
                                      CallBase = true
                                  };

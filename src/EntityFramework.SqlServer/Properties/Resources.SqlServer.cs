@@ -87,6 +87,14 @@ namespace System.Data.Entity.SqlServer.Resources
         }
 
         /// <summary>
+        ///     A string like "Spatial readers can only be produced from readers of type SqlDataReader. A reader of type {0} was provided."
+        /// </summary>
+        internal static string SqlProvider_NeedSqlDataReader(object p0)
+        {
+            return EntityRes.GetString(EntityRes.SqlProvider_NeedSqlDataReader, p0);
+        }
+
+        /// <summary>
         ///     A string like "Spatial types and functions are only supported by SQL Server 2008 or later."
         /// </summary>
         internal static string SqlProvider_Sql2008RequiredForSpatial
@@ -415,6 +423,7 @@ namespace System.Data.Entity.SqlServer.Resources
         internal const string Mapping_Provider_WrongManifestType = "Mapping_Provider_WrongManifestType";
         internal const string ADP_InternalProviderError = "ADP_InternalProviderError";
         internal const string UnableToDetermineStoreVersion = "UnableToDetermineStoreVersion";
+        internal const string SqlProvider_NeedSqlDataReader = "SqlProvider_NeedSqlDataReader";
         internal const string SqlProvider_Sql2008RequiredForSpatial = "SqlProvider_Sql2008RequiredForSpatial";
         internal const string SqlProvider_SqlTypesAssemblyNotFound = "SqlProvider_SqlTypesAssemblyNotFound";
         internal const string SqlProvider_IncompleteCreateDatabase = "SqlProvider_IncompleteCreateDatabase";

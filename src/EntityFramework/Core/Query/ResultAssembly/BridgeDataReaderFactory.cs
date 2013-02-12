@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             const MergeOption NoTracking = MergeOption.NoTracking;
 
             var shaperFactory = _translator.TranslateColumnMap<RecordState>(cacheManager, columnMap, workspace, null, NoTracking, true);
-            var recordShaper = shaperFactory.Create(storeDataReader, null, workspace, MergeOption.NoTracking, true);
+            var recordShaper = shaperFactory.Create(storeDataReader, null, workspace, MergeOption.NoTracking, true, useSpatialReader: true);
 
             return new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(
                 recordShaper, recordShaper.RootCoordinator.TypedCoordinatorFactory);
@@ -66,6 +66,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         {
             foreach (var nextResultColumnMap in nextResultColumnMaps)
             {
+                // It is important to do this lazily as the storeDataReader will be advanced to the next result set
+                // by the time this is called
                 yield return CreateShaperInfo(storeDataReader, nextResultColumnMap, workspace);
             }
         }

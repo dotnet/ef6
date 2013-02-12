@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using Moq;
     using Xunit;
 
-    public class ObjectQueryExecutionPlanTests
+    public class ObjectQueryExecutionPlanTests : TestBase
     {
         [Fact]
         public void Execute_sets_the_parameter_values_and_returns_the_result()
@@ -34,13 +34,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
-                                           {
-                                               Assert.Equal(1, ec.Parameters.Count);
-                                               Assert.Equal(2, ec.Parameters[0].Value);
-                                               Assert.Equal(3, ec.CommandTimeout);
-                                               return Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                                                   new[] { new object[] { "Bar" } });
-                                           });
+                                               {
+                                                   Assert.Equal(1, ec.Parameters.Count);
+                                                   Assert.Equal(2, ec.Parameters[0].Value);
+                                                   Assert.Equal(3, ec.CommandTimeout);
+                                                   return Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                                       new[] { new object[] { "Bar" } });
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
@@ -88,12 +88,12 @@ namespace System.Data.Entity.Core.Objects.Internal
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
-                                           {
-                                               reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                                                   new[] { new object[] { "Bar" } });
-                                               Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
-                                               return reader;
-                                           });
+                                               {
+                                                   reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                                       new[] { new object[] { "Bar" } });
+                                                   Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
+                                                   return reader;
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
             objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
 
-            var result = objectQueryExecutionPlan.Execute<string>(objectContextMock.Object, objectParameterCollectionMock.Object);
+            objectQueryExecutionPlan.Execute<string>(objectContextMock.Object, objectParameterCollectionMock.Object);
 
             Assert.Equal(!streaming, reader.IsClosed);
         }
@@ -141,19 +141,19 @@ namespace System.Data.Entity.Core.Objects.Internal
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
-                                           {
-                                               reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                                                   new[] { new object[] { "Bar" } });
-                                               return reader;
-                                           });
+                                               {
+                                                   reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                                       new[] { new object[] { "Bar" } });
+                                                   return reader;
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
-                Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
+                Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(2)),
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
-            edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
+            edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);
 
             var objectQueryExecutionPlan = new ObjectQueryExecutionPlan(
                 entityCommandDefinitionMock.Object,
@@ -167,9 +167,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
             objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
-            objectContextMock.Setup(m => m.MetadataWorkspace).Returns(() => { throw new NotImplementedException(); });
 
-            Assert.Throws<NotImplementedException>(() =>
+            Assert.Throws<InvalidCastException>(
+                () =>
                 objectQueryExecutionPlan.Execute<string>(objectContextMock.Object, objectParameterCollectionMock.Object));
 
             Assert.Equal(true, reader.IsClosed);
@@ -198,14 +198,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                     It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb, CancellationToken ct) =>
-                                           {
-                                               Assert.Equal(1, ec.Parameters.Count);
-                                               Assert.Equal(2, ec.Parameters[0].Value);
-                                               Assert.Equal(3, ec.CommandTimeout);
-                                               return Task.FromResult(
-                                                   Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                                                       new[] { new object[] { "Bar" } }));
-                                           });
+                                               {
+                                                   Assert.Equal(1, ec.Parameters.Count);
+                                                   Assert.Equal(2, ec.Parameters[0].Value);
+                                                   Assert.Equal(3, ec.CommandTimeout);
+                                                   return Task.FromResult(
+                                                       Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                                           new[] { new object[] { "Bar" } }));
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
@@ -258,12 +258,12 @@ namespace System.Data.Entity.Core.Objects.Internal
                     It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb, CancellationToken ct) =>
-                                           {
-                                               reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                               {
+                                                   reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
-                                               Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
-                                               return Task.FromResult(reader);
-                                           });
+                                                   Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
+                                                   return Task.FromResult(reader);
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
@@ -316,11 +316,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                     It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb, CancellationToken ct) =>
-                                           {
-                                               reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                                               {
+                                                   reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
-                                               return Task.FromResult(reader);
-                                           });
+                                                   return Task.FromResult(reader);
+                                               });
 
             var shaperFactory = new ShaperFactory<string>(
                 1,
@@ -328,7 +328,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
-            edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
+            edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);
 
             var objectQueryExecutionPlan = new ObjectQueryExecutionPlan(
                 entityCommandDefinitionMock.Object,
@@ -342,16 +342,18 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
             objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
-            objectContextMock.Setup(m => m.MetadataWorkspace).Returns(() => { throw new NotImplementedException(); });
 
-            Assert.Throws<NotImplementedException>(() =>
-                ExceptionHelpers.UnwrapAggregateExceptions(() => objectQueryExecutionPlan.ExecuteAsync<string>(
-                    objectContextMock.Object,
-                    objectParameterCollectionMock.Object, CancellationToken.None).Result));
+            Assert.Throws<InvalidCastException>(
+                () =>
+                ExceptionHelpers.UnwrapAggregateExceptions(
+                    () => objectQueryExecutionPlan.ExecuteAsync<string>(
+                        objectContextMock.Object,
+                        objectParameterCollectionMock.Object, CancellationToken.None).Result));
 
             Assert.Equal(true, reader.IsClosed);
             var readerMock = Mock.Get(reader);
-            readerMock.Verify(m => m.GetFieldValueAsync<object>(It.IsAny<int>(), It.IsAny<CancellationToken>()), streaming ? Times.Never() : Times.Once());
+            readerMock.Verify(
+                m => m.GetFieldValueAsync<object>(It.IsAny<int>(), It.IsAny<CancellationToken>()), streaming ? Times.Never() : Times.Once());
         }
 
 #endif

@@ -4,15 +4,20 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+    using System.Data.Entity.Spatial;
     using System.Reflection;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 #if !NET40
     using System.Threading;
+    using System.Threading.Tasks;
 #endif
 
-    public class BufferedDataReaderTests
+    public class BufferedDataReaderTests : TestBase
     {
         [Fact]
         public void Metadata_methods_return_expected_results_sync()
@@ -42,12 +47,12 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (async)
             {
 #if !NET40
-                bufferedDataReader.InitializeAsync(CancellationToken.None).Wait();
+                bufferedDataReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, CancellationToken.None).Wait();
 #endif
             }
             else
             {
-                bufferedDataReader.Initialize();
+                bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance);
             }
 
             Assert.Equal(1, bufferedDataReader.FieldCount);
@@ -68,7 +73,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
 
             var bufferedDataReader = new BufferedDataReader(reader);
-            bufferedDataReader.Initialize();
+            bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance);
 
             bufferedDataReader.Close();
 
@@ -87,37 +92,83 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Manipulation_methods_perform_expected_actions_sync()
         {
-            Manipulation_methods_perform_expected_actions(false);
+            Manipulation_methods_perform_expected_actions(spatial: false, async: false);
+        }
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_spatial_sync()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: true, async: false);
         }
 
 #if !NET40
         [Fact]
         public void Manipulation_methods_perform_expected_actions_async()
         {
-            Manipulation_methods_perform_expected_actions(true);
+            Manipulation_methods_perform_expected_actions(spatial: false, async: true);
+        }
+
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_spatial_async()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: true, async: true);
         }
 #endif
 
-        private void Manipulation_methods_perform_expected_actions(bool async)
+        private void Manipulation_methods_perform_expected_actions(bool spatial, bool async)
         {
-            var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                new[] { new object[] { 1, "a" } }, new object[0][]);
+                var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                    new[] { new object[] { 1, "a" } }, new object[0][]);
 
             var bufferedDataReader = new BufferedDataReader(reader);
 
-            Assert.False(bufferedDataReader.IsClosed);
-            if (async)
-            {
-#if !NET40
-                bufferedDataReader.InitializeAsync(CancellationToken.None).Wait();
-#endif
-            }
-            else
-            {
-                bufferedDataReader.Initialize();
-            }
-            Assert.False(bufferedDataReader.IsClosed);
 
+            var spatialDataReaderMock = new Mock<DbSpatialDataReader>();
+            var providerServicesMock = new Mock<DbProviderServices>();
+            if (spatial)
+            {
+                spatialDataReaderMock.Setup(m => m.IsGeographyColumn(0)).Returns(true);
+                spatialDataReaderMock.Setup(m => m.IsGeometryColumn(1)).Returns(true);
+                spatialDataReaderMock.Setup(m => m.GetGeographyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult((DbGeography)null));
+                spatialDataReaderMock.Setup(m => m.GetGeometryAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns(() => Task.FromResult((DbGeometry)null));
+                providerServicesMock.Protected()
+                                    .Setup<DbSpatialDataReader>("GetDbSpatialDataReader", reader, "2008")
+                                    .Returns(spatialDataReaderMock.Object);
+            }
+            try
+            {
+                Assert.False(bufferedDataReader.IsClosed);
+                if (async)
+                {
+#if !NET40
+                    bufferedDataReader.InitializeAsync("2008", providerServicesMock.Object, CancellationToken.None).Wait();
+#endif
+                }
+                else
+                {
+                    bufferedDataReader.Initialize("2008", providerServicesMock.Object);
+                }
+                Assert.False(bufferedDataReader.IsClosed);
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+
+            if (spatial)
+            {
+                if (async)
+                {
+#if !NET40
+                    spatialDataReaderMock.Verify(m => m.GetGeographyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once());
+                    spatialDataReaderMock.Verify(m => m.GetGeometryAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once());
+#endif
+                }
+                else
+                {
+                    spatialDataReaderMock.Verify(m => m.GetGeography(It.IsAny<int>()), Times.Once());
+                    spatialDataReaderMock.Verify(m => m.GetGeometry(It.IsAny<int>()), Times.Once());
+                }
+            }
             Assert.True(bufferedDataReader.HasRows);
 
             if (async)
@@ -174,7 +225,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 new[] { new object[] { 3, "c" } });
 
             var bufferedReader = new BufferedDataReader(reader);
-            bufferedReader.Initialize();
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
 
             var enumerator = bufferedReader.GetEnumerator();
 
@@ -213,9 +264,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
 
             Assert.False(reader.IsClosed);
-            bufferedReader.Initialize();
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
             Assert.True(reader.IsClosed);
-            bufferedReader.Initialize();
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
         }
 
 #if !NET40
@@ -226,9 +277,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
 
             Assert.False(reader.IsClosed);
-            bufferedReader.InitializeAsync(CancellationToken.None);
+            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
             Assert.True(reader.IsClosed);
-            bufferedReader.InitializeAsync(CancellationToken.None);
+            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
         }
 #endif
 
@@ -291,13 +342,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (async)
             {
 #if !NET40
-                bufferedReader.InitializeAsync(CancellationToken.None).Wait();
+                bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
                 Assert.True(bufferedReader.ReadAsync().Result);
 #endif
             }
             else
             {
-                bufferedReader.Initialize();
+                bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
                 Assert.True(bufferedReader.Read());
             }
 
@@ -359,7 +410,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(dataReaderContents);
 
             var bufferedReader = new BufferedDataReader(reader);
-            bufferedReader.Initialize();
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
 
             Assert.Throws<InvalidOperationException>(() => method(bufferedReader)).ValidateMessage("ADP_NoData");
         }

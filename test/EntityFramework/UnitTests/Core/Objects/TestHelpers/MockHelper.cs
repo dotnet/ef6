@@ -9,10 +9,14 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.SqlServer;
     using System.Linq;
     using System.Linq.Expressions;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using Moq;
 
     public static class MockHelper
@@ -22,7 +26,7 @@ namespace System.Data.Entity.Core.Objects
             return new Mock<Shaper<T>>(
                 /*reader*/ null, /*context*/ null, /*workspace*/ null,
                     MergeOption.AppendOnly, /*stateCount*/ 1, /*rootCoordinatorFactory*/ CreateCoordinatorFactory<T>(),
-                    /*readerOwned*/ false);
+                    /*readerOwned*/ false, /*useSpatialReader*/ false);
         }
 
         internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null)
@@ -110,10 +114,18 @@ namespace System.Data.Entity.Core.Objects
             var objectContextMock = new Mock<ObjectContextForMock>(entityConnection);
             objectContextMock.Setup(m => m.Connection).Returns(entityConnection);
 
-            var metadataWorkspace = new Mock<MetadataWorkspace>().Object;
-            objectContextMock.Setup(m => m.MetadataWorkspace).Returns(metadataWorkspace);
+            //var modelMock = new Mock<EdmModel>();
+            //modelMock.Setup(m => m.ProviderInfo).Returns()
+            var model = new EdmModel(DataSpace.SSpace);
+            model.ProviderInfo = new DbProviderInfo(GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008");
+            model.ProviderManifest = new SqlProviderManifest("2008");
+            var storeItemCollectionMock = new Mock<StoreItemCollection>(model);
 
-            var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspace);
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
+            objectContextMock.Setup(m => m.MetadataWorkspace).Returns(metadataWorkspaceMock.Object);
+
+            var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspaceMock.Object);
             objectContextMock.Setup(m => m.ObjectStateManager).Returns(objectStateManagerMock.Object);
 
             var mockObjectQuery = CreateMockObjectQuery(default(TEntity), objectContext: objectContextMock.Object);

@@ -21,7 +21,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// </summary>
     internal abstract class Shaper
     {
-        internal Shaper(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, int stateCount)
+        private readonly bool _useSpatialReader;
+
+        internal Shaper(
+            DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
+            int stateCount, bool useSpatialReader)
         {
             Debug.Assert(context == null || workspace == context.MetadataWorkspace, "workspace must match context's workspace");
 
@@ -32,6 +36,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Workspace = workspace;
             AssociationSpaceMap = new Dictionary<AssociationType, AssociationType>();
             _spatialReader = new Lazy<DbSpatialDataReader>(CreateSpatialDataReader);
+            _useSpatialReader = useSpatialReader;
         }
 
         /// <summary>
@@ -329,7 +334,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         targetEntry = manager.AddKeyEntry(targetKey, targetEntitySet);
                     }
 
-                    // SQLBU 557105. For 1-1 relationships we have to take care of the relationships of targetEntity
+                    // For 1-1 relationships we have to take care of the relationships of targetEntity
                     var needNewRelationship = true;
                     switch (sourceMember.RelationshipMultiplicity)
                     {
@@ -619,7 +624,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             return result;
         }
 
-        private DbSpatialDataReader CreateSpatialDataReader()
+        protected virtual DbSpatialDataReader CreateSpatialDataReader()
         {
             return SpatialHelpers.CreateSpatialDataReader(Workspace, Reader);
         }
@@ -628,12 +633,26 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public DbGeography GetGeographyColumnValue(int ordinal)
         {
-            return _spatialReader.Value.GetGeography(ordinal);
+            if (_useSpatialReader)
+            {
+                return _spatialReader.Value.GetGeography(ordinal);
+            }
+            else
+            {
+                return (DbGeography)Reader.GetValue(ordinal);
+            }
         }
 
         public DbGeometry GetGeometryColumnValue(int ordinal)
         {
-            return _spatialReader.Value.GetGeometry(ordinal);
+            if (_useSpatialReader)
+            {
+                return _spatialReader.Value.GetGeometry(ordinal);
+            }
+            else
+            {
+                return (DbGeometry)Reader.GetValue(ordinal);
+            }
         }
 
         public TColumn GetSpatialColumnValueWithErrorHandling<TColumn>(int ordinal, PrimitiveTypeKind spatialTypeKind)
@@ -645,17 +664,37 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             TColumn result;
             if (spatialTypeKind == PrimitiveTypeKind.Geography)
             {
-                result = new ColumnErrorHandlingValueReader<TColumn>(
-                    (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeography(column),
-                    (reader, column) => _spatialReader.Value.GetGeography(column)
-                    ).GetValue(Reader, ordinal);
+                if (_useSpatialReader)
+                {
+                    result = new ColumnErrorHandlingValueReader<TColumn>(
+                        (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeography(column),
+                        (reader, column) => _spatialReader.Value.GetGeography(column)
+                        ).GetValue(Reader, ordinal);
+                }
+                else
+                {
+                    result = new ColumnErrorHandlingValueReader<TColumn>(
+                        (reader, column) => (TColumn)Reader.GetValue(column),
+                        (reader, column) => Reader.GetValue(column)
+                        ).GetValue(Reader, ordinal);
+                }
             }
             else
             {
-                result = new ColumnErrorHandlingValueReader<TColumn>(
-                    (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeometry(column),
-                    (reader, column) => _spatialReader.Value.GetGeometry(column)
-                    ).GetValue(Reader, ordinal);
+                if (_useSpatialReader)
+                {
+                    result = new ColumnErrorHandlingValueReader<TColumn>(
+                        (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeometry(column),
+                        (reader, column) => _spatialReader.Value.GetGeometry(column)
+                        ).GetValue(Reader, ordinal);
+                }
+                else
+                {
+                    result = new ColumnErrorHandlingValueReader<TColumn>(
+                        (reader, column) => (TColumn)Reader.GetValue(column),
+                        (reader, column) => Reader.GetValue(column)
+                        ).GetValue(Reader, ordinal);
+                }
             }
             return result;
         }
@@ -666,20 +705,43 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             TProperty result;
             if (Helper.IsGeographicTypeKind(spatialTypeKind))
             {
-                result = new PropertyErrorHandlingValueReader<TProperty>(
-                    propertyName, typeName,
-                    (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeography(column),
-                    (reader, column) => _spatialReader.Value.GetGeography(column)
-                    ).GetValue(Reader, ordinal);
+                if (_useSpatialReader)
+                {
+                    result = new PropertyErrorHandlingValueReader<TProperty>(
+                        propertyName, typeName,
+                        (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeography(column),
+                        (reader, column) => _spatialReader.Value.GetGeography(column)
+                        ).GetValue(Reader, ordinal);
+                }
+                else
+                {
+                    result = new PropertyErrorHandlingValueReader<TProperty>(
+                        propertyName, typeName,
+                        (reader, column) => (TProperty)Reader.GetValue(column),
+                        (reader, column) => Reader.GetValue(column)
+                        ).GetValue(Reader, ordinal);
+                }
             }
             else
             {
-                Debug.Assert(Helper.IsGeometricTypeKind(spatialTypeKind));
-                result = new PropertyErrorHandlingValueReader<TProperty>(
-                    propertyName, typeName,
-                    (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeometry(column),
-                    (reader, column) => _spatialReader.Value.GetGeometry(column)
-                    ).GetValue(Reader, ordinal);
+                if (_useSpatialReader)
+                {
+                    Debug.Assert(Helper.IsGeometricTypeKind(spatialTypeKind));
+                    result = new PropertyErrorHandlingValueReader<TProperty>(
+                        propertyName, typeName,
+                        (reader, column) => (TProperty)(object)_spatialReader.Value.GetGeometry(column),
+                        (reader, column) => _spatialReader.Value.GetGeometry(column)
+                        ).GetValue(Reader, ordinal);
+                }
+                else
+                {
+                    Debug.Assert(Helper.IsGeometricTypeKind(spatialTypeKind));
+                    result = new PropertyErrorHandlingValueReader<TProperty>(
+                        propertyName, typeName,
+                        (reader, column) => (TProperty)Reader.GetValue(column),
+                        (reader, column) => Reader.GetValue(column)
+                        ).GetValue(Reader, ordinal);
+                }
             }
 
             return result;
@@ -969,7 +1031,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             protected override Exception CreateNullValueException()
             {
-                return new InvalidOperationException(Strings.Materializer_NullReferenceCast(typeof(TColumn).Name));
+                return new InvalidOperationException(Strings.Materializer_NullReferenceCast(typeof(TColumn)));
             }
 
             protected override Exception CreateWrongTypeException(Type resultType)
@@ -1002,7 +1064,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 return new ConstraintException(
                     Strings.Materializer_SetInvalidValue(
-                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
+                        Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty),
                         _typeName, _propertyName, "null"));
             }
 
@@ -1010,8 +1072,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 return new InvalidOperationException(
                     Strings.Materializer_SetInvalidValue(
-                        (Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty)).Name,
-                        _typeName, _propertyName, resultType.Name));
+                        Nullable.GetUnderlyingType(typeof(TProperty)) ?? typeof(TProperty),
+                        _typeName, _propertyName, resultType));
             }
         }
 

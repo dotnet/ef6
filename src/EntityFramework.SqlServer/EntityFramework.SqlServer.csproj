@@ -113,6 +113,7 @@
     <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\Check.cs" />
+    <Compile Include="Utilities\SqlDataReaderWrapper.cs" />
     <Compile Include="Utilities\DbExpressionExtensions.cs" />
     <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\EdmFunctionExtensions.cs" />

@@ -24,5 +24,10 @@ namespace System.Data.Entity.SqlServer
         {
             get { return _sqlTypesAssembly; }
         }
+
+        public override bool NativeTypesAvailable
+        {
+            get { return true; }
+        }
     }
 }

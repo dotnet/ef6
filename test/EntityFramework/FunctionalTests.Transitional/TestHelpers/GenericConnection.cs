@@ -3,9 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Common;
-
-    #region Test Providers
-
+    
     public class GenericConnection<T> : DbConnection
         where T : DbProviderFactory
     {
@@ -65,6 +63,4 @@ namespace System.Data.Entity
             get { return GenericProviderFactory<T>.Instance; }
         }
     }
-
-    #endregion
 }

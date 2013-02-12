@@ -43,7 +43,6 @@ namespace ProductivityApiTests
 
         #region Tests for TVFs with spatial types
 
-        // Dev11 226644
         [Fact]
         public void DbQuery_with_TVFs_mapped_to_context_instance_methods_involving_spatial_types_works_sync()
         {

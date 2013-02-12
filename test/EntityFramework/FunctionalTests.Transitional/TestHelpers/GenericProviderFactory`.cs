@@ -18,10 +18,15 @@ namespace System.Data.Entity
 
             var row = providerTable.NewRow();
             row["Name"] = "GenericProviderFactory";
-            row["InvariantName"] = "My.Generic.Provider." + typeof(T).Name;
+            row["InvariantName"] = InvariantProviderName;
             row["Description"] = "Fake GenericProviderFactory";
             row["AssemblyQualifiedName"] = GetType().AssemblyQualifiedName;
             providerTable.Rows.Add(row);
+        }
+
+        public string InvariantProviderName
+        {
+            get { return "My.Generic.Provider." + typeof(T).Name; }
         }
 
         public override DbConnection CreateConnection()
