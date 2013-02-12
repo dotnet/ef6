@@ -109,7 +109,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EntitConnection_object_with_derived_context_can_be_used_to_create_context_for_existing_model()
+        public void EntityConnection_object_with_derived_context_can_be_used_to_create_context_for_existing_model()
         {
             using (var connection = new EntityConnection(SimpleModelEntityConnectionString))
             {
@@ -122,7 +122,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void EntitConnection_object_with_empty_context_can_be_used_to_create_context_for_existing_model()
+        public void EntityConnection_object_with_empty_context_can_be_used_to_create_context_for_existing_model()
         {
             using (
                 var context = new DbContext(
@@ -179,8 +179,7 @@ namespace ProductivityApiTests
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Closed);
         }
 
-        // [Fact(Skip = "Cannot create EntityConnection with open connection.")]
-        // See http://entityframework.codeplex.com/workitem/45
+        [Fact]
         public void Existing_connection_is_open_if_it_started_open()
         {
             Existing_connection_is_same_state_it_started_in_after_use(ConnectionState.Open);
@@ -883,7 +882,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Exception thrown for bad connection (Dev11 364657)
+        #region Exception thrown for bad connection
 
         public class BadMvcContext : DbContext
         {

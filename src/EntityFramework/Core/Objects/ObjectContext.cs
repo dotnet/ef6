@@ -2468,7 +2468,10 @@ namespace System.Data.Entity.Core.Objects
             if (0 < entriesAffected)
             {
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-                entriesAffected = executionStrategy.Execute(() => SaveChangesToStore(options));
+                entriesAffected = executionStrategy.Execute(
+                    () => SaveChangesToStore(
+                        options,
+                        throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions));
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -2489,8 +2492,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     An asynchronous version of SaveChanges, which
-        ///     persists all updates to the store.
+        ///     An asynchronous version of SaveChanges, which persists all updates to the store.
         /// </summary>
         /// <param name="options"> Describes behavior options of SaveChanges </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
@@ -2506,9 +2508,10 @@ namespace System.Data.Entity.Core.Objects
             if (0 < entriesAffected)
             {
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-                entriesAffected = await
-                                  executionStrategy.ExecuteAsync(() => SaveChangesToStoreAsync(options, cancellationToken))
-                                                   .ConfigureAwait(continueOnCapturedContext: false);
+                entriesAffected = await executionStrategy.ExecuteAsync(
+                    () => SaveChangesToStoreAsync(options,
+                              /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions, cancellationToken))
+                                                         .ConfigureAwait(continueOnCapturedContext: false);
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -2539,7 +2542,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private int SaveChangesToStore(SaveOptions options)
+        private int SaveChangesToStore(SaveOptions options, bool throwOnExistingTransaction)
         {
             // get data adapter
             if (_adapter == null)
@@ -2556,7 +2559,9 @@ namespace System.Data.Entity.Core.Objects
             if (_commandInterceptor == null
                 || !_commandInterceptor.IsEnabled)
             {
-                entriesAffected = ExecuteInTransaction(() => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true));
+                entriesAffected = ExecuteInTransaction(
+                    () => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true), throwOnExistingTransaction, startLocalTransaction: true);
+                ReleaseConnection();
             }
             else
             {
@@ -2582,7 +2587,8 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        private async Task<int> SaveChangesToStoreAsync(SaveOptions options, CancellationToken cancellationToken)
+        private async Task<int> SaveChangesToStoreAsync(
+            SaveOptions options, bool throwOnExistingTransaction, CancellationToken cancellationToken)
         {
             if (_adapter == null)
             {
@@ -2594,21 +2600,11 @@ namespace System.Data.Entity.Core.Objects
             _adapter.Connection = Connection;
             _adapter.CommandTimeout = CommandTimeout;
 
-            int entriesAffected;
-            if (_commandInterceptor == null
-                || !_commandInterceptor.IsEnabled)
-            {
-                entriesAffected = await
-                                  ExecuteInTransactionAsync(
-                                      () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken),
-                                      cancellationToken)
-                                      .ConfigureAwait(continueOnCapturedContext: false);
-            }
-            else
-            {
-                entriesAffected =
-                    await _adapter.UpdateAsync(ObjectStateManager, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            }
+            var entriesAffected = await ExecuteInTransactionAsync(
+                () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken), throwOnExistingTransaction,
+                    /*startLocalTransaction:*/ true, cancellationToken)
+                                            .ConfigureAwait(continueOnCapturedContext: false);
+            ReleaseConnection();
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
@@ -2631,21 +2627,36 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion //SaveChanges
 
-        private T ExecuteInTransaction<T>(Func<T> func)
+        /// <summary>
+        ///     Executes a function in a local transaction and returns the result.
+        /// </summary>
+        /// <remarks>
+        ///     A local transaction is created only if there are no existing local nor ambient transactions.
+        ///     This method will ensure that the connection is opened and release it if an exception is thrown.
+        ///     The caller is responsible of releasing the connection if no exception is thrown.
+        /// </remarks>
+        /// <typeparam name="T"> Type of the result. </typeparam>
+        /// <param name="func"> The function to invoke. </param>
+        /// <param name="throwOnExistingTransaction"> Wheather to throw on an existing transaction. </param>
+        /// <param name="startLocalTransaction"> Wheather should start a new local transaction when there's no existing one. </param>
+        /// <returns> The result from invoking <paramref name="func"/>. </returns>
+        internal virtual T ExecuteInTransaction<T>(Func<T> func, bool throwOnExistingTransaction, bool startLocalTransaction)
         {
-            // determine what transaction to enlist in
-            var needLocalTransaction = false;
             EnsureConnection();
+
+            var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;
-            if (null == connection.CurrentTransaction
-                && !connection.EnlistedInUserTransaction)
+            if (connection.CurrentTransaction == null
+                && !connection.EnlistedInUserTransaction
+                && _lastTransaction == null)
             {
-                // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                // on the current SysTx transaction so we don't need to construct a local
-                // transaction.
-                needLocalTransaction = (_lastTransaction == null);
+                needLocalTransaction = startLocalTransaction;
             }
-            // else the user already has his own local transaction going; user will do the abort or commit.
+            else if (throwOnExistingTransaction)
+            {
+                throw Error.ExecutionStrategy_ExistingTransaction();
+            }
+            // else the caller already has his own local transaction going; caller will do the abort or commit.
 
             DbTransaction localTransaction = null;
             try
@@ -2658,14 +2669,19 @@ namespace System.Data.Entity.Core.Objects
 
                 var result = func();
 
-                if (needLocalTransaction)
+                if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
                     localTransaction.Commit();
                 }
-                // else on success with no exception is thrown, user generally commits the transaction
+                // else on success with no exception is thrown, caller generally commits the transaction
 
                 return result;
+            }
+            catch (Exception)
+            {
+                ReleaseConnection();
+                throw;
             }
             finally
             {
@@ -2674,29 +2690,45 @@ namespace System.Data.Entity.Core.Objects
                     // we started the local transaction; so it requires disposal (rollback if not previously committed
                     localTransaction.Dispose();
                 }
-                // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
-
-                ReleaseConnection();
+                // else on failure with an exception being thrown, caller generally aborts (default action with transaction without an explict commit)
             }
         }
 
 #if !NET40
 
-        private async Task<T> ExecuteInTransactionAsync<T>(Func<Task<T>> func, CancellationToken cancellationToken)
+        /// <summary>
+        ///     An asynchronous version of ExecuteStoreQuery, which
+        ///     executes a function in a local transaction and returns the result.
+        /// </summary>
+        /// <remarks>
+        ///     A local transaction is created only if there are no existing local nor ambient transactions.
+        ///     This method will ensure that the connection is opened and release it if an exception is thrown.
+        ///     The caller is responsible of releasing the connection if no exception is thrown.
+        /// </remarks>
+        /// <typeparam name="T"> Type of the result. </typeparam>
+        /// <param name="func"> The function to invoke. </param>
+        /// <param name="throwOnExistingTransaction"> Wheather to throw on an existing transaction. </param>
+        /// <param name="startLocalTransaction"> Wheather should start a new local transaction when there's no existing one. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task containing the result from invoking <paramref name="func"/>. </returns>
+        internal virtual async Task<T> ExecuteInTransactionAsync<T>(
+            Func<Task<T>> func, bool throwOnExistingTransaction, bool startLocalTransaction, CancellationToken cancellationToken)
         {
-            // determine what transaction to enlist in
-            var needLocalTransaction = false;
             await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+
+            var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;
-            if (null == connection.CurrentTransaction
-                && !connection.EnlistedInUserTransaction)
+            if (connection.CurrentTransaction == null
+                && !connection.EnlistedInUserTransaction
+                && _lastTransaction == null)
             {
-                // If there isn't a local transaction started by the user, we'll attempt to enlist 
-                // on the current SysTx transaction so we don't need to construct a local
-                // transaction.
-                needLocalTransaction = (_lastTransaction == null);
+                needLocalTransaction = startLocalTransaction;
             }
-            // else the user already has his own local transaction going; user will do the abort or commit.
+            else if (throwOnExistingTransaction)
+            {
+                throw Error.ExecutionStrategy_ExistingTransaction();
+            }
+            // else the caller already has his own local transaction going; caller will do the abort or commit.
 
             DbTransaction localTransaction = null;
             try
@@ -2709,14 +2741,19 @@ namespace System.Data.Entity.Core.Objects
 
                 var result = await func().ConfigureAwait(continueOnCapturedContext: false);
 
-                if (needLocalTransaction)
+                if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
                     localTransaction.Commit();
                 }
-                // else on success with no exception is thrown, user generally commits the transaction
+                // else on success with no exception is thrown, caller generally commits the transaction
 
                 return result;
+            }
+            catch (Exception)
+            {
+                ReleaseConnection();
+                throw;
             }
             finally
             {
@@ -2725,9 +2762,7 @@ namespace System.Data.Entity.Core.Objects
                     // we started the local transaction; so it requires disposal (rollback if not previously committed
                     localTransaction.Dispose();
                 }
-                // else on failure with an exception being thrown, user generally aborts (default action with transaction without an explict commit)
-
-                ReleaseConnection();
+                // else on failure with an exception being thrown, caller generally aborts (default action with transaction without an explict commit)
             }
         }
 
@@ -3030,7 +3065,8 @@ namespace System.Data.Entity.Core.Objects
 
             if (executionOptions.Streaming)
             {
-                return MaterializedDataRecord<TElement>(entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true);
+                return MaterializedDataRecord<TElement>(
+                    entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true);
             }
             else
             {
@@ -3039,7 +3075,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
                     var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
-                    
+
                     bufferedReader = new BufferedDataReader(storeReader);
                     bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
                 }
@@ -3443,7 +3479,7 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
-            return ExecuteStoreQueryInternal<TElement>(
+            return ExecuteStoreQueryReliably<TElement>(
                 commandText, /*entitySetName:*/null, ExecutionOptions.Default, parameters);
         }
 
@@ -3461,7 +3497,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, ExecutionOptions executionOptions, params object[] parameters)
         {
-            return ExecuteStoreQueryInternal<TElement>(
+            return ExecuteStoreQueryReliably<TElement>(
                 commandText, /*entitySetName:*/null, executionOptions, parameters);
         }
 
@@ -3481,7 +3517,7 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TElement>(
+            return ExecuteStoreQueryReliably<TElement>(
                 commandText, entitySetName, new ExecutionOptions(mergeOption, streaming: false), parameters);
         }
 
@@ -3501,12 +3537,12 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            return ExecuteStoreQueryInternal<TElement>(commandText, entitySetName, executionOptions, parameters);
+            return ExecuteStoreQueryReliably<TElement>(commandText, entitySetName, executionOptions, parameters);
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Buffer disposed by the returned ObjectResult")]
-        private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
+        private ObjectResult<TElement> ExecuteStoreQueryReliably<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
             // Ensure the assembly containing the entity's CLR type
@@ -3519,8 +3555,18 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            EnsureConnection();
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            return executionStrategy.Execute(
+                () => ExecuteInTransaction(
+                    () => ExecuteStoreQueryInternal<TElement>(
+                        commandText, entitySetName, executionOptions, parameters),
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
+        }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by ObjectResult")]
+        private ObjectResult<TElement> ExecuteStoreQueryInternal<TElement>(
+            string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
+        {
             DbDataReader reader = null;
             try
             {
@@ -3542,7 +3588,6 @@ namespace System.Data.Entity.Core.Objects
                     reader.Dispose();
                 }
 
-                ReleaseConnection();
                 throw;
             }
 
@@ -3563,7 +3608,6 @@ namespace System.Data.Entity.Core.Objects
                     bufferedReader.Dispose();
                 }
 
-                ReleaseConnection();
                 throw;
             }
         }
@@ -3603,7 +3647,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteStoreQueryInternalAsync<TElement>(
+            return ExecuteStoreQueryReliablyAsync<TElement>(
                 commandText, /*entitySetName:*/null, ExecutionOptions.Default, cancellationToken, parameters);
         }
 
@@ -3623,7 +3667,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, ExecutionOptions executionOptions, params object[] parameters)
         {
-            return ExecuteStoreQueryInternalAsync<TElement>(
+            return ExecuteStoreQueryReliablyAsync<TElement>(
                 commandText, /*entitySetName:*/null, executionOptions, CancellationToken.None, parameters);
         }
 
@@ -3644,7 +3688,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, ExecutionOptions executionOptions, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteStoreQueryInternalAsync<TElement>(
+            return ExecuteStoreQueryReliablyAsync<TElement>(
                 commandText, /*entitySetName:*/null, executionOptions, cancellationToken, parameters);
         }
 
@@ -3689,11 +3733,11 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotEmpty(entitySetName, "entitySetName");
 
-            return ExecuteStoreQueryInternalAsync<TElement>(
+            return ExecuteStoreQueryReliablyAsync<TElement>(
                 commandText, entitySetName, executionOption, cancellationToken, parameters);
         }
 
-        private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(
+        private Task<ObjectResult<TElement>> ExecuteStoreQueryReliablyAsync<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, CancellationToken cancellationToken,
             params object[] parameters)
         {
@@ -3707,8 +3751,20 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            return executionStrategy.ExecuteAsync(
+                () => ExecuteInTransactionAsync(
+                    () => ExecuteStoreQueryInternalAsync<TElement>(
+                        commandText, entitySetName, executionOptions, cancellationToken, parameters),
+                    /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                    /*startLocalTransaction:*/ false, cancellationToken),
+                cancellationToken);
+        }
 
+        private async Task<ObjectResult<TElement>> ExecuteStoreQueryInternalAsync<TElement>(
+            string commandText, string entitySetName, ExecutionOptions executionOptions,
+            CancellationToken cancellationToken, params object[] parameters)
+        {
             DbDataReader reader = null;
             try
             {
@@ -3730,7 +3786,6 @@ namespace System.Data.Entity.Core.Objects
                     reader.Dispose();
                 }
 
-                ReleaseConnection();
                 throw;
             }
 
@@ -3742,7 +3797,7 @@ namespace System.Data.Entity.Core.Objects
 
                 bufferedReader = new BufferedDataReader(reader);
                 await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                                    .ConfigureAwait(continueOnCapturedContext: false);
                 return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
             }
             catch
@@ -3752,7 +3807,6 @@ namespace System.Data.Entity.Core.Objects
                     bufferedReader.Dispose();
                 }
 
-                ReleaseConnection();
                 throw;
             }
         }
@@ -3805,7 +3859,7 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TEntity), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TEntity>(reader, entitySetName, mergeOption, false);
+            return InternalTranslate<TEntity>(reader, entitySetName, mergeOption, readerOwned: false);
         }
 
         private ObjectResult<TElement> InternalTranslate<TElement>(

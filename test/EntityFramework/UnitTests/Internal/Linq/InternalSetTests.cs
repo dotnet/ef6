@@ -10,7 +10,7 @@ namespace System.Data.Entity.Internal.Linq
     using Moq;
     using Xunit;
 
-    public class InternalSetTests
+    public class InternalSetTests : TestBase
     {
         [Fact]
         public void ExecuteSqlQuery_delegates_lazily_with_noTracking_and_buffering()

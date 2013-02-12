@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -673,39 +674,26 @@ namespace System.Data.Entity.Core.Objects
 
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
-            QueryState.ObjectContext.EnsureConnection();
-
-            try
-            {
-                var execPlan = QueryState.GetExecutionPlan(forMergeOption);
-                return execPlan.Execute<T>(QueryState.ObjectContext, QueryState.Parameters);
-            }
-            catch
-            {
-                QueryState.ObjectContext.ReleaseConnection();
-                throw;
-            }
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+            return executionStrategy.Execute(
+                () => QueryState.ObjectContext.ExecuteInTransaction(
+                    () => QueryState.GetExecutionPlan(forMergeOption)
+                                    .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
         }
 
 #if !NET40
 
-        private async Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
+        private Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
         {
-            await QueryState.ObjectContext.EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
-            try
-            {
-                var execPlan = QueryState.GetExecutionPlan(forMergeOption);
-                return
-                    await
-                    execPlan.ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken).ConfigureAwait(
-                        continueOnCapturedContext: false);
-            }
-            catch
-            {
-                QueryState.ObjectContext.ReleaseConnection();
-                throw;
-            }
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+            return executionStrategy.ExecuteAsync(
+                () => QueryState.ObjectContext.ExecuteInTransactionAsync(
+                    () => QueryState.GetExecutionPlan(forMergeOption)
+                                    .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
+                    /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                    /*startLocalTransaction:*/ true, cancellationToken),
+                cancellationToken);
         }
 
 #endif
