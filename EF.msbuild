@@ -40,6 +40,9 @@
         <MSBuild Targets="Rebuild" 
                  Projects="$(SolutionFile)"
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
+        <MSBuild Targets="Rebuild" 
+                 Projects="$(SolutionFile)"
+                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
