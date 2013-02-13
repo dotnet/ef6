@@ -12,13 +12,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         {
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
             var manyToManyNavigationPropertyConfiguration
-                = new ManyToManyNavigationPropertyConfiguration(navigationPropertyConfiguration);
+                = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
 
             manyToManyNavigationPropertyConfiguration.Map(c => c.ToTable("Foo"));
 
             Assert.NotNull(navigationPropertyConfiguration.AssociationMappingConfiguration);
             Assert.IsType<ManyToManyAssociationMappingConfiguration>(
                 navigationPropertyConfiguration.AssociationMappingConfiguration);
+        }
+
+        [Fact]
+        public void MapToFunctions_when_no_configuration_should_create_empty_configuration()
+        {
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var manyToManyNavigationPropertyConfiguration
+                = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
+
+            manyToManyNavigationPropertyConfiguration.MapToFunctions();
+
+            Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);
+        }
+
+        [Fact]
+        public void MapToFunctions_when_configuration_should_assign_configuration_to_nav_prop_configuration()
+        {
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var manyToManyNavigationPropertyConfiguration
+                = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
+
+            var called = false;
+
+            manyToManyNavigationPropertyConfiguration.MapToFunctions(m => { called = true; });
+
+            Assert.True(called);
+            Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);
         }
     }
 }

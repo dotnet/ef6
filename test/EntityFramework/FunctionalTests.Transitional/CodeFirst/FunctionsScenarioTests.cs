@@ -150,14 +150,17 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<Tag>().MapToFunctions();
-                    modelBuilder.Entity<ProductA>().MapToFunctions();
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToFunctions();
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
                     databaseMapping.AssertValid();
 
-                    Assert.Equal(8, databaseMapping.Database.Functions.Count());
+                    Assert.Equal(2, databaseMapping.Database.Functions.Count());
 
                     var functionMapping
                         = databaseMapping
@@ -451,99 +454,244 @@ namespace FunctionalTests
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }
-            }
 
-            public class AdvancedMapping : AdvancedMappingScenarioTests
-            {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                [Fact]
+                public void Can_configure_many_to_many_modification_functions()
                 {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToFunctions(
+                            map =>
+                                {
+                                    map.InsertFunction(
+                                        f =>
+                                            {
+                                                f.HasName("ins_product_tag");
+                                                f.LeftKeyParameter(t => t.Id).HasName("tag_id");
+                                                f.RightKeyParameter(p => p.Id).HasName("product_id");
+                                            });
+                                    map.DeleteFunction(
+                                        f =>
+                                            {
+                                                f.HasName("del_product_tag");
+                                                f.LeftKeyParameter(t => t.Id).HasName("tag_id");
+                                                f.RightKeyParameter(p => p.Id).HasName("product_id");
+                                            });
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Equal(2, databaseMapping.Database.Functions.Count());
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .AssociationSetMappings
+                            .Select(asm => asm.ModificationFunctionMapping)
+                            .Single();
+
+                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
+                }
+
+                [Fact]
+                public void Can_configure_many_to_many_modification_functions_from_both_ends()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToFunctions(
+                            map => map.InsertFunction(
+                                f =>
+                                    {
+                                        f.HasName("ins_product_tag");
+                                        f.LeftKeyParameter(t => t.Id).HasName("tag_id");
+                                    }));
+
+                    modelBuilder
+                        .Entity<ProductA>()
+                        .HasMany(p => p.Tags)
+                        .WithMany(t => t.Products)
+                        .MapToFunctions(
+                            map => map.DeleteFunction(
+                                f =>
+                                    {
+                                        f.HasName("del_product_tag");
+                                        f.LeftKeyParameter(p => p.Id).HasName("product_id");
+                                        f.RightKeyParameter(t => t.Id).HasName("tag_id");
+                                    }));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Equal(2, databaseMapping.Database.Functions.Count());
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .AssociationSetMappings
+                            .Select(asm => asm.ModificationFunctionMapping)
+                            .Single();
+
+                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
+                }
+
+                [Fact]
+                public void Configuring_parameter_when_not_valid_for_many_to_many_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToFunctions(
+                            map => map.InsertFunction(
+                                f => f.LeftKeyParameter(t => t.Name).HasName("tag_id")));
+
+                    Assert.Equal(
+                        Strings.ModificationFunctionParameterNotFound("Name", "Tag_Products_Insert"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
+                }
+
+                [Fact]
+                public void Configuring_parameter_when_conflicting_configuration_for_many_to_many_should_throw()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToFunctions(
+                            map => map.InsertFunction(f => f.HasName("ins_product_tag")));
+
+                    modelBuilder
+                        .Entity<ProductA>()
+                        .HasMany(p => p.Tags)
+                        .WithMany(t => t.Products)
+                        .MapToFunctions(
+                            map => map.InsertFunction(f => f.HasName("boom")));
+
+                    Assert.Equal(
+                        Strings.ConflictingFunctionsMapping("Tags", "FunctionalTests.ProductA"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => BuildMapping(modelBuilder)).Message);
                 }
             }
+        }
 
-            public class Associations : AssociationScenarioTests
+        public class AdvancedMapping : AdvancedMappingScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+            }
+        }
+
+        public class Associations : AssociationScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+            }
+        }
+
+        public class BasicMapping : BasicMappingScenarioTests
+        {
+            public override void Abstract_in_middle_of_hierarchy_with_TPC()
+            {
+                //TODO: Bug #842
             }
 
-            public class BasicMapping : BasicMappingScenarioTests
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                public override void Abstract_in_middle_of_hierarchy_with_TPC()
-                {
-                    //TODO: Bug #842
-                }
-
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class ComplexTypes : ComplexTypeScenarioTests
+        public class ComplexTypes : ComplexTypeScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class Configuration : ConfigurationScenarioTests
+        public class Configuration : ConfigurationScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class Conventions : ConventionsScenarioTests
+        public class Conventions : ConventionsScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class DataAnnotations : DataAnnotationScenarioTests
+        public class DataAnnotations : DataAnnotationScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class Enums : EnumsScenarioTests
+        public class Enums : EnumsScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class Inheritance : InheritanceScenarioTests
+        public class Inheritance : InheritanceScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class PropertyConfiguration : PropertyConfigurationScenarioTests
+        public class PropertyConfiguration : PropertyConfigurationScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
+        }
 
-            public class Spatial : SpatialScenarioTests
+        public class Spatial : SpatialScenarioTests
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    modelBuilder.Entities().Configure(c => c.MapToFunctions());
-                }
+                modelBuilder.Entities().Configure(c => c.MapToFunctions());
             }
         }
     }

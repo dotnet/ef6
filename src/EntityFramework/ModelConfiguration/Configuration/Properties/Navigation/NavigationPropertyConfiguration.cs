@@ -2,12 +2,15 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
@@ -22,6 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private RelationshipMultiplicity? _inverseEndKind;
         private ConstraintConfiguration _constraint;
         private AssociationMappingConfiguration _associationMappingConfiguration;
+        private ModificationFunctionsConfiguration _modificationFunctionsConfiguration;
 
         internal NavigationPropertyConfiguration(PropertyInfo navigationProperty)
         {
@@ -39,14 +43,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             _inverseNavigationProperty = source._inverseNavigationProperty;
             _inverseEndKind = source._inverseEndKind;
 
-            _constraint = source._constraint == null ? null : source._constraint.Clone();
+            _constraint = source._constraint == null
+                              ? null
+                              : source._constraint.Clone();
 
-            _associationMappingConfiguration = source._associationMappingConfiguration == null
-                                                   ? null
-                                                   : source._associationMappingConfiguration.Clone();
+            _associationMappingConfiguration
+                = source._associationMappingConfiguration == null
+                      ? null
+                      : source._associationMappingConfiguration.Clone();
 
             DeleteAction = source.DeleteAction;
             IsNavigationPropertyDeclaringTypePrincipal = source.IsNavigationPropertyDeclaringTypePrincipal;
+
+            _modificationFunctionsConfiguration
+                = source._modificationFunctionsConfiguration == null
+                      ? null
+                      : source._modificationFunctionsConfiguration.Clone();
         }
 
         internal virtual NavigationPropertyConfiguration Clone()
@@ -140,6 +152,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
+        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
+        {
+            get { return _modificationFunctionsConfiguration; }
+            set
+            {
+                DebugCheck.NotNull(value);
+
+                _modificationFunctionsConfiguration = value;
+            }
+        }
+
         internal void Configure(
             NavigationProperty navigationProperty, EdmModel model, EntityTypeConfiguration entityTypeConfiguration)
         {
@@ -166,10 +189,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             ConfigureDependentBehavior(associationType, model, entityTypeConfiguration);
         }
 
-        internal void Configure(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
+        internal void Configure(
+            StorageAssociationSetMapping associationSetMapping,
+            DbDatabaseMapping databaseMapping,
+            DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(associationSetMapping);
             DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(providerManifest);
 
             // We may apply configuration twice from two different NavigationPropertyConfiguration objects,
             // but that should be okay since they were validated as consistent above.
@@ -180,7 +207,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 // consistency when processing the configuration above.
                 associationSetMapping.SetConfiguration(this);
 
-                AssociationMappingConfiguration.Configure(associationSetMapping, databaseMapping.Database, _navigationProperty);
+                AssociationMappingConfiguration
+                    .Configure(associationSetMapping, databaseMapping.Database, _navigationProperty);
+            }
+
+            if (_modificationFunctionsConfiguration != null)
+            {
+                if (associationSetMapping.ModificationFunctionMapping == null)
+                {
+                    new ModificationFunctionMappingGenerator(providerManifest)
+                        .Generate(associationSetMapping, databaseMapping);
+                }
+
+                _modificationFunctionsConfiguration.Configure(associationSetMapping.ModificationFunctionMapping);
             }
         }
 
@@ -246,6 +285,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ValidateConsistency(NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
             DebugCheck.NotNull(navigationPropertyConfiguration);
@@ -293,8 +333,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             if ((navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal != null)
                 && (IsNavigationPropertyDeclaringTypePrincipal != null)
-                &&
-                navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal
+                && navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal
                 == IsNavigationPropertyDeclaringTypePrincipal)
             {
                 throw Error.ConflictingConstraint(
@@ -303,11 +342,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             if ((navigationPropertyConfiguration.AssociationMappingConfiguration != null)
                 && (AssociationMappingConfiguration != null)
-                &&
-                !Equals(
+                && !Equals(
                     navigationPropertyConfiguration.AssociationMappingConfiguration, AssociationMappingConfiguration))
             {
                 throw Error.ConflictingMapping(
+                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+            }
+
+            if ((navigationPropertyConfiguration.ModificationFunctionsConfiguration != null)
+                && (ModificationFunctionsConfiguration != null)
+                && !navigationPropertyConfiguration.ModificationFunctionsConfiguration.IsCompatibleWith(ModificationFunctionsConfiguration))
+            {
+                throw Error.ConflictingFunctionsMapping(
                     NavigationProperty.Name, NavigationProperty.ReflectedType);
             }
         }

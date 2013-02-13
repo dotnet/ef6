@@ -23,6 +23,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
 
+            if (entityType.Abstract)
+            {
+                return;
+            }
+
             var entitySet = databaseMapping.Model.GetEntitySet(entityType);
 
             Debug.Assert(entitySet != null);

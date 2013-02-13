@@ -98,5 +98,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     .Configure(modificationFunctionMapping.DeleteFunctionMapping);
             }
         }
+
+        public void Configure(StorageAssociationSetModificationFunctionMapping modificationFunctionMapping)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            if (_insertModificationFunctionConfiguration != null)
+            {
+                _insertModificationFunctionConfiguration
+                    .Configure(modificationFunctionMapping.InsertFunctionMapping);
+            }
+
+            if (_deleteModificationFunctionConfiguration != null)
+            {
+                _deleteModificationFunctionConfiguration
+                    .Configure(modificationFunctionMapping.DeleteFunctionMapping);
+            }
+        }
+
+        public bool IsCompatibleWith(ModificationFunctionsConfiguration other)
+        {
+            DebugCheck.NotNull(other);
+
+            if ((_insertModificationFunctionConfiguration != null)
+                && (other._insertModificationFunctionConfiguration != null)
+                && !_insertModificationFunctionConfiguration.IsCompatibleWith(other._insertModificationFunctionConfiguration))
+            {
+                return false;
+            }
+
+            if ((_deleteModificationFunctionConfiguration != null)
+                && (other._deleteModificationFunctionConfiguration != null)
+                && !_deleteModificationFunctionConfiguration.IsCompatibleWith(other._deleteModificationFunctionConfiguration))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

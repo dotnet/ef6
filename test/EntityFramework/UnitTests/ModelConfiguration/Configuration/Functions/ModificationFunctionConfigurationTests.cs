@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                             new StorageModificationFunctionParameterBinding(
                                 functionParameter1,
                                 new StorageModificationFunctionMemberPath(
-                                new[] { property1 },
+                                new EdmMember[] { property1, new AssociationEndMember("AE", new EntityType()) },
                                 null),
                                 false),
                             new StorageModificationFunctionParameterBinding(
@@ -310,6 +310,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               new StorageModificationFunctionParameterBinding[0],
                               null,
                               null))).Message);
+        }
+
+        [Fact]
+        public void IsCompatibleWith_should_return_true_when_name_and_parameters_compatible()
+        {
+            var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
+
+            Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
+
+            modificationFunctionConfiguration1.HasName("P");
+
+            Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
+
+            modificationFunctionConfiguration2.HasName("P");
+
+            Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
+
+            var mockPropertyInfo1 = new MockPropertyInfo(typeof(int), "I");
+            var mockPropertyInfo2 = new MockPropertyInfo(typeof(string), "S");
+            var mockPropertyInfo3 = new MockPropertyInfo(typeof(bool), "B");
+
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo1));
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo2));
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo3));
+
+            Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
+
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo3));
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo2));
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo1));
+
+            Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
         }
     }
 }

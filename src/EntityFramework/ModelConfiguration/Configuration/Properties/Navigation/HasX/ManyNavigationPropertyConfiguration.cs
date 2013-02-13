@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public ManyToManyNavigationPropertyConfiguration WithMany(
+        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> WithMany(
             Expression<Func<TTargetEntityType, ICollection<TEntityType>>> navigationPropertyExpression)
         {
             Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
@@ -53,11 +53,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the relationship to be many:many without a navigation property on the other side of the relationship.
         /// </summary>
         /// <returns> A configuration object that can be used to further configure the relationship. </returns>
-        public ManyToManyNavigationPropertyConfiguration WithMany()
+        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> WithMany()
         {
             _navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity.Many;
 
-            return new ManyToManyNavigationPropertyConfiguration(_navigationPropertyConfiguration);
+            return new ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType>(_navigationPropertyConfiguration);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -201,7 +202,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         .ParameterBindings
                         .Where(
                             pb => parameterKey.PropertyPath.Equals(
-                                new PropertyPath(pb.MemberPath.Members.Select(m => m.GetClrPropertyInfo()))))
+                                new PropertyPath(
+                                      pb.MemberPath.Members
+                                        .OfType<EdmProperty>()
+                                        .Select(m => m.GetClrPropertyInfo()))))
                         .ToList();
 
                 var parameterBinding
@@ -246,6 +250,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 resultBinding.ColumnName = columnName;
             }
+        }
+
+        public bool IsCompatibleWith(ModificationFunctionConfiguration other)
+        {
+            if ((_name != null)
+                && (other._name != null)
+                && !string.Equals(_name, other._name, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return !_parameterConfigurations
+                        .Join(
+                            other._parameterConfigurations,
+                            kv1 => kv1.Key,
+                            kv2 => kv2.Key,
+                            (kv1, kv2) => !Equals(kv1.Value, kv2.Value))
+                        .Any(j => j);
         }
     }
 }

@@ -13548,6 +13548,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.NoRowsAffectedParameter, p0);
         }
+
+        /// <summary>
+        /// A string like "The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information."
+        /// </summary>
+        internal static string ConflictingFunctionsMapping(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingFunctionsMapping, p0, p1);
+        }
     } 
 
     /// <summary>
@@ -15307,6 +15315,14 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.NoRowsAffectedParameter(p0));
         }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information."
+        /// </summary>
+        internal static Exception ConflictingFunctionsMapping(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ConflictingFunctionsMapping(p0, p1));
+        }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -17032,6 +17048,7 @@ namespace System.Data.Entity.Resources
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
         internal const string NoRowsAffectedParameter = "NoRowsAffectedParameter";
+        internal const string ConflictingFunctionsMapping = "ConflictingFunctionsMapping";
         
         static EntityRes loader = null;
         ResourceManager resources;

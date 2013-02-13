@@ -690,7 +690,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         [Fact]
         public void NavigationPropertyConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<NavigationPropertyConfiguration>(8);
+            VerifyFieldCount<NavigationPropertyConfiguration>(9);
         }
 
         [Fact]
@@ -726,6 +726,22 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
 
             Assert.NotSame(configuration.AssociationMappingConfiguration, clone.AssociationMappingConfiguration);
             Assert.Equal(configuration.AssociationMappingConfiguration, clone.AssociationMappingConfiguration);
+        }
+
+        [Fact]
+        public void Cloning_a_navigation_property_configuration_clones_its_function_mapping_configuration()
+        {
+            var navProp = new MockPropertyInfo(typeof(int), "P1");
+            var configuration = new NavigationPropertyConfiguration(navProp);
+
+            var functionsConfiguration = new ModificationFunctionsConfiguration();
+            
+            configuration.ModificationFunctionsConfiguration = functionsConfiguration;
+
+            var clone = configuration.Clone();
+
+            Assert.NotSame(configuration.ModificationFunctionsConfiguration, clone.ModificationFunctionsConfiguration);
+            Assert.True(configuration.ModificationFunctionsConfiguration.IsCompatibleWith(clone.ModificationFunctionsConfiguration));
         }
 
         [Fact]

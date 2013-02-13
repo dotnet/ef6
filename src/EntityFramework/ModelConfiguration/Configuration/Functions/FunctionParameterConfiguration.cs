@@ -55,16 +55,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.ToString();
         }
 
+        protected bool Equals(FunctionParameterConfiguration other)
+        {
+            return string.Equals(_parameterName, other._parameterName, StringComparison.OrdinalIgnoreCase);
+        }
+
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj.GetType() == GetType()
+                   && Equals((FunctionParameterConfiguration)obj);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (_parameterName != null ? _parameterName.ToUpperInvariant().GetHashCode() : 0);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]

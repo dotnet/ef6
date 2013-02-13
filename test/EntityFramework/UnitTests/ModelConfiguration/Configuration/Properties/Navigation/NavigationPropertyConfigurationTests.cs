@@ -36,7 +36,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             navigationProperty.Association.SourceEnd = new AssociationEndMember("S", new EntityType());
             navigationProperty.Association.TargetEnd = new AssociationEndMember("T", new EntityType());
 
-            navigationPropertyConfiguration.Configure(navigationProperty, new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
+            navigationPropertyConfiguration.Configure(
+                navigationProperty, new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
 
             Assert.NotNull(navigationProperty.GetConfiguration());
             Assert.NotNull(navigationProperty.Association.GetConfiguration());
@@ -188,9 +189,44 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
             associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
-            navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping);
+            navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", associationSetMapping.Table.GetTableName().Name);
+        }
+
+        [Fact]
+        public void Configure_should_configure_function_mapping()
+        {
+            var functionsConfiguration = new ModificationFunctionsConfiguration();
+            var functionConfiguration = new ModificationFunctionConfiguration();
+            functionConfiguration.HasName("Func");
+            functionsConfiguration.InsertFunction(functionConfiguration);
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            var navigationPropertyConfiguration
+                = new NavigationPropertyConfiguration(mockPropertyInfo)
+                      {
+                          ModificationFunctionsConfiguration = functionsConfiguration
+                      };
+
+            var databaseMapping
+                = new DbDatabaseMapping()
+                    .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
+
+            var associationSetMapping = databaseMapping.AddAssociationSetMapping(
+                new AssociationSet("AS", new AssociationType()), new EntitySet());
+
+            var dependentTable = databaseMapping.Database.AddTable("T");
+
+            associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
+            associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
+
+            navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal("Func", associationSetMapping.ModificationFunctionMapping.InsertFunctionMapping.Function.Name);
         }
 
         [Fact]
@@ -350,6 +386,51 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
                                 RelationshipType = associationType
                             },
                         new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
+        }
+
+        [Fact]
+        public void Configure_should_validate_consistency_of_function_configuration_when_already_configured()
+        {
+            var associationType = new AssociationType();
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+
+            var functionConfiguration1 = new ModificationFunctionConfiguration();
+            functionConfiguration1.HasName("Foo");
+
+            var functionConfiguration2 = new ModificationFunctionConfiguration();
+            functionConfiguration2.HasName("Bar");
+
+            var functionsConfiguration1 = new ModificationFunctionsConfiguration();
+
+            functionsConfiguration1.InsertFunction(functionConfiguration1);
+
+            var functionsConfiguration2 = new ModificationFunctionsConfiguration();
+
+            functionsConfiguration2.InsertFunction(functionConfiguration2);
+
+            var navigationPropertyConfigurationA
+                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                      {
+                          ModificationFunctionsConfiguration = functionsConfiguration1
+                      };
+
+            associationType.SetConfiguration(navigationPropertyConfigurationA);
+
+            var navigationPropertyConfigurationB
+                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                      {
+                          ModificationFunctionsConfiguration = functionsConfiguration2
+                      };
+
+            Assert.Equal(
+                Strings.ConflictingFunctionsMapping("P", typeof(object)),
+                Assert.Throws<InvalidOperationException>(
+                    () => navigationPropertyConfigurationB.Configure(
+                        new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
+                            {
+                                RelationshipType = associationType
+                            }, new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)))).Message);
         }
 
         [Fact]

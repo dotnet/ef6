@@ -10,6 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -566,11 +567,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
-            ConfigureAssociationMappings(databaseMapping, entityType);
+            ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
             ConfigureDependentKeys(databaseMapping, providerManifest);
 
             if (_modificationFunctionsConfiguration != null)
             {
+                new ModificationFunctionMappingGenerator(providerManifest)
+                    .Generate(entityType, databaseMapping);
+
                 var modificationFunctionMapping
                     = databaseMapping.GetEntitySetMappings()
                                      .SelectMany(esm => esm.ModificationFunctionMappings)
@@ -608,9 +612,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private void ConfigureAssociationMappings(DbDatabaseMapping databaseMapping, EntityType entityType)
+        private void ConfigureAssociationMappings(DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(providerManifest);
 
             foreach (var configuration in _navigationPropertyConfigurations)
             {
@@ -629,7 +635,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 if (associationSetMapping != null)
                 {
-                    navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping);
+                    navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, providerManifest);
                 }
             }
         }

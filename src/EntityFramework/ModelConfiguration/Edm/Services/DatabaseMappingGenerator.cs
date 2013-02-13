@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -38,7 +37,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             GenerateEntityTypes(databaseMapping);
             GenerateDiscriminators(databaseMapping);
             GenerateAssociationTypes(databaseMapping);
-            GenerateModificationFunctions(databaseMapping);
 
             return databaseMapping;
         }
@@ -117,45 +115,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 new AssociationTypeMappingGenerator(_providerManifest)
                     .Generate(associationType, databaseMapping);
             }
-        }
-
-        private void GenerateModificationFunctions(DbDatabaseMapping databaseMapping)
-        {
-            DebugCheck.NotNull(databaseMapping);
-
-            var functionMappingGenerator
-                = new ModificationFunctionMappingGenerator(_providerManifest);
-
-            foreach (var entityType in databaseMapping.Model.EntityTypes)
-            {
-                if (!entityType.Abstract)
-                {
-                    if (IsMappedToFunctions(entityType))
-                    {
-                        functionMappingGenerator.Generate(entityType, databaseMapping);
-                    }
-                }
-            }
-
-            foreach (var associationSetMapping in databaseMapping.GetAssociationSetMappings())
-            {
-                if (associationSetMapping.AssociationSet.ElementType.IsManyToMany()
-                    && IsMappedToFunctions(associationSetMapping.AssociationSet.SourceSet.ElementType)
-                    && IsMappedToFunctions(associationSetMapping.AssociationSet.TargetSet.ElementType))
-                {
-                    functionMappingGenerator.Generate(associationSetMapping, databaseMapping);
-                }
-            }
-        }
-
-        private static bool IsMappedToFunctions(EntityType entityType)
-        {
-            DebugCheck.NotNull(entityType);
-
-            var configuration = entityType.GetRootType().GetConfiguration() as EntityTypeConfiguration;
-
-            return ((configuration != null)
-                    && configuration.IsMappedToFunctions);
         }
     }
 }
