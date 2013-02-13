@@ -1,15 +1,13 @@
-﻿
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.MetadataMapping
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.TestHelpers;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Xml;
     using System.Xml.Linq;
     using Xunit;
 
@@ -22,6 +20,7 @@ namespace System.Data.Entity.MetadataMapping
                     .GetExecutingAssembly()
                     .GetManifestResourceStream("System.Data.Entity.MetadataMapping.Enum.csdl"));
         }
+
         #region convention loader (POCO)
 
         [Fact]
@@ -68,7 +67,6 @@ namespace System.Data.Entity.MetadataMapping
             Assert.Contains(
                 Strings.Validator_UnsupportedEnumUnderlyingType("System.UInt32"),
                 exception.Message);
-
         }
 
         [Fact]
@@ -114,8 +112,8 @@ namespace System.Data.Entity.MetadataMapping
         public void Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name_POCO()
         {
             var exception = Assert.Throws<MetadataException>(
-               () =>
-               Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(true));
+                () =>
+                Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(true));
 
             Assert.Contains(
                 Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
@@ -142,8 +140,8 @@ namespace System.Data.Entity.MetadataMapping
         public void Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value_POCO()
         {
             var exception = Assert.Throws<MetadataException>(
-               () =>
-               Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(true));
+                () =>
+                Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(true));
 
             Assert.Contains(
                 Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
@@ -178,7 +176,7 @@ namespace System.Data.Entity.MetadataMapping
         public void Correct_CSpace_enum_type_is_mapped_if_multiple_OSpace_enum_types_exist_but_only_one_matches()
         {
             var additionalEnumType = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""MessageModel1"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""MessageModel1"">
     <EnumType Name=""MessageType"" IsFlags=""false"" />
 </Schema>");
 
@@ -201,7 +199,7 @@ namespace System.Data.Entity.MetadataMapping
         public void Mapping_fails_for_multiple_OSpace_enum_types_matching_the_same_CSpace_enum_type_POCO()
         {
             var additionalMatchingEnumType = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""MessageModel1"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""MessageModel1"">
   <EnumType Name=""MessageType"" IsFlags=""false"">
     <Member Name=""Express"" />
     <Member Name=""Priority"" />
@@ -266,12 +264,12 @@ namespace System.Data.Entity.MetadataMapping
             const bool isPOCO = true;
 
             var enumTypeCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
   <EnumType Name=""Enum"" IsFlags=""false"" />
 </Schema>");
 
             var entityTypeCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumModel"">
   <EntityContainer Name=""EnumModelContainer"">
     <EntitySet Name=""Entity"" EntityType=""EnumModel.Entity"" />
   </EntityContainer>
@@ -288,28 +286,30 @@ namespace System.Data.Entity.MetadataMapping
             var assemblyWithEntityType = BuildAssembly(isPOCO, entityTypeCsdl);
 
             EdmItemCollection edmItemCollection;
-
-            var workspace = new MetadataWorkspace();
             using (var enumTypeReader = enumTypeCsdl.CreateReader())
-            using (var entityTypeReader = entityTypeCsdl.CreateReader())
             {
-                edmItemCollection = 
-                    new EdmItemCollection(
-                        new XmlReader[] { enumTypeReader, entityTypeReader });
+                using (var entityTypeReader = entityTypeCsdl.CreateReader())
+                {
+                    edmItemCollection =
+                        new EdmItemCollection(
+                            new[] { enumTypeReader, entityTypeReader });
+                }
             }
-            workspace.RegisterItemCollection(edmItemCollection);
 
             var objectItemCollection = new ObjectItemCollection();
-
             objectItemCollection.LoadFromAssembly(assemblyWithEnumType, edmItemCollection);
             objectItemCollection.LoadFromAssembly(assemblyWithEntityType, edmItemCollection);
-            workspace.RegisterItemCollection(objectItemCollection);
+
+            var workspace = new MetadataWorkspace(
+                () => edmItemCollection,
+                () => null,
+                () => null,
+                () => objectItemCollection);
 
             Assert.Equal(
                 "EnumModel.Entity:EnumModel.Entity",
                 workspace.GetMap("EnumModel.Entity", DataSpace.OSpace, DataSpace.OCSpace).Identity);
         }
-
 
         #endregion
 
@@ -362,7 +362,6 @@ namespace System.Data.Entity.MetadataMapping
             Assert.Contains(
                 Strings.Validator_UnsupportedEnumUnderlyingType("System.UInt32"),
                 exception.Message);
-
         }
 
         [Fact]
@@ -372,14 +371,14 @@ namespace System.Data.Entity.MetadataMapping
                 Strings.Mapping_Object_InvalidType("MessageModel.ShippingType"),
                 Assert.Throws<InvalidOperationException>(
                     () => Cannot_map_enum_types_if_names_are_different(false)).Message);
-
         }
 
         [Fact]
         public void OSpaceEnumUnderlyingTypeDoesNotMatchCSpaceEnumUnderlyingTypeName_NonPOCO()
         {
             Assert.Contains(
-                Strings.Mapping_Enum_OCMapping_UnderlyingTypesMismatch("Int32", "MessageModel.MessageType", "Int64", "MessageModel.MessageType"),
+                Strings.Mapping_Enum_OCMapping_UnderlyingTypesMismatch(
+                    "Int32", "MessageModel.MessageType", "Int64", "MessageModel.MessageType"),
                 Assert.Throws<MappingException>(
                     () => Cannot_map_enum_types_if_underlying_types_dont_match(false)).Message);
         }
@@ -466,7 +465,7 @@ namespace System.Data.Entity.MetadataMapping
                     "MessageModel.MessageType"),
                 Assert.Throws<MappingException>(
                     () =>
-                        GetMappedType(oSpaceCsdl, EnumCsdl(), "MessageModel.Message", false)).Message);
+                    GetMappedType(oSpaceCsdl, EnumCsdl(), "MessageModel.Message", false)).Message);
         }
 
         [Fact]
@@ -478,9 +477,9 @@ namespace System.Data.Entity.MetadataMapping
                 .SetAttributeValue("Namespace", "MessageModelModified");
 
             foreach (var attribute in cSpaceCsdl
-                                        .Descendants()
-                                        .Attributes()
-                                        .Where(a => ((string)a).StartsWith("MessageModel.")))
+                .Descendants()
+                .Attributes()
+                .Where(a => ((string)a).StartsWith("MessageModel.")))
             {
                 attribute.SetValue(((string)attribute).Replace("MessageModel.", "MessageModelModified."));
             }
@@ -491,19 +490,18 @@ namespace System.Data.Entity.MetadataMapping
                 .SetAttributeValue("Name", "NewMessageType");
 
             foreach (var propertyElement in cSpaceCsdl
-                                            .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}Property")
-                                            .Where(p => (string)p.Attribute("Type") == "MessageModelModified.MessageType"))
+                .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}Property")
+                .Where(p => (string)p.Attribute("Type") == "MessageModelModified.MessageType"))
             {
                 propertyElement.SetAttributeValue("Type", "MessageModelModified.NewMessageType");
             }
 
-
             var oSpaceCsdl = EnumCsdl();
 
             foreach (var typeElement in oSpaceCsdl
-                                        .Element("{http://schemas.microsoft.com/ado/2009/11/edm}Schema")
-                                        .Elements()
-                                        .Where(e => new string[] { "EntityType", "ComplexType", "EnumType" }.Contains(e.Name.LocalName)))
+                .Element("{http://schemas.microsoft.com/ado/2009/11/edm}Schema")
+                .Elements()
+                .Where(e => new[] { "EntityType", "ComplexType", "EnumType" }.Contains(e.Name.LocalName)))
             {
                 if ((string)typeElement.Attribute("Name") == "MessageType")
                 {
@@ -568,14 +566,15 @@ namespace System.Data.Entity.MetadataMapping
             var enumTypeElement =
                 additionalMatchingEnumType.
                     Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
-                    .Single();
+                                          .Single();
 
             enumTypeElement.SetAttributeValue("{MappingTestExtension}OSpaceTypeName", "MessageType");
             enumTypeElement.SetAttributeValue("{MappingTestExtension}OSpaceTypeNamespace", "MessageModel");
 
             Assert.Equal(
                 Strings.Mapping_CannotMapCLRTypeMultipleTimes("MessageModel.MessageType"),
-                Assert.Throws<MappingException>(() =>
+                Assert.Throws<MappingException>(
+                    () =>
                     CreateMetadataWorkspace(
                         EnumCsdl(),
                         BuildAssembly(false, EnumCsdl(), additionalMatchingEnumType),
@@ -586,7 +585,7 @@ namespace System.Data.Entity.MetadataMapping
 
         private static void Verify_simple_enum_mapping(bool isPOCO)
         {
-            var workspace = PrepareModel(/* oSpaceCsdl */ EnumCsdl(), /* cSpaceCsdl */ EnumCsdl(), isPOCO);
+            var workspace = PrepareModel( /* oSpaceCsdl */ EnumCsdl(), /* cSpaceCsdl */ EnumCsdl(), isPOCO);
 
             Assert.Equal(
                 "MessageModel.MessageType:MessageModel.MessageType",
@@ -600,7 +599,7 @@ namespace System.Data.Entity.MetadataMapping
         private static void Complex_type_with_enum_property_is_mapped_correctly(bool isPOCO)
         {
             var complexType = XElement.Parse(
-@"<ComplexType Name=""Complex"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
+                @"<ComplexType Name=""Complex"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
   <Property Name=""MessageType"" Type=""MessageModel.MessageType"" Nullable=""false""/>
 </ComplexType>");
 
@@ -613,12 +612,14 @@ namespace System.Data.Entity.MetadataMapping
             csdl
                 .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EntityType")
                 .Single(e => (string)e.Attribute("Name") == "Message")
-                .Add(new XElement("{http://schemas.microsoft.com/ado/2009/11/edm}Property",
-                    new XAttribute("Name", "ComplexProperty"),
-                    new XAttribute("Type", "MessageModel.Complex"),
-                    new XAttribute("Nullable", "false")));
+                .Add(
+                    new XElement(
+                        "{http://schemas.microsoft.com/ado/2009/11/edm}Property",
+                        new XAttribute("Name", "ComplexProperty"),
+                        new XAttribute("Type", "MessageModel.Complex"),
+                        new XAttribute("Nullable", "false")));
 
-            var workspace = PrepareModel(/* oSpaceCsdl */ csdl, /* cSpaceCsdl */ csdl, isPOCO);
+            var workspace = PrepareModel( /* oSpaceCsdl */ csdl, /* cSpaceCsdl */ csdl, isPOCO);
 
             Assert.Equal(
                 "MessageModel.MessageType:MessageModel.MessageType",
@@ -640,9 +641,11 @@ namespace System.Data.Entity.MetadataMapping
                 .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
                 .Single(e => (string)e.Attribute("Name") == "ContentsType");
 
-            oSpaceEnumType.Add(new XElement("{http://schemas.microsoft.com/ado/2009/11/edm}Member",
-                        new XAttribute("Name", "LegacyType"),
-                        new XAttribute("Value", 0)));
+            oSpaceEnumType.Add(
+                new XElement(
+                    "{http://schemas.microsoft.com/ado/2009/11/edm}Member",
+                    new XAttribute("Name", "LegacyType"),
+                    new XAttribute("Value", 0)));
 
             var cSpaceCsdl = new XDocument(oSpaceCsdl);
             var cSpaceEnumType = cSpaceCsdl
@@ -769,12 +772,14 @@ namespace System.Data.Entity.MetadataMapping
             var oSpaceCsdl = EnumCsdl();
 
             var enumType = oSpaceCsdl
-               .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
-               .Single(e => (string)e.Attribute("Name") == "MessageType");
+                .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
+                .Single(e => (string)e.Attribute("Name") == "MessageType");
 
-            enumType.Add(new XElement("{http://schemas.microsoft.com/ado/2009/11/edm}Member",
-                        new XAttribute("Name", "LegacyType"),
-                        new XAttribute("Value", 0)));
+            enumType.Add(
+                new XElement(
+                    "{http://schemas.microsoft.com/ado/2009/11/edm}Member",
+                    new XAttribute("Name", "LegacyType"),
+                    new XAttribute("Value", 0)));
 
             Assert.Equal(
                 "MessageModel.Message:MessageModel.Message",
@@ -786,10 +791,10 @@ namespace System.Data.Entity.MetadataMapping
             var cSpaceCsdl = EnumCsdl();
 
             cSpaceCsdl
-               .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
-               .Single(e => (string)e.Attribute("Name") == "MessageType")
-               .Elements()
-               .Remove();
+                .Descendants("{http://schemas.microsoft.com/ado/2009/11/edm}EnumType")
+                .Single(e => (string)e.Attribute("Name") == "MessageType")
+                .Elements()
+                .Remove();
 
             Assert.Equal(
                 "MessageModel.Message:MessageModel.Message",
@@ -811,12 +816,12 @@ namespace System.Data.Entity.MetadataMapping
         private static void OSpace_enum_type_and_CSpace_entity_type_have_the_same_name(bool isPOCO)
         {
             var oSpaceCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
   <EnumType Name=""MessageType"" IsFlags=""false"" />
 </Schema>");
 
             var cSpaceCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
   <EntityType Name=""MessageType"">
     <Key>
       <PropertyRef Name=""Id"" />
@@ -831,7 +836,7 @@ namespace System.Data.Entity.MetadataMapping
         private static void OSpace_entity_type_and_CSpace_enum_type_have_the_same_name(bool isPOCO)
         {
             var oSpaceCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
   <EntityType Name=""MessageType"">
     <Key>
       <PropertyRef Name=""Id"" />
@@ -841,7 +846,7 @@ namespace System.Data.Entity.MetadataMapping
 </Schema>");
 
             var cSpaceCsdl = XDocument.Parse(
-@"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
+                @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""Model"">
   <EnumType Name=""MessageType"" IsFlags=""false"" />
 </Schema>");
 
@@ -871,16 +876,12 @@ namespace System.Data.Entity.MetadataMapping
 
         private static MetadataWorkspace CreateMetadataWorkspace(XDocument cSpaceCsdl, Assembly assembly, bool isPOCO)
         {
-            var workspace = new MetadataWorkspace();
 
             EdmItemCollection edmItemCollection;
-
             using (var csdlReader = cSpaceCsdl.CreateReader())
             {
-                edmItemCollection = new EdmItemCollection(new XmlReader[] { csdlReader });
+                edmItemCollection = new EdmItemCollection(new[] { csdlReader });
             }
-            workspace.RegisterItemCollection(edmItemCollection);
-
 
             // assembly can actually be an AssemblyBuilder. The following line ensures that we are 
             // using the actual assembly otherwise an Assert in ObjectItemAttributeAssemblyLoader.LoadType
@@ -897,7 +898,11 @@ namespace System.Data.Entity.MetadataMapping
                 objectItemCollection.LoadFromAssembly(assembly);
             }
 
-            workspace.RegisterItemCollection(objectItemCollection);
+            var workspace = new MetadataWorkspace(
+                () => edmItemCollection,
+                () => null,
+                () => null,
+                () => objectItemCollection);
 
             return workspace;
         }

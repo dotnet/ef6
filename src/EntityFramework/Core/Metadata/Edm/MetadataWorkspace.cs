@@ -27,25 +27,88 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Runtime Metadata Workspace
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class MetadataWorkspace
     {
-        private EdmItemCollection _itemsCSpace;
-        private StoreItemCollection _itemsSSpace;
-        private ObjectItemCollection _itemsOSpace;
-        private StorageMappingItemCollection _itemsCSSpace;
-        private DefaultObjectMappingItemCollection _itemsOCSpace;
+        private Lazy<EdmItemCollection> _itemsCSpace;
+        private Lazy<StoreItemCollection> _itemsSSpace;
+        private Lazy<ObjectItemCollection> _itemsOSpace;
+        private Lazy<StorageMappingItemCollection> _itemsCSSpace;
+        private Lazy<DefaultObjectMappingItemCollection> _itemsOCSpace;
 
         private List<object> _cacheTokens;
         private bool _foundAssemblyWithAttribute;
         private double _schemaVersion = XmlConstants.UndefinedVersion;
         private Guid _metadataWorkspaceId = Guid.Empty;
-        private readonly object _lock = new object();
 
         /// <summary>
         ///     Constructs the new instance of runtime metadata workspace
         /// </summary>
         public MetadataWorkspace()
         {
+            _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="MetadataWorkspace"/> with loaders for all item collections (<see cref="ItemCollection"/>)
+        /// needed by EF except the o/c mapping which will be created automatically based on the given o-space and c-space
+        /// loaders. The item collection delegates are executed lazily when a given collection is used for the first
+        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        /// </summary>
+        /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
+        /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
+        /// <param name="csMappingLoader">Delegate to return the c/s mapping (MSL) item collection.</param>
+        /// <param name="oSpaceLoader">Delegate to return the o-space item collection.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "c")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "o")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "s")]
+        public MetadataWorkspace(
+            Func<EdmItemCollection> cSpaceLoader,
+            Func<StoreItemCollection> sSpaceLoader,
+            Func<StorageMappingItemCollection> csMappingLoader,
+            Func<ObjectItemCollection> oSpaceLoader)
+        {
+            Check.NotNull(cSpaceLoader, "cSpaceLoader");
+            Check.NotNull(sSpaceLoader, "sSpaceLoader");
+            Check.NotNull(csMappingLoader, "csMappingLoader");
+            Check.NotNull(oSpaceLoader, "oSpaceLoader");
+
+            _itemsCSpace = new Lazy<EdmItemCollection>(cSpaceLoader, isThreadSafe: true);
+            _itemsSSpace = new Lazy<StoreItemCollection>(sSpaceLoader, isThreadSafe: true);
+            _itemsOSpace = new Lazy<ObjectItemCollection>(oSpaceLoader, isThreadSafe: true);
+            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
+            _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
+                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="MetadataWorkspace"/> with loaders for all item collections (<see cref="ItemCollection"/>)
+        /// that come from traditional EDMX mapping. Default o-space and o/c mapping collections will be used.
+        /// The item collection delegates are executed lazily when a given collection is used for the first
+        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        /// </summary>
+        /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
+        /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
+        /// <param name="csMappingLoader">Delegate to return the c/s mapping (MSL) item collection.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "c")]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "s")]
+        public MetadataWorkspace(
+            Func<EdmItemCollection> cSpaceLoader,
+            Func<StoreItemCollection> sSpaceLoader,
+            Func<StorageMappingItemCollection> csMappingLoader)
+        {
+            Check.NotNull(cSpaceLoader, "cSpaceLoader");
+            Check.NotNull(sSpaceLoader, "sSpaceLoader");
+            Check.NotNull(csMappingLoader, "csMappingLoader");
+
+            _itemsCSpace = new Lazy<EdmItemCollection>(cSpaceLoader, isThreadSafe: true);
+            _itemsSSpace = new Lazy<StoreItemCollection>(sSpaceLoader, isThreadSafe: true);
+            _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
+            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
+            _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
+                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
         }
 
         /// <summary>
@@ -70,19 +133,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EntityUtil.CheckArgumentContainsNull(ref assembliesToConsider, "assembliesToConsider");
 
             Func<AssemblyName, Assembly> resolveReference = (AssemblyName referenceName) =>
-                                                                {
-                                                                    foreach (var assembly in assembliesToConsider)
-                                                                    {
-                                                                        if (AssemblyName.ReferenceMatchesDefinition(
-                                                                            referenceName, new AssemblyName(assembly.FullName)))
-                                                                        {
-                                                                            return assembly;
-                                                                        }
-                                                                    }
-                                                                    throw new ArgumentException(
-                                                                        Strings.AssemblyMissingFromAssembliesToConsider(
-                                                                            referenceName.FullName), "assembliesToConsider");
-                                                                };
+                {
+                    foreach (var assembly in assembliesToConsider)
+                    {
+                        if (AssemblyName.ReferenceMatchesDefinition(
+                            referenceName, new AssemblyName(assembly.FullName)))
+                        {
+                            return assembly;
+                        }
+                    }
+                    throw new ArgumentException(
+                        Strings.AssemblyMissingFromAssembliesToConsider(
+                            referenceName.FullName), "assembliesToConsider");
+                };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
         }
@@ -96,34 +159,37 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var composite = MetadataArtifactLoader.CreateCompositeFromFilePaths(
                 paths.ToArray(), "", new CustomAssemblyResolver(wildcardAssemblies, resolveReference));
 
-            // only create the ItemCollection that has corresponding artifacts
-            var dataSpace = DataSpace.CSpace;
-            using (var cSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
+
+            using (var cSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(DataSpace.CSpace)))
             {
                 if (cSpaceReaders.Any())
                 {
-                    _itemsCSpace = new EdmItemCollection(cSpaceReaders, composite.GetPaths(dataSpace));
+                    var itemCollection = new EdmItemCollection(cSpaceReaders, composite.GetPaths(DataSpace.CSpace));
+                    _itemsCSpace = new Lazy<EdmItemCollection>(() => itemCollection, isThreadSafe: true);
+                    _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
+                        () => new DefaultObjectMappingItemCollection(itemCollection, _itemsOSpace.Value), isThreadSafe: true);
                 }
             }
 
-            dataSpace = DataSpace.SSpace;
-            using (var sSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            using (var sSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(DataSpace.SSpace)))
             {
                 if (sSpaceReaders.Any())
                 {
-                    _itemsSSpace = new StoreItemCollection(sSpaceReaders, composite.GetPaths(dataSpace));
+                    var itemCollection = new StoreItemCollection(sSpaceReaders, composite.GetPaths(DataSpace.SSpace));
+                    _itemsSSpace = new Lazy<StoreItemCollection>(() => itemCollection, isThreadSafe: true);
                 }
             }
 
-            dataSpace = DataSpace.CSSpace;
-            using (var csSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(dataSpace)))
+            using (var csSpaceReaders = new DisposableCollectionWrapper<XmlReader>(composite.CreateReaders(DataSpace.CSSpace)))
             {
                 if (csSpaceReaders.Any()
-                    && null != _itemsCSpace
-                    && null != _itemsSSpace)
+                    && _itemsCSpace != null
+                    && _itemsSSpace != null)
                 {
-                    _itemsCSSpace = new StorageMappingItemCollection(
-                        _itemsCSpace, _itemsSSpace, csSpaceReaders, composite.GetPaths(dataSpace));
+                    var mapping = new StorageMappingItemCollection(
+                        _itemsCSpace.Value, _itemsSSpace.Value, csSpaceReaders, composite.GetPaths(DataSpace.CSSpace));
+                    _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => mapping, isThreadSafe: true);
                 }
             }
         }
@@ -220,120 +286,71 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         ///     Register the item collection for the space associated with it.
-        ///     This should be done only once for a space.
-        ///     If a space already has a registered ItemCollection InvalidOperation exception is thrown
         /// </summary>
-        /// <param name="collection"> The out parameter collection that needs to be filled up </param>
-        /// <returns> </returns>
+        /// <param name="collection">The collection to register.</param>
         /// <exception cref="System.ArgumentNullException">if collection argument is null</exception>
-        /// <exception cref="System.InvalidOperationException">If there is an ItemCollection that has already been registered for collection's space passed in</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [CLSCompliant(false)]
+        [Obsolete("Construct MetadataWorkspace using constructor that accepts metadata loading delegates.")]
         public virtual void RegisterItemCollection(ItemCollection collection)
         {
             Check.NotNull(collection, "collection");
-
-            ItemCollection existing;
 
             try
             {
                 switch (collection.DataSpace)
                 {
                     case DataSpace.CSpace:
-                        if (null == (existing = _itemsCSpace))
+                        var edmCollection = (EdmItemCollection)collection;
+                        if (!SupportedEdmVersions.Contains(edmCollection.EdmVersion))
                         {
-                            var edmCollection = (EdmItemCollection)collection;
-                            if (!SupportedEdmVersions.Contains(edmCollection.EdmVersion))
-                            {
-                                throw new InvalidOperationException(
-                                    Strings.EdmVersionNotSupportedByRuntime(
-                                        edmCollection.EdmVersion,
-                                        Helper.GetCommaDelimitedString(
-                                            SupportedEdmVersions
-                                                .Where(e => e != XmlConstants.UndefinedVersion)
-                                                .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
-                            }
+                            throw new InvalidOperationException(
+                                Strings.EdmVersionNotSupportedByRuntime(
+                                    edmCollection.EdmVersion,
+                                    Helper.GetCommaDelimitedString(
+                                        SupportedEdmVersions
+                                            .Where(e => e != XmlConstants.UndefinedVersion)
+                                            .Select(e => e.ToString(CultureInfo.InvariantCulture)))));
+                        }
 
-                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
-
-                            _itemsCSpace = edmCollection;
+                        CheckAndSetItemCollectionVersionInWorkSpace(collection);
+                        _itemsCSpace = new Lazy<EdmItemCollection>(() => edmCollection, isThreadSafe: true);
+                        if (_itemsOCSpace == null)
+                        {
+                            Debug.Assert(_itemsOSpace != null);
+                            _itemsOCSpace =
+                                new Lazy<DefaultObjectMappingItemCollection>(
+                                    () => new DefaultObjectMappingItemCollection(edmCollection, _itemsOSpace.Value));
                         }
                         break;
                     case DataSpace.SSpace:
-                        if (null == (existing = _itemsSSpace))
-                        {
-                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
-                            _itemsSSpace = (StoreItemCollection)collection;
-                        }
+                        CheckAndSetItemCollectionVersionInWorkSpace(collection);
+                        _itemsSSpace = new Lazy<StoreItemCollection>(() => (StoreItemCollection)collection, isThreadSafe: true);
                         break;
                     case DataSpace.OSpace:
-                        if (null == (existing = _itemsOSpace))
+                        _itemsOSpace = new Lazy<ObjectItemCollection>(() => (ObjectItemCollection)collection, isThreadSafe: true);
+                        if (_itemsOCSpace == null && _itemsCSpace != null)
                         {
-                            _itemsOSpace = (ObjectItemCollection)collection;
+                            _itemsOCSpace =
+                                new Lazy<DefaultObjectMappingItemCollection>(
+                                    () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value));
                         }
                         break;
                     case DataSpace.CSSpace:
-                        if (null == (existing = _itemsCSSpace))
-                        {
-                            CheckAndSetItemCollectionVersionInWorkSpace(collection);
-                            _itemsCSSpace = (StorageMappingItemCollection)collection;
-                        }
+                        CheckAndSetItemCollectionVersionInWorkSpace(collection);
+                        _itemsCSSpace = new Lazy<StorageMappingItemCollection>(
+                            () => (StorageMappingItemCollection)collection, isThreadSafe: true);
                         break;
                     default:
                         Debug.Assert(collection.DataSpace == DataSpace.OCSpace, "Invalid DataSpace Enum value: " + collection.DataSpace);
-
-                        if (null == (existing = _itemsOCSpace))
-                        {
-                            _itemsOCSpace = (DefaultObjectMappingItemCollection)collection;
-                        }
+                        _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
+                            () => (DefaultObjectMappingItemCollection)collection, isThreadSafe: true);
                         break;
                 }
             }
             catch (InvalidCastException)
             {
                 throw new MetadataException(Strings.InvalidCollectionForMapping(collection.DataSpace.ToString()));
-            }
-
-            if (existing != null)
-            {
-                throw new InvalidOperationException(Strings.ItemCollectionAlreadyRegistered(collection.DataSpace.ToString()));
-            }
-            // Need to make sure that if the storage mapping Item collection was created with the 
-            // same instances of item collection that are registered for CSpace and SSpace
-            if (collection.DataSpace
-                == DataSpace.CSpace)
-            {
-                if (_itemsCSSpace != null
-                    && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, collection))
-                {
-                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
-                }
-            }
-
-            if (collection.DataSpace
-                == DataSpace.SSpace)
-            {
-                if (_itemsCSSpace != null
-                    && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, collection))
-                {
-                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
-                }
-            }
-
-            if (collection.DataSpace
-                == DataSpace.CSSpace)
-            {
-                if (_itemsCSpace != null
-                    && !ReferenceEquals(_itemsCSSpace.EdmItemCollection, _itemsCSpace))
-                {
-                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
-                }
-
-                if (_itemsSSpace != null
-                    && !ReferenceEquals(_itemsCSSpace.StoreItemCollection, _itemsSSpace))
-                {
-                    throw new InvalidOperationException(Strings.InvalidCollectionSpecified(collection.DataSpace));
-                }
             }
         }
 
@@ -921,38 +938,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return (null != collection) && ((MappingItemCollection)collection).TryGetMap(item, out map);
         }
 
-        private ItemCollection RegisterDefaultObjectMappingItemCollection()
-        {
-            if (_itemsCSpace != null
-                 && _itemsOSpace != null
-                 && _itemsOCSpace == null)
-            {
-                lock (_lock)
-                {
-                    if (_itemsOCSpace == null)
-                    {
-                        RegisterItemCollection(new DefaultObjectMappingItemCollection(_itemsCSpace, _itemsOSpace));
-                    }
-                }
-            }
-
-            return _itemsOCSpace;
-        }
-
-        internal void RegisterDefaultObjectItemCollection()
-        {
-            if (_itemsOSpace == null)
-            {
-                lock (_lock)
-                {
-                    if (_itemsOSpace == null)
-                    {
-                        RegisterItemCollection(new ObjectItemCollection());
-                    }
-                }
-            }
-        }
-
         /// <summary>
         ///     Get item collection for the space, if registered. If returned, the ItemCollection is in read only mode as it is
         ///     part of the workspace.
@@ -983,19 +968,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             switch (dataSpace)
             {
                 case DataSpace.CSpace:
-                    collection = _itemsCSpace;
+                    collection = _itemsCSpace == null ? null : _itemsCSpace.Value;
                     break;
                 case DataSpace.OSpace:
-                    collection = _itemsOSpace;
+                    Debug.Assert(_itemsOSpace != null);
+                    collection = _itemsOSpace.Value;
                     break;
                 case DataSpace.OCSpace:
-                    collection = _itemsOCSpace ?? RegisterDefaultObjectMappingItemCollection();
+                    collection = _itemsOCSpace == null ? null : _itemsOCSpace.Value;
                     break;
                 case DataSpace.CSSpace:
-                    collection = _itemsCSSpace;
+                    collection = _itemsCSSpace == null ? null : _itemsCSSpace.Value;
                     break;
                 case DataSpace.SSpace:
-                    collection = _itemsSSpace;
+                    collection = _itemsSSpace == null ? null : _itemsSSpace.Value;
                     break;
                 default:
                     if (required)
@@ -1318,9 +1304,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal virtual ViewLoader GetUpdateViewLoader()
         {
-            if (_itemsCSSpace != null)
+            if (_itemsCSSpace != null
+                && _itemsCSSpace.Value != null)
             {
-                return _itemsCSSpace.GetUpdateViewLoader();
+                return _itemsCSSpace.Value.GetUpdateViewLoader();
             }
             return null;
         }
@@ -1551,8 +1538,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual QueryCacheManager GetQueryCacheManager()
         {
-            Debug.Assert(null != _itemsSSpace, "_itemsSSpace must not be null");
-            return _itemsSSpace.QueryCacheManager;
+            Debug.Assert(_itemsSSpace != null && _itemsSSpace.Value != null);
+            return _itemsSSpace.Value.QueryCacheManager;
         }
 
         internal bool TryDetermineCSpaceModelType<T>(out EdmType modelEdmType)

@@ -76,6 +76,47 @@ namespace System.Data.Entity
             return row;
         }
 
+        protected static void RunTestWithTempMetadata(string csdl, string ssdl, string msl, Action<IEnumerable<string>> test)
+        {
+            var paths = new[]
+                {
+                    Path.GetTempFileName() + ".ssdl",
+                    Path.GetTempFileName() + ".csdl",
+                    Path.GetTempFileName() + ".msl"
+                };
+            var metadata = new[]
+                {
+                    ssdl,
+                    csdl,
+                    msl
+                };
+            try
+            {
+                for (var i = 0; i < metadata.Length; i++)
+                {
+                    using (var file = File.CreateText(paths[i]))
+                    {
+                        file.Write(metadata[i]);
+                    }
+                }
+                test(paths);
+            }
+            finally
+            {
+                foreach (var path in paths)
+                {
+                    try
+                    {
+                        File.SetAttributes(path, File.GetAttributes(path) & ~FileAttributes.ReadOnly);
+                        File.Delete(path);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                    }
+                }
+            }
+        }
+
         #region Assemblies and exceptions
 
         /// <summary>

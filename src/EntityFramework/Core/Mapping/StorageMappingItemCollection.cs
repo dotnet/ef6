@@ -594,14 +594,14 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         //EdmItemCollection that is associated with the MSL Loader.
-        private EdmItemCollection m_edmCollection;
+        private EdmItemCollection _edmCollection;
 
         //StoreItemCollection that is associated with the MSL Loader.
-        private StoreItemCollection m_storeItemCollection;
+        private StoreItemCollection _storeItemCollection;
         private ViewDictionary m_viewDictionary;
         private double m_mappingVersion = XmlConstants.UndefinedVersion;
 
-        private MetadataWorkspace m_workspace;
+        private MetadataWorkspace _workspace;
 
         // In this version, we won't allow same types in CSpace to map to different types in store. If the same type
         // need to be reused, the store type must be the same. To keep track of this, we need to keep track of the member 
@@ -647,8 +647,8 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(storeCollection, "storeCollection");
             Check.NotNull(filePaths, "filePaths");
 
-            m_edmCollection = edmCollection;
-            m_storeItemCollection = storeCollection;
+            _edmCollection = edmCollection;
+            _storeItemCollection = storeCollection;
 
             // Wrap the file paths in instances of the MetadataArtifactLoader class, which provides
             // an abstraction and a uniform interface over a diverse set of metadata artifacts.
@@ -762,8 +762,8 @@ namespace System.Data.Entity.Core.Mapping
             DebugCheck.NotNull(edmCollection);
             DebugCheck.NotNull(storeCollection);
 
-            m_edmCollection = edmCollection;
-            m_storeItemCollection = storeCollection;
+            _edmCollection = edmCollection;
+            _storeItemCollection = storeCollection;
 
             Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict;
             Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict;
@@ -772,9 +772,9 @@ namespace System.Data.Entity.Core.Mapping
 
             var errors = new List<EdmSchemaError>();
 
-            if (m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
-                && m_storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
-                && m_edmCollection.EdmVersion != m_storeItemCollection.StoreSchemaVersion)
+            if (_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
+                && _storeItemCollection.StoreSchemaVersion != XmlConstants.UndefinedVersion
+                && _edmCollection.EdmVersion != _storeItemCollection.StoreSchemaVersion)
             {
                 errors.Add(
                     new EdmSchemaError(
@@ -783,9 +783,9 @@ namespace System.Data.Entity.Core.Mapping
             }
             else
             {
-                var expectedVersion = m_edmCollection.EdmVersion != XmlConstants.UndefinedVersion
-                                          ? m_edmCollection.EdmVersion
-                                          : m_storeItemCollection.StoreSchemaVersion;
+                var expectedVersion = _edmCollection.EdmVersion != XmlConstants.UndefinedVersion
+                                          ? _edmCollection.EdmVersion
+                                          : _storeItemCollection.StoreSchemaVersion;
                 errors.AddRange(
                     LoadItems(xmlReaders, filePaths, userDefinedQueryViewsDict, userDefinedQueryViewsOfTypeDict, expectedVersion));
             }
@@ -812,14 +812,14 @@ namespace System.Data.Entity.Core.Mapping
         {
             get
             {
-                if (m_workspace == null)
+                if (_workspace == null)
                 {
-                    m_workspace = new MetadataWorkspace();
-                    m_workspace.RegisterItemCollection(m_edmCollection);
-                    m_workspace.RegisterItemCollection(m_storeItemCollection);
-                    m_workspace.RegisterItemCollection(this);
+                    _workspace = new MetadataWorkspace(
+                        () => _edmCollection,
+                        () => _storeItemCollection,
+                        () => this);
                 }
-                return m_workspace;
+                return _workspace;
             }
         }
 
@@ -828,7 +828,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal EdmItemCollection EdmItemCollection
         {
-            get { return m_edmCollection; }
+            get { return _edmCollection; }
         }
 
         /// <summary>
@@ -844,7 +844,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal StoreItemCollection StoreItemCollection
         {
-            get { return m_storeItemCollection; }
+            get { return _storeItemCollection; }
         }
 
         /// <summary>

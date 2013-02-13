@@ -4526,14 +4526,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "Item Collection for '{0}' is not valid. Make sure that the StorageMappingItemCollection was constructed with the same instances of item collection that are registered for conceptual model and storage model."
-        /// </summary>
-        internal static string InvalidCollectionSpecified(object p0)
-        {
-            return EntityRes.GetString(EntityRes.InvalidCollectionSpecified, p0);
-        }
-
-        /// <summary>
         /// A string like "Unable to load the specified metadata resource."
         /// </summary>
         internal static string UnableToLoadResource
@@ -15912,7 +15904,6 @@ namespace System.Data.Entity.Resources
         internal const string InvalidUseOfWebPath = "InvalidUseOfWebPath";
         internal const string UnableToFindReflectedType = "UnableToFindReflectedType";
         internal const string AssemblyMissingFromAssembliesToConsider = "AssemblyMissingFromAssembliesToConsider";
-        internal const string InvalidCollectionSpecified = "InvalidCollectionSpecified";
         internal const string UnableToLoadResource = "UnableToLoadResource";
         internal const string EdmVersionNotSupportedByRuntime = "EdmVersionNotSupportedByRuntime";
         internal const string AtleastOneSSDLNeeded = "AtleastOneSSDLNeeded";

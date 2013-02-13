@@ -35,22 +35,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(databaseMapping);
 
-            var metadataWorkspace = new MetadataWorkspace();
+            var itemCollection = new EdmItemCollection(databaseMapping.Model);
+            var storeItemCollection = new StoreItemCollection(databaseMapping.Database);
+            var storageMappingItemCollection = databaseMapping.ToStorageMappingItemCollection(itemCollection, storeItemCollection);
 
-            var itemCollection
-                = new EdmItemCollection(databaseMapping.Model);
-
-            var storeItemCollection
-                = new StoreItemCollection(databaseMapping.Database);
-
-            var storageMappingItemCollection
-                = databaseMapping.ToStorageMappingItemCollection(itemCollection, storeItemCollection);
-
-            metadataWorkspace.RegisterItemCollection(itemCollection);
-            metadataWorkspace.RegisterItemCollection(storeItemCollection);
-            metadataWorkspace.RegisterItemCollection(storageMappingItemCollection);
-
-            return metadataWorkspace;
+            return new MetadataWorkspace(
+                () => itemCollection,
+                () => storeItemCollection,
+                () => storageMappingItemCollection);
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

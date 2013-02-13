@@ -111,9 +111,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // The plan may have been invalidated above, or this query may never have been prepared.
             if (plan == null)
             {
-                // Metadata is required to generate the execution plan.
-                ObjectContext.EnsureMetadata();
-
                 // Reset internal state
                 _recompileRequired = null;
                 ResetParameters();

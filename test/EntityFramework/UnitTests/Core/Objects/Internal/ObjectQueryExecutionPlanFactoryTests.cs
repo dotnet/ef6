@@ -21,15 +21,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             var objectQueryExecutionPlanFactory = new ObjectQueryExecutionPlanFactory(
                 Common.Internal.Materialization.MockHelper.CreateTranslator<object>());
 
-            var metadataWorkspace = new MetadataWorkspace();
             var edmItemCollection = new EdmItemCollection();
-            metadataWorkspace.RegisterItemCollection(edmItemCollection);
-            metadataWorkspace.RegisterItemCollection(new ObjectItemCollection());
             var fakeSqlProviderManifest = FakeSqlProviderServices.Instance.GetProviderManifest("2008");
             var storeItemCollection = new StoreItemCollection(FakeSqlProviderFactory.Instance, fakeSqlProviderManifest, "System.Data.SqlClient", "2008");
-            metadataWorkspace.RegisterItemCollection(storeItemCollection);
-            metadataWorkspace.RegisterItemCollection(
-                new StorageMappingItemCollection(edmItemCollection, storeItemCollection, Enumerable.Empty<XmlReader>()));
+            var mappingItemCollection = new StorageMappingItemCollection(edmItemCollection, storeItemCollection, Enumerable.Empty<XmlReader>());
+
+            var metadataWorkspace = new MetadataWorkspace(
+                () => edmItemCollection,
+                () => storeItemCollection,
+                () => mappingItemCollection);
 
             var fakeSqlConnection = new FakeSqlConnection();
             fakeSqlConnection.ConnectionString = "foo";

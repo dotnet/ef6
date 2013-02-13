@@ -1971,9 +1971,6 @@
   <data name="AssemblyMissingFromAssembliesToConsider" xml:space="preserve">
     <value>The assembly '{0}' specified does not exist in the assemblies enumeration.</value>
   </data>
-  <data name="InvalidCollectionSpecified" xml:space="preserve">
-    <value>Item Collection for '{0}' is not valid. Make sure that the StorageMappingItemCollection was constructed with the same instances of item collection that are registered for conceptual model and storage model.</value>
-  </data>
   <data name="UnableToLoadResource" xml:space="preserve">
     <value>Unable to load the specified metadata resource.</value>
   </data>

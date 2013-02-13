@@ -32,21 +32,21 @@ namespace System.Data.Entity.Core.Mapping
             DebugCheck.NotNull(edmCollection);
             DebugCheck.NotNull(objectCollection);
 
-            m_edmCollection = edmCollection;
-            m_objectCollection = objectCollection;
+            _edmCollection = edmCollection;
+            _objectCollection = objectCollection;
 
-            var cspaceTypes = m_edmCollection.GetPrimitiveTypes();
+            var cspaceTypes = _edmCollection.GetPrimitiveTypes();
             foreach (var type in cspaceTypes)
             {
-                var ospaceType = m_objectCollection.GetMappedPrimitiveType(type.PrimitiveTypeKind);
+                var ospaceType = _objectCollection.GetMappedPrimitiveType(type.PrimitiveTypeKind);
                 Debug.Assert(ospaceType != null, "all primitive type must have been loaded");
 
                 AddInternalMapping(new ObjectTypeMapping(ospaceType, type), _clrTypeIndexes, _edmTypeIndexes);
             }
         }
 
-        private readonly ObjectItemCollection m_objectCollection;
-        private readonly EdmItemCollection m_edmCollection;
+        private readonly ObjectItemCollection _objectCollection;
+        private readonly EdmItemCollection _edmCollection;
 
         //Indexes into the type mappings collection based on clr type name
         private Dictionary<string, int> _clrTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
@@ -55,6 +55,16 @@ namespace System.Data.Entity.Core.Mapping
         private Dictionary<string, int> _edmTypeIndexes = new Dictionary<string, int>(StringComparer.Ordinal);
 
         private readonly object _lock = new object();
+
+        public ObjectItemCollection ObjectItemCollection
+        {
+            get { return _objectCollection; }
+        }
+
+        public EdmItemCollection EdmItemCollection
+        {
+            get { return _edmCollection; }
+        }
 
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
@@ -90,7 +100,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (ignoreCase)
                 {
                     // Get the correct casing of the identity first if we are asked to do ignore case
-                    if (!m_edmCollection.TryGetItem(identity, true, out cdmType))
+                    if (!_edmCollection.TryGetItem(identity, true, out cdmType))
                     {
                         map = null;
                         return false;
@@ -108,10 +118,10 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (cdmType != null
                     ||
-                    m_edmCollection.TryGetItem(identity, ignoreCase, out cdmType))
+                    _edmCollection.TryGetItem(identity, ignoreCase, out cdmType))
                 {
                     // If the mapping is not already loaded, then get the mapping ospace type
-                    m_objectCollection.TryGetOSpaceType(cdmType, out clrType);
+                    _objectCollection.TryGetOSpaceType(cdmType, out clrType);
                 }
             }
             else if (typeSpace == DataSpace.OSpace)
@@ -119,7 +129,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (ignoreCase)
                 {
                     // Get the correct casing of the identity first if we are asked to do ignore case
-                    if (!m_objectCollection.TryGetItem(identity, true, out clrType))
+                    if (!_objectCollection.TryGetItem(identity, true, out clrType))
                     {
                         map = null;
                         return false;
@@ -137,11 +147,11 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (clrType != null
                     ||
-                    m_objectCollection.TryGetItem(identity, ignoreCase, out clrType))
+                    _objectCollection.TryGetItem(identity, ignoreCase, out clrType))
                 {
                     // If the mapping is not already loaded, get the mapping cspace type
                     var cspaceTypeName = ObjectItemCollection.TryGetMappingCSpaceTypeIdentity(clrType);
-                    m_edmCollection.TryGetItem(cspaceTypeName, out cdmType);
+                    _edmCollection.TryGetItem(cspaceTypeName, out cdmType);
                 }
             }
 
@@ -342,7 +352,7 @@ namespace System.Data.Entity.Core.Mapping
             }
             else if (Helper.IsPrimitiveType(cdmType))
             {
-                clrType = m_objectCollection.GetMappedPrimitiveType(((PrimitiveType)cdmType).PrimitiveTypeKind);
+                clrType = _objectCollection.GetMappedPrimitiveType(((PrimitiveType)cdmType).PrimitiveTypeKind);
             }
             else
             {

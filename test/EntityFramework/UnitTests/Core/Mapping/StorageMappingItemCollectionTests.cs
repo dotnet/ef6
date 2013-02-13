@@ -155,5 +155,32 @@ namespace System.Data.Entity.Core.Mapping
             Assert.NotNull(storageMappingItemCollection.GetItem<GlobalItem>("AdventureWorksEntities3"));
             Assert.Equal(0, errors.Count);
         }
+
+        [Fact]
+        public void Workspace_returns_a_new_workspace_with_all_collections_registered()
+        {
+            var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(Csdl).CreateReader() });
+            var storeItemCollection = new StoreItemCollection(new[] { XDocument.Parse(Ssdl).CreateReader() });
+
+            IList<EdmSchemaError> errors;
+            var storageMappingItemCollection = StorageMappingItemCollection.Create(
+                edmItemCollection,
+                storeItemCollection,
+                new[] { XDocument.Parse(Msl).CreateReader() },
+                null,
+                out errors);
+
+            var workspace = storageMappingItemCollection.Workspace;
+
+            Assert.Same(edmItemCollection, workspace.GetItemCollection(DataSpace.CSpace));
+            Assert.Same(storeItemCollection, workspace.GetItemCollection(DataSpace.SSpace));
+            Assert.Same(storageMappingItemCollection, workspace.GetItemCollection(DataSpace.CSSpace));
+
+            var objectItemCollection = (ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace);
+            var ocMappingCollection = (DefaultObjectMappingItemCollection)workspace.GetItemCollection(DataSpace.OCSpace);
+
+            Assert.Same(objectItemCollection, ocMappingCollection.ObjectItemCollection);
+            Assert.Same(edmItemCollection, ocMappingCollection.EdmItemCollection);
+        }
     }
 }

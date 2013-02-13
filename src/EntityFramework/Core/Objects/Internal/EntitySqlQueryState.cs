@@ -133,9 +133,6 @@ namespace System.Data.Entity.Core.Objects
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
         {
-            // Metadata is required to generate the execution plan or to retrieve it from the cache.
-            ObjectContext.EnsureMetadata();
-
             // Determine the required merge option, with the following precedence:
             // 1. The merge option specified to Execute(MergeOption) as forMergeOption.
             // 2. The merge option set via ObjectQuery.MergeOption.

@@ -79,9 +79,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
             DebugCheck.NotNull(functionParameters);
             DebugCheck.NotNull(edmItemCollection);
 
-            var workspace = new MetadataWorkspace();
-            workspace.RegisterItemCollection(edmItemCollection);
-            Perspective perspective = new ModelPerspective(workspace);
+            var perspective = new ModelPerspective(new MetadataWorkspace(
+                () => edmItemCollection,
+                () => null,
+                () => null));
 
             // Since we compile lambda expression and generate variables from the function parameter definitions,
             // the returned DbLambda will contain variable types that match function parameter types.

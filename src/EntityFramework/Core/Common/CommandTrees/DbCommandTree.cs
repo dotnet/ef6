@@ -40,24 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 throw new ArgumentException(Strings.Cqt_CommandTree_InvalidDataSpace, "dataSpace");
             }
 
-            //
-            // Create the tree's metadata workspace and initalize commonly used types.
-            //
-            var effectiveMetadata = new MetadataWorkspace();
-
-            //While EdmItemCollection and StorageitemCollections are required
-            //ObjectItemCollection may or may not be registered on the workspace yet.
-            //So register the ObjectItemCollection if it exists.
-            ItemCollection objectItemCollection;
-            if (metadata.TryGetItemCollection(DataSpace.OSpace, out objectItemCollection))
-            {
-                effectiveMetadata.RegisterItemCollection(objectItemCollection);
-            }
-            effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.CSpace));
-            effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.CSSpace));
-            effectiveMetadata.RegisterItemCollection(metadata.GetItemCollection(DataSpace.SSpace));
-
-            _metadata = effectiveMetadata;
+            _metadata = metadata;
             _dataSpace = dataSpace;
         }
 

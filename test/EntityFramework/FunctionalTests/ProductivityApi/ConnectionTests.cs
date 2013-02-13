@@ -2,12 +2,12 @@
 
 namespace ProductivityApiTests
 {
-    using System;
     using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
@@ -134,6 +134,21 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void GetMetadataWorkspace_returns_an_initialized_workspace_when_connection_string_constructor_is_used()
+        {
+            using (var connection = new EntityConnection(SimpleModelEntityConnectionString))
+            {
+                var workspace = connection.GetMetadataWorkspace();
+
+                Assert.NotNull(workspace.GetItemCollection(DataSpace.OSpace));
+                Assert.NotNull(workspace.GetItemCollection(DataSpace.OCSpace));
+                Assert.NotNull(workspace.GetItemCollection(DataSpace.SSpace));
+                Assert.NotNull(workspace.GetItemCollection(DataSpace.CSSpace));
+                Assert.NotNull(workspace.GetItemCollection(DataSpace.CSpace));
+            }
+        }
+
+        [Fact]
         public void Context_name_can_be_used_to_find_entity_connection_string_in_app_config()
         {
             using (var context = new EntityConnectionForSimpleModel())
@@ -183,13 +198,13 @@ namespace ProductivityApiTests
 
                 var opened = false;
                 connection.StateChange += (_, e) =>
-                                              {
-                                                  if (e.CurrentState
-                                                      == ConnectionState.Open)
-                                                  {
-                                                      opened = true;
-                                                  }
-                                              };
+                    {
+                        if (e.CurrentState
+                            == ConnectionState.Open)
+                        {
+                            opened = true;
+                        }
+                    };
 
                 using (var context = new SimpleModelContext(connection))
                 {
@@ -885,8 +900,9 @@ namespace ProductivityApiTests
         {
             try
             {
-                MutableResolver.AddResolver<IDbConnectionFactory>(k => new SqlConnectionFactory(
-                        "Data Source=(localdb)\v11.0; Integrated Security=True; Connection Timeout=1;"));
+                MutableResolver.AddResolver<IDbConnectionFactory>(
+                    k => new SqlConnectionFactory(
+                             "Data Source=(localdb)\v11.0; Integrated Security=True; Connection Timeout=1;"));
 
                 using (var context = new BadMvcContext())
                 {

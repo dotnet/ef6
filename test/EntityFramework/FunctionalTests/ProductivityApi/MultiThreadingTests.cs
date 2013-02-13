@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Concurrent;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
@@ -182,6 +183,33 @@ namespace ProductivityApiTests
                         using (var context = new MultiInitContextForCrud())
                         {
                             Assert.Null(context.Products.Find(id));
+                        }
+                    });
+        }
+
+        public class SimpleModelContextForThreads : SimpleModelContext
+        {
+            public SimpleModelContextForThreads()
+                : base(SimpleModelEntityConnectionString)
+            {
+            }
+        }
+
+        [Fact]
+        public void EDMX_based_DbContext_initialization_should_work_when_called_concurrently_from_multiple_threads()
+        {
+            ExecuteInParallel(
+                () =>
+                    {
+                        using (var context = new SimpleModelContextForThreads())
+                        {
+                            context.Products.ToString(); // Causes s-space and c/s loading
+
+                            var workspace = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
+                            Assert.NotNull(workspace.GetItemCollection(DataSpace.OCSpace));
+                            Assert.NotNull(workspace.GetItemCollection(DataSpace.CSSpace));
+                            Assert.NotNull(workspace.GetItemCollection(DataSpace.SSpace));
+                            Assert.NotNull(workspace.GetItemCollection(DataSpace.CSpace));
                         }
                     });
         }

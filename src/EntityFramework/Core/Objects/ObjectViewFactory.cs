@@ -267,7 +267,6 @@ namespace System.Data.Entity.Core.Objects
                     }
                     else
                     {
-                        objectContext.EnsureMetadata();
                         ospaceTypeUsage = objectContext.Perspective.MetadataWorkspace.GetOSpaceTypeUsage(typeUsage);
                     }
                 }

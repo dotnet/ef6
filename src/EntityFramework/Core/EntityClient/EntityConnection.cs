@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -97,10 +98,8 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection)
-            : this(workspace, connection, false, false)
+            : this(Check.NotNull(workspace, "workspace"), Check.NotNull(connection, "connection"), false, false)
         {
-            Check.NotNull(workspace, "workspace");
-            Check.NotNull(connection, "connection");
         }
 
         /// <summary>
@@ -112,10 +111,9 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection, bool entityConnectionOwnsStoreConnection)
-            : this(workspace, connection, false, entityConnectionOwnsStoreConnection)
+            : this(Check.NotNull(workspace, "workspace"), Check.NotNull(connection, "connection"),
+                false, entityConnectionOwnsStoreConnection)
         {
-            Check.NotNull(workspace, "workspace");
-            Check.NotNull(connection, "connection");
         }
 
         /// <summary>
@@ -419,85 +417,60 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Gets the metadata workspace used by this connection
         /// </summary>
-        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate"), CLSCompliant(false)]
         public virtual MetadataWorkspace GetMetadataWorkspace()
         {
-            return GetMetadataWorkspace(initializeAllCollections: true);
-        }
-
-        private static bool ShouldRecalculateMetadataArtifactLoader(List<MetadataArtifactLoader> loaders)
-        {
-            if (loaders.Any(loader => loader.GetType() == typeof(MetadataArtifactLoaderCompositeFile)))
+            if (_metadataWorkspace != null)
             {
-                // the loaders had folders in it
-                return true;
+                return _metadataWorkspace;
             }
 
-            // in the case that loaders only contains resources or file name, we trust the cache
-            return false;
-        }
+            var loaders = new List<MetadataArtifactLoader>();
+            var paths = _effectiveConnectionOptions[EntityConnectionStringBuilder.MetadataParameterName];
 
-        [ResourceExposure(ResourceScope.None)] // The resource( path name) is not exposed to the callers of this method
-        [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
-        //For SplitPaths call and we pick the file names from class variable.
-        internal virtual MetadataWorkspace GetMetadataWorkspace(bool initializeAllCollections)
-        {
-            Debug.Assert(
-                _metadataWorkspace != null || _effectiveConnectionOptions != null,
-                "The effective connection options is null, which should never be");
-            if (_metadataWorkspace == null
-                ||
-                (initializeAllCollections && !_metadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)))
+            if (!string.IsNullOrEmpty(paths))
             {
-                // This lock is to ensure that the connection string and the metadata workspace are in a consistent state, that is, you
-                // don't get a metadata workspace not matching what's described by the connection string
-                lock (_connectionStringLock)
+                loaders = MetadataCache.GetOrCreateMetdataArtifactLoader(paths);
+
+                if (ShouldRecalculateMetadataArtifactLoader(loaders))
                 {
-                    EdmItemCollection edmItemCollection = null;
-                    if (_metadataWorkspace == null)
-                    {
-                        var workspace = new MetadataWorkspace();
-                        var loaders = new List<MetadataArtifactLoader>();
-                        var paths = _effectiveConnectionOptions[EntityConnectionStringBuilder.MetadataParameterName];
-
-                        if (!string.IsNullOrEmpty(paths))
-                        {
-                            loaders = MetadataCache.GetOrCreateMetdataArtifactLoader(paths);
-
-                            if (!ShouldRecalculateMetadataArtifactLoader(loaders))
-                            {
-                                _artifactLoader = MetadataArtifactLoader.Create(loaders);
-                            }
-                            else
-                            {
-                                // the loaders contains folders that might get updated during runtime, so we have to recalculate the loaders again
-                                _artifactLoader = MetadataArtifactLoader.Create(MetadataCache.SplitPaths(paths));
-                            }
-                        }
-                        else
-                        {
-                            _artifactLoader = MetadataArtifactLoader.Create(loaders);
-                        }
-
-                        edmItemCollection = LoadEdmItemCollection(workspace, _artifactLoader);
-                        _metadataWorkspace = workspace;
-                    }
-                    else
-                    {
-                        edmItemCollection = (EdmItemCollection)_metadataWorkspace.GetItemCollection(DataSpace.CSpace);
-                    }
-
-                    if (initializeAllCollections && !_metadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
-                    {
-                        LoadStoreItemCollections(
-                            _metadataWorkspace, _storeConnection, _effectiveConnectionOptions, edmItemCollection, _artifactLoader);
-                        _artifactLoader = null;
-                        _initialized = true;
-                    }
+                    // the loaders contains folders that might get updated during runtime, so we have to recalculate the loaders again
+                    _artifactLoader = MetadataArtifactLoader.Create(MetadataCache.SplitPaths(paths));
+                }
+                else
+                {
+                    _artifactLoader = MetadataArtifactLoader.Create(loaders);
                 }
             }
+            else
+            {
+                _artifactLoader = MetadataArtifactLoader.Create(loaders);
+            }
+
+            // Build a string as the key and look up the MetadataCache for a match
+            var edmCacheKey = CreateMetadataCacheKey(_artifactLoader.GetOriginalPaths(DataSpace.CSpace), null, null);
+
+            // Check the MetadataCache for an entry with this key
+            object entryToken;
+            var edmItemCollection = MetadataCache.GetOrCreateEdmItemCollection(edmCacheKey, _artifactLoader, out entryToken);
+
+            var mappingLoader = new Lazy<StorageMappingItemCollection>(
+                () => StorageMappingLoader(_storeConnection, _effectiveConnectionOptions, edmItemCollection));
+
+            _metadataWorkspace = new MetadataWorkspace(
+                () => edmItemCollection,
+                () => mappingLoader.Value.StoreItemCollection,
+                () => mappingLoader.Value);
+
+            // TODO: Fix this as part of metadata caching simplification to cache workspaces themselves
+            _metadataWorkspace.AddMetadataEntryToken(entryToken);
 
             return _metadataWorkspace;
+        }
+
+        private static bool ShouldRecalculateMetadataArtifactLoader(IEnumerable<MetadataArtifactLoader> loaders)
+        {
+            return loaders.Any(loader => loader.GetType() == typeof(MetadataArtifactLoaderCompositeFile));
         }
 
         /// <summary>
@@ -1018,6 +991,7 @@ namespace System.Data.Entity.Core.EntityClient
                 // Now we have sufficient information and verified the configuration string is good, use them for this connection object
                 // Failure should not occur from this point to the end of this method
                 _providerFactory = factory;
+
                 _metadataWorkspace = null;
 
                 ClearTransactions();
@@ -1048,35 +1022,11 @@ namespace System.Data.Entity.Core.EntityClient
             return keywordValue;
         }
 
-        private static EdmItemCollection LoadEdmItemCollection(MetadataWorkspace workspace, MetadataArtifactLoader artifactLoader)
-        {
-            // Build a string as the key and look up the MetadataCache for a match
-            var edmCacheKey = CreateMetadataCacheKey(artifactLoader.GetOriginalPaths(DataSpace.CSpace), null, null);
-
-            // Check the MetadataCache for an entry with this key
-            object entryToken;
-            var edmItemCollection = MetadataCache.GetOrCreateEdmItemCollection(
-                edmCacheKey,
-                artifactLoader,
-                out entryToken);
-            workspace.RegisterItemCollection(edmItemCollection);
-
-            // Adding the edm metadata entry token to the workspace, to make sure that this token remains alive till workspace is alive
-            workspace.AddMetadataEntryToken(entryToken);
-
-            return edmItemCollection;
-        }
-
-        private static void LoadStoreItemCollections(
-            MetadataWorkspace workspace,
+        private StorageMappingItemCollection StorageMappingLoader(
             DbConnection storeConnection,
             DbConnectionOptions connectionOptions,
-            EdmItemCollection edmItemCollection,
-            MetadataArtifactLoader artifactLoader)
+            EdmItemCollection edmItemCollection)
         {
-            Debug.Assert(
-                workspace.IsItemCollectionAlreadyRegistered(DataSpace.CSpace), "C-Space must be loaded before loading S or C-S space");
-
             // The provider connection string is optional; if it has not been specified,
             // we pick up the store's connection string.
             //
@@ -1089,7 +1039,7 @@ namespace System.Data.Entity.Core.EntityClient
 
             // Build a string as the key and look up the MetadataCache for a match
             var storeCacheKey = CreateMetadataCacheKey(
-                artifactLoader.GetOriginalPaths(),
+                _artifactLoader.GetOriginalPaths(),
                 connectionOptions[EntityConnectionStringBuilder.ProviderParameterName],
                 providerConnectionString);
 
@@ -1098,15 +1048,17 @@ namespace System.Data.Entity.Core.EntityClient
             var mappingCollection =
                 MetadataCache.GetOrCreateStoreAndMappingItemCollections(
                     storeCacheKey,
-                    artifactLoader,
+                    _artifactLoader,
                     edmItemCollection,
                     out entryToken);
 
-            workspace.RegisterItemCollection(mappingCollection.StoreItemCollection);
-            workspace.RegisterItemCollection(mappingCollection);
+            _artifactLoader = null;
+            _initialized = true;
 
-            // Adding the store metadata entry token to the workspace
-            workspace.AddMetadataEntryToken(entryToken);
+            // TODO: Fix this as part of metadata caching simplification to cache workspaces themselves
+            _metadataWorkspace.AddMetadataEntryToken(entryToken);
+
+            return mappingCollection;
         }
 
         /// <summary>

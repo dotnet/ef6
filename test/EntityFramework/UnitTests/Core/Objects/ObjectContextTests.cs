@@ -21,6 +21,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Transactions;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -289,40 +290,21 @@ namespace System.Data.Entity.Core.Objects
         public class EnsureConnection
         {
             [Fact]
-            public void Calls_EnsureMetadata_if_connection_open()
-            {
-                var entityConnectionMock = new Mock<EntityConnection>();
-                entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
-                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
-                objectContextMock.Setup(m => m.EnsureMetadata()).Verifiable();
-
-                objectContextMock.Object.EnsureConnection();
-
-                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Once());
-            }
-
-            [Fact]
             public void Releases_connection_when_exception_caught()
             {
                 var connectionMock = new Mock<EntityConnection>();
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
+                connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
                 var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
                                             {
                                                 CallBase = true
                                             };
-                objectContextMock.Setup(m => m.EnsureMetadata()).Throws(new MetadataException());
+                using (new TransactionScope())
+                {
+                    Assert.Throws<NotImplementedException>(() => objectContextMock.Object.EnsureConnection());
+                }
 
-                try
-                {
-                    objectContextMock.Object.EnsureConnection();
-                }
-                catch (MetadataException)
-                {
-                    objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
-                }
+                objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]
@@ -343,8 +325,6 @@ namespace System.Data.Entity.Core.Objects
                                             {
                                                 CallBase = true
                                             };
-                objectContextMock.Setup(m => m.EnsureMetadata());
-
                 objectContextMock.Object.EnsureConnection();
 
                 entityConnectionMock.Verify(m => m.Open(), Times.Once());
@@ -776,7 +756,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
-                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
 
                 var objectContext = new ObjectContext(entityConnectionMock.Object, true);
@@ -790,7 +770,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
-                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", false).Verifiable();
 
                 var objectContext = new ObjectContext(entityConnectionMock.Object, false);
@@ -804,7 +784,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
-                entityConnectionMock.Setup(m => m.GetMetadataWorkspace(false)).Returns(new Mock<MetadataWorkspace>().Object);
+                entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
 
                 var objectContext = new ObjectContext(entityConnectionMock.Object);
@@ -1102,40 +1082,22 @@ namespace System.Data.Entity.Core.Objects
         public class EnsureConnectionAsync
         {
             [Fact]
-            public void Calls_EnsureMetadata_if_connection_open()
-            {
-                var entityConnectionMock = new Mock<EntityConnection>();
-                entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
-                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
-                objectContextMock.Setup(m => m.EnsureMetadata()).Verifiable();
-
-                objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
-
-                objectContextMock.Verify(m => m.EnsureMetadata(), Times.Once());
-            }
-
-            [Fact]
             public void Releases_connection_when_exception_caught()
             {
                 var connectionMock = new Mock<EntityConnection>();
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
+                connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
                 var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
                                             {
                                                 CallBase = true
                                             };
-                objectContextMock.Setup(m => m.EnsureMetadata()).Throws(new MetadataException());
 
-                try
+                using (new TransactionScope())
                 {
-                    objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
+                    Assert.Throws<AggregateException>(() => objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait());
                 }
-                catch (AggregateException)
-                {
-                    objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
-                }
+
+                objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]
@@ -1157,8 +1119,6 @@ namespace System.Data.Entity.Core.Objects
                 {
                     CallBase = true
                 };
-                objectContextMock.Setup(m => m.EnsureMetadata());
-
                 objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
 
                 entityConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());

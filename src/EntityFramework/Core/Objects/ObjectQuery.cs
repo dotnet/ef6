@@ -204,7 +204,6 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public TypeUsage GetResultType()
         {
-            Context.EnsureMetadata();
             if (null == _resultType)
             {
                 // Retrieve the result type from the implementation, in terms of C-Space.

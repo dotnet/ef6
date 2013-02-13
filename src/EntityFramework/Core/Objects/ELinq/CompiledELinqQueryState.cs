@@ -53,9 +53,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Debug.Assert(Span == null, "Include span specified on compiled LINQ-based ObjectQuery instead of within the expression tree?");
             Debug.Assert(_cachedPlan == null, "Cached plan should not be set on compiled LINQ queries");
 
-            // Metadata is required to generate the execution plan or to retrieve it from the cache.
-            ObjectContext.EnsureMetadata();
-
             ObjectQueryExecutionPlan plan = null;
             var cacheEntry = _cacheEntry;
             var useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;

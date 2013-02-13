@@ -220,12 +220,6 @@ namespace System.Data.Entity.Core.Objects
 
             Debug.Assert(_workspace != null);
 
-            // register the O-Loader
-            _workspace.RegisterDefaultObjectItemCollection();
-
-            // have the OC-Loader registered by asking for it
-            _workspace.GetItemCollection(DataSpace.OCSpace);
-
             // load config file properties
             var value = ConfigurationManager.AppSettings[UseLegacyPreserveChangesBehavior];
             var useV35Behavior = false;
@@ -1456,9 +1450,6 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                // Make sure the necessary metadata is registered
-                EnsureMetadata();
-
                 var currentTransaction = Transaction.Current;
 
                 EnsureContextIsEnlistedInCurrentTransaction(
@@ -1514,9 +1505,6 @@ namespace System.Data.Entity.Core.Objects
 
             try
             {
-                // Make sure the necessary metadata is registered
-                EnsureMetadata();
-
                 var currentTransaction = Transaction.Current;
 
                 await EnsureContextIsEnlistedInCurrentTransaction(
@@ -1689,42 +1677,6 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        internal virtual void EnsureMetadata()
-        {
-            if (!MetadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace))
-            {
-                Debug.Assert(
-                    !MetadataWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace), "ObjectContext has C-S metadata but not S?");
-
-                // Only throw an ObjectDisposedException if an attempt is made to access the underlying connection object.
-                if (_disposed)
-                {
-                    throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
-                }
-
-                var connectionWorkspace = ((EntityConnection)Connection).GetMetadataWorkspace();
-
-                Debug.Assert(
-                    connectionWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.CSpace) &&
-                    connectionWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.SSpace) &&
-                    connectionWorkspace.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace),
-                    "EntityConnection.GetMetadataWorkspace() did not return an initialized workspace?");
-
-                // Validate that the context's MetadataWorkspace and the underlying connection's MetadataWorkspace
-                // have the same CSpace collection. Otherwise, an error will occur when trying to set the SSpace
-                // and CSSpace metadata
-                var connectionCSpaceCollection = connectionWorkspace.GetItemCollection(DataSpace.CSpace);
-                var contextCSpaceCollection = MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
-                if (!ReferenceEquals(connectionCSpaceCollection, contextCSpaceCollection))
-                {
-                    throw new InvalidOperationException(Strings.ObjectContext_MetadataHasChanged);
-                }
-
-                MetadataWorkspace.RegisterItemCollection(connectionWorkspace.GetItemCollection(DataSpace.SSpace));
-                MetadataWorkspace.RegisterItemCollection(connectionWorkspace.GetItemCollection(DataSpace.CSSpace));
-            }
-        }
-
         #endregion
 
         /// <summary>
@@ -1791,10 +1743,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new ObjectDisposedException(null, Strings.ObjectContext_ObjectDisposed);
             }
 
-            var connectionWorkspace = ((EntityConnection)Connection).GetMetadataWorkspace(initializeAllCollections: false);
-            Debug.Assert(connectionWorkspace != null, "EntityConnection.MetadataWorkspace is null.");
-
-            return connectionWorkspace;
+            return _connection.GetMetadataWorkspace();
         }
 
         /// <summary>
@@ -3869,10 +3818,6 @@ namespace System.Data.Entity.Core.Objects
             {
                 entitySet = GetEntitySetFromName(entitySetName);
             }
-
-            // make sure all metadata is available (normally this is handled by the call to EntityConnection.Open,
-            // but translate does not necessarily use the EntityConnection)
-            EnsureMetadata();
 
             // get the expected EDM type
             EdmType modelEdmType;
