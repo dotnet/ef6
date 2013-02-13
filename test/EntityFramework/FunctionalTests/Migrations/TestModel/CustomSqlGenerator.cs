@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Migrations.Model;
-using System.Data.Entity.Migrations.Sql;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations.TestModel
+namespace System.Data.Entity.Migrations
 {
-    public class CustomSqlGenerator
-        : SqlServerMigrationSqlGenerator
+    using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Sql;
+
+    internal class CustomSqlGenerator : SqlServerMigrationSqlGenerator
     {
-
-        protected override void Generate(MigrationOperation operation)
+        protected override void Generate(MigrationOperation migrationOperation)
         {
-            if (operation is TestMigrationOperation)
+            var commentOperation = migrationOperation as CommentOperation;
+            if (commentOperation != null)
             {
-                var testOperation = (TestMigrationOperation)operation;
-
-                string statementFormat = "Migration Operation: {0} called";
-
-                this.Statement(String.Format(statementFormat, testOperation.TestName));
+                Statement(string.Format("-- {0}", commentOperation.Text));
+            }
+            else
+            {
+                base.Generate(migrationOperation);
             }
         }
     }

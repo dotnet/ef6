@@ -3,8 +3,10 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Linq;
+    using Moq;
     using Xunit;
 
     public class DbMigrationTests
@@ -363,15 +365,15 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
-        public void Explictly_calling_IAddMigrationOperation_should_add_operation()
+        public void Explictly_calling_IDbMigration_should_add_operation()
         {
-            IAddMigrationOperation migration = new TestMigration();
+            var migration = new TestMigration();
+            var operation = new Mock<MigrationOperation>(null).Object;
 
-            migration.AddOperation(new SqlOperation("foo"));
+            ((IDbMigration)migration).AddOperation(operation);
 
-            var sqlOperation = ((TestMigration)migration).Operations.Cast<SqlOperation>().Single();
-
-            Assert.Equal("foo", sqlOperation.Sql);
+            Assert.Equal(1, migration.Operations.Count());
+            Assert.Same(operation, migration.Operations.Single());
         }
     }
 }

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Migrations.Builders;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -14,8 +15,7 @@ namespace System.Data.Entity.Migrations
     /// <summary>
     ///     Base class for code-based migrations.
     /// </summary>
-    public abstract class DbMigration
-        : IAddMigrationOperation
+    public abstract class DbMigration : IDbMigration
     {
         private readonly List<MigrationOperation> _operations = new List<MigrationOperation>();
 
@@ -599,7 +599,9 @@ namespace System.Data.Entity.Migrations
                 });
         }
 
-        void IAddMigrationOperation.AddOperation(MigrationOperation migrationOperation)
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
+        void IDbMigration.AddOperation(MigrationOperation migrationOperation)
         {
             AddOperation(migrationOperation);
         }
@@ -655,7 +657,5 @@ namespace System.Data.Entity.Migrations
         }
 
         #endregion
-
-
     }
 }

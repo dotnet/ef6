@@ -9,6 +9,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
@@ -17,7 +18,6 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
@@ -68,13 +68,16 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
-        /// Allows generating SQL for custom operations
-        /// Needs to be overridden
+        ///     Generates SQL for a <see cref="MigrationOperation" />.
+        ///     Allows derived providers to handle additional operation types.
+        ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="operation">The custom operation to produce SQL for.</param>
-        protected virtual void Generate(MigrationOperation operation)
+        /// <param name="migrationOperation"> The operation to produce SQL for. </param>
+        protected virtual void Generate(MigrationOperation migrationOperation)
         {
+            Check.NotNull(migrationOperation, "migrationOperation");
 
+            throw Error.SqlServerMigrationSqlGenerator_UnknownOperation(GetType().Name, migrationOperation.GetType().FullName);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using Moq;
     using Xunit;
 
     public class SqlCeMigrationSqlGeneratorTests
@@ -21,6 +22,20 @@ namespace System.Data.Entity.Migrations.Sql
                 Strings.SqlCeColumnRenameNotSupported,
                 Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameColumnOperation }, "4.0").ToList()).
                     Message);
+        }
+
+        [Fact]
+        public void Generate_throws_when_operation_unknown()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+            var unknownOperation = new Mock<MigrationOperation>(null).Object;
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => migrationSqlGenerator.Generate(new[] { unknownOperation }, "4.0"));
+
+            Assert.Equal(
+                Strings.SqlServerMigrationSqlGenerator_UnknownOperation(typeof(SqlCeMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
+                ex.Message);
         }
     }
 }

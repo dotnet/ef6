@@ -13524,6 +13524,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.EntityClient_CannotOpenBrokenConnection); }
         }
+
+        /// <summary>
+        /// A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static string SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
+        }
     } 
 
     /// <summary>
@@ -15251,6 +15259,14 @@ namespace System.Data.Entity.Resources
         {
             return new InvalidOperationException(Strings.EntityClient_CannotOpenBrokenConnection);
         }
+
+        /// <summary>
+        /// InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
+        }
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -16973,6 +16989,7 @@ namespace System.Data.Entity.Resources
         internal const string BaseTypeNotMappedToFunctions = "BaseTypeNotMappedToFunctions";
         internal const string InvalidResourceName = "InvalidResourceName";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
+        internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
         
         static EntityRes loader = null;
         ResourceManager resources;

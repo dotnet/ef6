@@ -336,7 +336,7 @@
     <Compile Include="DataAnnotations\Schema\NotMappedAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
     <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
-    <Compile Include="Migrations\IAddMigrationOperation.cs" />
+    <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
     <Compile Include="Infrastructure\IExecutionStrategy.cs" />
