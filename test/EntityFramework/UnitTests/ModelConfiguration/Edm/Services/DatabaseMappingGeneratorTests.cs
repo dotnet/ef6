@@ -83,9 +83,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
             Assert.False(column.Nullable);
-            Assert.Null(column.IsFixedLength);
-            Assert.Equal(false, column.IsMaxLength);
-            Assert.Null(column.IsUnicode);
+            Assert.True(column.IsFixedLengthConstant);
+            Assert.False(column.IsMaxLength);
+            Assert.True(column.IsUnicodeConstant);
             Assert.Equal(42, column.MaxLength);
             Assert.Null(column.Precision);
             Assert.Null(column.Scale);

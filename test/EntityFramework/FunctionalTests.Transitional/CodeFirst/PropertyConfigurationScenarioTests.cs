@@ -79,15 +79,15 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<UnitMeasure>(u => u.Name).FacetEqual(true, c => c.IsMaxLength);
-            // Should be null for nvarchar(max)
+            // nvarchar(max) should use const MaxLength
             databaseMapping.Assert<BillOfMaterials>("BillOfMaterials").Column("UnitMeasure_Name")
                 .DbEqual(false, c => c.IsMaxLength);
             databaseMapping.Assert<UnitMeasure>(u => u.Name).FacetEqual(null, c => c.MaxLength);
             databaseMapping.Assert<BillOfMaterials>("BillOfMaterials").Column("UnitMeasure_Name")
-                .DbEqual(null, c => c.MaxLength);
+                .DbEqual(true, c => c.IsMaxLengthConstant);
             databaseMapping.Assert<UnitMeasure>(u => u.Name).FacetEqual(false, c => c.IsFixedLength);
             databaseMapping.Assert<BillOfMaterials>("BillOfMaterials").Column("UnitMeasure_Name")
-                .DbEqual(null, c => c.IsFixedLength);
+                .DbEqual(true,  c => c.IsFixedLengthConstant);
         }
 
         [Fact]

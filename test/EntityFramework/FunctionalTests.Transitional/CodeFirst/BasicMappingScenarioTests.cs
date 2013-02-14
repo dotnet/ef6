@@ -2289,7 +2289,7 @@ namespace FunctionalTests
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData");
             databaseMapping.Assert<TPHBase>("TPHBases")
                 .Column("DerivedData")
-                .DbEqual(null, f => f.MaxLength);
+                .DbEqual(true, f => f.IsMaxLengthConstant);
             databaseMapping.AssertMapping<TPHDerived>("TPHBases", false)
                 .HasNoPropertyConditions()
                 .HasNullabilityColumnCondition("DerivedData", false);
@@ -2318,7 +2318,7 @@ namespace FunctionalTests
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData");
             databaseMapping.Assert<TPHBase>("TPHBases")
                 .Column("DerivedData")
-                .DbEqual(null, f => f.MaxLength);
+                .DbEqual(true, f => f.IsMaxLengthConstant);
             databaseMapping.AssertMapping<TPHDerived>("TPHBases")
                 .HasNoPropertyConditions()
                 .HasNullabilityColumnCondition("DerivedData", false);

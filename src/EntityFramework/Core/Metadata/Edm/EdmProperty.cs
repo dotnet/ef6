@@ -342,13 +342,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        public bool IsMaxLengthConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                    && facet.Description.IsConstant;
+            }
+        }
+
         public int? MaxLength
         {
             get
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
-                           ? (!facet.Description.IsConstant ? facet.Value as int? : null)
+                           ? facet.Value as int?
                            : null;
             }
             set
@@ -357,9 +368,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(
                     new FacetValues
-                        {
-                            MaxLength = value
-                        });
+                    {
+                        MaxLength = value
+                    });
             }
         }
 
@@ -379,10 +390,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                            {
-                                MaxLength = EdmConstants.UnboundedValue
-                            });
+                        {
+                            MaxLength = EdmConstants.UnboundedValue
+                        });
                 }
+            }
+        }
+
+        public bool IsFixedLengthConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, false, out facet)
+                    && facet.Description.IsConstant;
             }
         }
 
@@ -392,7 +414,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, false, out facet)
-                           ? (!facet.Description.IsConstant ? facet.Value as bool? : null)
+                           ? facet.Value as bool?
                            : null;
             }
             set
@@ -401,9 +423,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(
                     new FacetValues
-                        {
-                            FixedLength = value
-                        });
+                    {
+                        FixedLength = value
+                    });
+            }
+        }
+
+        public bool IsUnicodeConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, false, out facet)
+                    && facet.Description.IsConstant;
             }
         }
 
@@ -413,7 +446,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, false, out facet)
-                           ? (!facet.Description.IsConstant ? facet.Value as bool? : null)
+                           ? facet.Value as bool?
                            : null;
             }
             set
@@ -422,9 +455,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(
                     new FacetValues
-                        {
-                            Unicode = value
-                        });
+                    {
+                        Unicode = value
+                    });
+            }
+        }
+
+        public bool IsPrecisionConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
+                    && facet.Description.IsConstant;
             }
         }
 
@@ -434,7 +478,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
-                           ? (!facet.Description.IsConstant ? facet.Value as byte? : null)
+                           ? facet.Value as byte?
                            : null;
             }
             set
@@ -443,9 +487,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(
                     new FacetValues
-                        {
-                            Precision = value
-                        });
+                    {
+                        Precision = value
+                    });
+            }
+        }
+
+        public bool IsScaleConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
+                    && facet.Description.IsConstant;
             }
         }
 
@@ -455,7 +510,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Facet facet;
                 return TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
-                           ? (!facet.Description.IsConstant ? facet.Value as byte? : null)
+                           ? facet.Value as byte?
                            : null;
             }
             set
@@ -464,9 +519,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 TypeUsage = TypeUsage.ShallowCopy(
                     new FacetValues
-                        {
-                            Scale = value
-                        });
+                    {
+                        Scale = value
+                    });
             }
         }
     }

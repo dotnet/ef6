@@ -258,5 +258,160 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.True(property.IsKeyMember);
         }
+
+        [Fact]
+        public void IsMaxLengthConstant_returns_true_for_const_MaxLength_facet_and_value_cannot_be_changed()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new[] { CreateConstFacet("MaxLength", PrimitiveTypeKind.Int32, 200) });
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.True(property.IsMaxLengthConstant);
+            Assert.Equal(200, property.MaxLength);
+
+            property.MaxLength = 300;
+            Assert.Equal(200, property.MaxLength);
+        }
+
+        [Fact]
+        public void IsMaxLengthConstant_returns_false_if_MaxLength_facet_not_present_and_value_is_null()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), new Facet[0]);
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.False(property.IsMaxLengthConstant);
+            Assert.Null(property.MaxLength);
+        }
+
+        [Fact]
+        public void IsFixedLengthConstant_returns_true_for_const_FixedLength_facet_and_value_cannot_be_changed()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new[] { CreateConstFacet("FixedLength", PrimitiveTypeKind.Boolean, true) });
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.True(property.IsFixedLengthConstant);
+            Assert.Equal(true, property.IsFixedLength);
+
+            property.IsFixedLength = false;
+            Assert.Equal(true, property.IsFixedLength);
+        }
+
+        [Fact]
+        public void IsFixedLengthConstant_returns_false_if_FixedLength_facet_not_present_and_value_is_null()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), new Facet[0]);
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.False(property.IsFixedLengthConstant);
+            Assert.Null(property.IsFixedLength);
+        }
+
+        [Fact]
+        public void IsUnicodeConstant_returns_true_for_const_Unicode_facet_and_value_cannot_be_changed()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new[] { CreateConstFacet("Unicode", PrimitiveTypeKind.Boolean, true) });
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.True(property.IsUnicodeConstant);
+            Assert.Equal(true, property.IsUnicode);
+
+            property.IsFixedLength = false;
+            Assert.Equal(true, property.IsUnicode);
+        }
+
+        [Fact]
+        public void IsUnicodeConstant_returns_false_if_Unicode_facet_not_present_and_value_is_null()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), new Facet[0]);
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.False(property.IsUnicodeConstant);
+            Assert.Null(property.IsUnicode);
+        }
+
+        [Fact]
+        public void IsPrecisionConstant_returns_true_for_const_Precision_facet_and_value_cannot_be_changed()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new[] { CreateConstFacet("Precision", PrimitiveTypeKind.Byte, (byte)10) });
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.True(property.IsPrecisionConstant);
+            Assert.Equal(10, (byte)property.Precision);
+
+            property.Precision = 15;
+            Assert.Equal(10, (byte)property.Precision);
+        }
+
+        [Fact]
+        public void IsPrecisionConstant_returns_false_if_Precision_facet_not_present_and_value_is_null()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), new Facet[0]);
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.False(property.IsPrecisionConstant);
+            Assert.Null(property.Precision);
+        }
+
+        [Fact]
+        public void IsScaleConstant_returns_true_for_const_Scale_facet_and_value_cannot_be_changed()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new[] { CreateConstFacet("Scale", PrimitiveTypeKind.Byte, (byte)10) });
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.True(property.IsScaleConstant);
+            Assert.Equal(10, (byte)property.Scale);
+
+            property.Scale = 15;
+            Assert.Equal(10, (byte)property.Scale);
+        }
+
+        [Fact]
+        public void IsScaleConstant_returns_false_if_Scale_facet_not_present_and_value_is_null()
+        {
+            var typeUsage =
+                TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), new Facet[0]);
+
+            var property = new EdmProperty("P", typeUsage);
+            Assert.False(property.IsScaleConstant);
+            Assert.Null(property.Scale);
+        }
+
+        private static Facet CreateConstFacet(string facetName, PrimitiveTypeKind facetTypeKind, object value)
+        {
+            return
+                Facet.Create(
+                    new FacetDescription(
+                        facetName,
+                        PrimitiveType.GetEdmPrimitiveType(facetTypeKind),
+                        null,
+                        null,
+                        value,
+                        true,
+                        null),
+                    value);
+        }
     }
 }

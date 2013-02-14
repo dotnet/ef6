@@ -33,10 +33,12 @@ namespace FunctionalTests
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nvarchar", c => c.TypeName);
 
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLengthConstant);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nvarchar", c => c.TypeName);
 
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(4000, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLengthConstant);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("varbinary", c => c.TypeName);
         }
@@ -82,11 +84,11 @@ namespace FunctionalTests
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Id).DbEqual("nvarchar", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(null, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(true, f => f.IsMaxLengthConstant);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop1).DbEqual("nvarchar(max)", c => c.TypeName);
 
-            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(null, f => f.MaxLength);
+            databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(true, f => f.IsMaxLengthConstant);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual(false, f => f.IsMaxLength);
             databaseMapping.Assert<MaxLengthProperties>(e => e.Prop2).DbEqual("varbinary(max)", c => c.TypeName);
         }

@@ -433,6 +433,7 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteEndElement();
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void WritePropertyElementHeader(EdmProperty property)
         {
             DebugCheck.NotNull(property);
@@ -552,34 +553,34 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.MaxLengthElement, XmlConstants.Max);
             }
-            else if (property.MaxLength.HasValue)
+            else if (!property.IsMaxLengthConstant && property.MaxLength.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.MaxLengthElement,
                     property.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (property.IsFixedLength.HasValue)
+            if (!property.IsFixedLengthConstant && property.IsFixedLength.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.FixedLengthElement,
                     GetLowerCaseStringFromBoolValue(property.IsFixedLength.Value));
             }
 
-            if (property.IsUnicode.HasValue)
+            if (!property.IsUnicodeConstant && property.IsUnicode.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.UnicodeElement, GetLowerCaseStringFromBoolValue(property.IsUnicode.Value));
             }
 
-            if (property.Precision.HasValue)
+            if (!property.IsPrecisionConstant && property.Precision.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.PrecisionElement,
                     property.Precision.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (property.Scale.HasValue)
+            if (!property.IsScaleConstant && property.Scale.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.ScaleElement, property.Scale.Value.ToString(CultureInfo.InvariantCulture));
