@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
+    using Moq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -437,6 +438,37 @@ namespace System.Data.Entity.Migrations
                 () => migrator.ExecuteStatements(migrationStatements));
 
             Assert.Equal(-2, ex.Number);
+        }
+    }
+
+    public class ExecuteStatements : TestBase
+    {
+        [Fact]
+        public void Uses_ExecutionStrategy()
+        {
+            var configuration = new DbMigrationsConfiguration
+            {
+                ContextType = typeof(ShopContext_v1),
+                MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly,
+                MigrationsNamespace = typeof(ShopContext_v1).Namespace,
+                HistoryContextFactory = new DefaultHistoryContextFactory()
+            };
+
+            var migrator = new DbMigrator(configuration);
+
+            var executionStrategyMock = new Mock<IExecutionStrategy>();
+
+            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            try
+            {
+                migrator.ExecuteStatements(Enumerable.Empty<MigrationStatement>());
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+
+            executionStrategyMock.Verify(m => m.Execute(It.IsAny<Action>()), Times.Once());
         }
     }
 }

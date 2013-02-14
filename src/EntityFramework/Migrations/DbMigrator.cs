@@ -870,17 +870,23 @@ namespace System.Data.Entity.Migrations
         {
             using (var connection = CreateConnection())
             {
-                connection.Open();
+                DbProviderServices.GetExecutionStrategy(connection).Execute(
+                    () => ExecuteStatementsInternal(migrationStatements, connection));
+            }
+        }
 
-                using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
+        private void ExecuteStatementsInternal(IEnumerable<MigrationStatement> migrationStatements, DbConnection connection)
+        {
+            connection.Open();
+
+            using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
+            {
+                foreach (var migrationStatement in migrationStatements)
                 {
-                    foreach (var migrationStatement in migrationStatements)
-                    {
-                        base.ExecuteSql(transaction, migrationStatement);
-                    }
-
-                    transaction.Commit();
+                    base.ExecuteSql(transaction, migrationStatement);
                 }
+
+                transaction.Commit();
             }
         }
 
