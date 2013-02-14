@@ -2509,7 +2509,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
                 entriesAffected = await executionStrategy.ExecuteAsync(
-                    () => SaveChangesToStoreAsync(options,
+                    () => SaveChangesToStoreAsync(
+                        options,
                               /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions, cancellationToken))
                                                          .ConfigureAwait(continueOnCapturedContext: false);
             }
@@ -2560,7 +2561,8 @@ namespace System.Data.Entity.Core.Objects
                 || !_commandInterceptor.IsEnabled)
             {
                 entriesAffected = ExecuteInTransaction(
-                    () => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true), throwOnExistingTransaction, startLocalTransaction: true);
+                    () => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true), throwOnExistingTransaction,
+                    startLocalTransaction: true);
                 ReleaseConnection();
             }
             else
@@ -2602,7 +2604,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken), throwOnExistingTransaction,
-                    /*startLocalTransaction:*/ true, cancellationToken)
+                                            /*startLocalTransaction:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
             ReleaseConnection();
 
@@ -3412,17 +3414,16 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> A single integer return value </returns>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
-            EnsureConnection();
-
-            try
-            {
-                var command = CreateStoreCommand(commandText, parameters);
-                return command.ExecuteNonQuery();
-            }
-            finally
-            {
-                ReleaseConnection();
-            }
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            return executionStrategy.Execute(
+                () =>
+                    {
+                        var rowsAffected = ExecuteInTransaction(
+                            () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
+                            throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true);
+                        ReleaseConnection();
+                        return rowsAffected;
+                    });
         }
 
 #if !NET40
@@ -3449,20 +3450,22 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a single integer return value. </returns>
-        public virtual async Task<int> ExecuteStoreCommandAsync(
+        public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
-            try
-            {
-                var command = CreateStoreCommand(commandText, parameters);
-                return await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            }
-            finally
-            {
-                ReleaseConnection();
-            }
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            return executionStrategy.ExecuteAsync(
+                async () =>
+                          {
+                              var rowsAffected = await ExecuteInTransactionAsync(
+                                  () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
+                                                           /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                                                           /*startLocalTransaction:*/ true, cancellationToken)
+                                                           .ConfigureAwait(continueOnCapturedContext: false);
+                              ReleaseConnection();
+                              return rowsAffected;
+                          },
+                cancellationToken);
         }
 
 #endif
@@ -3756,8 +3759,8 @@ namespace System.Data.Entity.Core.Objects
                 () => ExecuteInTransactionAsync(
                     () => ExecuteStoreQueryInternalAsync<TElement>(
                         commandText, entitySetName, executionOptions, cancellationToken, parameters),
-                    /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                    /*startLocalTransaction:*/ false, cancellationToken),
+                          /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                          /*startLocalTransaction:*/ false, cancellationToken),
                 cancellationToken);
         }
 

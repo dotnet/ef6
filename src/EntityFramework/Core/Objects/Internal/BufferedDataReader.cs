@@ -11,10 +11,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#if !NET40
-
 #endif
 
     /// <summary>

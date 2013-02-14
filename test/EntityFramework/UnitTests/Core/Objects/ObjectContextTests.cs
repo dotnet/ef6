@@ -333,7 +333,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class ExecuteStoreCommand
+        public class ExecuteStoreCommand : TestBase
         {
             [Fact]
             public void Command_is_executed_with_correct_CommandText()
@@ -341,6 +341,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -360,6 +361,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -379,6 +381,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var storeTransaction = new Mock<DbTransaction>().Object;
                 var entityTransactionMock = new Mock<EntityTransaction>();
@@ -425,6 +428,7 @@ namespace System.Data.Entity.Core.Objects
                     () => parameterCollectionMock.Object);
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -483,6 +487,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -516,6 +521,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -528,6 +534,56 @@ namespace System.Data.Entity.Core.Objects
                     Strings.ObjectContext_ExecuteCommandWithMixOfDbParameterAndValues,
                     Assert.Throws<InvalidOperationException>(
                         () => objectContext.ExecuteStoreCommand("Foo", 1, new Mock<DbParameter>().Object)).Message);
+            }
+
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);
+
+                var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+
+                // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
+                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<int>, bool, bool>(
+                                     (f, t, s) =>
+                                     {
+                                         dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Never());
+                                         var result = f();
+                                         dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Once());
+                                         return result;
+                                     });
+
+                // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
+                                     .Returns<Func<int>>(
+                                         f =>
+                                         {
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Never());
+                                             var result = f();
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Once());
+                                             return result;
+                                         });
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    objectContextMock.Object.ExecuteStoreCommand("foo");
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                // Finally verify that ExecutionStrategy.Execute was called
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<int>>()), Times.Once());
             }
         }
 
@@ -1389,7 +1445,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class ExecuteStoreCommandAsync
+        public class ExecuteStoreCommandAsync : TestBase
         {
             [Fact]
             public void Command_is_executed_with_correct_CommandText()
@@ -1398,6 +1454,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -1418,6 +1475,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -1438,6 +1496,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var storeTransaction = new Mock<DbTransaction>().Object;
                 var entityTransactionMock = new Mock<EntityTransaction>();
@@ -1485,6 +1544,7 @@ namespace System.Data.Entity.Core.Objects
                     () => parameterCollectionMock.Object);
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -1543,6 +1603,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -1576,6 +1637,7 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Foo");
@@ -1591,6 +1653,65 @@ namespace System.Data.Entity.Core.Objects
                             () => objectContext.ExecuteStoreCommandAsync(
                                 "Foo", 1,
                                 new Mock<DbParameter>().Object).Result)).Message);
+            }
+
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
+
+                var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+
+                // Verify that ExecuteInTransactionAsync calls DbCommand.ExecuteNonQueryAsync
+                objectContextMock.Setup(m => m.ExecuteInTransactionAsync(It.IsAny<Func<Task<int>>>(),
+                    It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                                 .Returns<Func<Task<int>>, bool, bool, CancellationToken>(
+                                     (f, t, s, c) =>
+                                     {
+                                         dbCommandMock.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()), Times.Never());
+                                         var result = f();
+                                         dbCommandMock.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()), Times.Once());
+                                         return result;
+                                     });
+
+                // Verify that ExecutionStrategy.ExecuteAsync calls ExecuteInTransactionAsync
+                executionStrategyMock.Setup(
+                    m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()))
+                                     .Returns<Func<Task<int>>, CancellationToken>(
+                                         (f, c) =>
+                                         {
+                                             objectContextMock.Verify(
+                                                 m =>
+                                                 m.ExecuteInTransactionAsync(
+                                                     It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                                                     It.IsAny<CancellationToken>()),
+                                                 Times.Never());
+                                             var result = f().Result;
+                                             objectContextMock.Verify(
+                                                 m =>
+                                                 m.ExecuteInTransactionAsync(
+                                                     It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                                                     It.IsAny<CancellationToken>()),
+                                                 Times.Once());
+                                             return Task.FromResult(result);
+                                         });
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    var result = objectContextMock.Object.ExecuteStoreCommandAsync("foo").Result;
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+
+                // Finally verify that ExecutionStrategy.ExecuteAsync was called
+                executionStrategyMock.Verify(
+                    m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
             }
         }
 
