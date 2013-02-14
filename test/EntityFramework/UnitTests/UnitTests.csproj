@@ -178,6 +178,7 @@
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmPropertyTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmSchemaErrorTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityContainerTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntitySetBaseTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityTypeBaseTests.cs" />

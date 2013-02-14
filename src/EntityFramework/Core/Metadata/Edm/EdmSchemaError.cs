@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="message"> The explanation of the error. </param>
         /// <param name="errorCode"> The code associated with this error. </param>
         /// <param name="severity"> The severity of the error. </param>
-        internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity)
+        public EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity)
             :
                 this(message, errorCode, severity, null)
         {
