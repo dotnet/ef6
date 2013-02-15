@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _enableQueryPlanCaching;
         private DbCommand _storeProviderCommand;
         private readonly EntityDataReaderFactory _entityDataReaderFactory;
-        private readonly IDbDependencyResolver _dependencyResolver = null;
+        private readonly IDbDependencyResolver _dependencyResolver;
 
         /// <summary>
         ///     Constructs the EntityCommand object not yet associated to a connection object
@@ -675,62 +675,57 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Ensures we have the command tree, either the user passed us the tree, or an eSQL statement that we need to parse
         /// </summary>
-        private void MakeCommandTree()
+        private DbCommandTree MakeCommandTree()
         {
             // We must have a connection before we come here
             Debug.Assert(_connection != null);
 
-            // Do the work only if we don't have a command tree yet
-            if (_preparedCommandTree == null)
+            DbCommandTree resultTree = null;
+            if (_commandTreeSetByUser != null)
             {
-                DbCommandTree resultTree = null;
-                if (_commandTreeSetByUser != null)
+                resultTree = _commandTreeSetByUser;
+            }
+            else if (CommandType.Text == CommandType)
+            {
+                if (!string.IsNullOrEmpty(_esqlCommandText))
                 {
-                    resultTree = _commandTreeSetByUser;
+                    // The perspective to be used for the query compilation
+                    Perspective perspective = new ModelPerspective(_connection.GetMetadataWorkspace());
+
+                    // get a dictionary of names and typeusage from entity parameter collection
+                    var queryParams = GetParameterTypeUsage();
+
+                    resultTree = CqlQuery.Compile(
+                        _esqlCommandText,
+                        perspective,
+                        null /*parser option - use default*/,
+                        queryParams.Select(paramInfo => paramInfo.Value.Parameter(paramInfo.Key))).CommandTree;
                 }
-                else if (CommandType.Text == CommandType)
+                else
                 {
-                    if (!string.IsNullOrEmpty(_esqlCommandText))
+                    // We have no command text, no command tree, so throw an exception
+                    if (_isCommandDefinitionBased)
                     {
-                        // The perspective to be used for the query compilation
-                        Perspective perspective = new ModelPerspective(_connection.GetMetadataWorkspace());
-
-                        // get a dictionary of names and typeusage from entity parameter collection
-                        var queryParams = GetParameterTypeUsage();
-
-                        resultTree = CqlQuery.Compile(
-                            _esqlCommandText,
-                            perspective,
-                            null /*parser option - use default*/,
-                            queryParams.Select(paramInfo => paramInfo.Value.Parameter(paramInfo.Key))).CommandTree;
+                        // This command was based on a prepared command definition and has no command text,
+                        // so reprepare is not possible. To create a new command with different parameters
+                        // requires creating a new entity command definition and calling it's CreateCommand method.
+                        throw new InvalidOperationException(Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
                     }
                     else
                     {
-                        // We have no command text, no command tree, so throw an exception
-                        if (_isCommandDefinitionBased)
-                        {
-                            // This command was based on a prepared command definition and has no command text,
-                            // so reprepare is not possible. To create a new command with different parameters
-                            // requires creating a new entity command definition and calling it's CreateCommand method.
-                            throw new InvalidOperationException(Strings.EntityClient_CannotReprepareCommandDefinitionBasedCommand);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException(Strings.EntityClient_NoCommandText);
-                        }
+                        throw new InvalidOperationException(Strings.EntityClient_NoCommandText);
                     }
                 }
-                else if (CommandType.StoredProcedure == CommandType)
-                {
-                    // get a dictionary of names and typeusage from entity parameter collection
-                    IEnumerable<KeyValuePair<string, TypeUsage>> queryParams = GetParameterTypeUsage();
-                    var function = DetermineFunctionImport();
-                    resultTree = new DbFunctionCommandTree(Connection.GetMetadataWorkspace(), DataSpace.CSpace, function, null, queryParams);
-                }
-
-                // After everything is good and succeeded, assign the result to our field
-                _preparedCommandTree = resultTree;
             }
+            else if (CommandType.StoredProcedure == CommandType)
+            {
+                // get a dictionary of names and typeusage from entity parameter collection
+                IEnumerable<KeyValuePair<string, TypeUsage>> queryParams = GetParameterTypeUsage();
+                var function = DetermineFunctionImport();
+                resultTree = new DbFunctionCommandTree(Connection.GetMetadataWorkspace(), DataSpace.CSpace, function, null, queryParams);
+            }
+
+            return resultTree;
         }
 
         // requires: this must be a StoreProcedure command
@@ -867,7 +862,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> the command definition </returns>
         private EntityCommandDefinition CreateCommandDefinition()
         {
-            MakeCommandTree();
+            // Do the work only if we don't have a command tree yet
+            if (_preparedCommandTree == null)
+            {
+                _preparedCommandTree = MakeCommandTree();
+            }
 
             // Always check the CQT metadata against the connection metadata (internally, CQT already
             // validates metadata consistency)
@@ -876,7 +875,8 @@ namespace System.Data.Entity.Core.EntityClient
                 throw new InvalidOperationException(Strings.EntityClient_CommandTreeMetadataIncompatible);
             }
 
-            return EntityProviderServices.CreateCommandDefinition(_connection.StoreProviderFactory, _preparedCommandTree, _dependencyResolver);
+            return EntityProviderServices.CreateCommandDefinition(
+                _connection.StoreProviderFactory, _preparedCommandTree, _dependencyResolver);
         }
 
         private void CheckConnectionPresent()

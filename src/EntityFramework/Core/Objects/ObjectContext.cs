@@ -2947,7 +2947,11 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            return CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            return executionStrategy.Execute(
+                () => ExecuteInTransaction(
+                    () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
         }
 
         /// <summary>
@@ -2971,8 +2975,18 @@ namespace System.Data.Entity.Core.Objects
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
 
-            EnsureConnection();
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var result = executionStrategy.Execute(
+                () => ExecuteInTransaction(
+                    () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions,
+                    startLocalTransaction: true));
 
+            ReleaseConnection();
+            return result;
+        }
+
+        private static int ExecuteFunctionCommand(EntityCommand entityCommand)
+        {
             // Prepare the command before calling ExecuteNonQuery, so that exceptions thrown during preparation are not wrapped in EntityCommandExecutionException
             entityCommand.Prepare();
 
@@ -2988,10 +3002,6 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 throw;
-            }
-            finally
-            {
-                ReleaseConnection();
             }
         }
 
@@ -3043,8 +3053,6 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(edmTypes);
             Debug.Assert(edmTypes.Length > 0);
 
-            EnsureConnection();
-
             var commandDefinition = entityCommand.GetCommandDefinition();
 
             // get store data reader
@@ -3055,8 +3063,6 @@ namespace System.Data.Entity.Core.Objects
             }
             catch (Exception e)
             {
-                ReleaseConnection();
-
                 if (e.IsCatchableEntityExceptionType())
                 {
                     throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
@@ -3087,7 +3093,6 @@ namespace System.Data.Entity.Core.Objects
                     {
                         bufferedReader.Dispose();
                     }
-                    ReleaseConnection();
 
                     if (e.IsCatchableEntityExceptionType())
                     {
@@ -3415,15 +3420,13 @@ namespace System.Data.Entity.Core.Objects
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            return executionStrategy.Execute(
-                () =>
-                    {
-                        var rowsAffected = ExecuteInTransaction(
-                            () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
-                            throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true);
-                        ReleaseConnection();
-                        return rowsAffected;
-                    });
+            var rowsAffected = executionStrategy.Execute(
+                () => ExecuteInTransaction(
+                    () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
+
+            ReleaseConnection();
+            return rowsAffected;
         }
 
 #if !NET40
@@ -3450,22 +3453,19 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a single integer return value. </returns>
-        public virtual Task<int> ExecuteStoreCommandAsync(
+        public virtual async Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            return executionStrategy.ExecuteAsync(
-                async () =>
-                          {
-                              var rowsAffected = await ExecuteInTransactionAsync(
-                                  () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                                                           /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                                                           /*startLocalTransaction:*/ true, cancellationToken)
-                                                           .ConfigureAwait(continueOnCapturedContext: false);
-                              ReleaseConnection();
-                              return rowsAffected;
-                          },
-                cancellationToken);
+            var rowsAffected = await executionStrategy.ExecuteAsync(
+                () => ExecuteInTransactionAsync(
+                    () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
+                          /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                          /*startLocalTransaction:*/ true, cancellationToken),
+                cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+
+            ReleaseConnection();
+            return rowsAffected;
         }
 
 #endif

@@ -1016,7 +1016,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class ExecuteFunction
+        public class ExecuteFunction : TestBase
         {
             [Fact]
             public void Command_is_executed_with_streaming()
@@ -1029,23 +1029,159 @@ namespace System.Data.Entity.Core.Objects
                     dataReader, new List<EntityParameter>());
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
 
+                try
+                {
+                    var entityCommandMock = Mock.Get((EntityCommand)entityCommandDefinition.CreateCommand());
+
+                    var objectContext = CreateObjectContext(entityCommandMock.Object);
+                    SetupFooFunction(objectContext.MetadataWorkspace);
+
+                    var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
+                    entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
+
+                    objectContext.ExecuteFunction<object>("Foo", new ExecutionOptions(MergeOption.AppendOnly, streaming: true));
+
+                    entityCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                }
+                finally
+                {
+                    FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
+                }
+            }
+
+            [Fact]
+            public void Generic_Executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                var dataReaderMock = Mock.Get(Common.Internal.Materialization.MockHelper.CreateDbDataReader());
+                dataReaderMock.Setup(m => m.FieldCount).Returns(1);
+                dataReaderMock.Setup(m => m.GetName(0)).Returns("key");
+                var entityCommandDefinition = EntityClient.MockHelper.CreateEntityCommandDefinition(
+                    dataReaderMock.Object, new List<EntityParameter>());
+
                 var entityCommandMock = Mock.Get((EntityCommand)entityCommandDefinition.CreateCommand());
+                entityCommandMock.Protected().Setup<DbDataReader>(
+                    "ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                             .Returns(dataReaderMock.Object);
 
-                var objectContext = CreateObjectContext(entityCommandMock.Object);
+                var objectContextMock = Mock.Get(CreateObjectContext(entityCommandMock.Object));
 
-                var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
+                SetupFooFunction(objectContextMock.Object.MetadataWorkspace);
+                var entityConnectionMock = Mock.Get((EntityConnection)objectContextMock.Object.Connection);
                 entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
 
-                var entityTypeMock = new Mock<EntityType>
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+
+                // Verify that ExecuteInTransaction calls DbCommand.ExecuteDataReader
+                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<ObjectResult<object>>, bool, bool>(
+                                     (f, t, s) =>
+                                     {
+                                         entityCommandMock.Protected().Verify<DbDataReader>(
+                                             "ExecuteDbDataReader", Times.Never(), It.IsAny<CommandBehavior>());
+                                         var result = f();
+                                         entityCommandMock.Protected().Verify<DbDataReader>(
+                                             "ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                                         return result;
+                                     });
+
+                // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()))
+                                     .Returns<Func<ObjectResult<object>>>(
+                                         f =>
                                          {
-                                             CallBase = true
-                                         };
-                var collectionTypeMock = new Mock<CollectionType>(entityTypeMock.Object)
-                                             {
-                                                 CallBase = true
-                                             };
-                var entityType = (EdmType)entityTypeMock.Object;
-                var metadataWorkspaceMock = Mock.Get(objectContext.MetadataWorkspace);
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Never());
+                                             var result = f();
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Once());
+                                             return result;
+                                         });
+
+                FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    objectContextMock.Object.ExecuteFunction<object>("Foo");
+                }
+                finally
+                {
+                    FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
+                    MutableResolver.ClearResolvers();
+                }
+
+                // Finally verify that ExecutionStrategy.Execute was called
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()), Times.Once());
+            }
+
+            [Fact]
+            public void NonGeneric_Executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                var dataReaderMock = Mock.Get(Common.Internal.Materialization.MockHelper.CreateDbDataReader());
+                dataReaderMock.Setup(m => m.FieldCount).Returns(1);
+                var entityCommandDefinition = EntityClient.MockHelper.CreateEntityCommandDefinition(
+                    dataReaderMock.Object, new List<EntityParameter>());
+                
+                var objectContextMock = Mock.Get(CreateObjectContext(entityCommandDefinition.CreateCommand()));
+
+                SetupFooFunction(objectContextMock.Object.MetadataWorkspace);
+                var entityConnectionMock = Mock.Get((EntityConnection)objectContextMock.Object.Connection);
+                entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+
+                // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
+                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<int>, bool, bool>(
+                                     (f, t, s) =>
+                                     {
+                                         dataReaderMock.Verify(m => m.Read(), Times.Never());
+                                         var result = f();
+                                         dataReaderMock.Verify(m => m.Read(), Times.Once());
+                                         return result;
+                                     });
+
+                // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
+                                     .Returns<Func<int>>(
+                                         f =>
+                                         {
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Never());
+                                             var result = f();
+                                             objectContextMock.Verify(
+                                                 m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                 Times.Once());
+                                             return result;
+                                         });
+
+                FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    objectContextMock.Object.ExecuteFunction("Foo");
+                }
+                finally
+                {
+                    FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
+                    MutableResolver.ClearResolvers();
+                }
+
+                // Finally verify that ExecutionStrategy.Execute was called
+                executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<int>>()), Times.Once());
+            }
+            
+            private void SetupFooFunction(MetadataWorkspace metadataWorkspace)
+            {
+                var metadataWorkspaceMock = Mock.Get(metadataWorkspace);
+                var entityType = (EdmType)new EntityType("ReturnedEntity", "FooNamespace", DataSpace.CSpace,
+                    new []{"key"}, new EdmMember[]{new EdmProperty("key") });
+                var collectionTypeMock = new Mock<CollectionType>(entityType)
+                {
+                    CallBase = true
+                };
                 metadataWorkspaceMock.Setup(m => m.TryDetermineCSpaceModelType(It.IsAny<Type>(), out entityType))
                                      .Returns(true);
 
@@ -1055,21 +1191,21 @@ namespace System.Data.Entity.Core.Objects
                 var functionImport = new EdmFunction(
                     "Foo", "Bar", DataSpace.CSpace,
                     new EdmFunctionPayload
-                        {
-                            IsComposable = false,
-                            IsFunctionImport = true,
-                            ReturnParameters = new[]
+                    {
+                        IsComposable = false,
+                        IsFunctionImport = true,
+                        ReturnParameters = new[]
                                                    {
                                                        new FunctionParameter(
                                                            EdmConstants.ReturnType,
                                                            TypeUsage.Create(collectionTypeMock.Object),
                                                            ParameterMode.ReturnValue),
                                                    }
-                        });
+                    });
                 entityContainer.AddFunctionImport(functionImport);
 
-                var edmItemCollection = (EdmItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.CSpace);
-                var storeItemCollection = (StoreItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                var edmItemCollection = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
+                var storeItemCollection = (StoreItemCollection)metadataWorkspace.GetItemCollection(DataSpace.SSpace);
                 var containerMappingMock = new Mock<StorageEntityContainerMapping>(entityContainer);
                 FunctionImportMapping targetFunctionMapping = new FunctionImportMappingNonComposable(
                     functionImport, functionImport, new List<List<FunctionImportStructuralTypeMapping>>(), edmItemCollection);
@@ -1079,9 +1215,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var storageMappingItemCollection = new Mock<StorageMappingItemCollection>(
                     edmItemCollection, storeItemCollection, new string[0])
-                                                       {
-                                                           CallBase = true
-                                                       };
+                {
+                    CallBase = true
+                };
                 storageMappingItemCollection.Setup(m => m.GetItems<StorageEntityContainerMapping>())
                                             .Returns(
                                                 new ReadOnlyCollection<StorageEntityContainerMapping>(
@@ -1092,12 +1228,6 @@ namespace System.Data.Entity.Core.Objects
 
                 metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>()))
                                      .Returns(storageMappingItemCollection.Object);
-
-                objectContext.ExecuteFunction<object>("Foo", new ExecutionOptions(MergeOption.AppendOnly, streaming: true));
-
-                entityCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
-
-                FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
             }
         }
 
@@ -2213,7 +2343,7 @@ namespace System.Data.Entity.Core.Objects
             dbConnectionMock.Setup(m => m.DataSource).Returns("fakeDb");
 
             var entityConnectionMock = new Mock<EntityConnection>();
-            entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Bar");
+            entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("BarConnection");
             entityConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
             entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
             entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
