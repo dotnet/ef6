@@ -331,7 +331,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                              if (!entityConfiguration.IsMappedToFunctions)
                              {
-                                 entityConfiguration.MapToFunctions();
+                                 entityConfiguration.MapToStoredProcedures();
                              }
                          });
         }

@@ -282,7 +282,6 @@
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfiguration`Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfiguration`Tests.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Functions\FunctionParameterConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\MissingPropertyConfigurationTests.cs" />

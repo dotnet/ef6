@@ -15,132 +15,248 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
         }
 
+        public UpdateModificationFunctionConfiguration<TEntityType> HasName(string procedureName)
+        {
+            Check.NotEmpty(procedureName, "procedureName");
+
+            Configuration.HasName(procedureName);
+
+            return this;
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter<TProperty>(
-            Expression<Func<TEntityType, TProperty>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)
             where TProperty : struct
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter<TProperty>(
-            Expression<Func<TEntityType, TProperty?>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty?>> propertyExpression, string parameterName)
             where TProperty : struct
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter(
-            Expression<Func<TEntityType, string>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, string>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter(
-            Expression<Func<TEntityType, byte[]>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, byte[]>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter(
-            Expression<Func<TEntityType, DbGeography>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeography>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionParameterConfiguration Parameter(
-            Expression<Func<TEntityType, DbGeometry>> propertyExpression, bool originalValue)
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeometry>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            return Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), originalValue);
+            Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult<TProperty>(
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+            where TProperty : struct
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty?>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+            where TProperty : struct
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, string>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, byte[]>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeography>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeometry>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationFunctionConfiguration<TEntityType> Result<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string columnName)
             where TProperty : struct
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult<TProperty>(
+        public UpdateModificationFunctionConfiguration<TEntityType> Result<TProperty>(
             Expression<Func<TEntityType, TProperty?>> propertyExpression, string columnName)
             where TProperty : struct
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult(
+        public UpdateModificationFunctionConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, string>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult(
+        public UpdateModificationFunctionConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, byte[]>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult(
+        public UpdateModificationFunctionConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, DbGeography>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public UpdateModificationFunctionConfiguration<TEntityType> BindResult(
+        public UpdateModificationFunctionConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, DbGeometry>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.BindResult(propertyExpression.GetSimplePropertyAccess(), columnName);
+            Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
 
             return this;
         }

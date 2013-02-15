@@ -21,15 +21,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo));
-            modificationFunctionConfiguration.BindResult(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo), "baz");
+            modificationFunctionConfiguration.Result(new PropertyPath(mockPropertyInfo), "foo");
             modificationFunctionConfiguration.RowsAffectedParameter("bar");
 
             var clone = modificationFunctionConfiguration.Clone();
 
             Assert.NotSame(modificationFunctionConfiguration, clone);
             Assert.Equal("Foo", clone.Name);
-            Assert.Equal(1, clone.ParameterConfigurations.Count);
+            Assert.Equal(1, clone.ParameterNames.Count);
             Assert.Equal(1, clone.ResultBindings.Count);
             Assert.Equal("bar", clone.RowsAffectedParameterName);
         }
@@ -59,14 +59,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            Assert.Empty(modificationFunctionConfiguration.ParameterConfigurations);
+            Assert.Empty(modificationFunctionConfiguration.ParameterNames);
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            var parameterConfiguration
-                = modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo));
+            modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo), "baz");
 
-            Assert.Same(parameterConfiguration, modificationFunctionConfiguration.ParameterConfigurations.Single().Value);
+            Assert.Equal("baz", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
         }
 
         [Fact]
@@ -76,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            modificationFunctionConfiguration.BindResult(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfiguration.Result(new PropertyPath(mockPropertyInfo), "foo");
 
             Assert.Same("foo", modificationFunctionConfiguration.ResultBindings.Single().Value);
         }
@@ -92,12 +91,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo2 = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(mockPropertyInfo1))
-                .HasName("P1");
+                .Parameter(new PropertyPath(mockPropertyInfo1), "P1");
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }))
-                .HasName("P2");
+                .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "P2");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -148,8 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo1 = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(mockPropertyInfo1))
-                .HasName("P1");
+                .Parameter(new PropertyPath(mockPropertyInfo1), "P1");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -172,14 +168,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            var mockPropertyInfo1 = new MockPropertyInfo();
+            var mockPropertyInfo = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(mockPropertyInfo1), originalValue: true)
-                .HasName("P1");
+                .Parameter(new PropertyPath(mockPropertyInfo), "P0", "P1");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            var property = new EdmProperty("P0");
+            property.SetClrPropertyInfo(mockPropertyInfo);
 
             Assert.Equal(
                 Strings.ModificationFunctionParameterNotFoundOriginal("P", "F"),
@@ -189,7 +187,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               entitySet,
                               new EntityType(),
                               new EdmFunction(),
-                              new StorageModificationFunctionParameterBinding[0],
+                              new[]
+                                  {
+                                      new StorageModificationFunctionParameterBinding(
+                                          new FunctionParameter(),
+                                          new StorageModificationFunctionMemberPath(
+                                          new[] { property },
+                                          null),
+                                          true)
+                                  },
                               null,
                               null))).Message);
         }
@@ -202,7 +208,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo1 = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .BindResult(new PropertyPath(mockPropertyInfo1), "Foo");
+                .Result(new PropertyPath(mockPropertyInfo1), "Foo");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -228,7 +234,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .BindResult(new PropertyPath(mockPropertyInfo), "Foo");
+                .Result(new PropertyPath(mockPropertyInfo), "Foo");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -332,15 +338,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo2 = new MockPropertyInfo(typeof(string), "S");
             var mockPropertyInfo3 = new MockPropertyInfo(typeof(bool), "B");
 
-            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo1));
-            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo2));
-            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo3));
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo1), "baz");
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo2), "baz");
+            modificationFunctionConfiguration1.Parameter(new PropertyPath(mockPropertyInfo3), "baz");
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
 
-            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo3));
-            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo2));
-            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo1));
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo3), "baz");
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo2), "baz");
+            modificationFunctionConfiguration2.Parameter(new PropertyPath(mockPropertyInfo1), "baz");
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
         }

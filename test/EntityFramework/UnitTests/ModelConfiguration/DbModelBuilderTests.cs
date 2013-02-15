@@ -461,7 +461,7 @@ namespace System.Data.Entity.ModelConfiguration.UnitTests
         {
             var configuration = new EntityTypeConfiguration(typeof(object));
 
-            configuration.MapToFunctions();
+            configuration.MapToStoredProcedures();
 
             var clone = configuration.Clone();
             

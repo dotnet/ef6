@@ -16,9 +16,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            modificationFunctionsConfiguration.InsertFunction(modificationFunctionConfiguration);
-            modificationFunctionsConfiguration.UpdateFunction(modificationFunctionConfiguration);
-            modificationFunctionsConfiguration.DeleteFunction(modificationFunctionConfiguration);
+            modificationFunctionsConfiguration.Insert(modificationFunctionConfiguration);
+            modificationFunctionsConfiguration.Update(modificationFunctionConfiguration);
+            modificationFunctionsConfiguration.Delete(modificationFunctionConfiguration);
 
             var clone = modificationFunctionsConfiguration.Clone();
 
@@ -35,9 +35,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var mockModificationFunctionConfiguration = new Mock<ModificationFunctionConfiguration>();
 
-            modificationFunctionsConfiguration.InsertFunction(mockModificationFunctionConfiguration.Object);
-            modificationFunctionsConfiguration.UpdateFunction(mockModificationFunctionConfiguration.Object);
-            modificationFunctionsConfiguration.DeleteFunction(mockModificationFunctionConfiguration.Object);
+            modificationFunctionsConfiguration.Insert(mockModificationFunctionConfiguration.Object);
+            modificationFunctionsConfiguration.Update(mockModificationFunctionConfiguration.Object);
+            modificationFunctionsConfiguration.Delete(mockModificationFunctionConfiguration.Object);
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -69,8 +69,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var mockModificationFunctionConfiguration = new Mock<ModificationFunctionConfiguration>();
 
-            modificationFunctionsConfiguration.InsertFunction(mockModificationFunctionConfiguration.Object);
-            modificationFunctionsConfiguration.DeleteFunction(mockModificationFunctionConfiguration.Object);
+            modificationFunctionsConfiguration.Insert(mockModificationFunctionConfiguration.Object);
+            modificationFunctionsConfiguration.Delete(mockModificationFunctionConfiguration.Object);
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -105,11 +105,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
             var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
 
-            modificationFunctionsConfiguration1.InsertFunction(modificationFunctionConfiguration1);
+            modificationFunctionsConfiguration1.Insert(modificationFunctionConfiguration1);
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 
-            modificationFunctionsConfiguration2.InsertFunction(modificationFunctionConfiguration2);
+            modificationFunctionsConfiguration2.Insert(modificationFunctionConfiguration2);
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 
@@ -133,11 +133,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
             var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
 
-            modificationFunctionsConfiguration1.DeleteFunction(modificationFunctionConfiguration1);
+            modificationFunctionsConfiguration1.Delete(modificationFunctionConfiguration1);
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 
-            modificationFunctionsConfiguration2.DeleteFunction(modificationFunctionConfiguration2);
+            modificationFunctionsConfiguration2.Delete(modificationFunctionConfiguration2);
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 

@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> InsertFunction(
+        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> Insert(
             Action<ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
@@ -33,13 +33,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
-            _configuration.InsertFunction(modificationFunctionConfiguration.Configuration);
+            _configuration.Insert(modificationFunctionConfiguration.Configuration);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> DeleteFunction(
+        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> Delete(
             Action<ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
-            _configuration.DeleteFunction(modificationFunctionConfiguration.Configuration);
+            _configuration.Delete(modificationFunctionConfiguration.Configuration);
 
             return this;
         }

@@ -160,7 +160,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             databaseMapping.Model.AddEntitySet("E2Set", entityType2);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
-            entityTypeConfiguration.MapToFunctions();
+            entityTypeConfiguration.MapToStoredProcedures();
             entityType1.SetConfiguration(entityTypeConfiguration);
             entityType2.SetConfiguration(entityTypeConfiguration);
 

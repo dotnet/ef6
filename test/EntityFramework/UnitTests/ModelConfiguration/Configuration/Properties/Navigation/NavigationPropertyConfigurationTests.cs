@@ -200,7 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var functionsConfiguration = new ModificationFunctionsConfiguration();
             var functionConfiguration = new ModificationFunctionConfiguration();
             functionConfiguration.HasName("Func");
-            functionsConfiguration.InsertFunction(functionConfiguration);
+            functionsConfiguration.Insert(functionConfiguration);
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -403,11 +403,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var functionsConfiguration1 = new ModificationFunctionsConfiguration();
 
-            functionsConfiguration1.InsertFunction(functionConfiguration1);
+            functionsConfiguration1.Insert(functionConfiguration1);
 
             var functionsConfiguration2 = new ModificationFunctionsConfiguration();
 
-            functionsConfiguration2.InsertFunction(functionConfiguration2);
+            functionsConfiguration2.Insert(functionConfiguration2);
 
             var navigationPropertyConfigurationA
                 = new NavigationPropertyConfiguration(new MockPropertyInfo())

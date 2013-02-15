@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ModificationFunctionsConfiguration<TEntityType> InsertFunction(
+        public ModificationFunctionsConfiguration<TEntityType> Insert(
             Action<InsertModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
@@ -32,13 +32,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
-            _configuration.InsertFunction(modificationFunctionConfiguration.Configuration);
+            _configuration.Insert(modificationFunctionConfiguration.Configuration);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ModificationFunctionsConfiguration<TEntityType> UpdateFunction(
+        public ModificationFunctionsConfiguration<TEntityType> Update(
             Action<UpdateModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
@@ -48,13 +48,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
-            _configuration.UpdateFunction(modificationFunctionConfiguration.Configuration);
+            _configuration.Update(modificationFunctionConfiguration.Configuration);
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ModificationFunctionsConfiguration<TEntityType> DeleteFunction(
+        public ModificationFunctionsConfiguration<TEntityType> Delete(
             Action<DeleteModificationFunctionConfiguration<TEntityType>> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
-            _configuration.DeleteFunction(modificationFunctionConfiguration.Configuration);
+            _configuration.Delete(modificationFunctionConfiguration.Configuration);
 
             return this;
         }

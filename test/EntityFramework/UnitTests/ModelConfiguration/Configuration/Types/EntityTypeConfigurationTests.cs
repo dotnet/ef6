@@ -18,13 +18,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
     public sealed class EntityTypeConfigurationTests
     {
         [Fact]
-        public void MapToFunctions_should_create_empty_function_mapping_configuration()
+        public void MapToStoredProcedures_should_create_empty_function_mapping_configuration()
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             Assert.False(entityTypeConfiguration.IsMappedToFunctions);
 
-            entityTypeConfiguration.MapToFunctions();
+            entityTypeConfiguration.MapToStoredProcedures();
 
             Assert.True(entityTypeConfiguration.IsMappedToFunctions);
         }
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
 
             Assert.False(entityTypeConfiguration.IsMappedToFunctions);
 
-            entityTypeConfiguration.MapToFunctions(new ModificationFunctionsConfiguration());
+            entityTypeConfiguration.MapToStoredProcedures(new ModificationFunctionsConfiguration());
 
             Assert.True(entityTypeConfiguration.IsMappedToFunctions);
         }
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types.UnitTests
             var modificationFunctionsConfigurationMock = new Mock<ModificationFunctionsConfiguration>();
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
-            entityTypeConfiguration.MapToFunctions(modificationFunctionsConfigurationMock.Object);
+            entityTypeConfiguration.MapToStoredProcedures(modificationFunctionsConfigurationMock.Object);
 
             entityType.SetConfiguration(entityTypeConfiguration);
 

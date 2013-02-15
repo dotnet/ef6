@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var middleType = new MockType().BaseType(rootType);
             var leafType = new MockType().BaseType(middleType);
 
-            modelConfiguration.Entity(rootType).MapToFunctions();
+            modelConfiguration.Entity(rootType).MapToStoredProcedures();
             modelConfiguration.Entity(middleType);
             modelConfiguration.Entity(leafType);
 
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var derivedType = new MockType("D").BaseType(baseType);
 
             modelConfiguration.Entity(baseType);
-            modelConfiguration.Entity(derivedType).MapToFunctions();
+            modelConfiguration.Entity(derivedType).MapToStoredProcedures();
 
             var model = new EdmModel(DataSpace.CSpace);
 
@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
             var derivedType = new MockType("D").BaseType(baseType);
 
             modelConfiguration.Entity(baseType);
-            modelConfiguration.Entity(derivedType).MapToFunctions();
+            modelConfiguration.Entity(derivedType).MapToStoredProcedures();
 
             var model = new EdmModel(DataSpace.CSpace);
 

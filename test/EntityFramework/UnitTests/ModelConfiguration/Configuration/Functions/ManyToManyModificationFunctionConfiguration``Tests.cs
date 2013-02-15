@@ -3,10 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
+    using System.Linq;
     using Xunit;
 
-    public class ManyToManyModificationFunctionConfigurationTests
+    public class ManyToManyModificationFunctionConfigurationTests : ModificationFunctionConfigurationTTests
     {
         [Fact]
         public void HasName_should_set_name_on_underlying_configuration()
@@ -23,12 +23,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
 
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.Int));
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.Nullable));
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.String));
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.Bytes));
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.Geography));
-            Assert.NotNull(configuration.LeftKeyParameter(e => e.Geometry));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Int, "Foo"));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Nullable, "Foo"));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.String, "Foo"));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Bytes, "Foo"));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Geography, "Foo"));
+            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Geometry, "Foo"));
+        }
+
+        [Fact]
+        public void LeftKeyParameter_should_set_parameter_name_for_valid_property_expressions()
+        {
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .LeftKeyParameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
         }
 
         [Fact]
@@ -39,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 Strings.InvalidPropertyExpression("e => e.ComplexType.Int"),
                 Assert.Throws<InvalidOperationException>(
-                    () => configuration.LeftKeyParameter(e => e.ComplexType.Int)).Message);
+                    () => configuration.LeftKeyParameter(e => e.ComplexType.Int, "Foo")).Message);
         }
 
         [Fact]
@@ -47,12 +81,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
 
-            Assert.NotNull(configuration.RightKeyParameter(e => e.Int));
-            Assert.NotNull(configuration.RightKeyParameter(e => e.Nullable));
-            Assert.NotNull(configuration.RightKeyParameter(e => e.String));
-            Assert.NotNull(configuration.RightKeyParameter(e => e.Bytes));
-            Assert.NotNull(configuration.RightKeyParameter(e => e.Geography));
-            Assert.NotNull(configuration.RightKeyParameter(e => e.Geometry));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Int, "Foo"));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Nullable, "Foo"));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.String, "Foo"));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Bytes, "Foo"));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Geography, "Foo"));
+            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Geometry, "Foo"));
+        }
+
+        [Fact]
+        public void RightKeyParameter_should_set_parameter_name_for_valid_property_expressions()
+        {
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                    .RightKeyParameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
         }
 
         [Fact]
@@ -63,23 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 Strings.InvalidPropertyExpression("e => e.ComplexType.Int"),
                 Assert.Throws<InvalidOperationException>(
-                    () => configuration.RightKeyParameter(e => e.ComplexType.Int)).Message);
-        }
-
-        protected class Entity
-        {
-            public int Int { get; set; }
-            public short? Nullable { get; set; }
-            public string String { get; set; }
-            public byte[] Bytes { get; set; }
-            public DbGeography Geography { get; set; }
-            public DbGeometry Geometry { get; set; }
-            public ComplexType ComplexType { get; set; }
-        }
-
-        protected class ComplexType
-        {
-            public int Int { get; set; }
+                    () => configuration.RightKeyParameter(e => e.ComplexType.Int, "Foo")).Message);
         }
     }
 }

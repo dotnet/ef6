@@ -200,12 +200,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal bool IsExplicitEntity { get; set; }
 
-        internal virtual void MapToFunctions()
+        internal virtual void MapToStoredProcedures()
         {
             _modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
         }
 
-        internal virtual void MapToFunctions(
+        internal virtual void MapToStoredProcedures(
             ModificationFunctionsConfiguration modificationFunctionsConfiguration)
         {
             DebugCheck.NotNull(modificationFunctionsConfiguration);

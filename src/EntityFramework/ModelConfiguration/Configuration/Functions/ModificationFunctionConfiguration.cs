@@ -14,63 +14,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     internal class ModificationFunctionConfiguration
     {
-        internal sealed class ParameterKey
-        {
-            private readonly PropertyPath _propertyPath;
-            private readonly bool _originalValue;
-
-            public ParameterKey(PropertyPath propertyPath, bool originalValue)
-            {
-                DebugCheck.NotNull(propertyPath);
-
-                _propertyPath = propertyPath;
-                _originalValue = originalValue;
-            }
-
-            public PropertyPath PropertyPath
-            {
-                get { return _propertyPath; }
-            }
-
-            public bool IsOriginalValue
-            {
-                get { return _originalValue; }
-            }
-
-            private bool Equals(ParameterKey other)
-            {
-                return _propertyPath.Equals(other._propertyPath)
-                       && _originalValue.Equals(other._originalValue);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                var parameterKey = obj as ParameterKey;
-
-                return (parameterKey != null) && Equals(parameterKey);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return (_propertyPath.GetHashCode() * 397) ^ _originalValue.GetHashCode();
-                }
-            }
-        }
-
-        private readonly Dictionary<ParameterKey, FunctionParameterConfiguration> _parameterConfigurations
-            = new Dictionary<ParameterKey, FunctionParameterConfiguration>();
+        private readonly Dictionary<PropertyPath, Tuple<string, string>> _parameterNames
+            = new Dictionary<PropertyPath, Tuple<string, string>>();
 
         private readonly Dictionary<PropertyInfo, string> _resultBindings
             = new Dictionary<PropertyInfo, string>();
@@ -89,8 +34,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _name = source._name;
             _rowsAffectedParameter = source._rowsAffectedParameter;
 
-            source._parameterConfigurations.Each(
-                c => _parameterConfigurations.Add(c.Key, c.Value.Clone()));
+            source._parameterNames.Each(
+                c => _parameterNames.Add(c.Key, Tuple.Create(c.Value.Item1, c.Value.Item2)));
 
             source._resultBindings.Each(
                 r => _resultBindings.Add(r.Key, r.Value));
@@ -125,9 +70,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _rowsAffectedParameter; }
         }
 
-        public Dictionary<ParameterKey, FunctionParameterConfiguration> ParameterConfigurations
+        public Dictionary<PropertyPath, Tuple<string, string>> ParameterNames
         {
-            get { return _parameterConfigurations; }
+            get { return _parameterNames; }
         }
 
         public Dictionary<PropertyInfo, string> ResultBindings
@@ -135,23 +80,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _resultBindings; }
         }
 
-        public FunctionParameterConfiguration Parameter(PropertyPath propertyPath, bool originalValue = false)
+        public void Parameter(
+            PropertyPath propertyPath, string parameterName, string originalValueParameterName = null)
         {
             DebugCheck.NotNull(propertyPath);
+            DebugCheck.NotEmpty(parameterName);
 
-            var parameterKey = new ParameterKey(propertyPath, originalValue);
-
-            FunctionParameterConfiguration parameterConfiguration;
-            if (!_parameterConfigurations.TryGetValue(parameterKey, out parameterConfiguration))
-            {
-                _parameterConfigurations.Add(
-                    parameterKey, parameterConfiguration = new FunctionParameterConfiguration());
-            }
-
-            return parameterConfiguration;
+            _parameterNames[propertyPath] = Tuple.Create(parameterName, originalValueParameterName);
         }
 
-        public void BindResult(PropertyPath propertyPath, string columnName)
+        public void Result(PropertyPath propertyPath, string columnName)
         {
             DebugCheck.NotNull(propertyPath);
             DebugCheck.NotEmpty(columnName);
@@ -171,6 +109,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureName(StorageModificationFunctionMapping modificationFunctionMapping)
         {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
             if (!string.IsNullOrWhiteSpace(_name))
             {
                 modificationFunctionMapping.Function.Name = _name;
@@ -179,6 +119,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureRowsAffectedParameter(StorageModificationFunctionMapping modificationFunctionMapping)
         {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
             if (!string.IsNullOrWhiteSpace(_rowsAffectedParameter))
             {
                 if (modificationFunctionMapping.RowsAffectedParameter == null)
@@ -192,45 +134,61 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureParameters(StorageModificationFunctionMapping modificationFunctionMapping)
         {
-            foreach (var keyValue in _parameterConfigurations)
+            foreach (var keyValue in _parameterNames)
             {
-                var parameterKey = keyValue.Key;
-                var parameterConfiguration = keyValue.Value;
+                var propertyPath = keyValue.Key;
+                var parameterName = keyValue.Value.Item1;
+                var originalValueParameterName = keyValue.Value.Item2;
 
                 var parameterBindings
                     = modificationFunctionMapping
                         .ParameterBindings
                         .Where(
-                            pb => parameterKey.PropertyPath.Equals(
+                            pb => propertyPath.Equals(
                                 new PropertyPath(
                                       pb.MemberPath.Members
                                         .OfType<EdmProperty>()
                                         .Select(m => m.GetClrPropertyInfo()))))
                         .ToList();
 
-                var parameterBinding
-                    = parameterBindings
-                          .SingleOrDefault(pb => pb.IsCurrent != parameterKey.IsOriginalValue)
-                      ?? parameterBindings
-                             .SingleOrDefault(pb => !parameterKey.IsOriginalValue);
-
-                if (parameterBinding == null)
+                if (parameterBindings.Count == 1)
                 {
-                    throw !parameterKey.IsOriginalValue
-                              ? Error.ModificationFunctionParameterNotFound(
-                                  parameterKey.PropertyPath,
-                                  modificationFunctionMapping.Function.Name)
-                              : Error.ModificationFunctionParameterNotFoundOriginal(
-                                  parameterKey.PropertyPath,
-                                  modificationFunctionMapping.Function.Name);
-                }
+                    var parameterBinding = parameterBindings.Single();
 
-                parameterConfiguration.Configure(parameterBinding.Parameter);
+                    if (!string.IsNullOrWhiteSpace(originalValueParameterName))
+                    {
+                        if (parameterBinding.IsCurrent)
+                        {
+                            throw Error.ModificationFunctionParameterNotFoundOriginal(
+                                propertyPath,
+                                modificationFunctionMapping.Function.Name);
+                        }
+                    }
+
+                    parameterBinding.Parameter.Name = parameterName;
+                }
+                else if (parameterBindings.Count == 2)
+                {
+                    parameterBindings.Single(pb => pb.IsCurrent).Parameter.Name = parameterName;
+
+                    if (!string.IsNullOrWhiteSpace(originalValueParameterName))
+                    {
+                        parameterBindings.Single(pb => !pb.IsCurrent).Parameter.Name = originalValueParameterName;
+                    }
+                }
+                else
+                {
+                    throw Error.ModificationFunctionParameterNotFound(
+                        propertyPath,
+                        modificationFunctionMapping.Function.Name);
+                }
             }
         }
 
         private void ConfigureResultBindings(StorageModificationFunctionMapping modificationFunctionMapping)
         {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
             foreach (var keyValue in _resultBindings)
             {
                 var propertyInfo = keyValue.Key;
@@ -254,6 +212,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         public bool IsCompatibleWith(ModificationFunctionConfiguration other)
         {
+            DebugCheck.NotNull(other);
+
             if ((_name != null)
                 && (other._name != null)
                 && !string.Equals(_name, other._name, StringComparison.OrdinalIgnoreCase))
@@ -261,9 +221,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return false;
             }
 
-            return !_parameterConfigurations
+            return !_parameterNames
                         .Join(
-                            other._parameterConfigurations,
+                            other._parameterNames,
                             kv1 => kv1.Key,
                             kv2 => kv2.Key,
                             (kv1, kv2) => !Equals(kv1.Value, kv2.Value))

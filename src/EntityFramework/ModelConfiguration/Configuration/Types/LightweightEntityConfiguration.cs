@@ -248,9 +248,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        public void MapToFunctions()
+        public void MapToStoredProcedures()
         {
-            _configuration().MapToFunctions();
+            _configuration().MapToStoredProcedures();
         }
 
         /// <summary>

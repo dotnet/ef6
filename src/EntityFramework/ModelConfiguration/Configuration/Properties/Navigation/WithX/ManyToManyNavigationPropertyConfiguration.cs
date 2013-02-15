@@ -43,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
-        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToFunctions()
+        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures()
         {
             _navigationPropertyConfiguration.ModificationFunctionsConfiguration
                 = new ModificationFunctionsConfiguration();
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToFunctions(
+        public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures(
             Action<ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType>>
                 modificationFunctionMappingConfigurationAction)
         {

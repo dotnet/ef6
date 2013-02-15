@@ -40,21 +40,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ModificationFunctionsConfiguration(this);
         }
 
-        public virtual void InsertFunction(ModificationFunctionConfiguration modificationFunctionConfiguration)
+        public virtual void Insert(ModificationFunctionConfiguration modificationFunctionConfiguration)
         {
             DebugCheck.NotNull(modificationFunctionConfiguration);
 
             _insertModificationFunctionConfiguration = modificationFunctionConfiguration;
         }
 
-        public virtual void UpdateFunction(ModificationFunctionConfiguration modificationFunctionConfiguration)
+        public virtual void Update(ModificationFunctionConfiguration modificationFunctionConfiguration)
         {
             DebugCheck.NotNull(modificationFunctionConfiguration);
 
             _updateModificationFunctionConfiguration = modificationFunctionConfiguration;
         }
 
-        public virtual void DeleteFunction(ModificationFunctionConfiguration modificationFunctionConfiguration)
+        public virtual void Delete(ModificationFunctionConfiguration modificationFunctionConfiguration)
         {
             DebugCheck.NotNull(modificationFunctionConfiguration);
 

@@ -411,13 +411,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void MapToFunctions_configures_when_unset()
+        public void MapToStoredProcedures_configures_when_unset()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration(type, () => innerConfig);
 
-            config.MapToFunctions();
+            config.MapToStoredProcedures();
 
             Assert.True(innerConfig.IsMappedToFunctions);
         }

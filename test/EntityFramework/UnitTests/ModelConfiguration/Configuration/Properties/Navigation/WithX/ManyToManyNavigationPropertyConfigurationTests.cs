@@ -22,19 +22,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         }
 
         [Fact]
-        public void MapToFunctions_when_no_configuration_should_create_empty_configuration()
+        public void MapToStoredProcedures_when_no_configuration_should_create_empty_configuration()
         {
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
             var manyToManyNavigationPropertyConfiguration
                 = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
 
-            manyToManyNavigationPropertyConfiguration.MapToFunctions();
+            manyToManyNavigationPropertyConfiguration.MapToStoredProcedures();
 
             Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);
         }
 
         [Fact]
-        public void MapToFunctions_when_configuration_should_assign_configuration_to_nav_prop_configuration()
+        public void MapToStoredProcedures_when_configuration_should_assign_configuration_to_nav_prop_configuration()
         {
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
             var manyToManyNavigationPropertyConfiguration
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
 
             var called = false;
 
-            manyToManyNavigationPropertyConfiguration.MapToFunctions(m => { called = true; });
+            manyToManyNavigationPropertyConfiguration.MapToStoredProcedures(m => { called = true; });
 
             Assert.True(called);
             Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);

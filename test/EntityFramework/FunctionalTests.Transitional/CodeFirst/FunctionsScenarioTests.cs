@@ -21,7 +21,7 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<OrderLine>().MapToFunctions();
+                    modelBuilder.Entity<OrderLine>().MapToStoredProcedures();
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -48,7 +48,7 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<Building>().MapToFunctions();
+                    modelBuilder.Entity<Building>().MapToStoredProcedures();
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -75,7 +75,7 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<MigrationsCustomer>().MapToFunctions();
+                    modelBuilder.Entity<MigrationsCustomer>().MapToStoredProcedures();
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -104,7 +104,7 @@ namespace FunctionalTests
                     var modelBuilder = new DbModelBuilder();
 
                     modelBuilder.Entity<MigrationsCustomer>();
-                    modelBuilder.Entity<GoldCustomer>().MapToFunctions();
+                    modelBuilder.Entity<GoldCustomer>().MapToStoredProcedures();
 
                     Assert.Equal(
                         Strings.BaseTypeNotMappedToFunctions(
@@ -119,9 +119,9 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<Order>().MapToFunctions();
+                    modelBuilder.Entity<Order>().MapToStoredProcedures();
                     modelBuilder.Entity<OrderLine>()
-                                .MapToFunctions()
+                                .MapToStoredProcedures()
                                 .Ignore(ol => ol.OrderId);
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -154,7 +154,7 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToFunctions();
+                        .MapToStoredProcedures();
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -179,7 +179,7 @@ namespace FunctionalTests
                 {
                     var modelBuilder = new DbModelBuilder();
 
-                    modelBuilder.Entity<Engine>().MapToFunctions();
+                    modelBuilder.Entity<Engine>().MapToStoredProcedures();
                     modelBuilder.Ignore<Team>();
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -213,12 +213,12 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<OrderLine>()
-                        .MapToFunctions(
+                        .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.InsertFunction(f => f.HasName("insert_order_line"));
-                                    map.UpdateFunction(f => f.HasName("update_order_line"));
-                                    map.DeleteFunction(f => f.HasName("delete_order_line"));
+                                    map.Insert(f => f.HasName("insert_order_line"));
+                                    map.Update(f => f.HasName("update_order_line"));
+                                    map.Delete(f => f.HasName("delete_order_line"));
                                 });
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -246,12 +246,12 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Building>()
-                        .MapToFunctions(
+                        .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.InsertFunction(f => f.Parameter(b => b.Address.Line1).HasName("ins_line1"));
-                                    map.UpdateFunction(f => f.Parameter(b => b.Id).HasName("upd_id"));
-                                    map.DeleteFunction(f => f.Parameter(b => b.Id).HasName("del_id"));
+                                    map.Insert(f => f.Parameter(b => b.Address.Line1, "ins_line1"));
+                                    map.Update(f => f.Parameter(b => b.Id, "upd_id"));
+                                    map.Delete(f => f.Parameter(b => b.Id, "del_id"));
                                 });
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -279,14 +279,12 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Engine>()
-                        .MapToFunctions(
-                            map => map.UpdateFunction(
+                        .MapToStoredProcedures(
+                            map => map.Update(
                                 f =>
                                     {
-                                        f.Parameter(e => e.Name).HasName("name_cur");
-                                        f.Parameter(e => e.Name, originalValue: true).HasName("name_orig");
-                                        f.Parameter(e => e.StorageLocation.Latitude).HasName("lat_cur");
-                                        f.Parameter(e => e.StorageLocation.Latitude, originalValue: true).HasName("lat_orig");
+                                        f.Parameter(e => e.Name, "name_cur", "name_orig");
+                                        f.Parameter(e => e.StorageLocation.Latitude, "lat_cur", "lat_orig");
                                     }));
                     modelBuilder.Ignore<Team>();
 
@@ -316,9 +314,9 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Engine>()
-                        .MapToFunctions(
-                            map => map.UpdateFunction(
-                                f => f.Parameter(e => e.Id, originalValue: true).HasName("boom")));
+                        .MapToStoredProcedures(
+                            map => map.Update(
+                                f => f.Parameter(e => e.Id, "id", "boom")));
                     modelBuilder.Ignore<Team>();
 
                     Assert.Equal(
@@ -334,12 +332,12 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<OrderLine>()
-                        .MapToFunctions(
-                            map => map.DeleteFunction(
+                        .MapToStoredProcedures(
+                            map => map.Delete(
                                 f =>
                                     {
                                         f.HasName("del_ol");
-                                        f.Parameter(e => e.IsShipped).HasName("boom");
+                                        f.Parameter(e => e.IsShipped, "boom");
                                     }));
 
                     Assert.Equal(
@@ -355,11 +353,11 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Order>()
-                        .MapToFunctions(
+                        .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.InsertFunction(f => f.BindResult(o => o.OrderId, "order_id"));
-                                    map.UpdateFunction(f => f.BindResult(o => o.Version, "timestamp"));
+                                    map.Insert(f => f.Result(o => o.OrderId, "order_id"));
+                                    map.Update(f => f.Result(o => o.Version, "timestamp"));
                                 });
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -388,9 +386,9 @@ namespace FunctionalTests
                         Assert.Throws<InvalidOperationException>(
                             () => modelBuilder
                                       .Entity<Engine>()
-                                      .MapToFunctions(
-                                          map => map.UpdateFunction(
-                                              f => f.BindResult(e => e.StorageLocation.Latitude, "boom")))).Message);
+                                      .MapToStoredProcedures(
+                                          map => map.Update(
+                                              f => f.Result(e => e.StorageLocation.Latitude, "boom")))).Message);
                 }
 
                 [Fact]
@@ -400,8 +398,8 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Order>()
-                        .MapToFunctions(
-                            map => map.InsertFunction(f => f.BindResult(o => o.Type, "boom")));
+                        .MapToStoredProcedures(
+                            map => map.Insert(f => f.Result(o => o.Type, "boom")));
 
                     Assert.Equal(
                         Strings.ResultBindingNotFound("Type", "Order_Insert"),
@@ -416,11 +414,11 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<Order>()
-                        .MapToFunctions(
+                        .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.UpdateFunction(f => f.RowsAffectedParameter("rows_affected1"));
-                                    map.DeleteFunction(f => f.RowsAffectedParameter("rows_affected2"));
+                                    map.Update(f => f.RowsAffectedParameter("rows_affected1"));
+                                    map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
                                 });
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -446,8 +444,8 @@ namespace FunctionalTests
 
                     modelBuilder
                         .Entity<OrderLine>()
-                        .MapToFunctions(
-                            map => map.UpdateFunction(f => f.RowsAffectedParameter("rows_affected")));
+                        .MapToStoredProcedures(
+                            map => map.Update(f => f.RowsAffectedParameter("rows_affected")));
 
                     Assert.Equal(
                         Strings.NoRowsAffectedParameter("OrderLine_Update"),
@@ -464,22 +462,22 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToFunctions(
+                        .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.InsertFunction(
+                                    map.Insert(
                                         f =>
                                             {
                                                 f.HasName("ins_product_tag");
-                                                f.LeftKeyParameter(t => t.Id).HasName("tag_id");
-                                                f.RightKeyParameter(p => p.Id).HasName("product_id");
+                                                f.LeftKeyParameter(t => t.Id, "tag_id");
+                                                f.RightKeyParameter(p => p.Id, "product_id");
                                             });
-                                    map.DeleteFunction(
+                                    map.Delete(
                                         f =>
                                             {
                                                 f.HasName("del_product_tag");
-                                                f.LeftKeyParameter(t => t.Id).HasName("tag_id");
-                                                f.RightKeyParameter(p => p.Id).HasName("product_id");
+                                                f.LeftKeyParameter(t => t.Id, "tag_id");
+                                                f.RightKeyParameter(p => p.Id, "product_id");
                                             });
                                 });
 
@@ -514,25 +512,25 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToFunctions(
-                            map => map.InsertFunction(
+                        .MapToStoredProcedures(
+                            map => map.Insert(
                                 f =>
                                     {
                                         f.HasName("ins_product_tag");
-                                        f.LeftKeyParameter(t => t.Id).HasName("tag_id");
+                                        f.LeftKeyParameter(t => t.Id, "tag_id");
                                     }));
 
                     modelBuilder
                         .Entity<ProductA>()
                         .HasMany(p => p.Tags)
                         .WithMany(t => t.Products)
-                        .MapToFunctions(
-                            map => map.DeleteFunction(
+                        .MapToStoredProcedures(
+                            map => map.Delete(
                                 f =>
                                     {
                                         f.HasName("del_product_tag");
-                                        f.LeftKeyParameter(p => p.Id).HasName("product_id");
-                                        f.RightKeyParameter(t => t.Id).HasName("tag_id");
+                                        f.LeftKeyParameter(p => p.Id, "product_id");
+                                        f.RightKeyParameter(t => t.Id, "tag_id");
                                     }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -565,9 +563,9 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToFunctions(
-                            map => map.InsertFunction(
-                                f => f.LeftKeyParameter(t => t.Name).HasName("tag_id")));
+                        .MapToStoredProcedures(
+                            map => map.Insert(
+                                f => f.LeftKeyParameter(t => t.Name, "tag_id")));
 
                     Assert.Equal(
                         Strings.ModificationFunctionParameterNotFound("Name", "Tag_Products_Insert"),
@@ -584,15 +582,15 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToFunctions(
-                            map => map.InsertFunction(f => f.HasName("ins_product_tag")));
+                        .MapToStoredProcedures(
+                            map => map.Insert(f => f.HasName("ins_product_tag")));
 
                     modelBuilder
                         .Entity<ProductA>()
                         .HasMany(p => p.Tags)
                         .WithMany(t => t.Products)
-                        .MapToFunctions(
-                            map => map.InsertFunction(f => f.HasName("boom")));
+                        .MapToStoredProcedures(
+                            map => map.Insert(f => f.HasName("boom")));
 
                     Assert.Equal(
                         Strings.ConflictingFunctionsMapping("Tags", "FunctionalTests.ProductA"),
@@ -606,7 +604,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -614,7 +612,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -627,7 +625,7 @@ namespace FunctionalTests
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -635,7 +633,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -643,7 +641,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -651,7 +649,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -659,7 +657,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -667,7 +665,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -675,7 +673,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -683,7 +681,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -691,7 +689,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToFunctions());
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
             }
         }
     }

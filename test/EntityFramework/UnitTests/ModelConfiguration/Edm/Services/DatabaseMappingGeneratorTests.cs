@@ -429,7 +429,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             model.AddEntitySet("ESet", entityType);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
-            entityTypeConfiguration.MapToFunctions();
+            entityTypeConfiguration.MapToStoredProcedures();
             entityType.SetConfiguration(entityTypeConfiguration);
 
             var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);

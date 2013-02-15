@@ -8,13 +8,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
     public class ManyToManyModificationFunctionsConfigurationTests
     {
         [Fact]
-        public void InsertFunction_when_config_action_should_call_method_on_internal_configuration()
+        public void Insert_when_config_action_should_call_method_on_internal_configuration()
         {
             var modificationFunctionsConfiguration = new ManyToManyModificationFunctionsConfiguration<Order, Order>();
 
             ManyToManyModificationFunctionConfiguration<Order, Order> configuration = null;
 
-            modificationFunctionsConfiguration.InsertFunction(c => { configuration = c; });
+            modificationFunctionsConfiguration.Insert(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
@@ -22,13 +22,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         }
 
         [Fact]
-        public void DeleteFunction_when_config_action_should_call_method_on_internal_configuration()
+        public void Delete_when_config_action_should_call_method_on_internal_configuration()
         {
             var modificationFunctionsConfiguration = new ManyToManyModificationFunctionsConfiguration<Order, Order>();
 
             ManyToManyModificationFunctionConfiguration<Order, Order> configuration = null;
 
-            modificationFunctionsConfiguration.DeleteFunction(c => { configuration = c; });
+            modificationFunctionsConfiguration.Delete(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,

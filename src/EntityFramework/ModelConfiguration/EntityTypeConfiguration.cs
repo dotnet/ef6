@@ -113,15 +113,15 @@ namespace System.Data.Entity.ModelConfiguration
             _entityTypeConfiguration.ToTable(tableName, schemaName);
         }
 
-        public EntityTypeConfiguration<TEntityType> MapToFunctions()
+        public EntityTypeConfiguration<TEntityType> MapToStoredProcedures()
         {
-            _entityTypeConfiguration.MapToFunctions();
+            _entityTypeConfiguration.MapToStoredProcedures();
 
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public EntityTypeConfiguration<TEntityType> MapToFunctions(
+        public EntityTypeConfiguration<TEntityType> MapToStoredProcedures(
             Action<ModificationFunctionsConfiguration<TEntityType>> modificationFunctionMappingConfigurationAction)
         {
             Check.NotNull(modificationFunctionMappingConfigurationAction, "modificationFunctionMappingConfigurationAction");
@@ -131,7 +131,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
 
-            _entityTypeConfiguration.MapToFunctions(modificationFunctionMappingConfiguration.Configuration);
+            _entityTypeConfiguration.MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
 
             return this;
         }
