@@ -13526,6 +13526,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static string SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
         /// </summary>
         internal static string ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
@@ -15293,6 +15301,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
+        }
+
+        /// <summary>
         /// InvalidOperationException with message like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
         /// </summary>
         internal static Exception ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
@@ -17045,6 +17061,7 @@ namespace System.Data.Entity.Resources
         internal const string InvalidResourceName = "InvalidResourceName";
         internal const string ModificationFunctionParameterNotFound = "ModificationFunctionParameterNotFound";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
+        internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
         internal const string NoRowsAffectedParameter = "NoRowsAffectedParameter";

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
@@ -67,6 +68,19 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
+        ///     Generates SQL for a <see cref="MigrationOperation" />.
+        ///     Allows derived providers to handle additional operation types.
+        ///     Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="migrationOperation"> The operation to produce SQL for. </param>
+        protected virtual void Generate(MigrationOperation migrationOperation)
+        {
+            Check.NotNull(migrationOperation, "migrationOperation");
+
+            throw Error.SqlServerMigrationSqlGenerator_UnknownOperation(GetType().Name, migrationOperation.GetType().FullName);
+        }
+
+        /// <summary>
         ///     Creates an empty connection for the current provider.
         ///     Allows derived providers to use connection other than <see cref="SqlConnection" />.
         /// </summary>
@@ -118,14 +132,14 @@ namespace System.Data.Entity.Migrations.Sql
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                    {
-                        Generate(c, writer);
+                {
+                    Generate(c, writer);
 
-                        if (i < columnCount - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
-                    });
+                    if (i < columnCount - 1)
+                    {
+                        writer.WriteLine(",");
+                    }
+                });
 
             if (createTableOperation.PrimaryKey != null)
             {
@@ -138,7 +152,7 @@ namespace System.Data.Entity.Migrations.Sql
                 {
                     writer.Write("NONCLUSTERED ");
                 }
-                
+
                 writer.Write("(");
                 writer.Write(createTableOperation.PrimaryKey.Columns.Join(Quote));
                 writer.WriteLine(")");
@@ -700,19 +714,19 @@ namespace System.Data.Entity.Migrations.Sql
             {
                 historyOperation.Commands.Each(
                     c =>
-                        {
-                            var sql
-                                = c.CommandText
-                                   .Replace("insert ", "INSERT ")
-                                   .Replace("values ", "VALUES ")
-                                   .Replace("delete ", "DELETE ")
-                                   .Replace("where ", "WHERE "); // prettify
+                    {
+                        var sql
+                            = c.CommandText
+                               .Replace("insert ", "INSERT ")
+                               .Replace("values ", "VALUES ")
+                               .Replace("delete ", "DELETE ")
+                               .Replace("where ", "WHERE "); // prettify
 
-                            // inline params
-                            c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                        // inline params
+                        c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
 
-                            writer.Write(sql);
-                        });
+                        writer.Write(sql);
+                    });
 
                 Statement(writer);
             }
@@ -934,10 +948,10 @@ namespace System.Data.Entity.Migrations.Sql
 
             _statements.Add(
                 new MigrationStatement
-                    {
-                        Sql = sql,
-                        SuppressTransaction = suppressTransaction
-                    });
+                {
+                    Sql = sql,
+                    SuppressTransaction = suppressTransaction
+                });
         }
 
         /// <summary>

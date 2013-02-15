@@ -149,6 +149,12 @@
     <Compile Include="Migrations\AutoAndGenerateScenarios.cs" />
     <Compile Include="Migrations\AutoAndGenerateTestCase.cs" />
     <Compile Include="Migrations\AddPrimaryKeyScenarios.cs" />
+    <Compile Include="Migrations\TestHelpers\MigrationMetadataHelper.cs" />
+    <Compile Include="Migrations\TestModel\CommentOperation.cs" />
+    <Compile Include="Migrations\TestModel\CustomOperationExtensions.cs" />
+    <Compile Include="Migrations\TestModel\CustomOperationMigration.cs" />
+    <Compile Include="Migrations\CustomOperationScenarios.cs" />
+    <Compile Include="Migrations\TestModel\CustomSqlGenerator.cs" />
     <Compile Include="Migrations\MultiTenantScenarios.cs" />
     <Compile Include="Migrations\SchemaScenarios.cs" />
     <Compile Include="Migrations\CreateIndexScenarios.cs" />

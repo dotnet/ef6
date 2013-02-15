@@ -3,8 +3,10 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Linq;
+    using Moq;
     using Xunit;
 
     public class DbMigrationTests
@@ -177,12 +179,12 @@ namespace System.Data.Entity.Migrations
 
             migration.CreateTable(
                 "Foo", cs => new
-                                 {
-                                     Id = cs.Int()
-                                 }, new
-                                        {
-                                            Foo = 123
-                                        });
+                {
+                    Id = cs.Int()
+                }, new
+                {
+                    Foo = 123
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -212,10 +214,10 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(),
-                              Name = cs.String()
-                          });
+                {
+                    Id = cs.Int(),
+                    Name = cs.String()
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -241,9 +243,9 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(name: "Customer Id")
-                          });
+                {
+                    Id = cs.Int(name: "Customer Id")
+                });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -261,16 +263,16 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                          {
-                              Id = cs.Int(),
-                              Name = cs.String()
-                          })
+                {
+                    Id = cs.Int(),
+                    Name = cs.String()
+                })
                      .Index(
                          t => new
-                                  {
-                                      t.Id,
-                                      t.Name
-                                  }, unique: true, clustered: true);
+                         {
+                             t.Id,
+                             t.Name
+                         }, unique: true, clustered: true);
 
             var createIndexOperation = migration.Operations.OfType<CreateIndexOperation>().Single();
 
@@ -360,6 +362,18 @@ namespace System.Data.Entity.Migrations
             var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
 
             Assert.Equal("foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void Explictly_calling_IDbMigration_should_add_operation()
+        {
+            var migration = new TestMigration();
+            var operation = new Mock<MigrationOperation>(null).Object;
+
+            ((IDbMigration)migration).AddOperation(operation);
+
+            Assert.Equal(1, migration.Operations.Count());
+            Assert.Same(operation, migration.Operations.Single());
         }
     }
 }

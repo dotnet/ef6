@@ -5400,6 +5400,10 @@
     <value>The connection could not be opened because it is broken. The connection must be closed before it can be opened.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="SqlServerMigrationSqlGenerator_UnknownOperation" xml:space="preserve">
+    <value>The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation).</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
   <data name="ModificationFunctionParameterNotFoundOriginal" xml:space="preserve">
     <value>An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

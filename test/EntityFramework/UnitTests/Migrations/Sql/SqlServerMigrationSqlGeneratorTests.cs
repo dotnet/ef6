@@ -5,11 +5,13 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Globalization;
     using System.Threading;
+    using Moq;
     using Xunit;
 
     public class SqlServerMigrationSqlGeneratorTests
@@ -909,6 +911,20 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [int] NOT NULL DEFAULT 0"));
+        }
+
+        [Fact]
+        public void Generate_throws_when_operation_unknown()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+            var unknownOperation = new Mock<MigrationOperation>(null).Object;
+
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => migrationSqlGenerator.Generate(new[] { unknownOperation }, "2008"));
+
+            Assert.Equal(
+                Strings.SqlServerMigrationSqlGenerator_UnknownOperation(typeof(SqlServerMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
+                ex.Message);
         }
     }
 }
