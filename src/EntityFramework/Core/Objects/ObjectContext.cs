@@ -2260,45 +2260,40 @@ namespace System.Data.Entity.Core.Objects
             var mergeOption = (RefreshMode.StoreWins == refreshMode
                                    ? MergeOption.OverwriteChanges
                                    : MergeOption.PreserveChanges);
+            var objectQueryExecutionPlan = _objectQueryExecutionPlanFactory.Prepare(
+                this, queryTreeAndNextPosition.Item1, typeof(object), mergeOption,
+                /*streaming:*/ false, null, null, DbExpressionBuilder.AliasGenerator);
 
-            // The connection will be released by ObjectResult when enumeration is complete.
-            EnsureConnection();
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var results = executionStrategy.Execute(
+                () => ExecuteInTransaction(
+                    () => objectQueryExecutionPlan.Execute<object>(this, null),
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
 
-            try
+            foreach (var entity in results)
             {
-                var results = ExecuteCommandTree(queryTreeAndNextPosition.Item1, mergeOption);
-
-                foreach (var entity in results)
+                // There is a risk that, during an event, the Entity removed itself from the cache.
+                var entry = ObjectStateManager.FindEntityEntry(entity);
+                if (null != entry
+                    && EntityState.Modified == entry.State)
                 {
-                    // There is a risk that, during an event, the Entity removed itself from the cache.
-                    var entry = ObjectStateManager.FindEntityEntry(entity);
-                    if (null != entry
-                        && EntityState.Modified == entry.State)
-                    {
-                        // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
-                        Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
-                        entry.SetModifiedAll();
-                    }
-
-                    var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
-                    var key = wrappedEntity.EntityKey;
-                    if ((object)key == null)
-                    {
-                        throw Error.EntityKey_UnexpectedNull();
-                    }
-
-                    // An incorrectly returned entity should result in an exception to avoid further corruption to the ObjectStateManager.
-                    if (!trackedEntities.Remove(key))
-                    {
-                        throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
-                    }
+                    // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
+                    Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
+                    entry.SetModifiedAll();
                 }
-            }
-            catch
-            {
-                // Enumeration did not complete, so the connection must be explicitly released.
-                ReleaseConnection();
-                throw;
+
+                var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
+                var key = wrappedEntity.EntityKey;
+                if ((object)key == null)
+                {
+                    throw Error.EntityKey_UnexpectedNull();
+                }
+
+                // An incorrectly returned entity should result in an exception to avoid further corruption to the ObjectStateManager.
+                if (!trackedEntities.Remove(key))
+                {
+                    throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
+                }
             }
 
             // Return the position in the list from which the next refresh operation should start.
@@ -2307,7 +2302,7 @@ namespace System.Data.Entity.Core.Objects
             return queryTreeAndNextPosition.Item2;
         }
 
-        private Tuple<DbQueryCommandTree, int> PrepareRefreshQuery(EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
+        internal virtual Tuple<DbQueryCommandTree, int> PrepareRefreshQuery(EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
         {
             // A single refresh query can be built for all entities from the same set.
             // For each entity set, a DbFilterExpression is constructed that
@@ -2376,15 +2371,6 @@ namespace System.Data.Entity.Core.Objects
             return new Tuple<DbQueryCommandTree, int>(
                 DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery),
                 startFrom);
-        }
-
-        private ObjectResult<object> ExecuteCommandTree(DbQueryCommandTree tree, MergeOption mergeOption)
-        {
-            DebugCheck.NotNull(tree);
-
-            var execPlan = _objectQueryExecutionPlanFactory.Prepare(
-                this, tree, typeof(object), mergeOption, false, null, null, DbExpressionBuilder.AliasGenerator);
-            return execPlan.Execute<object>(this, null);
         }
 
         private static int RefreshEntitiesSize(IEnumerable collection)
@@ -2470,8 +2456,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
                 entriesAffected = executionStrategy.Execute(
                     () => SaveChangesToStore(
-                        options,
-                        throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions));
+                        options, throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions));
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
