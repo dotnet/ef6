@@ -4,7 +4,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -24,8 +26,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     The ObjectItemCollection that loads metadata from assemblies
         /// </summary>
         public ObjectItemCollection()
+            : this(null)
+        {
+        }
+
+        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache)
             : base(DataSpace.OSpace)
         {
+            _viewAssemblyCache = viewAssemblyCache ?? DbConfiguration.GetService<IViewAssemblyCache>();
+            
             foreach (var type in ClrProviderManifest.Instance.GetStoreTypes())
             {
                 AddInternal(type);
@@ -50,14 +59,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private object _loaderCookie;
         private readonly object _loadAssemblyLock = new object();
 
+        private readonly IViewAssemblyCache _viewAssemblyCache;
+
         internal object LoadAssemblyLock
         {
             get { return _loadAssemblyLock; }
-        }
-
-        internal static IList<Assembly> ViewGenerationAssemblies
-        {
-            get { return AssemblyCache.ViewGenerationAssemblies; }
         }
 
         internal static bool IsCompiledViewGenAttributePresent(Assembly assembly)
@@ -75,26 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (!MetadataAssemblyHelper.ShouldFilterAssembly(assembly))
             {
-                var loadAllReferencedAssemblies = true;
-                LoadAssemblyFromCache(this, assembly, loadAllReferencedAssemblies, edmItemCollection, null);
-            }
-        }
-
-        internal void ImplicitLoadViewsFromAllReferencedAssemblies(Assembly assembly)
-        {
-            // we filter implicit loads
-            if (MetadataAssemblyHelper.ShouldFilterAssembly(assembly))
-            {
-                return;
-            }
-            lock (this)
-            {
-                CollectIfViewGenAssembly(assembly);
-
-                foreach (var referenceAssembly in MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(assembly))
-                {
-                    CollectIfViewGenAssembly(referenceAssembly);
-                }
+                LoadAssemblyFromCache(assembly, true, edmItemCollection, null);
             }
         }
 
@@ -136,28 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal void ExplicitLoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
-            LoadAssemblyFromCache(this, assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, logLoadMessage);
-            //Since User called LoadFromAssembly, so we should collect the generated views if present
-            //even if the schema attribute is not present
-            if (IsCompiledViewGenAttributePresent(assembly)
-                && !ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(assembly))
-            {
-                CollectIfViewGenAssembly(assembly);
-            }
-        }
-
-        /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right
-        ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
-        ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        /// </summary>
-        internal void ImplicitLoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection)
-        {
-            if (!MetadataAssemblyHelper.ShouldFilterAssembly(assembly))
-            {
-                // it meets the Implicit rules Load it
-                ExplicitLoadFromAssembly(assembly, edmItemCollection, null);
-            }
+            LoadAssemblyFromCache(assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, logLoadMessage);
         }
 
         /// <summary>
@@ -170,16 +136,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> true if the type and all its generic arguments are filtered out (did not attempt to load assembly) </returns>
         internal bool ImplicitLoadAssemblyForType(Type type, EdmItemCollection edmItemCollection)
         {
-            bool result;
+            var result = false;
 
             if (!MetadataAssemblyHelper.ShouldFilterAssembly(type.Assembly))
             {
                 // InternalLoadFromAssembly will check _knownAssemblies
-                result = LoadAssemblyFromCache(this, type.Assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, null);
-            }
-            else
-            {
-                result = false;
+                result = LoadAssemblyFromCache(type.Assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, null);
             }
 
             if (type.IsGenericType)
@@ -279,15 +241,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             yield break;
         }
 
-        private static bool LoadAssemblyFromCache(
-            ObjectItemCollection objectItemCollection, Assembly assembly,
-            bool loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
+        private bool LoadAssemblyFromCache(Assembly assembly, bool loadReferencedAssemblies,  EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
+            _viewAssemblyCache.CheckAssembly(assembly, loadReferencedAssemblies);
+
             // Check if its loaded in the cache - if the call is for loading referenced assemblies, make sure that all referenced
             // assemblies are also loaded
             KnownAssemblyEntry entry;
-            if (objectItemCollection._knownAssemblies.TryGetKnownAssembly(
-                assembly, objectItemCollection._loaderCookie, edmItemCollection, out entry))
+            if (_knownAssemblies.TryGetKnownAssembly(assembly, _loaderCookie, edmItemCollection, out entry))
             {
                 // Proceed if only we need to load the referenced assemblies and they are not loaded
                 if (loadReferencedAssemblies == false)
@@ -302,12 +263,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            lock (objectItemCollection.LoadAssemblyLock)
+            lock (LoadAssemblyLock)
             {
                 // Check after acquiring the lock, since the known assemblies might have got modified
                 // Check if the assembly is already loaded. The reason we need to check if the assembly is already loaded, is that 
-                if (objectItemCollection._knownAssemblies.TryGetKnownAssembly(
-                    assembly, objectItemCollection._loaderCookie, edmItemCollection, out entry))
+                if (_knownAssemblies.TryGetKnownAssembly(assembly, _loaderCookie, edmItemCollection, out entry))
                 {
                     // Proceed if only we need to load the referenced assemblies and they are not loaded
                     if (loadReferencedAssemblies == false
@@ -319,21 +279,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 Dictionary<string, EdmType> typesInLoading;
                 List<EdmItemError> errors;
-                KnownAssembliesSet knownAssemblies;
-
-                if (objectItemCollection != null)
-                {
-                    knownAssemblies = new KnownAssembliesSet(objectItemCollection._knownAssemblies);
-                }
-                else
-                {
-                    knownAssemblies = new KnownAssembliesSet();
-                }
+                var knownAssemblies = new KnownAssembliesSet(_knownAssemblies);
 
                 // Load the assembly from the cache
                 AssemblyCache.LoadAssembly(
                     assembly, loadReferencedAssemblies, knownAssemblies, edmItemCollection, logLoadMessage,
-                    ref objectItemCollection._loaderCookie, out typesInLoading, out errors);
+                    ref _loaderCookie, out typesInLoading, out errors);
 
                 // Throw if we have encountered errors
                 if (errors.Count != 0)
@@ -362,17 +313,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             if (Helper.IsEntityType(edmType))
                             {
                                 cspaceTypeName = ((ClrEntityType)edmType).CSpaceTypeName;
-                                objectItemCollection._ocMapping.Add(cspaceTypeName, edmType);
+                                _ocMapping.Add(cspaceTypeName, edmType);
                             }
                             else if (Helper.IsComplexType(edmType))
                             {
                                 cspaceTypeName = ((ClrComplexType)edmType).CSpaceTypeName;
-                                objectItemCollection._ocMapping.Add(cspaceTypeName, edmType);
+                                _ocMapping.Add(cspaceTypeName, edmType);
                             }
                             else if (Helper.IsEnumType(edmType))
                             {
                                 cspaceTypeName = ((ClrEnumType)edmType).CSpaceTypeName;
-                                objectItemCollection._ocMapping.Add(cspaceTypeName, edmType);
+                                _ocMapping.Add(cspaceTypeName, edmType);
                             }
                             // for the rest of the types like a relationship type, we do not have oc mapping, 
                             // so we don't keep that information
@@ -385,35 +336,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     // Create a new ObjectItemCollection and add all the global items to it. 
                     // Also copy all the existing items from the existing collection
-                    objectItemCollection.AtomicAddRange(globalItems);
+                    AtomicAddRange(globalItems);
                 }
 
                 // Update the value of known assemblies
-                objectItemCollection._knownAssemblies = knownAssemblies;
-
-                foreach (var loadedAssembly in knownAssemblies.Assemblies)
-                {
-                    CollectIfViewGenAssembly(loadedAssembly);
-                }
+                _knownAssemblies = knownAssemblies;
 
                 return typesInLoading.Count != 0;
-            }
-        }
-
-        /// <summary>
-        ///     Check to see if the assembly has the custom view generation attribute AND
-        ///     collect the assembly into the local list if it has cutom attribute.
-        /// </summary>
-        /// <param name="assembly"> </param>
-        /// <param name="viewGenAssemblies"> </param>
-        private static void CollectIfViewGenAssembly(Assembly assembly)
-        {
-            if (assembly.IsDefined(typeof(EntityViewGenerationAttribute), false /*inherit*/))
-            {
-                if (!AssemblyCache.ViewGenerationAssemblies.Contains(assembly))
-                {
-                    AssemblyCache.ViewGenerationAssemblies.Add(assembly);
-                }
             }
         }
 

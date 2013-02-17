@@ -3,11 +3,15 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
+    using Moq;
     using Xunit;
 
     public class StorageMappingItemCollectionTests
@@ -181,6 +185,46 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(objectItemCollection, ocMappingCollection.ObjectItemCollection);
             Assert.Same(edmItemCollection, ocMappingCollection.EdmItemCollection);
+        }
+
+        [Fact]
+        public void SerializedCollectViewsFromCache_performs_scan_from_entry_assembly_if_no_view_assemblies_known()
+        {
+            var mockCache = new Mock<IViewAssemblyCache>();
+            mockCache.Setup(m => m.Assemblies).Returns(Enumerable.Empty<Assembly>());
+
+            Dictionary<EntitySetBase, GeneratedView> _;
+            Dictionary<Pair<EntitySetBase, Pair<EntityTypeBase, bool>>, GeneratedView> __;
+            var viewDictionary = new StorageMappingItemCollection.ViewDictionary(
+                new Mock<StorageMappingItemCollection>().Object, out _, out __, mockCache.Object);
+
+            viewDictionary.SerializedCollectViewsFromCache(
+                new Mock<MetadataWorkspace>().Object, 
+                new Mock<Dictionary<EntitySetBase, GeneratedView>>().Object,
+                () => typeof(object).Assembly);
+
+            mockCache.Verify(m => m.Assemblies, Times.Exactly(2));
+            mockCache.Verify(m => m.CheckAssembly(typeof(object).Assembly, true), Times.Once());
+        }
+
+        [Fact]
+        public void SerializedCollectViewsFromCache_does_not_scan_from_entry_assembly_if_any_view_assemblies_known()
+        {
+            var mockCache = new Mock<IViewAssemblyCache>();
+            mockCache.Setup(m => m.Assemblies).Returns(new[] { typeof(object).Assembly });
+
+            Dictionary<EntitySetBase, GeneratedView> _;
+            Dictionary<Pair<EntitySetBase, Pair<EntityTypeBase, bool>>, GeneratedView> __;
+            var viewDictionary = new StorageMappingItemCollection.ViewDictionary(
+                new Mock<StorageMappingItemCollection>().Object, out _, out __, mockCache.Object);
+
+            viewDictionary.SerializedCollectViewsFromCache(
+                new Mock<MetadataWorkspace>().Object,
+                new Mock<Dictionary<EntitySetBase, GeneratedView>>().Object,
+                () => typeof(object).Assembly);
+
+            mockCache.Verify(m => m.Assemblies, Times.Exactly(2));
+            mockCache.Verify(m => m.CheckAssembly(It.IsAny<Assembly>(), It.IsAny<bool>()), Times.Never());
         }
     }
 }

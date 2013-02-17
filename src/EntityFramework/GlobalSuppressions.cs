@@ -4,6 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Core.Mapping.ViewGeneration")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.Migrations.Sql")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",

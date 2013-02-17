@@ -5,6 +5,7 @@ namespace System.Data.Entity.Config
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
@@ -134,6 +135,12 @@ namespace System.Data.Entity.Config
             Assert.Same(
                 SqlClientFactory.Instance,
                 new RootDependencyResolver().GetService<DbProviderFactory>("System.Data.SqlClient"));
+        }
+
+        [Fact]
+        public void The_root_resolver_returns_default_view_assembly_cache()
+        {
+            Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetService<IViewAssemblyCache>());
         }
 
         /// <summary>

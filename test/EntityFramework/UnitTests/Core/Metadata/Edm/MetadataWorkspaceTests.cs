@@ -3,9 +3,16 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.ViewGeneration;
+    using System.Linq;
     using System.Reflection;
+    using System.Xml;
     using System.Xml.Linq;
+    using Moq;
     using Xunit;
 
     public class MetadataWorkspaceTests
@@ -138,10 +145,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     new EdmItemCollection(new[] { XDocument.Parse(Csdl).CreateReader() }),
                     new StoreItemCollection(new[] { XDocument.Parse(Ssdl).CreateReader() }));
 
-                Item_collections_can_be_registered(new MetadataWorkspace(
-                    () => storageMappingItemCollection.EdmItemCollection,
-                    () => storageMappingItemCollection.StoreItemCollection,
-                    () => storageMappingItemCollection));
+                Item_collections_can_be_registered(
+                    new MetadataWorkspace(
+                        () => storageMappingItemCollection.EdmItemCollection,
+                        () => storageMappingItemCollection.StoreItemCollection,
+                        () => storageMappingItemCollection));
             }
 
             private static void Item_collections_can_be_registered(MetadataWorkspace workspace)
@@ -178,7 +186,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 #pragma warning restore 612,618
 
                 Assert.Same(edmItemCollection, workspace.GetItemCollection(DataSpace.CSpace));
-                
+
                 var ocMappingCollection = (DefaultObjectMappingItemCollection)workspace.GetItemCollection(DataSpace.OCSpace);
                 Assert.Same(workspace.GetItemCollection(DataSpace.OSpace), ocMappingCollection.ObjectItemCollection);
                 Assert.Same(edmItemCollection, ocMappingCollection.EdmItemCollection);
@@ -204,7 +212,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             [Fact]
-            public void Registering_o_space_causes_oc_mapping_to_also_be_registered_if_it_is_not_already_registered_and_c_space_is_registered()
+            public void
+                Registering_o_space_causes_oc_mapping_to_also_be_registered_if_it_is_not_already_registered_and_c_space_is_registered()
             {
                 var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(Csdl).CreateReader() });
                 var objectItemCollection = new ObjectItemCollection();
@@ -236,6 +245,93 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Assert.Same(objectItemCollection, workspace.GetItemCollection(DataSpace.OSpace));
                 ItemCollection _;
                 Assert.False(workspace.TryGetItemCollection(DataSpace.OCSpace, out _));
+            }
+        }
+
+        public class ImplicitLoadAssemblyForType : TestBase
+        {
+            [Fact]
+            public void ImplicitLoadAssemblyForType_checks_only_given_assembly_for_views_if_assembly_not_filtered()
+            {
+                var mockCache = new Mock<IViewAssemblyCache>();
+                var workspace = new MetadataWorkspace(
+                    () => new EdmItemCollection(Enumerable.Empty<XmlReader>()),
+                    () => null,
+                    () => null,
+                    () => new ObjectItemCollection(mockCache.Object));
+
+                workspace.ImplicitLoadAssemblyForType(typeof(FactAttribute), null);
+
+                mockCache.Verify(m => m.CheckAssembly(typeof(FactAttribute).Assembly, false), Times.Once());
+            }
+
+            [Fact]
+            public void ImplicitLoadAssemblyForType_checks_only_calling_assembly_for_views_if_type_assembly_filtered_and_no_schema_attribute()
+            {
+                var mockCache = new Mock<IViewAssemblyCache>();
+                var workspace = new MetadataWorkspace(
+                    () => new EdmItemCollection(Enumerable.Empty<XmlReader>()),
+                    () => null,
+                    () => null,
+                    () => new ObjectItemCollection(mockCache.Object));
+
+                workspace.ImplicitLoadAssemblyForType(typeof(object), typeof(FactAttribute).Assembly);
+
+                mockCache.Verify(m => m.CheckAssembly(typeof(object).Assembly, It.IsAny<bool>()), Times.Never());
+                mockCache.Verify(m => m.CheckAssembly(typeof(FactAttribute).Assembly, false), Times.Once());
+            }
+
+            [Fact]
+            public void ImplicitLoadAssemblyForType_checks_calling_schema_assembly_and_references_for_views_if_type_assembly_filtered()
+            {
+                var assembly = new DynamicAssembly();
+                assembly.HasAttribute(new EdmSchemaAttribute());
+                var callingAssembly = assembly.Compile(new AssemblyName("WithEdmSchemaAttribute"));
+
+                var mockCache = new Mock<IViewAssemblyCache>();
+                var workspace = new MetadataWorkspace(
+                    () => new EdmItemCollection(Enumerable.Empty<XmlReader>()),
+                    () => null,
+                    () => null,
+                    () => new ObjectItemCollection(mockCache.Object));
+
+                workspace.ImplicitLoadAssemblyForType(typeof(object), callingAssembly);
+
+                mockCache.Verify(m => m.CheckAssembly(typeof(object).Assembly, It.IsAny<bool>()), Times.Never());
+                mockCache.Verify(m => m.CheckAssembly(callingAssembly, true), Times.Once());
+            }
+        }
+
+        public class LoadFromAssembly : TestBase
+        {
+            [Fact]
+            public void LoadFromAssembly_checks_only_given_assembly_for_views()
+            {
+                var mockCache = new Mock<IViewAssemblyCache>();
+                var workspace = new MetadataWorkspace(
+                    () => new EdmItemCollection(Enumerable.Empty<XmlReader>()),
+                    () => null,
+                    () => null,
+                    () => new ObjectItemCollection(mockCache.Object));
+
+                workspace.LoadFromAssembly(typeof(object).Assembly);
+
+                mockCache.Verify(m => m.CheckAssembly(typeof(object).Assembly, false), Times.Once());
+            }
+        }
+
+        public class ClearCache : TestBase
+        {
+            [Fact]
+            public void ClearCache_clears_cached_assembly_information_for_views()
+            {
+                var cache = DbConfiguration.GetService<IViewAssemblyCache>();
+                cache.CheckAssembly(typeof(PregenContextEdmxViews).Assembly, followReferences: true);
+                Assert.True(cache.Assemblies.Contains(typeof(PregenContextEdmxViews).Assembly));
+
+                MetadataWorkspace.ClearCache();
+
+                Assert.Equal(0, cache.Assemblies.Count());
             }
         }
 
@@ -294,5 +390,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             "    </EntitySetMapping>" +
             "  </EntityContainerMapping>" +
             "</Mapping>";
+
     }
 }
+    

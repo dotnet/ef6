@@ -2,14 +2,13 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -59,6 +58,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new ThreadLocalDependencyResolver<IDbCommandInterceptor>(() => new DefaultCommandInterceptor()));
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new DefaultDbProviderFactoryService()));
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
+            _resolvers.Add(new SingletonDependencyResolver<IViewAssemblyCache>(new ViewAssemblyCache()));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

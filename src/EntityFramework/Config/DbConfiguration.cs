@@ -4,6 +4,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations;
@@ -142,7 +143,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
@@ -164,7 +165,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolvers for
         ///     <see cref="DbProviderFactory" /> and <see cref="IProviderInvariantName"/>. This means that, if desired, 
-        ///     the same functionality can be achieved using a custom resolver or a resolved backed by an
+        ///     the same functionality can be achieved using a custom resolver or a resolver backed by an
         ///     Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
@@ -190,7 +191,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbConnectionFactory" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="connectionFactory"> The connection factory. </param>
         protected internal void SetDefaultConnectionFactory(IDbConnectionFactory connectionFactory)
@@ -227,7 +228,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDatabaseInitializer{TContext}" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <typeparam name="TContext"> The type of the context. </typeparam>
         /// <param name="initializer"> The initializer to use, or null to disable initialization for the given context type. </param>
@@ -249,7 +250,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="MigrationSqlGenerator" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The invariant name of the ADO.NET provider for which this generator should be used. </param>
         /// <param name="sqlGenerator"> A delegate that returns a new instance of the SQL generator each time it is called. </param>
@@ -272,7 +273,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IManifestTokenService" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="service"> The manifest token service. </param>
         protected internal void SetManifestTokenService(IManifestTokenService service)
@@ -293,7 +294,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbProviderFactoryService" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerFactoryService"> The provider factory service. </param>
         protected internal void SetProviderFactoryService(IDbProviderFactoryService providerFactoryService)
@@ -313,7 +314,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="keyFactory"> The key factory. </param>
         protected internal void SetModelCacheKeyFactory(IDbModelCacheKeyFactory keyFactory)
@@ -333,7 +334,7 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IHistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="historyContextFactory">
         ///     The <see cref="HistoryContext" /> factory.
@@ -364,15 +365,35 @@ namespace System.Data.Entity.Config
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolved backed by an Inversion-of-Control container.
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="keyFactory"> The key factory. </param>
+        /// <param name="spatialProvider"> The spatial provider. </param>
         protected internal void SetSpatialProvider(DbSpatialServices spatialProvider)
         {
             Check.NotNull(spatialProvider, "spatialProvider");
 
             _internalConfiguration.CheckNotLocked("SetSpatialProvider");
             _internalConfiguration.RegisterSingleton(spatialProvider, null);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     an implementation of <see cref="IViewAssemblyCache" /> which will be used to find and cache the list
+        ///     of assemblies that contain pre-generated views.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IViewAssemblyCache" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="cache"> The cache implementation to use. </param>
+        protected internal void SetViewAssemblyCache(IViewAssemblyCache cache)
+        {
+            Check.NotNull(cache, "cache");
+
+            _internalConfiguration.CheckNotLocked("SetViewAssemblyCache");
+            _internalConfiguration.RegisterSingleton(cache, null);
         }
 
         internal virtual InternalConfiguration InternalConfiguration

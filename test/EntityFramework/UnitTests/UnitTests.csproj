@@ -168,6 +168,9 @@
     <Compile Include="Core\Mapping\StorageScalarPropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageSetMappingTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\Utils\ExternalCallsTests.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCacheTests.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCheckerTests.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyScannerTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewgenContextTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationEndMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
@@ -189,6 +192,7 @@
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataWorkspaceTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
+    <Compile Include="Core\Metadata\Edm\ObjectItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />

@@ -215,7 +215,11 @@
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
     <Compile Include="Core\Mapping\IStructuralTypeMapping.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\IViewAssemblyCache.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\QueryRewriting\FragmentQueryKBChaseSupport.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCache.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyChecker.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyScanner.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMapping.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\IMetadataItem.cs" />

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Core.Common.QueryCache;
@@ -50,11 +51,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Constructs a <see cref="MetadataWorkspace"/> with loaders for all item collections (<see cref="ItemCollection"/>)
-        /// needed by EF except the o/c mapping which will be created automatically based on the given o-space and c-space
-        /// loaders. The item collection delegates are executed lazily when a given collection is used for the first
-        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
-        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        ///     Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
+        ///     needed by EF except the o/c mapping which will be created automatically based on the given o-space and c-space
+        ///     loaders. The item collection delegates are executed lazily when a given collection is used for the first
+        ///     time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        ///     is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
         /// </summary>
         /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
         /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
@@ -83,11 +84,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Constructs a <see cref="MetadataWorkspace"/> with loaders for all item collections (<see cref="ItemCollection"/>)
-        /// that come from traditional EDMX mapping. Default o-space and o/c mapping collections will be used.
-        /// The item collection delegates are executed lazily when a given collection is used for the first
-        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
-        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        ///     Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
+        ///     that come from traditional EDMX mapping. Default o-space and o/c mapping collections will be used.
+        ///     The item collection delegates are executed lazily when a given collection is used for the first
+        ///     time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        ///     is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
         /// </summary>
         /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
         /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
@@ -329,7 +330,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         break;
                     case DataSpace.OSpace:
                         _itemsOSpace = new Lazy<ObjectItemCollection>(() => (ObjectItemCollection)collection, isThreadSafe: true);
-                        if (_itemsOCSpace == null && _itemsCSpace != null)
+                        if (_itemsOCSpace == null
+                            && _itemsCSpace != null)
                         {
                             _itemsOCSpace =
                                 new Lazy<DefaultObjectMappingItemCollection>(
@@ -489,10 +491,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // If the attribute is not presented on the assembly, then we won't load the referenced asssembly 
                     // for this callingAssembly
                     if (ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(callingAssembly)
-                        ||
-                        (_foundAssemblyWithAttribute ||
-                         MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(callingAssembly).Any(
-                             a => ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent(a))))
+                        || (_foundAssemblyWithAttribute
+                            || MetadataAssemblyHelper.GetNonSystemReferencedAssemblies(callingAssembly).Any(
+                                ObjectItemAttributeAssemblyLoader.IsSchemaAttributePresent)))
                     {
                         // cache the knowledge that we found an attribute
                         // because it can be expesive to figure out
@@ -1398,7 +1399,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public static void ClearCache()
         {
             MetadataCache.Clear();
-            ObjectItemCollection.ViewGenerationAssemblies.Clear();
+            DbConfiguration.GetService<IViewAssemblyCache>().Clear();
             using (var cache = AssemblyCache.AquireLockedAssemblyCache())
             {
                 cache.Clear();
