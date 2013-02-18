@@ -14,7 +14,7 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        static ChangeTrackingProxyTests()
+        public ChangeTrackingProxyTests()
         {
             using (var context = new GranniesContext())
             {

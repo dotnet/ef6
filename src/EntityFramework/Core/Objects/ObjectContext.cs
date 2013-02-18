@@ -2268,7 +2268,7 @@ namespace System.Data.Entity.Core.Objects
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => objectQueryExecutionPlan.Execute<object>(this, null),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
 
             foreach (var entity in results)
             {

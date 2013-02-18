@@ -23,7 +23,7 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        static ConcurrencyTests()
+        public ConcurrencyTests()
         {
             using (var context = new F1Context())
             {

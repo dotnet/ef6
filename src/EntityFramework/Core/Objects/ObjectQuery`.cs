@@ -692,7 +692,7 @@ namespace System.Data.Entity.Core.Objects
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
                     /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                    /*startLocalTransaction:*/ true, cancellationToken),
+                    /*startLocalTransaction:*/ false, cancellationToken),
                 cancellationToken);
         }
 
