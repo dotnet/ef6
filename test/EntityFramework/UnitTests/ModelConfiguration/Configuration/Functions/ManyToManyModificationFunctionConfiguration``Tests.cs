@@ -38,8 +38,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Nullable, "Foo"));
             Assert.Same(configuration, configuration.LeftKeyParameter(e => e.String, "Foo"));
             Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Bytes, "Foo"));
-            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Geography, "Foo"));
-            Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Geometry, "Foo"));
         }
 
         [Fact]
@@ -64,16 +62,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
                     .LeftKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
-
-            Assert.Equal(
-                "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
-
-            Assert.Equal(
-                "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
         }
 
         [Fact]
@@ -96,8 +84,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Same(configuration, configuration.RightKeyParameter(e => e.Nullable, "Foo"));
             Assert.Same(configuration, configuration.RightKeyParameter(e => e.String, "Foo"));
             Assert.Same(configuration, configuration.RightKeyParameter(e => e.Bytes, "Foo"));
-            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Geography, "Foo"));
-            Assert.Same(configuration, configuration.RightKeyParameter(e => e.Geometry, "Foo"));
         }
 
         [Fact]
@@ -122,16 +108,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
                     .RightKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
-
-            Assert.Equal(
-                "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
-
-            Assert.Equal(
-                "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
         }
 
         [Fact]

@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
 
     public class InsertModificationFunctionConfiguration<TEntityType> : ModificationFunctionConfiguration<TEntityType>
@@ -178,6 +180,44 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(columnName, "columnName");
 
             Configuration.Result(propertyExpression.GetSimplePropertyAccess(), columnName);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public InsertModificationFunctionConfiguration<TEntityType> Association<TPrincipalEntityType>(
+            Expression<Func<TPrincipalEntityType, TEntityType>> navigationPropertyExpression,
+            Action<AssociationModificationFunctionConfiguration<TPrincipalEntityType>> associationModificationFunctionConfigurationAction)
+            where TPrincipalEntityType : class
+        {
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
+            Check.NotNull(associationModificationFunctionConfigurationAction, "associationModificationFunctionConfigurationAction");
+
+            var associationModificationFunctionConfiguration
+                = new AssociationModificationFunctionConfiguration<TPrincipalEntityType>(
+                    navigationPropertyExpression.GetSimplePropertyAccess().Single(),
+                    Configuration);
+
+            associationModificationFunctionConfigurationAction(associationModificationFunctionConfiguration);
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public InsertModificationFunctionConfiguration<TEntityType> Association<TPrincipalEntityType>(
+            Expression<Func<TPrincipalEntityType, ICollection<TEntityType>>> navigationPropertyExpression,
+            Action<AssociationModificationFunctionConfiguration<TPrincipalEntityType>> associationModificationFunctionConfigurationAction)
+            where TPrincipalEntityType : class
+        {
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
+            Check.NotNull(associationModificationFunctionConfigurationAction, "associationModificationFunctionConfigurationAction");
+
+            var associationModificationFunctionConfiguration
+                = new AssociationModificationFunctionConfiguration<TPrincipalEntityType>(
+                    navigationPropertyExpression.GetSimplePropertyAccess().Single(),
+                    Configuration);
+
+            associationModificationFunctionConfigurationAction(associationModificationFunctionConfiguration);
 
             return this;
         }

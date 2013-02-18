@@ -110,6 +110,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var functionParameter1 = new FunctionParameter();
             var functionParameter2 = new FunctionParameter();
 
+            var associationType = new AssociationType();
+            
+            var associationEndMember1
+                = new AssociationEndMember("AE1", new EntityType())
+                      {
+                          RelationshipMultiplicity = RelationshipMultiplicity.Many
+                      };
+
+            var associationEndMember2
+               = new AssociationEndMember("AE2", new EntityType())
+               {
+                   RelationshipMultiplicity = RelationshipMultiplicity.Many
+               };
+
+            associationType.SourceEnd = associationEndMember1;
+            associationType.TargetEnd = associationEndMember2;
+
+            var associationSet = new AssociationSet("AS", associationType);
+
+            associationSet.AddAssociationSetEnd(
+                new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
+
             modificationFunctionConfiguration.Configure(
                 new StorageModificationFunctionMapping(
                     entitySet,
@@ -120,8 +142,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                             new StorageModificationFunctionParameterBinding(
                                 functionParameter1,
                                 new StorageModificationFunctionMemberPath(
-                                new EdmMember[] { property1, new AssociationEndMember("AE", new EntityType()) },
-                                null),
+                                new EdmMember[] { property1, associationEndMember2 },
+                                associationSet),
                                 false),
                             new StorageModificationFunctionParameterBinding(
                                 functionParameter2,
@@ -137,6 +159,69 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal("Bar", function.Schema);
             Assert.Equal("P1", functionParameter1.Name);
             Assert.Equal("P2", functionParameter2.Name);
+        }
+
+        [Fact]
+        public void Can_configure_ia_fk_parameters()
+        {
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+
+            var mockPropertyInfo1 = new MockPropertyInfo();
+            var mockPropertyInfo2 = new MockPropertyInfo();
+
+            modificationFunctionConfiguration
+                .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "Foo");
+
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+
+            var property1 = new EdmProperty("P1");
+            property1.SetClrPropertyInfo(mockPropertyInfo1);
+
+            var function = new EdmFunction();
+            var functionParameter1 = new FunctionParameter();
+            
+            var associationType = new AssociationType();
+
+            var associationEndMember1
+                = new AssociationEndMember("AE1", new EntityType())
+                {
+                    RelationshipMultiplicity = RelationshipMultiplicity.Many
+                };
+
+            var associationEndMember2
+               = new AssociationEndMember("AE2", new EntityType())
+               {
+                   RelationshipMultiplicity = RelationshipMultiplicity.One
+               };
+            associationEndMember2.SetClrPropertyInfo(mockPropertyInfo1);
+
+            associationType.SourceEnd = associationEndMember1;
+            associationType.TargetEnd = associationEndMember2;
+
+            var associationSet = new AssociationSet("AS", associationType);
+
+            associationSet.AddAssociationSetEnd(
+                new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
+
+            modificationFunctionConfiguration.Configure(
+                new StorageModificationFunctionMapping(
+                    entitySet,
+                    new EntityType(),
+                    function,
+                    new[]
+                        {
+                            new StorageModificationFunctionParameterBinding(
+                                functionParameter1,
+                                new StorageModificationFunctionMemberPath(
+                                new EdmMember[] { property1, associationEndMember2 },
+                                associationSet),
+                                false)
+                        },
+                    null,
+                    null));
+
+            Assert.Equal("Foo", functionParameter1.Name);
         }
 
         [Fact]

@@ -278,6 +278,7 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\AssociationModificationFunctionConfiguration`Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionsConfiguration``Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionConfiguration``Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\DeleteModificationFunctionConfiguration`Tests.cs" />

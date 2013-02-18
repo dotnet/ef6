@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -134,6 +135,52 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new InsertModificationFunctionConfiguration<Entity>();
 
             Assert.Throws<InvalidOperationException>(() => configuration.Result(e => e.ComplexType.Int, "Foo"));
+        }
+
+        [Fact]
+        public void Association_when_collection_should_invoke_action_with_configuration()
+        {
+            var configuration = new InsertModificationFunctionConfiguration<Entity>();
+
+            AssociationModificationFunctionConfiguration<Entity> associationConfiguration = null;
+
+            configuration.Association<Entity>(e => e.Children, c => { associationConfiguration = c; });
+
+            Assert.NotNull(associationConfiguration);
+        }
+
+        [Fact]
+        public void Association_when_reference_should_invoke_action_with_configuration()
+        {
+            var configuration = new InsertModificationFunctionConfiguration<Entity>();
+
+            AssociationModificationFunctionConfiguration<Entity> associationConfiguration = null;
+
+            configuration.Association<Entity>(e => e.Parent, c => { associationConfiguration = c; });
+
+            Assert.NotNull(associationConfiguration);
+        }
+
+        [Fact]
+        public void Association_when_collection_should_throw_when_complex_property_expression()
+        {
+            var configuration = new InsertModificationFunctionConfiguration<Entity>();
+
+            Assert.Equal(
+                Strings.InvalidPropertyExpression("e => e.Parent.Children"),
+                Assert.Throws<InvalidOperationException>(
+                    () => configuration.Association<Entity>(e => e.Parent.Children, c => { })).Message);
+        }
+
+        [Fact]
+        public void Association_when_reference_should_throw_when_complex_property_expression()
+        {
+            var configuration = new InsertModificationFunctionConfiguration<Entity>();
+
+            Assert.Equal(
+                Strings.InvalidPropertyExpression("e => e.Parent.Parent"),
+                Assert.Throws<InvalidOperationException>(
+                    () => configuration.Association<Entity>(e => e.Parent.Parent, c => { })).Message);
         }
     }
 }

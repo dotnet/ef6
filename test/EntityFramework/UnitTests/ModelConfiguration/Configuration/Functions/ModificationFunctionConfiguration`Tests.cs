@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Spatial;
 
     public abstract class ModificationFunctionConfigurationTTests
@@ -15,6 +16,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             public DbGeography Geography { get; set; }
             public DbGeometry Geometry { get; set; }
             public ComplexType ComplexType { get; set; }
+            public Entity Parent { get; set; }
+            public ICollection<Entity> Children { get; set; }
         }
 
         protected class ComplexType

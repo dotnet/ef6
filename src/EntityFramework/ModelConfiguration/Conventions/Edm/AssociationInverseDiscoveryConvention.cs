@@ -62,6 +62,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     unifiedAssociation.Constraint.ToRole = unifiedAssociation.TargetEnd;
                 }
 
+                var sourceEndClrProperty = redundantAssociation.SourceEnd.GetClrPropertyInfo();
+
+                if (sourceEndClrProperty != null)
+                {
+                    unifiedAssociation.TargetEnd.SetClrPropertyInfo(sourceEndClrProperty);
+                }
+
                 FixNavigationProperties(model, unifiedAssociation, redundantAssociation);
 
                 model.RemoveAssociationType(redundantAssociation);

@@ -394,6 +394,7 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\EntityConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\AssociationModificationFunctionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionConfiguration``.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionsConfiguration``.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\DeleteModificationFunctionConfiguration`.cs" />

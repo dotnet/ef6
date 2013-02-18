@@ -600,6 +600,221 @@ namespace FunctionalTests
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }
+
+                [Fact]
+                public void Can_configure_composite_ia_fk_parameters_from_nav_prop_on_principal()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Order>()
+                        .HasKey(
+                            o => new
+                                     {
+                                         o.OrderId,
+                                         o.Type
+                                     });
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id1");
+                                                    a.Parameter(o => o.Type, "the_type1");
+                                                }));
+                                    map.Update(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id2");
+                                                    a.Parameter(o => o.Type, "the_type2");
+                                                }));
+                                    map.Delete(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id3");
+                                                    a.Parameter(o => o.Type, "the_type3");
+                                                }));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id1"));
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "the_type1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id2"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "the_type2"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id3"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "the_type3"));
+                }
+
+                [Fact]
+                public void Can_configure_composite_ia_fk_parameters_from_nav_prop_on_dependent_and_last_wins()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Ignore<Chassis>()
+                        .Ignore<Sponsor>()
+                        .Ignore<TestDriver>()
+                        .Ignore<Gearbox>()
+                        .Ignore<Engine>();
+
+                    modelBuilder
+                        .Entity<Team>()
+                        .HasKey(
+                            o => new
+                                     {
+                                         o.Id,
+                                         o.Name
+                                     });
+
+                    modelBuilder
+                        .Entity<Driver>()
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(
+                                        f =>
+                                            {
+                                                f.Association<Team>(
+                                                    t => t.Drivers,
+                                                    a =>
+                                                        {
+                                                            a.Parameter(t => t.Id, "team_id0");
+                                                            a.Parameter(t => t.Name, "team_name0");
+                                                        });
+                                                f.Parameter(d => d.Team.Id, "team_id1");
+                                                f.Parameter(d => d.Team.Name, "team_name1");
+                                            });
+                                    map.Update(
+                                        f =>
+                                            {
+                                                f.Parameter(d => d.Team.Id, "team_id2");
+                                                f.Parameter(d => d.Team.Name, "team_name2");
+                                            });
+                                    map.Delete(
+                                        f =>
+                                            {
+                                                f.Parameter(d => d.Team.Id, "team_id3");
+                                                f.Parameter(d => d.Team.Name, "team_name3");
+                                            });
+                                })
+                        .Ignore(d => d.Name);
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "team_id1"));
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "team_name1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "team_id2"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "team_name2"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "team_id3"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "team_name3"));
+                }
+
+                [Fact]
+                public void Can_configure_ia_fk_self_ref_parameters_from_nav_prop_on_dependent()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Item>()
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(f => f.Parameter(i => i.ParentItem.Id, "item_id1"));
+                                    map.Update(f => f.Parameter(i => i.ParentItem.Id, "item_id2"));
+                                    map.Delete(f => f.Parameter(i => i.ParentItem.Id, "item_id3"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id2"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id3"));
+                }
+
+                [Fact]
+                public void Can_configure_ia_fk_self_ref_parameters_from_nav_prop_on_principal()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Item>()
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(f => f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id1")));
+                                    map.Update(
+                                        f =>
+                                            {
+                                                f.Parameter(i => i.Id, "id2");
+                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id2"));
+                                            });
+                                    map.Delete(
+                                        f =>
+                                            {
+                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id3"));
+                                                f.Parameter(i => i.Id, "id3");
+                                            });
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "id2"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id2"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "id3"));
+                    Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id3"));
+                }
             }
         }
 

@@ -100,12 +100,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         public void Parameter(
-            PropertyPath propertyPath, string parameterName, string originalValueParameterName = null)
+            PropertyPath propertyPath,
+            string parameterName,
+            string originalValueParameterName = null)
         {
             DebugCheck.NotNull(propertyPath);
             DebugCheck.NotEmpty(parameterName);
 
-            _parameterNames[propertyPath] = Tuple.Create(parameterName, originalValueParameterName);
+            _parameterNames[propertyPath]
+                = Tuple.Create(parameterName, originalValueParameterName);
         }
 
         public void Result(PropertyPath propertyPath, string columnName)
@@ -174,11 +177,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     = modificationFunctionMapping
                         .ParameterBindings
                         .Where(
-                            pb => propertyPath.Equals(
-                                new PropertyPath(
-                                      pb.MemberPath.Members
-                                        .OfType<EdmProperty>()
-                                        .Select(m => m.GetClrPropertyInfo()))))
+                            pb => // First, try and match scalar/complex/many-to-many binding 
+                            (((pb.MemberPath.AssociationSetEnd == null)
+                              || pb.MemberPath.AssociationSetEnd.ParentAssociationSet.ElementType.IsManyToMany())
+                             && propertyPath.Equals(
+                                 new PropertyPath(
+                                    pb.MemberPath.Members.OfType<EdmProperty>().Select(m => m.GetClrPropertyInfo()))))
+                            ||
+                            // Otherwise, try and match IA FK bindings 
+                            ((propertyPath.Count == 2)
+                             && (pb.MemberPath.AssociationSetEnd != null)
+                             && pb.MemberPath.Members.First().GetClrPropertyInfo().IsSameAs(propertyPath.Last())
+                             && pb.MemberPath.AssociationSetEnd.ParentAssociationSet.AssociationSetEnds
+                                  .Select(ae => ae.CorrespondingAssociationEndMember.GetClrPropertyInfo())
+                                  .Where(pi => pi != null)
+                                  .Any(pi => pi.IsSameAs(propertyPath.First()))))
                         .ToList();
 
                 if (parameterBindings.Count == 1)

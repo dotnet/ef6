@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using Xunit;
 
@@ -37,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
         }
 
         [Fact]
-        public void Apply_should_transfer_constraint()
+        public void Apply_should_transfer_constraint_and_clr_property_info_annotation()
         {
             EdmModel model
                 = new TestModelBuilder()
@@ -46,6 +47,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
                     .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
             var association2 = model.AssociationTypes.Last();
+
+            var mockPropertyInfo = new MockPropertyInfo();
+            association2.SourceEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             var referentialConstraint 
                 = new ReferentialConstraint(
@@ -67,6 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.UnitTests
             Assert.Same(referentialConstraint, associationType.Constraint);
             Assert.Same(associationType.SourceEnd, referentialConstraint.FromRole);
             Assert.Same(associationType.TargetEnd, referentialConstraint.ToRole);
+            Assert.Same(mockPropertyInfo.Object, associationType.TargetEnd.GetClrPropertyInfo());
         }
 
         [Fact]

@@ -3,32 +3,24 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
     public class ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>
+        : ModificationFunctionConfiguration<TEntityType>
         where TEntityType : class
         where TTargetEntityType : class
     {
-        private readonly ModificationFunctionConfiguration _configuration
-            = new ModificationFunctionConfiguration();
-
         internal ManyToManyModificationFunctionConfiguration()
         {
-        }
-
-        internal ModificationFunctionConfiguration Configuration
-        {
-            get { return _configuration; }
         }
 
         public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
-            _configuration.HasName(procedureName);
+            Configuration.HasName(procedureName);
 
             return this;
         }
@@ -52,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -65,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -77,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -89,31 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
-
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
-            Expression<Func<TEntityType, DbGeography>> propertyExpression, string parameterName)
-        {
-            Check.NotNull(propertyExpression, "propertyExpression");
-            Check.NotEmpty(parameterName, "parameterName");
-
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
-
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
-            Expression<Func<TEntityType, DbGeometry>> propertyExpression, string parameterName)
-        {
-            Check.NotNull(propertyExpression, "propertyExpression");
-            Check.NotEmpty(parameterName, "parameterName");
-
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -126,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -139,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -151,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
@@ -163,31 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
-
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
-            Expression<Func<TTargetEntityType, DbGeography>> propertyExpression, string parameterName)
-        {
-            Check.NotNull(propertyExpression, "propertyExpression");
-            Check.NotEmpty(parameterName, "parameterName");
-
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
-
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
-            Expression<Func<TTargetEntityType, DbGeometry>> propertyExpression, string parameterName)
-        {
-            Check.NotNull(propertyExpression, "propertyExpression");
-            Check.NotEmpty(parameterName, "parameterName");
-
-            _configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
 
             return this;
         }
