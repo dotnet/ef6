@@ -18,6 +18,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         }
 
         [Fact]
+        public void HasName_when_schema_should_set_name_and_schema_on_underlying_configuration()
+        {
+            var configuration = new UpdateModificationFunctionConfiguration<Entity>();
+
+            configuration.HasName("Foo", "Bar");
+
+            Assert.Equal("Foo", configuration.Configuration.Name);
+            Assert.Equal("Bar", configuration.Configuration.Schema);
+        }
+
+        [Fact]
         public void Parameter_should_return_configuration_for_valid_property_expressions()
         {
             var configuration = new UpdateModificationFunctionConfiguration<Entity>();

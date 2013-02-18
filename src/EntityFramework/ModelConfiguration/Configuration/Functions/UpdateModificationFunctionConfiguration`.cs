@@ -24,6 +24,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        public UpdateModificationFunctionConfiguration<TEntityType> HasName(string procedureName, string schemaName)
+        {
+            Check.NotEmpty(procedureName, "procedureName");
+            Check.NotEmpty(schemaName, "schemaName");
+
+            Configuration.HasName(procedureName, schemaName);
+
+            return this;
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public UpdateModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)

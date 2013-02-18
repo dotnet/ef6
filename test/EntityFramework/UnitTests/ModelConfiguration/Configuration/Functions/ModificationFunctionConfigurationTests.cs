@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            modificationFunctionConfiguration.HasName("Foo");
+            modificationFunctionConfiguration.HasName("Foo", "baz");
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -29,6 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             Assert.NotSame(modificationFunctionConfiguration, clone);
             Assert.Equal("Foo", clone.Name);
+            Assert.Equal("baz", clone.Schema);
             Assert.Equal(1, clone.ParameterNames.Count);
             Assert.Equal(1, clone.ResultBindings.Count);
             Assert.Equal("bar", clone.RowsAffectedParameterName);
@@ -85,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            modificationFunctionConfiguration.HasName("Foo");
+            modificationFunctionConfiguration.HasName("Foo", "Bar");
 
             var mockPropertyInfo1 = new MockPropertyInfo();
             var mockPropertyInfo2 = new MockPropertyInfo();
@@ -133,6 +134,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     null));
 
             Assert.Equal("Foo", function.Name);
+            Assert.Equal("Bar", function.Schema);
             Assert.Equal("P1", functionParameter1.Name);
             Assert.Equal("P2", functionParameter2.Name);
         }
@@ -326,11 +328,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
 
-            modificationFunctionConfiguration1.HasName("P");
+            modificationFunctionConfiguration1.HasName("P", "S");
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
 
-            modificationFunctionConfiguration2.HasName("P");
+            modificationFunctionConfiguration2.HasName("P", "S");
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
 

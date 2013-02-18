@@ -217,8 +217,8 @@ namespace FunctionalTests
                             map =>
                                 {
                                     map.Insert(f => f.HasName("insert_order_line"));
-                                    map.Update(f => f.HasName("update_order_line"));
-                                    map.Delete(f => f.HasName("delete_order_line"));
+                                    map.Update(f => f.HasName("update_order_line", "foo"));
+                                    map.Delete(f => f.HasName("delete_order_line", "bar"));
                                 });
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -237,6 +237,8 @@ namespace FunctionalTests
                     Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.Name);
                     Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.Name);
                     Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("foo", functionMapping.UpdateFunctionMapping.Function.Schema);
+                    Assert.Equal("bar", functionMapping.DeleteFunctionMapping.Function.Schema);
                 }
 
                 [Fact]
@@ -475,7 +477,7 @@ namespace FunctionalTests
                                     map.Delete(
                                         f =>
                                             {
-                                                f.HasName("del_product_tag");
+                                                f.HasName("del_product_tag", "bar");
                                                 f.LeftKeyParameter(t => t.Id, "tag_id");
                                                 f.RightKeyParameter(p => p.Id, "product_id");
                                             });
@@ -501,6 +503,7 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
+                    Assert.Equal("bar", functionMapping.DeleteFunctionMapping.Function.Schema);
                 }
 
                 [Fact]

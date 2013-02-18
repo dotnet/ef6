@@ -33,6 +33,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> HasName(
+            string procedureName, string schemaName)
+        {
+            Check.NotEmpty(procedureName, "procedureName");
+            Check.NotEmpty(schemaName, "schemaName");
+
+            Configuration.HasName(procedureName, schemaName);
+
+            return this;
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)

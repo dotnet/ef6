@@ -21,6 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             = new Dictionary<PropertyInfo, string>();
 
         private string _name;
+        private string _schema;
         private string _rowsAffectedParameter;
 
         public ModificationFunctionConfiguration()
@@ -32,6 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(source);
 
             _name = source._name;
+            _schema = source._schema;
             _rowsAffectedParameter = source._rowsAffectedParameter;
 
             source._parameterNames.Each(
@@ -50,12 +52,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotEmpty(name);
 
+            var databaseName = DatabaseName.Parse(name);
+
+            _name = databaseName.Name;
+            _schema = databaseName.Schema;
+        }
+
+        public void HasName(string name, string schema)
+        {
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotEmpty(schema);
+
             _name = name;
+            _schema = schema;
         }
 
         public string Name
         {
             get { return _name; }
+        }
+
+        public string Schema
+        {
+            get { return _schema; }
         }
 
         public void RowsAffectedParameter(string name)
@@ -102,6 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(modificationFunctionMapping);
 
             ConfigureName(modificationFunctionMapping);
+            ConfigureSchema(modificationFunctionMapping);
             ConfigureRowsAffectedParameter(modificationFunctionMapping);
             ConfigureParameters(modificationFunctionMapping);
             ConfigureResultBindings(modificationFunctionMapping);
@@ -114,6 +134,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if (!string.IsNullOrWhiteSpace(_name))
             {
                 modificationFunctionMapping.Function.Name = _name;
+            }
+        }
+
+        private void ConfigureSchema(StorageModificationFunctionMapping modificationFunctionMapping)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            if (!string.IsNullOrWhiteSpace(_schema))
+            {
+                modificationFunctionMapping.Function.Schema = _schema;
             }
         }
 
@@ -217,6 +247,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if ((_name != null)
                 && (other._name != null)
                 && !string.Equals(_name, other._name, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if ((_schema != null)
+                && (other._schema != null)
+                && !string.Equals(_schema, other._schema, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
