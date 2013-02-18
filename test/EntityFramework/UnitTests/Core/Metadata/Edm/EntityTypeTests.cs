@@ -151,5 +151,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(1, entityType.Properties.Count);
         }
+
+        [Fact]
+        public void Create_factory_method_sets_properties_and_seals_the_type()
+        {
+            var entity =
+                EntityType.Create(
+                    "Customer",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    new[] { "Id" },
+                    new[]
+                        {
+                            EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                            EdmProperty.Primitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                        },
+                    new[]
+                        {
+                            new MetadataProperty(
+                                "TestProperty",
+                                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                                "value"),
+                        });
+
+            Assert.Equal("MyModel.Customer", entity.FullName);
+            Assert.Equal(DataSpace.CSpace, entity.DataSpace);
+            Assert.True(new [] { "Id"}.SequenceEqual(entity.KeyMemberNames));
+            Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.Members.Select(m => m.Name)));
+            Assert.True(entity.IsReadOnly);
+
+            var metadataProperty = entity.MetadataProperties.SingleOrDefault(p => p.Name == "TestProperty");
+            Assert.NotNull(metadataProperty);
+            Assert.Equal("value", metadataProperty.Value);
+        }
     }
 }

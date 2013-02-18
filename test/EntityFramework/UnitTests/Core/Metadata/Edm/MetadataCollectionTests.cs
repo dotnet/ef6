@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using Xunit;
 
     public class MetadataCollectionTests
@@ -39,6 +41,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(1, metadataCollection.Count);
             Assert.Same(entityType2, metadataCollection[0]);
+        }
+
+        [Fact]
+        public void AddRange_throws_ArgumentNullException_for_null_collection_item()
+        {
+            var metadataCollection = new MetadataCollection<MetadataItem>();
+
+            Assert.Equal(
+                Strings.ADP_CollectionParameterElementIsNull("items"),
+                Assert.Throws<ArgumentException>(
+                    () => metadataCollection.AtomicAddRange(new List<MetadataItem>{ null })).Message);
         }
     }
 }

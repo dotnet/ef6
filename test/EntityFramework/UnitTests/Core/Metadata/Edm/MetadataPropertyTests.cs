@@ -17,5 +17,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("Foo", metadataProperty.Value);
         }
+
+        [Fact]
+        public void Create_sets_properties_and_seals_MetadataProperty()
+        {
+            var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var metadataProperty = MetadataProperty.Create("property", typeUsage, "value");
+
+            Assert.Equal("property", metadataProperty.Name);
+            Assert.Same(typeUsage, metadataProperty.TypeUsage);
+            Assert.Equal("value", metadataProperty.Value);
+            Assert.True(metadataProperty.IsReadOnly);
+        }
     }
 }

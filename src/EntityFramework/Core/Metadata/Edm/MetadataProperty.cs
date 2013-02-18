@@ -147,5 +147,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _propertyKind; }
         }
+
+        public static MetadataProperty Create(string name, TypeUsage typeUsage, object value)
+        {
+            var metadataProperty = new MetadataProperty(name, typeUsage, value);
+            metadataProperty.SetReadOnly();
+            return metadataProperty;
+        }
     }
 }

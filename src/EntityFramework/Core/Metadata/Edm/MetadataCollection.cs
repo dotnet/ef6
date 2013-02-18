@@ -378,6 +378,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // Add the new items, this will also perform duplication check
             foreach (var item in items)
             {
+                if (item == null)
+                {
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("items"));
+                }
+                Debug.Assert(!String.IsNullOrEmpty(item.Identity), "Identity of the item must never be null or empty");
+
                 AddInternalHelper(item, newData, false);
             }
 

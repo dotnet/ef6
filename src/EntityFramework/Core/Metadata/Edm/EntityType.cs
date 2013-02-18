@@ -237,5 +237,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
             navigationProperty = null;
             return false;
         }
+
+        public static EntityType Create(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            IEnumerable<string> keyMemberNames,
+            IEnumerable<EdmMember> members,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            var entity = new EntityType(name, namespaceName, dataSpace, keyMemberNames, members);
+
+            if (metadataProperties != null)
+            {
+                entity.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            entity.SetReadOnly();
+            return entity;
+        }
     }
 }
