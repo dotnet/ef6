@@ -47,16 +47,5 @@ namespace System.Data.Entity.Config
 
             return configurations.FirstOrDefault();
         }
-
-        public virtual InternalConfiguration TryCreateConfiguration(Type contextType, IEnumerable<Type> typesToSearch = null)
-        {
-            DebugCheck.NotNull(contextType);
-
-            var configType = TryFindConfigurationType(contextType, typesToSearch ?? contextType.Assembly.GetAccessibleTypes());
-
-            return configType == null
-                       ? null
-                       : configType.CreateInstance<DbConfiguration>().InternalConfiguration;
-        }
     }
 }

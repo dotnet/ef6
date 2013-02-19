@@ -8,7 +8,7 @@ namespace System.Data.Entity.Config
 
     internal class DbConfigurationLoader
     {
-        public virtual InternalConfiguration TryLoadFromConfig(AppConfig config)
+        public virtual Type TryLoadFromConfig(AppConfig config)
         {
             DebugCheck.NotNull(config);
 
@@ -18,17 +18,23 @@ namespace System.Data.Entity.Config
                 return null;
             }
 
-            Type configType;
+            Type type;
             try
             {
-                configType = Type.GetType(typeName, throwOnError: true);
+                type = Type.GetType(typeName, throwOnError: true);
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException(Strings.DbConfigurationTypeNotFound(typeName), ex);
             }
 
-            return configType.CreateInstance<DbConfiguration>(Strings.CreateInstance_BadDbConfigurationType).InternalConfiguration;
+            if (!typeof(DbConfiguration).IsAssignableFrom(type))
+            {
+                throw new InvalidOperationException(
+                    Strings.CreateInstance_BadDbConfigurationType(type.ToString(), typeof(DbConfiguration).ToString()));
+            }
+
+            return type;
         }
 
         public virtual bool AppConfigContainsDbConfigurationType(AppConfig config)
