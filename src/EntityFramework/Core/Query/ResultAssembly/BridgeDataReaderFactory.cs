@@ -54,8 +54,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             var cacheManager = workspace.GetQueryCacheManager();
             const MergeOption NoTracking = MergeOption.NoTracking;
 
-            var shaperFactory = _translator.TranslateColumnMap<RecordState>(cacheManager, columnMap, workspace, null, NoTracking, true);
-            var recordShaper = shaperFactory.Create(storeDataReader, null, workspace, MergeOption.NoTracking, true, useSpatialReader: true);
+            var shaperFactory = _translator.TranslateColumnMap<RecordState>(cacheManager, columnMap, workspace, null, NoTracking, valueLayer: true);
+            var recordShaper = shaperFactory.Create(storeDataReader, null, workspace, MergeOption.NoTracking, readerOwned: true, useSpatialReader: true, shouldReleaseConnection: true);
 
             return new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(
                 recordShaper, recordShaper.RootCoordinator.TypedCoordinatorFactory);

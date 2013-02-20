@@ -48,7 +48,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     /*stateCount*/ 1,
                     coordinatorFactory,
                     /*readerOwned*/ false,
-                    /*useSpatialReader*/ false);
+                    /*useSpatialReader*/ false, 
+                    shouldReleaseConnection: true);
 
                 var actualEnumerator = shaper.GetEnumerator();
 
@@ -116,7 +117,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     /*stateCount*/ 3,
                     rootCoordinatorFactory,
                     /*readerOwned*/ false,
-                    /*useSpatialReader*/ false);
+                    /*useSpatialReader*/ false,
+                    shouldReleaseConnection: true);
 
                 var actualEnumerator = shaper.GetEnumerator();
 
@@ -202,7 +204,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     /*stateCount*/ 6,
                     rootCoordinatorFactory,
                     /*readerOwned*/ false,
-                    /*useSpatialReader*/ false);
+                    /*useSpatialReader*/ false, 
+                    shouldReleaseConnection: true);
 
                 Assert.Equal(new object[] { 1, "A", 2, "X", 3, "B", 4, "C", "D" }.ToList(), toList(shaper.RootEnumerator));
             }
@@ -282,7 +285,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     /*stateCount*/ 1,
                     coordinatorFactory,
                     /*readerOwned*/ false,
-                    /*useSpatialReader*/ useSpatialReader)
+                    /*useSpatialReader*/ useSpatialReader,
+                    /*shouldReleaseConnection*/ true)
                                      {
                                          CallBase = true
                                      };
@@ -425,7 +429,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     /*stateCount*/ 1,
                     coordinatorFactory,
                     /*readerOwned*/ false,
-                    /*useSpatialReader*/ useSpatialReader)
+                    /*useSpatialReader*/ useSpatialReader,
+                    /*shouldReleaseConnection*/ true)
                                      {
                                          CallBase = true
                                      };
@@ -522,7 +527,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 /*stateCount*/ 1,
                 coordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ useSpatialReader)
+                /*useSpatialReader*/ useSpatialReader,
+                /*shouldReleaseConnection*/ true)
                                  {
                                      CallBase = true
                                  };
@@ -570,7 +576,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 /*stateCount*/ 1,
                 coordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ useSpatialReader)
+                /*useSpatialReader*/ useSpatialReader,
+                /*shouldReleaseConnection*/ true)
                                  {
                                      CallBase = true
                                  };

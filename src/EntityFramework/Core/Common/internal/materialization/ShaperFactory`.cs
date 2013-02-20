@@ -31,12 +31,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <summary>
         ///     Factory method to create the Shaper for Object Layer queries.
         /// </summary>
-        internal Shaper<T> Create(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, bool readerOwned, bool useSpatialReader)
+        internal Shaper<T> Create(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
+            bool readerOwned, bool useSpatialReader, bool shouldReleaseConnection)
         {
             Debug.Assert(
                 mergeOption == _mergeOption, "executing a query with a different mergeOption than was used to compile the delegate");
             return new Shaper<T>(
-                reader, context, workspace, mergeOption, _stateCount, _rootCoordinatorFactory, readerOwned, useSpatialReader);
+                reader, context, workspace, mergeOption, _stateCount, _rootCoordinatorFactory, readerOwned, useSpatialReader, shouldReleaseConnection);
         }
     }
 }

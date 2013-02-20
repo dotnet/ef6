@@ -113,9 +113,9 @@ namespace System.Data.Entity.Core.Objects
                 objectContextMock.Setup(
                     m =>
                     m.ExecuteInTransactionAsync(
-                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-                                 .Returns<Func<Task<ObjectResult<object>>>, bool, bool, CancellationToken>(
-                                     (f, t, s, c) =>
+                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                                 .Returns<Func<Task<ObjectResult<object>>>, bool, bool, bool, CancellationToken>(
+                                     (f, t, s, r, c) =>
                                          {
                                              executionPlanMock.Verify(
                                                  m =>
@@ -134,9 +134,9 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<ObjectResult<object>>, bool, bool>(
-                                     (f, t, s) =>
+                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<ObjectResult<object>>, bool, bool, bool>(
+                                     (f, t, s, r) =>
                                          {
                                              executionPlanMock.Verify(
                                                  m =>
@@ -164,14 +164,14 @@ namespace System.Data.Entity.Core.Objects
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
                                                          It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(),
-                                                         false, It.IsAny<CancellationToken>()),
+                                                         false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
                                                      Times.Never());
                                                  var result = f().Result;
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
                                                          It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(),
-                                                         false, It.IsAny<CancellationToken>()),
+                                                         false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
                                                      Times.Once());
                                                  return Task.FromResult(result);
                                              });
@@ -184,11 +184,11 @@ namespace System.Data.Entity.Core.Objects
                                          f =>
                                              {
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false),
+                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false),
+                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
                                                      Times.Once());
                                                  return result;
                                              });

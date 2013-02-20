@@ -32,8 +32,10 @@ namespace System.Data.Entity.Core.Objects
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using System.Transactions;
 
     /// <summary>
@@ -2268,7 +2270,8 @@ namespace System.Data.Entity.Core.Objects
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => objectQueryExecutionPlan.Execute<object>(this, null),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false,
+                    releaseConnectionOnSuccess: true));
 
             foreach (var entity in results)
             {
@@ -2547,8 +2550,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 entriesAffected = ExecuteInTransaction(
                     () => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true), throwOnExistingTransaction,
-                    startLocalTransaction: true);
-                ReleaseConnection();
+                    startLocalTransaction: true, releaseConnectionOnSuccess: true);
             }
             else
             {
@@ -2589,9 +2591,8 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken), throwOnExistingTransaction,
-                                            /*startLocalTransaction:*/ true, cancellationToken)
+                                            /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
-            ReleaseConnection();
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
@@ -2620,14 +2621,17 @@ namespace System.Data.Entity.Core.Objects
         /// <remarks>
         ///     A local transaction is created only if there are no existing local nor ambient transactions.
         ///     This method will ensure that the connection is opened and release it if an exception is thrown.
-        ///     The caller is responsible of releasing the connection if no exception is thrown.
+        ///     The caller is responsible of releasing the connection if no exception is thrown, unless
+        ///     <paramref name="releaseConnectionOnSuccess"/> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
-        /// <param name="throwOnExistingTransaction"> Wheather to throw on an existing transaction. </param>
-        /// <param name="startLocalTransaction"> Wheather should start a new local transaction when there's no existing one. </param>
+        /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
+        /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
+        /// <param name="releaseConnectionOnSucces"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <returns> The result from invoking <paramref name="func"/>. </returns>
-        internal virtual T ExecuteInTransaction<T>(Func<T> func, bool throwOnExistingTransaction, bool startLocalTransaction)
+        internal virtual T ExecuteInTransaction<T>(
+            Func<T> func, bool throwOnExistingTransaction, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
             EnsureConnection();
 
@@ -2663,6 +2667,11 @@ namespace System.Data.Entity.Core.Objects
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
 
+                if (releaseConnectionOnSuccess)
+                {
+                    ReleaseConnection();
+                }
+
                 return result;
             }
             catch (Exception)
@@ -2690,16 +2699,19 @@ namespace System.Data.Entity.Core.Objects
         /// <remarks>
         ///     A local transaction is created only if there are no existing local nor ambient transactions.
         ///     This method will ensure that the connection is opened and release it if an exception is thrown.
-        ///     The caller is responsible of releasing the connection if no exception is thrown.
+        ///     The caller is responsible of releasing the connection if no exception is thrown, unless
+        ///     <paramref name="releaseConnectionOnSuccess"/> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
-        /// <param name="throwOnExistingTransaction"> Wheather to throw on an existing transaction. </param>
-        /// <param name="startLocalTransaction"> Wheather should start a new local transaction when there's no existing one. </param>
+        /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
+        /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
+        /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A task containing the result from invoking <paramref name="func"/>. </returns>
         internal virtual async Task<T> ExecuteInTransactionAsync<T>(
-            Func<Task<T>> func, bool throwOnExistingTransaction, bool startLocalTransaction, CancellationToken cancellationToken)
+            Func<Task<T>> func, bool throwOnExistingTransaction,
+            bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
         {
             await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
@@ -2734,6 +2746,11 @@ namespace System.Data.Entity.Core.Objects
                     localTransaction.Commit();
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
+                
+                if (releaseConnectionOnSuccess)
+                {
+                    ReleaseConnection();
+                }
 
                 return result;
             }
@@ -2936,7 +2953,8 @@ namespace System.Data.Entity.Core.Objects
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true,
+                    releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
         /// <summary>
@@ -2961,13 +2979,10 @@ namespace System.Data.Entity.Core.Objects
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            var result = executionStrategy.Execute(
+            return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions,
-                    startLocalTransaction: true));
-
-            ReleaseConnection();
-            return result;
+                    startLocalTransaction: true, releaseConnectionOnSuccess: true));
         }
 
         private static int ExecuteFunctionCommand(EntityCommand entityCommand)
@@ -3059,7 +3074,8 @@ namespace System.Data.Entity.Core.Objects
             if (executionOptions.Streaming)
             {
                 return MaterializedDataRecord<TElement>(
-                    entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true);
+                    entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true,
+                    shouldReleaseConnection: true);
             }
             else
             {
@@ -3088,7 +3104,8 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 return MaterializedDataRecord<TElement>(
-                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: false);
+                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: false,
+                    shouldReleaseConnection: false);
             }
         }
 
@@ -3096,13 +3113,8 @@ namespace System.Data.Entity.Core.Objects
         ///     Get the materializer for the resultSetIndexth result set of storeReader.
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
-            EntityCommand entityCommand,
-            DbDataReader storeReader,
-            int resultSetIndex,
-            ReadOnlyMetadataCollection<EntitySet> entitySets,
-            EdmType[] edmTypes,
-            MergeOption mergeOption,
-            bool useSpatialReader)
+            EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyMetadataCollection<EntitySet> entitySets,
+            EdmType[] edmTypes, MergeOption mergeOption, bool useSpatialReader, bool shouldReleaseConnection)
         {
             DebugCheck.NotNull(entityCommand);
             DebugCheck.NotNull(storeReader);
@@ -3123,7 +3135,8 @@ namespace System.Data.Entity.Core.Objects
                 var shaperFactory = _translator.TranslateColumnMap<TElement>(
                     cacheManager, commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
                     false);
-                var shaper = shaperFactory.Create(storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, useSpatialReader);
+                var shaper = shaperFactory.Create(
+                    storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, useSpatialReader, shouldReleaseConnection);
 
                 NextResultGenerator nextResultGenerator;
 
@@ -3160,7 +3173,8 @@ namespace System.Data.Entity.Core.Objects
                 // We want the ObjectResult to close the reader in its Dispose method, even if it is not the last result set.
                 // This is to allow users to cancel reading results without the unnecessary iteration thru all the result sets.
                 return new ObjectResult<TElement>(
-                    shaper, entitySet, TypeUsage.Create(edmTypes[resultSetIndex]), true, nextResultGenerator, onReaderDispose);
+                    shaper, entitySet, TypeUsage.Create(edmTypes[resultSetIndex]), true, shouldReleaseConnection, nextResultGenerator,
+                    onReaderDispose);
             }
             catch
             {
@@ -3405,13 +3419,11 @@ namespace System.Data.Entity.Core.Objects
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            var rowsAffected = executionStrategy.Execute(
+            return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true));
-
-            ReleaseConnection();
-            return rowsAffected;
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true,
+                    releaseConnectionOnSuccess: true));
         }
 
 #if !NET40
@@ -3438,19 +3450,16 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing a single integer return value. </returns>
-        public virtual async Task<int> ExecuteStoreCommandAsync(
+        public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
-            var rowsAffected = await executionStrategy.ExecuteAsync(
+            return executionStrategy.ExecuteAsync(
                 () => ExecuteInTransactionAsync(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
                           /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                          /*startLocalTransaction:*/ true, cancellationToken),
-                cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
-            ReleaseConnection();
-            return rowsAffected;
+                          /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
+                cancellationToken);
         }
 
 #endif
@@ -3548,7 +3557,8 @@ namespace System.Data.Entity.Core.Objects
                 () => ExecuteInTransaction(
                     () => ExecuteStoreQueryInternal<TElement>(
                         commandText, entitySetName, executionOptions, parameters),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false,
+                    releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by ObjectResult")]
@@ -3564,7 +3574,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 if (executionOptions.Streaming)
                 {
-                    return InternalTranslate<TElement>(reader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                    return InternalTranslate<TElement>(
+                        reader, entitySetName, executionOptions.MergeOption, readerOwned: true,
+                        shouldReleaseConnection: executionOptions.Streaming);
                 }
             }
             catch
@@ -3587,7 +3599,9 @@ namespace System.Data.Entity.Core.Objects
 
                 bufferedReader = new BufferedDataReader(reader);
                 bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
-                return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                return InternalTranslate<TElement>(
+                    bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
+                    shouldReleaseConnection: !executionOptions.Streaming);
             }
             catch
             {
@@ -3745,7 +3759,7 @@ namespace System.Data.Entity.Core.Objects
                     () => ExecuteStoreQueryInternalAsync<TElement>(
                         commandText, entitySetName, executionOptions, cancellationToken, parameters),
                           /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                          /*startLocalTransaction:*/ false, cancellationToken),
+                          /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming, cancellationToken),
                 cancellationToken);
         }
 
@@ -3762,7 +3776,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 if (executionOptions.Streaming)
                 {
-                    return InternalTranslate<TElement>(reader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                    return InternalTranslate<TElement>(
+                        reader, entitySetName, executionOptions.MergeOption, readerOwned: true,
+                        shouldReleaseConnection: executionOptions.Streaming);
                 }
             }
             catch
@@ -3786,7 +3802,9 @@ namespace System.Data.Entity.Core.Objects
                 bufferedReader = new BufferedDataReader(reader);
                 await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
                                     .ConfigureAwait(continueOnCapturedContext: false);
-                return InternalTranslate<TElement>(bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true);
+                return InternalTranslate<TElement>(
+                    bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
+                    shouldReleaseConnection: !executionOptions.Streaming);
             }
             catch
             {
@@ -3820,7 +3838,8 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TElement>(reader, null /*entitySetName*/, MergeOption.AppendOnly, readerOwned: false);
+            return InternalTranslate<TElement>(
+                reader, null /*entitySetName*/, MergeOption.AppendOnly, readerOwned: false, shouldReleaseConnection: false);
         }
 
         /// <summary>
@@ -3847,11 +3866,12 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TEntity), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TEntity>(reader, entitySetName, mergeOption, readerOwned: false);
+            return InternalTranslate<TEntity>(reader, entitySetName, mergeOption, readerOwned: false, shouldReleaseConnection: false);
         }
 
         private ObjectResult<TElement> InternalTranslate<TElement>(
-            DbDataReader reader, string entitySetName, MergeOption mergeOption, bool readerOwned)
+            DbDataReader reader, string entitySetName,
+            MergeOption mergeOption, bool readerOwned, bool shouldReleaseConnection)
         {
             DebugCheck.NotNull(reader);
             EntityUtil.CheckArgumentMergeOption(mergeOption);
@@ -3890,8 +3910,10 @@ namespace System.Data.Entity.Core.Objects
             var cacheManager = MetadataWorkspace.GetQueryCacheManager();
             var shaperFactory = _translator.TranslateColumnMap<TElement>(
                 cacheManager, columnMap, MetadataWorkspace, null, mergeOption, false);
-            var shaper = shaperFactory.Create(reader, this, MetadataWorkspace, mergeOption, readerOwned, useSpatialReader: true);
-            return new ObjectResult<TElement>(shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned);
+            var shaper = shaperFactory.Create(
+                reader, this, MetadataWorkspace, mergeOption, readerOwned, /*useSpatialReader:*/ true, shouldReleaseConnection);
+            return new ObjectResult<TElement>(
+                shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned, shouldReleaseConnection);
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]

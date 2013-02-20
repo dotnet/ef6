@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Objects
             _mergeOption = mergeOption;
         }
 
-        internal ObjectResult<TElement> GetNextResult<TElement>(DbDataReader storeReader)
+        internal ObjectResult<TElement> GetNextResult<TElement>(DbDataReader storeReader, bool shouldReleaseConnection)
         {
             var isNextResult = false;
             try
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Objects
                 var edmType = _edmTypes[_resultSetIndex];
                 MetadataHelper.CheckFunctionImportReturnType<TElement>(edmType, _context.MetadataWorkspace);
                 return _context.MaterializedDataRecord<TElement>(
-                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, useSpatialReader: true);
+                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, /*useSpatialReader:*/ true, shouldReleaseConnection);
             }
             else
             {

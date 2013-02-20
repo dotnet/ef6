@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Objects
         {
             return new Mock<Shaper<T>>(
                 /*reader*/ null, /*context*/ null, /*workspace*/ null,
-                    MergeOption.AppendOnly, /*stateCount*/ 1, /*rootCoordinatorFactory*/ CreateCoordinatorFactory<T>(),
-                    /*readerOwned*/ false, /*useSpatialReader*/ false);
+                MergeOption.AppendOnly, /*stateCount*/ 1, /*rootCoordinatorFactory*/ CreateCoordinatorFactory<T>(),
+                /*readerOwned*/ false, /*useSpatialReader*/ false, /*shouldReleaseConnection*/ true);
         }
 
         internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null)

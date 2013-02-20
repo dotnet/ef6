@@ -679,7 +679,7 @@ namespace System.Data.Entity.Core.Objects
                 () => QueryState.ObjectContext.ExecuteInTransaction(
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false));
+                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false, releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
         }
 
 #if !NET40
@@ -692,7 +692,7 @@ namespace System.Data.Entity.Core.Objects
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
                     /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
-                    /*startLocalTransaction:*/ false, cancellationToken),
+                    /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour, cancellationToken),
                 cancellationToken);
         }
 

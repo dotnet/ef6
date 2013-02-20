@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common
     using Moq.Protected;
     using Xunit;
 
-    public class DbProviderServicesTests
+    public class DbProviderServicesTests 
     {
         public class ExpandDataDirectory
         {
@@ -123,8 +123,8 @@ namespace System.Data.Entity.Core.Common
                 }
             }
         }
-
-        public class GetProviderServices
+        
+        public class GetProviderServices : TestBase
         {
             [Fact]
             public void GetProviderServices_returns_SQL_Server_provider_by_convention()
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.Common
                 }
             }
         }
-
+ 
         public class GetSpatialServices
         {
             [Fact]
@@ -268,7 +268,6 @@ namespace System.Data.Entity.Core.Common
                     Strings.ProviderDidNotReturnSpatialServices,
                     Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
             }
-
         }
 
         public class GetConceptualSchemaDefinition

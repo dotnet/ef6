@@ -43,11 +43,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         private readonly bool _readerOwned;
 
+        /// <summary>
+        ///     Should the connection be released when the shaper is disposed
+        /// </summary>
+        private readonly bool _shouldReleaseConnection;
+
         #endregion
 
-        internal Shaper(
-            DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption, int stateCount,
-            CoordinatorFactory<T> rootCoordinatorFactory, bool readerOwned, bool useSpatialReader)
+        internal Shaper(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
+            int stateCount, CoordinatorFactory<T> rootCoordinatorFactory, bool readerOwned, bool useSpatialReader,
+            bool shouldReleaseConnection)
             : base(reader, context, workspace, mergeOption, stateCount, useSpatialReader)
         {
             DebugCheck.NotNull(rootCoordinatorFactory);
@@ -57,6 +62,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             _isActive = true;
             RootCoordinator.Initialize(this);
             _readerOwned = readerOwned;
+            _shouldReleaseConnection = shouldReleaseConnection;
         }
 
         #region "Public" Surface Area
@@ -166,7 +172,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     // This case includes when the ObjectResult is disposed before it 
                     // created an ObjectQueryEnumeration; at this time, the connection can be released
-                    if (Context != null)
+                    if (Context != null && _shouldReleaseConnection)
                     {
                         Context.ReleaseConnection();
                     }

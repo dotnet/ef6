@@ -36,7 +36,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ false)
+                /*useSpatialReader*/ false,
+                /*shouldReleaseConnection*/ true)
                                  {
                                      CallBase = true
                                  };
@@ -137,7 +138,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ false)
+                /*useSpatialReader*/ false,
+                /*shouldReleaseConnection*/ true)
                                  {
                                      CallBase = true
                                  };
@@ -245,7 +247,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 /*stateCount*/ 2,
                 rootCoordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ false)
+                /*useSpatialReader*/ false,
+                /*shouldReleaseConnection*/ true)
                                  {
                                      CallBase = true
                                  };
@@ -265,7 +268,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                 /*stateCount*/ 2,
                 rootCoordinatorFactory2,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ false)
+                /*useSpatialReader*/ false,
+                /*shouldReleaseConnection*/ true)
                                   {
                                       CallBase = true
                                   };

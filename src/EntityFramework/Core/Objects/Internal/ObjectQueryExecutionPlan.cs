@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Shaper<TResultType> shaper;
                 if (Streaming)
                 {
-                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true);
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true, shouldReleaseConnection: Streaming);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     bufferedReader = new BufferedDataReader(storeReader);
                     bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
 
-                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false);
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false, shouldReleaseConnection: Streaming);
                 }
 
                 // create materializer delegate
@@ -226,7 +226,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Shaper<TResultType> shaper;
                 if (Streaming)
                 {
-                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true);
+                    shaper = shaperFactory.Create(storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true, shouldReleaseConnection: Streaming);
                 }
                 else
                 {
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
                         .ConfigureAwait(continueOnCapturedContext: false);
 
-                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false);
+                    shaper = shaperFactory.Create(bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false, shouldReleaseConnection: Streaming);
                 }
 
                 // create materializer delegate
