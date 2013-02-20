@@ -184,6 +184,7 @@
     <Compile Include="Core\Metadata\Edm\EdmSchemaErrorTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityContainerTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntitySetBaseTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EntitySetTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityTypeBaseTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />

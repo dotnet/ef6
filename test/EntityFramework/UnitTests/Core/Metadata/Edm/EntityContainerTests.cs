@@ -55,5 +55,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Empty(entityContainer.AssociationSets);
             Assert.Null(associationSet.EntityContainer);
         }
+
+        [Fact]
+        public void Create_factory_method_sets_properties_and_seals_the_type()
+        {
+            var entitySets = new[] { new EntitySet() { Name = "Bar"} };
+
+            var entityContainer = 
+                EntityContainer.Create("Foo", DataSpace.SSpace, entitySets, null);
+
+            Assert.Equal("Foo", entityContainer.Name);
+            Assert.Equal(entitySets, entityContainer.EntitySets);
+            Assert.Empty(entityContainer.FunctionImports);
+            Assert.True(entityContainer.IsReadOnly);
+        }
     }
 }

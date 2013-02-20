@@ -45,5 +45,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal("Foo", entitySetBase.Schema);
         }
+
+        [Fact]
+        public void Can_set_and_get_defining_query()
+        {
+            var entitySetBase
+                = new TestEntitySetBase
+                {
+                    DefiningQuery = "Foo"
+                };
+
+            Assert.Equal("Foo", entitySetBase.DefiningQuery);
+        }
+
+        [Fact]
+        public void Cannot_set_defining_query_for_sealed_entity_set_base()
+        {
+            var entitySetBase = new TestEntitySetBase();
+            entitySetBase.SetReadOnly();
+
+            Assert.Equal(
+                Resources.Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(() => entitySetBase.DefiningQuery = "abc").Message);
+        }
     }
 }

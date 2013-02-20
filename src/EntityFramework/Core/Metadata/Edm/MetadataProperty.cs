@@ -148,8 +148,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _propertyKind; }
         }
 
+        /// <summary>
+        /// The factory method for constructing the MetadataProperty object.
+        /// </summary>
+        /// <param name="name">The name of the metadata property.</param>
+        /// <param name="typeUsage">The type usage of the metadata property.</param>
+        /// <param name="value">The value of the metadata property.</param>
+        /// <exception cref="System.NullReferenceException">Thrown <paramref name="typeUsage"/> is <c>null</c>.</exception>
+        /// <notes>The newly created MetadataProperty will be read only.</notes>
         public static MetadataProperty Create(string name, TypeUsage typeUsage, object value)
         {
+            Check.NotNull(typeUsage, "typeUsage");
+
             var metadataProperty = new MetadataProperty(name, typeUsage, value);
             metadataProperty.SetReadOnly();
             return metadataProperty;

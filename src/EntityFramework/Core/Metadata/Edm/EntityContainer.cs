@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -229,6 +230,43 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(function);
             Debug.Assert(function.IsFunctionImport, "function.IsFunctionImport");
             _functionImports.Source.Add(function);
+        }
+
+        /// <summary>
+        /// The factory method for constructing the EntityContainer object.
+        /// </summary>
+        /// <param name="name">The name of the entity container to be created.</param>
+        /// <param name="dataSpace">DataSpace in which this entity container belongs to.</param>
+        /// <param name="entitySets">Entity sets that will be included in the new container. Can be null.</param>
+        /// <param name="functions">Functions that will be included in the new container. Can be null.</param>
+        /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
+        /// <notes>The newly created EntityContainer will be read only.</notes>
+        public static EntityContainer Create(string name, DataSpace dataSpace, IEnumerable<EntitySetBase> entitySets,
+                                             IEnumerable<EdmFunction> functions)
+        {
+            Check.NotEmpty(name, "name");
+
+            var entityContainer = new EntityContainer(name, dataSpace);
+
+            if (entitySets != null)
+            {
+                foreach (var entitySet in entitySets)
+                {
+                    entityContainer.AddEntitySetBase(entitySet);
+                }
+            }
+
+            if (functions != null)
+            {
+                foreach (var function in functions)
+                {
+                    entityContainer.AddFunctionImport(function);
+                }
+            }
+
+            entityContainer.SetReadOnly();
+
+            return entityContainer;
         }
     }
 }

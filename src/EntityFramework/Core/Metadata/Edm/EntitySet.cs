@@ -5,7 +5,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -156,6 +158,39 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Interlocked.CompareExchange(ref _foreignKeyDependents, readOnlyDependents, null);
             Interlocked.CompareExchange(ref _foreignKeyPrincipals, readOnlyPrincipals, null);
+        }
+
+        /// <summary>
+        /// The factory method for constructing the EntitySet object.
+        /// </summary>
+        /// <param name="name">The name of the EntitySet.</param>
+        /// <param name="schema">The db schema. Can be null.</param>
+        /// <param name="table">The db table. Can be null.</param>
+        /// <param name="definingQuery">
+        /// The provider specific query that should be used to retrieve data for this EntitySet. Can be null.
+        /// </param>
+        /// <param name="entityType">The entity type of the entities that this entity set type contains.</param>
+        /// <param name="metadataProperties">
+        /// Metadata properties that will be added to the newly created EntitySet. Can be null.
+        /// </param>
+        /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
+        /// <notes>The newly created EntitySet will be read only.</notes>
+        public static EntitySet Create(
+            string name, string schema, string table, string definingQuery, EntityType entityType,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(entityType, "entityType");
+
+            var entitySet = new EntitySet(name, schema, table, definingQuery, entityType);
+
+            if (metadataProperties != null)
+            {
+                entitySet.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            entitySet.SetReadOnly();
+            return entitySet;
         }
     }
 }

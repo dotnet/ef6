@@ -28,7 +28,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> name of the entity type </param>
         /// <param name="namespaceName"> namespace of the entity type </param>
-        /// <param name="version"> version of the entity type </param>
         /// <param name="dataSpace"> dataspace in which the EntityType belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityType(string name, string namespaceName, DataSpace dataSpace)
@@ -38,7 +37,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <param name="name"> name of the entity type </param>
         /// <param name="namespaceName"> namespace of the entity type </param>
-        /// <param name="version"> version of the entity type </param>
         /// <param name="dataSpace"> dataspace in which the EntityType belongs to </param>
         /// <param name="members"> members of the entity type [property and navigational property] </param>
         /// <param name="keyMemberNames"> key members for the type </param>
@@ -238,6 +236,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
+        /// <summary>
+        /// The factory method for constructing the EntityType object.
+        /// </summary>
+        /// <param name="name">The name of the entity type.</param>
+        /// <param name="namespaceName">The namespace of the entity type.</param>
+        /// <param name="dataSpace">The dataspace in which the EntityType belongs to.</param>
+        /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
+        /// <param name="keyMemberNames">Name of key members for the type.</param>
+        /// <exception cref="System.ArgumentException">Thrown if either name, namespace arguments are null.</exception>
+        /// <notes>The newly created EntityType will be read only.</notes>
         public static EntityType Create(
             string name,
             string namespaceName,
@@ -246,6 +254,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<EdmMember> members,
             IEnumerable<MetadataProperty> metadataProperties)
         {
+            Check.NotNull(name, "name");
+            Check.NotNull(namespaceName, "namespaceName");
+
             var entity = new EntityType(name, namespaceName, dataSpace, keyMemberNames, members);
 
             if (metadataProperties != null)

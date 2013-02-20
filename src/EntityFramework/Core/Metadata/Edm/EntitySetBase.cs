@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _table = table;
 
             //---- the Provider specific query to use to retrieve the EntitySet data
-            DefiningQuery = definingQuery;
+            _definingQuery = definingQuery;
 
             ElementType = entityType;
         }
@@ -63,6 +63,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private EntityTypeBase _elementType;
         private string _table;
         private string _schema;
+        private string _definingQuery;
 
         /// <summary>
         ///     Returns the kind of the type
@@ -81,11 +82,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets escaped SQL describing this entity set.
+        ///     Gets or sets escaped provider specific SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string DefiningQuery { get; set; }
+        public string DefiningQuery
+        {
+            get { return _definingQuery; }
+            internal set
+            {
+                Check.NotNull(value, "value");
+                Util.ThrowIfReadOnly(this);
 
+                _definingQuery = value;
+            }
+        }
         /// <summary>
         ///     Gets/Sets the name of this entity set
         /// </summary>
@@ -132,11 +142,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>
+        /// Gets or sets the database table for this entity set.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string Table
+        public string Table
         {
             get { return _table; }
-            set
+            internal set
             {
                 DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
@@ -145,11 +160,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>
+        /// Gets or sets the database schema for this entity set.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
-        internal string Schema
+        public string Schema
         {
             get { return _schema; }
-            set
+            internal set
             {
                 DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
