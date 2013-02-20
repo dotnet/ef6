@@ -242,7 +242,6 @@
   </data>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="EntityTypeConfigurationMismatch" xml:space="preserve">
     <value>The type '{0}' has already been configured as a complex type. It cannot be reconfigured as an entity type.</value>
@@ -317,7 +316,7 @@
   </data>
   <data name="ConflictingInferredColumnType" xml:space="preserve">
     <value>Values of incompatible types ('{1}' and '{2}') were assigned to the '{0}' discriminator column. Values of the same type must be specified. To explicitly specify the type of the discriminator column use the HasColumnType method.</value>
-    <comment>## ExceptionType=MappingException</comment>
+    <comment>## ExceptionType=Core.MappingException</comment>
   </data>
   <data name="ConflictingMapping" xml:space="preserve">
     <value>The navigation property '{0}' declared on type '{1}' has been configured with conflicting mapping information.</value>
@@ -376,9 +375,6 @@
   <data name="KeyRegisteredOnDerivedType" xml:space="preserve">
     <value>A key is registered for the derived type '{0}'. Keys can only be registered for the root type '{1}'.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="DuplicateEntryInUserDictionary" xml:space="preserve">
-    <value>The {0} value '{1}' already exists in the user-defined dictionary.</value>
   </data>
   <data name="InvalidTableMapping" xml:space="preserve">
     <value>The type '{0}' has already been mapped to table '{1}'. Specify all mapping aspects of a table in a single Map call.</value>
@@ -560,10 +556,6 @@
     <value>"The property '{0}' from the property path '{1}' is not a complex property on type '{2}'. Property paths must be composed of complex properties for all except the final property."</value>
     <comment>## ExceptionType=ArgumentException</comment>
   </data>
-  <data name="DbPropertyEntry_CannotMarkPropertyUnmodified" xml:space="preserve">
-    <value>Setting IsModified to false for a modified property is not supported.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
-  </data>
   <data name="DbEntityEntry_DottedPathMustBeProperty" xml:space="preserve">
     <value>"The property path '{0}' cannot be used for navigation properties. Property paths can only be used to access primitive or complex properties."</value>
     <comment>## ExceptionType=ArgumentException</comment>
@@ -582,7 +574,6 @@
   </data>
   <data name="DbEntityEntry_BadPropertyExpression" xml:space="preserve">
     <value>The expression passed to method {0} must represent a property defined on the type '{1}'.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="DbContext_IndependentAssociationUpdateException" xml:space="preserve">
     <value>An error occurred while saving entities that do not expose foreign key properties for their relationships. The EntityEntries property will return null because a single entity cannot be identified as the source of the exception. Handling of exceptions while saving can be made easier by exposing foreign key properties in your entity types. See the InnerException for details.</value>
@@ -651,25 +642,18 @@
     <value>Model compatibility cannot be checked because the DbContext instance was not created using Code First patterns. DbContext instances created from an ObjectContext or using an EDMX file cannot be checked for compatibility.</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
-  <data name="Database_MetadataNotMapped" xml:space="preserve">
-    <value>Model compatibility cannot be checked because the EdmMetadata type was not included in the model. Ensure that IncludeMetadataConvention has been added to the DbModelBuilder conventions.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
-  </data>
   <data name="Database_NoDatabaseMetadata" xml:space="preserve">
     <value>Model compatibility cannot be checked because the database does not contain model metadata. Model compatibility can only be checked for databases created using Code First or Code First Migrations.</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
   <data name="Database_BadLegacyInitializerEntry" xml:space="preserve">
     <value>The DbContextDatabaseInitializer entry 'key="{0}" value="{1}"' in the application configuration is not valid. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Consider using the &lt;entityFramework&gt; configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468).</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="Database_InitializeFromLegacyConfigFailed" xml:space="preserve">
     <value>Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. Entries should be of the form 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="MyNamespace.MyInitializerClass, MyAssembly"' or 'key="DatabaseInitializerForType MyNamespace.MyDbContextClass, MyAssembly" value="Disabled"'. Also verify that 'DatabaseInitializerArgumentForType' entries are present for every parameter of the database initializer constructor. See inner exception for details. Consider using the &lt;entityFramework&gt; configuration section to set the database initializer (http://go.microsoft.com/fwlink/?LinkID=237468).</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="Database_InitializeFromConfigFailed" xml:space="preserve">
     <value>Failed to set database initializer of type '{0}' for DbContext type '{1}' specified in the application configuration. See inner exception for details.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ContextConfiguredMultipleTimes" xml:space="preserve">
     <value>Configuration for DbContext type '{0}' is specified multiple times in the application configuration. Each context can only be configured once.</value>
@@ -677,11 +661,6 @@
   </data>
   <data name="SetConnectionFactoryFromConfigFailed" xml:space="preserve">
     <value>Failed to set Database.DefaultConnectionFactory to an instance of the '{0}' type as specified in the application configuration. See inner exception for details.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="Database_FailedToResolveType" xml:space="preserve">
-    <value>The type '{0}' could not be found. The type name must be an assembly-qualified name.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="DbContext_ContextUsedInModelCreating" xml:space="preserve">
     <value>The context cannot be used while the model is being created. This exception may be thrown if the context is used inside the OnModelCreating method or if the same context instance is accessed by multiple threads concurrently. Note that instance members of DbContext and related classes are not guaranteed to be thread safe.</value>
@@ -709,13 +688,11 @@
   </data>
   <data name="DbSet_WrongNumberOfKeyValuesPassed" xml:space="preserve">
     <value>The number of primary key values passed must match number of primary key values defined on the entity.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="DbSet_WrongKeyValueType" xml:space="preserve">
     <value>The type of one of the primary key values did not match the type defined in the entity. See inner exception for details.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
-  <data name="DbSet_WrongEntityTypeFound" xml:space="preserve">
+    <data name="DbSet_WrongEntityTypeFound" xml:space="preserve">
     <value>The entity found was of type {0} when an entity of type {1} was requested.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
@@ -741,7 +718,6 @@
   </data>
   <data name="DbExtensions_InvalidIncludePathExpression" xml:space="preserve">
     <value>The Include path expression must refer to a navigation property defined on the type. Use dotted paths for reference navigation properties and the Select operator for collection navigation properties.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="DbContext_ConnectionStringNotFound" xml:space="preserve">
     <value>No connection string named '{0}' could be found in the application config file.</value>
@@ -782,14 +758,9 @@
   </data>
   <data name="Database_InitializationException" xml:space="preserve">
     <value>An exception occurred while initializing the database. See the InnerException for details.</value>
-    <comment>## ExceptionType=DataException</comment>
   </data>
   <data name="EdmxWriter_EdmxFromObjectContextNotSupported" xml:space="preserve">
     <value>Creating a DbModelBuilder or writing the EDMX from a DbContext created using an existing ObjectContext is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
-  </data>
-  <data name="EdmxWriter_EdmxFromDbCompiledModelNotSupported" xml:space="preserve">
-    <value>Creating a DbModelBuilder or writing the EDMX from a DbContext created using an existing DbCompiledModel is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
   <data name="EdmxWriter_EdmxFromModelFirstNotSupported" xml:space="preserve">
@@ -806,9 +777,6 @@
   <data name="CannotCallGenericSetWithProxyType" xml:space="preserve">
     <value>The generic 'Set' method cannot be called with a proxy type. Either use the actual entity type or call the non-generic 'Set' method.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="EdmPrimitiveType_SetPropertyNotSupported" xml:space="preserve">
-    <value>The '{0}' property of EdmPrimitiveType is fixed and cannot be set.</value>
   </data>
   <data name="EdmModel_Validator_Semantic_SystemNamespaceEncountered" xml:space="preserve">
     <value>The namespace '{0}' is a system namespace and cannot be used by other schemas. Choose another namespace name.</value>
@@ -1011,14 +979,8 @@
     <value>Can not override the connection for this context with an EntityConnection because the original connection was a standard DbConnection.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="EntityKey_DataRecordMustBeEntity" xml:space="preserve">
-    <value>The supplied IExtendedDataRecord must represent an entity object.</value>
-  </data>
   <data name="EntityKey_EntitySetDoesNotMatch" xml:space="preserve">
     <value>The EntitySet '{0}' obtained from the metadata workspace is incompatible with the EntitySet required by this EntityKey.</value>
-  </data>
-  <data name="EntityKey_EntityTypesDoNotMatch" xml:space="preserve">
-    <value>The object represented by the IExtendedDataRecord '{0}' does not match the EntityType for the EntitySet ('{1}').</value>
   </data>
   <data name="EntityKey_IncorrectNumberOfKeyValuePairs" xml:space="preserve">
     <value>The provided list of key-value pairs contains an incorrect number of entries. There are {1} key fields defined on type '{0}', but {2} were provided.</value>
@@ -1065,9 +1027,6 @@
   </data>
   <data name="EdmMembersDefiningTypeDoNotAgreeWithMetadataType" xml:space="preserve">
     <value>The type of the TypeUsage object specified for the metadata parameter is not compatible with the type to which an EdmMember belongs.</value>
-  </data>
-  <data name="InvalidStringArgument" xml:space="preserve">
-    <value>Parameter '{0}' is not valid. String arguments cannot be empty.</value>
   </data>
   <data name="CannotCallNoncomposableFunction" xml:space="preserve">
     <value>The function or function import '{0}' is not composable. A non-composable function or function import cannot be called in a query expression.</value>
@@ -1184,9 +1143,6 @@
   <data name="EntityClient_UnsupportedDbType" xml:space="preserve">
     <value>The DbType '{0}' is not valid for the EntityParameter.DbType property on the '{1}' object.</value>
   </data>
-  <data name="EntityClient_DoesNotImplementIServiceProvider" xml:space="preserve">
-    <value>The store provider factory type '{0}' does not implement the IServiceProvider interface. Use a store provider that implements this interface.</value>
-  </data>
   <data name="EntityClient_IncompatibleNavigationPropertyResult" xml:space="preserve">
     <value>The declared type of navigation property {0}.{1} is not compatible with the result of the specified navigation. </value>
   </data>
@@ -1229,9 +1185,6 @@
   </data>
   <data name="EntityClient_ItemCollectionsNotRegisteredInWorkspace" xml:space="preserve">
     <value>MetadataWorkspace must have {0} pre-registered.</value>
-  </data>
-  <data name="EntityClient_ConnectionMustBeClosed" xml:space="preserve">
-    <value>EntityConnection can only be constructed with a closed DbConnection.</value>
   </data>
   <data name="EntityClient_DbConnectionHasNoProvider" xml:space="preserve">
     <value>The DbConnection parameter '{0}' contains no ProviderFactory.</value>
@@ -1572,9 +1525,6 @@
   <data name="ViewGen_Error" xml:space="preserve">
     <value>ERROR</value>
   </data>
-  <data name="ViewGen_AND" xml:space="preserve">
-    <value>AND </value>
-  </data>
   <data name="Viewgen_CannotGenerateQueryViewUnderNoValidation" xml:space="preserve">
     <value>Insufficient or contradictory mapping. Cannot generate query views for entities in {0} when:</value>
   </data>
@@ -1649,42 +1599,6 @@
   </data>
   <data name="ViewGen_CQ_DomainConstraint" xml:space="preserve">
     <value>Data loss is possible in {0}.</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustBeNonNullable" xml:space="preserve">
-    <value>{0} must be non-nullable</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustBeNull" xml:space="preserve">
-    <value>{0} must be null</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustBeEqualTo" xml:space="preserve">
-    <value>{0} must be equal to {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustNotBeEqualTo" xml:space="preserve">
-    <value>{0} must not be equal to {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustBeOneOf" xml:space="preserve">
-    <value>{0} must be one of {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_MustNotBeOneOf" xml:space="preserve">
-    <value>{0} must not be one of {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsNonNullable" xml:space="preserve">
-    <value>{0} is non-nullable</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsEqualTo" xml:space="preserve">
-    <value>{0} ={1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsNotEqualTo" xml:space="preserve">
-    <value>{0} is not equal to {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsOneOf" xml:space="preserve">
-    <value>{0} is one of {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsNotOneOf" xml:space="preserve">
-    <value>{0} is not one of {1}</value>
-  </data>
-  <data name="ViewGen_OneOfConst_IsOneOfTypes" xml:space="preserve">
-    <value>, (for example, is one of the following type(s): {0})</value>
   </data>
   <data name="ViewGen_ErrorLog" xml:space="preserve">
     <value>Problem in mapping fragments starting at line {0}:</value>
@@ -1923,9 +1837,6 @@
   <data name="InvalidParameterTypeForAggregateFunction" xml:space="preserve">
     <value>Type of parameter '{0}' in function '{1}' is not valid. The aggregate function parameter type must be of CollectionType.</value>
   </data>
-  <data name="ItemCollectionAlreadyRegistered" xml:space="preserve">
-    <value>The ItemCollection for the '{0}' space has already been registered.</value>
-  </data>
   <data name="InvalidSchemaEncountered" xml:space="preserve">
     <value>Schema specified is not valid. Errors: {0}</value>
   </data>
@@ -2015,9 +1926,6 @@
   </data>
   <data name="InvalidRelationshipSetName" xml:space="preserve">
     <value>The RelationshipSet with the specified name '{0}' does not exist in the EntityContainer.</value>
-  </data>
-  <data name="MemberInvalidIdentity" xml:space="preserve">
-    <value>The member with identity '{0}' does not exist in the member collection.</value>
   </data>
   <data name="InvalidEntitySetName" xml:space="preserve">
     <value>The EntitySet with the specified name '{0}' does not exist in the EntityContainer.</value>
@@ -2264,7 +2172,7 @@
   </data>
   <data name="Mapping_Default_OCMapping_Member_Type_Mismatch" xml:space="preserve">
     <value>The type '{0}'('{1}') of the member '{2}' in the conceptual  type '{3}' doesn't match with the type '{4}'('{5}') of the member '{6}' on the object side type '{7}'.</value>
-    <comment>## ExceptionType=MappingException</comment>
+    <comment>## ExceptionType=Core.MappingException</comment>
   </data>
   <data name="Mapping_Enum_OCMapping_UnderlyingTypesMismatch" xml:space="preserve">
     <value>The underlying type '{0}' of the enumeration type '{1}' defined in the conceptual model does not match the underlying type '{2}' of the enumeration type '{3}' defined in the object layer.</value>
@@ -2725,9 +2633,6 @@
   <data name="ObjectStateManager_EntityTypeDoesnotMatchtoEntitySetType" xml:space="preserve">
     <value>EntityType '{0}' does not exist in the EntitySet '{1}'.</value>
   </data>
-  <data name="ObjectStateManager_GetEntityKeyRequiresObjectToHaveAKey" xml:space="preserve">
-    <value>An object of type '{0}' must have a corresponding EntityKey value that is not null.</value>
-  </data>
   <data name="ObjectStateManager_AcceptChangesEntityKeyIsNotValid" xml:space="preserve">
     <value>AcceptChanges cannot continue because the object's EntityKey value is null or is not a temporary key. This can happen when the EntityKey property is modified while the object is in an added state.</value>
   </data>
@@ -2767,9 +2672,6 @@
   </data>
   <data name="ObjectContext_InvalidConnection" xml:space="preserve">
     <value>The supplied connection is not valid because it contains insufficient mapping or metadata information.</value>
-  </data>
-  <data name="ObjectContext_InvalidDataAdapter" xml:space="preserve">
-    <value>The DbDataAdapter returned from DbConnection.ProviderFactory.CreateDataAdapter() must implement IEntityDataAdapter.</value>
   </data>
   <data name="ObjectContext_InvalidDefaultContainerName" xml:space="preserve">
     <value>The specified default EntityContainer name '{0}' could not be found in the mapping and metadata information.</value>
@@ -2864,12 +2766,6 @@
   <data name="ObjectContext_InvalidObjectSetTypeForEntitySet" xml:space="preserve">
     <value>The specified entity type, '{0}', does not match the type '{1}' from the EntitySet '{2}'.</value>
   </data>
-  <data name="ObjectContext_RequiredMetadataNotAvailble" xml:space="preserve">
-    <value>The operation could not be completed because the required metadata could not be found. Make sure that the connection used by the ObjectContext is open before attempting this operation.</value>
-  </data>
-  <data name="ObjectContext_MetadataHasChanged" xml:space="preserve">
-    <value>The metadata stored by the ObjectContext is different than the metadata stored by the ObjectContext's connection. This can happen if the connection string is changed after the ObjectContext is created.</value>
-  </data>
   <data name="ObjectContext_InvalidEntitySetInKeyFromName" xml:space="preserve">
     <value>The EntitySet name '{0}.{1}' from the entity's EntityKey does not match the expected EntitySet name '{2}.{3}' from the '{4}' parameter.</value>
   </data>
@@ -2954,12 +2850,6 @@
   <data name="RelatedEnd_UnableToAddRelationshipWithDeletedEntity" xml:space="preserve">
     <value>Adding a relationship with an entity which is in the Deleted state is not allowed.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="RelatedEnd_ConflictingChangeOfRelationshipDetected" xml:space="preserve">
-    <value>The relationship being added conflicts with an existing relationship. Consider deleting the previous relationship and calling ObjectContext.DetectChanges.</value>
-  </data>
-  <data name="RelatedEnd_InvalidRelationshipFixupDetected" xml:space="preserve">
-    <value>Invalid relationship fixup detected in the navigation property '{0}' of the entity of the type '{1}'.</value>
   </data>
   <data name="RelatedEnd_CannotSerialize" xml:space="preserve">
     <value>The {0} object could not be serialized. This type of object cannot be serialized when the RelationshipManager belongs to an entity object that does not implement IEntityWithRelationships.</value>
@@ -3163,12 +3053,6 @@
   </data>
   <data name="CodeGen_PropertyDeclaringTypeIsValueType" xml:space="preserve">
     <value>Properties are not supported on value types.</value>
-  </data>
-  <data name="CodeGen_PropertyStrongNameIdentity" xml:space="preserve">
-    <value>Properties with StrongNameIdentityPermissionAttribute applied are not supported.</value>
-  </data>
-  <data name="CodeGen_PropertyUnsupportedForm" xml:space="preserve">
-    <value>The property has an unexpected return type or parameter.</value>
   </data>
   <data name="CodeGen_PropertyUnsupportedType" xml:space="preserve">
     <value>The property uses an unsupported type.</value>
@@ -3511,9 +3395,6 @@
   </data>
   <data name="InvalidEmptyQuery" xml:space="preserve">
     <value>The query text consists only of comments and/or white space.</value>
-  </data>
-  <data name="InvalidEmptyQueryTextArgument" xml:space="preserve">
-    <value>The query text is empty or consists only of white space.</value>
   </data>
   <data name="InvalidEscapedIdentifier" xml:space="preserve">
     <value>The escaped identifier '{0}' is not valid.</value>
@@ -4223,9 +4104,6 @@
   <data name="Cqt_GroupBinding_CollectionRequired" xml:space="preserve">
     <value>DbGroupExpressionBinding requires an input expression with a collection ResultType.</value>
   </data>
-  <data name="Cqt_GroupBinding_GroupVariableNameNotValid" xml:space="preserve">
-    <value>The specified group variable name is not valid. Group variable names cannot be empty.</value>
-  </data>
   <data name="Cqt_Binary_CollectionsRequired" xml:space="preserve">
     <value>{0} requires arguments with compatible collection ResultTypes.</value>
   </data>
@@ -4396,9 +4274,6 @@
   </data>
   <data name="Cqt_Skip_NonNegativeCountRequired" xml:space="preserve">
     <value>Count must have a non-negative value.</value>
-  </data>
-  <data name="Cqt_Sort_EmptyCollationInvalid" xml:space="preserve">
-    <value>Collation specifiers cannot be empty or consist only of white-space characters.</value>
   </data>
   <data name="Cqt_Sort_NonStringCollationInvalid" xml:space="preserve">
     <value>A collation specifier is only valid for a sort key with a string ResultType.</value>
@@ -4883,9 +4758,6 @@
   </data>
   <data name="InvalidNamespaceOrAliasSpecified" xml:space="preserve">
     <value>'{0}' is not a valid namespace or alias name. You must use the current schema namespace or alias to qualify the type.</value>
-  </data>
-  <data name="InvalidPrecisionAndScaleSpecified" xml:space="preserve">
-    <value>Maximum value '{0}' for Scale facet must be less than or equal to the maximum value '{1}' for Precision Facet in '{2}' type.</value>
   </data>
   <data name="PrecisionOutOfRange" xml:space="preserve">
     <value>Precision '{0}' is not valid. Precision must be between '{1}' and '{2}' for '{3}' type.</value>

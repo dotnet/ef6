@@ -181,7 +181,7 @@
     <value>Specifies the name of the connection string to use from the specified configuration file. If omitted, the context's default connection will be used.</value>
   </data>
   <data name="ConnectionStringDescription" xml:space="preserve">
-    <value>Specifies the the connection string to use. If omitted, the context's default connection will be used.</value>
+    <value>Specifies the connection string to use. If omitted, the context's default connection will be used.</value>
   </data>
   <data name="ConnectionProviderNameDescription" xml:space="preserve">
     <value>Specifies the provider invariant name of the connection string.</value>

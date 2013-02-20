@@ -119,7 +119,6 @@
   </resheader>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
   <data name="ADP_CanNotRetrieveServerGeneratedKey" xml:space="preserve">
     <value>Records were updated, but the values were not retrieved back. See internal error for more details.</value>

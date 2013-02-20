@@ -120,9 +120,6 @@
   <data name="UpdateDatabaseCommand_VerboseInstructions" xml:space="preserve">
     <value>Specify the '-Verbose' flag to view the SQL statements being applied to the target database.</value>
   </data>
-  <data name="UpdateDatabaseCommand_SourceMigrationWithoutScript" xml:space="preserve">
-    <value>The '-SourceMigration' parameter is only valid when using '-Script'.</value>
-  </data>
   <data name="GetMigrationsCommand_NoHistory" xml:space="preserve">
     <value>No migrations have been applied to the target database.</value>
   </data>
@@ -147,10 +144,6 @@
   <data name="EnableMigrations_InitialScaffold" xml:space="preserve">
     <value>Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter.</value>
   </data>
-  <data name="WebSiteProjectNotSupported" xml:space="preserve">
-    <value>Code First Migrations does not support web site projects.</value>
-    <comment>## ExceptionType=Migrations.ProjectTypeNotSupportedException</comment>
-  </data>
   <data name="GetMigrationsCommand_Intro" xml:space="preserve">
     <value>Retrieving migrations that have been applied to the target database.</value>
   </data>
@@ -160,7 +153,6 @@
   </data>
   <data name="SaveConnectionFactoryInConfigFailed" xml:space="preserve">
     <value>Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details.</value>
-    <comment>## ExceptionType=System.IO.IOException</comment>
   </data>
   <data name="RescaffoldingMigration" xml:space="preserve">
     <value>Re-scaffolding migration '{0}'.</value>
@@ -170,6 +162,5 @@
   </data>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
   </data>
 </root>
