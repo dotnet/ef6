@@ -76,30 +76,6 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class TryCreateConfiguration
-        {
-            [Fact]
-            public void TryCreateConfiguration_returns_null_if_TryFindConfigurationType_returns_null()
-            {
-                Assert.Null(new DbConfigurationFinder().TryCreateConfiguration(typeof(DbContext), new[] { typeof(object), typeof(object) }));
-            }
-
-            [Fact]
-            public void TryCreateConfiguration_creates_instance_of_type_returned_by_TryFindConfigurationType()
-            {
-                Assert.IsType<FunctionalTestsConfiguration>(
-                    new DbConfigurationFinder().TryCreateConfiguration(typeof(DbContext), new[] { typeof(FunctionalTestsConfiguration) }).
-                        Owner);
-            }
-
-            [Fact]
-            public void TryCreateConfiguration_creates_instance_of_type_specified_by_DbConfigurationTypeAttribute()
-            {
-                Assert.IsType<FunctionalTestsConfiguration>(
-                    new DbConfigurationFinder().TryCreateConfiguration(typeof(FakeContextWithAttribute)).Owner);
-            }
-        }
-
         public abstract class AbstractConfiguration : DbConfiguration
         {
         }
