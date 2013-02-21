@@ -447,7 +447,7 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.SqlServer.Properties.Resources.SqlServerCompact", typeof(System.Data.Entity.SqlServerCompact.SqlCeProviderServices).Assembly);
+                "System.Data.Entity.SqlServerCompact.Properties.Resources.SqlServerCompact", typeof(System.Data.Entity.SqlServerCompact.SqlCeProviderServices).Assembly);
         }
 
         private static EntityRes GetLoader()

@@ -152,7 +152,7 @@ namespace <#= outputNamespace #>.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.SqlServer.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.SqlServerCompact.SqlCeProviderServices).Assembly);
+                "System.Data.Entity.SqlServerCompact.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.SqlServerCompact.SqlCeProviderServices).Assembly);
         }
 
         private static EntityRes GetLoader()

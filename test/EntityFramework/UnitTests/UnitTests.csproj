@@ -304,6 +304,7 @@
     <Compile Include="Infrastructure\Pluralization\EnglishPluralizationServiceTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />
+    <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
     <Compile Include="SqlServer\SqlSpatialServicesForConversionsTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
