@@ -130,7 +130,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 ThrowIfReadOnly();
 
                 _collectionData.OrderedList[index] = value;
-                _collectionData.IdentityDictionary = null;
             }
         }
 
@@ -186,7 +185,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ThrowIfReadOnly();
 
             _collectionData.OrderedList.Remove(item);
-            _collectionData.IdentityDictionary = null;
         }
 
         /// <summary>
@@ -318,6 +316,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 // We only have to take care of the ordered list.
                 index = IndexOf(collectionData, item.Identity, false);
+
                 if (0 <= index)
                 {
                     // The item is found in the linear ordered list. Unless
@@ -325,24 +324,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     if (!updateIfFound)
                     {
                         throw new ArgumentException(Strings.ItemDuplicateIdentity(item.Identity), "item", null);
-                    }
-                }
-                else
-                {
-                    // This is a new item to be inserted. Grow if we must before adding to ordered list.
-                    if (UseSortedListCrossover <= listCount)
-                    {
-                        collectionData.IdentityDictionary
-                            = new Dictionary<string, OrderedIndex>(
-                                collectionData.OrderedList.Count + 1,
-                                StringComparer.OrdinalIgnoreCase);
-
-                        for (var i = 0; i < collectionData.OrderedList.Count; ++i)
-                        {
-                            AddToDictionary(collectionData, collectionData.OrderedList[i].Identity, i, false);
-                        }
-
-                        AddToDictionary(collectionData, item.Identity, listCount, false);
                     }
                 }
             }
@@ -357,6 +338,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             else
             {
                 Debug.Assert(index == -1 || index == listCount);
+
                 collectionData.OrderedList.Add(item);
             }
         }
@@ -636,8 +618,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 _collectionData.OrderedList[i].SetReadOnly();
             }
+
             _collectionData.OrderedList.TrimExcess();
+
+            // Build the fast-access by identity dictionary
+            if ((_collectionData.IdentityDictionary == null)
+                && UseSortedListCrossover <= _collectionData.OrderedList.Count)
+            {
+                _collectionData.IdentityDictionary
+                    = new Dictionary<string, OrderedIndex>(
+                        _collectionData.OrderedList.Count,
+                        StringComparer.OrdinalIgnoreCase);
+
+                for (var i = 0; i < _collectionData.OrderedList.Count; ++i)
+                {
+                    AddToDictionary(_collectionData, _collectionData.OrderedList[i].Identity, i, false);
+                }
+            }
+
             _readOnly = true;
+
             return this;
         }
 

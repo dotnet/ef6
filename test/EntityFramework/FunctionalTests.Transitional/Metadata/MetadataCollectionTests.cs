@@ -2,17 +2,17 @@
 
 namespace System.Data.Entity.Metadata
 {
+    using System.Data.Entity.Metadata.Fixtures;
     using Xunit;
-    using Fixtures;
 
     public class MetadataCollectionTests : FunctionalTestBase
     {
-        [Fact(Skip="Waiting for the fix for EF849")]
+        [Fact]
         public void Verify_that_models_with_more_than_UseSortedListCrossover_entities_work_fine()
         {
             using (var ctx = new MyContext())
             {
-                ctx.MyEntities_01.Add(new MyEntity_01());         
+                ctx.MyEntities_01.Add(new MyEntity_01());
             }
         }
 
@@ -21,43 +21,148 @@ namespace System.Data.Entity.Metadata
         {
             using (var ctx = new MyContext2())
             {
-                ctx.MyBigEntities.Add(new MyBigEntity { Property01 = "Test" });               
+                ctx.MyBigEntities.Add(
+                    new MyBigEntity
+                        {
+                            Property01 = "Test"
+                        });
             }
         }
     }
 
     namespace Fixtures
     {
-        using System.Data.Entity;
-
         // Model with more than 25 entities
 
-        public class MyEntity_01 { public int Id { get; set; } }
-        public class MyEntity_02 { public int Id { get; set; } }
-        public class MyEntity_03 { public int Id { get; set; } }
-        public class MyEntity_04 { public int Id { get; set; } }
-        public class MyEntity_05 { public int Id { get; set; } }
-        public class MyEntity_06 { public int Id { get; set; } }
-        public class MyEntity_07 { public int Id { get; set; } }
-        public class MyEntity_08 { public int Id { get; set; } }
-        public class MyEntity_09 { public int Id { get; set; } }
-        public class MyEntity_10 { public int Id { get; set; } }
-        public class MyEntity_11 { public int Id { get; set; } }
-        public class MyEntity_12 { public int Id { get; set; } }
-        public class MyEntity_13 { public int Id { get; set; } }
-        public class MyEntity_14 { public int Id { get; set; } }
-        public class MyEntity_15 { public int Id { get; set; } }
-        public class MyEntity_16 { public int Id { get; set; } }
-        public class MyEntity_17 { public int Id { get; set; } }
-        public class MyEntity_18 { public int Id { get; set; } }
-        public class MyEntity_19 { public int Id { get; set; } }
-        public class MyEntity_20 { public int Id { get; set; } }
-        public class MyEntity_21 { public int Id { get; set; } }
-        public class MyEntity_22 { public int Id { get; set; } }
-        public class MyEntity_23 { public int Id { get; set; } }
-        public class MyEntity_24 { public int Id { get; set; } }
-        public class MyEntity_25 { public int Id { get; set; } }
-        public class MyEntity_26 { public int Id { get; set; } }
+        public class MyEntity_01
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_02
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_03
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_04
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_05
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_06
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_07
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_08
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_09
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_10
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_11
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_12
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_13
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_14
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_15
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_16
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_17
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_18
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_19
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_20
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_21
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_22
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_23
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_24
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_25
+        {
+            public int Id { get; set; }
+        }
+
+        public class MyEntity_26
+        {
+            public int Id { get; set; }
+        }
 
         public class MyContext : DbContext
         {
@@ -138,7 +243,6 @@ namespace System.Data.Entity.Metadata
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                base.OnModelCreating(modelBuilder);
                 modelBuilder.Entity<MyBigEntity>().Property(e => e.Property01).HasColumnName("NewProp01");
             }
         }
