@@ -220,6 +220,7 @@
     <Compile Include="TestModels\ArubaModel\ArubaInitializer.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaMachineConfig.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaOwner.cs" />
+    <Compile Include="TestModels\ArubaModel\ArubaPerson.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaRun.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTask.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTaskInfo.cs" />

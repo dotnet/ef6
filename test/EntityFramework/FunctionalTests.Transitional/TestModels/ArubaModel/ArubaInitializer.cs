@@ -3,6 +3,7 @@
 namespace System.Data.Entity.TestModels.ArubaModel
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Linq;
 
@@ -19,6 +20,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
             var owners = InitializeOwners();
             var runs = InitializeRuns();
             var tasks = InitializeTasks();
+            InitializeAndPersistPeople(context);
 
             for (var i = 0; i < EntitiesCount; i++)
             {
@@ -237,6 +239,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
             {
                 var owner = new ArubaOwner
                 {
+                    Id = i,
                     Alias = "Owner Alias " + i,
                     FirstName = "First Name " + i % 3,
                     LastName = "Last Name " + i,
@@ -255,6 +258,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
             {
                 var run = new ArubaRun
                 {
+                    Id = i,
                     Name = "Run Name" + i,
                     Purpose = i + 10,
                     Tasks = new List<ArubaTask>(),
@@ -272,6 +276,8 @@ namespace System.Data.Entity.TestModels.ArubaModel
             {
                 var task = new ArubaTask
                 {
+                    Id = i / 2,
+                    Name = i % 2 == 0 ? "Foo" : "Bar",
                     Deleted = i % 3 == 0,
                     TaskInfo = new ArubaTaskInfo
                     {
@@ -284,6 +290,84 @@ namespace System.Data.Entity.TestModels.ArubaModel
                 tasks[i] = task;
             }
             return tasks;
+        }
+
+        private void InitializeAndPersistPeople(ArubaContext context)
+        {
+            var grandFather = new ArubaPerson
+                {
+                    Name = "GrandFather",
+                    Children = new List<ArubaPerson>(),
+                };
+
+            var mother = new ArubaPerson
+                {
+                    Name = "Mother",
+                    Children = new List<ArubaPerson>(),
+                    Parents = new List<ArubaPerson> { grandFather },
+                };
+
+            grandFather.Children.Add(mother);
+
+            var father = new ArubaPerson
+                {
+                    Name = "Father",
+                    Children = new List<ArubaPerson>(),
+                };
+            mother.Partner = father;
+
+            var child = new ArubaPerson
+                {
+                    Name = "Child",
+                    Parents = new List<ArubaPerson> { mother, father }
+                };
+
+            mother.Children.Add(child);
+            father.Children.Add(child);
+
+            var childOfSingleMother = new ArubaPerson
+            {
+                Name = "Child",
+            };
+
+            var singleMother = new ArubaPerson
+                {
+                    Name = "Single Mother",
+                    Children = new List<ArubaPerson> { childOfSingleMother },
+                };
+
+            childOfSingleMother.Parents = new List<ArubaPerson> { singleMother };
+
+            var childOfDivorcedParents = new ArubaPerson
+                {
+                    Name = "Child",
+                };
+
+            var divorcedFather = new ArubaPerson
+                {
+                    Name = "Divorced Father",
+                    Children = new List<ArubaPerson> { childOfDivorcedParents },
+                };
+
+            var divorcedMother = new ArubaPerson
+            {
+                Name = "Divorced Mother",
+                Children = new List<ArubaPerson> { childOfDivorcedParents },
+            };
+
+            childOfDivorcedParents.Parents = new List<ArubaPerson> { divorcedFather, divorcedMother };
+
+            var bachelor = new ArubaPerson
+                {
+                    Name = "Bachelor",
+                };
+
+            context.People.Add(bachelor);
+            context.People.Add(divorcedFather);
+            context.People.Add(divorcedMother);
+            context.People.Add(singleMother);
+            context.People.Add(grandFather);
+            context.SaveChanges();
         }
     }
 }

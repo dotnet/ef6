@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.TestModels.ArubaModel
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Infrastructure;
 
     public class ArubaContext : DbContext
@@ -19,11 +20,26 @@ namespace System.Data.Entity.TestModels.ArubaModel
         public DbSet<ArubaOwner> Owners { get; set; }
         public DbSet<ArubaRun> Runs { get; set; }
         public DbSet<ArubaTask> Tasks { get; set; }
+        public DbSet<ArubaPerson> People { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.ModelConfiguration.ModelNamespace = "ArubaModel";
             modelBuilder.Conventions.Remove<ModelNamespaceConvention>();
+            modelBuilder.Entity<ArubaFailure>().ToTable("ArubaFailures");
+            modelBuilder.Entity<ArubaBaseline>().ToTable("ArubaBaselines");
+            modelBuilder.Entity<ArubaTestFailure>().ToTable("ArubaTestFailures");
+            
+            // composite key, non-integer key
+            modelBuilder.Entity<ArubaTask>().HasKey(k => new { k.Id, k.Name });
+            
+            // need to map key explicitly, otherwise we get into invalid state
+            modelBuilder.Entity<ArubaRun>().HasMany(r => r.Tasks).WithRequired().Map(m => { });
+            
+            // non-generated key
+            modelBuilder.Entity<ArubaOwner>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            modelBuilder.Entity<ArubaRun>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            
             modelBuilder.Entity<ArubaRun>().HasRequired(r => r.RunOwner).WithRequiredDependent(o => o.OwnedRun);
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c6_smalldatetime).HasColumnType("smalldatetime");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c7_decimal_28_4).HasColumnType("decimal").HasPrecision(28, 4);
@@ -45,6 +61,22 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c28_date).HasColumnType("date");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c29_datetime2).HasColumnType("datetime2");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c35_timestamp).HasColumnType("timestamp");
+
+            // self reference
+            modelBuilder.Entity<ArubaPerson>().HasOptional(p => p.Partner).WithOptionalPrincipal();
+            modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents);
+
+            // entity splitting
+            modelBuilder.Entity<ArubaBug>().Map(m =>
+                {
+                    m.Properties(p => new { p.Id, p.Comment });
+                    m.ToTable("Bugs1");
+                });
+            modelBuilder.Entity<ArubaBug>().Map(m =>
+                {
+                    m.Properties(p => new { p.Number, p.Resolution });
+                    m.ToTable("Bugs2");
+                });
         }
     }
 }
