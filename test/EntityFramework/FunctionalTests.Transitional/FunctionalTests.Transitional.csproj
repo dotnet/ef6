@@ -178,6 +178,7 @@
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
+    <Compile Include="Metadata\MetadataCollectionTests.cs" />
     <Compile Include="Metadata\MetadataEnumTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataFunctionsTests.cs" />
