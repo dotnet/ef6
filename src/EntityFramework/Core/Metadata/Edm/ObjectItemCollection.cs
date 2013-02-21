@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Resources;
@@ -20,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///     done by ItemCollection
     /// </summary>
     [CLSCompliant(false)]
-    public sealed class ObjectItemCollection : ItemCollection
+    public class ObjectItemCollection : ItemCollection
     {
         /// <summary>
         ///     The ObjectItemCollection that loads metadata from assemblies
@@ -30,11 +29,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache)
+        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache,  KnownAssembliesSet knownAssembliesSet = null)
             : base(DataSpace.OSpace)
         {
             _viewAssemblyCache = viewAssemblyCache ?? DbConfiguration.GetService<IViewAssemblyCache>();
-            
+            _knownAssemblies = knownAssembliesSet ?? new KnownAssembliesSet();
+
             foreach (var type in ClrProviderManifest.Instance.GetStoreTypes())
             {
                 AddInternal(type);
@@ -61,14 +61,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly IViewAssemblyCache _viewAssemblyCache;
 
+        internal bool OSpaceTypesLoaded { get; set; }
+
         internal object LoadAssemblyLock
         {
             get { return _loadAssemblyLock; }
-        }
-
-        internal static bool IsCompiledViewGenAttributePresent(Assembly assembly)
-        {
-            return assembly.IsDefined(typeof(EntityViewGenerationAttribute), false /*inherit*/);
         }
 
         /// <summary>
@@ -184,6 +181,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             List<EdmItemError> errors;
             var knownAssemblies = new KnownAssembliesSet();
 
+            // TODO: This is used when we need o-space types but don't have an ObjectItemCollection
+            // This may be linked to when we need a RelationshipManager for a disconnected entity.
+            // We should figure out what the implications are for this in terms of caching/perf/etc.
             AssemblyCache.LoadAssembly(
                 assembly, false /*loadAllReferencedAssemblies*/,
                 knownAssemblies, out typesInLoading, out errors);
@@ -241,9 +241,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             yield break;
         }
 
-        private bool LoadAssemblyFromCache(Assembly assembly, bool loadReferencedAssemblies,  EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
+        private bool LoadAssemblyFromCache(
+            Assembly assembly, bool loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
             _viewAssemblyCache.CheckAssembly(assembly, loadReferencedAssemblies);
+
+            // Code First already did type loading
+            if (OSpaceTypesLoaded)
+            {
+                return true;
+            }
 
             // Check if its loaded in the cache - if the call is for loading referenced assemblies, make sure that all referenced
             // assemblies are also loaded
@@ -301,42 +308,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // because the caller should have done it already
                     // Recheck the assemblies added, another list is created just to match up the collection type
                     // taken in by AtomicAddRange()
-                    var globalItems = new List<GlobalItem>();
-                    foreach (var edmType in typesInLoading.Values)
-                    {
-                        globalItems.Add(edmType);
-
-                        var cspaceTypeName = "";
-                        try
-                        {
-                            // Also populate the ocmapping information
-                            if (Helper.IsEntityType(edmType))
-                            {
-                                cspaceTypeName = ((ClrEntityType)edmType).CSpaceTypeName;
-                                _ocMapping.Add(cspaceTypeName, edmType);
-                            }
-                            else if (Helper.IsComplexType(edmType))
-                            {
-                                cspaceTypeName = ((ClrComplexType)edmType).CSpaceTypeName;
-                                _ocMapping.Add(cspaceTypeName, edmType);
-                            }
-                            else if (Helper.IsEnumType(edmType))
-                            {
-                                cspaceTypeName = ((ClrEnumType)edmType).CSpaceTypeName;
-                                _ocMapping.Add(cspaceTypeName, edmType);
-                            }
-                            // for the rest of the types like a relationship type, we do not have oc mapping, 
-                            // so we don't keep that information
-                        }
-                        catch (ArgumentException e)
-                        {
-                            throw new MappingException(Strings.Mapping_CannotMapCLRTypeMultipleTimes(cspaceTypeName), e);
-                        }
-                    }
-
-                    // Create a new ObjectItemCollection and add all the global items to it. 
-                    // Also copy all the existing items from the existing collection
-                    AtomicAddRange(globalItems);
+                    AddLoadedTypes(typesInLoading);
                 }
 
                 // Update the value of known assemblies
@@ -344,6 +316,48 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return typesInLoading.Count != 0;
             }
+        }
+
+        internal virtual void AddLoadedTypes(Dictionary<string, EdmType> typesInLoading)
+        {
+            DebugCheck.NotNull(typesInLoading);
+
+            var globalItems = new List<GlobalItem>();
+            foreach (var edmType in typesInLoading.Values)
+            {
+                globalItems.Add(edmType);
+
+                var cspaceTypeName = "";
+                try
+                {
+                    // Also populate the ocmapping information
+                    if (Helper.IsEntityType(edmType))
+                    {
+                        cspaceTypeName = ((ClrEntityType)edmType).CSpaceTypeName;
+                        _ocMapping.Add(cspaceTypeName, edmType);
+                    }
+                    else if (Helper.IsComplexType(edmType))
+                    {
+                        cspaceTypeName = ((ClrComplexType)edmType).CSpaceTypeName;
+                        _ocMapping.Add(cspaceTypeName, edmType);
+                    }
+                    else if (Helper.IsEnumType(edmType))
+                    {
+                        cspaceTypeName = ((ClrEnumType)edmType).CSpaceTypeName;
+                        _ocMapping.Add(cspaceTypeName, edmType);
+                    }
+                    // for the rest of the types like a relationship type, we do not have oc mapping, 
+                    // so we don't keep that information
+                }
+                catch (ArgumentException e)
+                {
+                    throw new MappingException(Strings.Mapping_CannotMapCLRTypeMultipleTimes(cspaceTypeName), e);
+                }
+            }
+
+            // Create a new ObjectItemCollection and add all the global items to it. 
+            // Also copy all the existing items from the existing collection
+            AtomicAddRange(globalItems);
         }
 
         /// <summary>

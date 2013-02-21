@@ -7,10 +7,16 @@ namespace ProductivityApiTests
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.ModelConfiguration;
+    using System.Data.Entity.ViewGeneration;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Linq;
     using AdvancedPatternsModel;
     using InvalidTypeModel;
     using Microsoft.CSharp;
@@ -104,7 +110,7 @@ namespace ProductivityApiTests
             {
                 var set = ctx.Set(typeof(UnMappedPersonBase));
                 Assert.Throws<InvalidOperationException>(() => set.Cast<UnMappedPersonBase>().FirstOrDefault()).
-                    ValidateMessage("DbSet_EntityTypeNotInModel", typeof(UnMappedPersonBase).Name);
+                       ValidateMessage("DbSet_EntityTypeNotInModel", typeof(UnMappedPersonBase).Name);
             }
         }
 
@@ -212,10 +218,10 @@ namespace ProductivityApiTests
         public void Set_throws_only_when_used_if_type_not_in_the_model_even_if_type_is_anonymous()
         {
             var anon = new
-                           {
-                               Id = 4,
-                               Name = ""
-                           };
+                {
+                    Id = 4,
+                    Name = ""
+                };
 
             using (var ctx = new SimpleModelContext())
             {
@@ -235,10 +241,10 @@ namespace ProductivityApiTests
         public void Non_generic_Set_throws_only_when_used_if_type_not_in_the_model_even_if_type_is_anonymous()
         {
             var anon = new
-                           {
-                               Id = 4,
-                               Name = ""
-                           };
+                {
+                    Id = 4,
+                    Name = ""
+                };
 
             using (var ctx = new SimpleModelContext())
             {
@@ -249,7 +255,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Set_throws_only_when_used_if_type_is_POCO_but_is_in_attributed_assembly_Dev10_883031()
+        public void Set_does_not_throw_in_Code_First_mode_when_used_if_type_is_POCO_but_is_in_attributed_assembly_Dev10_883031()
         {
             var assembly = new DynamicAssembly();
             assembly.HasAttribute(new EdmSchemaAttribute());
@@ -261,9 +267,52 @@ namespace ProductivityApiTests
 
             var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
             var setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
-            var findMethod = typeof(DbSet<>).MakeGenericType(pocoType).GetMethod("Find");
+            var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
+                                              .GetMethods()
+                                              .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
 
             using (var context = new DbContext("MixedPocoEocoContext", model))
+            {
+                var set = setMethod.Invoke(context, null);
+                createMethod.Invoke(set, null);
+            }
+        }
+
+        [Fact]
+        public void Set_throws_in_EDMX_mode_only_when_used_if_type_is_POCO_but_is_in_attributed_assembly_Dev10_883031()
+        {
+            var assembly = new DynamicAssembly();
+            assembly.HasAttribute(new EdmSchemaAttribute());
+            assembly.DynamicStructuralType("PocoEntity").Property("Id").HasType(typeof(int));
+            assembly.DynamicStructuralType("EocoEntity").Property("Id").HasType(typeof(int)).HasAttribute(
+                new EdmEntityTypeAttribute());
+            assembly.Compile(new AssemblyName("MixedPocoEocoAssembly"));
+
+            var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
+            var setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
+            var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
+                                              .GetMethods()
+                                              .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
+
+            var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(PregenContextEdmx.Csdl).CreateReader() });
+            var storeItemCollection = new StoreItemCollection(new[] { XDocument.Parse(PregenContextEdmx.Ssdl).CreateReader() });
+
+            IList<EdmSchemaError> errors;
+            var storageMappingItemCollection = StorageMappingItemCollection.Create(
+                edmItemCollection,
+                storeItemCollection,
+                new[] { XDocument.Parse(PregenContextEdmx.Msl).CreateReader() },
+                null,
+                out errors);
+
+            var workspace = new MetadataWorkspace(
+                () => edmItemCollection,
+                () => storeItemCollection,
+                () => storageMappingItemCollection);
+
+            using (var context = new DbContext(
+                new EntityConnection(workspace, new SqlConnection(), entityConnectionOwnsStoreConnection: true),
+                contextOwnsConnection: true))
             {
                 var set = setMethod.Invoke(context, null);
                 Assert.Throws<InvalidOperationException>(
@@ -271,9 +320,7 @@ namespace ProductivityApiTests
                         {
                             try
                             {
-                                findMethod.Invoke(
-                                    set,
-                                    new object[] { new object[] { 1 } });
+                                createMethod.Invoke(set, null);
                             }
                             catch (TargetInvocationException tie)
                             {
@@ -284,6 +331,66 @@ namespace ProductivityApiTests
                             "PocoEntity");
             }
         }
+
+        private const string Csdl =
+            @"<Schema Namespace='CodeFirstNamespace' Alias='Self' p4:UseStrongSpatialTypes='false' xmlns:p4='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns='http://schemas.microsoft.com/ado/2009/11/edm'>
+                <EntityType Name='PocoEntity'>
+                  <Key>
+                    <PropertyRef Name='Id' />
+                  </Key>
+                  <Property Name='Id' Type='Int32' Nullable='false' p4:StoreGeneratedPattern='Identity' />
+                </EntityType>
+                <EntityType Name='EocoEntity'>
+                  <Key>
+                    <PropertyRef Name='Id' />
+                  </Key>
+                  <Property Name='Id' Type='Int32' Nullable='false' p4:StoreGeneratedPattern='Identity' />
+                </EntityType>
+                <EntityContainer Name='CodeFirstContainer'>
+                  <EntitySet Name='PocoEntities' EntityType='Self.PocoEntity' />
+                  <EntitySet Name='EocoEntities' EntityType='Self.EocoEntity' />
+                </EntityContainer>
+              </Schema>";
+
+        private const string Msl =
+            @"<Mapping Space='C-S' xmlns='http://schemas.microsoft.com/ado/2009/11/mapping/cs'>
+                <EntityContainerMapping StorageEntityContainer='CodeFirstDatabase' CdmEntityContainer='CodeFirstContainer'>
+                  <EntitySetMapping Name='PocoEntities'>
+                    <EntityTypeMapping TypeName='CodeFirstNamespace.PocoEntity'>
+                      <MappingFragment StoreEntitySet='PocoEntity'>
+                        <ScalarProperty Name='Id' ColumnName='Id' />
+                      </MappingFragment>
+                    </EntityTypeMapping>
+                  </EntitySetMapping>
+                  <EntitySetMapping Name='EocoEntities'>
+                    <EntityTypeMapping TypeName='CodeFirstNamespace.EocoEntity'>
+                      <MappingFragment StoreEntitySet='EocoEntity'>
+                        <ScalarProperty Name='Id' ColumnName='Id' />
+                      </MappingFragment>
+                    </EntityTypeMapping>
+                  </EntitySetMapping>
+                </EntityContainerMapping>
+              </Mapping>";
+
+        private const string Ssdl =
+            @"<Schema Namespace='CodeFirstDatabaseSchema' Provider='System.Data.SqlClient' ProviderManifestToken='2008' Alias='Self' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>
+                <EntityType Name='PocoEntity'>
+                  <Key>
+                    <PropertyRef Name='Id' />
+                  </Key>
+                  <Property Name='Id' Type='int' StoreGeneratedPattern='Identity' Nullable='false' />
+                </EntityType>
+                <EntityType Name='EocoEntity'>
+                  <Key>
+                    <PropertyRef Name='Id' />
+                  </Key>
+                  <Property Name='Id' Type='int' StoreGeneratedPattern='Identity' Nullable='false' />
+                </EntityType>
+                <EntityContainer Name='CodeFirstDatabase'>
+                  <EntitySet Name='PocoEntity' EntityType='Self.PocoEntity' Schema='dbo' Table='PocoEntities' />
+                  <EntitySet Name='EocoEntity' EntityType='Self.EocoEntity' Schema='dbo' Table='EocoEntities' />
+                </EntityContainer>
+              </Schema>";
 
         [Fact]
         public void Add_throws_when_type_not_in_model()
@@ -427,7 +534,7 @@ namespace ProductivityApiTests
             {
                 var office = new UnMappedOffice();
                 Assert.Throws<InvalidOperationException>(() => context.Set(typeof(Office)).Attach(office)).
-                    ValidateMessage("ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
+                       ValidateMessage("ObjectContext_NoMappingForEntityType", typeof(UnMappedOffice).FullName);
             }
         }
 

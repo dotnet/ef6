@@ -178,6 +178,8 @@
     <Compile Include="Core\Metadata\Edm\AssociationEndMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceLoaderTests.cs" />
+    <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceTypeFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmFunctionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Core\Metadata\Edm\MetadataWorkspaceTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\ObjectItemCollectionTests.cs" />
+    <Compile Include="Core\Metadata\Edm\ObjectItemConventionAssemblyLoaderTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />

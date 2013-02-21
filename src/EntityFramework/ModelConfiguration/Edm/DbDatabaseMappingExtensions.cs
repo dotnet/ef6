@@ -39,10 +39,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var storeItemCollection = new StoreItemCollection(databaseMapping.Database);
             var storageMappingItemCollection = databaseMapping.ToStorageMappingItemCollection(itemCollection, storeItemCollection);
 
-            return new MetadataWorkspace(
+            var workspace = new MetadataWorkspace(
                 () => itemCollection,
                 () => storeItemCollection,
                 () => storageMappingItemCollection);
+
+            new CodeFirstOSpaceLoader().LoadTypes(itemCollection, (ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace));
+
+            return workspace;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
@@ -58,9 +62,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                                   {
-                                       Indent = true
-                                   }))
+                    {
+                        Indent = true
+                    }))
             {
                 new MslSerializer().Serialize(databaseMapping, xmlWriter);
             }

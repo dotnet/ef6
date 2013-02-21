@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
     using System.Reflection;
 
-    internal sealed class ObjectItemLoadingSessionData
+    internal class ObjectItemLoadingSessionData
     {
         private Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader> _loaderFactory;
 
@@ -29,15 +29,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // an assembly
         private readonly KnownAssembliesSet _knownAssemblies;
         private readonly LockedAssemblyCache _lockedAssemblyCache;
-        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel1PostSessionProcessing;
-        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel2PostSessionProcessing;
+        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel1PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
+        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel2PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
 
         private readonly EdmItemCollection _edmItemCollection;
         private Dictionary<string, KeyValuePair<EdmType, int>> _conventionCSpaceTypeNames;
         private readonly Dictionary<EdmType, EdmType> _cspaceToOspace;
         private readonly object _originalLoaderCookie;
 
-        internal Dictionary<string, EdmType> TypesInLoading
+        internal virtual Dictionary<string, EdmType> TypesInLoading
         {
             get { return _typesInLoading; }
         }
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _listOfAssembliesLoaded; }
         }
 
-        internal List<EdmItemError> EdmItemErrors
+        internal virtual List<EdmItemError> EdmItemErrors
         {
             get { return _errors; }
         }
@@ -67,14 +67,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _edmItemCollection; }
         }
 
-        internal Dictionary<EdmType, EdmType> CspaceToOspace
+        internal virtual Dictionary<EdmType, EdmType> CspaceToOspace
         {
             get { return _cspaceToOspace; }
         }
 
         internal bool ConventionBasedRelationshipsAreLoaded { get; set; }
 
-        internal LoadMessageLogger LoadMessageLogger
+        internal virtual LoadMessageLogger LoadMessageLogger
         {
             get { return _loadMessageLogger; }
         }
@@ -146,6 +146,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal ObjectItemLoadingSessionData()
+        {
+        }
+
         internal ObjectItemLoadingSessionData(
             KnownAssembliesSet knownAssemblies, LockedAssemblyCache lockedAssemblyCache, EdmItemCollection edmItemCollection,
             Action<String> logLoadMessage, object loaderCookie)
@@ -158,8 +165,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _errors = new List<EdmItemError>();
             _knownAssemblies = knownAssemblies;
             _lockedAssemblyCache = lockedAssemblyCache;
-            _loadersThatNeedLevel1PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
-            _loadersThatNeedLevel2PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
             _edmItemCollection = edmItemCollection;
             _loadMessageLogger = new LoadMessageLogger(logLoadMessage);
             _cspaceToOspace = new Dictionary<EdmType, EdmType>();

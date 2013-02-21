@@ -224,6 +224,9 @@
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\IMetadataItem.cs" />
     <Compile Include="Core\Metadata\Edm\INamedDataModelItem.cs" />
+    <Compile Include="Core\Metadata\ObjectLayer\CodeFirstOSpaceLoader.cs" />
+    <Compile Include="Core\Metadata\ObjectLayer\CodeFirstOSpaceTypeFactory.cs" />
+    <Compile Include="Core\Metadata\ObjectLayer\OSpaceTypeFactory.cs" />
     <Compile Include="Core\Objects\ExecutionOptions.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataReader.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataRecord.cs" />

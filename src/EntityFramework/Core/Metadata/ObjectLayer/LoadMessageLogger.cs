@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _logLoadMessage = logLoadMessage;
         }
 
-        internal void LogLoadMessage(string message, EdmType relatedType)
+        internal virtual void LogLoadMessage(string message, EdmType relatedType)
         {
             if (_logLoadMessage != null)
             {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             LogMessagesWithTypeInfo(message, relatedType);
         }
 
-        internal string CreateErrorMessageWithTypeSpecificLoadLogs(string errorMessage, EdmType relatedType)
+        internal virtual string CreateErrorMessageWithTypeSpecificLoadLogs(string errorMessage, EdmType relatedType)
         {
             return new StringBuilder(errorMessage)
                 .AppendLine(GetTypeRelatedLogMessage(relatedType)).ToString();

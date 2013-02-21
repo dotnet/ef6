@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _assemblies = new Dictionary<Assembly, KnownAssemblyEntry>(set._assemblies);
         }
 
-        internal bool TryGetKnownAssembly(
+        internal virtual bool TryGetKnownAssembly(
             Assembly assembly, object loaderCookie, EdmItemCollection itemCollection, out KnownAssemblyEntry entry)
         {
             if (!_assemblies.TryGetValue(assembly, out entry))
