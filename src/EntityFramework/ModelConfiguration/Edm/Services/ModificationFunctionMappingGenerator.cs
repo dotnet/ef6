@@ -9,6 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal class ModificationFunctionMappingGenerator : StructuralTypeMappingGenerator
@@ -36,6 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             Debug.Assert(entitySetMapping != null);
 
+            var columnMappings = GetColumnMappings(entityType, entitySetMapping).ToList();
             var iaFkProperties = GetIndependentFkColumns(entityType, databaseMapping).ToList();
 
             var insertFunctionMapping
@@ -44,10 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entitySetMapping.EntitySet,
                     entityType,
                     databaseMapping,
-                    entityType
-                        .Properties
-                        .Where(p => !p.HasStoreGeneratedPattern()),
+                    entityType.Properties,
                     iaFkProperties,
+                    columnMappings,
                     entityType
                         .Properties
                         .Where(p => p.HasStoreGeneratedPattern()));
@@ -60,6 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     databaseMapping,
                     entityType.Properties,
                     iaFkProperties,
+                    columnMappings,
                     entityType
                         .Properties
                         .Where(p => p.GetStoreGeneratedPattern() == StoreGeneratedPattern.Computed));
@@ -71,7 +73,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entityType,
                     databaseMapping,
                     entityType.Properties,
-                    iaFkProperties);
+                    iaFkProperties,
+                    columnMappings);
 
             var modificationFunctionMapping
                 = new StorageEntityTypeModificationFunctionMapping(
@@ -81,6 +84,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     updateFunctionMapping);
 
             entitySetMapping.AddModificationFunctionMapping(modificationFunctionMapping);
+        }
+
+        private static IEnumerable<ColumnMappingBuilder> GetColumnMappings(
+            EntityType entityType, StorageEntitySetMapping entitySetMapping)
+        {
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(entitySetMapping);
+
+            return new[] { entityType }
+                .Concat(GetParents(entityType))
+                .SelectMany(
+                    et => entitySetMapping
+                              .TypeMappings
+                              .Where(stm => stm.Types.Contains(et))
+                              .SelectMany(stm => stm.MappingFragments)
+                              .SelectMany(mf => mf.ColumnMappings));
         }
 
         public void Generate(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
@@ -97,7 +116,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     associationSetMapping.AssociationSet.ElementType,
                     databaseMapping,
                     Enumerable.Empty<EdmProperty>(),
-                    iaFkProperties);
+                    iaFkProperties,
+                    new ColumnMappingBuilder[0]);
 
             var deleteFunctionMapping
                 = GenerateFunctionMapping(
@@ -106,7 +126,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     associationSetMapping.AssociationSet.ElementType,
                     databaseMapping,
                     Enumerable.Empty<EdmProperty>(),
-                    iaFkProperties);
+                    iaFkProperties,
+                    new ColumnMappingBuilder[0]);
 
             associationSetMapping.ModificationFunctionMapping
                 = new StorageAssociationSetModificationFunctionMapping(
@@ -115,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     insertFunctionMapping);
         }
 
-        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> GetIndependentFkColumns(
+        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
             StorageAssociationSetMapping associationSetMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
@@ -126,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     Tuple.Create(
                         new StorageModificationFunctionMemberPath(
                             new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.SourceEndMapping.EndMember },
-                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty.Name);
+                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
             }
 
             foreach (var propertyMapping in associationSetMapping.TargetEndMapping.PropertyMappings)
@@ -135,11 +156,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     Tuple.Create(
                         new StorageModificationFunctionMemberPath(
                             new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.TargetEndMapping.EndMember },
-                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty.Name);
+                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
             }
         }
 
-        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> GetIndependentFkColumns(
+        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
             EntityType entityType, DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(entityType);
@@ -176,7 +197,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             Tuple.Create(
                                 new StorageModificationFunctionMemberPath(
                                     new EdmMember[] { propertyMapping.EdmProperty, dependentEnd },
-                                    associationSetMapping.AssociationSet), propertyMapping.ColumnProperty.Name);
+                                    associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
                     }
                 }
             }
@@ -194,13 +215,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private StorageModificationFunctionMapping GenerateFunctionMapping(
             ModificationOperator modificationOperator,
             EntitySetBase entitySetBase,
             EntityTypeBase entityTypeBase,
             DbDatabaseMapping databaseMapping,
             IEnumerable<EdmProperty> parameterProperties,
-            IEnumerable<Tuple<StorageModificationFunctionMemberPath, string>> iaFkProperties,
+            IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
+            IList<ColumnMappingBuilder> columnMappings,
             IEnumerable<EdmProperty> resultProperties = null)
         {
             DebugCheck.NotNull(entitySetBase);
@@ -208,9 +231,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(parameterProperties);
             DebugCheck.NotNull(iaFkProperties);
+            DebugCheck.NotNull(columnMappings);
 
             var useOriginalValues = modificationOperator == ModificationOperator.Delete;
-            
+
             var parameterMappingGenerator
                 = new FunctionParameterMappingGenerator(_providerManifest);
 
@@ -219,6 +243,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     .Generate(
                         modificationOperator,
                         parameterProperties,
+                        columnMappings,
                         new List<EdmProperty>(),
                         useOriginalValues)
                     .Concat(
@@ -229,7 +254,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             FunctionParameter rowsAffectedParameter = null;
 
             var parameters
-                = parameterBindings.Select(b => b.Parameter);
+                = parameterBindings.Select(b => b.Parameter).ToList();
 
             if (parameterBindings
                 .Any(
@@ -245,8 +270,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                                 PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
                         ParameterMode.Out);
 
-                parameters = parameters.Concat(new[] { rowsAffectedParameter });
+                parameters.Add(rowsAffectedParameter);
             }
+
+            UniquifyParameterNames(parameters);
 
             var functionPayload
                 = new EdmFunctionPayload
@@ -270,10 +297,23 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     parameterBindings,
                     rowsAffectedParameter,
                     resultProperties != null
-                        ? resultProperties.Select(p => new StorageModificationFunctionResultBinding(p.Name, p))
+                        ? resultProperties.Select(
+                            p => new StorageModificationFunctionResultBinding(
+                                     columnMappings.First(cm => cm.PropertyPath.SequenceEqual(new[] { p })).ColumnProperty.Name,
+                                     p))
                         : null);
 
             return functionMapping;
+        }
+
+        private static void UniquifyParameterNames(IList<FunctionParameter> parameters)
+        {
+            DebugCheck.NotNull(parameters);
+
+            foreach (var parameter in parameters)
+            {
+                parameter.Name = parameters.Except(new[] { parameter }).UniquifyName(parameter.Name);
+            }
         }
     }
 }

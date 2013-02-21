@@ -32,6 +32,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                 = databaseMapping.AddEntitySetMapping(
                     databaseMapping.Model.AddEntitySet("ES", entityType));
 
+            var storageEntityTypeMapping 
+                = new StorageEntityTypeMapping(
+                    new StorageEntitySetMapping(new EntitySet(), databaseMapping.EntityContainerMappings.Single()));
+           
+            storageEntityTypeMapping.AddType(entityType);
+            
+            var storageMappingFragment = new StorageMappingFragment(new EntitySet(), storageEntityTypeMapping, false);
+            
+            storageMappingFragment.AddColumnMapping(
+                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { intProperty }));
+
+            storageMappingFragment.AddColumnMapping(
+                new ColumnMappingBuilder(new EdmProperty("C1"), new[] { stringProperty }));
+
+            storageEntityTypeMapping.AddFragment(storageMappingFragment);
+
+            entitySetMapping.AddTypeMapping(storageEntityTypeMapping);
+
             functionMappingGenerator.Generate(entityType, databaseMapping);
 
             var modificationFunctionMapping
@@ -99,6 +117,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var entitySetMapping
                 = databaseMapping.AddEntitySetMapping(
                     databaseMapping.Model.AddEntitySet("ES", entityType));
+
+            var storageEntityTypeMapping
+                = new StorageEntityTypeMapping(
+                    new StorageEntitySetMapping(new EntitySet(), databaseMapping.EntityContainerMappings.Single()));
+
+            storageEntityTypeMapping.AddType(entityType);
+
+            var storageMappingFragment = new StorageMappingFragment(new EntitySet(), storageEntityTypeMapping, false);
+
+            storageMappingFragment.AddColumnMapping(
+                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { intProperty }));
+
+            storageMappingFragment.AddColumnMapping(
+                new ColumnMappingBuilder(new EdmProperty("C1"), new[] { stringProperty }));
+
+            storageEntityTypeMapping.AddFragment(storageMappingFragment);
+
+            entitySetMapping.AddTypeMapping(storageEntityTypeMapping);
 
             functionMappingGenerator.Generate(entityType, databaseMapping);
 

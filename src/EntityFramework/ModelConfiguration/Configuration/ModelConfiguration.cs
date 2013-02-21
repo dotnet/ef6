@@ -4,8 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -371,6 +373,84 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             RemoveRedundantTables(databaseMapping);
             ConfigureTables(databaseMapping.Database);
             ConfigureDefaultSchema(databaseMapping);
+            UniquifyFunctionNames(databaseMapping);
+        }
+
+        private static void UniquifyFunctionNames(DbDatabaseMapping databaseMapping)
+        {
+            DebugCheck.NotNull(databaseMapping);
+
+            foreach (var modificationFunctionMapping 
+                in databaseMapping
+                    .GetEntitySetMappings()
+                    .SelectMany(esm => esm.ModificationFunctionMappings))
+            {
+                var entityTypeConfiguration
+                    = (EntityTypeConfiguration)modificationFunctionMapping.EntityType.GetConfiguration();
+
+                if (entityTypeConfiguration.ModificationFunctionsConfiguration == null)
+                {
+                    continue;
+                }
+
+                UniquifyFunctionName(
+                    databaseMapping,
+                    entityTypeConfiguration.ModificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
+                    modificationFunctionMapping.InsertFunctionMapping);
+
+                UniquifyFunctionName(
+                    databaseMapping,
+                    entityTypeConfiguration.ModificationFunctionsConfiguration.UpdateModificationFunctionConfiguration,
+                    modificationFunctionMapping.UpdateFunctionMapping);
+
+                UniquifyFunctionName(
+                    databaseMapping,
+                    entityTypeConfiguration.ModificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
+                    modificationFunctionMapping.DeleteFunctionMapping);
+            }
+
+            foreach (var modificationFunctionMapping 
+                in databaseMapping
+                    .GetAssociationSetMappings()
+                    .Select(asm => asm.ModificationFunctionMapping)
+                    .Where(asm => asm != null))
+            {
+                var navigationPropertyConfiguration
+                    = (NavigationPropertyConfiguration)modificationFunctionMapping
+                                                           .AssociationSet.ElementType.GetConfiguration();
+
+                if (navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+                {
+                    continue;
+                }
+
+                UniquifyFunctionName(
+                    databaseMapping,
+                    navigationPropertyConfiguration.ModificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
+                    modificationFunctionMapping.InsertFunctionMapping);
+
+                UniquifyFunctionName(
+                    databaseMapping,
+                    navigationPropertyConfiguration.ModificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
+                    modificationFunctionMapping.DeleteFunctionMapping);
+            }
+        }
+
+        private static void UniquifyFunctionName(
+            DbDatabaseMapping databaseMapping,
+            ModificationFunctionConfiguration modificationFunctionConfiguration,
+            StorageModificationFunctionMapping functionMapping)
+        {
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(functionMapping);
+
+            if ((modificationFunctionConfiguration == null)
+                || string.IsNullOrWhiteSpace(modificationFunctionConfiguration.Name))
+            {
+                functionMapping.Function.Name
+                    = databaseMapping.Database.Functions.Except(new[] { functionMapping.Function })
+                                     .UniquifyName(functionMapping.Function.Name);
+            }
         }
 
         private void ConfigureDefaultSchema(DbDatabaseMapping databaseMapping)

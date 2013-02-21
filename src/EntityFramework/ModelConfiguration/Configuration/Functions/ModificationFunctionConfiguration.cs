@@ -9,6 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
@@ -23,6 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private string _name;
         private string _schema;
         private string _rowsAffectedParameter;
+        private List<FunctionParameter> _configuredParameters;
 
         public ModificationFunctionConfiguration()
         {
@@ -123,6 +125,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
+            _configuredParameters = new List<FunctionParameter>();
+
             ConfigureName(modificationFunctionMapping);
             ConfigureSchema(modificationFunctionMapping);
             ConfigureRowsAffectedParameter(modificationFunctionMapping);
@@ -162,9 +166,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
 
                 modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
+
+                _configuredParameters.Add(modificationFunctionMapping.RowsAffectedParameter);
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ConfigureParameters(StorageModificationFunctionMapping modificationFunctionMapping)
         {
             foreach (var keyValue in _parameterNames)
@@ -209,14 +217,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     }
 
                     parameterBinding.Parameter.Name = parameterName;
+
+                    _configuredParameters.Add(parameterBinding.Parameter);
                 }
                 else if (parameterBindings.Count == 2)
                 {
-                    parameterBindings.Single(pb => pb.IsCurrent).Parameter.Name = parameterName;
+                    var parameterBinding = parameterBindings.Single(pb => pb.IsCurrent);
+
+                    parameterBinding.Parameter.Name = parameterName;
+
+                    _configuredParameters.Add(parameterBinding.Parameter);
 
                     if (!string.IsNullOrWhiteSpace(originalValueParameterName))
                     {
-                        parameterBindings.Single(pb => !pb.IsCurrent).Parameter.Name = originalValueParameterName;
+                        parameterBinding = parameterBindings.Single(pb => !pb.IsCurrent);
+
+                        parameterBinding.Parameter.Name = originalValueParameterName;
+
+                        _configuredParameters.Add(parameterBinding.Parameter);
                     }
                 }
                 else
@@ -225,6 +243,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         propertyPath,
                         modificationFunctionMapping.Function.Name);
                 }
+            }
+
+            var unconfiguredParameters
+                = modificationFunctionMapping
+                    .Function
+                    .Parameters
+                    .Except(_configuredParameters);
+
+            foreach (var parameter in unconfiguredParameters)
+            {
+                parameter.Name
+                    = modificationFunctionMapping
+                        .Function
+                        .Parameters
+                        .Except(new[] { parameter })
+                        .UniquifyName(parameter.Name);
             }
         }
 

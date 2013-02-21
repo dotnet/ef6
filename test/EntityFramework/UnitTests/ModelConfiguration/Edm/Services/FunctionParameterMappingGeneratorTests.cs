@@ -36,6 +36,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                     .Generate(
                         ModificationOperator.Insert,
                         new[] { property0, complexProperty, property2 },
+                        new[]
+                            {
+                                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { property0 }),
+                                new ColumnMappingBuilder(new EdmProperty("CT"), new[] { complexProperty, property1 }),
+                                new ColumnMappingBuilder(new EdmProperty("C2"), new[] { property2 })
+                            },
                         new List<EdmProperty>(),
                         useOriginalValues: true)
                     .ToList();
@@ -44,18 +50,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var parameterBinding = parameterBindings.First();
 
-            Assert.Equal("P0", parameterBinding.Parameter.Name);
+            Assert.Equal("C0", parameterBinding.Parameter.Name);
             Assert.Same(property0, parameterBinding.MemberPath.Members.Single());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
 
             parameterBinding = parameterBindings.Last();
 
-            Assert.Equal("C_P1", parameterBinding.Parameter.Name);
+            Assert.Equal("CT", parameterBinding.Parameter.Name);
             Assert.Same(complexProperty, parameterBinding.MemberPath.Members.First());
             Assert.Same(property1, parameterBinding.MemberPath.Members.Last());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
         }
@@ -84,6 +90,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                     .Generate(
                         ModificationOperator.Update,
                         new[] { property0, complexProperty, property2 },
+                        new[]
+                            {
+                                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { property0 }),
+                                new ColumnMappingBuilder(new EdmProperty("C_P1"), new[] { complexProperty, property1 }),
+                                new ColumnMappingBuilder(new EdmProperty("C2"), new[] { property2 })
+                            },
                         new List<EdmProperty>(),
                         useOriginalValues: true)
                     .ToList();
@@ -92,9 +104,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var parameterBinding = parameterBindings.First();
 
-            Assert.Equal("P0", parameterBinding.Parameter.Name);
+            Assert.Equal("C0", parameterBinding.Parameter.Name);
             Assert.Same(property0, parameterBinding.MemberPath.Members.Single());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
 
@@ -103,15 +115,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             Assert.Equal("C_P1", parameterBinding.Parameter.Name);
             Assert.Same(complexProperty, parameterBinding.MemberPath.Members.First());
             Assert.Same(property1, parameterBinding.MemberPath.Members.Last());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
 
             parameterBinding = parameterBindings.Last();
 
-            Assert.Equal("P2_Original", parameterBinding.Parameter.Name);
+            Assert.Equal("C2_Original", parameterBinding.Parameter.Name);
             Assert.Same(property2, parameterBinding.MemberPath.Members.Single());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
         }
@@ -120,7 +132,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
         public void Can_generate_scalar_and_complex_properties_when_delete()
         {
             var functionParameterMappingGenerator
-                            = new FunctionParameterMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new FunctionParameterMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);
 
             var property0 = new EdmProperty("P0");
             var property1 = new EdmProperty("P1");
@@ -142,6 +154,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                     .Generate(
                         ModificationOperator.Delete,
                         new[] { property0, complexProperty, property2 },
+                        new[]
+                            {
+                                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { property0 }),
+                                new ColumnMappingBuilder(new EdmProperty("CT_C1"), new[] { complexProperty, property1 }),
+                                new ColumnMappingBuilder(new EdmProperty("C2"), new[] { property2 })
+                            },
                         new List<EdmProperty>(),
                         useOriginalValues: true)
                     .ToList();
@@ -150,17 +168,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             var parameterBinding = parameterBindings.First();
 
-            Assert.Equal("P0", parameterBinding.Parameter.Name);
+            Assert.Equal("C0", parameterBinding.Parameter.Name);
             Assert.Same(property0, parameterBinding.MemberPath.Members.Single());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
 
             parameterBinding = parameterBindings.Last();
 
-            Assert.Equal("P2_Original", parameterBinding.Parameter.Name);
+            Assert.Equal("C2_Original", parameterBinding.Parameter.Name);
             Assert.Same(property2, parameterBinding.MemberPath.Members.Single());
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
         }
@@ -193,7 +211,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
             var parameterBindings
                 = functionParameterMappingGenerator
                     .Generate(
-                        new[] { Tuple.Create(memberPath, "param") },
+                        new[] { Tuple.Create(memberPath, new EdmProperty("param")) },
                         useOriginalValues: true)
                     .ToList();
 
@@ -201,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
 
             Assert.Equal("param", parameterBinding.Parameter.Name);
             Assert.Same(memberPath, parameterBinding.MemberPath);
-            Assert.Equal("nvarchar(max)", parameterBinding.Parameter.TypeName);
+            Assert.Equal("String", parameterBinding.Parameter.TypeName);
             Assert.Equal(ParameterMode.In, parameterBinding.Parameter.Mode);
             Assert.False(parameterBinding.IsCurrent);
         }
@@ -222,6 +240,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services.UnitTests
                               .Generate(
                                   ModificationOperator.Insert,
                                   new[] { EdmProperty.Complex("C0", complexType) },
+                                  new ColumnMappingBuilder[0],
                                   new List<EdmProperty>())
                               .ToList()).Message);
         }

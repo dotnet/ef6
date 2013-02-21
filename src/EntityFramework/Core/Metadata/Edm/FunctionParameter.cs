@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Class representing a function parameter
     /// </summary>
-    public sealed class FunctionParameter : MetadataItem
+    public sealed class FunctionParameter : MetadataItem, INamedDataModelItem
     {
         internal static Func<FunctionParameter, SafeLink<EdmFunction>> DeclaringFunctionLinker = fp => fp._declaringFunction;
 

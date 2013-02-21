@@ -51,7 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.UnitTests
         }
 
         [Fact]
-        public void AddFunction_should_uniquify_namee()
+        public void AddFunction_should_uniquify_name()
         {
             var database = new EdmModel(DataSpace.SSpace);
             database.AddFunction("F", new EdmFunctionPayload());

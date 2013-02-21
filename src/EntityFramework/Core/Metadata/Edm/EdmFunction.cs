@@ -16,9 +16,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class EdmFunction : EdmType
     {
         internal EdmFunction()
-            : base("F", "N", DataSpace.SSpace)
+            : this("F", "N", DataSpace.SSpace, new EdmFunctionPayload())
         {
             // testing only
+
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]

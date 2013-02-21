@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         }
 
         [Fact]
-        public void Can_set_parameter_name()
+        public void Can_set_function_name()
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
@@ -92,10 +92,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var mockPropertyInfo2 = new MockPropertyInfo();
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(mockPropertyInfo1), "P1");
+                .Parameter(new PropertyPath(mockPropertyInfo1), "Foo");
 
             modificationFunctionConfiguration
-                .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "P2");
+                .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "Bar");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
@@ -106,12 +106,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var property2 = new EdmProperty("P1");
             property2.SetClrPropertyInfo(mockPropertyInfo2);
 
-            var function = new EdmFunction();
-            var functionParameter1 = new FunctionParameter();
-            var functionParameter2 = new FunctionParameter();
+            var functionParameter1
+                = new FunctionParameter(
+                    "P1",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+
+            var functionParameter2
+                = new FunctionParameter(
+                    "P2",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+
+            var functionParameter3
+                = new FunctionParameter(
+                    "Foo",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+
+            var function
+                = new EdmFunction(
+                    "F", "N", DataSpace.SSpace,
+                    new EdmFunctionPayload
+                        {
+                            Parameters = new[] { functionParameter1, functionParameter2, functionParameter3 }
+                        });
 
             var associationType = new AssociationType();
-            
+
             var associationEndMember1
                 = new AssociationEndMember("AE1", new EntityType())
                       {
@@ -119,10 +141,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                       };
 
             var associationEndMember2
-               = new AssociationEndMember("AE2", new EntityType())
-               {
-                   RelationshipMultiplicity = RelationshipMultiplicity.Many
-               };
+                = new AssociationEndMember("AE2", new EntityType())
+                      {
+                          RelationshipMultiplicity = RelationshipMultiplicity.Many
+                      };
 
             associationType.SourceEnd = associationEndMember1;
             associationType.TargetEnd = associationEndMember2;
@@ -157,8 +179,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             Assert.Equal("Foo", function.Name);
             Assert.Equal("Bar", function.Schema);
-            Assert.Equal("P1", functionParameter1.Name);
-            Assert.Equal("P2", functionParameter2.Name);
+            Assert.Equal("Foo", functionParameter1.Name);
+            Assert.Equal("Bar", functionParameter2.Name);
+            Assert.Equal("Foo1", functionParameter3.Name);
         }
 
         [Fact]
@@ -180,20 +203,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             var function = new EdmFunction();
             var functionParameter1 = new FunctionParameter();
-            
+
             var associationType = new AssociationType();
 
             var associationEndMember1
                 = new AssociationEndMember("AE1", new EntityType())
-                {
-                    RelationshipMultiplicity = RelationshipMultiplicity.Many
-                };
+                      {
+                          RelationshipMultiplicity = RelationshipMultiplicity.Many
+                      };
 
             var associationEndMember2
-               = new AssociationEndMember("AE2", new EntityType())
-               {
-                   RelationshipMultiplicity = RelationshipMultiplicity.One
-               };
+                = new AssociationEndMember("AE2", new EntityType())
+                      {
+                          RelationshipMultiplicity = RelationshipMultiplicity.One
+                      };
             associationEndMember2.SetClrPropertyInfo(mockPropertyInfo1);
 
             associationType.SourceEnd = associationEndMember1;
@@ -339,7 +362,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     new[]
                         {
                             new StorageModificationFunctionParameterBinding(
-                                new FunctionParameter(),
+                                new FunctionParameter(
+                                "P",
+                                TypeUsage.Create(
+                                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                                ParameterMode.In),
                                 new StorageModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     null,
@@ -373,7 +400,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     new[]
                         {
                             new StorageModificationFunctionParameterBinding(
-                                new FunctionParameter(),
+                                new FunctionParameter(
+                                "P",
+                                TypeUsage.Create(
+                                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                                ParameterMode.In),
                                 new StorageModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     rowsAffectedParameter,

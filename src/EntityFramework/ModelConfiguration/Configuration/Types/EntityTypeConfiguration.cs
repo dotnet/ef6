@@ -124,6 +124,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return _modificationFunctionsConfiguration != null; }
         }
 
+        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
+        {
+            get { return _modificationFunctionsConfiguration; }
+        }
+
         internal IEnumerable<PropertyInfo> KeyProperties
         {
             get { return _keyProperties; }
@@ -569,6 +574,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
             ConfigureDependentKeys(databaseMapping, providerManifest);
+            ConfigureModificationFunctions(entityType, databaseMapping, providerManifest);
+        }
+
+        private void ConfigureModificationFunctions(
+            EntityType entityType, DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
+        {
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(providerManifest);
 
             if (_modificationFunctionsConfiguration != null)
             {
@@ -588,7 +602,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private void ConfigurePropertyMappings(
-            DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest,
+            DbDatabaseMapping databaseMapping, 
+            EntityType entityType, 
+            DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -612,7 +628,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private void ConfigureAssociationMappings(DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
+        private void ConfigureAssociationMappings(
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entityType);

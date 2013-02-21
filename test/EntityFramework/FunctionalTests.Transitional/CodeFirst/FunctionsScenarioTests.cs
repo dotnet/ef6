@@ -4,6 +4,7 @@ namespace FunctionalTests
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -201,6 +202,165 @@ namespace FunctionalTests
                         Assert.NotNull(functionMapping.UpdateFunctionMapping);
                         Assert.NotNull(functionMapping.DeleteFunctionMapping);
                     }
+                }
+
+                [Fact]
+                public void Parameter_names_are_uniquified_when_column_name_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures()
+                        .Property(o => o.IsShipped).HasColumnName("Price");
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .Single()
+                            .ModificationFunctionMappings
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "Price1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "Price1"));
+                }
+
+                [Fact]
+                public void Parameter_names_are_uniquified_when_parameter_name_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures(map => map.Insert(f => f.Parameter(ol => ol.IsShipped, "Price")));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .Single()
+                            .ModificationFunctionMappings
+                            .Single();
+
+                    Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "Price1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "IsShipped"));
+                }
+
+                [Fact]
+                public void Parameter_names_are_uniquified_when_rows_affected_parameter_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder.Entity<Engine>()
+                        .MapToStoredProcedures(map => map.Update(f => f.RowsAffectedParameter("Name")));
+
+                    modelBuilder.Ignore<Team>();
+                    
+                    var databaseMapping = BuildMapping(modelBuilder);
+                    
+                    databaseMapping.AssertValid();
+                    
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "Name1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "Name"));
+                }
+
+                [Fact]
+                public void Rows_affected_parameter_name_uniquified_when_parameter_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder.Entity<Engine>()
+                        .MapToStoredProcedures(map => map.Update(f => f.Parameter(e => e.Name, "RowsAffected")));
+
+                    modelBuilder.Ignore<Team>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+                    
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "RowsAffected1"));
+                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "RowsAffected"));
+                }
+
+                [Fact]
+                public void Entity_function_names_are_uniquified_when_name_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures(map => map.Insert(f => f.HasName("OrderLine_Update")));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .Single()
+                            .ModificationFunctionMappings
+                            .Single();
+
+                    Assert.Equal("OrderLine_Update", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("OrderLine_Update1", functionMapping.UpdateFunctionMapping.Function.Name);
+                    Assert.Equal("OrderLine_Delete", functionMapping.DeleteFunctionMapping.Function.Name);
+                }
+
+                [Fact]
+                public void Association_function_names_are_uniquified_when_name_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToStoredProcedures(map => map.Insert(f => f.HasName("Tag_Products_Delete")));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .AssociationSetMappings
+                            .Single()
+                            .ModificationFunctionMapping;
+
+                    Assert.Equal("Tag_Products_Delete", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("Tag_Products_Delete1", functionMapping.DeleteFunctionMapping.Function.Name);
                 }
             }
 
@@ -814,6 +974,149 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id2"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "id3"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id3"));
+                }
+
+                public void Column_configuration_is_propagated_to_parameters()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Order>()
+                        .HasMany(o => o.OrderLines)
+                        .WithRequired()
+                        .Map(m => m.MapKey("order_id"));
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures()
+                        .Property(ol => ol.IsShipped).HasColumnName("is_shipped");
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .Ignore(ol => ol.OrderId);
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .Property(ol => ol.Quantity).HasColumnType("int");
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .Property(ol => ol.Id).HasColumnName("the_id");
+
+                    modelBuilder
+                        .Entity<Building>()
+                        .MapToStoredProcedures()
+                        .Property(b => b.Address.Line2).HasColumnName("bar");
+
+                    modelBuilder
+                        .ComplexType<Address>()
+                        .Property(a => a.Line1).HasColumnName("foomatic");
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.ShellEdmx();
+
+                    databaseMapping.AssertValid();
+
+                    var orderLineFunctionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single(mfm => mfm.EntityType.Name == "OrderLine");
+
+                    Assert.NotNull(orderLineFunctionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id"));
+                    Assert.NotNull(orderLineFunctionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "is_shipped"));
+                    Assert.NotNull(
+                        orderLineFunctionMapping.InsertFunctionMapping.Function.Parameters
+                                                .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
+
+                    Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "the_id"));
+                    Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id"));
+                    Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "is_shipped"));
+                    Assert.NotNull(
+                        orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters
+                                                .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
+
+                    Assert.NotNull(orderLineFunctionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "the_id"));
+                    Assert.NotNull(orderLineFunctionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id"));
+
+                    var buildingFunctionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single(mfm => mfm.EntityType.Name == "Building");
+
+                    Assert.NotNull(buildingFunctionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "bar"));
+                    Assert.NotNull(buildingFunctionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "foomatic"));
+                    Assert.NotNull(buildingFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "bar"));
+                    Assert.NotNull(buildingFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "foomatic"));
+                }
+
+                [Fact]
+                public void Should_throw_when_conflicting_parameter_names_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures(
+                            map => map.Insert(
+                                f =>
+                                    {
+                                        f.Parameter(ol => ol.IsShipped, "Price");
+                                        f.Parameter(ol => ol.Price, "Price");
+                                    }));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    // TODO: Change this when functions validation added to EDM validator
+                    Assert.Throws<MappingException>(() => databaseMapping.AssertValid());
+                }
+
+                [Fact]
+                public void Should_throw_when_conflicting_function_names_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(f => f.HasName("OrderLine_Update"));
+                                    map.Update(f => f.HasName("OrderLine_Update"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    // TODO: Change this when functions validation added to EDM validator
+                    Assert.Throws<MappingException>(() => databaseMapping.AssertValid());
+                }
+
+                [Fact]
+                public void Should_throw_when_conflicting_association_function_names_configured()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Tag>()
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .MapToStoredProcedures(
+                            map =>
+                                {
+                                    map.Insert(f => f.HasName("Tag_Products_Delete"));
+                                    map.Delete(f => f.HasName("Tag_Products_Delete"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    // TODO: Change this when functions validation added to EDM validator
+                    Assert.Throws<ArgumentException>(() => databaseMapping.AssertValid());
                 }
             }
         }
