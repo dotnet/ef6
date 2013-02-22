@@ -198,12 +198,10 @@ namespace System.Data.Entity.Core.Objects
 
             objectQueryStateMock.Setup(m => m.GetExecutionPlan(It.IsAny<MergeOption?>())).Returns(objectQueryExecutionPlanMock.Object);
 
-            var objectQueryMock = new Mock<ObjectQuery<TEntity>>(objectQueryStateMock.Object)
+            return new Mock<ObjectQuery<TEntity>>(objectQueryStateMock.Object)
                                       {
                                           CallBase = true
                                       };
-
-            return objectQueryMock;
         }
     }
 }

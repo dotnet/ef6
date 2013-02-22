@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -77,6 +78,54 @@ namespace System.Data.Entity.Core.Objects
                 Assert.True(element.StartsWith("foo"));
             }
         }
+
+        [Fact]
+        public void Execute_throws_on_streaming_with_retrying_strategy()
+        {
+            var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
+            objectQuery.Streaming = true;
+
+            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
+            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            try
+            {
+                Assert.Equal(
+                    Strings.ExecutionStrategy_StreamingNotSupported,
+                    Assert.Throws<InvalidOperationException>(() => objectQuery.Execute(MergeOption.NoTracking)).Message);
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+#if !NET40
+
+        [Fact]
+        public void ExecuteAsync_throws_on_streaming_with_retrying_strategy()
+        {
+            var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
+            objectQuery.Streaming = true;
+
+            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
+            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            try
+            {
+                Assert.Equal(
+                    Strings.ExecutionStrategy_StreamingNotSupported,
+                    Assert.Throws<InvalidOperationException>(() => objectQuery.ExecuteAsync(MergeOption.NoTracking).Wait()).Message);
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+#endif
 
         [Fact]
         public void Execute_calls_ObjectQueryExecutionPlan_Execute_in_a_transaction_using_ExecutionStrategy()

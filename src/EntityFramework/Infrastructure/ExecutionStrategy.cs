@@ -35,13 +35,10 @@ namespace System.Data.Entity.Infrastructure
         protected IRetryDelayStrategy RetryDelayStrategy { get; private set; }
         protected IRetriableExceptionDetector RetriableExceptionDetector { get; private set; }
 
-        /// <summary>
-        ///     Indicates whether this <see cref="ExecutionStrategy"/> supports transactions started before the action is executed.
-        ///     Most strategies will retry the action execution after a failure and thus cannot support existing transactions.
-        /// </summary>
-        public virtual bool SupportsExistingTransactions
+        /// <inheritdoc/>
+        public bool RetriesOnFailure
         {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary>
@@ -124,6 +121,7 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
         public Task ExecuteAsync(Func<Task> taskFunc)
@@ -146,6 +144,7 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
         public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
@@ -164,12 +163,16 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="taskFunc"/>.
+        /// </typeparam>
         /// <param name="taskFunc">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <returns>
         ///     A task that will run to completion if the original task completes successfully (either the
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -183,6 +186,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
+        /// <typeparam name="TResult">
+        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="taskFunc"/>.
+        /// </typeparam>
         /// <param name="taskFunc">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
@@ -193,6 +199,7 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -243,8 +250,7 @@ namespace System.Data.Entity.Infrastructure
 
         private void EnsurePreexecutionState()
         {
-            if (!SupportsExistingTransactions
-                && Transaction.Current != null)
+            if (Transaction.Current != null)
             {
                 throw Error.ExecutionStrategy_ExistingTransaction();
             }

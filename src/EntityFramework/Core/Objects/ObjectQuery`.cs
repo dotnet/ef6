@@ -675,11 +675,18 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+
+            if (executionStrategy.RetriesOnFailure
+                && QueryState.EffectiveStreamingBehaviour)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return executionStrategy.Execute(
                 () => QueryState.ObjectContext.ExecuteInTransaction(
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false, releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false, releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
         }
 
 #if !NET40
@@ -687,11 +694,18 @@ namespace System.Data.Entity.Core.Objects
         private Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+
+            if (executionStrategy.RetriesOnFailure
+                && QueryState.EffectiveStreamingBehaviour)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return executionStrategy.ExecuteAsync(
                 () => QueryState.ObjectContext.ExecuteInTransactionAsync(
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
-                    /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                    /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
                     /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour, cancellationToken),
                 cancellationToken);
         }

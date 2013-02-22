@@ -11,27 +11,44 @@ namespace System.Data.Entity.SqlServer
     /// <summary>
     ///     An execution strategy that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
     /// </summary>
-    internal sealed class DefaultSqlExecutionStrategy : ExecutionStrategy
+    internal sealed class DefaultSqlExecutionStrategy : IExecutionStrategy
     {
-        public DefaultSqlExecutionStrategy()
-            : base(new ExponentialRetryDelayStrategy(), new SqlAzureRetriableExceptionDetector())
+        private readonly IRetriableExceptionDetector _retriableExceptionDetector = new SqlAzureRetriableExceptionDetector();
+
+        public bool RetriesOnFailure
         {
+            get { return false; }
+        }
+        
+        public void Execute(Action action)
+        {
+            if (action == null)
+            {
+                throw new ArgumentNullException("action");
+            }
+
+            Execute(
+                () =>
+                {
+                    action();
+                    return (object)null;
+                });
         }
 
-        public override bool SupportsExistingTransactions
+        public TResult Execute<TResult>(Func<TResult> func)
         {
-            get { return true; }
-        }
-
-        protected override TResult ProtectedExecute<TResult>(Func<TResult> func)
-        {
+            if (func == null)
+            {
+                throw new ArgumentNullException("func");
+            }
+            
             try
             {
                 return func();
             }
             catch (Exception ex)
             {
-                if (RetriableExceptionDetector.ShouldRetryOn(ex))
+                if (_retriableExceptionDetector.ShouldRetryOn(ex))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }
@@ -42,8 +59,52 @@ namespace System.Data.Entity.SqlServer
 
 #if !NET40
 
-        protected override async Task<TResult> ProtectedExecuteAsync<TResult>(
-            Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+        public Task ExecuteAsync(Func<Task> taskFunc)
+        {
+            if (taskFunc == null)
+            {
+                throw new ArgumentNullException("taskFunc");
+            }
+
+            return ExecuteAsync(taskFunc, CancellationToken.None);
+        }
+
+        public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
+        {
+            if (taskFunc == null)
+            {
+                throw new ArgumentNullException("taskFunc");
+            }
+
+            return ExecuteAsyncImplementation(
+                async () =>
+                          {
+                              await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
+                              return true;
+                          });
+        }
+
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc)
+        {
+            if (taskFunc == null)
+            {
+                throw new ArgumentNullException("taskFunc");
+            }
+
+            return ExecuteAsync(taskFunc, CancellationToken.None);
+        }
+
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+        {
+            if (taskFunc == null)
+            {
+                throw new ArgumentNullException("taskFunc");
+            }
+
+            return ExecuteAsyncImplementation(taskFunc);
+        }
+
+        private async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> taskFunc)
         {
             try
             {
@@ -51,7 +112,7 @@ namespace System.Data.Entity.SqlServer
             }
             catch (Exception ex)
             {
-                if (RetriableExceptionDetector.ShouldRetryOn(ex))
+                if (_retriableExceptionDetector.ShouldRetryOn(ex))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }
@@ -59,8 +120,6 @@ namespace System.Data.Entity.SqlServer
                 throw;
             }
         }
-
 #endif
-
     }
 }

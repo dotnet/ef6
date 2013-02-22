@@ -2270,7 +2270,7 @@ namespace System.Data.Entity.Core.Objects
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => objectQueryExecutionPlan.Execute<object>(this, null),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false,
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
                     releaseConnectionOnSuccess: true));
 
             foreach (var entity in results)
@@ -2459,7 +2459,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
                 entriesAffected = executionStrategy.Execute(
                     () => SaveChangesToStore(
-                        options, throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions));
+                        options, throwOnExistingTransaction: executionStrategy.RetriesOnFailure));
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -2499,7 +2499,7 @@ namespace System.Data.Entity.Core.Objects
                 entriesAffected = await executionStrategy.ExecuteAsync(
                     () => SaveChangesToStoreAsync(
                         options,
-                              /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions, cancellationToken))
+                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken))
                                                          .ConfigureAwait(continueOnCapturedContext: false);
             }
 
@@ -2950,10 +2950,17 @@ namespace System.Data.Entity.Core.Objects
             }
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.Streaming)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true,
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: true,
                     releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
@@ -2981,7 +2988,7 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
-                    () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions,
+                    () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: executionStrategy.RetriesOnFailure,
                     startLocalTransaction: true, releaseConnectionOnSuccess: true));
         }
 
@@ -3422,7 +3429,7 @@ namespace System.Data.Entity.Core.Objects
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: true,
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: true,
                     releaseConnectionOnSuccess: true));
         }
 
@@ -3457,7 +3464,7 @@ namespace System.Data.Entity.Core.Objects
             return executionStrategy.ExecuteAsync(
                 () => ExecuteInTransactionAsync(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                          /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                          /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
                           /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
                 cancellationToken);
         }
@@ -3553,11 +3560,18 @@ namespace System.Data.Entity.Core.Objects
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.Streaming)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => ExecuteStoreQueryInternal<TElement>(
                         commandText, entitySetName, executionOptions, parameters),
-                    throwOnExistingTransaction: !executionStrategy.SupportsExistingTransactions, startLocalTransaction: false,
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
                     releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
@@ -3754,11 +3768,18 @@ namespace System.Data.Entity.Core.Objects
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+
+            if (executionStrategy.RetriesOnFailure
+                && executionOptions.Streaming)
+            {
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+            }
+
             return executionStrategy.ExecuteAsync(
                 () => ExecuteInTransactionAsync(
                     () => ExecuteStoreQueryInternalAsync<TElement>(
                         commandText, entitySetName, executionOptions, cancellationToken, parameters),
-                          /*throwOnExistingTransaction:*/ !executionStrategy.SupportsExistingTransactions,
+                          /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
                           /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming, cancellationToken),
                 cancellationToken);
         }

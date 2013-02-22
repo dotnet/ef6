@@ -23,14 +23,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void SupportsExistingTransactions_returns_false()
+        public void RetriesOnFailure_returns_true()
         {
-            var mockExecutionStrategy = new Mock<ExecutionStrategy>(new Mock<IRetryDelayStrategy>().Object, new Mock<IRetriableExceptionDetector>().Object)
-                                            {
-                                                CallBase = true
-                                            }.Object;
+            var mockExecutionStrategy = new ExecutionStrategy(
+                new Mock<IRetryDelayStrategy>().Object, new Mock<IRetriableExceptionDetector>().Object);
 
-            Assert.False(mockExecutionStrategy.SupportsExistingTransactions);
+            Assert.True(mockExecutionStrategy.RetriesOnFailure);
         }
 
         public class Execute

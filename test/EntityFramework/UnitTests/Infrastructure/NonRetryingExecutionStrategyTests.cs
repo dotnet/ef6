@@ -10,9 +10,9 @@ namespace System.Data.Entity.Infrastructure
     public class NonRetryingExecutionStrategyTests
     {
         [Fact]
-        public void SupportsExistingTransactions_returns_true()
+        public void RetriesOnFailure_returns_false()
         {
-            Assert.True(new NonRetryingExecutionStrategy().SupportsExistingTransactions);
+            Assert.False(new NonRetryingExecutionStrategy().RetriesOnFailure);
         }
 
         [Fact]

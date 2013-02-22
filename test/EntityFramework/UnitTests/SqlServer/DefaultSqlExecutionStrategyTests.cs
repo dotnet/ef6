@@ -10,9 +10,23 @@ namespace System.Data.Entity.SqlServer
     public class DefaultSqlExecutionStrategyTests
     {
         [Fact]
-        public void SupportsExistingTransactions_returns_true()
+        public void RetriesOnFailure_returns_false()
         {
-            Assert.True(new DefaultSqlExecutionStrategy().SupportsExistingTransactions);
+            Assert.False(new DefaultSqlExecutionStrategy().RetriesOnFailure);
+        }
+
+        [Fact]
+        public void Execute_throws_on_null_parameters()
+        {
+            var executionStrategy = new DefaultSqlExecutionStrategy();
+
+            Assert.Equal(
+                "action",
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.Execute(null)).ParamName);
+
+            Assert.Equal(
+                "func",
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.Execute((Func<object>)null)).ParamName);
         }
 
         [Fact]
@@ -79,6 +93,19 @@ namespace System.Data.Entity.SqlServer
 
 #if !NET40
 
+        [Fact]
+        public void ExecuteAsync_throws_on_null_parameter()
+        {
+            var executionStrategy = new DefaultSqlExecutionStrategy();
+
+            Assert.Equal(
+                "taskFunc",
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null)).ParamName);
+
+            Assert.Equal(
+                "taskFunc",
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null)).ParamName);
+        }
         [Fact]
         public void ExecuteAsync_Action_doesnt_retry_on_transient_exceptions()
         {

@@ -46,9 +46,9 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void The_root_resolver_returns_null_execution_strategy_for_null_key()
+        public void GetService_throws_for_null_key()
         {
-            Assert.Null(new ExecutionStrategyResolver().GetService<IExecutionStrategy>(null));
+            Assert.Throws<ArgumentNullException>(() => new ExecutionStrategyResolver().GetService<IExecutionStrategy>(null));
         }
     }
 }

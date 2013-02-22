@@ -824,6 +824,28 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
+            public void Throws_on_streaming_with_retrying_strategy()
+            {
+                var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Assert.Throws<InvalidOperationException>(() => 
+                            objectContext.ExecuteStoreQuery<object>("{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, streaming:true))).Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+            }
+
+            [Fact]
             public void Connection_is_released_after_reader_exception()
             {
                 var dbCommandMock = new Mock<DbCommand>();
@@ -1240,6 +1262,32 @@ namespace System.Data.Entity.Core.Objects
                 finally
                 {
                     FakeSqlProviderServices.Instance.EntityCommandDefinition = null;
+                }
+            }
+
+            [Fact]
+            public void Throws_on_streaming_with_retrying_strategy()
+            {
+                var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
+                SetupFooFunction(objectContext.MetadataWorkspace);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Assert.Throws<InvalidOperationException>(
+                            () =>
+                            objectContext.ExecuteFunction<object>(
+                                "Foo",
+                                new ExecutionOptions(MergeOption.AppendOnly, streaming: true))).Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
                 }
             }
 
@@ -2149,6 +2197,31 @@ namespace System.Data.Entity.Core.Objects
 
                 storeDataReaderMock.Verify(m => m.ReadAsync(It.IsAny<CancellationToken>()), Times.Once());
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
+            }
+
+            [Fact]
+            public void Throws_on_streaming_with_retrying_strategy()
+            {
+                var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
+
+                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
+                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                try
+                {
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Assert.Throws<InvalidOperationException>(
+                            () =>
+                            objectContext.ExecuteStoreQueryAsync<object>(
+                                "{0} Foo",
+                                new ExecutionOptions(MergeOption.AppendOnly, streaming: true)).Wait()).Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
             }
 
             [Fact]

@@ -13158,7 +13158,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Existing transactions are not supported with the current execution strategy."
+        ///     A string like "Existing transactions are not supported by the current execution strategy."
         /// </summary>
         internal static string ExecutionStrategy_ExistingTransaction
         {
@@ -13291,6 +13291,14 @@ namespace System.Data.Entity.Resources
         internal static string DbContext_TransactionAlreadyEnlistedInUserTransaction
         {
             get { return EntityRes.GetString(EntityRes.DbContext_TransactionAlreadyEnlistedInUserTransaction); }
+        }
+
+        /// <summary>
+        ///     A string like "Streaming queries are not supported by the current execution strategy."
+        /// </summary>
+        internal static string ExecutionStrategy_StreamingNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_StreamingNotSupported); }
         }
     }
 
@@ -14869,7 +14877,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "Existing transactions are not supported with the current execution strategy."
+        ///     InvalidOperationException with message like "Existing transactions are not supported by the current execution strategy."
         /// </summary>
         internal static Exception ExecutionStrategy_ExistingTransaction()
         {
@@ -16649,6 +16657,7 @@ namespace System.Data.Entity.Resources
         internal const string DbContext_InvalidTransactionNoConnection = "DbContext_InvalidTransactionNoConnection";
         internal const string DbContext_TransactionAlreadyStarted = "DbContext_TransactionAlreadyStarted";
         internal const string DbContext_TransactionAlreadyEnlistedInUserTransaction = "DbContext_TransactionAlreadyEnlistedInUserTransaction";
+        internal const string ExecutionStrategy_StreamingNotSupported = "ExecutionStrategy_StreamingNotSupported";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

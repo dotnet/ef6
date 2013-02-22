@@ -28,6 +28,11 @@ namespace System.Data.Entity.SqlServer
         {
             if (type == typeof(IExecutionStrategy))
             {
+                if (key == null)
+                {
+                    throw new ArgumentNullException("key");
+                }
+
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)
                 {
@@ -40,8 +45,7 @@ namespace System.Data.Entity.SqlServer
                 }
 
                 if (_serverName != null
-                    &&
-                    !executionStrategyKey.DataSourceName.Equals(_serverName, StringComparison.Ordinal))
+                    && !executionStrategyKey.DataSourceName.Equals(_serverName, StringComparison.Ordinal))
                 {
                     return null;
                 }

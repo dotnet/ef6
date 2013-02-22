@@ -12,9 +12,9 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public class NonRetryingExecutionStrategy : IExecutionStrategy
     {
-        public bool SupportsExistingTransactions
+        public bool RetriesOnFailure
         {
-            get { return true; }
+            get { return false; }
         }
 
         public void Execute(Action action)

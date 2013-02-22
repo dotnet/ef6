@@ -25,6 +25,12 @@ namespace System.Data.Entity.SqlServer
         }
 
         [Fact]
+        public void GetService_throws_for_null_key()
+        {
+            Assert.Throws<ArgumentNullException>(() => new SqlExecutionStrategyResolver(() => new Mock<IExecutionStrategy>().Object, null).GetService<IExecutionStrategy>(null));
+        }
+
+        [Fact]
         public void GetService_returns_null_when_the_key_is_not_ExecutionStrategyKey()
         {
             Assert.Null(

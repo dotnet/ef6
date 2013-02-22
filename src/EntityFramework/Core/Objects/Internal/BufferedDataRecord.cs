@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly string[] _dataTypeNames;
         private readonly Type[] _fieldTypes;
         private readonly string[] _columnNames;
-        private readonly FieldNameLookup _fieldNameLookup;
+        private readonly Lazy<FieldNameLookup> _fieldNameLookup;
 
         public BufferedDataRecord(List<object[]> resultSet, string[] dataTypeNames, Type[] fieldTypes, string[] columnNames)
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             _dataTypeNames = dataTypeNames;
             _fieldTypes = fieldTypes;
             _columnNames = columnNames;
-            _fieldNameLookup = new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1);
+            _fieldNameLookup = new Lazy<FieldNameLookup>(() => new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1), isThreadSafe:false);
         }
 
         public object this[string name]
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public int GetOrdinal(string name)
         {
-            return _fieldNameLookup.GetOrdinal(name);
+            return _fieldNameLookup.Value.GetOrdinal(name);
         }
 
         public bool Read()

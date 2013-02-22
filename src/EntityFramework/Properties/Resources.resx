@@ -692,7 +692,7 @@
   <data name="DbSet_WrongKeyValueType" xml:space="preserve">
     <value>The type of one of the primary key values did not match the type defined in the entity. See inner exception for details.</value>
   </data>
-    <data name="DbSet_WrongEntityTypeFound" xml:space="preserve">
+  <data name="DbSet_WrongEntityTypeFound" xml:space="preserve">
     <value>The entity found was of type {0} when an entity of type {1} was requested.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
@@ -5243,7 +5243,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ExecutionStrategy_ExistingTransaction" xml:space="preserve">
-    <value>Existing transactions are not supported with the current execution strategy.</value>
+    <value>Existing transactions are not supported by the current execution strategy.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ExecutionStrategy_MinimumMustBeLessThanMaximum" xml:space="preserve">
@@ -5303,5 +5303,8 @@
   </data>
   <data name="DbContext_TransactionAlreadyEnlistedInUserTransaction" xml:space="preserve">
     <value>The connection is already enlisted in a user transaction. The first transaction should be completed before attempting to engage the connection in another transaction.</value>
+  </data>
+  <data name="ExecutionStrategy_StreamingNotSupported" xml:space="preserve">
+    <value>Streaming queries are not supported by the current execution strategy.</value>
   </data>
 </root>

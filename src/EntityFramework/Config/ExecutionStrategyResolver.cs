@@ -4,6 +4,7 @@ namespace System.Data.Entity.Config
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal class ExecutionStrategyResolver : IDbDependencyResolver
@@ -12,6 +13,8 @@ namespace System.Data.Entity.Config
         {
             if (type == typeof(IExecutionStrategy))
             {
+                Check.NotNull(key, "key");
+
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)
                 {
