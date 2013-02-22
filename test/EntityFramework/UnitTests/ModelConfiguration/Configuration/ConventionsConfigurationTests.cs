@@ -1,15 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
+namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;
@@ -184,13 +182,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyPropertyConfiguration_should_run_property_configuration_conventions()
         {
-            var mockConvention = new Mock<IConfigurationConvention<PropertyInfo, StringPropertyConfiguration>>();
+            var mockConvention = new Mock<IConfigurationConvention<PropertyInfo, Properties.Primitive.StringPropertyConfiguration>>();
             var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
             var mockPropertyInfo = new MockPropertyInfo(typeof(string), "S");
 
-            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new StringPropertyConfiguration());
+            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration());
 
-            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<StringPropertyConfiguration>>()), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -227,16 +225,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
         [Fact]
         public void ApplyPropertyConfiguration_should_run_compatible_property_configuration_conventions()
         {
-            var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo, StringPropertyConfiguration>>();
+            var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo, Properties.Primitive.StringPropertyConfiguration>>();
             var mockConvention2 = new Mock<IConfigurationConvention<PropertyInfo, PropertyConfiguration>>();
             var mockConvention3 = new Mock<IConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new IConvention[] { mockConvention1.Object, mockConvention2.Object, mockConvention3.Object });
             var mockPropertyInfo = new MockPropertyInfo(typeof(string), "S");
 
-            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new StringPropertyConfiguration());
+            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration());
 
-            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<StringPropertyConfiguration>>()), Times.AtMostOnce());
+            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.AtMostOnce());
             mockConvention2.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.AtMostOnce());
             mockConvention3.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<NavigationPropertyConfiguration>>()), Times.Never());
         }

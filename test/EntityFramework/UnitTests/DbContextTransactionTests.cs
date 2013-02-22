@@ -1,18 +1,14 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity
 {
     using System.Data;
     using System.Data.Common;
-    using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
     using Moq;
     using Moq.Protected;
     using Xunit;
 
-    /// <summary>
-    ///     Unit tests for DbContextTransaction.
-    /// </summary>
     public class DbContextTransactionTests : TestBase
     {
         #region Constructors

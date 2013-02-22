@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity.Infrastructure
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Linq;

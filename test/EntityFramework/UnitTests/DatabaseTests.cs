@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity
 {
-    using System;
     using System.Data.Common;
-    using System.Data.Entity;
+    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -183,7 +184,7 @@ namespace ProductivityApiUnitTests
                 var internalContextMock = new Mock<InternalContextForMock>();
                 internalContextMock.Setup(
                     m => m.ExecuteSqlCommandAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
-                    .Returns(Task.FromResult(1));
+                                   .Returns(Task.FromResult(1));
                 var database = new Database(internalContextMock.Object);
 
                 Assert.NotNull(database.ExecuteSqlCommandAsync("query").Result);
@@ -193,6 +194,55 @@ namespace ProductivityApiUnitTests
         }
 
 #endif
+
+        public class DefaultConnectionFactory
+        {
+            [Fact]
+            public void Default_is_SqlServerConnectionFactory()
+            {
+#pragma warning disable 612,618
+                Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);
+#pragma warning restore 612,618
+                Assert.IsType<SqlConnectionFactory>(DbConfiguration.GetService<IDbConnectionFactory>());
+            }
+
+            private class FakeConnectionFactory : IDbConnectionFactory
+            {
+                public DbConnection CreateConnection(string nameOrConnectionString)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            [Fact]
+            public void Setting_DefaultConnectionFactory_after_configuration_override_is_in_place_has_no_effect()
+            {
+                try
+                {
+#pragma warning disable 612,618
+                    // This call will have no effect because the functional tests are setup with a DbConfiguration
+                    // that explicitly overrides this using an OnLockingConfiguration handler.
+                    Database.DefaultConnectionFactory = new FakeConnectionFactory();
+
+                    Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);
+#pragma warning restore 612,618
+                }
+                finally
+                {
+                    typeof(Database).GetMethod("ResetDefaultConnectionFactory", BindingFlags.Static | BindingFlags.NonPublic)
+                                    .Invoke(null, null);
+                    Database.ResetDefaultConnectionFactory();
+                }
+            }
+
+            [Fact]
+            public void Throws_when_set_to_null()
+            {
+#pragma warning disable 612,618
+                Assert.Equal("value", Assert.Throws<ArgumentNullException>(() => Database.DefaultConnectionFactory = null).ParamName);
+#pragma warning restore 612,618
+            }
+        }
 
         public class SqlQuery_Generic
         {

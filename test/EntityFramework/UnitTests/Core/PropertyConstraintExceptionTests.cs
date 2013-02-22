@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity.Core
 {
     using System;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity.Internal
 {
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.SqlClient;
     using System.Reflection;

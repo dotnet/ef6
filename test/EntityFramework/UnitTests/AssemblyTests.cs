@@ -3,8 +3,11 @@
 namespace System.Data.Entity
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
     using System.Reflection;
+    using System.Security;
     using Xunit;
 
     public class AssemblyTests : TestBase
@@ -89,6 +92,33 @@ namespace System.Data.Entity
 #else
             Assert.Same(_dataAnnotationsDll, type.Assembly);
 #endif
+        }
+
+        [Fact]
+        public void EntityFramework_assembly_has_no_security_attributes()
+        {
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(DbContext).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
+        }
+
+        [Fact]
+        public void EntityFramework_SqlServer_assembly_has_no_security_attributes()
+        {
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(SqlProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
+        }
+
+        [Fact]
+        public void EntityFramework_SqlCompact_assembly_has_no_security_attributes()
+        {
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityTransparentAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityCriticalAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<AllowPartiallyTrustedCallersAttribute>().Any());
+            Assert.False(typeof(SqlCeProviderServices).Assembly.GetCustomAttributes(true).OfType<SecurityRulesAttribute>().Any());
         }
     }
 }

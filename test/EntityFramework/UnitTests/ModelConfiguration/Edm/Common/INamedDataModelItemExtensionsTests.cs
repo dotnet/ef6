@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Edm.Common.UnitTests
+namespace System.Data.Entity.ModelConfiguration.Edm.Common
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;

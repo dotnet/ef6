@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity.Infrastructure
 {
     using System;
     using System.Configuration;
@@ -9,10 +9,8 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
@@ -137,7 +135,7 @@ namespace ProductivityApiUnitTests
             var contextInfo = new DbContextInfo(typeof(SimpleContext));
 
             Assert.True(!string.IsNullOrWhiteSpace(contextInfo.ConnectionString));
-            Assert.Equal("ProductivityApiUnitTests.DbContextInfoTests+SimpleContext", contextInfo.ConnectionStringName);
+            Assert.Equal(typeof(SimpleContext).FullName, contextInfo.ConnectionStringName);
         }
 
         [Fact]
@@ -274,7 +272,7 @@ namespace ProductivityApiUnitTests
             var contextInfo = new DbContextInfo(typeof(ContextWithCompiledModel));
 
             Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-            Assert.Equal("ProductivityApiUnitTests.DbContextInfoTests+ContextWithCompiledModel", contextInfo.ConnectionStringName);
+            Assert.Equal(typeof(ContextWithCompiledModel).FullName, contextInfo.ConnectionStringName);
         }
 
         private class ContextWithExistingConnection : DbContext
@@ -453,7 +451,7 @@ namespace ProductivityApiUnitTests
                 () =>
                     {
                         var config = CreateEmptyConfig().AddDefaultConnectionFactory(
-                            "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                            typeof(FakeDbContextInfoConnectionFactory).FullName + ", EntityFramework.UnitTests",
                             new string[0]);
 
                         var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
@@ -494,7 +492,7 @@ namespace ProductivityApiUnitTests
                         var config =
                             AddConnectionStrings(
                                 CreateEmptyConfig().AddDefaultConnectionFactory(
-                                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                                    typeof(FakeDbContextInfoConnectionFactory).FullName + ", EntityFramework.UnitTests",
                                     new string[0]));
 
                         var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
@@ -517,7 +515,7 @@ namespace ProductivityApiUnitTests
                     {
                         var config = CreateEmptyConfig().
                             AddDefaultConnectionFactory(
-                                "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                                typeof(FakeDbContextInfoConnectionFactory).FullName + ", EntityFramework.UnitTests",
                                 new string[0]);
 
                         var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config);
@@ -668,7 +666,7 @@ namespace ProductivityApiUnitTests
         {
             var config = AddConnectionStrings(
                 CreateEmptyConfig().AddDefaultConnectionFactory(
-                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                    typeof(FakeDbContextInfoConnectionFactory).FullName + ", EntityFramework.UnitTests",
                     new string[0]));
 
             var contextInfo = new DbContextInfo(typeof(SimpleContext), config, ProviderRegistry.SqlCe4_ProviderInfo);
@@ -689,7 +687,7 @@ namespace ProductivityApiUnitTests
         {
             var config = AddConnectionStrings(
                 CreateEmptyConfig().AddDefaultConnectionFactory(
-                    "ProductivityApiUnitTests.FakeDbContextInfoConnectionFactory, EntityFramework.UnitTests",
+                    typeof(FakeDbContextInfoConnectionFactory).FullName + ", EntityFramework.UnitTests",
                     new string[0]));
 
             var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), config, ProviderRegistry.SqlCe4_ProviderInfo);

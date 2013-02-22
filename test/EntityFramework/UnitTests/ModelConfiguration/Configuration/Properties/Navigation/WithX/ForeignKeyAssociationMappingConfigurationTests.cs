@@ -1,18 +1,15 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Configuration.UnitTests
+namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation
 {
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
-    using System.Data.Entity.ModelConfiguration.Edm.Db.Mapping;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
-    public sealed class IndependentAssociationMappingConfigurationTests
+    public sealed class ForeignKeyAssociationMappingConfigurationTests
     {
         [Fact]
         public void Configure_should_split_key_constraint_when_to_table_configuration()

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity.Internal
 {
     using System;
     using System.Collections;
@@ -8,13 +8,14 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;
     using Moq;
     using Xunit;
+
+    #region Test fixtures
 
     public class FakeEntity1
     {
@@ -88,10 +89,12 @@ namespace ProductivityApiUnitTests
     {
     }
 
+    #endregion
+
     /// <summary>
     ///     Unit tests for the DbSet/ObjectSet discovery service.
     /// </summary>
-    public class SetDiscoveryTests : TestBase
+    public class DbSetDiscoveryServiceTests : TestBase
     {
         #region Positive DbContext discovery and initialization tests
 

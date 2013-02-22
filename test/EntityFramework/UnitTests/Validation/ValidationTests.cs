@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity
+namespace System.Data.Entity.Validation
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal.Validation;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Validation;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -869,9 +868,8 @@ namespace System.Data.Entity
                     });
 
             Assert.Equal(
-                new DbUnexpectedValidationException(
-                    Strings.DbUnexpectedValidationException_IValidatableObject("Airport information", "System.Data.Entity.AirportDetails")).
-                    Message, Assert.Throws<DbUnexpectedValidationException>(
+                    Strings.DbUnexpectedValidationException_IValidatableObject("Airport information", typeof(AirportDetails).FullName),
+                    Assert.Throws<DbUnexpectedValidationException>(
                         () => validator.Validate(
                             CreateEntityValidationContext(mockInternalEntityEntry.Object),
                             mockInternalEntityEntry.Object.Property("Airport"))).Message);

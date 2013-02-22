@@ -102,9 +102,7 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
@@ -113,17 +111,17 @@
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineParameterAttributeTests.cs" />
-    <Compile Include="CommandLine\_TestHelpers\BadPositionArgMissingTwo.cs" />
-    <Compile Include="CommandLine\_TestHelpers\BadPositionArgNoOne.cs" />
+    <Compile Include="CommandLine\TestHelpers\BadPositionArgMissingTwo.cs" />
+    <Compile Include="CommandLine\TestHelpers\BadPositionArgNoOne.cs" />
     <Compile Include="CommandLine\CommandLineArgumentsAttributeTest.cs" />
     <Compile Include="CommandLine\CommandLineTest.cs" />
-    <Compile Include="CommandLine\_TestHelpers\InferredTestArgs.cs" />
-    <Compile Include="CommandLine\_TestHelpers\PropWithNoCommandName.cs" />
-    <Compile Include="CommandLine\_TestHelpers\TestArgs.cs" />
-    <Compile Include="CommandLine\_TestHelpers\TestCommandEnvironment.cs" />
-    <Compile Include="CommandLine\_TestHelpers\ThreeRequiredPositionArgs.cs" />
-    <Compile Include="CommandLine\_TestHelpers\TwoPropsWithSameSwitch.cs" />
-    <Compile Include="CommandLine\_TestHelpers\XCopyCommandArgs.cs" />
+    <Compile Include="CommandLine\TestHelpers\InferredTestArgs.cs" />
+    <Compile Include="CommandLine\TestHelpers\PropWithNoCommandName.cs" />
+    <Compile Include="CommandLine\TestHelpers\TestArgs.cs" />
+    <Compile Include="CommandLine\TestHelpers\TestCommandEnvironment.cs" />
+    <Compile Include="CommandLine\TestHelpers\ThreeRequiredPositionArgs.cs" />
+    <Compile Include="CommandLine\TestHelpers\TwoPropsWithSameSwitch.cs" />
+    <Compile Include="CommandLine\TestHelpers\XCopyCommandArgs.cs" />
     <Compile Include="Config\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Config\CachingDependencyResolverTests.cs" />
     <Compile Include="Config\CompositeResolverTests.cs" />
@@ -250,6 +248,7 @@
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
+    <Compile Include="Infrastructure\DbUpdateExceptionTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyTests.cs" />
@@ -321,7 +320,7 @@
     <Compile Include="SqlServer\SqlSpatialServicesForConversionsTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
-    <Compile Include="Utilities\AppConfigTestBase.cs" />
+    <Compile Include="TestHelpers\AppConfigTestBase.cs" />
     <Compile Include="Core\Common\DbProviderServicesTests.cs" />
     <Compile Include="Core\Common\Utils\CommandHelperTests.cs" />
     <Compile Include="Core\EntityClient\EntityCommandDefinitionTests.cs" />
@@ -461,7 +460,7 @@
     </Compile>
     <Compile Include="TestHelpers\Fake\FakeSqlProviderFactory.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlProviderServices.cs" />
-    <Compile Include="TestHelpers\TestInternalPropertyValues`.cs" />
+    <Compile Include="Internal\TestHelpers\TestInternalPropertyValues`.cs" />
     <Compile Include="ModelConfiguration\ComplexTypeConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationRegistrarTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsConfigurationTests.cs" />
@@ -471,12 +470,12 @@
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\HasX\ManyNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\HasX\OptionalNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\HasX\RequiredNavigationPropertyConfigurationTests.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\IndependentAssociationMappingConfigurationTests.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\ManyToManyAssociationMappingConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\ForeignKeyAssociationMappingConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\ManyToManyAssociationMappingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\NavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\CascadableNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\DependentNavigationPropertyConfigurationTests.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\IndependentNavigationPropertyConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\ForeignKeyNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\WithX\ManyToManyNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\BinaryPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\DateTimePropertyConfigurationTests.cs" />
@@ -557,31 +556,29 @@
     <Compile Include="Utilities\PropertyInfoExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPathTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
-    <Compile Include="InternalsVisibleTo.cs" />
-    <Compile Include="AppConfigTests.cs" />
-    <Compile Include="ClonedObjectContextTests.cs" />
-    <Compile Include="ConcurrencyTests.cs" />
-    <Compile Include="DbConnectionInfoTests.cs" />
-    <Compile Include="DatabaseInitializationTests.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="Internal\AppConfigTests.cs" />
+    <Compile Include="Internal\ClonedObjectContextTests.cs" />
+    <Compile Include="Infrastructure\DbUpdateConcurrencyExceptionTests.cs" />
+    <Compile Include="Infrastructure\DbConnectionInfoTests.cs" />
+    <Compile Include="DatabaseInitializerTests.cs" />
     <Compile Include="DatabaseTests.cs" />
     <Compile Include="DatabindingTests.cs" />
-    <Compile Include="DbConnectionFactoryTests.cs" />
-    <Compile Include="DbContextInfoTests.cs" />
+    <Compile Include="Infrastructure\DbConnectionFactoryTests.cs" />
+    <Compile Include="Infrastructure\DbContextInfoTests.cs" />
     <Compile Include="DbContextTests.cs" />
     <Compile Include="Infrastructure\DbEntityEntryTests.cs" />
-    <Compile Include="DbPropertyValuesTests.cs" />
+    <Compile Include="Infrastructure\DbPropertyValuesTests.cs" />
     <Compile Include="DbSetTests.cs" />
     <Compile Include="Infrastructure\DbRawSqlQueryTests.cs" />
-    <Compile Include="DefaultConnectionFactoryTests.cs" />
-    <Compile Include="EdmMetadataRepositoryTests.cs" />
-    <Compile Include="InternalConnectionTests.cs" />
-    <Compile Include="ModelHashCalculatorTests.cs" />
+    <Compile Include="Internal\EdmMetadataRepositoryTests.cs" />
+    <Compile Include="Internal\InternalConnectionTests.cs" />
+    <Compile Include="Internal\ModelHashCalculatorTests.cs" />
     <Compile Include="MultiThreadingTests.cs" />
-    <Compile Include="PropertyConstraintExceptionTests.cs" />
-    <Compile Include="SetDiscoveryTests.cs" />
-    <Compile Include="ValidationTests.cs" />
+    <Compile Include="Core\PropertyConstraintExceptionTests.cs" />
+    <Compile Include="Internal\DbSetDiscoveryServiceTests.cs" />
+    <Compile Include="Validation\ValidationTests.cs" />
     <Compile Include="WriteEdmxTests.cs" />
-    <Compile Include="TargetAssemblyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FinalPublicKey.snk">

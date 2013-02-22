@@ -8,7 +8,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
-    using System.Data.Entity.Utilities;
     using Xunit;
 
     public class ProviderConfigTests

@@ -4,7 +4,6 @@ namespace System.Data.Entity
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
     /// <summary>

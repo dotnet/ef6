@@ -15,7 +15,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;

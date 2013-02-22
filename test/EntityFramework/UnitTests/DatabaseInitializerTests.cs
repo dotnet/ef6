@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace ProductivityApiUnitTests
+namespace System.Data.Entity
 {
     using System;
-    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
@@ -17,7 +16,7 @@ namespace ProductivityApiUnitTests
     /// <summary>
     ///     Unit tests for database initialization.
     /// </summary>
-    public class DatabaseInitializationTests : TestBase
+    public class DatabaseInitializerTests : TestBase
     {
         #region Helpers
 
