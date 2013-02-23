@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Create_factory_method_sets_properties_and_seals_the_type()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             var entitySet =
                 EntitySet.Create(

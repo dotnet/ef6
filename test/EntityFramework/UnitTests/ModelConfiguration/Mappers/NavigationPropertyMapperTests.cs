@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                                              ModelNamespace = "Foo"
                                          };
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -64,10 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType
-                                 {
-                                     Name = "Source"
-                                 };
+            var entityType = new EntityType("Source", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
 
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
@@ -91,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -113,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
@@ -129,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
@@ -152,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var modelConfiguration = new ModelConfiguration();
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 

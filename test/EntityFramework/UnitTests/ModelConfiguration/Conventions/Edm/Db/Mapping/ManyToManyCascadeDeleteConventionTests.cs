@@ -28,10 +28,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             table.AddForeignKey(foreignKeyConstraint);
 
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
                       };
 
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;

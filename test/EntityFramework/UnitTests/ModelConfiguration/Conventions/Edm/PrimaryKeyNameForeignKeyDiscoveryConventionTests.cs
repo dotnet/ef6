@@ -119,9 +119,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private static AssociationType CreateAssociationType()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 

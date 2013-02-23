@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Properties_collection_is_live_until_entity_goes_readonly()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.False(entityType.IsReadOnly);
             Assert.NotSame(entityType.Properties, entityType.Properties);
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_add_and_remove_foreign_key_builders()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mockForeignKeyBuilder = new Mock<ForeignKeyBuilder>();
 
             entityType.AddForeignKey(mockForeignKeyBuilder.Object);
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_list_of_declared_key_properties()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.DeclaredKeyProperties);
 
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             entityType.RemoveMember(property);
 
-            var baseType = new EntityType();
+            var baseType = new EntityType("E", "N", DataSpace.CSpace);
             baseType.AddKeyMember(property);
 
             entityType.BaseType = baseType;
@@ -65,11 +65,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_list_of_declared_navigation_properties()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.DeclaredNavigationProperties);
 
-            var property = new NavigationProperty("N", TypeUsage.Create(new EntityType()));
+            var property = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)));
 
             entityType.AddMember(property);
 
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             entityType.RemoveMember(property);
 
-            var baseType = new EntityType();
+            var baseType = new EntityType("E", "N", DataSpace.CSpace);
             baseType.AddMember(property);
 
             entityType.BaseType = baseType;
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_list_of_declared_properties()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.DeclaredProperties);
 
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             entityType.RemoveMember(property);
 
-            var baseType = new EntityType();
+            var baseType = new EntityType("E", "N", DataSpace.CSpace);
             baseType.AddMember(property);
 
             entityType.BaseType = baseType;
@@ -113,11 +113,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_list_of_declared_members()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.DeclaredMembers);
 
-            var property1 = new NavigationProperty("N", TypeUsage.Create(new EntityType()));
+            var property1 = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)));
             var property2 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityType.RemoveMember(property1);
             entityType.RemoveMember(property2);
 
-            var baseType = new EntityType();
+            var baseType = new EntityType("E", "N", DataSpace.CSpace);
             baseType.AddMember(property1);
             baseType.AddMember(property2);
 
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Properties_list_should_be_live_on_reread()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.Properties);
 

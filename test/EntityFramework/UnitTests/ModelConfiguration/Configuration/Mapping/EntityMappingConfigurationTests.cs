@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             var entityTypeMapping = new StorageEntityTypeMapping(null);
 
-            entityTypeMapping.AddType(new EntityType());
+            entityTypeMapping.AddType(new EntityType("E", "N", DataSpace.CSpace));
 
             var databaseMapping =
                 new DbDatabaseMapping().Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));

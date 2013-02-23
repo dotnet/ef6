@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
                 factory.LogLoadMessage("Cheese", entityType);
 
                 mockLogger.Verify(m => m.LogLoadMessage("Cheese", entityType));
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
                 factory.LogError("Cheese", entityType);
 
                 mockLogger.Verify(m => m.CreateErrorMessageWithTypeSpecificLoadLogs("Cheese", entityType));
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(mockLoader.Object);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
                 factory.AddToTypesInAssembly(entityType);
 
                 Assert.Same(entityType, cacheEntry.TypesInAssembly.Single());

@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_schema()
         {
             var function
-                = new EdmFunction
+                = new EdmFunction("F", "N", DataSpace.SSpace)
                       {
                           Schema = "Foo"
                       };
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_full_name()
         {
-            var function = new EdmFunction();
+            var function = new EdmFunction("F", "N", DataSpace.SSpace);
 
             Assert.Equal("N.F", function.FullName);
 

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Resources;
     using Xunit;
 
     public class ExecutionStrategyKeyTests
@@ -9,14 +10,18 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Constructor_throws_on_invalid_parameters()
         {
-            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey(null, ""))
-                  .ValidateMessage("ArgumentIsNullOrWhitespace", "invariantProviderName");
-            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("", "b"))
-                  .ValidateMessage("ArgumentIsNullOrWhitespace", "invariantProviderName");
-            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", null))
-                  .ValidateMessage("ArgumentIsNullOrWhitespace", "dataSource");
-            Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", ""))
-                  .ValidateMessage("ArgumentIsNullOrWhitespace", "dataSource");
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("invariantProviderName"),
+                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey(null, "")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("invariantProviderName"),
+                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("", "b")).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("dataSource"),
+                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", null)).Message);
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("dataSource"),
+                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", "")).Message);
         }
 
         [Fact]

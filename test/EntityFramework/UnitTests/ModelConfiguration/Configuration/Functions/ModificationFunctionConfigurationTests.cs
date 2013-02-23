@@ -98,7 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "Bar");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var property1 = new EdmProperty("P1");
             property1.SetClrPropertyInfo(mockPropertyInfo1);
@@ -132,16 +132,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                             Parameters = new[] { functionParameter1, functionParameter2, functionParameter3 }
                         });
 
-            var associationType = new AssociationType();
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             var associationEndMember1
-                = new AssociationEndMember("AE1", new EntityType())
+                = new AssociationEndMember("AE1", new EntityType("E", "N", DataSpace.CSpace))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
 
             var associationEndMember2
-                = new AssociationEndMember("AE2", new EntityType())
+                = new AssociationEndMember("AE2", new EntityType("E", "N", DataSpace.CSpace))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
@@ -157,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.Configure(
                 new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
+                    new EntityType("E", "N", DataSpace.CSpace),
                     function,
                     new[]
                         {
@@ -196,24 +196,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Parameter(new PropertyPath(new[] { mockPropertyInfo1.Object, mockPropertyInfo2.Object }), "Foo");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var property1 = new EdmProperty("P1");
             property1.SetClrPropertyInfo(mockPropertyInfo1);
 
-            var function = new EdmFunction();
+            var function = new EdmFunction("F", "N", DataSpace.SSpace);
             var functionParameter1 = new FunctionParameter();
 
-            var associationType = new AssociationType();
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             var associationEndMember1
-                = new AssociationEndMember("AE1", new EntityType())
+                = new AssociationEndMember("AE1", new EntityType("E", "N", DataSpace.CSpace))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
 
             var associationEndMember2
-                = new AssociationEndMember("AE2", new EntityType())
+                = new AssociationEndMember("AE2", new EntityType("E", "N", DataSpace.CSpace))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.One
                       };
@@ -230,7 +230,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.Configure(
                 new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
+                    new EntityType("E", "N", DataSpace.CSpace),
                     function,
                     new[]
                         {
@@ -258,7 +258,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Parameter(new PropertyPath(mockPropertyInfo1), "P1");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             Assert.Equal(
                 Strings.ModificationFunctionParameterNotFound("P", "F"),
@@ -266,8 +266,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     () => modificationFunctionConfiguration.Configure(
                         new StorageModificationFunctionMapping(
                               entitySet,
-                              new EntityType(),
-                              new EdmFunction(),
+                              new EntityType("E", "N", DataSpace.CSpace),
+                              new EdmFunction("F", "N", DataSpace.SSpace),
                               new StorageModificationFunctionParameterBinding[0],
                               null,
                               null))).Message);
@@ -284,7 +284,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Parameter(new PropertyPath(mockPropertyInfo), "P0", "P1");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var property = new EdmProperty("P0");
             property.SetClrPropertyInfo(mockPropertyInfo);
@@ -295,8 +295,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     () => modificationFunctionConfiguration.Configure(
                         new StorageModificationFunctionMapping(
                               entitySet,
-                              new EntityType(),
-                              new EdmFunction(),
+                              new EntityType("E", "N", DataSpace.CSpace),
+                              new EdmFunction("F", "N", DataSpace.SSpace),
                               new[]
                                   {
                                       new StorageModificationFunctionParameterBinding(
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Result(new PropertyPath(mockPropertyInfo1), "Foo");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             Assert.Equal(
                 Strings.ResultBindingNotFound("P", "F"),
@@ -329,8 +329,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     () => modificationFunctionConfiguration.Configure(
                         new StorageModificationFunctionMapping(
                               entitySet,
-                              new EntityType(),
-                              new EdmFunction(),
+                              new EntityType("E", "N", DataSpace.CSpace),
+                              new EdmFunction("F", "N", DataSpace.SSpace),
                               new StorageModificationFunctionParameterBinding[0],
                               null,
                               null))).Message);
@@ -347,7 +347,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 .Result(new PropertyPath(mockPropertyInfo), "Foo");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var property = new EdmProperty("P1");
             property.SetClrPropertyInfo(mockPropertyInfo);
@@ -357,8 +357,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.Configure(
                 new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
-                    new EdmFunction(),
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
                     new[]
                         {
                             new StorageModificationFunctionParameterBinding(
@@ -385,7 +385,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.RowsAffectedParameter("Foo");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var property = new EdmProperty("P1");
             property.SetClrPropertyInfo(mockPropertyInfo);
@@ -395,8 +395,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.Configure(
                 new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
-                    new EdmFunction(),
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
                     new[]
                         {
                             new StorageModificationFunctionParameterBinding(
@@ -421,7 +421,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfiguration.RowsAffectedParameter("boom");
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             Assert.Equal(
                 Strings.NoRowsAffectedParameter("F"),
@@ -429,8 +429,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     () => modificationFunctionConfiguration.Configure(
                         new StorageModificationFunctionMapping(
                               entitySet,
-                              new EntityType(),
-                              new EdmFunction(),
+                              new EntityType("E", "N", DataSpace.CSpace),
+                              new EdmFunction("F", "N", DataSpace.SSpace),
                               new StorageModificationFunctionParameterBinding[0],
                               null,
                               null))).Message);

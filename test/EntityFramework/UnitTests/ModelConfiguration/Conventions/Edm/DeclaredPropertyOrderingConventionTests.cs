@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_move_declared_keys_head_of_declared_properties_list()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var type = typeof(SimpleEntity);
 
             entityType.Annotations.SetClrType(type);

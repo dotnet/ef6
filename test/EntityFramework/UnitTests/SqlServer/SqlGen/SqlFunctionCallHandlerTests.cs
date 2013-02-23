@@ -256,7 +256,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockProperty.Setup(m => m.Name).Returns("DataSpace");
             mockProperty.Setup(m => m.Value).Returns(DataSpace.CSpace);
 
-            var mockEdmFunction = new Mock<EdmFunction>();
+            var mockEdmFunction = new Mock<EdmFunction>("F", "N", DataSpace.SSpace);
             mockEdmFunction.Setup(m => m.FullName).Returns(functionName);
             mockEdmFunction.Setup(m => m.NamespaceName).Returns(functionName.Split('.')[0]);
             mockEdmFunction.Setup(m => m.Name).Returns(functionName.Split('.')[1]);

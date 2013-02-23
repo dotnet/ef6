@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetRootType_should_return_same_type_when_no_base_type()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Same(entityType, entityType.GetRootType());
         }
@@ -20,9 +20,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetRootType_should_return_base_type_when_has_base_type()
         {
-            var entityType = new EntityType
+            var entityType = new EntityType("E", "N", DataSpace.CSpace)
                                  {
-                                     BaseType = new EntityType()
+                                     BaseType = new EntityType("E", "N", DataSpace.CSpace)
                                  };
 
             Assert.Same(entityType.BaseType, entityType.GetRootType());
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetPrimitiveProperties_should_return_only_primitive_properties()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             entityType.Annotations.SetConfiguration(42);
 
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_clr_type_annotation()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Null(entityType.GetClrType());
 
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void AddComplexProperty_should_create_and_add_complex_property()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             var complexType = new ComplexType("C");
             var property = entityType.AddComplexProperty("Foo", complexType);
@@ -83,12 +83,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void AddNavigationProperty_should_create_and_add_navigation_property()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType().GetReferenceType(), RelationshipMultiplicity.Many)
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace).GetReferenceType(), RelationshipMultiplicity.Many)
                       };
 
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
@@ -105,7 +105,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void AddPrimitiveProperty_should_create_and_add_to_declared_properties()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
@@ -120,7 +120,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetPrimitiveProperty_should_return_correct_property()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
@@ -135,10 +135,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetNavigationProperty_should_return_correct_property()
         {
-            var entityType = new EntityType();
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var property = entityType.AddNavigationProperty("Foo", associationType);
 
             var foundProperty = entityType.NavigationProperties.SingleOrDefault(np => np.Name == "Foo");
@@ -181,24 +181,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsAncestorOf_should_return_correct_answer()
         {
-            var entityType1 = new EntityType
-                                  {
-                                      Name = "E1"
-                                  };
-            var entityType2 = new EntityType
-                                  {
-                                      Name = "E2"
-                                  };
+            var entityType1 = new EntityType("E1", "N", DataSpace.CSpace);
+            var entityType2 = new EntityType("E2", "N", DataSpace.CSpace);
             entityType2.BaseType = entityType1;
-            var entityType3 = new EntityType
-                                  {
-                                      Name = "E3"
-                                  };
+            var entityType3 = new EntityType("E3", "N", DataSpace.CSpace);
             entityType3.BaseType = entityType1;
-            var entityType4 = new EntityType
-                                  {
-                                      Name = "E4"
-                                  };
+            var entityType4 = new EntityType("E4", "N", DataSpace.CSpace);
             entityType4.BaseType = entityType2;
 
             Assert.True(entityType1.IsAncestorOf(entityType4));

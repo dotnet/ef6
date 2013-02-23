@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Internal.Linq;
+    using System.Reflection;
     using Moq;
 
     public static class MockHelper
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Internal
             var fakeEntity = new TEntity();
             mockStateEntry.Setup(e => e.Entity).Returns(fakeEntity);
 
-            var entitySet = new EntitySet("foo set", "foo schema", "foo table", "foo query", new EntityType());
+            var entitySet = new EntitySet("foo set", "foo schema", "foo table", "foo query", new EntityType("E", "N", DataSpace.CSpace));
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("foo container", DataSpace.CSpace));
             mockStateEntry.Setup(e => e.EntitySet).Returns(entitySet);
 
@@ -60,7 +61,22 @@ namespace System.Data.Entity.Internal
         }
 
         internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity>(
-            TEntity entity, bool isDetached = false)
+            TEntity entity)
+            where TEntity : class, new()
+        {
+            var mockInternalEntityEntry = CreateMockInternalEntityEntry<TEntity, object>(entity, isDetached: false);
+
+            var mockChildProperties = GetMockPropertiesForEntityOrComplexType(mockInternalEntityEntry.Object, null, entity);
+            mockInternalEntityEntry.Setup(e => e.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
+                                   .Returns((string propertyName, Type requestedType, bool requiresComplex) => mockChildProperties[propertyName]);
+            mockInternalEntityEntry.Setup(e => e.Member(It.IsAny<string>(), It.IsAny<Type>()))
+                                   .Returns((string propertyName, Type requestedType) => mockChildProperties[propertyName]);
+
+            return mockInternalEntityEntry;
+        }
+
+        internal static Mock<InternalEntityEntryForMock<TEntity>> CreateMockInternalEntityEntry<TEntity>(
+            TEntity entity, bool isDetached)
             where TEntity : class, new()
         {
             return CreateMockInternalEntityEntry<TEntity, object>(entity, isDetached: isDetached);
@@ -109,6 +125,117 @@ namespace System.Data.Entity.Internal
             propertyEntry.SetupGet(p => p.InternalEntityEntry).Returns(new InternalEntityEntryForMock<object>());
 
             return propertyEntry;
+        }
+
+        internal static Mock<InternalEntityEntryForMock<object>> CreateMockInternalEntityEntry(Dictionary<string, object> values)
+        {
+            var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>();
+            foreach (var propertyName in values.Keys)
+            {
+                var mockEntityProperty = new Mock<InternalEntityPropertyEntry>(
+                    CreateMockInternalEntityEntry(new object()).Object,
+                    new PropertyEntryMetadataForMock());
+                mockEntityProperty.CallBase = true;
+                mockEntityProperty.SetupGet(p => p.Name).Returns(propertyName);
+                mockEntityProperty.SetupGet(p => p.CurrentValue).Returns(values[propertyName]);
+                mockEntityProperty.SetupGet(p => p.InternalEntityEntry).Returns(mockInternalEntityEntry.Object);
+
+                mockInternalEntityEntry.Setup(e => e.Property(propertyName, It.IsAny<Type>(), It.IsAny<bool>()))
+                                       .Returns(mockEntityProperty.Object);
+                mockInternalEntityEntry.Setup(e => e.Member(propertyName, It.IsAny<Type>()))
+                                       .Returns(mockEntityProperty.Object);
+            }
+
+            mockInternalEntityEntry.Setup(e => e.Entity).Returns(new object());
+
+            return mockInternalEntityEntry;
+        }
+
+        internal static Dictionary<string, InternalPropertyEntry> GetMockPropertiesForEntityOrComplexType(
+            InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, object parent)
+        {
+            var mockChildProperties = new Dictionary<string, InternalPropertyEntry>();
+
+            // do not create mocks for nulls
+            if (parent != null)
+            {
+                foreach (var childPropInfo in parent.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    if (childPropInfo.GetGetMethod() != null
+                        && childPropInfo.GetSetMethod() != null)
+                    {
+                        var mockInternalPropertyEntry = CreateMockInternalPropertyEntry(owner, parentPropertyEntry, childPropInfo, parent);
+                        mockChildProperties.Add(childPropInfo.Name, mockInternalPropertyEntry);
+                    }
+                }
+            }
+
+            return mockChildProperties;
+        }
+
+        internal static InternalPropertyEntry CreateMockInternalPropertyEntry(
+            InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, PropertyInfo propInfo, object parent)
+        {
+            var propertyValue = propInfo.GetGetMethod().Invoke(parent, new object[0]);
+
+            InternalPropertyEntry childPropertyEntry;
+            if (parentPropertyEntry == null)
+            {
+                var mockEntityProperty = new Mock<InternalEntityPropertyEntry>(
+                    CreateMockInternalEntityEntry(propertyValue).Object,
+                    new PropertyEntryMetadataForMock());
+                mockEntityProperty.CallBase = true;
+                mockEntityProperty.SetupGet(p => p.Name).Returns(propInfo.Name);
+                mockEntityProperty.SetupGet(p => p.CurrentValue).Returns(propertyValue);
+                mockEntityProperty.SetupGet(p => p.InternalEntityEntry).Returns(owner);
+
+                var mockChildProperties = GetMockPropertiesForEntityOrComplexType(owner, mockEntityProperty.Object, propertyValue);
+
+                mockEntityProperty.Setup(p => p.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
+                                  .Returns(
+                                      (string propertyName, Type requestedType, bool requiresComplex) =>
+                                      mockChildProperties.ContainsKey(propertyName)
+                                          ? mockChildProperties[propertyName]
+                                          : CreateInternalPropertyEntryForNullParent(propertyName));
+
+                childPropertyEntry = mockEntityProperty.Object;
+            }
+            else
+            {
+                var mockComplexProperty = new Mock<InternalNestedPropertyEntry>(
+                    CreateMockInternalEntityPropertyEntry(propertyValue).Object,
+                    new PropertyEntryMetadataForMock());
+                mockComplexProperty.CallBase = true;
+                mockComplexProperty.SetupGet(p => p.Name).Returns(propInfo.Name);
+                mockComplexProperty.SetupGet(p => p.CurrentValue).Returns(propertyValue);
+                mockComplexProperty.SetupGet(p => p.InternalEntityEntry).Returns(owner);
+                mockComplexProperty.SetupGet(p => p.ParentPropertyEntry).Returns(parentPropertyEntry);
+
+                var mockChildProperties = GetMockPropertiesForEntityOrComplexType(owner, mockComplexProperty.Object, propertyValue);
+
+                mockComplexProperty.Setup(p => p.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>()))
+                                   .Returns(
+                                       (string propertyName, Type requestedType, bool requiresComplex) =>
+                                       mockChildProperties.ContainsKey(propertyName)
+                                           ? mockChildProperties[propertyName]
+                                           : CreateInternalPropertyEntryForNullParent(propertyName));
+
+                childPropertyEntry = mockComplexProperty.Object;
+            }
+
+            return childPropertyEntry;
+        }
+
+        internal static InternalPropertyEntry CreateInternalPropertyEntryForNullParent(string propertyName)
+        {
+            var parentNullPropertyEntry = new Mock<InternalEntityPropertyEntry>(
+                CreateMockInternalEntityEntry(new object()).Object,
+                new PropertyEntryMetadataForMock());
+            parentNullPropertyEntry.SetupGet(p => p.Name).Returns(propertyName);
+            parentNullPropertyEntry.SetupGet(p => p.ParentPropertyEntry);
+            parentNullPropertyEntry.SetupGet(p => p.CurrentValue).Throws(new NullReferenceException());
+
+            return parentNullPropertyEntry.Object;
         }
     }
 }

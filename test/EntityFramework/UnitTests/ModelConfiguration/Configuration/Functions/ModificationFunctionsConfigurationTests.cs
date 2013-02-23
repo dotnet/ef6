@@ -40,20 +40,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionsConfiguration.Delete(mockModificationFunctionConfiguration.Object);
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var storageModificationFunctionMapping
                 = new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
-                    new EdmFunction(),
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
                     new StorageModificationFunctionParameterBinding[0],
                     null,
                     null);
 
             modificationFunctionsConfiguration.Configure(
                 new StorageEntityTypeModificationFunctionMapping(
-                    new EntityType(),
+                    new EntityType("E", "N", DataSpace.CSpace),
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping));
@@ -73,20 +73,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionsConfiguration.Delete(mockModificationFunctionConfiguration.Object);
 
             var entitySet = new EntitySet();
-            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer());
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var storageModificationFunctionMapping
                 = new StorageModificationFunctionMapping(
                     entitySet,
-                    new EntityType(),
-                    new EdmFunction(),
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
                     new StorageModificationFunctionParameterBinding[0],
                     null,
                     null);
 
             modificationFunctionsConfiguration.Configure(
                 new StorageAssociationSetModificationFunctionMapping(
-                    new AssociationSet("AS", new AssociationType()),
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping));
 

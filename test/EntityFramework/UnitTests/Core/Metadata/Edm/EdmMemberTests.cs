@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.False(property.IsPrimaryKeyColumn);
 
-            new EntityType().AddKeyMember(property);
+            new EntityType("E", "N", DataSpace.CSpace).AddKeyMember(property);
 
             Assert.True(property.IsPrimaryKeyColumn);
         }

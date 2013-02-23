@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void Map_should_map_entity_navigation_properties()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             model.AddEntitySet("Source", entityType);
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model);
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             mockModelConfiguration
                 .Setup(m => m.GetStructuralTypeConfiguration(mockComplexType))
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mappingContext
                 = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel(DataSpace.CSpace));
 
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Map_should_set_correct_name_and_type()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel(DataSpace.CSpace));
 
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Map_should_set_correct_nullability()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mappingContext
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), new EdmModel(DataSpace.CSpace));
 

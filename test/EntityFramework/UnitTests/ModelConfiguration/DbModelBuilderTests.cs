@@ -352,10 +352,7 @@ namespace System.Data.Entity.ModelConfiguration
 
         private EntityType CreateEntityTypeWithProperties(params PropertyInfo[] props)
         {
-            var entityType = new EntityType
-                                 {
-                                     Name = "E"
-                                 };
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             foreach (var prop in props)
             {
                 var property = EdmProperty.Primitive(prop.Name, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));

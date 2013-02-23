@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_and_set_annotations()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var dataModelAnnotation = new DataModelAnnotation();
 
             Assert.Empty(entityType.Annotations);

@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()),
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     database.GetEntitySet(table))
                     .Initialize();
 
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var database = new EdmModel(DataSpace.CSpace);
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()), new EntitySet())
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet())
                     .Initialize();
             var column = new EdmProperty("C");
             associationSetMapping.SourceEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), column));
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()),
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();
 
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
             manyToManyAssociationMappingConfiguration.Configure(associationSetMapping, database, mockPropertyInfo);
@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()),
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();
 
@@ -112,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var mockPropertyInfo = new MockPropertyInfo();
 
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType());
+            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
 
             Assert.Equal(

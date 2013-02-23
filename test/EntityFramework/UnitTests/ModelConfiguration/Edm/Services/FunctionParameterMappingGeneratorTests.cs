@@ -147,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var complexProperty = EdmProperty.Complex("C", complexType);
 
-            new EntityType().AddKeyMember(property0);
+            new EntityType("E", "N", DataSpace.CSpace).AddKeyMember(property0);
 
             var parameterBindings
                 = functionParameterMappingGenerator
@@ -190,10 +190,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new FunctionParameterMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);
 
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
                       };
 
             var associationSet

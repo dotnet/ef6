@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsMany_should_return_true_when_end_kind_is_many()
         {
-            var associationEnd = new AssociationEndMember("E", new EntityType())
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace))
                                      {
                                          RelationshipMultiplicity = RelationshipMultiplicity.Many
                                      };
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsOptional_should_return_true_when_end_kind_is_optional()
         {
-            var associationEnd = new AssociationEndMember("E", new EntityType())
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace))
                                      {
                                          RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
                                      };
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsRequired_should_return_true_when_end_kind_is_required()
         {
-            var associationEnd = new AssociationEndMember("E", new EntityType())
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace))
                                      {
                                          RelationshipMultiplicity = RelationshipMultiplicity.One
                                      };

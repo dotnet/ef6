@@ -2128,14 +2128,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public void Null_check_Aggregate()
         {
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(null, DbExpressionBuilder.True));
-            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(new EdmFunction(), null));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(new EdmFunction("F", "N", DataSpace.SSpace), null));
         }
 
         [Fact]
         public void Null_check_AggregateDistinct()
         {
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(null, DbExpressionBuilder.True));
-            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(new EdmFunction(), null));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(new EdmFunction("F", "N", DataSpace.SSpace), null));
         }
 
         [Fact]

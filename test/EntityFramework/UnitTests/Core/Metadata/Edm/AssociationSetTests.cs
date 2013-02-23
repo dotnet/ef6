@@ -10,10 +10,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_ends_via_wrapper_properties()
         {
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
                       };
 
             var associationSet = new AssociationSet("A", associationType);
@@ -36,11 +36,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_association_ends_from_association_set()
         {
-            var sourceEnd = new AssociationEndMember("S", new EntityType());
-            var targetEnd = new AssociationEndMember("T", new EntityType());
+            var sourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            var targetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             var associationType
-                = new AssociationType();
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             associationType.AddKeyMember(targetEnd);
             associationType.AddKeyMember(sourceEnd);

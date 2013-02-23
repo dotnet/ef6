@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.Properties);
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             var property = new EdmProperty("P");
 
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Same(tableSet, mappingFragment.TableSet);
 
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_table()
         {
-            var table = new EntityType();
+            var table = new EntityType("E", "N", DataSpace.CSpace);
 
             var tableSet = new EntitySet("ES", null, null, null, table);
 
@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Same(table, mappingFragment.Table);
         }
@@ -262,7 +262,7 @@ namespace System.Data.Entity.Core.Mapping
                     new StorageEntityTypeMapping(
                         new StorageEntitySetMapping(
                             new EntitySet(),
-                            new StorageEntityContainerMapping(new EntityContainer()))), false);
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             Assert.Empty(mappingFragment.ColumnConditions);
 

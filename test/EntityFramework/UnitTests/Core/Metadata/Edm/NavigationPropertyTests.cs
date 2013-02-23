@@ -10,11 +10,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Nullability_updated_when_property_goes_readonly()
         {
             var navigationProperty 
-                = new NavigationProperty("N", TypeUsage.Create(new EntityType()))
+                = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)))
                                          {
                                              ToEndMember =
                                                  new AssociationEndMember(
-                                                 "T", new RefType(new EntityType()), RelationshipMultiplicity.ZeroOrOne)
+                                                 "T", new RefType(new EntityType("E", "N", DataSpace.CSpace)), RelationshipMultiplicity.ZeroOrOne)
                                          };
 
             Assert.Equal(true, navigationProperty.TypeUsage.Facets[EdmConstants.Nullable].Value);

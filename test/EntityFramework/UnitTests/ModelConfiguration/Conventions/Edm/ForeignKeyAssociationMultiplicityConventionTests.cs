@@ -12,9 +12,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_set_principal_end_kind_to_required_when_all_properties_not_nullable()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 

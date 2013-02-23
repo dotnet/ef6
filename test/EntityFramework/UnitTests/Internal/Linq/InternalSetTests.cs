@@ -172,7 +172,7 @@ namespace System.Data.Entity.Internal.Linq
                                               CallBase = true
                                           };
 
-            var entitySet = new EntitySet("set", "", "", "", new EntityType());
+            var entitySet = new EntitySet("set", "", "", "", new EntityType("E", "N", DataSpace.CSpace));
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("container", DataSpace.OSpace));
             internalContextMock.Setup(m => m.GetEntitySetAndBaseTypeForType(It.IsAny<Type>()))
                 .Returns(new EntitySetTypePair(entitySet, typeof(TEntity)));

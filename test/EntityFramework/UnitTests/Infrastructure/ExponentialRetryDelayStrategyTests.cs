@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using Xunit;
 
     public class ExponentialRetryDelayStrategyTests
@@ -29,7 +30,9 @@ namespace System.Data.Entity.Infrastructure
                 new ExponentialRetryDelayStrategy(
                     maxRetryCount: 0, minDelay: TimeSpan.FromTicks(0), maxDelay: TimeSpan.FromTicks(-1), maxRandomFactor: 1,
                     exponentialBase: 1, coefficient: TimeSpan.FromTicks(0)));
-            maxDelayException.ValidateMessage("ExecutionStrategy_MinimumMustBeLessThanMaximum", "maxDelay");
+            Assert.Equal(
+                new ArgumentOutOfRangeException("maxDelay", Strings.ExecutionStrategy_MinimumMustBeLessThanMaximum).Message,
+                maxDelayException.Message);
             Assert.Equal(
                 "maxRandomFactor",
                 Assert.Throws<ArgumentOutOfRangeException>(

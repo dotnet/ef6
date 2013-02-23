@@ -248,7 +248,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var modelConfiguration = new ModelConfiguration();
 
             var databaseMetadata = new EdmModel(DataSpace.CSpace);
-            databaseMetadata.AddEntitySet("ES", new EntityType());
+            databaseMetadata.AddEntitySet("ES", new EntityType("E", "N", DataSpace.CSpace));
 
             var databaseMapping
                 = new DbDatabaseMapping().Initialize(
@@ -270,7 +270,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                       };
 
             var databaseMetadata = new EdmModel(DataSpace.CSpace);
-            databaseMetadata.AddEntitySet("ES", new EntityType());
+            databaseMetadata.AddEntitySet("ES", new EntityType("E", "N", DataSpace.CSpace));
 
             var databaseMapping
                 = new DbDatabaseMapping().Initialize(

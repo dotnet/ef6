@@ -8,15 +8,15 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Transactions;
     using Moq;
     using Moq.Protected;
     using Xunit;
     using IsolationLevel = System.Data.IsolationLevel;
-
 #if !NET40
-    using System.Threading;
-    using System.Threading.Tasks;
+
 #endif
 
     public class EntityConnectionTests
@@ -37,7 +37,8 @@ namespace System.Data.Entity.Core.EntityClient
                     Assert.Throws<ArgumentNullException>(() => new EntityConnection(null, new Mock<DbConnection>().Object, true)).ParamName);
                 Assert.Equal(
                     "connection",
-                    Assert.Throws<ArgumentNullException>(() => new EntityConnection(new Mock<MetadataWorkspace>().Object, null, true)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new EntityConnection(new Mock<MetadataWorkspace>().Object, null, true))
+                          .ParamName);
             }
         }
 
@@ -124,8 +125,9 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = metadataWorkspaceMock.Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(() => entityConnection.Open())
-                      .ValidateMessage("EntityClient_CannotReopenConnection");
+                Assert.Equal(
+                    Strings.EntityClient_CannotReopenConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
             }
 
             [Fact]
@@ -140,8 +142,9 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = metadataWorkspaceMock.Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(() => entityConnection.Open())
-                      .ValidateMessage("EntityClient_CannotOpenBrokenConnection");
+                Assert.Equal(
+                    Strings.EntityClient_CannotOpenBrokenConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
             }
 
             [Fact]
@@ -157,7 +160,9 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).ValidateMessage("EntityClient_ConnectionNotOpen");
+                Assert.Equal(
+                    Strings.EntityClient_ConnectionNotOpen,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
             }
 
             [Fact]
@@ -239,7 +244,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -310,7 +315,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityConnection_automatically_opened_if_underlying_StoreConnection_is_opened_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -377,7 +382,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityConnection_automatically_closed_if_underlying_StoreConnection_is_closed_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -525,9 +530,6 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
             }
         }
-#endif
-
-#if !NET40
 
         public class OpenAsync : TestBase
         {
@@ -537,9 +539,11 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, null, true, true);
 
-                AssertThrowsInAsyncMethod<InvalidOperationException>(
+                Assert.Equal(
                     Strings.EntityClient_ConnectionStringNeededBeforeOperation,
-                    () => entityConnection.OpenAsync().Wait());
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => entityConnection.OpenAsync().Wait())).Message);
             }
 
             [Fact]
@@ -596,10 +600,12 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = metadataWorkspaceMock.Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(
-                    () => ExceptionHelpers.UnwrapAggregateExceptions(
-                        () =>
-                        entityConnection.OpenAsync().Wait())).ValidateMessage("EntityClient_CannotReopenConnection");
+                Assert.Equal(
+                    Strings.EntityClient_CannotReopenConnection,
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
+                            entityConnection.OpenAsync().Wait())).Message);
             }
 
             [Fact]
@@ -614,9 +620,11 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = metadataWorkspaceMock.Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(
-                    () => ExceptionHelpers.UnwrapAggregateExceptions(
-                        () => entityConnection.OpenAsync().Wait())).ValidateMessage("EntityClient_CannotOpenBrokenConnection");
+                Assert.Equal(
+                    Strings.EntityClient_CannotOpenBrokenConnection,
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => entityConnection.OpenAsync().Wait())).Message);
             }
 
             [Fact]
@@ -633,10 +641,12 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
 
-                Assert.Throws<InvalidOperationException>(
-                    () => ExceptionHelpers.UnwrapAggregateExceptions(
-                        () =>
-                        entityConnection.OpenAsync().Wait())).ValidateMessage("EntityClient_ConnectionNotOpen");
+                Assert.Equal(
+                    Strings.EntityClient_ConnectionNotOpen,
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
+                            entityConnection.OpenAsync().Wait())).Message);
             }
 
             [Fact]
@@ -654,9 +664,11 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
-                AssertThrowsInAsyncMethod<InvalidOperationException>(
+                Assert.Equal(
                     Strings.EntityClient_CannotReopenConnection,
-                    () => entityConnection.OpenAsync().Wait());
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => entityConnection.OpenAsync().Wait())).Message);
 
                 dbConnectionMock.Verify(m => m.Close(), Times.Never());
 
@@ -677,9 +689,11 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(
                     new Mock<MetadataWorkspace>(MockBehavior.Strict).Object, dbConnectionMock.Object, true, true);
 
-                AssertThrowsInAsyncMethod<InvalidOperationException>(
+                Assert.Equal(
                     Strings.EntityClient_ConnectionNotOpen,
-                    () => entityConnection.OpenAsync().Wait());
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => entityConnection.OpenAsync().Wait())).Message);
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State);
             }
@@ -698,9 +712,11 @@ namespace System.Data.Entity.Core.EntityClient
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
 
-                AssertThrowsInAsyncMethod<EntityException>(
+                Assert.Equal(
                     Strings.EntityClient_ProviderSpecificError("Open"),
-                    () => entityConnection.OpenAsync().Wait());
+                    Assert.Throws<EntityException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => entityConnection.OpenAsync().Wait())).Message);
 
                 dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -753,7 +769,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void StoreConnection_state_mimics_EntityConnection_state_if_only_EntityConnection_is_used_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -826,7 +842,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityConnection_automatically_opened_if_underlying_StoreConnection_is_opened_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -895,7 +911,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void EntityConnection_automatically_closed_if_underlying_StoreConnection_is_closed_with_ambient_txn()
             {
-                using (var transaction = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var storeConnectionState = ConnectionState.Closed;
                     var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
@@ -969,18 +985,6 @@ namespace System.Data.Entity.Core.EntityClient
                     conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
-            }
-        }
-
-        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
-            where TException : Exception
-        {
-            var exception = Assert.Throws<AggregateException>(testCode);
-            var innerException = exception.InnerExceptions.Single();
-            Assert.IsType<TException>(innerException);
-            if (expectedMessage != null)
-            {
-                Assert.Equal(expectedMessage, innerException.Message);
             }
         }
 
@@ -1099,12 +1103,13 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbTransactionMock2 = new Mock<DbTransaction>();
 
                 Assert.Equal(
-                    System.Data.Entity.Resources.Strings.DbContext_TransactionAlreadyStarted,
+                    Strings.DbContext_TransactionAlreadyStarted,
                     Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(dbTransactionMock2.Object)).Message);
             }
 
             [Fact]
-            public void Passing_a_transaction_to_UseStoreTransaction_when_it_is_already_enlisted_in_a_TransactionScope_Transaction_throws_InvalidOperationException()
+            public void
+                Passing_a_transaction_to_UseStoreTransaction_when_it_is_already_enlisted_in_a_TransactionScope_Transaction_throws_InvalidOperationException()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Open);
@@ -1113,7 +1118,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
 
-                using (var txnScope = new TransactionScope())
+                using (new TransactionScope())
                 {
                     var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
                     entityConnection.EnlistTransaction(Transaction.Current);
@@ -1121,8 +1126,9 @@ namespace System.Data.Entity.Core.EntityClient
                     var dbTransactionMock = new Mock<DbTransaction>();
                     dbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => dbConnectionMock.Object);
                     Assert.Equal(
-                        System.Data.Entity.Resources.Strings.DbContext_TransactionAlreadyEnlistedInUserTransaction,
-                        Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(dbTransactionMock.Object)).Message);
+                        Strings.DbContext_TransactionAlreadyEnlistedInUserTransaction,
+                        Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(dbTransactionMock.Object))
+                              .Message);
                 }
             }
 
@@ -1142,8 +1148,9 @@ namespace System.Data.Entity.Core.EntityClient
                 otherDbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => null);
 
                 Assert.Equal(
-                    System.Data.Entity.Resources.Strings.DbContext_InvalidTransactionNoConnection,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object)).Message);
+                    Strings.DbContext_InvalidTransactionNoConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object))
+                          .Message);
             }
 
             [Fact]
@@ -1164,8 +1171,9 @@ namespace System.Data.Entity.Core.EntityClient
                 otherDbTransactionMock.Protected().SetupGet<DbConnection>("DbConnection").Returns(() => otherDbConnectionMock.Object);
 
                 Assert.Equal(
-                    System.Data.Entity.Resources.Strings.DbContext_InvalidTransactionForConnection,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object)).Message);
+                    Strings.DbContext_InvalidTransactionForConnection,
+                    Assert.Throws<InvalidOperationException>(() => entityConnection.UseStoreTransaction(otherDbTransactionMock.Object))
+                          .Message);
             }
 
             [Fact]
@@ -1185,7 +1193,6 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(dbTransactionMock.Object, entityConnection.CurrentTransaction.StoreTransaction);
             }
-
         }
     }
 }

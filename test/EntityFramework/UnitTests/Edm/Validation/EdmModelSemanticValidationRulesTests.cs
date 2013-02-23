@@ -19,7 +19,7 @@ namespace System.Data.Entity.Edm
             var sourceEntity = new EntityType("S", "N", DataSpace.CSpace);
 
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", sourceEntity),
                           TargetEnd = new AssociationEndMember("T", targetEntity)
@@ -65,9 +65,9 @@ namespace System.Data.Entity.Edm
             var model = new EdmModel(DataSpace.SSpace);
 
             model.Containers.Single().AddEntitySetBase(
-                new EntitySet("Foo", "S", "T", null, new EntityType()));
+                new EntitySet("Foo", "S", "T", null, new EntityType("E", "N", DataSpace.CSpace)));
 
-            var duplicateEntitySet = new EntitySet("Bar", "S", "T", null, new EntityType());
+            var duplicateEntitySet = new EntitySet("Bar", "S", "T", null, new EntityType("E", "N", DataSpace.CSpace));
 
             model.Containers.Single().AddEntitySetBase(duplicateEntitySet);
 

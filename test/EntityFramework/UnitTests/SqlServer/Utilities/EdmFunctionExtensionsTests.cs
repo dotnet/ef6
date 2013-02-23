@@ -11,7 +11,7 @@ namespace System.Data.Entity.SqlServer.Utilities
         [Fact]
         public void IsCSpace_returns_false_if_MetadataProperties_contains_no_data_space_property()
         {
-            var mockEdmFunction = new Mock<EdmFunction>();
+            var mockEdmFunction = new Mock<EdmFunction>("F", "N", DataSpace.SSpace);
             mockEdmFunction.Setup(m => m.MetadataProperties).Returns(new ReadOnlyMetadataCollection<MetadataProperty>());
 
             Assert.False(mockEdmFunction.Object.IsCSpace());
@@ -20,13 +20,13 @@ namespace System.Data.Entity.SqlServer.Utilities
         [Fact]
         public void IsCSpace_returns_false_if_MetadataProperties_contains_non_c_space_data_space_property()
         {
-            Assert.False(CreateMockEdmFunction(DataSpace.OCSpace, null).Object.IsCSpace());
+            Assert.False(CreateMockEdmFunction(DataSpace.OCSpace, "").Object.IsCSpace());
         }
 
         [Fact]
         public void IsCSpace_returns_true_if_MetadataProperties_contains_c_space_data_space_property()
         {
-            Assert.True(CreateMockEdmFunction(DataSpace.CSpace, null).Object.IsCSpace());
+            Assert.True(CreateMockEdmFunction(DataSpace.CSpace, "").Object.IsCSpace());
         }
 
         [Fact]
@@ -53,10 +53,12 @@ namespace System.Data.Entity.SqlServer.Utilities
             mockProperty.Setup(m => m.Name).Returns("DataSpace");
             mockProperty.Setup(m => m.Value).Returns(dataSpace);
 
-            var mockEdmFunction = new Mock<EdmFunction>();
+            var mockEdmFunction = new Mock<EdmFunction>("F", namespaceName, dataSpace)
+                                      {
+                                          CallBase = true
+                                      };
             mockEdmFunction.Setup(m => m.MetadataProperties).Returns(
                 new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
-            mockEdmFunction.Setup(m => m.NamespaceName).Returns(namespaceName);
 
             return mockEdmFunction;
         }

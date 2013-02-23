@@ -17,12 +17,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
 
-        internal EntityType()
-            : this("E", "N", DataSpace.CSpace)
-        {
-            // testing only
-        }
-
         /// <summary>
         ///     Initializes a new instance of Entity Type
         /// </summary>

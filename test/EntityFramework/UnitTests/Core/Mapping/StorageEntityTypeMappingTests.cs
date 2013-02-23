@@ -12,11 +12,11 @@ namespace System.Data.Entity.Core.Mapping
         {
             var entityTypeMapping 
                 = new StorageEntityTypeMapping(
-                    new StorageEntitySetMapping(new EntitySet(), new StorageEntityContainerMapping(new EntityContainer())));
+                    new StorageEntitySetMapping(new EntitySet(), new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace))));
 
             Assert.Null(entityTypeMapping.EntityType);
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             entityTypeMapping.AddType(entityType);
 
@@ -28,11 +28,11 @@ namespace System.Data.Entity.Core.Mapping
         {
             var entityTypeMapping
                 = new StorageEntityTypeMapping(
-                    new StorageEntitySetMapping(new EntitySet(), new StorageEntityContainerMapping(new EntityContainer())));
+                    new StorageEntitySetMapping(new EntitySet(), new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace))));
 
             Assert.False(entityTypeMapping.IsHierarchyMapping);
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             entityTypeMapping.AddType(entityType);
             entityTypeMapping.AddIsOfType(entityType);

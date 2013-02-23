@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Linq;
     using System.Threading;
@@ -312,10 +313,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     if (throwException)
                     {
-                        Assert.Throws<InvalidOperationException>(
-                            () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeometry>(0, spatialType))
-                              .ValidateMessage(
-                                  "Materializer_InvalidCastReference", typeof(DbGeography), typeof(DbGeometry));
+                        Assert.Equal(
+                            Strings.Materializer_InvalidCastReference(typeof(DbGeography), typeof(DbGeometry)),
+                            Assert.Throws<InvalidOperationException>(
+                                () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeometry>(0, spatialType)).Message);
                     }
                     else
                     {
@@ -326,10 +327,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     if (throwException)
                     {
-                        Assert.Throws<InvalidOperationException>(
-                            () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeography>(0, spatialType))
-                              .ValidateMessage(
-                                  "Materializer_InvalidCastReference", typeof(DbGeometry), typeof(DbGeography));
+                        Assert.Equal(
+                            Strings.Materializer_InvalidCastReference(typeof(DbGeometry), typeof(DbGeography)),
+                            Assert.Throws<InvalidOperationException>(
+                                () => shaperMock.Object.GetSpatialColumnValueWithErrorHandling<DbGeography>(0, spatialType)).Message);
                     }
                     else
                     {
@@ -456,10 +457,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     if (throwException)
                     {
-                        Assert.Throws<InvalidOperationException>(
-                            () => shaperMock.Object.GetSpatialPropertyValueWithErrorHandling<DbGeometry>(0, "property", "type", spatialType))
-                              .ValidateMessage(
-                                  "Materializer_SetInvalidValue", typeof(DbGeometry), "type", "property", typeof(DbGeography));
+                        Assert.Equal(
+                            Strings.Materializer_SetInvalidValue(typeof(DbGeometry), "type", "property", typeof(DbGeography)),
+                            Assert.Throws<InvalidOperationException>(
+                                () =>
+                                shaperMock.Object.GetSpatialPropertyValueWithErrorHandling<DbGeometry>(0, "property", "type", spatialType))
+                                  .Message);
                     }
                     else
                     {
@@ -470,11 +473,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     if (throwException)
                     {
-                        Assert.Throws<InvalidOperationException>(
-                            () =>
-                            shaperMock.Object.GetSpatialPropertyValueWithErrorHandling<DbGeography>(0, "property", "type", spatialType))
-                              .ValidateMessage(
-                                  "Materializer_SetInvalidValue", typeof(DbGeography), "type", "property", typeof(DbGeometry));
+                        Assert.Equal(
+                            Strings.Materializer_SetInvalidValue(typeof(DbGeography), "type", "property", typeof(DbGeometry)),
+                            Assert.Throws<InvalidOperationException>(
+                                () =>
+                                shaperMock.Object.GetSpatialPropertyValueWithErrorHandling<DbGeography>(0, "property", "type", spatialType))
+                                  .Message);
                     }
                     else
                     {

@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var metadataCollection = new MetadataCollection<EntityType>();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             metadataCollection.Add(entityType);
 
@@ -29,13 +29,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var metadataCollection = new MetadataCollection<EntityType>();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             metadataCollection.Add(entityType);
 
             Assert.Equal(1, metadataCollection.Count);
 
-            var entityType2 = new EntityType();
+            var entityType2 = new EntityType("E", "N", DataSpace.CSpace);
 
             metadataCollection[0] = entityType2;
 

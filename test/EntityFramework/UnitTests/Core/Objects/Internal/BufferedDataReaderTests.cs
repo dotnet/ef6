@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Reflection;
     using Moq;
@@ -76,17 +77,21 @@ namespace System.Data.Entity.Core.Objects.Internal
             bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance);
 
             bufferedDataReader.Close();
-
-            Assert.Throws<InvalidOperationException>(() => bufferedDataReader.FieldCount)
-                  .ValidateMessage("ADP_ClosedDataReaderError");
-            Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetOrdinal("columnName"))
-                  .ValidateMessage("ADP_ClosedDataReaderError");
-            Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetDataTypeName(0))
-                  .ValidateMessage("ADP_ClosedDataReaderError");
-            Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetFieldType(0))
-                  .ValidateMessage("ADP_ClosedDataReaderError");
-            Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetName(0))
-                  .ValidateMessage("ADP_ClosedDataReaderError");
+            Assert.Equal(
+                Strings.ADP_ClosedDataReaderError,
+                Assert.Throws<InvalidOperationException>(() => bufferedDataReader.FieldCount).Message);
+            Assert.Equal(
+                Strings.ADP_ClosedDataReaderError,
+                Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetOrdinal("columnName")).Message);
+            Assert.Equal(
+                Strings.ADP_ClosedDataReaderError,
+                Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetDataTypeName(0)).Message);
+            Assert.Equal(
+                Strings.ADP_ClosedDataReaderError,
+                Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetFieldType(0)).Message);
+            Assert.Equal(
+                Strings.ADP_ClosedDataReaderError,
+                Assert.Throws<InvalidOperationException>(() => bufferedDataReader.GetName(0)).Message);
         }
 
         [Fact]
@@ -419,7 +424,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
             bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
 
-            Assert.Throws<InvalidOperationException>(() => method(bufferedReader)).ValidateMessage("ADP_NoData");
+            Assert.Equal(
+                Strings.ADP_NoData,
+                Assert.Throws<InvalidOperationException>(() => method(bufferedReader)).Message);
         }
     }
 }

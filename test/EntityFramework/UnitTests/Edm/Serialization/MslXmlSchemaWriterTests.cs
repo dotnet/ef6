@@ -16,7 +16,7 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             var entityContainer = new EntityContainer("EC", DataSpace.SSpace);
 
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
 
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
 
@@ -166,15 +166,15 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
-            var associationSet = new AssociationSet("AS", new AssociationType());
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
 
-            var associationEndMember1 = new AssociationEndMember("Source", new EntityType());
+            var associationEndMember1 = new AssociationEndMember("Source", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember1));
 
-            var associationEndMember2 = new AssociationEndMember("Target", new EntityType());
+            var associationEndMember2 = new AssociationEndMember("Target", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             var storageModificationFunctionMapping
@@ -217,15 +217,15 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", null, null, entityType);
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
-            var associationSet = new AssociationSet("AS", new AssociationType());
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
 
-            var associationEndMember1 = new AssociationEndMember("Source", new EntityType());
+            var associationEndMember1 = new AssociationEndMember("Source", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember1));
 
-            var associationEndMember2 = new AssociationEndMember("Target", new EntityType());
+            var associationEndMember2 = new AssociationEndMember("Target", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             var storageModificationFunctionMapping

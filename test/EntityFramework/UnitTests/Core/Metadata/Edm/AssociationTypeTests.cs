@@ -9,16 +9,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_and_set_ends_via_wrapper_properties()
         {
-            var associationType = new AssociationType();
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             Assert.Null(associationType.SourceEnd);
             Assert.Null(associationType.TargetEnd);
 
-            var sourceEnd = new AssociationEndMember("S", new EntityType());
+            var sourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
 
             associationType.SourceEnd = sourceEnd;
 
-            var targetEnd = new AssociationEndMember("T", new EntityType());
+            var targetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             associationType.TargetEnd = targetEnd;
 
@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_get_and_set_constraint_via_wrapper_property()
         {
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
                       };
 
             Assert.Null(associationType.Constraint);

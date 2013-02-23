@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
-            databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", new AssociationType()), new EntitySet());
+            databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
 
             Assert.Equal(1, databaseMapping.GetAssociationSetMappings().Count());
         }
@@ -95,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
-            var associationSet = new AssociationSet("AS", new AssociationType());
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
 
             var associationSetMapping = databaseMapping.AddAssociationSetMapping(associationSet, new EntitySet());
 
@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entityTypeMapping = new StorageEntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
             databaseMapping.AddEntitySetMapping(
@@ -126,10 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         {
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
-            var entityType = new EntityType
-                                 {
-                                     Name = "Foo"
-                                 };
+            var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
             var type = typeof(object);
 
             entityType.Annotations.SetClrType(type);

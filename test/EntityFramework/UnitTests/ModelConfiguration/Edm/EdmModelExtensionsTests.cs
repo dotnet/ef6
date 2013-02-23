@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entityTypeA = model.AddEntityType("A");
             var entityTypeB = model.AddEntityType("B");
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", entityTypeA),
                           TargetEnd = new AssociationEndMember("T", entityTypeB)
@@ -46,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entityTypeB = model.AddEntityType("B");
             var entityTypeC = model.AddEntityType("B");
             var associationTypeA
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", entityTypeA),
                           TargetEnd = new AssociationEndMember("T", entityTypeB)
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             associationTypeA.SourceEnd.DeleteBehavior = OperationAction.Cascade;
             model.AddAssociationType(associationTypeA);
             var associationTypeB
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", entityTypeB),
                           TargetEnd = new AssociationEndMember("T", entityTypeC)
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("A");
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", entityType)
                       };
@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void Validate_should_throw()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            model.AddEntitySet("S", new EntityType());
+            model.AddEntitySet("S", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.Throws<ModelValidationException>(() => model.Validate());
         }
@@ -118,8 +118,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void GetEntitySets_should_return_all_sets()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            model.AddEntitySet("S", new EntityType());
-            model.AddEntitySet("T", new EntityType());
+            model.AddEntitySet("S", new EntityType("E", "N", DataSpace.CSpace));
+            model.AddEntitySet("T", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.Equal(2, model.GetEntitySets().Count());
         }
@@ -152,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var entityType = model.AddEntityType("Foo");
             model.AddEntitySet("FooESet", entityType);
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
                           SourceEnd = new AssociationEndMember("S", entityType),
                           TargetEnd = new AssociationEndMember("T", entityType)
@@ -324,10 +324,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
 
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType()),
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace)),
                           Name = "Foo"
                       };
             model.AddItem(associationType);
@@ -385,7 +385,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void AddAssociationSet_should_create_and_add_to_default_container_explicit_overload()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var associationSet = new AssociationSet("AS", new AssociationType());
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
 
             model.AddAssociationSet(associationSet);
 
@@ -410,8 +410,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var sourceEntityType = new EntityType();
-            var targetEntityType = new EntityType();
+            var sourceEntityType = new EntityType("E", "N", DataSpace.CSpace);
+            var targetEntityType = new EntityType("E", "N", DataSpace.CSpace);
 
             model.AddEntitySet("S", sourceEntityType);
             model.AddEntitySet("T", targetEntityType);

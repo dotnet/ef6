@@ -14,12 +14,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public sealed class AssociationType : RelationshipType
     {
-        internal AssociationType()
-            : this("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
-        {
-            // testing only
-        }
-
         /// <summary>
         ///     Initializes a new instance of Association Type with the given name, namespace, version and ends
         /// </summary>

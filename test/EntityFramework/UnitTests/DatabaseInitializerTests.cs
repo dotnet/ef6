@@ -572,8 +572,9 @@ namespace System.Data.Entity
             internalContext.DisposeTempObjectContext();
             internalContext.DisposeTempObjectContext();
 
-            Assert.Throws<ObjectDisposedException>(() => fakeContext.SaveChanges()).ValidateMessage(
-                "ObjectContext_ObjectDisposed");
+            Assert.Equal(
+                Strings.ObjectContext_ObjectDisposed,
+                Assert.Throws<ObjectDisposedException>(() => fakeContext.SaveChanges()).Message);
         }
 
         #endregion

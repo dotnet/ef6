@@ -478,7 +478,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             {
                 var properties = new ReadOnlyMetadataCollection<EdmProperty>();
 
-                var mockEdmType = new Mock<EntityType>();
+                var mockEdmType = new Mock<EntityType>("E", "N", DataSpace.CSpace);
                 mockEdmType.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.EntityType);
                 mockEdmType.Setup(m => m.Properties).Returns(properties);
 
@@ -524,7 +524,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             [Fact]
             public void GetElementTypeUsage_returns_reference_element_usage_for_reference_type()
             {
-                var refType = new Mock<EntityType>().Object;
+                var refType = new Mock<EntityType>("E", "N", DataSpace.CSpace).Object;
 
                 var mockEdmType = new Mock<RefType>();
                 mockEdmType.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.RefType);
@@ -573,7 +573,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             [Fact]
             public void IsSpatialType_returns_false_for_non_primitive_type()
             {
-                var mockEdmType = new Mock<EntityType>();
+                var mockEdmType = new Mock<EntityType>("E", "N", DataSpace.CSpace);
                 mockEdmType.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.EntityType);
 
                 Assert.False(TypeUsage.Create(mockEdmType.Object).IsSpatialType());
@@ -594,7 +594,7 @@ namespace System.Data.Entity.SqlServer.Utilities
             [Fact]
             public void IsSpatialType_with_out_returns_false_for_non_primitive_type()
             {
-                var mockEdmType = new Mock<EntityType>();
+                var mockEdmType = new Mock<EntityType>("E", "N", DataSpace.CSpace);
                 mockEdmType.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.EntityType);
 
                 PrimitiveTypeKind _;

@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new DbDatabaseMapping()
                     .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             var intProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(intProperty);
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new DbDatabaseMapping()
                     .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             var intProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             intProperty.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
@@ -210,12 +210,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         entityType2,
                         RelationshipMultiplicity.Many));
 
-            var entitySet = new EntitySet("ES", "S", null, null, new EntityType());
+            var entitySet = new EntitySet("ES", "S", null, null, new EntityType("E", "N", DataSpace.CSpace));
 
-            var associationEndMember1 = new AssociationEndMember("Source", new EntityType());
+            var associationEndMember1 = new AssociationEndMember("Source", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember1));
 
-            var associationEndMember2 = new AssociationEndMember("Target", new EntityType());
+            var associationEndMember2 = new AssociationEndMember("Target", new EntityType("E", "N", DataSpace.CSpace));
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             var associationSetMapping

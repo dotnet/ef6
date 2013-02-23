@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.False(property.IsKeyMember);
 
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             entityType.AddMember(property);
 

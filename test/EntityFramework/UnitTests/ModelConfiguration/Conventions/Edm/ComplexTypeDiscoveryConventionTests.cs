@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType declaringEntityType;
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            complexEntityType.BaseType = new EntityType();
+            complexEntityType.BaseType = new EntityType("E", "N", DataSpace.CSpace);
 
             ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
@@ -104,10 +104,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             var associationType
-                = new AssociationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                       {
-                          SourceEnd = new AssociationEndMember("S", new EntityType()),
-                          TargetEnd = new AssociationEndMember("T", new EntityType())
+                          SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                          TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
                       };
             complexEntityType.AddNavigationProperty("N", associationType);
 

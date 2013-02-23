@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_remove_member()
         {
-            var entityType = new EntityType();
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.Empty(entityType.Members);
 

@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_configuration_facet()
         {
-            var navigationProperty = new NavigationProperty("N", TypeUsage.Create(new EntityType()));
+            var navigationProperty = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)));
             navigationProperty.SetConfiguration(42);
 
             Assert.Equal(42, navigationProperty.GetConfiguration());

@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var targetTable = database.AddTable("Split");
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()), database.GetEntitySet(sourceTable)).Initialize();
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), database.GetEntitySet(sourceTable)).Initialize();
             associationSetMapping.SourceEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
 
             var independentAssociationMappingConfiguration
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var associationSetMapping
                 = new StorageAssociationSetMapping(
-                    new AssociationSet("AS", new AssociationType()),
+                    new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();
 

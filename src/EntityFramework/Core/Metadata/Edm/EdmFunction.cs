@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EdmFunction : EdmType
     {
-        internal EdmFunction()
-            : this("F", "N", DataSpace.SSpace, new EdmFunctionPayload())
+        internal EdmFunction(string name, string namespaceName, DataSpace dataSpace)
+            : this(name, namespaceName, dataSpace, new EdmFunctionPayload())
         {
             // testing only
 

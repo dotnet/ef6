@@ -34,7 +34,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             var mockMember = new Mock<EdmMember>();
             mockMember.Setup(m => m.Name).Returns(name);
-            mockMember.Setup(m => m.DeclaringType).Returns(new Mock<EntityType>().Object);
+            mockMember.Setup(m => m.DeclaringType).Returns(new Mock<EntityType>("E", "N", DataSpace.CSpace).Object);
 
             return mockMember;
         }
@@ -73,7 +73,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockProperty.Setup(m => m.Identity).Returns("DefiningQuery");
             mockProperty.Setup(m => m.Value).Returns(definingQuery);
 
-            var mockContainer = new Mock<EntityContainer>();
+            var mockContainer = new Mock<EntityContainer>("C", DataSpace.CSpace);
             mockContainer.Setup(m => m.Name).Returns("Kontainer");
 
             var mockSet = new Mock<EntitySetBase>();

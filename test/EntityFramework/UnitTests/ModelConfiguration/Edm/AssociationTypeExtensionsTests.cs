@@ -10,9 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Initialize_should_create_association_ends()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.NotNull(associationType.SourceEnd);
             Assert.NotNull(associationType.TargetEnd);
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_mark_association_as_independent()
         {
-            var associationType = new AssociationType();
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             Assert.False(associationType.IsIndependent());
 
@@ -33,9 +33,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetOtherEnd_should_return_correct_end()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.Same(associationType.SourceEnd, associationType.GetOtherEnd(associationType.TargetEnd));
             Assert.Same(associationType.TargetEnd, associationType.GetOtherEnd(associationType.SourceEnd));
@@ -44,9 +44,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_configuration_facet()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SetConfiguration(42);
 
             Assert.Equal(42, associationType.GetConfiguration());
@@ -55,9 +55,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsRequiredToMany_should_be_true_when_source_required_and_target_many()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
@@ -67,9 +67,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsManyToRequired_should_be_true_when_source_many_and_target_required()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
@@ -79,9 +79,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsManyToMany_should_be_true_when_source_many_and_target_many()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
@@ -91,8 +91,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsSelfReferencing_returns_true_when_source_type_matches_target_type()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", associationType.SourceEnd.GetEntityType());
 
             Assert.True(associationType.IsSelfReferencing());
@@ -101,15 +101,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void IsSelfReferencing_returns_true_when_ends_have_same_base_type()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.False(associationType.IsSelfReferencing());
 
             associationType.SourceEnd.GetEntityType().BaseType
                 = associationType.TargetEnd.GetEntityType().BaseType
-                  = new EntityType();
+                  = new EntityType("E", "N", DataSpace.CSpace);
 
             Assert.True(associationType.IsSelfReferencing());
         }
@@ -117,9 +117,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_optional_to_many()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
@@ -133,9 +133,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_required_to_many()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
@@ -149,9 +149,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_many_to_optional()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 
@@ -165,9 +165,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_many_to_required()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
@@ -181,9 +181,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_required_to_optional()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 
@@ -197,9 +197,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void TryGuessPrincipalAndDependentEnds_should_return_correct_ends_for_optional_to_required()
         {
-            var associationType = new AssociationType();
-            associationType.SourceEnd = new AssociationEndMember("S", new EntityType());
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType());
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 

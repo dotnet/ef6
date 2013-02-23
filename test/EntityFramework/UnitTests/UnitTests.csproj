@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -37,6 +38,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>
     </NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -48,6 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -60,6 +63,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>
     </NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -577,7 +581,29 @@
     <Compile Include="MultiThreadingTests.cs" />
     <Compile Include="Core\PropertyConstraintExceptionTests.cs" />
     <Compile Include="Internal\DbSetDiscoveryServiceTests.cs" />
-    <Compile Include="Validation\ValidationTests.cs" />
+    <Compile Include="Validation\ComplexPropertyValidatorTests.cs" />
+    <Compile Include="Validation\ComplexTypeValidatorTests.cs" />
+    <Compile Include="Validation\DbEntityValidationExceptionTests.cs" />
+    <Compile Include="Validation\DbEntityValidationResultTests.cs" />
+    <Compile Include="Validation\DbUnexpectedValidationExceptionTests.cs" />
+    <Compile Include="Validation\EntityValidatorBuilderTests.cs" />
+    <Compile Include="Validation\EntityValidatorTests.cs" />
+    <Compile Include="Validation\PropertyValidatorTests.cs" />
+    <Compile Include="Validation\TestHelpers\Model\AircraftInfo.cs" />
+    <Compile Include="Validation\TestHelpers\Model\AirportDetails.cs" />
+    <Compile Include="Validation\TestHelpers\Model\DepartureArrivalInfoWithNestedComplexType.cs" />
+    <Compile Include="Validation\TestHelpers\Model\EntityWithOptionalNestedComplexType.cs" />
+    <Compile Include="Validation\TestHelpers\Model\FlightSegmentWithNestedComplexTypes.cs" />
+    <Compile Include="Validation\TestHelpers\Model\FlightSegmentWithNestedComplexTypesWithTypeLevelValidation.cs" />
+    <Compile Include="Validation\TestHelpers\Model\MostDerivedFlightSegmentWithNestedComplexTypes.cs" />
+    <Compile Include="Validation\TestHelpers\EntityValidatorBuilderForMock.cs" />
+    <Compile Include="Validation\TestHelpers\MockHelper.cs" />
+    <Compile Include="Validation\TestHelpers\ValidationErrorHelper.cs" />
+    <Compile Include="Validation\TestHelpers\ValidationProviderForMock.cs" />
+    <Compile Include="Validation\ValidatableObjectValidatorTests.cs" />
+    <Compile Include="Validation\ValidationAttributeValidatorTests.cs" />
+    <Compile Include="Validation\ValidationContextTests.cs" />
+    <Compile Include="Validation\ValidationProviderTests.cs" />
     <Compile Include="WriteEdmxTests.cs" />
   </ItemGroup>
   <ItemGroup>

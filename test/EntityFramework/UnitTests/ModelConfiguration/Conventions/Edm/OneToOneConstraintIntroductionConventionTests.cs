@@ -11,13 +11,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_introduce_constraint_when_one_to_one()
         {
-            var entityType1 = new EntityType();
+            var entityType1 = new EntityType("E", "N", DataSpace.CSpace);
             entityType1.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            var entityType2 = new EntityType();
+            var entityType2 = new EntityType("E", "N", DataSpace.CSpace);
             entityType2.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            var associationType = new AssociationType();
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
             associationType.SourceEnd = new AssociationEndMember("S", entityType2);
             associationType.TargetEnd = new AssociationEndMember("T", entityType1);
 

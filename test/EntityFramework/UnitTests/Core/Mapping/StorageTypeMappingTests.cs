@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Mapping
             var storageSetMapping
                 = new StorageEntitySetMapping(
                     new EntitySet(),
-                    new StorageEntityContainerMapping(new EntityContainer()));
+                    new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
 
             var storageTypeMapping
                 = new StorageEntityTypeMapping(storageSetMapping);

@@ -18,7 +18,7 @@ namespace System.Data.Entity.Edm
                           CallBase = true
                       };
 
-            var function = new EdmFunction();
+            var function = new EdmFunction("F", "N", DataSpace.SSpace);
             var model = new EdmModel(DataSpace.SSpace);
             model.AddItem(function);
 

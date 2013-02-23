@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Resources;
     using System.Diagnostics.Eventing.Reader;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
@@ -54,10 +55,11 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
                 using (new TransactionScope())
                 {
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        executeAsync(mockExecutionStrategy))
-                          .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Assert.Throws<InvalidOperationException>(
+                            () =>
+                            executeAsync(mockExecutionStrategy)).Message);
                 }
             }
 
@@ -82,10 +84,11 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
                 Execute(mockExecutionStrategy);
 
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    Execute(mockExecutionStrategy))
-                      .ValidateMessage("ExecutionStrategy_AlreadyExecuted");
+                Assert.Equal(
+                    Strings.ExecutionStrategy_AlreadyExecuted,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        Execute(mockExecutionStrategy)).Message);
             }
 
             [Fact]
@@ -144,21 +147,24 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
 
                 var executionCount = 0;
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    execute(
-                        mockExecutionStrategy, () =>
-                                                   {
-                                                       if (executionCount++ < 3)
+
+                Assert.Equal(
+                    Strings.ExecutionStrategy_NegativeDelay,
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        execute(
+                            mockExecutionStrategy, () =>
                                                        {
-                                                           throw new ExternalException();
-                                                       }
-                                                       else
-                                                       {
-                                                           Assert.True(false);
-                                                           return 0;
-                                                       }
-                                                   })).ValidateMessage("ExecutionStrategy_NegativeDelay");
+                                                           if (executionCount++ < 3)
+                                                           {
+                                                               throw new ExternalException();
+                                                           }
+                                                           else
+                                                           {
+                                                               Assert.True(false);
+                                                               return 0;
+                                                           }
+                                                       })).Message);
 
                 Assert.Equal(1, executionCount);
             }
@@ -369,10 +375,11 @@ namespace System.Data.Entity.Infrastructure
 
                 using (new TransactionScope())
                 {
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        executeAsync(mockExecutionStrategy))
-                          .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Assert.Throws<InvalidOperationException>(
+                            () =>
+                            executeAsync(mockExecutionStrategy)).Message);
                 }
             }
 
@@ -397,12 +404,13 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
                 executeAsync(mockExecutionStrategy).Wait();
 
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    ExceptionHelpers.UnwrapAggregateExceptions(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_AlreadyExecuted,
+                    Assert.Throws<InvalidOperationException>(
                         () =>
-                        executeAsync(mockExecutionStrategy).Wait()))
-                      .ValidateMessage("ExecutionStrategy_AlreadyExecuted");
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
+                            executeAsync(mockExecutionStrategy).Wait())).Message);
             }
 
             [Fact]
@@ -461,23 +469,25 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
 
                 var executionCount = 0;
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    ExceptionHelpers.UnwrapAggregateExceptions(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_NegativeDelay,
+                    Assert.Throws<InvalidOperationException>(
                         () =>
-                        executeAsync(
-                            mockExecutionStrategy, () =>
-                                                       {
-                                                           if (executionCount++ < 3)
+                        ExceptionHelpers.UnwrapAggregateExceptions(
+                            () =>
+                            executeAsync(
+                                mockExecutionStrategy, () =>
                                                            {
-                                                               throw new ExternalException();
-                                                           }
-                                                           else
-                                                           {
-                                                               Assert.True(false);
-                                                               return Task.FromResult(0);
-                                                           }
-                                                       }).Wait())).ValidateMessage("ExecutionStrategy_NegativeDelay");
+                                                               if (executionCount++ < 3)
+                                                               {
+                                                                   throw new ExternalException();
+                                                               }
+                                                               else
+                                                               {
+                                                                   Assert.True(false);
+                                                                   return Task.FromResult(0);
+                                                               }
+                                                           }).Wait())).Message);
 
                 Assert.Equal(1, executionCount);
             }

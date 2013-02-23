@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_set_and_get_relationship_multiplicity()
         {
-            var relationshipEndMember = new AssociationEndMember("E", new EntityType());
+            var relationshipEndMember = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.Equal(default(RelationshipMultiplicity), relationshipEndMember.RelationshipMultiplicity);
 

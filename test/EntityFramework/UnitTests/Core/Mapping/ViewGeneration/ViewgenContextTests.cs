@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var associationType1
                     = new AssociationType("A1", EdmConstants.TransientNamespace, true, DataSpace.CSpace);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
                 associationType1.AddMember(
                     new AssociationEndMember("S", entityType)
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var associationType1
                     = new AssociationType("A1", EdmConstants.TransientNamespace, true, DataSpace.CSpace);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
                 associationType1.AddMember(
                     new AssociationEndMember("S", entityType)
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var associationType1
                     = new AssociationType("A1", EdmConstants.TransientNamespace, true, DataSpace.CSpace);
 
-                var entityType = new EntityType();
+                var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
                 associationType1.AddMember(
                     new AssociationEndMember("S", entityType)
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     = new AssociationType("A2", EdmConstants.TransientNamespace, true, DataSpace.CSpace);
 
                 associationType2.AddMember(
-                    new AssociationEndMember("S", new EntityType())
+                    new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace))
                         {
                             RelationshipMultiplicity = RelationshipMultiplicity.One
                         });

@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            model.AddItem(new EntityType());
+            model.AddItem(new EntityType("E", "N", DataSpace.CSpace));
 
             Assert.Throws<ModelValidationException>(() => model.Validate());
         }

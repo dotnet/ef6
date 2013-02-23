@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_entity_type_mappings()
         {
-            var entityContainerMapping = new StorageEntityContainerMapping(new EntityContainer());
+            var entityContainerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace));
             var entitySetMapping = new StorageEntitySetMapping(new EntitySet(), entityContainerMapping);
 
             Assert.Empty(entitySetMapping.EntityTypeMappings);
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_entity_set()
         {
-            var entityContainerMapping = new StorageEntityContainerMapping(new EntityContainer());
+            var entityContainerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace));
             var entitySet = new EntitySet();
             var entitySetMapping = new StorageEntitySetMapping(entitySet, entityContainerMapping);
 

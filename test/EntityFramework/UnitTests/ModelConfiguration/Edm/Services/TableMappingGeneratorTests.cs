@@ -12,10 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         public void Generate_should_add_set_mapping_and_table_and_set_clr_type()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EntityType
-                                 {
-                                     Name = "E"
-                                 };
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
             var type = typeof(object);
 
@@ -33,10 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         public void Generate_should_map_scalar_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EntityType
-                                 {
-                                     Name = "E"
-                                 };
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
@@ -61,10 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         public void Generate_should_flatten_complex_properties_to_columns()
         {
             var databaseMapping = CreateEmptyModel();
-            var entityType = new EntityType
-                                 {
-                                     Name = "E"
-                                 };
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var complexType = new ComplexType("C");
 
             var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));

@@ -98,7 +98,7 @@ namespace System.Data.Entity.Edm.Serialization
         public void VisitEdmFunction_should_write_start_and_end_elements()
         {
             var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
-            var function = new EdmFunction();
+            var function = new EdmFunction("F", "N", DataSpace.SSpace);
 
             new EdmSerializationVisitor(schemaWriterMock.Object).VisitEdmFunction(function);
 

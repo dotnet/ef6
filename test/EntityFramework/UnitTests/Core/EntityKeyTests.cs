@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core
                                 return mockEdmMember1.Object;
                             }).ToList());
 
-                var mockEntityType = new Mock<EntityType>();
+                var mockEntityType = new Mock<EntityType>("E", "N", DataSpace.CSpace);
                 mockEntityType.Setup(m => m.KeyMembers).Returns(metadataCollection);
                 mockEntityType.Setup(m => m.IsAssignableFrom(mockEntityType.Object)).Returns(true);
                 mockEntityType.Setup(m => m.KeyMemberNames).Returns(keyNames.Select(k => k).ToArray());
@@ -346,7 +346,7 @@ namespace System.Data.Entity.Core
 
             private static Mock<EntitySet> CreateMockEntitySet(Mock<EntityType> mockEntityType)
             {
-                var mockContainer = new Mock<EntityContainer>();
+                var mockContainer = new Mock<EntityContainer>("C", DataSpace.CSpace);
                 mockContainer.Setup(m => m.Name).Returns("Container");
 
                 var mockEntitySet = new Mock<EntitySet>();

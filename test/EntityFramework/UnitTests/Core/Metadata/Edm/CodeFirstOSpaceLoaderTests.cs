@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void LoadTypes_processes_entity_types()
         {
-            LoadTypes_processes_given_type(SetupEdmType(new EntityType(), typeof(Random)));
+            LoadTypes_processes_given_type(SetupEdmType(new EntityType("E", "N", DataSpace.CSpace), typeof(Random)));
         }
 
         [Fact]

@@ -966,15 +966,17 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
                 var executed = false;
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    objectContext.ExecuteInTransaction(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Assert.Throws<InvalidOperationException>(
                         () =>
-                            {
-                                executed = true;
-                                return executed;
-                            }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
-                      .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                        objectContext.ExecuteInTransaction(
+                            () =>
+                                {
+                                    executed = true;
+                                    return executed;
+                                }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                          .Message);
 
                 Assert.False(executed);
             }
@@ -990,15 +992,17 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
 
                 var executed = false;
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    objectContext.ExecuteInTransaction(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Assert.Throws<InvalidOperationException>(
                         () =>
-                            {
-                                executed = true;
-                                return executed;
-                            }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
-                      .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                        objectContext.ExecuteInTransaction(
+                            () =>
+                                {
+                                    executed = true;
+                                    return executed;
+                                }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                          .Message);
 
                 Assert.False(executed);
             }
@@ -1013,15 +1017,17 @@ namespace System.Data.Entity.Core.Objects
                 var executed = false;
                 using (new TransactionScope())
                 {
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        objectContext.ExecuteInTransaction(
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Assert.Throws<InvalidOperationException>(
                             () =>
-                                {
-                                    executed = true;
-                                    return executed;
-                                }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
-                          .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                            objectContext.ExecuteInTransaction(
+                                () =>
+                                    {
+                                        executed = true;
+                                        return executed;
+                                    }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                              .Message);
                 }
 
                 Assert.False(executed);
@@ -2358,18 +2364,19 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
                 var executed = false;
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    ExceptionHelpers.UnwrapAggregateExceptions(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Assert.Throws<InvalidOperationException>(
                         () =>
-                        objectContext.ExecuteInTransactionAsync(
+                        ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
-                                {
-                                    executed = true;
-                                    return Task.FromResult(executed);
-                                }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false, false, CancellationToken.None)
-                                     .Result))
-                      .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                            objectContext.ExecuteInTransactionAsync(
+                                () =>
+                                    {
+                                        executed = true;
+                                        return Task.FromResult(executed);
+                                    }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
 
                 Assert.False(executed);
             }
@@ -2385,17 +2392,18 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
 
                 var executed = false;
-                Assert.Throws<InvalidOperationException>(
-                    () => ExceptionHelpers.UnwrapAggregateExceptions(
-                        () =>
-                        objectContext.ExecuteInTransactionAsync(
+                Assert.Equal(
+                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Assert.Throws<InvalidOperationException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
-                                {
-                                    executed = true;
-                                    return Task.FromResult(executed);
-                                }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false, false, CancellationToken.None)
-                                     .Result))
-                      .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                            objectContext.ExecuteInTransactionAsync(
+                                () =>
+                                    {
+                                        executed = true;
+                                        return Task.FromResult(executed);
+                                    }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
 
                 Assert.False(executed);
             }
@@ -2410,18 +2418,19 @@ namespace System.Data.Entity.Core.Objects
                 var executed = false;
                 using (new TransactionScope())
                 {
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Assert.Throws<InvalidOperationException>(
                             () =>
-                            objectContext.ExecuteInTransactionAsync(
+                            ExceptionHelpers.UnwrapAggregateExceptions(
                                 () =>
-                                    {
-                                        executed = true;
-                                        return Task.FromResult(executed);
-                                    }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false, false, CancellationToken.None)
-                                         .Result))
-                          .ValidateMessage("ExecutionStrategy_ExistingTransaction");
+                                objectContext.ExecuteInTransactionAsync(
+                                    () =>
+                                        {
+                                            executed = true;
+                                            return Task.FromResult(executed);
+                                        }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                    /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
                 }
 
                 Assert.False(executed);

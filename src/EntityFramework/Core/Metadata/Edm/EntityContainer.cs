@@ -17,12 +17,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
         private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
 
-        // For testing only
-        internal EntityContainer()
-            : this("C", DataSpace.CSpace)
-        {
-        }
-
         /// <summary>
         ///     The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
         /// </summary>
