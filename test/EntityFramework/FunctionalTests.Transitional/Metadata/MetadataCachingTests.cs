@@ -80,33 +80,6 @@ namespace System.Data.Entity.Metadata
             MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }
 
-        [Fact]
-        public void Metadata_does_not_get_garbage_collected_after_cleanup_is_performed_once_if_references_are_alive()
-        {
-            Action garbageCollection = () =>
-                                           {
-                                               GC.Collect();
-                                               GC.WaitForPendingFinalizers();
-                                               CallPeriodicCleanupMethod();
-                                           };
-
-            MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
-        }
-
-        [Fact]
-        public void Metadata_does_not_get_garbage_collected_after_cleanup_is_performed_twice_if_references_are_alive()
-        {
-            Action garbageCollection = () =>
-                                           {
-                                               GC.Collect();
-                                               GC.WaitForPendingFinalizers();
-                                               CallPeriodicCleanupMethod();
-                                               CallPeriodicCleanupMethod();
-                                           };
-
-            MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
-        }
-
         private void MetadataCachingWithGarbageCollectionTemplate(Action garbageCollection)
         {
             MetadataWorkspace.ClearCache();
@@ -134,13 +107,6 @@ namespace System.Data.Entity.Metadata
                 Assert.Same(weakReferences[1].Target, connection2.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace));
                 Assert.Same(weakReferences[2].Target, connection2.GetMetadataWorkspace().GetItemCollection(DataSpace.CSSpace));
             }
-        }
-
-        internal static void CallPeriodicCleanupMethod()
-        {
-            var method = typeof(MetadataCache).GetMethod(
-                "PeriodicCleanupCallback", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(object) }, null);
-            method.Invoke(null, new object[] { null });
         }
     }
 }

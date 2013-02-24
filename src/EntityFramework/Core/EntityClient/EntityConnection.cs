@@ -2,22 +2,19 @@
 
 namespace System.Data.Entity.Core.EntityClient
 {
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Linq;
     using System.Runtime.Versioning;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -30,8 +27,6 @@ namespace System.Data.Entity.Core.EntityClient
     /// </summary>
     public class EntityConnection : DbConnection
     {
-        private const string MetadataPathSeparator = "|";
-        private const string SemicolonSeparator = ";";
         private const string EntityClientProviderName = "System.Data.EntityClient";
         private const string ProviderInvariantName = "provider";
         private const string ProviderConnectionString = "provider connection string";
@@ -57,9 +52,6 @@ namespace System.Data.Entity.Core.EntityClient
         // Transaction the user enlisted in using EnlistTransaction() method
         private Transaction _enlistedTransaction;
         private bool _initialized;
-        // will only have a value while waiting for the ssdl to be loaded. we should 
-        // never have a value for this when _initialized == true
-        private MetadataArtifactLoader _artifactLoader;
 
         /// <summary>
         ///     Constructs the EntityConnection object with a connection not yet associated to a particular store
@@ -120,7 +112,10 @@ namespace System.Data.Entity.Core.EntityClient
         ///     This constructor allows to skip the initialization code for testing purposes.
         /// </summary>
         internal EntityConnection(
-            MetadataWorkspace workspace, DbConnection connection, bool skipInitialization, bool entityConnectionOwnsStoreConnection)
+            MetadataWorkspace workspace, 
+            DbConnection connection, 
+            bool skipInitialization, 
+            bool entityConnectionOwnsStoreConnection)
         {
             if (!skipInitialization)
             {
@@ -268,7 +263,10 @@ namespace System.Data.Entity.Core.EntityClient
             // For ChangeConnectionString method call. But the paths are not created in this method.
             set
             {
-                ValidateChangesPermitted();
+                if (_initialized)
+                {
+                    throw new InvalidOperationException(Strings.EntityClient_SettingsCannotBeChangedOnOpenConnection);
+                }
                 ChangeConnectionString(value);
             }
         }
@@ -417,7 +415,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Gets the metadata workspace used by this connection
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate"), CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [CLSCompliant(false)]
         public virtual MetadataWorkspace GetMetadataWorkspace()
         {
             if (_metadataWorkspace != null)
@@ -425,52 +424,9 @@ namespace System.Data.Entity.Core.EntityClient
                 return _metadataWorkspace;
             }
 
-            var loaders = new List<MetadataArtifactLoader>();
-            var paths = _effectiveConnectionOptions[EntityConnectionStringBuilder.MetadataParameterName];
-
-            if (!string.IsNullOrEmpty(paths))
-            {
-                loaders = MetadataCache.GetOrCreateMetdataArtifactLoader(paths);
-
-                if (ShouldRecalculateMetadataArtifactLoader(loaders))
-                {
-                    // the loaders contains folders that might get updated during runtime, so we have to recalculate the loaders again
-                    _artifactLoader = MetadataArtifactLoader.Create(MetadataCache.SplitPaths(paths));
-                }
-                else
-                {
-                    _artifactLoader = MetadataArtifactLoader.Create(loaders);
-                }
-            }
-            else
-            {
-                _artifactLoader = MetadataArtifactLoader.Create(loaders);
-            }
-
-            // Build a string as the key and look up the MetadataCache for a match
-            var edmCacheKey = CreateMetadataCacheKey(_artifactLoader.GetOriginalPaths(DataSpace.CSpace), null, null);
-
-            // Check the MetadataCache for an entry with this key
-            object entryToken;
-            var edmItemCollection = MetadataCache.GetOrCreateEdmItemCollection(edmCacheKey, _artifactLoader, out entryToken);
-
-            var mappingLoader = new Lazy<StorageMappingItemCollection>(
-                () => StorageMappingLoader(_storeConnection, _effectiveConnectionOptions, edmItemCollection));
-
-            _metadataWorkspace = new MetadataWorkspace(
-                () => edmItemCollection,
-                () => mappingLoader.Value.StoreItemCollection,
-                () => mappingLoader.Value);
-
-            // TODO: Fix this as part of metadata caching simplification to cache workspaces themselves
-            _metadataWorkspace.AddMetadataEntryToken(entryToken);
-
+            _metadataWorkspace = MetadataCache.Instance.GetMetadataWorkspace(_effectiveConnectionOptions);
+            _initialized = true;
             return _metadataWorkspace;
-        }
-
-        private static bool ShouldRecalculateMetadataArtifactLoader(IEnumerable<MetadataArtifactLoader> loaders)
-        {
-            return loaders.Any(loader => loader.GetType() == typeof(MetadataArtifactLoaderCompositeFile));
         }
 
         /// <summary>
@@ -794,25 +750,31 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Enables the user to pass in a database transaction created outside of the Entity Framework
-        /// if you want the framework to execute commands within that external transaction.
-        /// Or pass in null to clear the Framework's knowledge of the current transaction.
+        ///     Enables the user to pass in a database transaction created outside of the Entity Framework
+        ///     if you want the framework to execute commands within that external transaction.
+        ///     Or pass in null to clear the Framework's knowledge of the current transaction.
         /// </summary>
         /// <returns>the EntityTransaction wrapping the DbTransaction or null if cleared</returns>
         /// <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already enlisted in a <see cref="System.Transactions.TransactionScope"/> transaction</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already participating in a transaction</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if the connection associated with the <see cref="Database" /> object is already enlisted in a
+        ///     <see
+        ///         cref="System.Transactions.TransactionScope" />
+        ///     transaction
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if the connection associated with the <see cref="Database" /> object is already participating in a transaction
+        /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         /// <summary>
         internal EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
         {
             if (storeTransaction == null)
             {
-                this.ClearCurrentTransaction();
+                ClearCurrentTransaction();
             }
             else
             {
-
                 if (CurrentTransaction != null)
                 {
                     throw new InvalidOperationException(Strings.DbContext_TransactionAlreadyStarted);
@@ -828,7 +790,7 @@ namespace System.Data.Entity.Core.EntityClient
                     throw new InvalidOperationException(Strings.DbContext_InvalidTransactionNoConnection);
                 }
 
-                if (storeTransaction.Connection != this.StoreConnection)
+                if (storeTransaction.Connection != StoreConnection)
                 {
                     throw new InvalidOperationException(Strings.DbContext_InvalidTransactionForConnection);
                 }
@@ -1068,167 +1030,6 @@ namespace System.Data.Entity.Core.EntityClient
             return keywordValue;
         }
 
-        private StorageMappingItemCollection StorageMappingLoader(
-            DbConnection storeConnection,
-            DbConnectionOptions connectionOptions,
-            EdmItemCollection edmItemCollection)
-        {
-            // The provider connection string is optional; if it has not been specified,
-            // we pick up the store's connection string.
-            //
-            var providerConnectionString = connectionOptions[EntityConnectionStringBuilder.ProviderConnectionStringParameterName];
-            if (string.IsNullOrEmpty(providerConnectionString)
-                && (storeConnection != null))
-            {
-                providerConnectionString = storeConnection.ConnectionString;
-            }
-
-            // Build a string as the key and look up the MetadataCache for a match
-            var storeCacheKey = CreateMetadataCacheKey(
-                _artifactLoader.GetOriginalPaths(),
-                connectionOptions[EntityConnectionStringBuilder.ProviderParameterName],
-                providerConnectionString);
-
-            // Load store metadata.
-            object entryToken;
-            var mappingCollection =
-                MetadataCache.GetOrCreateStoreAndMappingItemCollections(
-                    storeCacheKey,
-                    _artifactLoader,
-                    edmItemCollection,
-                    out entryToken);
-
-            _artifactLoader = null;
-            _initialized = true;
-
-            // TODO: Fix this as part of metadata caching simplification to cache workspaces themselves
-            _metadataWorkspace.AddMetadataEntryToken(entryToken);
-
-            return mappingCollection;
-        }
-
-        /// <summary>
-        ///     Create a key to be used with the MetadataCache from a connection options object
-        /// </summary>
-        /// <param name="paths"> A list of metadata file paths </param>
-        /// <param name="providerName"> The provider name </param>
-        /// <param name="providerConnectionString"> The provider connection string </param>
-        /// <returns> The key </returns>
-        private static string CreateMetadataCacheKey(IList<string> paths, string providerName, string providerConnectionString)
-        {
-            var resultCount = 0;
-            string result;
-
-            // Do a first pass to calculate the output size of the metadata cache key,
-            // then another pass to populate a StringBuilder with the exact size and
-            // get the result.
-            CreateMetadataCacheKeyWithCount(
-                paths, providerName, providerConnectionString,
-                false, ref resultCount, out result);
-            CreateMetadataCacheKeyWithCount(
-                paths, providerName, providerConnectionString,
-                true, ref resultCount, out result);
-
-            return result;
-        }
-
-        /// <summary>
-        ///     Create a key to be used with the MetadataCache from a connection options
-        ///     object.
-        /// </summary>
-        /// <param name="paths"> A list of metadata file paths </param>
-        /// <param name="providerName"> The provider name </param>
-        /// <param name="providerConnectionString"> The provider connection string </param>
-        /// <param name="buildResult"> Whether the result variable should be built. </param>
-        /// <param name="resultCount"> On entry, the expected size of the result (unused if buildResult is false). After execution, the effective result. </param>
-        /// <param name="result"> The key. </param>
-        /// <remarks>
-        ///     This method should be called once with buildResult=false, to get
-        ///     the size of the resulting key, and once with buildResult=true
-        ///     and the size specification.
-        /// </remarks>
-        private static void CreateMetadataCacheKeyWithCount(
-            IList<string> paths,
-            string providerName, string providerConnectionString,
-            bool buildResult, ref int resultCount, out string result)
-        {
-            // Build a string as the key and look up the MetadataCache for a match
-            StringBuilder keyString;
-            if (buildResult)
-            {
-                keyString = new StringBuilder(resultCount);
-            }
-            else
-            {
-                keyString = null;
-            }
-
-            // At this point, we've already used resultCount. Reset it
-            // to zero to make the final debug assertion that our computation
-            // is correct.
-            resultCount = 0;
-
-            if (!string.IsNullOrEmpty(providerName))
-            {
-                resultCount += providerName.Length + 1;
-                if (buildResult)
-                {
-                    keyString.Append(providerName);
-                    keyString.Append(SemicolonSeparator);
-                }
-            }
-
-            if (paths != null)
-            {
-                for (var i = 0; i < paths.Count; i++)
-                {
-                    if (paths[i].Length > 0)
-                    {
-                        if (i > 0)
-                        {
-                            resultCount++;
-                            if (buildResult)
-                            {
-                                keyString.Append(MetadataPathSeparator);
-                            }
-                        }
-
-                        resultCount += paths[i].Length;
-                        if (buildResult)
-                        {
-                            keyString.Append(paths[i]);
-                        }
-                    }
-                }
-
-                resultCount++;
-                if (buildResult)
-                {
-                    keyString.Append(SemicolonSeparator);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(providerConnectionString))
-            {
-                resultCount += providerConnectionString.Length;
-                if (buildResult)
-                {
-                    keyString.Append(providerConnectionString);
-                }
-            }
-
-            if (buildResult)
-            {
-                result = keyString.ToString();
-            }
-            else
-            {
-                result = null;
-            }
-
-            Debug.Assert(!buildResult || (result.Length == resultCount));
-        }
-
         /// <summary>
         ///     Clears the current DbTransaction and the transaction the user enlisted the connection in
         ///     with EnlistTransaction() method.
@@ -1291,17 +1092,6 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 throw;
-            }
-        }
-
-        /// <summary>
-        ///     Call to determine if changes to the entity object are currently permitted.
-        /// </summary>
-        private void ValidateChangesPermitted()
-        {
-            if (_initialized)
-            {
-                throw new InvalidOperationException(Strings.EntityClient_SettingsCannotBeChangedOnOpenConnection);
             }
         }
 

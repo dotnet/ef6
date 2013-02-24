@@ -1398,7 +1398,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public static void ClearCache()
         {
-            MetadataCache.Clear();
+            MetadataCache.Instance.Clear();
             DbConfiguration.GetService<IViewAssemblyCache>().Clear();
             using (var cache = AssemblyCache.AquireLockedAssemblyCache())
             {

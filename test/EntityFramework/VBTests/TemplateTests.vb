@@ -22,7 +22,17 @@ Public Class TemplateTests
 
     Shared Sub New()
         DbConfiguration.SetConfiguration(New FunctionalTestsConfiguration())
-        InitializeModelFirstDatabases()
+        InitializeModelFirstDatabases(False)
+
+        Using context = New AdvancedPatternsModelFirstContext
+            Database.SetInitializer(New AdvancedPatternsModelFirstInitializer())
+            context.Database.Initialize(False)
+        End Using
+
+        Using context = New MonsterModel
+            Database.SetInitializer(New DropCreateDatabaseAlways(Of MonsterModel))
+            context.Database.Initialize(False)
+        End Using
     End Sub
 
 #End Region

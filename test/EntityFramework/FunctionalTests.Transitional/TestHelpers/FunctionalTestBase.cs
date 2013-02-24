@@ -75,7 +75,7 @@ namespace System.Data.Entity
         /// <summary>
         ///     Initializes the metadata files and creates databases for existing CSDL/EDMX files.
         /// </summary>
-        protected static void InitializeModelFirstDatabases()
+        protected static void InitializeModelFirstDatabases(bool runInitializers = true)
         {
             const string prefix = "FunctionalTests.ProductivityApi.TemplateModels.Schemas.";
             ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(
@@ -90,15 +90,18 @@ namespace System.Data.Entity
             // Extract the csdl, msl, and ssdl from the edmx so that they can be referenced in the connection string.
             ModelHelpers.WriteMetadataFiles(File.ReadAllText(@".\AdvancedPatterns.edmx"), @".\AdvancedPatterns");
 
-            using (var context = new AdvancedPatternsModelFirstContext())
+            if (runInitializers)
             {
-                context.Database.Initialize(force: false);
-            }
+                using (var context = new AdvancedPatternsModelFirstContext())
+                {
+                    context.Database.Initialize(force: false);
+                }
 
-            using (var context = new MonsterModel())
-            {
-                Database.SetInitializer(new DropCreateDatabaseAlways<MonsterModel>());
-                context.Database.Initialize(force: false);
+                using (var context = new MonsterModel())
+                {
+                    Database.SetInitializer(new DropCreateDatabaseAlways<MonsterModel>());
+                    context.Database.Initialize(force: false);
+                }
             }
         }
 

@@ -107,6 +107,7 @@
     <Compile Include="VbAdvancedPatterns\AddressMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
+    <Compile Include="VbAdvancedPatterns\AdvancedPatternsModelFirstInitializer.vb" />
     <Compile Include="VbAdvancedPatterns\BuildingDetailMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
@@ -128,7 +129,10 @@
     <Compile Include="VbAdvancedPatterns\Partials\AddressMf.vb" />
     <Compile Include="VbAdvancedPatterns\Partials\AdvancedPatternsModelFirstContext.vb" />
     <Compile Include="VbAdvancedPatterns\Partials\BuildingMf.vb" />
+    <Compile Include="VbAdvancedPatterns\Partials\CurrentEmployeeMf.vb" />
+    <Compile Include="VbAdvancedPatterns\Partials\EmployeeMf.vb" />
     <Compile Include="VbAdvancedPatterns\Partials\OfficeMf.vb" />
+    <Compile Include="VbAdvancedPatterns\Partials\PastEmployeeMf.vb" />
     <Compile Include="VbAdvancedPatterns\Partials\SiteInfoMf.vb" />
     <Compile Include="VbAdvancedPatterns\PastEmployeeMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>

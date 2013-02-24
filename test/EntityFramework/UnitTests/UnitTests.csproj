@@ -106,6 +106,9 @@
     <Folder Include="Migrations\Extensions\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
+    <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
+    <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.ssdl" />
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
@@ -190,6 +193,7 @@
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
     <Compile Include="Core\Metadata\Edm\FunctionParameterTests.cs" />
+    <Compile Include="Core\Metadata\Edm\MetadataCacheTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataWorkspaceTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />

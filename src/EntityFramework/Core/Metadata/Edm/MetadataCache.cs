@@ -2,110 +2,44 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Mapping;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Versioning;
+    using System.Linq;
+    using System.Text;
     using System.Threading;
-    using System.Xml;
 
-    /// <summary>
-    ///     Runtime Metadata Cache - this class contains the metadata cache entry for edm and store collections.
-    /// </summary>
-    internal static class MetadataCache
+    internal class MetadataCache
     {
-        private const string s_dataDirectory = "|datadirectory|";
-        private const string s_metadataPathSeparator = "|";
+        private const string DataDirectory = "|datadirectory|";
+        private const string MetadataPathSeparator = "|";
+        private const string SemicolonSeparator = ";";
 
-        // This is the period in the periodic cleanup measured in milliseconds
-        private const int cleanupPeriod = 5 * 60 * 1000;
+        public static readonly MetadataCache Instance = new MetadataCache();
 
-        // This dictionary contains the cache entry for the edm item collection. The reason why we need to keep a seperate dictionary 
-        // for CSpace item collection is that the same model can be used for different providers. We don't want to load the model
-        // again and again
-        private static readonly Dictionary<string, EdmMetadataEntry> _edmLevelCache =
-            new Dictionary<string, EdmMetadataEntry>(StringComparer.OrdinalIgnoreCase);
+        private Memoizer<string, List<MetadataArtifactLoader>> _artifactLoaderCache
+            = new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null);
 
-        /// <summary>
-        ///     This dictionary contains the store cache entry - this entry will only keep track of StorageMappingItemCollection, since internally
-        ///     storage mapping item collection keeps strong references to both edm item collection and store item collection.
-        /// </summary>
-        private static readonly Dictionary<string, StoreMetadataEntry> _storeLevelCache =
-            new Dictionary<string, StoreMetadataEntry>(StringComparer.OrdinalIgnoreCase);
-
-        /// <summary>
-        ///     The list maintains the store metadata entries that are still in use, maybe because someone is still holding a strong reference
-        ///     to it. We need to scan this list everytime the clean up thread wakes up and make sure if the item collection is no longer in use,
-        ///     call clear on query cache
-        /// </summary>
-        private static readonly List<StoreMetadataEntry> _metadataEntriesRemovedFromCache = new List<StoreMetadataEntry>();
-
-        private static Memoizer<string, List<MetadataArtifactLoader>> _artifactLoaderCache =
-            new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null);
-
-        /// <summary>
-        ///     Read/Write lock for edm cache
-        /// </summary>
-        private static readonly object _edmLevelLock = new object();
-
-        /// <summary>
-        ///     Read/Write lock for the store cache
-        /// </summary>
-        private static readonly object _storeLevelLock = new object();
-
-        // Periodic thread which runs every n mins (look up the cleanupPeriod variable to see the exact time), walks through
-        // every item in other store and edm cache and tries to do some cleanup
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
-        private static Timer timer = new Timer(PeriodicCleanupCallback, null, cleanupPeriod, cleanupPeriod);
-
-        /// <summary>
-        ///     The purpose of the thread is to do cleanup. It marks the object in various stages before it actually cleans up the object
-        ///     Here's what this does for each entry in the cache:
-        ///     1> First checks if the entry is marked for cleanup.
-        ///     2> If the entry is marked for cleanup, that means its in one of the following 3 states
-        ///     a) If the strong reference to item collection is not null, it means that this item was marked for cleanup in
-        ///     the last cleanup cycle and we must make the strong reference set to null so that it can be garbage collected.
-        ///     b) Otherwise, we are waiting for GC to collect the item collection so that we can remove this entry from the cache
-        ///     If the weak reference to item collection is still alive, we don't do anything
-        ///     c) If the weak reference to item collection is not alive, we need to remove this entry from the cache
-        ///     3> If the entry is not marked for cleanup, then check whether the weak reference to entry token is alive
-        ///     a) if it is alive, then this entry is in use and we must do nothing
-        ///     b) Otherwise, we can mark this entry for cleanup
-        /// </summary>
-        /// <param name="state"> </param>
-        private static void PeriodicCleanupCallback(object state)
-        {
-            // Perform clean up on edm cache
-            DoCacheClean(_edmLevelCache, _edmLevelLock);
-
-            // Perform clean up on store cache
-            DoCacheClean(_storeLevelCache, _storeLevelLock);
-        }
+        private readonly ConcurrentDictionary<string, MetadataWorkspace> _cachedWorkspaces
+            = new ConcurrentDictionary<string, MetadataWorkspace>();
 
         /// <summary>
         ///     A helper function for splitting up a string that is a concatenation of strings delimited by the metadata
-        ///     path separator into a string list. The resulting list is NOT sorted.
+        ///     path separator into a string list. The resulting list sorted SSDL, MSL, CSDL, if possible.
         /// </summary>
         /// <param name="paths"> The paths to split </param>
         /// <returns> An array of strings </returns>
-        [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
-        [ResourceConsumption(ResourceScope.Machine)]
-        //For MetadataArtifactLoader.Create method call. But the path is not created in this method.
-        internal static List<MetadataArtifactLoader> SplitPaths(string paths)
+        private static List<MetadataArtifactLoader> SplitPaths(string paths)
         {
             DebugCheck.NotEmpty(paths);
 
-            string[] results;
-
             // This is the registry of all URIs in the global collection.
             var uriRegistry = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            var loaders = new List<MetadataArtifactLoader>();
 
             // If the argument contains one or more occurrences of the macro '|DataDirectory|', we
             // pull those paths out so that we don't lose them in the string-splitting logic below.
@@ -118,13 +52,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //
             var dataDirPaths = new List<string>();
 
-            var indexStart = paths.IndexOf(s_dataDirectory, StringComparison.OrdinalIgnoreCase);
+            var indexStart = paths.IndexOf(DataDirectory, StringComparison.OrdinalIgnoreCase);
             while (indexStart != -1)
             {
                 var prevSeparatorIndex = indexStart == 0
                                              ? -1
                                              : paths.LastIndexOf(
-                                                 s_metadataPathSeparator,
+                                                 MetadataPathSeparator,
                                                  indexStart - 1, // start looking here
                                                  StringComparison.Ordinal
                                                    );
@@ -137,8 +71,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // latter case the macro will not be expanded, and downstream code will throw an exception.
                 //
                 var indexEnd = paths.IndexOf(
-                    s_metadataPathSeparator,
-                    indexStart + s_dataDirectory.Length,
+                    MetadataPathSeparator,
+                    indexStart + DataDirectory.Length,
                     StringComparison.Ordinal);
                 if (indexEnd == -1)
                 {
@@ -152,11 +86,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // Update the concatenated list of paths by removing the one containing the macro.
                 //
                 paths = paths.Remove(macroPathBeginIndex, indexEnd - macroPathBeginIndex);
-                indexStart = paths.IndexOf(s_dataDirectory, StringComparison.OrdinalIgnoreCase);
+                indexStart = paths.IndexOf(DataDirectory, StringComparison.OrdinalIgnoreCase);
             }
 
             // Split the string on the separator and remove all spaces around each parameter value
-            results = paths.Split(new[] { s_metadataPathSeparator }, StringSplitOptions.RemoveEmptyEntries);
+            var results = paths.Split(new[] { MetadataPathSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
             // Now that the non-macro paths have been identified, merge the paths containing the macro
             // into the complete list.
@@ -167,639 +101,236 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 results = dataDirPaths.ToArray();
             }
 
+            var csdlLoaders = new List<MetadataArtifactLoader>();
+            var mslLoaders = new List<MetadataArtifactLoader>();
+            var ssdlLoaders = new List<MetadataArtifactLoader>();
+            var loaders = new List<MetadataArtifactLoader>();
+
             for (var i = 0; i < results.Length; i++)
             {
                 // Trim out all the spaces for this parameter and add it only if it's not blank
                 results[i] = results[i].Trim();
                 if (results[i].Length > 0)
                 {
-                    loaders.Add(
-                        MetadataArtifactLoader.Create(
-                            results[i],
-                            MetadataArtifactLoader.ExtensionCheck.All, // validate the extension against all acceptable values
-                            null,
-                            uriRegistry
-                            ));
+                    var loader = MetadataArtifactLoader.Create(
+                        results[i],
+                        MetadataArtifactLoader.ExtensionCheck.All, // validate the extension against all acceptable values
+                        null,
+                        uriRegistry);
+
+                    if (results[i].EndsWith(XmlConstants.CSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        csdlLoaders.Add(loader);
+                    }
+                    else if (results[i].EndsWith(XmlConstants.CSSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        mslLoaders.Add(loader);
+                    }
+                    else if (results[i].EndsWith(XmlConstants.SSpaceSchemaExtension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        ssdlLoaders.Add(loader);
+                    }
+                    else
+                    {
+                        loaders.Add(loader);
+                    }
                 }
             }
+
+            loaders.AddRange(ssdlLoaders);
+            loaders.AddRange(mslLoaders);
+            loaders.AddRange(csdlLoaders);
 
             return loaders;
         }
 
-        /// <summary>
-        ///     Walks through the given cache and calls cleanup on each entry in the cache
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="cache"> </param>
-        /// <param name="objectToLock"> </param>
-        private static void DoCacheClean<T>(Dictionary<string, T> cache, object objectToLock) where T : MetadataEntry
+        public MetadataWorkspace GetMetadataWorkspace(DbConnectionOptions effectiveConnectionOptions)
         {
-            // Sometime, for some reason, timer can be initialized and the cache is still not initialized.
-            if (cache != null)
-            {
-                List<KeyValuePair<string, T>> keysForRemoval = null;
+            DebugCheck.NotNull(effectiveConnectionOptions);
 
-                lock (objectToLock)
-                {
-                    // we should check for type of the lock object first, since otherwise we might be reading the count of the list
-                    // while some other thread might be modifying it. For e.g. when this function is called for edmcache,
-                    // we will be acquiring edmlock and trying to get the count for the list, while some other thread
-                    // might be calling ClearCache and we might be adding entries to the list
-                    if (objectToLock == _storeLevelLock
-                        && _metadataEntriesRemovedFromCache.Count != 0)
+            var artifactLoader = GetArtifactLoader(effectiveConnectionOptions);
+
+            var cacheKey = CreateMetadataCacheKey(
+                artifactLoader.GetPaths(),
+                effectiveConnectionOptions[EntityConnectionStringBuilder.ProviderParameterName]);
+
+            return GetMetadataWorkspace(cacheKey, artifactLoader);
+        }
+
+        public MetadataArtifactLoader GetArtifactLoader(DbConnectionOptions effectiveConnectionOptions)
+        {
+            DebugCheck.NotNull(effectiveConnectionOptions);
+
+            var paths = effectiveConnectionOptions[EntityConnectionStringBuilder.MetadataParameterName];
+
+            if (!string.IsNullOrEmpty(paths))
+            {
+                var loaders = _artifactLoaderCache.Evaluate(paths);
+
+                return MetadataArtifactLoader.Create(
+                    ShouldRecalculateMetadataArtifactLoader(loaders)
+                        ? SplitPaths(paths)
+                        : loaders);
+            }
+
+            return MetadataArtifactLoader.Create(new List<MetadataArtifactLoader>());
+        }
+
+        public MetadataWorkspace GetMetadataWorkspace(string cacheKey, MetadataArtifactLoader artifactLoader)
+        {
+            DebugCheck.NotEmpty(cacheKey);
+            DebugCheck.NotNull(artifactLoader);
+
+            return _cachedWorkspaces.GetOrAdd(
+                cacheKey,
+                k =>
                     {
-                        // First check the list of entries and remove things which are no longer in use
-                        for (var i = _metadataEntriesRemovedFromCache.Count - 1; 0 <= i; i--)
+                        var edmItemCollection = LoadEdmItemCollection(artifactLoader);
+
+                        var mappingLoader = new Lazy<StorageMappingItemCollection>(
+                            () => LoadStoreCollection(edmItemCollection, artifactLoader));
+
+                        return new MetadataWorkspace(
+                            () => edmItemCollection,
+                            () => mappingLoader.Value.StoreItemCollection,
+                            () => mappingLoader.Value);
+                    });
+        }
+
+        public void Clear()
+        {
+            _cachedWorkspaces.Clear();
+
+            Interlocked.CompareExchange(
+                ref _artifactLoaderCache, 
+                new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null), 
+                _artifactLoaderCache);
+        }
+
+        private static StorageMappingItemCollection LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
+        {
+            StoreItemCollection storeItemCollection;
+            var sSpaceXmlReaders = loader.CreateReaders(DataSpace.SSpace);
+            try
+            {
+                storeItemCollection = new StoreItemCollection(
+                    sSpaceXmlReaders,
+                    loader.GetPaths(DataSpace.SSpace));
+            }
+            finally
+            {
+                Helper.DisposeXmlReaders(sSpaceXmlReaders);
+            }
+
+            var csSpaceXmlReaders = loader.CreateReaders(DataSpace.CSSpace);
+            try
+            {
+                return new StorageMappingItemCollection(
+                    edmItemCollection,
+                    storeItemCollection,
+                    csSpaceXmlReaders,
+                    loader.GetPaths(DataSpace.CSSpace));
+            }
+            finally
+            {
+                Helper.DisposeXmlReaders(csSpaceXmlReaders);
+            }
+        }
+
+        private static EdmItemCollection LoadEdmItemCollection(MetadataArtifactLoader loader)
+        {
+            DebugCheck.NotNull(loader);
+
+            var readers = loader.CreateReaders(DataSpace.CSpace);
+            try
+            {
+                return new EdmItemCollection(readers, loader.GetPaths(DataSpace.CSpace));
+            }
+            finally
+            {
+                Helper.DisposeXmlReaders(readers);
+            }
+        }
+
+        private static bool ShouldRecalculateMetadataArtifactLoader(IEnumerable<MetadataArtifactLoader> loaders)
+        {
+            return loaders.Any(loader => loader.GetType() == typeof(MetadataArtifactLoaderCompositeFile));
+        }
+
+        private static string CreateMetadataCacheKey(IList<string> paths, string providerName)
+        {
+            var resultCount = 0;
+            string result;
+
+            // Do a first pass to calculate the output size of the metadata cache key,
+            // then another pass to populate a StringBuilder with the exact size and
+            // get the result.
+            CreateMetadataCacheKeyWithCount(
+                paths, providerName,
+                false, ref resultCount, out result);
+            CreateMetadataCacheKeyWithCount(
+                paths, providerName,
+                true, ref resultCount, out result);
+
+            return result;
+        }
+
+        private static void CreateMetadataCacheKeyWithCount(
+            IList<string> paths,
+            string providerName,
+            bool buildResult, ref int resultCount, out string result)
+        {
+            // Build a string as the key and look up the MetadataCache for a match
+            var keyString = buildResult ? new StringBuilder(resultCount) : null;
+
+            // At this point, we've already used resultCount. Reset it
+            // to zero to make the final debug assertion that our computation
+            // is correct.
+            resultCount = 0;
+
+            if (!string.IsNullOrEmpty(providerName))
+            {
+                resultCount += providerName.Length + 1;
+                if (buildResult)
+                {
+                    keyString.Append(providerName);
+                    keyString.Append(SemicolonSeparator);
+                }
+            }
+
+            if (paths != null)
+            {
+                for (var i = 0; i < paths.Count; i++)
+                {
+                    if (paths[i].Length > 0)
+                    {
+                        if (i > 0)
                         {
-                            if (!_metadataEntriesRemovedFromCache[i].IsEntryStillValid())
+                            resultCount++;
+                            if (buildResult)
                             {
-                                // Clear the query cache
-                                _metadataEntriesRemovedFromCache[i].CleanupQueryCache();
-                                // Remove the entry at the current index. This is the reason why we
-                                // go backwards.
-                                _metadataEntriesRemovedFromCache.RemoveAt(i);
+                                keyString.Append(MetadataPathSeparator);
                             }
                         }
-                    }
 
-                    // We have to use a list to keep track of the keys to remove because we can't remove while enumerating
-                    foreach (var pair in cache)
-                    {
-                        if (pair.Value.PeriodicCleanUpThread())
+                        resultCount += paths[i].Length;
+                        if (buildResult)
                         {
-                            if (keysForRemoval == null)
-                            {
-                                keysForRemoval = new List<KeyValuePair<string, T>>();
-                            }
-                            keysForRemoval.Add(pair);
-                        }
-                    }
-
-                    // Remove all the entries from the cache
-                    if (keysForRemoval != null)
-                    {
-                        for (var i = 0; i < keysForRemoval.Count; i++)
-                        {
-                            keysForRemoval[i].Value.Clear();
-                            cache.Remove(keysForRemoval[i].Key);
+                            keyString.Append(paths[i]);
                         }
                     }
                 }
-            }
-        }
 
-        /// <summary>
-        ///     Retrieves an cache entry holding to edm metadata for a given cache key
-        /// </summary>
-        /// <param name="cacheKey"> string containing all the files from which edm metadata is to be retrieved </param>
-        /// <param name="composite"> An instance of the composite MetadataArtifactLoader </param>
-        /// <param name="entryToken"> The metadata entry token for the returned entry </param>
-        /// <returns> Returns the entry containing the edm metadata </returns>
-        internal static EdmItemCollection GetOrCreateEdmItemCollection(
-            string cacheKey,
-            MetadataArtifactLoader loader,
-            out object entryToken)
-        {
-            var entry = GetCacheEntry(
-                _edmLevelCache, cacheKey, _edmLevelLock,
-                new EdmMetadataEntryConstructor(), out entryToken);
-
-            // Load the edm item collection or if the collection is already loaded, check for security permission
-            LoadItemCollection(new EdmItemCollectionLoader(loader), entry);
-
-            return entry.EdmItemCollection;
-        }
-
-        /// <summary>
-        ///     Retrieves an entry holding store metadata for a given cache key
-        /// </summary>
-        /// <param name="cacheKey"> The connection string whose store metadata is to be retrieved </param>
-        /// <param name="composite"> An instance of the composite MetadataArtifactLoader </param>
-        /// <param name="entryToken"> The metadata entry token for the returned entry </param>
-        /// <returns> the entry containing the information on how to load store metadata </returns>
-        internal static StorageMappingItemCollection GetOrCreateStoreAndMappingItemCollections(
-            string cacheKey,
-            MetadataArtifactLoader loader,
-            EdmItemCollection edmItemCollection,
-            out object entryToken)
-        {
-            var entry = GetCacheEntry(
-                _storeLevelCache, cacheKey, _storeLevelLock,
-                new StoreMetadataEntryConstructor(), out entryToken);
-
-            // Load the store item collection or if the collection is already loaded, check for security permission
-            LoadItemCollection(new StoreItemCollectionLoader(edmItemCollection, loader), entry);
-
-            return entry.StorageMappingItemCollection;
-        }
-
-        internal static List<MetadataArtifactLoader> GetOrCreateMetdataArtifactLoader(string paths)
-        {
-            return _artifactLoaderCache.Evaluate(paths);
-        }
-
-        /// <summary>
-        ///     Get the entry from the cache given the cache key. If the entry is not present, it creates a new entry and
-        ///     adds it to the cache
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="cache"> </param>
-        /// <param name="cacheKey"> </param>
-        /// <param name="entryToken"> </param>
-        /// <param name="metadataEntry"> </param>
-        /// <param name="objectToLock"> </param>
-        /// <returns> </returns>
-        private static T GetCacheEntry<T>(
-            Dictionary<string, T> cache, string cacheKey, object objectToLock,
-            IMetadataEntryConstructor<T> metadataEntry, out object entryToken) where T : MetadataEntry
-        {
-            T entry;
-
-            // In the critical section, we need to do the minimal thing to ensure correctness
-            // Within the lock, we will see if an entry is present. If it is not, we will create a new entry and
-            // add it to the cache. In either case, we need to ensure the token to make sure so that any other
-            // thread that comes looking for the same entry does nothing in this critical section
-            // Also the cleanup thread doesn't do anything since the token is alive
-            lock (objectToLock)
-            {
-                if (cache.TryGetValue(cacheKey, out entry))
+                resultCount++;
+                if (buildResult)
                 {
-                    entryToken = entry.EnsureToken();
-                }
-                else
-                {
-                    entry = metadataEntry.GetMetadataEntry();
-                    entryToken = entry.EnsureToken();
-                    cache.Add(cacheKey, entry);
+                    keyString.Append(SemicolonSeparator);
                 }
             }
 
-            return entry;
-        }
+            result = buildResult ? keyString.ToString() : null;
 
-        /// <summary>
-        ///     Loads the item collection for the entry
-        /// </summary>
-        /// <param name="itemCollectionLoader"> struct which loads an item collection </param>
-        /// <param name="entry"> entry whose item collection needs to be loaded </param>
-        private static void LoadItemCollection<T>(IItemCollectionLoader<T> itemCollectionLoader, T entry) where T : MetadataEntry
-        {
-            // At this point, you have made sure that there is an entry with an alive token in the cache so that
-            // other threads can find it if they come querying for it, and cleanup thread won't clean the entry
-            // If two or more threads come one after the other, we don't won't both of them to load the metadata.
-            // So if one of them is loading the metadata, the other should wait and then use the same metadata.
-            // For that reason, we have this lock on the entry itself to make sure that this happens. Its okay to
-            // update the item collection outside the lock, since assignment are guarantees to be atomic and no two
-            // thread are updating this at the same time
-            if (!entry.IsLoaded)
-            {
-                lock (entry)
-                {
-                    if (!entry.IsLoaded)
-                    {
-                        itemCollectionLoader.LoadItemCollection(entry);
-                    }
-                }
-            }
-
-            Debug.Assert(entry.IsLoaded, "The entry must be loaded at this point");
-        }
-
-        /// <summary>
-        ///     Remove all the entries from the cache
-        /// </summary>
-        internal static void Clear()
-        {
-            lock (_edmLevelLock)
-            {
-                _edmLevelCache.Clear();
-            }
-
-            lock (_storeLevelLock)
-            {
-                // Call clear on each of the metadata entries. This is to make sure we clear all the performance
-                // counters associated with the query cache
-                foreach (var entry in _storeLevelCache.Values)
-                {
-                    // Check if the weak reference to item collection is still alive
-                    if (entry.IsEntryStillValid())
-                    {
-                        _metadataEntriesRemovedFromCache.Add(entry);
-                    }
-                    else
-                    {
-                        entry.Clear();
-                    }
-                }
-                _storeLevelCache.Clear();
-            }
-
-            var artifactLoaderCacheTemp =
-                new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null);
-
-            Interlocked.CompareExchange(ref _artifactLoaderCache, artifactLoaderCacheTemp, _artifactLoaderCache);
-        }
-
-        /// <summary>
-        ///     The base class having common implementation for all metadata entry classes
-        /// </summary>
-        private abstract class MetadataEntry
-        {
-            private readonly WeakReference _entryTokenReference;
-            private ItemCollection _itemCollection;
-            private readonly WeakReference _weakReferenceItemCollection;
-            private bool _markEntryForCleanup;
-
-            /// <summary>
-            ///     The constructor for constructing this MetadataEntry
-            /// </summary>
-            internal MetadataEntry()
-            {
-                // Create this once per life time of the object. Creating extra weak references causing unnecessary GC pressure
-                _entryTokenReference = new WeakReference(null);
-                _weakReferenceItemCollection = new WeakReference(null);
-            }
-
-            /// <summary>
-            ///     returns the item collection inside this metadata entry
-            /// </summary>
-            protected ItemCollection ItemCollection
-            {
-                get { return _itemCollection; }
-            }
-
-            /// <summary>
-            ///     Update the entry with the given item collection
-            /// </summary>
-            /// <param name="itemCollection"> </param>
-            protected void UpdateMetadataEntry(ItemCollection itemCollection)
-            {
-                Debug.Assert(_entryTokenReference.IsAlive, "You must call Ensure token before you call this method");
-                Debug.Assert(_markEntryForCleanup == false, "The entry must not be marked for cleanup");
-                Debug.Assert(_itemCollection == null, "Item collection must be null");
-
-                // Update strong and weak reference for item collection
-                _weakReferenceItemCollection.Target = itemCollection;
-
-                // do this last, because it signals that we are loaded
-                _itemCollection = itemCollection;
-            }
-
-            internal bool IsLoaded
-            {
-                get { return _itemCollection != null; }
-            }
-
-            /// <summary>
-            ///     This method is called periodically by the cleanup thread to make the unused entries
-            ///     go through various stages, before it is ready for cleanup. If it is ready, this method
-            ///     returns true and then the entry is completely removed from the cache
-            /// </summary>
-            /// <returns> </returns>
-            internal bool PeriodicCleanUpThread()
-            {
-                // Here's what this does for each entry in the cache:
-                //     1> First checks if the entry is marked for cleanup.
-                //     2> If the entry is marked for cleanup, that means its in one of the following 3 states
-                //         a) If the strong reference to item collection is not null, it means that this item was marked for cleanup in 
-                //            the last cleanup cycle and we must make the strong reference set to null so that it can be garbage collected. (GEN 2)
-                //         b) Otherwise, we are waiting for GC to collect the item collection so that we can remove this entry from the cache
-                //            If the weak reference to item collection is still alive, we don't do anything
-                //         c) If the weak reference to item collection is not alive, we need to remove this entry from the cache (GEN 3)
-                //     3> If the entry is not marked for cleanup, then check whether the weak reference to entry token is alive
-                //         a) if it is alive, then this entry is in use and we must do nothing
-                //         b) Otherwise, we can mark this entry for cleanup (GEN 1)
-                if (_markEntryForCleanup)
-                {
-                    Debug.Assert(
-                        _entryTokenReference.IsAlive == false, "Entry Token must never be alive if the entry is marked for cleanup");
-
-                    if (_itemCollection != null)
-                    {
-                        // GEN 2
-                        _itemCollection = null;
-                    }
-                    else if (!_weakReferenceItemCollection.IsAlive)
-                    {
-                        // GEN 3
-                        // this entry must be removed from the cache
-                        return true;
-                    }
-                }
-                else if (!_entryTokenReference.IsAlive)
-                {
-                    // GEN 1
-
-                    // If someone creates a entity connection, and calls GetMetadataWorkspace. This creates an cache entry,
-                    // but the item collection is not initialized yet (since store item collection are initialized only 
-                    // when one calls connection.Open()). Suppose now the connection is no longer used - in other words,
-                    // open was never called and it goes out of scope. After some time when the connection gets GC'ed,
-                    // entry token won't be alive any longer, but item collection inside it will be null, since it was never initialized.
-                    // So we can't assert that item collection must be always initialized here
-                    _markEntryForCleanup = true;
-                }
-
-                return false;
-            }
-
-            /// <summary>
-            ///     Make sure that the entry has a alive token and returns that token - it can be new token or an existing
-            ///     one, depending on the state of the entry
-            /// </summary>
-            /// <returns> </returns>
-            internal object EnsureToken()
-            {
-                var entryToken = _entryTokenReference.Target;
-                var itemCollection = (ItemCollection)_weakReferenceItemCollection.Target;
-
-                // When ensure token is called, the entry can be in different stages
-                // 1> Its a newly created entry - no token, no item collection, etc. Just create a new token and 
-                //    return back
-                // 2> An entry already in use - the weak reference to token must be alive. We just need to grab the token
-                //    and return it
-                // 3> No one is using this entry and hence the token is no longer alive. If we have strong reference to item
-                //    collection, then create a new token and return it
-                // 4> No one has used this token for one cleanup cycle and hence strong reference is null. But the weak reference
-                //    is still alive. We need to make the initialize the strong reference again, create a new token and return it
-                // 5> This entry has not been used for long enough that even the weak reference is no longer alive. This entry is
-                //    now exactly like a new entry, except that it is still marked for cleanup. Create a new token, set mark for
-                //    cleanup to false and return the token
-                if (_entryTokenReference.IsAlive)
-                {
-                    Debug.Assert(_markEntryForCleanup == false, "An entry with alive token cannot be marked for cleanup");
-                    // ItemCollection strong pointer can be null or not null. If the entry has been created, and loadItemCollection
-                    // hasn't been called yet, the token will be alive, but item collection will be null. If someone called
-                    // load item collection, then item collection will not be non-null
-                    return entryToken;
-                }
-                    // If the entry token is not alive, then it can be either a new created entry with everything set
-                    // to null or it must be one of the entries which is no longer in use
-                else if (_itemCollection != null)
-                {
-                    Debug.Assert(
-                        _weakReferenceItemCollection.IsAlive, "Since the strong reference is still there, weak reference must also be alive");
-                    // This means that no one is using the item collection, and its waiting to be cleanuped
-                }
-                else
-                {
-                    if (_weakReferenceItemCollection.IsAlive)
-                    {
-                        Debug.Assert(_markEntryForCleanup, "Since the strong reference is null, this entry must be marked for cleanup");
-                        // Initialize the strong reference to item collection
-                        _itemCollection = itemCollection;
-                    }
-                }
-                // Even if the _weakReferenceItemCollection is no longer alive, we will reuse this entry. Assign a new entry token and set mark for cleanup to false
-                // so that this entry is not cleared by the cleanup thread
-
-                entryToken = new object();
-                _entryTokenReference.Target = entryToken;
-                _markEntryForCleanup = false;
-                return entryToken;
-            }
-
-            /// <summary>
-            ///     Dispose the composite loader that encapsulates all artifacts
-            /// </summary>
-            internal virtual void Clear()
-            {
-            }
-
-            /// <summary>
-            ///     This returns true if the entry is still in use - the entry can be use if the entry token is
-            ///     still alive.If the entry token is still not alive, it means that no one is using this entry
-            ///     and its okay to remove it. Today there is no
-            /// </summary>
-            /// <returns> </returns>
-            internal bool IsEntryStillValid()
-            {
-                return _entryTokenReference.IsAlive;
-            }
-        }
-
-        /// <summary>
-        ///     A metadata entry holding EdmItemCollection object for the cache
-        /// </summary>
-        private class EdmMetadataEntry : MetadataEntry
-        {
-            /// <summary>
-            ///     Gets the EdmItemCollection for this entry
-            /// </summary>
-            internal EdmItemCollection EdmItemCollection
-            {
-                get { return (EdmItemCollection)ItemCollection; }
-            }
-
-            /// <summary>
-            ///     Just loads the edm item collection
-            /// </summary>
-            /// <returns> </returns>
-            [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
-            internal void LoadEdmItemCollection(MetadataArtifactLoader loader)
-            {
-                DebugCheck.NotNull(loader);
-
-                var readers = loader.CreateReaders(DataSpace.CSpace);
-                try
-                {
-                    var itemCollection = new EdmItemCollection(
-                        readers,
-                        loader.GetPaths(DataSpace.CSpace)
-                        );
-
-                    UpdateMetadataEntry(itemCollection);
-                }
-                finally
-                {
-                    Helper.DisposeXmlReaders(readers);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     A metadata entry holding a StoreItemCollection and a StorageMappingItemCollection objects for the cache
-        /// </summary>
-        private class StoreMetadataEntry : MetadataEntry
-        {
-            private QueryCacheManager _queryCacheManager;
-
-            /// <summary>
-            ///     Gets the StorageMappingItemCollection for this entry
-            /// </summary>
-            internal StorageMappingItemCollection StorageMappingItemCollection
-            {
-                get { return (StorageMappingItemCollection)ItemCollection; }
-            }
-
-            /// <summary>
-            ///     Load store specific metadata into the StoreItemCollection for this entry
-            /// </summary>
-            /// <param name="factory"> The store-specific provider factory </param>
-            /// <param name="edmItemCollection"> edmItemCollection </param>
-            [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity")]
-            internal void LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
-            {
-                StoreItemCollection storeItemCollection = null;
-                IEnumerable<XmlReader> sSpaceXmlReaders = loader.CreateReaders(DataSpace.SSpace);
-                try
-                {
-                    // Load the store side, however, only do so if we don't already have one
-                    storeItemCollection = new StoreItemCollection(
-                        sSpaceXmlReaders,
-                        loader.GetPaths(DataSpace.SSpace));
-                }
-                finally
-                {
-                    Helper.DisposeXmlReaders(sSpaceXmlReaders);
-                }
-
-                // If this entry is getting re-used, make sure that the previous query cache manager gets
-                // cleared up
-                if (_queryCacheManager != null)
-                {
-                    _queryCacheManager.Clear();
-                }
-
-                // Update the query cache manager reference
-                _queryCacheManager = storeItemCollection.QueryCacheManager;
-
-                // With the store metadata in place, we can then load the mappings, however, only use it 
-                // if we don't already have one
-                //
-                StorageMappingItemCollection storageMappingItemCollection = null;
-                IEnumerable<XmlReader> csSpaceXmlReaders = loader.CreateReaders(DataSpace.CSSpace);
-                try
-                {
-                    storageMappingItemCollection = new StorageMappingItemCollection(
-                        edmItemCollection,
-                        storeItemCollection,
-                        csSpaceXmlReaders,
-                        loader.GetPaths(DataSpace.CSSpace));
-                }
-                finally
-                {
-                    Helper.DisposeXmlReaders(csSpaceXmlReaders);
-                }
-
-                UpdateMetadataEntry(storageMappingItemCollection);
-            }
-
-            /// <summary>
-            ///     Calls clear on query cache manager to make sure all the performance counters associated with the query
-            ///     cache are gone
-            /// </summary>
-            internal override void Clear()
-            {
-                // there can be entries in cache for which the store item collection was never created. For e.g.
-                // if you create a new entity connection, but never call open on it
-                CleanupQueryCache();
-                base.Clear();
-            }
-
-            /// <summary>
-            ///     Cleans and Dispose query cache manager
-            /// </summary>
-            internal void CleanupQueryCache()
-            {
-                if (null != _queryCacheManager)
-                {
-                    _queryCacheManager.Dispose();
-                    _queryCacheManager = null;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Interface to construct the metadata entry so that code can be reused
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        private interface IMetadataEntryConstructor<T>
-        {
-            T GetMetadataEntry();
-        }
-
-        /// <summary>
-        ///     Struct for creating EdmMetadataEntry
-        /// </summary>
-        private struct EdmMetadataEntryConstructor : IMetadataEntryConstructor<EdmMetadataEntry>
-        {
-            public EdmMetadataEntry GetMetadataEntry()
-            {
-                return new EdmMetadataEntry();
-            }
-        }
-
-        /// <summary>
-        ///     Struct for creating StoreMetadataEntry
-        /// </summary>
-        private struct StoreMetadataEntryConstructor : IMetadataEntryConstructor<StoreMetadataEntry>
-        {
-            public StoreMetadataEntry GetMetadataEntry()
-            {
-                return new StoreMetadataEntry();
-            }
-        }
-
-        /// <summary>
-        ///     Interface which constructs a new Item collection
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        private interface IItemCollectionLoader<T>
-            where T : MetadataEntry
-        {
-            void LoadItemCollection(T entry);
-        }
-
-        private struct EdmItemCollectionLoader : IItemCollectionLoader<EdmMetadataEntry>
-        {
-            private readonly MetadataArtifactLoader _loader;
-
-            public EdmItemCollectionLoader(MetadataArtifactLoader loader)
-            {
-                DebugCheck.NotNull(loader);
-                _loader = loader;
-            }
-
-            /// <summary>
-            ///     Creates a new item collection and updates the entry with the item collection
-            /// </summary>
-            /// <param name="entry"> </param>
-            /// <returns> </returns>
-            public void LoadItemCollection(EdmMetadataEntry entry)
-            {
-                entry.LoadEdmItemCollection(_loader);
-            }
-        }
-
-        private struct StoreItemCollectionLoader : IItemCollectionLoader<StoreMetadataEntry>
-        {
-            private readonly EdmItemCollection _edmItemCollection;
-            private readonly MetadataArtifactLoader _loader;
-
-            /// <summary>
-            ///     Constructs a struct from which you can load edm item collection
-            /// </summary>
-            /// <param name="factory"> </param>
-            /// <param name="edmItemCollection"> </param>
-            internal StoreItemCollectionLoader(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
-            {
-                DebugCheck.NotNull(edmItemCollection);
-                DebugCheck.NotNull(loader);
-                //StoreItemCollection requires atleast one SSDL path.
-                if ((loader.GetPaths(DataSpace.SSpace) == null)
-                    || (loader.GetPaths(DataSpace.SSpace).Count == 0))
-                {
-                    throw new MetadataException(Strings.AtleastOneSSDLNeeded);
-                }
-
-                _edmItemCollection = edmItemCollection;
-                _loader = loader;
-            }
-
-            public void LoadItemCollection(StoreMetadataEntry entry)
-            {
-                entry.LoadStoreCollection(_edmItemCollection, _loader);
-            }
+            Debug.Assert(!buildResult || (result.Length == resultCount));
         }
     }
 }

@@ -57,6 +57,13 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         private readonly Hashtable _parsetable;
         internal readonly NameValuePair KeyChain;
 
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal DbConnectionOptions()
+        {
+        }
+
         // synonyms hashtable is meant to be read-only translation of parsed string
         // keywords/synonyms to a known keyword string
         internal DbConnectionOptions(string connectionString, Hashtable synonyms)
@@ -86,7 +93,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             get { return _parsetable; }
         }
 
-        internal string this[string keyword]
+        internal virtual string this[string keyword]
         {
             get { return (string)_parsetable[keyword]; }
         }

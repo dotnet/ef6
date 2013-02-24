@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Schema Namespace='CodeFirstDatabaseSchema' Provider='System.Data.SqlClient' ProviderManifestToken='2008' Alias='Self' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>
+  <EntityType Name='BlogEdmx'>
+    <Key>
+      <PropertyRef Name='Id' />
+    </Key>
+    <Property Name='Id' Type='int' StoreGeneratedPattern='Identity' Nullable='false' />
+  </EntityType>
+  <EntityContainer Name='CodeFirstDatabase'>
+    <EntitySet Name='BlogEdmx' EntityType='Self.BlogEdmx' Schema='dbo' Table='BlogEdmxes' />
+  </EntityContainer>
+</Schema>
