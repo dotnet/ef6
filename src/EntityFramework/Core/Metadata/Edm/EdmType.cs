@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Base EdmType class for all the model types
     /// </summary>
-    public abstract class EdmType : GlobalItem, IQualifiedNameMetadataItem
+    public abstract class EdmType : GlobalItem, INamedDataModelItem
     {
         internal static IEnumerable<T> SafeTraverseHierarchy<T>(T startFrom)
             where T : EdmType

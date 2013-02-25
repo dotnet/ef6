@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Linq;
     using ConcurrencyModel;
@@ -1071,10 +1072,7 @@ namespace FunctionalTests
                                         f.Parameter(ol => ol.Price, "Price");
                                     }));
 
-                    var databaseMapping = BuildMapping(modelBuilder);
-
-                    // TODO: Change this when functions validation added to EDM validator
-                    Assert.Throws<MappingException>(() => databaseMapping.AssertValid());
+                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
 
                 [Fact]
@@ -1091,10 +1089,7 @@ namespace FunctionalTests
                                     map.Update(f => f.HasName("OrderLine_Update"));
                                 });
 
-                    var databaseMapping = BuildMapping(modelBuilder);
-
-                    // TODO: Change this when functions validation added to EDM validator
-                    Assert.Throws<MappingException>(() => databaseMapping.AssertValid());
+                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
 
                 [Fact]
@@ -1113,10 +1108,7 @@ namespace FunctionalTests
                                     map.Delete(f => f.HasName("Tag_Products_Delete"));
                                 });
 
-                    var databaseMapping = BuildMapping(modelBuilder);
-
-                    // TODO: Change this when functions validation added to EDM validator
-                    Assert.Throws<ArgumentException>(() => databaseMapping.AssertValid());
+                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
             }
         }

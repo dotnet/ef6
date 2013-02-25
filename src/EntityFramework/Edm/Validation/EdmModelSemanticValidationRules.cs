@@ -15,6 +15,28 @@ namespace System.Data.Entity.Edm.Validation
     [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
     internal static class EdmModelSemanticValidationRules
     {
+        internal static readonly EdmModelValidationRule<EdmFunction> EdmFunction_DuplicateParameterName
+            = new EdmModelValidationRule<EdmFunction>(
+                (context, function) =>
+                {
+                    var parameterNames = new HashSet<string>();
+
+                    foreach (var parameter in function.Parameters)
+                    {
+                        if (parameter != null)
+                        {
+                            if (!String.IsNullOrWhiteSpace(parameter.Name))
+                            {
+                                AddMemberNameToHashSet(
+                                    parameter,
+                                    parameterNames,
+                                    context,
+                                    Strings.ParameterNameAlreadyDefinedDuplicate);
+                            }
+                        }
+                    }
+                });
+
         internal static readonly EdmModelValidationRule<EdmType> EdmType_SystemNamespaceEncountered =
             new EdmModelValidationRule<EdmType>(
                 (context, edmType) =>

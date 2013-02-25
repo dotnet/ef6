@@ -28,16 +28,13 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
-                        if (!string.IsNullOrWhiteSpace(item.Name))
+                        if (!string.IsNullOrWhiteSpace(item.Name)
+                            && item.Name.Length > 480)
                         {
-                            // max length is hard coded in the xsd
-                            if (item.Name.Length > 480)
-                            {
-                                context.AddError(
-                                    item,
-                                    XmlConstants.Name,
-                                    Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name));
-                            }
+                            context.AddError(
+                                item,
+                                XmlConstants.Name,
+                                Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name));
                         }
                     }
                 );
@@ -46,22 +43,14 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<INamedDataModelItem>(
                 (context, item) =>
                     {
-                        if (!string.IsNullOrWhiteSpace(item.Name))
+                        if (!string.IsNullOrWhiteSpace(item.Name)
+                            && (context.IsCSpace && !item.Name.IsValidUndottedName())
+                            || item.Name.Contains("."))
                         {
-                            // max length is hard coded in the xsd
-                            if (item.Name.Length < 480)
-                            {
-                                if (context.IsCSpace
-                                    && !(item is IQualifiedNameMetadataItem
-                                             ? IsValidDottedName(item.Name)
-                                             : item.Name.IsValidUndottedName()))
-                                {
-                                    context.AddError(
-                                        (MetadataItem)item,
-                                        XmlConstants.Name,
-                                        Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name));
-                                }
-                            }
+                            context.AddError(
+                                (MetadataItem)item,
+                                XmlConstants.Name,
+                                Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name));
                         }
                     }
                 );
@@ -72,8 +61,7 @@ namespace System.Data.Entity.Edm.Validation
                     (context, edmAssociationType) =>
                         {
                             if (edmAssociationType.SourceEnd == null
-                                ||
-                                edmAssociationType.TargetEnd == null)
+                                || edmAssociationType.TargetEnd == null)
                             {
                                 context.AddError(
                                     edmAssociationType,
@@ -251,19 +239,6 @@ namespace System.Data.Entity.Edm.Validation
 
             visitedValidTypeUsages.Add(typeUsage);
 
-            return true;
-        }
-
-        private static bool IsValidDottedName(string name)
-        {
-            // each part of the dotted name needs to be a valid name
-            foreach (var namePart in name.Split('.'))
-            {
-                if (!namePart.IsValidUndottedName())
-                {
-                    return false;
-                }
-            }
             return true;
         }
     }

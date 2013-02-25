@@ -55,17 +55,13 @@ namespace System.Data.Entity.Edm.Validation
             }
 
             AddRule(EdmModelSemanticValidationRules.EdmType_SystemNamespaceEncountered);
-
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_SimilarRelationshipEnd);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_InvalidEntitySetNameReference);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_ConcurrencyRedefinedOnSubTypeOfEntitySetType);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_DuplicateEntityContainerMemberName);
             AddRule(EdmModelSemanticValidationRules.EdmEntityContainer_DuplicateEntitySetTable);
-
             AddRule(EdmModelSemanticValidationRules.EdmEntitySet_EntitySetTypeHasNoKeys);
-
             AddRule(EdmModelSemanticValidationRules.EdmAssociationSet_DuplicateEndName);
-
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_EntityKeyMustBeScalar);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_DuplicatePropertyNameSpecifiedInEntityKey);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_InvalidKeyNullablePart);
@@ -74,22 +70,18 @@ namespace System.Data.Entity.Edm.Validation
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_InvalidMemberNameMatchesTypeName);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_PropertyNameAlreadyDefinedDuplicate);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_CycleInTypeHierarchy);
-
             AddRule(EdmModelSemanticValidationRules.EdmNavigationProperty_BadNavigationPropertyUndefinedRole);
             AddRule(EdmModelSemanticValidationRules.EdmNavigationProperty_BadNavigationPropertyRolesCannotBeTheSame);
             AddRule(EdmModelSemanticValidationRules.EdmNavigationProperty_BadNavigationPropertyBadFromRoleType);
-
             AddRule(EdmModelSemanticValidationRules.EdmAssociationType_InvalidOperationMultipleEndsInAssociation);
-            AddRule(
-                EdmModelSemanticValidationRules.EdmAssociationType_EndWithManyMultiplicityCannotHaveOperationsSpecified);
+            AddRule(EdmModelSemanticValidationRules.EdmAssociationType_EndWithManyMultiplicityCannotHaveOperationsSpecified);
             AddRule(EdmModelSemanticValidationRules.EdmAssociationType_EndNameAlreadyDefinedDuplicate);
             AddRule(EdmModelSemanticValidationRules.EdmAssociationType_InvalidPropertyInRelationshipConstraint);
             AddRule(EdmModelSemanticValidationRules.EdmAssociationType_SameRoleReferredInReferentialConstraint);
             AddRule(EdmModelSemanticValidationRules.EdmAssociationType_ValidateReferentialConstraint);
-
             AddRule(EdmModelSemanticValidationRules.EdmComplexType_InvalidMemberNameMatchesTypeName);
-
             AddRule(EdmModelSemanticValidationRules.EdmNamespace_TypeNameAlreadyDefinedDuplicate);
+            AddRule(EdmModelSemanticValidationRules.EdmFunction_DuplicateParameterName);
         }
 
         private abstract class NonV1_1RuleSet : EdmModelRuleSet

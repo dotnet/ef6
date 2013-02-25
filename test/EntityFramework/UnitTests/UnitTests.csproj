@@ -251,6 +251,7 @@
     <Compile Include="Edm\Serialization\SsdlSerializerTests.cs" />
     <Compile Include="Edm\Validation\EdmModelSemanticValidationRulesTests.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
+    <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
     <Compile Include="Infrastructure\DbCollectionEntryTests.cs" />

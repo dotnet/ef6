@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    public class EdmModel
+    public class EdmModel : IMetadataItem
     {
         private readonly List<EntityContainer> _containers = new List<EntityContainer>();
         private readonly List<AssociationType> _associationTypes = new List<AssociationType>();

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     internal sealed class EdmModelValidationVisitor : EdmModelVisitor
     {
@@ -13,20 +14,27 @@ namespace System.Data.Entity.Edm.Validation
 
         internal EdmModelValidationVisitor(EdmModelValidationContext context, EdmModelRuleSet ruleSet)
         {
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(ruleSet);
+
             _context = context;
             _ruleSet = ruleSet;
         }
 
         protected internal override void VisitMetadataItem(MetadataItem item)
         {
+            DebugCheck.NotNull(item);
+
             if (_visitedItems.Add(item))
             {
                 EvaluateItem(item);
             }
         }
 
-        private void EvaluateItem(MetadataItem item)
+        private void EvaluateItem(IMetadataItem item)
         {
+            DebugCheck.NotNull(item);
+            
             foreach (var rule in _ruleSet.GetRules(item))
             {
                 rule.Evaluate(_context, item);
@@ -35,6 +43,10 @@ namespace System.Data.Entity.Edm.Validation
 
         internal void Visit(EdmModel model)
         {
+            DebugCheck.NotNull(model);
+            
+            EvaluateItem(model);
+
             VisitEdmModel(model);
         }
     }

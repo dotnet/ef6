@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Validation
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
 
@@ -13,6 +14,7 @@ namespace System.Data.Entity.Edm.Validation
 
         protected void AddRule(DataModelValidationRule rule)
         {
+            DebugCheck.NotNull(rule);
             Debug.Assert(!_rules.Contains(rule), "should not add the duplicate rule");
 
             _rules.Add(rule);
@@ -20,13 +22,16 @@ namespace System.Data.Entity.Edm.Validation
 
         protected void RemoveRule(DataModelValidationRule rule)
         {
+            DebugCheck.NotNull(rule);
             Debug.Assert(_rules.Contains(rule), "should exist");
 
             _rules.Remove(rule);
         }
 
-        internal IEnumerable<DataModelValidationRule> GetRules(MetadataItem itemToValidate)
+        internal IEnumerable<DataModelValidationRule> GetRules(IMetadataItem itemToValidate)
         {
+            DebugCheck.NotNull(itemToValidate);
+
             return _rules.Where(r => r.ValidatedType.IsInstanceOfType(itemToValidate));
         }
     }

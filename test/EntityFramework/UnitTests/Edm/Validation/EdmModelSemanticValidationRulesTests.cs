@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Edm
+namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Validation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -11,6 +10,48 @@ namespace System.Data.Entity.Edm
 
     public class EdmModelSemanticValidationRulesTests
     {
+        [Fact]
+        public void EdmFunction_DuplicateParameterName()
+        {
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            var parameter1
+                = new FunctionParameter(
+                    "P",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+
+            var parameter2
+                = new FunctionParameter(
+                    "P2",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+            
+            var function
+                = new EdmFunction(
+                    "F", "N", DataSpace.SSpace,
+                    new EdmFunctionPayload
+                        {
+                            Parameters = new[] { parameter1, parameter2 }
+                        });
+
+            parameter2.Name = "P";
+
+            EdmModelSemanticValidationRules
+                .EdmFunction_DuplicateParameterName
+                .Evaluate(validationContext, function);
+
+            Assert.NotNull(errorEventArgs);
+            Assert.Same(parameter2, errorEventArgs.Item);
+            Assert.Equal(
+                Strings.ParameterNameAlreadyDefinedDuplicate("P"),
+                errorEventArgs.ErrorMessage);
+        }
+
         [Fact]
         public void EdmNavigationProperty_BadNavigationPropertyBadFromRoleType()
         {
