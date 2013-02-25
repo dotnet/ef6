@@ -1792,7 +1792,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                 // We have to adjust for when we're supposed to add/remove null sentinels; 
                 // it is entirely possible that we may need to add multiple null sentinel
-                // columns (See SQLBUDT #549068 for an example).  
+                // columns
                 IEnumerator<md.EdmProperty> outputs = newOp.Properties.GetEnumerator();
                 var outputPropertyCount = newOp.Properties.Count;
                 outputs.MoveNext();
@@ -2588,7 +2588,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // We have to adjust for when we're supposed to remove null sentinels; 
-        // columns (See SQLBUDT #553534 for an example).  Note that we shouldn't
+        // columns.  Note that we shouldn't
         // have to add null sentinels here, since reference types won't be expecting
         // them (the fact that the key is null is good enough...)
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

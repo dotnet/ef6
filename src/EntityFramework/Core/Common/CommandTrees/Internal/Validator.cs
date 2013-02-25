@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                     ThrowInvalid(Strings.Cqt_Validator_VarRefInvalid(varRef.VariableName));
                 }
 
-                // SQLBUDT#545720: Equivalence is not a sufficient check (consider row types) - equality is required.
+                // Equivalence is not a sufficient check (consider row types) - equality is required.
                 if (!TypeSemantics.IsEqual(varRef.ResultType, foundType))
                 {
                     ThrowInvalid(Strings.Cqt_Validator_VarRefTypeMismatch(varRef.VariableName));
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 DbParameterReferenceExpression foundParam;
                 if (paramMappings.TryGetValue(paramRef.ParameterName, out foundParam))
                 {
-                    // SQLBUDT#545720: Equivalence is not a sufficient check (consider row types for TVPs) - equality is required.
+                    // Equivalence is not a sufficient check (consider row types for TVPs) - equality is required.
                     if (!TypeSemantics.IsEqual(paramRef.ResultType, foundParam.ResultType))
                     {
                         ThrowInvalid(Strings.Cqt_Validator_InvalidIncompatibleParameterReferences(paramRef.ParameterName));

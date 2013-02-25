@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         protected DbExpression Rewrite(DbExpression expression)
         {
-            //SQLBUDT #554182: This is special casing for expressions below which it is safe to push the span
+            // This is special casing for expressions below which it is safe to push the span
             // info without having to rebind.  By pushing the span info down (i.e. possible extra projections),
             // we potentially end up with simpler generated command. 
             switch (expression.ExpressionKind)
@@ -446,7 +446,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 var rewrittenRowTypeUsage = TypeUsage.Create(rewrittenRow);
                 DbExpression rewritten = rewrittenRowTypeUsage.New(columnArguments);
 
-                // SQLBUDT #554182: If we insert a new projection we should should make sure to 
+                // If we insert a new projection we should should make sure to 
                 // not interfere with the nullability of the input. 
                 // In particular, if the input row is null and we construct a new row as a projection over its columns
                 // we would get a row consisting of nulls, instead of a null row. 

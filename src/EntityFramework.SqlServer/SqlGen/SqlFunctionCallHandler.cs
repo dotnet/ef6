@@ -1758,8 +1758,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // We use CHARINDEX when the search param is a DbNullExpression because all of SQL Server 2008, 2005 and 2000
                 // consistently return NULL as the result.
                 //  However, if instead we use the optimized LIKE translation when the search param is a DbNullExpression,
-                //  only SQL Server 2005 yields a True instead of a DbNull as compared to SQL Server 2008 and 2000. This is
-                //  tracked in SQLBUDT #32315 in LIKE in SQL Server 2005.
+                //  only SQL Server 2005 yields a True instead of a DbNull as compared to SQL Server 2008 and 2000.
                 result.Append("CHARINDEX( ");
                 result.Append(args[1].Accept(sqlgen));
                 result.Append(", ");

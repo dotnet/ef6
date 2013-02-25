@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #region Equals / GetHashCode
 
-        // Dev10#547254: Easy to confuse DbExpressionBuilder.Equal with object.Equals method
+        // Easy to confuse DbExpressionBuilder.Equal with object.Equals method
         // The object.Equals method is overriden on DbExpression and marked so that it does
         // not appear in IntelliSense to avoid confusion with the DbExpressionBuilder.Equal
         // expression construction method. Overriding Equals also requires that GetHashCode

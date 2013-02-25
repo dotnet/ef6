@@ -54,8 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns> </returns>
         private static Var GetReplacementVar(Var originalVar, Dictionary<Var, Var> replacementVarMap)
         {
-            // SQLBUDT #478509: Follow the chain of mapped vars, don't
-            //                  just stop at the first one
+            //  Follow the chain of mapped vars, don't just stop at the first one
             var replacementVar = originalVar;
 
             while (replacementVarMap.TryGetValue(replacementVar, out originalVar))

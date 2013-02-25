@@ -218,7 +218,6 @@ namespace ProductivityApiTests
             Assert.Equal(7, results.Count);
         }
 
-        // Dev11 216491
         [Fact]
         [FullTrust] // Bespoke test with setup that requires full trust
         public void IsAspNetEnvironment_swallows_security_exception_when_System_Web_is_considered_non_APTCA()
@@ -241,7 +240,6 @@ namespace ProductivityApiTests
                 "IsAspNetEnvironment",
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
-            // Before fixing Dev11 216491 this would throw a SecurityException
             Assert.False((bool)isAspNetEnvironment.Invoke(aspProxy, new object[0]));
         }
 

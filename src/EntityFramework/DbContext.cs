@@ -318,8 +318,7 @@ namespace System.Data.Entity
             {
                 // When dropping down to ObjectContext we force o-space loading for the types
                 // that we know about so that code can use the ObjectContext with o-space metadata
-                // without having to explicitly call LoadFromAssembly. For example Dynamic Data does
-                // this--see Dev11 142609.
+                // without having to explicitly call LoadFromAssembly.
                 InternalContext.ForceOSpaceLoadingForKnownEntityTypes();
                 return InternalContext.ObjectContext;
             }

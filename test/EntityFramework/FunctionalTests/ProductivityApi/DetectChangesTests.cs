@@ -11,7 +11,7 @@ namespace ProductivityApiTests
 
     public class DetectChangesTests : FunctionalTestBase
     {
-        #region DetectChanges is O(1) when there is nothing to do (Dev11 113588)
+        #region DetectChanges is O(1) when there is nothing to do
 
         [Fact]
         public void Change_tracking_of_mutated_complex_types_happens_correctly_for_proxies()
@@ -76,7 +76,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Detect changes for complex types with null original values (Dev11 36323)
+        #region Detect changes for complex types with null original values
 
         [Fact]
         public void Calling_DetectChanges_with_nested_complex_property_null_after_Attach_with_change_to_another_property_should_not_throw()
@@ -410,7 +410,7 @@ namespace ProductivityApiTests
 
     #endregion
 
-    #region Model for Dev11 36323
+    #region Model with nested complex property
 
     public class Context36323 : DbContext
     {

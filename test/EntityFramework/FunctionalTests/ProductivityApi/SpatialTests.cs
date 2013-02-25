@@ -171,7 +171,6 @@ namespace ProductivityApiTests
             }
         }
 
-        // Dev11 264624
         [Fact]
         public void DbQuery_SelectMany_with_TVFs_and_spatial_types_using_Point_in_function_import_works()
         {
@@ -231,7 +230,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Tests for strongly typed spatial values for type construction (Dev11 254822)
+        #region Tests for strongly typed spatial values for type construction
 
         [Fact]
         public void Can_query_for_strongly_typed_geographic_point_using_type_construction()
@@ -305,13 +304,11 @@ namespace ProductivityApiTests
 
         #region Tests for materializing spatial types using eSQL
 
-        // Dev11 260655
-
         [Fact]
         public void
             Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception_sync()
         {
-            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
+            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception(ToList);
         }
 
 #if !NET40
@@ -320,7 +317,7 @@ namespace ProductivityApiTests
         public void
             Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception_async()
         {
-            Can_materialize_record_containing_geographic_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
+            Can_materialize_record_containing_geometric_types_and_get_names_of_the_types_without_null_arg_exception(ToListAsync);
         }
 
 #endif

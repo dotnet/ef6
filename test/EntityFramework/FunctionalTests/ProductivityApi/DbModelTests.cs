@@ -328,7 +328,6 @@ namespace CodeFirstTest
             public DbSet<Product> Products { get; set; }
         }
 
-        // See bug Dev11 139975
         [Fact]
         public void Model_creation_failure_due_to_a_bad_connection_does_not_preclude_model_creation_with_retry()
         {

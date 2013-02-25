@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.Objects
                 // If the exact object being added is already in the context, there there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
-                // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
                 // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
                 // We will auto-load the entity type's assembly into the ObjectItemCollection.
                 // We don't need the user's calling assembly for LoadAssemblyForType since entityType is sufficient.
@@ -902,7 +902,7 @@ namespace System.Data.Entity.Core.Objects
 
             var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(currentEntity, this);
 
-            // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // We will auto-load the entity type's assembly into the ObjectItemCollection.
             // We don't need the user's calling assembly for LoadAssemblyForType since entityType is sufficient.
@@ -951,7 +951,7 @@ namespace System.Data.Entity.Core.Objects
             Check.NotEmpty(entitySetName, "entitySetName");
             var wrappedOriginalEntity = EntityWrapperFactory.WrapEntityUsingContext(originalEntity, this);
 
-            // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // We will auto-load the entity type's assembly into the ObjectItemCollection.
             // We don't need the user's calling assembly for LoadAssemblyForType since entityType is sufficient.
@@ -1025,7 +1025,7 @@ namespace System.Data.Entity.Core.Objects
                 // If the exact object being added is already in the context, there there is no way we need to
                 // load the type for it, and since this is expensive, we only do the load if we have to.
 
-                // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
                 // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
                 // We will auto-load the entity type's assembly into the ObjectItemCollection.
                 // We don't need the user's calling assembly for LoadAssemblyForType since entityType is sufficient.
@@ -1246,7 +1246,7 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             Check.NotEmpty(entitySetName, "entitySetName");
 
-            // SQLBUDT 480919: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // If the schema types are not loaded: metadata, cache & query would be unable to reason about the type.
             // We will auto-load the entity type's assembly into the ObjectItemCollection.
             // We don't need the user's calling assembly for LoadAssemblyForType since entityType is sufficient.
@@ -2803,7 +2803,7 @@ namespace System.Data.Entity.Core.Objects
                 // can't find keys
                 if (!entry.IsKeyEntry)
                 {
-                    // SQLBUDT 511296 returning deleted object.
+                    // returning deleted object.
                     value = entry.Entity;
                     return value != null;
                 }

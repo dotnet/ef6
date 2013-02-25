@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.False(entityType.DeclaredKeyProperties.Contains(property));
         }
 
-        [Fact] // Dev11 347225
+        [Fact]
         public void Apply_should_throw_if_two_Id_properties_are_matched_that_differ_only_by_case()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);

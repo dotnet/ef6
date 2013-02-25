@@ -798,7 +798,7 @@ namespace System.Data.Entity.Objects
             Assert.Equal(0, LogEntriesCount());
         }
 
-        // Fails for now - MSDTC on server 'MAUMARDEV\SQLEXPRESS' is unavailable. See Issue #771 for details
+        // Fails for now - MSDTC on server '.\SQLEXPRESS' is unavailable. See Issue #771 for details
         ////[Fact]
         ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_connection_is_opened_inside_transaction_scope()
         ////{
@@ -850,7 +850,7 @@ namespace System.Data.Entity.Objects
         ////    }
         ////}
 
-        // Fails for now - MSDTC on server 'MAUMARDEV\SQLEXPRESS' is unavailable. See Issue #771 for details
+        // Fails for now - MSDTC on server '.\SQLEXPRESS' is unavailable. See Issue #771 for details
         ////[Fact]
         ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_connection_is_opened_outside_transaction_scope()
         ////{

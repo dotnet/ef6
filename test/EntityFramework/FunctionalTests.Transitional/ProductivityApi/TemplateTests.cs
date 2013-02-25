@@ -191,7 +191,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Tests for default container name when using model/database first (Dev11 142609)
+        #region Tests for default container name when using model/database first
 
         [Fact]
         public void Default_container_name_is_set_when_there_is_a_single_container_in_the_model()
@@ -206,7 +206,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Tests for not needing LoadFromAssembly with model/database first (Dev11 142609)
+        #region Tests for not needing LoadFromAssembly with model/database first
 
         [Fact]
         public void Object_space_types_are_loaded_when_code_drops_down_to_ObjectContext()

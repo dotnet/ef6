@@ -10,7 +10,7 @@ namespace ProductivityApiTests
 
     public class EnumTests : FunctionalTestBase
     {
-        #region Tests for Translate (Dev11 201757)
+        #region Tests for Translate
 
         [Fact]
         public void Translate_from_int_to_enum_in_the_model_should_not_always_return_zero()

@@ -680,7 +680,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Attaching and detaching mixed IA/FK relationships (Dev11 264780)
+        #region Attaching and detaching mixed IA/FK relationships
 
         [Fact]
         public void Attaching_previously_detached_entity_should_not_throw_exception()
@@ -736,7 +736,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Refresh with primary key (Dev11 212562)
+        #region Refresh with primary key
 
         [Fact]
         public void Setting_primary_key_to_same_value_on_Modified_entity_as_part_of_Refresh_with_conceptual_null_should_not_throw()
@@ -763,7 +763,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Removing demoted state entries from dangling FKs index (Dev11 322801)
+        #region Removing demoted state entries from dangling FKs index
 
         [Fact]
         public void State_entries_demoted_to_stubs_should_be_removed_from_dangling_foreign_keys_index()

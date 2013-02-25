@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 AddError(ErrorCode.IOException, EdmSchemaErrorSeverity.Error, sourceReader, ex);
             }
 
-            // do not close the reader here (SQLBUDT 522950)
+            // do not close the reader here
 
             return ResetErrors();
         }

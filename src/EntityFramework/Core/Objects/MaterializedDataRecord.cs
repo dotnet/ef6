@@ -431,8 +431,6 @@ namespace System.Data.Entity.Core.Objects
             return DataRecordInfo.FieldMetadata[ordinal].FieldType;
         }
 
-        /// <summary>
-        /// </summary>
         public override bool IsDBNull(int ordinal)
         {
             return (DBNull.Value == _values[ordinal]);
@@ -440,14 +438,14 @@ namespace System.Data.Entity.Core.Objects
 
         #region ICustomTypeDescriptor implementation
 
-        //[barryfr] Reference: http://msdn.microsoft.com/msdnmag/issues/05/04/NETMatters/
-        //Holds all of the PropertyDescriptors for the PrimitiveType objects in _values
+        // Reference: http://msdn.microsoft.com/msdnmag/issues/05/04/NETMatters/
+        // Holds all of the PropertyDescriptors for the PrimitiveType objects in _values
         private PropertyDescriptorCollection _propertyDescriptors;
         private FilterCache _filterCache;
-        //Stores an AttributeCollection for each PrimitiveType object in _values
+        // Stores an AttributeCollection for each PrimitiveType object in _values
         private Dictionary<object, AttributeCollection> _attrCache;
 
-        //Holds the filtered properties and attributes last used when GetProperties(Attribute[]) was called.
+        // Holds the filtered properties and attributes last used when GetProperties(Attribute[]) was called.
         private class FilterCache
         {
             public Attribute[] Attributes;

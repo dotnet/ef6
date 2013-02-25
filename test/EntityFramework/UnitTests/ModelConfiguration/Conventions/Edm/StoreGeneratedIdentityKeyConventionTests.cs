@@ -82,7 +82,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Null(entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
         }
 
-        // Dev11 345384
         [Fact]
         public void Apply_should_match_key_that_is_an_fk_used_in_table_splitting()
         {

@@ -218,7 +218,7 @@ namespace System.Data.Entity.Core.Mapping
                 m_parsingErrors.Add(error);
             }
 
-            // Do not close the wrapping reader here, as doing so will close the inner reader. See SQLBUDT 522950 for details.
+            // Do not close the wrapping reader here, as doing so will close the inner reader.
 
             return null;
         }

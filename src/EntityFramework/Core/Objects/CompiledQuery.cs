@@ -429,7 +429,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -453,7 +453,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -466,7 +466,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -479,7 +479,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -492,7 +492,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -505,7 +505,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -518,7 +518,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -532,7 +532,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -546,7 +546,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -560,7 +560,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -574,7 +574,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -588,7 +588,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -603,7 +603,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -618,7 +618,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());
@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.Objects
         {
             DebugCheck.NotNull(arg0);
 
-            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
             // This method must ensure that the O-Space metadata for TResultType is correctly loaded - it is the equivalent
             // of a public constructor for compiled queries, since it is returned as a delegate and called as a public entry point.
             arg0.MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TResult), Assembly.GetCallingAssembly());

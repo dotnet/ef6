@@ -43,8 +43,7 @@ namespace System.Data.Entity.Core.Common.Internal
                                               MaxLength = (int?)null
                                           });
 
-        // SQLBUDT #514204 - EntityCommand: XML parameter size must be ignored
-        /* XML parameters must not have a explicit size */
+        // XML parameters must not have a explicit size
 
         internal static readonly TypeUsage Xml = CreateType(
             PrimitiveTypeKind.String, new FacetValues

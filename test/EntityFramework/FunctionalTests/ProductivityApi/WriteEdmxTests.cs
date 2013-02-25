@@ -157,7 +157,6 @@ namespace ProductivityApiTests
 
         #region Using an invalid model
 
-        // See Dev11 Bug 151633
         [Fact]
         public void WriteEdmx_throws_when_using_bad_mapping_that_is_not_caught_by_first_pass_CSDL_validation()
         {
@@ -168,7 +167,6 @@ namespace ProductivityApiTests
             }
         }
 
-        // See Dev11 Bug 151633
         [Fact]
         public void Compiling_the_model_throws_when_using_bad_mapping_that_is_not_caught_by_first_pass_CSDL_validation()
         {
@@ -180,7 +178,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Using EdmxWriter with DbContextInfo (Dev11 324747)
+        #region Using EdmxWriter with DbContextInfo
 
         [Fact]
         public void EdmxWriter_can_write_an_EDMX_when_DbContextInfo_is_used_to_specify_the_provider_info()

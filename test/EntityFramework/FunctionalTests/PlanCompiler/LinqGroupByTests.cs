@@ -41,7 +41,6 @@ namespace PlanCompilerTests
             }
         }
 
-        // Dev11 448362
         [Fact]
         private void GroupBy_aggregate_pushdown_translates_NewRecordOp()
         {
