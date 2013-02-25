@@ -37,6 +37,8 @@ namespace System.Data.Entity.Query.LinqToEntities
         WHERE [Extent2].[PartyID] = [Extent1].[ID]) AS [C1]
 FROM [dbo].[DevDiv573440_Party] AS [Extent1]";
 
+            Database.SetInitializer<DevDiv573440_Context>(null);
+
             using (var context = new DevDiv573440_Context())
             {
                 var query = from party in context.Parties
