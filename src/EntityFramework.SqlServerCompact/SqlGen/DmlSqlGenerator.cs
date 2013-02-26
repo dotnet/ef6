@@ -313,7 +313,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                         {
                             throw ADP1.InvalidOperation(ADP1.Update_NotSupportedIdentityType(member.Name, member.TypeUsage.ToString()));
                         }
-                        commandText.Append("@@IDENTITY");
+                        commandText.AppendFormat("CAST (@@IDENTITY AS {0})", member.TypeUsage.EdmType.Name);
                         flag = true;
                     }
                 }
