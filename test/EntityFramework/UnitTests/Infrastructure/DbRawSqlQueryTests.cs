@@ -17,663 +17,698 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public class DbRawSqlQueryTests : TestBase
     {
-        #region ToString tests
-
-        [Fact]
-        public void Generic_non_entity_SQL_query_ToString_returns_the_query()
+        public new class ToString
         {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+            [Fact]
+            public void Generic_non_entity_SQL_query_ToString_returns_the_query()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
 
-            Assert.Equal("select * from products", query.ToString());
+                Assert.Equal("select * from products", query.ToString());
+            }
+
+            [Fact]
+            public void Generic_non_entity_SQL_query_ToString_returns_the_query_but_not_the_parameters()
+            {
+                var query =
+                    new DbRawSqlQuery<FakeEntity>(
+                        MockHelper.CreateInternalSqlNonSetQuery(
+                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, 4, "Beverages"));
+
+                Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
+            }
+
+            [Fact]
+            public void Non_generic_DbRawSqlQuery_ToString_returns_the_query()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("select * from products"));
+
+                Assert.Equal("select * from products", query.ToString());
+            }
+
+            [Fact]
+            public void Non_generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
+            {
+                var query =
+                    new DbRawSqlQuery(
+                        MockHelper.CreateInternalSqlSetQuery(
+                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
+
+                Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
+            }
+
+            [Fact]
+            public void Generic_DbRawSqlQuery_ToString_returns_the_query()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("select * from products"));
+
+                Assert.Equal("select * from products", query.ToString());
+            }
+
+            [Fact]
+            public void Generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
+            {
+                var query =
+                    new DbRawSqlQuery<FakeEntity>(
+                        MockHelper.CreateInternalSqlSetQuery(
+                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
+
+                Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
+            }
         }
 
-        [Fact]
-        public void Generic_non_entity_SQL_query_ToString_returns_the_query_but_not_the_parameters()
+        public class AsStreaming
         {
-            var query =
-                new DbRawSqlQuery<FakeEntity>(
-                    MockHelper.CreateInternalSqlNonSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, 4, "Beverages"));
+            [Fact]
+            public void Generic_DbSqlQuery_AsStreaming_returns_new_object_with_streamin_flag_set()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
+                DynamicAsStreamingTest(query);
+            }
 
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
+            [Fact]
+            public void Non_generic_DbSqlQuery_AsStreaming_returns_new_object_with_streamin_flag_set()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
+                DynamicAsStreamingTest(query);
+            }
+
+            private void DynamicAsStreamingTest(dynamic query)
+            {
+                Assert.False(((InternalSqlSetQuery)query.InternalQuery).Streaming);
+
+                var streamingQuery = query.AsStreaming();
+
+                Assert.NotSame(query, streamingQuery);
+
+                var internalQuery = (InternalSqlSetQuery)streamingQuery.InternalQuery;
+                Assert.True(internalQuery.Streaming);
+
+                Assert.Equal("query", internalQuery.Sql);
+                Assert.Equal(2, internalQuery.Parameters.Length);
+                Assert.Equal(1, internalQuery.Parameters[0]);
+                Assert.Equal(2, internalQuery.Parameters[1]);
+            }
         }
 
-        [Fact]
-        public void Non_generic_DbRawSqlQuery_ToString_returns_the_query()
+        public class AsIListSource
         {
-            var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("select * from products"));
+            [Fact]
+            public void Non_entity_SQL_query_ContainsListCollection_returns_false()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("query"));
 
-            Assert.Equal("select * from products", query.ToString());
+                Assert.False(((IListSource)query).ContainsListCollection);
+            }
+
+            [Fact]
+            public void Non_entity_SQL_query_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
+            {
+                var query = new DbRawSqlQuery<Random>(MockHelper.CreateInternalSqlNonSetQuery("query"));
+
+                Assert.Equal(
+                    Strings.DbQuery_BindingToDbQueryNotSupported,
+                    Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
+            }
+
+            [Fact]
+            public void DbRawSqlQuery_ContainsListCollection_returns_false()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
+
+                Assert.False(((IListSource)query).ContainsListCollection);
+            }
+
+            [Fact]
+            public void Non_generic_DbRawSqlQuery_ContainsListCollection_returns_false()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
+
+                Assert.False(((IListSource)query).ContainsListCollection);
+            }
+
+            [Fact]
+            public void DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
+
+                Assert.Equal(
+                    Strings.DbQuery_BindingToDbQueryNotSupported,
+                    Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
+            }
+
+            [Fact]
+            public void Non_generic_DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
+
+                Assert.Equal(
+                    Strings.DbQuery_BindingToDbQueryNotSupported,
+                    Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
+            }
         }
-
-        [Fact]
-        public void Non_generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
-        {
-            var query =
-                new DbRawSqlQuery(
-                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
-
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
-        }
-
-        [Fact]
-        public void Generic_DbRawSqlQuery_ToString_returns_the_query()
-        {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("select * from products"));
-
-            Assert.Equal("select * from products", query.ToString());
-        }
-
-        [Fact]
-        public void Generic_DbRawSqlQuery_ToString_returns_the_query_but_not_the_parameters()
-        {
-            var query =
-                new DbRawSqlQuery<FakeEntity>(
-                    MockHelper.CreateInternalSqlSetQuery("select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
-
-            Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
-        }
-
-        #endregion
-
-        #region DbRawSqlQuery as IListSource tests
-
-        [Fact]
-        public void Non_entity_SQL_query_ContainsListCollection_returns_false()
-        {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("query"));
-
-            Assert.False(((IListSource)query).ContainsListCollection);
-        }
-
-        [Fact]
-        public void Non_entity_SQL_query_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
-        {
-            var query = new DbRawSqlQuery<Random>(MockHelper.CreateInternalSqlNonSetQuery("query"));
-
-            Assert.Equal(
-                Strings.DbQuery_BindingToDbQueryNotSupported,
-                Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
-        }
-
-        [Fact]
-        public void DbRawSqlQuery_ContainsListCollection_returns_false()
-        {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
-
-            Assert.False(((IListSource)query).ContainsListCollection);
-        }
-
-        [Fact]
-        public void Non_generic_DbRawSqlQuery_ContainsListCollection_returns_false()
-        {
-            var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
-
-            Assert.False(((IListSource)query).ContainsListCollection);
-        }
-
-        [Fact]
-        public void DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
-        {
-            var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query"));
-
-            Assert.Equal(
-                Strings.DbQuery_BindingToDbQueryNotSupported,
-                Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
-        }
-
-        [Fact]
-        public void Non_generic_DbRawSqlQuery_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
-        {
-            var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query"));
-
-            Assert.Equal(
-                Strings.DbQuery_BindingToDbQueryNotSupported,
-                Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
-        }
-
-        #endregion
-
-        #region IDbAsyncEnumerable extension methods
 
 #if !NET40
 
-        [Fact]
-        public void Generic_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods()
+        public class AsIDbAsyncEnumerable
         {
-            IEnumerable<int>[] testCases = new[]
-                                               {
-                                                   new int[] { },
-                                                   new[] { 1 },
-                                                   new[] { 2 },
-                                                   new[] { 1, 2 },
-                                                   new[] { 1, 2, 3 }
-                                               };
-
-            foreach (var testCase in testCases)
+            [Fact]
+            public void Generic_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_as_IEnumerable_extension_methods()
             {
-                AssertSameResult(
-                    testCase,
-                    q => q.AllAsync(i => i < 2).Result,
-                    e => e.All(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.AnyAsync().Result,
-                    e => e.Any());
-                AssertSameResult(
-                    testCase,
-                    q => q.AnyAsync(i => i < 2).Result,
-                    e => e.Any(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ContainsAsync(1).Result,
-                    e => e.Contains(1));
-                AssertSameResult(
-                    testCase,
-                    q => q.CountAsync().Result,
-                    e => e.Count());
-                AssertSameResult(
-                    testCase,
-                    q => q.CountAsync(i => i < 2).Result,
-                    e => e.Count(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.LongCountAsync().Result,
-                    e => e.LongCount());
-                AssertSameResult(
-                    testCase,
-                    q => q.LongCountAsync(i => i < 2).Result,
-                    e => e.LongCount(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.FirstAsync().Result,
-                    e => e.First());
-                AssertSameResult(
-                    testCase,
-                    q => q.FirstAsync(i => i < 2).Result,
-                    e => e.First(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q =>
-                        {
-                            var sum = 0;
-                            q.ForEachAsync(e => sum = +e).Wait();
-                            return sum;
-                        },
-                    e =>
-                        {
-                            var sum = 0;
-                            foreach (var i in e)
+                IEnumerable<int>[] testCases = new[]
+                                                   {
+                                                       new int[] { },
+                                                       new[] { 1 },
+                                                       new[] { 2 },
+                                                       new[] { 1, 2 },
+                                                       new[] { 1, 2, 3 }
+                                                   };
+
+                foreach (var testCase in testCases)
+                {
+                    AssertSameResult(
+                        testCase,
+                        q => q.AllAsync(i => i < 2).Result,
+                        e => e.All(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.AnyAsync().Result,
+                        e => e.Any());
+                    AssertSameResult(
+                        testCase,
+                        q => q.AnyAsync(i => i < 2).Result,
+                        e => e.Any(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ContainsAsync(1).Result,
+                        e => e.Contains(1));
+                    AssertSameResult(
+                        testCase,
+                        q => q.CountAsync().Result,
+                        e => e.Count());
+                    AssertSameResult(
+                        testCase,
+                        q => q.CountAsync(i => i < 2).Result,
+                        e => e.Count(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.LongCountAsync().Result,
+                        e => e.LongCount());
+                    AssertSameResult(
+                        testCase,
+                        q => q.LongCountAsync(i => i < 2).Result,
+                        e => e.LongCount(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.FirstAsync().Result,
+                        e => e.First());
+                    AssertSameResult(
+                        testCase,
+                        q => q.FirstAsync(i => i < 2).Result,
+                        e => e.First(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q =>
                             {
-                                sum = +i;
-                            }
-                            return sum;
-                        });
-                AssertSameResult(
-                    testCase,
-                    q => q.MaxAsync().Result,
-                    e => e.Max());
-                AssertSameResult(
-                    testCase,
-                    q => q.MinAsync().Result,
-                    e => e.Min());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleAsync().Result,
-                    e => e.Single());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleAsync(i => i < 2).Result,
-                    e => e.Single(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleOrDefaultAsync().Result,
-                    e => e.SingleOrDefault());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleOrDefaultAsync(i => i < 2).Result,
-                    e => e.SingleOrDefault(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToArrayAsync().Result,
-                    e => e.ToArray());
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2).Result,
-                    e => e.ToDictionary(i => i + 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1L).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1L));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, new ModuloEqualityComparer(2)).Result,
-                    e => e.ToDictionary(i => i + 2, new ModuloEqualityComparer(2)));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToListAsync().Result,
-                    e => e.ToList());
-
-                //CancellationToken overloads
-                AssertSameResult(
-                    testCase,
-                    q => q.AllAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.All(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.AnyAsync(CancellationToken.None).Result,
-                    e => e.Any());
-                AssertSameResult(
-                    testCase,
-                    q => q.AnyAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.Any(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ContainsAsync(1, CancellationToken.None).Result,
-                    e => e.Contains(1));
-                AssertSameResult(
-                    testCase,
-                    q => q.CountAsync(CancellationToken.None).Result,
-                    e => e.Count());
-                AssertSameResult(
-                    testCase,
-                    q => q.CountAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.Count(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.LongCountAsync(CancellationToken.None).Result,
-                    e => e.LongCount());
-                AssertSameResult(
-                    testCase,
-                    q => q.LongCountAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.LongCount(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.FirstAsync(CancellationToken.None).Result,
-                    e => e.First());
-                AssertSameResult(
-                    testCase,
-                    q => q.FirstAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.First(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q =>
-                        {
-                            var sum = 0;
-                            q.ForEachAsync(e => sum = +e, CancellationToken.None).Wait();
-                            return sum;
-                        },
-                    e =>
-                        {
-                            var sum = 0;
-                            foreach (var i in e)
+                                var sum = 0;
+                                q.ForEachAsync(e => sum = +e).Wait();
+                                return sum;
+                            },
+                        e =>
                             {
-                                sum = +i;
-                            }
-                            return sum;
-                        });
-                AssertSameResult(
-                    testCase,
-                    q => q.MaxAsync(CancellationToken.None).Result,
-                    e => e.Max());
-                AssertSameResult(
-                    testCase,
-                    q => q.MinAsync(CancellationToken.None).Result,
-                    e => e.Min());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleAsync(CancellationToken.None).Result,
-                    e => e.Single());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.Single(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleOrDefaultAsync(CancellationToken.None).Result,
-                    e => e.SingleOrDefault());
-                AssertSameResult(
-                    testCase,
-                    q => q.SingleOrDefaultAsync(i => i < 2, CancellationToken.None).Result,
-                    e => e.SingleOrDefault(i => i < 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToArrayAsync(CancellationToken.None).Result,
-                    e => e.ToArray());
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, CancellationToken.None).Result,
-                    e => e.ToDictionary(i => i + 2));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1, CancellationToken.None).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, i => i - 1, new ModuloEqualityComparer(2), CancellationToken.None).Result,
-                    e => e.ToDictionary(i => i + 2, i => i - 1, new ModuloEqualityComparer(2)));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToDictionaryAsync(i => i + 2, new ModuloEqualityComparer(2), CancellationToken.None).Result,
-                    e => e.ToDictionary(i => i + 2, new ModuloEqualityComparer(2)));
-                AssertSameResult(
-                    testCase,
-                    q => q.ToListAsync(CancellationToken.None).Result,
-                    e => e.ToList());
-            }
-        }
+                                var sum = 0;
+                                foreach (var i in e)
+                                {
+                                    sum = +i;
+                                }
+                                return sum;
+                            });
+                    AssertSameResult(
+                        testCase,
+                        q => q.MaxAsync().Result,
+                        e => e.Max());
+                    AssertSameResult(
+                        testCase,
+                        q => q.MinAsync().Result,
+                        e => e.Min());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleAsync().Result,
+                        e => e.Single());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleAsync(i => i < 2).Result,
+                        e => e.Single(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleOrDefaultAsync().Result,
+                        e => e.SingleOrDefault());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleOrDefaultAsync(i => i < 2).Result,
+                        e => e.SingleOrDefault(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToArrayAsync().Result,
+                        e => e.ToArray());
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2).Result,
+                        e => e.ToDictionary(i => i + 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, i => i - 1L).Result,
+                        e => e.ToDictionary(i => i + 2, i => i - 1L));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)).Result,
+                        e => e.ToDictionary(i => i + 2, i => i - 1L, new ModuloEqualityComparer(2)));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, new ModuloEqualityComparer(2)).Result,
+                        e => e.ToDictionary(i => i + 2, new ModuloEqualityComparer(2)));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToListAsync().Result,
+                        e => e.ToList());
 
-        [Fact]
-        public void NonGeneric_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods()
-        {
-            IEnumerable<object>[] testCases = new[]
-                                                  {
-                                                      new object[] { },
-                                                      new object[] { 1 },
-                                                      new object[] { 2 },
-                                                      new object[] { 1, 2 },
-                                                      new object[] { 1, 2, 3 }
-                                                  };
-
-            foreach (var testCase in testCases)
-            {
-                AssertSameResult<int>(
-                    testCase,
-                    q =>
-                        {
-                            var sum = 0;
-                            q.ForEachAsync(e => sum = +(int)e).Wait();
-                            return sum;
-                        },
-                    e =>
-                        {
-                            var sum = 0;
-                            foreach (var i in e)
+                    //CancellationToken overloads
+                    AssertSameResult(
+                        testCase,
+                        q => q.AllAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.All(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.AnyAsync(CancellationToken.None).Result,
+                        e => e.Any());
+                    AssertSameResult(
+                        testCase,
+                        q => q.AnyAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.Any(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ContainsAsync(1, CancellationToken.None).Result,
+                        e => e.Contains(1));
+                    AssertSameResult(
+                        testCase,
+                        q => q.CountAsync(CancellationToken.None).Result,
+                        e => e.Count());
+                    AssertSameResult(
+                        testCase,
+                        q => q.CountAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.Count(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.LongCountAsync(CancellationToken.None).Result,
+                        e => e.LongCount());
+                    AssertSameResult(
+                        testCase,
+                        q => q.LongCountAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.LongCount(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.FirstAsync(CancellationToken.None).Result,
+                        e => e.First());
+                    AssertSameResult(
+                        testCase,
+                        q => q.FirstAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.First(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q =>
                             {
-                                sum = +(int)i;
-                            }
-                            return sum;
-                        });
-                AssertSameResult(
-                    testCase,
-                    q => q.ToArrayAsync().Result,
-                    e => e.ToArray());
-                AssertSameResult(
-                    testCase,
-                    q => q.ToListAsync().Result,
-                    e => e.ToList());
-
-                //CancellationToken overloads
-                AssertSameResult<int>(
-                    testCase,
-                    q =>
-                        {
-                            var sum = 0;
-                            q.ForEachAsync(e => sum = +(int)e, CancellationToken.None).Wait();
-                            return sum;
-                        },
-                    e =>
-                        {
-                            var sum = 0;
-                            foreach (var i in e)
+                                var sum = 0;
+                                q.ForEachAsync(e => sum = +e, CancellationToken.None).Wait();
+                                return sum;
+                            },
+                        e =>
                             {
-                                sum = +(int)i;
-                            }
-                            return sum;
-                        });
-                AssertSameResult(
-                    testCase,
-                    q => q.ToArrayAsync(CancellationToken.None).Result,
-                    e => e.ToArray());
-                AssertSameResult(
-                    testCase,
-                    q => q.ToListAsync(CancellationToken.None).Result,
-                    e => e.ToList());
-            }
-        }
-
-        [Fact]
-        public void Generic_IDbAsyncEnumerable_extension_method_equivalents_validate_arguments()
-        {
-            ArgumentNullTest<int, int>(
-                "action", q =>
-                              {
-                                  q.ForEachAsync(null);
-                                  return 0;
-                              });
-            ArgumentNullTest<int, int>(
-                "action", q =>
-                              {
-                                  q.ForEachAsync(null, new CancellationToken());
-                                  return 0;
-                              });
-
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int>(null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int>(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int>(null, comparer: null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int>(null, comparer: null, cancellationToken: new CancellationToken()).Result);
-
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e, cancellationToken: new CancellationToken()).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "elementSelector",
-                q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "elementSelector",
-                q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
-
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int, int>(null, e => e, null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "keySelector",
-                q => q.ToDictionaryAsync<int, int>(null, e => e, null, new CancellationToken()).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "elementSelector",
-                q => q.ToDictionaryAsync<int, int>(e => e, null, null).Result);
-            ArgumentNullTest<int, Dictionary<int, int>>(
-                "elementSelector",
-                q => q.ToDictionaryAsync<int, int>(e => e, null, null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null).Result);
-            ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, int>("predicate", q => q.SingleAsync(null).Result);
-            ArgumentNullTest<int, int>("predicate", q => q.SingleAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, int>("predicate", q => q.SingleOrDefaultAsync(null).Result);
-            ArgumentNullTest<int, int>("predicate", q => q.SingleOrDefaultAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, bool>("predicate", q => q.AnyAsync(null).Result);
-            ArgumentNullTest<int, bool>("predicate", q => q.AnyAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, bool>("predicate", q => q.AllAsync(null).Result);
-            ArgumentNullTest<int, bool>("predicate", q => q.AllAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, int>("predicate", q => q.CountAsync(null).Result);
-            ArgumentNullTest<int, int>("predicate", q => q.CountAsync(null, new CancellationToken()).Result);
-
-            ArgumentNullTest<int, long>("predicate", q => q.LongCountAsync(null).Result);
-            ArgumentNullTest<int, long>("predicate", q => q.LongCountAsync(null, new CancellationToken()).Result);
-        }
-
-        [Fact]
-        public void NonGeneric_IDbAsyncEnumerable_extension_method_equivalents_validate_arguments()
-        {
-            ArgumentNullTest("action", q => q.ForEachAsync(null));
-            ArgumentNullTest("action", q => q.ForEachAsync(null, new CancellationToken()));
-        }
-
-        private static void AssertSameResult<TElement, TResult>(
-            IEnumerable<TElement> sourceEnumerable,
-            Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest, Func<IEnumerable<TElement>, TResult> invokeOracleMethod)
-        {
-            var query = CreateDbRawSqlQuery(sourceEnumerable);
-
-            var expectedResult = default(TResult);
-            Exception expectedException = null;
-            try
-            {
-                expectedResult = invokeOracleMethod(sourceEnumerable);
-            }
-            catch (Exception e)
-            {
-                expectedException = e;
+                                var sum = 0;
+                                foreach (var i in e)
+                                {
+                                    sum = +i;
+                                }
+                                return sum;
+                            });
+                    AssertSameResult(
+                        testCase,
+                        q => q.MaxAsync(CancellationToken.None).Result,
+                        e => e.Max());
+                    AssertSameResult(
+                        testCase,
+                        q => q.MinAsync(CancellationToken.None).Result,
+                        e => e.Min());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleAsync(CancellationToken.None).Result,
+                        e => e.Single());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.Single(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleOrDefaultAsync(CancellationToken.None).Result,
+                        e => e.SingleOrDefault());
+                    AssertSameResult(
+                        testCase,
+                        q => q.SingleOrDefaultAsync(i => i < 2, CancellationToken.None).Result,
+                        e => e.SingleOrDefault(i => i < 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToArrayAsync(CancellationToken.None).Result,
+                        e => e.ToArray());
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, CancellationToken.None).Result,
+                        e => e.ToDictionary(i => i + 2));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, i => i - 1, CancellationToken.None).Result,
+                        e => e.ToDictionary(i => i + 2, i => i - 1));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, i => i - 1, new ModuloEqualityComparer(2), CancellationToken.None).Result,
+                        e => e.ToDictionary(i => i + 2, i => i - 1, new ModuloEqualityComparer(2)));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToDictionaryAsync(i => i + 2, new ModuloEqualityComparer(2), CancellationToken.None).Result,
+                        e => e.ToDictionary(i => i + 2, new ModuloEqualityComparer(2)));
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToListAsync(CancellationToken.None).Result,
+                        e => e.ToList());
+                }
             }
 
-            var actualResult = default(TResult);
-            Exception actualException = null;
-            try
+            [Fact]
+            public void NonGeneric_IDbAsyncEnumerable_extension_method_equivalents_produce_the_same_results_asIEnumerable_extension_methods(
+                
+                )
             {
-                actualResult = ExceptionHelpers.UnwrapAggregateExceptions(() => invokeMethodUnderTest(query));
-            }
-            catch (Exception e)
-            {
-                actualException = e;
+                IEnumerable<object>[] testCases = new[]
+                                                      {
+                                                          new object[] { },
+                                                          new object[] { 1 },
+                                                          new object[] { 2 },
+                                                          new object[] { 1, 2 },
+                                                          new object[] { 1, 2, 3 }
+                                                      };
+
+                foreach (var testCase in testCases)
+                {
+                    AssertSameResult<int>(
+                        testCase,
+                        q =>
+                            {
+                                var sum = 0;
+                                q.ForEachAsync(e => sum = +(int)e).Wait();
+                                return sum;
+                            },
+                        e =>
+                            {
+                                var sum = 0;
+                                foreach (var i in e)
+                                {
+                                    sum = +(int)i;
+                                }
+                                return sum;
+                            });
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToArrayAsync().Result,
+                        e => e.ToArray());
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToListAsync().Result,
+                        e => e.ToList());
+
+                    //CancellationToken overloads
+                    AssertSameResult<int>(
+                        testCase,
+                        q =>
+                            {
+                                var sum = 0;
+                                q.ForEachAsync(e => sum = +(int)e, CancellationToken.None).Wait();
+                                return sum;
+                            },
+                        e =>
+                            {
+                                var sum = 0;
+                                foreach (var i in e)
+                                {
+                                    sum = +(int)i;
+                                }
+                                return sum;
+                            });
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToArrayAsync(CancellationToken.None).Result,
+                        e => e.ToArray());
+                    AssertSameResult(
+                        testCase,
+                        q => q.ToListAsync(CancellationToken.None).Result,
+                        e => e.ToList());
+                }
             }
 
-            if (expectedException != null)
+            [Fact]
+            public void Generic_IDbAsyncEnumerable_extension_method_equivalents_validate_arguments()
             {
-                Assert.NotNull(actualException);
-                Assert.Equal(expectedException.GetType(), actualException.GetType());
-                Assert.Equal(expectedException.Message, actualException.Message);
-            }
-            else
-            {
-                Assert.Null(actualException);
-                Assert.Equal(expectedResult, actualResult);
-            }
-        }
+                ArgumentNullTest<int, int>(
+                    "action", q =>
+                                  {
+                                      q.ForEachAsync(null);
+                                      return 0;
+                                  });
+                ArgumentNullTest<int, int>(
+                    "action", q =>
+                                  {
+                                      q.ForEachAsync(null, new CancellationToken());
+                                      return 0;
+                                  });
 
-        private static void AssertSameResult<TResult>(
-            IEnumerable<object> sourceEnumerable,
-            Func<DbRawSqlQuery, TResult> invokeMethodUnderTest, Func<IEnumerable, TResult> invokeOracleMethod)
-        {
-            var query = CreateDbRawSqlQuery(sourceEnumerable);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int>(null).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int>(null, new CancellationToken()).Result);
 
-            var expectedResult = default(TResult);
-            Exception expectedException = null;
-            try
-            {
-                expectedResult = invokeOracleMethod(sourceEnumerable);
-            }
-            catch (Exception e)
-            {
-                expectedException = e;
-            }
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int>(null, comparer: null).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int>(null, comparer: null, cancellationToken: new CancellationToken()).Result);
 
-            var actualResult = default(TResult);
-            Exception actualException = null;
-            try
-            {
-                actualResult = ExceptionHelpers.UnwrapAggregateExceptions(() => invokeMethodUnderTest(query));
-            }
-            catch (Exception e)
-            {
-                actualException = e;
-            }
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int, int>(null, elementSelector: e => e, cancellationToken: new CancellationToken()).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "elementSelector",
+                    q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "elementSelector",
+                    q => q.ToDictionaryAsync<int, int>(e => e, elementSelector: null, cancellationToken: new CancellationToken()).Result);
 
-            if (expectedException != null)
-            {
-                Assert.NotNull(actualException);
-                Assert.Equal(expectedException.GetType(), actualException.GetType());
-                Assert.Equal(expectedException.Message, actualException.Message);
-            }
-            else
-            {
-                Assert.Null(actualException);
-                Assert.Equal(expectedResult, actualResult);
-            }
-        }
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int, int>(null, e => e, null).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "keySelector",
+                    q => q.ToDictionaryAsync<int, int>(null, e => e, null, new CancellationToken()).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "elementSelector",
+                    q => q.ToDictionaryAsync<int, int>(e => e, null, null).Result);
+                ArgumentNullTest<int, Dictionary<int, int>>(
+                    "elementSelector",
+                    q => q.ToDictionaryAsync<int, int>(e => e, null, null, new CancellationToken()).Result);
 
-        private static void ArgumentNullTest<TElement, TResult>(
-            string paramName, Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest)
-        {
-            var query = CreateDbRawSqlQuery(new TElement[0]);
-            Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
-        }
+                ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null).Result);
+                ArgumentNullTest<int, int>("predicate", q => q.FirstOrDefaultAsync(null, new CancellationToken()).Result);
 
-        private static void ArgumentNullTest<TResult>(string paramName, Func<DbRawSqlQuery, TResult> invokeMethodUnderTest)
-        {
-            var query = CreateDbRawSqlQuery(new object[0]);
-            Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
-        }
+                ArgumentNullTest<int, int>("predicate", q => q.SingleAsync(null).Result);
+                ArgumentNullTest<int, int>("predicate", q => q.SingleAsync(null, new CancellationToken()).Result);
 
-        private class ModuloEqualityComparer : IEqualityComparer<int>
-        {
-            private readonly int _modulo;
+                ArgumentNullTest<int, int>("predicate", q => q.SingleOrDefaultAsync(null).Result);
+                ArgumentNullTest<int, int>("predicate", q => q.SingleOrDefaultAsync(null, new CancellationToken()).Result);
 
-            public ModuloEqualityComparer(int modulo)
-            {
-                _modulo = modulo;
-            }
+                ArgumentNullTest<int, bool>("predicate", q => q.AnyAsync(null).Result);
+                ArgumentNullTest<int, bool>("predicate", q => q.AnyAsync(null, new CancellationToken()).Result);
 
-            public bool Equals(int left, int right)
-            {
-                return left % _modulo == right % _modulo;
+                ArgumentNullTest<int, bool>("predicate", q => q.AllAsync(null).Result);
+                ArgumentNullTest<int, bool>("predicate", q => q.AllAsync(null, new CancellationToken()).Result);
+
+                ArgumentNullTest<int, int>("predicate", q => q.CountAsync(null).Result);
+                ArgumentNullTest<int, int>("predicate", q => q.CountAsync(null, new CancellationToken()).Result);
+
+                ArgumentNullTest<int, long>("predicate", q => q.LongCountAsync(null).Result);
+                ArgumentNullTest<int, long>("predicate", q => q.LongCountAsync(null, new CancellationToken()).Result);
             }
 
-            public int GetHashCode(int value)
+            [Fact]
+            public void NonGeneric_IDbAsyncEnumerable_extension_method_equivalents_validate_arguments()
             {
-                return value.GetHashCode();
+                ArgumentNullTest("action", q => q.ForEachAsync(null));
+                ArgumentNullTest("action", q => q.ForEachAsync(null, new CancellationToken()));
+            }
+
+            private static void AssertSameResult<TElement, TResult>(
+                IEnumerable<TElement> sourceEnumerable,
+                Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest, Func<IEnumerable<TElement>, TResult> invokeOracleMethod)
+            {
+                var query = CreateDbRawSqlQuery(sourceEnumerable);
+
+                var expectedResult = default(TResult);
+                Exception expectedException = null;
+                try
+                {
+                    expectedResult = invokeOracleMethod(sourceEnumerable);
+                }
+                catch (Exception e)
+                {
+                    expectedException = e;
+                }
+
+                var actualResult = default(TResult);
+                Exception actualException = null;
+                try
+                {
+                    actualResult = ExceptionHelpers.UnwrapAggregateExceptions(() => invokeMethodUnderTest(query));
+                }
+                catch (Exception e)
+                {
+                    actualException = e;
+                }
+
+                if (expectedException != null)
+                {
+                    Assert.NotNull(actualException);
+                    Assert.Equal(expectedException.GetType(), actualException.GetType());
+                    Assert.Equal(expectedException.Message, actualException.Message);
+                }
+                else
+                {
+                    Assert.Null(actualException);
+                    Assert.Equal(expectedResult, actualResult);
+                }
+            }
+
+            private static void AssertSameResult<TResult>(
+                IEnumerable<object> sourceEnumerable,
+                Func<DbRawSqlQuery, TResult> invokeMethodUnderTest, Func<IEnumerable, TResult> invokeOracleMethod)
+            {
+                var query = CreateDbRawSqlQuery(sourceEnumerable);
+
+                var expectedResult = default(TResult);
+                Exception expectedException = null;
+                try
+                {
+                    expectedResult = invokeOracleMethod(sourceEnumerable);
+                }
+                catch (Exception e)
+                {
+                    expectedException = e;
+                }
+
+                var actualResult = default(TResult);
+                Exception actualException = null;
+                try
+                {
+                    actualResult = ExceptionHelpers.UnwrapAggregateExceptions(() => invokeMethodUnderTest(query));
+                }
+                catch (Exception e)
+                {
+                    actualException = e;
+                }
+
+                if (expectedException != null)
+                {
+                    Assert.NotNull(actualException);
+                    Assert.Equal(expectedException.GetType(), actualException.GetType());
+                    Assert.Equal(expectedException.Message, actualException.Message);
+                }
+                else
+                {
+                    Assert.Null(actualException);
+                    Assert.Equal(expectedResult, actualResult);
+                }
+            }
+
+            private static void ArgumentNullTest<TElement, TResult>(
+                string paramName, Func<DbRawSqlQuery<TElement>, TResult> invokeMethodUnderTest)
+            {
+                var query = CreateDbRawSqlQuery(new TElement[0]);
+                Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
+            }
+
+            private static void ArgumentNullTest<TResult>(string paramName, Func<DbRawSqlQuery, TResult> invokeMethodUnderTest)
+            {
+                var query = CreateDbRawSqlQuery(new object[0]);
+                Assert.Equal(paramName, Assert.Throws<ArgumentNullException>(() => invokeMethodUnderTest(query)).ParamName);
+            }
+
+            private class ModuloEqualityComparer : IEqualityComparer<int>
+            {
+                private readonly int _modulo;
+
+                public ModuloEqualityComparer(int modulo)
+                {
+                    _modulo = modulo;
+                }
+
+                public bool Equals(int left, int right)
+                {
+                    return left % _modulo == right % _modulo;
+                }
+
+                public int GetHashCode(int value)
+                {
+                    return value.GetHashCode();
+                }
             }
         }
 
 #endif
 
-        #endregion
-
-        #region GetEnumerator tests
-
-        [Fact]
-        public void NonGeneric_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
+        public class GetEnumerator
         {
-            var dbRawQuery = CreateDbRawSqlQuery(new object[0]);
-            var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
+            [Fact]
+            public void NonGeneric_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
+            {
+                var dbRawQuery = CreateDbRawSqlQuery(new object[0]);
+                var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
 #if !NET40
-            ((IDbAsyncEnumerable)dbRawQuery).GetAsyncEnumerator();
+                ((IDbAsyncEnumerable)dbRawQuery).GetAsyncEnumerator();
 
-            internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
+                internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
 #endif
 
-            ((IEnumerable)dbRawQuery).GetEnumerator();
+                ((IEnumerable)dbRawQuery).GetEnumerator();
 
-            internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
-        }
+                internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
+            }
 
-        [Fact]
-        public void Generic_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
-        {
-            var dbRawQuery = CreateDbRawSqlQuery(new string[0]);
-            var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
+            [Fact]
+            public void Generic_enumerable_methods_delegate_to_underlying_InternalQuery_correctly()
+            {
+                var dbRawQuery = CreateDbRawSqlQuery(new string[0]);
+                var internalQueryMock = Mock.Get((InternalSqlNonSetQuery)dbRawQuery.InternalQuery);
 #if !NET40
-            ((IDbAsyncEnumerable<string>)dbRawQuery).GetAsyncEnumerator();
+                ((IDbAsyncEnumerable<string>)dbRawQuery).GetAsyncEnumerator();
 
-            internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
+                internalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
 #endif
 
-            ((IEnumerable<string>)dbRawQuery).GetEnumerator();
+                ((IEnumerable<string>)dbRawQuery).GetEnumerator();
 
-            internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
+                internalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
+            }
         }
-
-        #endregion
 
         private static DbRawSqlQuery<TElement> CreateDbRawSqlQuery<TElement>(IEnumerable<TElement> sourceEnumerable)
         {

@@ -15,9 +15,6 @@ namespace ProductivityApiTests
     using SimpleModel;
     using Xunit;
 
-    /// <summary>
-    ///     Tests for the primary methods on DbContext.
-    /// </summary>
     public class DbSetTests : FunctionalTestBase
     {
         #region Positive query tests

@@ -75,7 +75,10 @@ namespace System.Data.Entity.Core.Objects
         ///     which to execute the query as well as the metadata and result cache.
         /// </summary>
         /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
-        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <param name="context">
+        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
+        ///     on which to execute the query, and the cache to store the results in.
+        /// </param>
         /// <returns> A new ObjectQuery instance. </returns>
         public ObjectQuery(string commandText, ObjectContext context)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
@@ -98,7 +101,10 @@ namespace System.Data.Entity.Core.Objects
         ///     The merge option specifies how the cache should be populated/updated.
         /// </summary>
         /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
-        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <param name="context">
+        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
+        ///     on which to execute the query, and the cache to store the results in.
+        /// </param>
         /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
         /// <returns> A new ObjectQuery instance. </returns>
         public ObjectQuery(string commandText, ObjectContext context, MergeOption mergeOption)
@@ -126,7 +132,10 @@ namespace System.Data.Entity.Core.Objects
         ///     The merge option specifies how the cache should be populated/updated.
         /// </summary>
         /// <param name="entitySet"> The entity set this query scans. </param>
-        /// <param name="context"> The ObjectContext containing the metadata workspace the query will be built against, the connection on which to execute the query, and the cache to store the results in. </param>
+        /// <param name="context">
+        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
+        ///     on which to execute the query, and the cache to store the results in.
+        /// </param>
         /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
         /// <returns> A new ObjectQuery instance. </returns>
         internal ObjectQuery(EntitySetBase entitySet, ObjectContext context, MergeOption mergeOption)

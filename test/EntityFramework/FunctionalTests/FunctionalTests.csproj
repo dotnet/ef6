@@ -143,6 +143,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />

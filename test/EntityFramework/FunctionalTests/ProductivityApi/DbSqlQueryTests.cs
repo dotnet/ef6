@@ -196,10 +196,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Products.SqlQuery(s).AsStreaming().AsNoTracking().ToList());
+        }
+
+        [Fact]
         public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Database.SqlQuery<Product>(s).ToList());
+        }
+
+        [Fact]
+        public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Database.SqlQuery<Product>(s).AsStreaming().ToList());
         }
 
         [Fact]
@@ -210,11 +224,26 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Set(typeof(Product)).SqlQuery(s).AsStreaming().AsNoTracking().ToList<Product>());
+        }
+
+        [Fact]
         public void
             Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Database.SqlQuery(typeof(Product), s).ToList<Product>());
+        }
+
+        [Fact]
+        public void
+            Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
+        {
+            SQL_query_can_be_used_to_materialize_entities_without_tracking(
+                (c, s) => c.Database.SqlQuery(typeof(Product), s).AsStreaming().ToList<Product>());
         }
 
         private void SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -240,11 +269,26 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Products.SqlQuery(s, p).AsStreaming().AsNoTracking().ToList());
+        }
+
+        [Fact]
         public void
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Database.SqlQuery<Product>(s, p).ToList());
+        }
+
+        [Fact]
+        public void
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Database.SqlQuery<Product>(s, p).AsStreaming().ToList());
         }
 
         [Fact]
@@ -255,10 +299,24 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Set(typeof(Product)).SqlQuery(s, p).AsStreaming().AsNoTracking().ToList<Product>());
+        }
+
+        [Fact]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Database.SqlQuery(typeof(Product), s, p).ToList<Product>());
+        }
+
+        [Fact]
+        public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
+        {
+            SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
+                (c, s, p) => c.Database.SqlQuery(typeof(Product), s, p).AsStreaming().ToList<Product>());
         }
 
         private void SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
