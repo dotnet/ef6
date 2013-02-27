@@ -203,6 +203,7 @@
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\ObjectItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\ObjectItemConventionAssemblyLoaderTests.cs" />
+    <Compile Include="Core\Metadata\Edm\RowTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />

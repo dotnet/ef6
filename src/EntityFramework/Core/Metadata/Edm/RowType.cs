@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using System.Threading;
 
@@ -231,6 +232,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// The factory method for constructing the <see cref="RowType"/> object.
+        /// </summary>
+        /// <param name="properties">Properties of the row type object.</param>
+        /// <param name="metadataProperties">Metadata properties that will be added to the function. Can be null.</param>
+        /// <returns>A new, read-only instance of the <see cref="RowType"/> object.</returns>
+        public static RowType Create(IEnumerable<EdmProperty> properties, IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotNull(properties, "properties");
+
+            var rowType = new RowType(properties);
+
+            if (metadataProperties != null)
+            {
+                rowType.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            rowType.SetReadOnly();
+
+            return rowType;
         }
     }
 }

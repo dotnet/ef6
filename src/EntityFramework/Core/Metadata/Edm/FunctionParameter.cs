@@ -123,5 +123,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // TypeUsage is always readonly, no reason to set it
             }
         }
+
+        /// <summary>
+        /// The factory method for constructing the <see cref="FunctionParameter"/> object.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="edmType">The EdmType of the parameter.</param>
+        /// <param name="parameterMode">The <see cref="ParameterMode"/> of the parameter.</param>
+        /// <returns>A new, read-only instance of the <see cref="EdmFunction"/> type.</returns>
+        public static FunctionParameter Create(string name, EdmType edmType, ParameterMode parameterMode)
+        {
+            Check.NotNull(name, "name");
+            Check.NotNull(edmType, "edmType");
+
+            var functionParameter =
+                new FunctionParameter(name, TypeUsage.Create(edmType, FacetValues.NullFacetValues), parameterMode);
+
+            functionParameter.SetReadOnly();
+
+            return functionParameter;
+        }
     }
 }

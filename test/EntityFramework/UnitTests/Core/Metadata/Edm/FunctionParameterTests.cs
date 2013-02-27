@@ -32,6 +32,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             function.Name = "Foo";
 
             Assert.Equal("Foo", function.Name);
-    }
+        }
+
+        [Fact]
+        public void Create_factory_method_sets_properties_and_seals_the_type()
+        {
+            var parameter = 
+                FunctionParameter.Create(
+                    "param", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), ParameterMode.In);
+
+            Assert.Equal("param", parameter.Name);
+            Assert.Same(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), parameter.TypeUsage.EdmType);
+            Assert.Equal(ParameterMode.In, parameter.Mode);
+            Assert.True(parameter.IsReadOnly);
+        }
     }
 }
