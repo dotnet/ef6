@@ -392,23 +392,24 @@ namespace ProductivityApiTests
             var categoryId = Guid.NewGuid().ToString();
             string productName = null;
 
-            using (var context = new SimpleModelContext())
-            {
-                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = true;
+            RunInSqlCeTransaction<SimpleModelContext>(
+                context =>
+                {
+                    ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = true;
 
-                var category = new Category { Id = categoryId };
-                var product = new Product { Name = productName, Category = category };
-                context.Categories.Add(category);
-                context.Products.Add(product);
-                context.SaveChanges();
+                    var category = new Category { Id = categoryId };
+                    var product = new Product { Name = productName, Category = category };
+                    context.Categories.Add(category);
+                    context.Products.Add(product);
+                    context.SaveChanges();
 
-                var query = from p in context.Products where p.CategoryId == categoryId && p.Name == productName select p;
-                Assert.Equal(1, query.Count());
+                    var query = from p in context.Products where p.CategoryId == categoryId && p.Name == productName select p;
+                    Assert.Equal(1, query.Count());
 
-                product = query.First();
-                Assert.Equal(productName, product.Name);
-                Assert.Equal(categoryId, product.CategoryId);                
-            }
+                    product = query.First();
+                    Assert.Equal(productName, product.Name);
+                    Assert.Equal(categoryId, product.CategoryId);
+                });
         }
 
         [Fact]
@@ -417,19 +418,20 @@ namespace ProductivityApiTests
             var categoryId = Guid.NewGuid().ToString();
             string productName = null;
 
-            using (var context = new SimpleModelContext())
-            {
-                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
+            RunInSqlCeTransaction<SimpleModelContext>(
+                context =>
+                {
+                    ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
-                var category = new Category { Id = categoryId };
-                var product = new Product { Name = productName, Category = category };
-                context.Categories.Add(category);
-                context.Products.Add(product);
-                context.SaveChanges();
+                    var category = new Category { Id = categoryId };
+                    var product = new Product { Name = productName, Category = category };
+                    context.Categories.Add(category);
+                    context.Products.Add(product);
+                    context.SaveChanges();
 
-                var query = from p in context.Products where p.CategoryId == categoryId && p.Name == productName select p;
-                Assert.Equal(0, query.Count());
-            }
+                    var query = from p in context.Products where p.CategoryId == categoryId && p.Name == productName select p;
+                    Assert.Equal(0, query.Count());
+                });
         }
 
         #endregion
