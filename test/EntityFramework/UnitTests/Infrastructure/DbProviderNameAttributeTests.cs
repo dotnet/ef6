@@ -44,8 +44,8 @@ namespace System.Data.Entity.Infrastructure
         {
             var attributes = DbProviderNameAttribute.GetFromType(typeof(MultiProviderStrategy)).ToList();
             Assert.Equal(2, attributes.Count);
-            Assert.Equal("One", attributes[0].Name);
-            Assert.Equal("Two", attributes[1].Name);
+            Assert.Contains("One", attributes.Select(a => a.Name));
+            Assert.Contains("Two", attributes.Select(a => a.Name));
         }
         
         [Fact]

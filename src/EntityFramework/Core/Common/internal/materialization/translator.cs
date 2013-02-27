@@ -272,7 +272,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // We have all the property bindings now; go ahead and build the expression to
                     // construct the entity or proxy and store the property values.  We'll wrap it with more
                     // stuff that needs to happen (or not) below.
-                    var proxyTypeInfo = EntityProxyFactory.GetProxyType(oSpaceType);
+                    var proxyTypeInfo = EntityProxyFactory.GetProxyType(oSpaceType, _workspace);
 
                     // If no proxy type exists for the entity, construct the regular entity object.
                     // If a proxy type does exist, examine the ObjectContext.ContextOptions.ProxyCreationEnabled flag

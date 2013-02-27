@@ -2652,18 +2652,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 NavigationPropertyAccessor sourceAccessor = null;
                 NavigationPropertyAccessor targetAccessor = null;
 
-                var associationType = RelationMetadata as AssociationType;
                 var relationshipName = _navigation.RelationshipName;
                 var sourceRoleName = _navigation.From;
                 var targetRoleName = _navigation.To;
-                if (associationType != null
-                    ||
-                    RelationshipManager.TryGetRelationshipType(
-                        WrappedOwner, WrappedOwner.IdentityType, relationshipName, out associationType)
-                    ||
-                    EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(
-                        WrappedOwner, relationshipName, targetRoleName, out associationType))
-                {
+
+                var associationType = RelationMetadata as AssociationType
+                                      ?? _wrappedOwner.RelationshipManager.GetRelationshipType(relationshipName);
+
                     AssociationEndMember sourceEnd;
                     if (associationType.AssociationEndMembers.TryGetValue(sourceRoleName, false, out sourceEnd))
                     {
@@ -2679,7 +2674,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(
                             targetEntityType, relationshipName, targetRoleName, sourceRoleName);
                     }
-                }
 
                 if (sourceAccessor == null
                     || targetAccessor == null)

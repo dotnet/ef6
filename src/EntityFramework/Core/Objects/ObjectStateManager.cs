@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Objects
             if (identityType != actualType)
             {
                 var entityType = MetadataWorkspace.GetItem<ClrEntityType>(identityType.FullName, DataSpace.OSpace);
-                var proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType);
+                var proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType, MetadataWorkspace);
                 if (proxyTypeInfo == null
                     || proxyTypeInfo.ProxyType != actualType)
                 {

@@ -34,6 +34,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private RelationshipManager()
         {
             _entityWrapperFactory = new EntityWrapperFactory();
+            _expensiveLoader = new ExpensiveOSpaceLoader();
+        }
+
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal RelationshipManager(ExpensiveOSpaceLoader expensiveLoader)
+        {
+            _entityWrapperFactory = new EntityWrapperFactory();
+            _expensiveLoader = expensiveLoader ?? new ExpensiveOSpaceLoader();
         }
 
         // ------
@@ -60,9 +70,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [NonSerialized]
         private EntityWrapperFactory _entityWrapperFactory;
 
+        [NonSerialized]
+        private ExpensiveOSpaceLoader _expensiveLoader;
+
         // ----------
         // Properties
         // ----------
+
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal void SetExpensiveLoader(ExpensiveOSpaceLoader loader)
+        {
+            DebugCheck.NotNull(loader);
+
+            _expensiveLoader = loader;
+        }
 
         /// <summary>
         ///     Returns a defensive copy of all the known relationships.  The copy is defensive because
@@ -439,38 +462,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 throw new InvalidOperationException(Strings.RelationshipManager_CannotGetRelatEndForDetachedPocoEntity);
             }
 
-            RelatedEnd relatedEnd = null;
+            var associationType = GetRelationshipType(relationshipName);
+            Debug.Assert(associationType != null);
 
-            // Try to get the AssociationType from metadata. This will contain all of the ospace metadata for this relationship            
-            AssociationType associationType = null;
-            if (!TryGetRelationshipType(wrappedOwner, wrappedOwner.IdentityType, relationshipName, out associationType))
-            {
-                if (_relationships != null)
-                {
-                    // Look for the RelatedEnd in the list that has already been retrieved
-                    relatedEnd = (from RelatedEnd end in _relationships
-                                  where end.RelationshipName == relationshipName &&
-                                        end.TargetRoleName == targetRoleName
-                                  select end).FirstOrDefault();
-                }
-
-                if (relatedEnd == null
-                    &&
-                    !EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(
-                        wrappedOwner, relationshipName, targetRoleName, out associationType))
-                {
-                    // If the end still cannot be found, throw an exception
-                    throw UnableToGetMetadata(WrappedOwner, relationshipName);
-                }
-            }
-
-            if (relatedEnd == null)
-            {
-                Debug.Assert(associationType != null, "associationType is null");
-                relatedEnd = GetRelatedEndInternal(relationshipName, targetRoleName, /*existingRelatedEnd*/ null, associationType);
-            }
-
-            return relatedEnd;
+            return GetRelatedEndInternal(relationshipName, targetRoleName, /*existingRelatedEnd*/ null, associationType);
         }
 
         private RelatedEnd GetRelatedEndInternal(
@@ -578,7 +573,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
             // If the relationship doesn't exist, we will use this type information to determine how to initialize the reference
             relationshipName = PrependNamespaceToRelationshipName(relationshipName);
-            var relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
+            var relationship = GetRelationshipType(relationshipName);
 
             RelatedEnd relatedEnd;
             if (TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd))
@@ -640,7 +635,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // We need the CSpace-qualified name in order to determine if this relationship already exists, so look it up.
             // If the relationship doesn't exist, we will use this type information to determine how to initialize the reference
             relationshipName = PrependNamespaceToRelationshipName(relationshipName);
-            var relationship = GetRelationshipType(wrappedOwner.IdentityType, relationshipName);
+            var relationship = GetRelationshipType(relationshipName);
 
             var collection =
                 GetRelatedEndInternal(relationshipName, targetRoleName, entityCollection, relationship) as EntityCollection<TTargetEntity>;
@@ -660,12 +655,30 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     This method should only be used at the imediate top-level public surface since all internal
         ///     calls are expected to use fully qualified names already.
         /// </summary>
-        private string PrependNamespaceToRelationshipName(string relationshipName)
+        internal string PrependNamespaceToRelationshipName(string relationshipName)
         {
             DebugCheck.NotNull(relationshipName);
 
             if (!relationshipName.Contains('.'))
             {
+                AssociationType associationType;
+                if (EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(WrappedOwner, relationshipName, out associationType))
+                {
+                    return associationType.FullName;
+                }
+
+                if (_relationships != null)
+                {
+                    var fullName = _relationships
+                        .Select(r => r.RelationshipName)
+                        .FirstOrDefault(n => n.Substring(n.LastIndexOf('.') + 1) == relationshipName);
+                    
+                    if (fullName != null)
+                    {
+                        return fullName;
+                    }
+                }
+
                 var identityName = WrappedOwner.IdentityType.FullName;
                 var objectItemCollection = GetObjectItemCollection(WrappedOwner);
                 EdmType entityType = null;
@@ -675,7 +688,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    var types = ObjectItemCollection.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly);
+                    var types = _expensiveLoader.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly);
                     if (types != null)
                     {
                         types.TryGetValue(identityName, out entityType);
@@ -698,9 +711,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         private static ObjectItemCollection GetObjectItemCollection(IEntityWrapper wrappedOwner)
         {
-            if (wrappedOwner.Context != null
-                && wrappedOwner.Context.MetadataWorkspace != null)
+            if (wrappedOwner.Context != null)
             {
+                Debug.Assert(wrappedOwner.Context.MetadataWorkspace != null);
+
                 return (ObjectItemCollection)wrappedOwner.Context.MetadataWorkspace.GetItemCollection(DataSpace.OSpace);
             }
             return null;
@@ -746,29 +760,42 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-        internal static bool TryGetRelationshipType(
-            IEntityWrapper wrappedOwner, Type entityClrType, string relationshipName, out AssociationType associationType)
+        internal AssociationType GetRelationshipType(string relationshipName)
         {
-            var objectItemCollection = GetObjectItemCollection(wrappedOwner);
+            DebugCheck.NotEmpty(relationshipName);
+
+            AssociationType associationType = null;
+
+            var objectItemCollection = GetObjectItemCollection(WrappedOwner);
             if (objectItemCollection != null)
             {
                 associationType = objectItemCollection.GetRelationshipType(relationshipName);
             }
-            else
+
+            if (associationType == null)
             {
-                associationType = ObjectItemCollection.GetRelationshipTypeExpensiveWay(entityClrType, relationshipName);
+                EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(WrappedOwner, relationshipName, out associationType);
             }
 
-            return (associationType != null);
-        }
+            if (associationType == null && _relationships != null)
+            {
+                associationType = _relationships
+                    .Where(e => e.RelationshipName == relationshipName)
+                    .Select(e => e.RelationMetadata)
+                    .OfType<AssociationType>()
+                    .FirstOrDefault();
+            }
 
-        private AssociationType GetRelationshipType(Type entityClrType, string relationshipName)
-        {
-            AssociationType associationType = null;
-            if (!TryGetRelationshipType(WrappedOwner, entityClrType, relationshipName, out associationType))
+            if (associationType == null)
+            {
+                associationType = _expensiveLoader.GetRelationshipTypeExpensiveWay(WrappedOwner.IdentityType, relationshipName);
+            }
+
+            if (associationType == null)
             {
                 throw UnableToGetMetadata(WrappedOwner, relationshipName);
             }
+
             return associationType;
         }
 
@@ -826,8 +853,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             else
             {
-                // No metadata is available, attempt to load the metadata on the fly to retrieve the AssociationTypes
-                associations = ObjectItemCollection.GetAllRelationshipTypesExpensiveWay(entityClrType.Assembly);
+                associations = EntityProxyFactory.TryGetAllAssociationTypesFromProxyInfo(WrappedOwner);
+
+                if (associations == null)
+                {
+                    // No metadata is available, attempt to load the metadata on the fly to retrieve the AssociationTypes
+                    associations = _expensiveLoader.GetAllRelationshipTypesExpensiveWay(entityClrType.Assembly);
+                }
             }
 
             foreach (var association in associations)
@@ -849,7 +881,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     yield return association.AssociationEndMembers[0];
                 }
             }
-            yield break;
         }
 
         private bool VerifyRelationship(AssociationType relationship, string sourceEndName, bool throwOnError)
@@ -1482,6 +1513,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // Note that when deserializing, the context is always null since we never serialize
             // the context with the entity.
             _entityWrapperFactory = new EntityWrapperFactory();
+            _expensiveLoader = new ExpensiveOSpaceLoader();
             _wrappedOwner = EntityWrapperFactory.WrapEntityUsingContext(_owner, null);
         }
 

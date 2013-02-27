@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache,  KnownAssembliesSet knownAssembliesSet = null)
+        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache, KnownAssembliesSet knownAssembliesSet = null)
             : base(DataSpace.OSpace)
         {
             _viewAssemblyCache = viewAssemblyCache ?? DbConfiguration.GetService<IViewAssemblyCache>();
@@ -167,78 +167,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return associationType;
             }
             return null;
-        }
-
-        /// <summary>
-        ///     Loads the OSpace types in the assembly and returns them as a dictionary
-        /// </summary>
-        /// <param name="assembly"> The assembly to load </param>
-        /// <returns> A mapping from names to OSpace EdmTypes </returns>
-        internal static Dictionary<string, EdmType> LoadTypesExpensiveWay(Assembly assembly)
-        {
-            Dictionary<string, EdmType> typesInLoading = null;
-
-            List<EdmItemError> errors;
-            var knownAssemblies = new KnownAssembliesSet();
-
-            // TODO: This is used when we need o-space types but don't have an ObjectItemCollection
-            // This may be linked to when we need a RelationshipManager for a disconnected entity.
-            // We should figure out what the implications are for this in terms of caching/perf/etc.
-            AssemblyCache.LoadAssembly(
-                assembly, false /*loadAllReferencedAssemblies*/,
-                knownAssemblies, out typesInLoading, out errors);
-
-            // Check for errors
-            if (errors.Count != 0)
-            {
-                throw EntityUtil.InvalidSchemaEncountered(Helper.CombineErrorMessage(errors));
-            }
-
-            return typesInLoading;
-        }
-
-        /// <summary>
-        ///     internal static method to get the relationship name
-        /// </summary>
-        /// <param name="clrType"> </param>
-        /// <param name="relationshipName"> </param>
-        /// <returns> </returns>
-        internal static AssociationType GetRelationshipTypeExpensiveWay(Type entityClrType, string relationshipName)
-        {
-            var typesInLoading = LoadTypesExpensiveWay(entityClrType.Assembly);
-            if (typesInLoading != null)
-            {
-                EdmType edmType;
-                // Look in typesInLoading for relationship type
-                if (typesInLoading.TryGetValue(relationshipName, out edmType)
-                    && Helper.IsRelationshipType(edmType))
-                {
-                    return (AssociationType)edmType;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        ///     internal static method to get all the AssociationTypes from an assembly
-        /// </summary>
-        /// <param name="assembly"> The assembly from which to load relationship types </param>
-        /// <returns> An enumeration of OSpace AssociationTypes that are present in this assembly </returns>
-        internal static IEnumerable<AssociationType> GetAllRelationshipTypesExpensiveWay(Assembly assembly)
-        {
-            var typesInLoading = LoadTypesExpensiveWay(assembly);
-            if (typesInLoading != null)
-            {
-                // Iterate through the EdmTypes looking for AssociationTypes
-                foreach (var edmType in typesInLoading.Values)
-                {
-                    if (Helper.IsAssociationType(edmType))
-                    {
-                        yield return (AssociationType)edmType;
-                    }
-                }
-            }
-            yield break;
         }
 
         private bool LoadAssemblyFromCache(

@@ -127,9 +127,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. Must not be null. </param>
         /// <returns> A non-null EntityProxyTypeInfo instance that contains information about the type of proxy for the specified O-Space EntityType; or null if no proxy can be created for the specified type. </returns>
-        internal static EntityProxyTypeInfo GetProxyType(ClrEntityType ospaceEntityType)
+        internal static EntityProxyTypeInfo GetProxyType(ClrEntityType ospaceEntityType, MetadataWorkspace workspace)
         {
             DebugCheck.NotNull(ospaceEntityType);
+            DebugCheck.NotNull(workspace);
             Debug.Assert(ospaceEntityType.DataSpace == DataSpace.OSpace, "ospaceEntityType.DataSpace must be OSpace");
 
             EntityProxyTypeInfo proxyTypeInfo = null;
@@ -152,7 +153,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             _typeMapLock.EnterUpgradeableReadLock();
             try
             {
-                return TryCreateProxyType(ospaceEntityType);
+                return TryCreateProxyType(ospaceEntityType, workspace);
             }
             finally
             {
@@ -165,16 +166,29 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="wrappedEntity"> The entity instance used to lookup the proxy type </param>
         /// <param name="relationshipName"> The name of the relationship (FullName or Name) </param>
-        /// <param name="targetRoleName"> Target role of the relationship </param>
         /// <param name="associationType"> The AssociationType for that property </param>
         /// <returns> True if an AssociationType is found in proxy metadata, false otherwise </returns>
         internal static bool TryGetAssociationTypeFromProxyInfo(
-            IEntityWrapper wrappedEntity, string relationshipName, string targetRoleName, out AssociationType associationType)
+            IEntityWrapper wrappedEntity, string relationshipName, out AssociationType associationType)
         {
-            EntityProxyTypeInfo proxyInfo = null;
+            DebugCheck.NotNull(wrappedEntity);
+            DebugCheck.NotEmpty(relationshipName);
+
+            EntityProxyTypeInfo proxyInfo;
             associationType = null;
             return (TryGetProxyType(wrappedEntity.Entity.GetType(), out proxyInfo) && proxyInfo != null &&
-                    proxyInfo.TryGetNavigationPropertyAssociationType(relationshipName, targetRoleName, out associationType));
+                    proxyInfo.TryGetNavigationPropertyAssociationType(relationshipName, out associationType));
+        }
+
+        internal static IEnumerable<AssociationType> TryGetAllAssociationTypesFromProxyInfo(IEntityWrapper wrappedEntity)
+        {
+            DebugCheck.NotNull(wrappedEntity);
+
+            EntityProxyTypeInfo proxyInfo;
+            return TryGetProxyType(wrappedEntity.Entity.GetType(), out proxyInfo)
+                       ? proxyInfo.GetAllAssociationTypes()
+                       : null;
+
         }
 
         /// <summary>
@@ -182,9 +196,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     and generate a proxy type for each EntityType (if possible for the particular type).
         /// </summary>
         /// <param name="ospaceEntityType"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
-        internal static void TryCreateProxyTypes(IEnumerable<EntityType> ospaceEntityTypes)
+        internal static void TryCreateProxyTypes(IEnumerable<EntityType> ospaceEntityTypes, MetadataWorkspace workspace)
         {
             DebugCheck.NotNull(ospaceEntityTypes);
+            DebugCheck.NotNull(workspace);
 
             // Acquire an upgradeable read lock for the duration of the enumeration so that:
             // 1. Other readers aren't blocked while existence checks are performed.
@@ -196,7 +211,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 foreach (var ospaceEntityType in ospaceEntityTypes)
                 {
                     Debug.Assert(ospaceEntityType != null, "Null EntityType element reference present in enumeration.");
-                    TryCreateProxyType(ospaceEntityType);
+                    TryCreateProxyType(ospaceEntityType, workspace);
                 }
             }
             finally
@@ -205,7 +220,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        private static EntityProxyTypeInfo TryCreateProxyType(EntityType ospaceEntityType)
+        private static EntityProxyTypeInfo TryCreateProxyType(EntityType ospaceEntityType, MetadataWorkspace workspace)
         {
             Debug.Assert(
                 _typeMapLock.IsUpgradeableReadLockHeld,
@@ -220,7 +235,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 && CanProxyType(ospaceEntityType))
             {
                 var moduleBuilder = GetDynamicModule(ospaceEntityType);
-                proxyTypeInfo = BuildType(moduleBuilder, clrEntityType);
+                proxyTypeInfo = BuildType(moduleBuilder, clrEntityType, workspace);
 
                 _typeMapLock.EnterWriteLock();
                 try
@@ -353,7 +368,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. </param>
         /// <returns> EntityProxyTypeInfo object that contains the constructed proxy type, along with any behaviors associated with that type; or null if a proxy type cannot be constructed for the specified EntityType. </returns>
-        private static EntityProxyTypeInfo BuildType(ModuleBuilder moduleBuilder, ClrEntityType ospaceEntityType)
+        private static EntityProxyTypeInfo BuildType(
+            ModuleBuilder moduleBuilder, 
+            ClrEntityType ospaceEntityType,
+            MetadataWorkspace workspace)
         {
             Debug.Assert(
                 _typeMapLock.IsUpgradeableReadLockHeld,
@@ -376,9 +394,12 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
 
                 proxyTypeInfo = new EntityProxyTypeInfo(
-                    proxyType, ospaceEntityType,
+                    proxyType,
+                    ospaceEntityType,
                     proxyTypeBuilder.CreateInitalizeCollectionMethod(proxyType),
-                    proxyTypeBuilder.BaseGetters, proxyTypeBuilder.BaseSetters);
+                    proxyTypeBuilder.BaseGetters,
+                    proxyTypeBuilder.BaseSetters,
+                    workspace);
 
                 foreach (var member in proxyTypeBuilder.LazyLoadMembers)
                 {

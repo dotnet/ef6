@@ -36,39 +36,34 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         // An index of relationship metadata strings to an AssociationType
         // This is used when metadata is not otherwise available to the proxy
-        private readonly Dictionary<Tuple<string, string>, AssociationType> _navigationPropertyAssociationTypes;
+        private readonly Dictionary<string, AssociationType> _navigationPropertyAssociationTypes = new Dictionary<string, AssociationType>();
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityProxyTypeInfo(
-            Type proxyType, ClrEntityType ospaceEntityType, DynamicMethod initializeCollections, List<PropertyInfo> baseGetters,
-            List<PropertyInfo> baseSetters)
+            Type proxyType,
+            ClrEntityType ospaceEntityType,
+            DynamicMethod initializeCollections,
+            List<PropertyInfo> baseGetters,
+            List<PropertyInfo> baseSetters,
+            MetadataWorkspace workspace)
         {
             DebugCheck.NotNull(proxyType);
+            DebugCheck.NotNull(workspace);
 
             _proxyType = proxyType;
             _entityType = ospaceEntityType;
 
             _initializeCollections = initializeCollections;
 
-            _navigationPropertyAssociationTypes = new Dictionary<Tuple<string, string>, AssociationType>();
-            foreach (var navigationProperty in ospaceEntityType.NavigationProperties)
+            foreach (var relationshipType in GetAllRelationshipsForType(workspace, proxyType))
             {
-                _navigationPropertyAssociationTypes.Add(
-                    new Tuple<string, string>(
-                        navigationProperty.RelationshipType.FullName,
-                        navigationProperty.ToEndMember.Name),
-                    (AssociationType)navigationProperty.RelationshipType);
+                _navigationPropertyAssociationTypes.Add(relationshipType.FullName, relationshipType);
 
-                if (navigationProperty.RelationshipType.Name
-                    != navigationProperty.RelationshipType.FullName)
+                if (relationshipType.Name != relationshipType.FullName)
                 {
                     // Sometimes there isn't enough metadata to have a container name
                     // Default codegen doesn't qualify names
-                    _navigationPropertyAssociationTypes.Add(
-                        new Tuple<string, string>(
-                            navigationProperty.RelationshipType.Name,
-                            navigationProperty.ToEndMember.Name),
-                        (AssociationType)navigationProperty.RelationshipType);
+                    _navigationPropertyAssociationTypes.Add(relationshipType.Name, relationshipType);
                 }
             }
 
@@ -87,18 +82,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Object_Parameter);
             var getEntityWrapperDelegate = lambda.Compile();
             Proxy_GetEntityWrapper = (object proxy) =>
-                                         {
-                                             // This code validates that the wrapper points to the proxy that holds the wrapper.
-                                             // This guards against mischief by switching this wrapper out for another one obtained
-                                             // from a different object.
-                                             var wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
-                                             if (wrapper != null
-                                                 && !ReferenceEquals(wrapper.Entity, proxy))
-                                             {
-                                                 throw new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
-                                             }
-                                             return wrapper;
-                                         };
+                {
+                    // This code validates that the wrapper points to the proxy that holds the wrapper.
+                    // This guards against mischief by switching this wrapper out for another one obtained
+                    // from a different object.
+                    var wrapper = ((IEntityWrapper)getEntityWrapperDelegate(proxy));
+                    if (wrapper != null
+                        && !ReferenceEquals(wrapper.Entity, proxy))
+                    {
+                        throw new InvalidOperationException(Strings.EntityProxyTypeInfo_ProxyHasWrongWrapper);
+                    }
+                    return wrapper;
+                };
 
             // Create the Wrapper setter
             Proxy_SetEntityWrapper = Expression.Lambda<Func<object, object, object>>(
@@ -136,6 +131,25 @@ namespace System.Data.Entity.Core.Objects.Internal
             _createObject = DelegateFactory.CreateConstructor(proxyType);
         }
 
+        internal static IEnumerable<AssociationType> GetAllRelationshipsForType(MetadataWorkspace workspace, Type clrType)
+        {
+            DebugCheck.NotNull(workspace);
+            DebugCheck.NotNull(clrType);
+
+            // Note that this gets any relationship that the CLR type participates in in any entity set. For MEST, this
+            // could result in too many relationships being returned, but this doesn't matter since the extra ones will
+            // not be used. Also, MEST is rare.
+            return ((ObjectItemCollection)workspace.GetItemCollection(DataSpace.OSpace)).GetItems<AssociationType>().Where(
+                a => IsEndMemberForType(a.AssociationEndMembers[0], clrType)
+                     || IsEndMemberForType(a.AssociationEndMembers[1], clrType));
+        }
+
+        private static bool IsEndMemberForType(AssociationEndMember end, Type clrType)
+        {
+            var referenceType = end.TypeUsage.EdmType as RefType;
+            return referenceType != null && referenceType.ElementType.ClrType.IsAssignableFrom(clrType);
+        }
+
         internal object CreateProxyObject()
         {
             return _createObject();
@@ -171,11 +185,14 @@ namespace System.Data.Entity.Core.Objects.Internal
             get { return _baseSetter; }
         }
 
-        public bool TryGetNavigationPropertyAssociationType(
-            string relationshipName, string targetRoleName, out AssociationType associationType)
+        public bool TryGetNavigationPropertyAssociationType(string relationshipName, out AssociationType associationType)
         {
-            return _navigationPropertyAssociationTypes.TryGetValue(
-                new Tuple<string, string>(relationshipName, targetRoleName), out associationType);
+            return _navigationPropertyAssociationTypes.TryGetValue(relationshipName, out associationType);
+        }
+
+        public IEnumerable<AssociationType> GetAllAssociationTypes()
+        {
+            return _navigationPropertyAssociationTypes.Values.Distinct();
         }
 
         public void ValidateType(ClrEntityType ospaceEntityType)

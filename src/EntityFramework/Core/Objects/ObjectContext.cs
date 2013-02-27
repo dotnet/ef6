@@ -3320,7 +3320,8 @@ namespace System.Data.Entity.Core.Objects
                             EntityType entityType;
                             ospaceItems.TryGetItem(type.FullName, out entityType);
                             return entityType;
-                        }).Where(entityType => entityType != null)
+                        }).Where(entityType => entityType != null),
+                        MetadataWorkspace
                 );
         }
 
@@ -3376,7 +3377,7 @@ namespace System.Data.Entity.Core.Objects
             EntityProxyTypeInfo proxyTypeInfo = null;
 
             if (ContextOptions.ProxyCreationEnabled
-                && ((proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType)) != null))
+                && ((proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType, MetadataWorkspace)) != null))
             {
                 instance = (T)proxyTypeInfo.CreateProxyObject();
 
