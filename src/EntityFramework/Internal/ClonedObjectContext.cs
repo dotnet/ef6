@@ -67,7 +67,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     This is always the store connection of the underlying ObjectContext.
         /// </summary>
-        public DbConnection Connection
+        public virtual DbConnection Connection
         {
             get { return _objectContext.Connection.StoreConnection; }
         }

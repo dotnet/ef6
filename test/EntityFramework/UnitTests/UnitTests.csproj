@@ -265,6 +265,7 @@
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
+    <Compile Include="Internal\DatabaseTableCheckerTests.cs" />
     <Compile Include="Internal\InterceptedCommandTests.cs" />
     <Compile Include="Internal\DefaultCommandInterceptorTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />

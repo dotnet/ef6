@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -112,15 +113,43 @@ namespace System.Data.Entity.Internal
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = provider.StoreSchemaTablesQuery;
-                connection.Open();
 
-                using (var reader = command.ExecuteReader())
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
+                try
                 {
-                    while (reader.Read())
+                    return executionStrategy.Execute(
+                        () =>
+                            {
+                                if (connection.State == ConnectionState.Broken)
+                                {
+                                    connection.Close();
+                                }
+
+                                if (connection.State == ConnectionState.Closed)
+                                {
+                                    connection.Open();
+                                }
+
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    var tables = new List<Tuple<string, string>>();
+                                    while (reader.Read())
+                                    {
+                                        tables.Add(
+                                            Tuple.Create(
+                                                reader["SchemaName"] as string,
+                                                reader["Name"] as string));
+                                    }
+
+                                    return tables;
+                                }
+                            });
+                }
+                finally
+                {
+                    if (connection.State != ConnectionState.Closed)
                     {
-                        yield return Tuple.Create(
-                            reader["SchemaName"] as string,
-                            reader["Name"] as string);
+                        connection.Close();
                     }
                 }
             }
