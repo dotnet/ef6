@@ -23,6 +23,17 @@ namespace System.Data.Entity
             get { return new DbProviderInfo("System.Data.SqlServerCe.4.0", "4.0"); }
         }
 
+        public static DbProviderManifest SqlCe4_ProviderManifest
+        {
+            get
+            {
+                return DbProviderServices.GetProviderServices(
+                    new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0")
+                        .CreateConnection("foo"))
+                                         .GetProviderManifest("4.0");
+            }
+        }
+
         public static DbProviderInfo SqlCe35_ProviderInfo
         {
             get { return new DbProviderInfo("System.Data.SqlServerCe.3.5", "3.5"); }

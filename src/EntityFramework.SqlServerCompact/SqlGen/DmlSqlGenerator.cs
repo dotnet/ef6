@@ -287,7 +287,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 var isFirst = true;
                 foreach (var member in target.ElementType.KeyMembers)
                 {
-                    DbParameter parameter;
                     if (!isFirst)
                     {
                         commandText.Append(" and ");
@@ -299,25 +298,38 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
                     commandText.Append(GenerateMemberTSql(member));
                     commandText.Append(" = ");
-                    if (translator.MemberValues.TryGetValue(member, out parameter))
-                    {
-                        commandText.Append(parameter.ParameterName);
-                    }
-                    else
-                    {
-                        if (flag)
-                        {
-                            throw ADP1.NotSupported(ADP1.Update_NotSupportedServerGenKey(target.Name));
-                        }
-                        if (!IsValidIdentityColumnType(member.TypeUsage))
-                        {
-                            throw ADP1.InvalidOperation(ADP1.Update_NotSupportedIdentityType(member.Name, member.TypeUsage.ToString()));
-                        }
-                        commandText.AppendFormat("CAST (@@IDENTITY AS {0})", member.TypeUsage.EdmType.Name);
-                        flag = true;
-                    }
+                    flag = HandleIdentity(commandText, translator, member, flag, target);
                 }
             }
+        }
+
+        internal static bool HandleIdentity(
+            StringBuilder commandText, ExpressionTranslator translator, EdmMember member, bool flag, EntitySetBase target)
+        {
+            DebugCheck.NotNull(commandText);
+            DebugCheck.NotNull(translator);
+            DebugCheck.NotNull(member);
+            DebugCheck.NotNull(target);
+
+            DbParameter parameter;
+            if (translator.MemberValues.TryGetValue(member, out parameter))
+            {
+                commandText.Append(parameter.ParameterName);
+            }
+            else
+            {
+                if (flag)
+                {
+                    throw ADP1.NotSupported(ADP1.Update_NotSupportedServerGenKey(target.Name));
+                }
+                if (!IsValidIdentityColumnType(member.TypeUsage))
+                {
+                    throw ADP1.InvalidOperation(ADP1.Update_NotSupportedIdentityType(member.Name, member.TypeUsage.ToString()));
+                }
+                commandText.AppendFormat("CAST (@@IDENTITY AS {0})", member.TypeUsage.EdmType.Name);
+                flag = true;
+            }
+            return flag;
         }
 
         private static bool IsValidIdentityColumnType(TypeUsage typeUsage)
@@ -350,8 +362,15 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Lightweight expression translator for DML expression trees, which have constrained
         ///     scope and support.
         /// </summary>
-        private class ExpressionTranslator : BasicExpressionVisitor
+        internal class ExpressionTranslator : BasicExpressionVisitor
         {
+            /// <summary>
+            /// For testing.
+            /// </summary>
+            internal ExpressionTranslator()
+            {
+            }
+
             /// <summary>
             ///     Initialize a new expression translator populating the given string builder
             ///     with command text. Command text builder and command tree must not be null.
@@ -386,7 +405,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 get { return _parameters; }
             }
 
-            internal Dictionary<EdmMember, DbParameter> MemberValues
+            internal virtual Dictionary<EdmMember, DbParameter> MemberValues
             {
                 get { return _memberValues; }
             }

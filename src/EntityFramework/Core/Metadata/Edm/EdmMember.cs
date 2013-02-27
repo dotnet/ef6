@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     about the type
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
-        public TypeUsage TypeUsage
+        public virtual TypeUsage TypeUsage
         {
             get { return _typeUsage; }
             protected set

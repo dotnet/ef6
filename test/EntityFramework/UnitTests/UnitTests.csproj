@@ -316,7 +316,8 @@
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />
     <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
-    <Compile Include="SqlServerCompact\SqlGeneratorTests.cs" />
+    <Compile Include="SqlServerCompact\SqlGen\DmlSqlGeneratorTests.cs" />
+    <Compile Include="SqlServerCompact\SqlGen\SqlGeneratorTests.cs" />
     <Compile Include="SqlServer\DefaultSqlExecutionStrategyTests.cs" />
     <Compile Include="SqlServer\SqlAzureDbConfigurationTests.cs" />
     <Compile Include="SqlServer\SqlAzureExecutionStrategyTests.cs" />
