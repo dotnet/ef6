@@ -401,10 +401,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         #region Constructor
 
         /// <summary>
-        ///     Basic constructor.
+        ///     Basic constructor. 
+        ///     Internal for test purposes only, otherwise should be treated as private. 
         /// </summary>
         /// <param name="sqlVersion"> server version </param>
-        private SqlGenerator()
+        internal SqlGenerator()
         {
         }
 
@@ -854,10 +855,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Appends the given constant value to the result either 'as is' or wrapped with a cast to the given type.
         /// </summary>
         /// <param name="cast"> </param>
-        /// <param name="value"> </param>
+        /// <param name="value">A SQL string or an ISqlFragment instance.</param>
         /// <param name="typeName"> </param>
         /// <param name="result"> </param>
-        private static void WrapWithCastIfNeeded(bool cast, string value, string typeName, SqlBuilder result)
+        private static void WrapWithCastIfNeeded(bool cast, object value, string typeName, SqlBuilder result)
         {
             if (!cast)
             {
@@ -2390,8 +2391,43 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <returns> </returns>
         private SqlBuilder VisitIsNullExpression(DbIsNullExpression e, bool negate)
         {
+            // Codeplex workitem #287: SqlCeProviderServices.CreateSqlCeParameter does not supply 
+            // the parameter type for strings and blobs if the parameter size is not available, 
+            // thus letting the QP to infer the type at execution time. That happpens because the 
+            // default types, ntext and image, are not comparable, so a simple predicate like 
+            // WHERE table.Column = @parameter would fail. However the inference is not possible
+            // when there is an IS NULL comparison, in which case we explicitly cast to ntext 
+            // and respectively image.
+            // NOTE: SqlProviderServices does not have this issue because it defaults to 
+            // nvarchar(max) and varbinary(max) instead of ntext and image, which cannot be done
+            // for SQL CE because max is not available. 
+
+            string castAsType = null;
+            if (e.Argument.ExpressionKind == DbExpressionKind.ParameterReference)
+            {
+                var resultType = e.Argument.ResultType;
+                int maxLength;
+                if (!TypeHelpers.TryGetMaxLength(resultType, out maxLength))
+                {
+                    PrimitiveTypeKind primitiveTypeKind;
+                    if (TypeHelpers.TryGetPrimitiveTypeKind(resultType, out primitiveTypeKind))
+                    {
+                        switch (primitiveTypeKind)
+                        {
+                            case PrimitiveTypeKind.String:
+                                castAsType = "ntext";
+                                break;
+                            case PrimitiveTypeKind.Binary:
+                                castAsType = "image";
+                                break;
+                        }
+                    }
+                }
+            }
+
             var result = new SqlBuilder();
-            result.Append(e.Argument.Accept(this));
+            WrapWithCastIfNeeded(castAsType != null, e.Argument.Accept(this), castAsType, result);
+
             if (!negate)
             {
                 result.Append(" IS NULL");
