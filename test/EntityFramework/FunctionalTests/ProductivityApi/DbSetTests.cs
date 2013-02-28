@@ -283,7 +283,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Add_moves_root_to_Added_with_conflicts_in_the_leaf_node()
+        public void Add_moves_root_to_Added_with_conflicts_in_the_leaf_node_Dev10_889207()
         {
             using (var context = new SimpleModelContext())
             {
@@ -1921,7 +1921,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Attach_throws_when_changing_state_from_Added_entity_with_null_key()
+        public void Attach_throws_when_changing_state_from_Added_entity_with_null_key_Dev10_887677()
         {
             using (var context = new SimpleModelContext())
             {
@@ -3030,7 +3030,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Entity set names with special characters
+        #region Entity set names with special characters (Dev11 263152)
 
         [Fact]
         public void DbSet_for_an_entity_set_with_special_characters_can_be_created()
@@ -3116,7 +3116,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Using Set, etc with proxy types
+        #region Using Set, etc with proxy types (Dev11 307937)
 
         [Fact]
         public void Calling_the_non_generic_Set_method_with_a_proxy_type_returns_the_same_set_as_when_called_with_the_real_entity_type()

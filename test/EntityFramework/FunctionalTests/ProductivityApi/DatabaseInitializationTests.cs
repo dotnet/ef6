@@ -1040,6 +1040,7 @@ namespace ProductivityApiTests
             }
         }
 
+        // See Dev11 bug 136276
         [Fact]
         public void Using_model_with_bad_mapping_but_no_EdmMetadata_table_should_result_in_DataException_containing_a_MappingException()
         {
@@ -1089,6 +1090,7 @@ namespace ProductivityApiTests
             }
         }
 
+        // See Dev11 bug 136276
         [Fact]
         public void
             Using_model_with_bad_mapping_but_no_EdmMetadata_table_and_initializer_that_throws_before_SaveChanges_should_result_in_DataException_containing_a_MappingException
@@ -1172,6 +1174,7 @@ namespace ProductivityApiTests
             public DbSet<Product> Products { get; set; }
         }
 
+        // See Dev11 bug 138963
         [Fact]
         public void O_space_types_are_loaded_when_a_Code_First_context_is_used_in_a_database_initializer()
         {

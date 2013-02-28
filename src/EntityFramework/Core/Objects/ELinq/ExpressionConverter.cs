@@ -650,7 +650,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             var isPrimitiveType = TypeSemantics.IsPrimitiveType(fromType);
 
-            // This is to allow for a workaround on Katmai via explicit casting by the user.
+            //SQLBUDT #573573: This is to allow for a workaround on Katmai via explicit casting by the user.
             // The issue is that SqlServer's type Date maps to Edm.DateTime, same as SqlServer's DateTime and SmallDateTime.
             // However the conversion is not possible for all values of Date.
 
@@ -1510,7 +1510,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private string PreparePattern(string patternValue, bool insertPercentAtStart, bool insertPercentAtEnd, out bool specifyEscape)
         {
-            // The pattern value if originating from a parameter value could be null
+            // Dev10 #800466: The pattern value if originating from a parameter value could be null
             if (patternValue == null)
             {
                 specifyEscape = false;

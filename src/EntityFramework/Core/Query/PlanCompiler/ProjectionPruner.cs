@@ -478,7 +478,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             PruneVarSet(op.Outputs); // remove unnecessary vars from the outputs
 
-            // If there are no keys to start with
+            //SQLBUDT #543064: If there are no keys to start with
             // and none of the aggregates is referenced, the GroupBy
             // is equivalent to a SingleRowTableOp
             if (op.Keys.Count == 0

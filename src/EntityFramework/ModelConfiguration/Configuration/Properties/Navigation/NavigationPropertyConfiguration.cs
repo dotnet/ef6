@@ -306,6 +306,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 {
                     // InverseNavigationProperty may be null if the association is bi-directional and is configured
                     // from both sides but on one side the navigation property is not specified in the configuration.
+                    // See Dev11 330745.
                     // In this case we use the navigation property that we do know about in the exception message.
                     throw Error.ConflictingMultiplicities(
                         NavigationProperty.Name, NavigationProperty.ReflectedType);

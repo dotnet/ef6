@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         {
             string result = null;
 
-            // EntityCommand false positive cache hits caused by insufficient parameter type information in cache key
+            // Dev10#537010: EntityCommand false positive cache hits caused by insufficient parameter type information in cache key
             // Ensure String types are correctly differentiated.
             if (ReferenceEquals(type, DbTypeMap.AnsiString))
             {

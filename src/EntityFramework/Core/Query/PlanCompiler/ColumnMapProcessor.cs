@@ -359,8 +359,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // abstract types may not have discriminator values, but may nonetheless be interesting
             var allMaps = new List<TypedColumnMap>();
 
-            // Polymorphic types must construct column maps that map to the entire type hierarchy, so we
-            // need to use the RootType, not the current type.
+            // SQLBUDT #433011 -- Polymorphic types must construct column maps
+            //                    that map to the entire type hierarchy, so we
+            //                    need to use the RootType, not the current type.
             TypeInfo rootTypeInfo = typeInfo.RootType;
 
             // Get the type discriminant column first

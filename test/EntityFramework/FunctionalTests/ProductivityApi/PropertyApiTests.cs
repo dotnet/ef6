@@ -5002,6 +5002,7 @@ namespace ProductivityApiTests
             }
         }
 
+        // See Dev11 bug 138738
         [Fact]
         public void Can_get_generic_collection_for_navigation_property_derived_from_ICollection_entry_using_Member()
         {
@@ -5016,6 +5017,7 @@ namespace ProductivityApiTests
             }
         }
 
+        // See Dev11 bug 138738
         [Fact]
         public void Using_generic_type_that_is_not_ICollection_to_get_collection_entry_using_Member_throws()
         {
@@ -5032,6 +5034,7 @@ namespace ProductivityApiTests
             }
         }
 
+        // See Dev11 bug 138738
         [Fact]
         public void
             Using_base_collection_type_for_navigation_property_derived_from_ICollection_entry_using_Member_throws()

@@ -479,7 +479,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void
-            Can_create_database_using_Database_obtained_from_context_even_when_context_not_initialized()
+            Can_create_database_using_Database_obtained_from_context_even_when_context_not_initialized_Dev10_904982()
         {
             using (var context = new EmptyContext())
             {
@@ -520,7 +520,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Can_create_database_if_it_does_not_exist_using_Database_obtained_from_context()
+        public void Can_create_database_if_it_does_not_exist_using_Database_obtained_from_context_Dev10_884353()
         {
             using (var context = new EmptyContext())
             {
@@ -669,7 +669,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Checking_if_database_exists_should_not_create_database()
+        public void Checking_if_database_exists_should_not_create_database_Dev10_883499()
         {
             using (var context = new EmptyContext())
             {
@@ -684,7 +684,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region Mutating the database connection string
+        #region Mutating the database connection string (Dev11 357496)
 
         public abstract class MutatingConnectionContext<TContext> : SimpleModelContext
         {

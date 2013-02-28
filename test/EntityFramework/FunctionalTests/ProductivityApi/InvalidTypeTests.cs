@@ -169,7 +169,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Set_throws_only_when_used_if_type_is_a_complex_type()
+        public void Set_throws_only_when_used_if_type_is_a_complex_type_Dev10_885806()
         {
             using (var ctx = new AdvancedPatternsMasterContext())
             {
@@ -180,7 +180,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Non_generic_Set_throws_only_when_used_if_type_is_a_complex_type()
+        public void Non_generic_Set_throws_only_when_used_if_type_is_a_complex_type_Dev10_885806()
         {
             using (var ctx = new AdvancedPatternsMasterContext())
             {
@@ -255,7 +255,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Set_does_not_throw_in_Code_First_mode_when_used_if_type_is_POCO_but_is_in_attributed_assembly()
+        public void Set_does_not_throw_in_Code_First_mode_when_used_if_type_is_POCO_but_is_in_attributed_assembly_Dev10_883031()
         {
             var assembly = new DynamicAssembly();
             assembly.HasAttribute(new EdmSchemaAttribute());
@@ -279,7 +279,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Set_throws_in_EDMX_mode_only_when_used_if_type_is_POCO_but_is_in_attributed_assembly()
+        public void Set_throws_in_EDMX_mode_only_when_used_if_type_is_POCO_but_is_in_attributed_assembly_Dev10_883031()
         {
             var assembly = new DynamicAssembly();
             assembly.HasAttribute(new EdmSchemaAttribute());

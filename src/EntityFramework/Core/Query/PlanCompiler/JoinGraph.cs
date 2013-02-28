@@ -1637,7 +1637,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
             else
             {
-                // For the 1 - 0..1 we also verify that the child's columns are not 
+                // SQLBUDT #512375: For the 1 - 0..1 we also verify that the child's columns are not 
                 // referenced outside the join condition, thus passing true for allowRefsForJoinedOnFkOnly only
                 // if the multiplicity is 1 - 1
                 return TryEliminateRightTable(

@@ -284,8 +284,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
                         ordinal.ToString(CultureInfo.InvariantCulture), (_lastColumnRead + 1).ToString(CultureInfo.InvariantCulture)));
             }
             _lastColumnRead = ordinal;
-            // We need to mark things that are not using GetBytes/GetChars in a way that prevents them from being read a second time 
-            // using those methods.  Pointing past any potential data is how we do that.
+            // SQLBUDT #442001 -- we need to mark things that are not using GetBytes/GetChars
+            //                    in a way that prevents them from being read a second time 
+            //                    using those methods.  Pointing past any potential data is
+            //                    how we do that.
             _lastDataOffsetRead = long.MaxValue;
         }
 

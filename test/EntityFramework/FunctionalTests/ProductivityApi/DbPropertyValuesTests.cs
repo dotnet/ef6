@@ -2356,7 +2356,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region GetDatabaseValues with different namespaces
+        #region GetDatabaseValues with different namespaces (Dev11 293334)
 
         [Fact]
         public void GetDatabaseValues_uses_the_CLR_namespace_when_context_and_entities_are_in_different_namespaces()

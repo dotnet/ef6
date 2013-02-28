@@ -348,6 +348,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 87347
         public void Key_and_column_work_together_in_an_IA()
         {
             var modelBuilder = new DbModelBuilder();
@@ -541,6 +542,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 94993
         public void Required_to_Required_and_ForeignKey()
         {
             using (var loginConfiguration = new DynamicTypeDescriptionConfiguration<Login>())

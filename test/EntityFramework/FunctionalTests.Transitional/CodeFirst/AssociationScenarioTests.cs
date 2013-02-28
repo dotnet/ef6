@@ -987,6 +987,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 98120
         public void Half_specified_optional_relationship_overrides_fully_specified_one()
         {
             var modelBuilder = new DbModelBuilder();
@@ -1000,6 +1001,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 98118
         public void Half_specified_required_relationship_overrides_fully_specified_one()
         {
             var modelBuilder = new DbModelBuilder();
@@ -1079,6 +1081,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 98118
         public void Self_ref_many_to_optional_should_find_FK()
         {
             var modelBuilder = new DbModelBuilder();
@@ -2438,6 +2441,7 @@ namespace FunctionalTests
                    ValidateMessage("ConflictingMultiplicities", "ProductCategory", "FunctionalTests.Model.ProductSubcategory");
         }
 
+        // Dev11 330745
         [Fact]
         public void Using_invalid_mapping_from_two_ends_without_nav_prop_when_nav_prop_exists_should_throw_but_not_NullReferenceException()
         {
@@ -2564,6 +2568,7 @@ namespace FunctionalTests
         #endregion
 
         [Fact]
+        // Regression test for Dev11 Bug 8383 "Identity convention should not be applied when PK is an FK."
         public void Setting_required_to_optional_relationship_gives_you_a_PK_FK_that_is_not_identity()
         {
             var modelBuilder = new DbModelBuilder();
@@ -2580,6 +2585,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 8383 "Identity convention should not be applied when PK is an FK."
         public void Setting_optional_to_required_relationship_gives_you_a_PK_FK_that_is_not_identity()
         {
             var modelBuilder = new DbModelBuilder();
@@ -2595,6 +2601,7 @@ namespace FunctionalTests
                            .DbEqual(StoreGeneratedPattern.None, c => c.StoreGeneratedPattern);
         }
 
+        // Dev11 345384
         [Fact]
         public void Identity_key_is_created_by_convention_when_table_splitting_is_specified_with_fluent_API()
         {
@@ -2615,6 +2622,7 @@ namespace FunctionalTests
                            .DbEqual(StoreGeneratedPattern.Identity, c => c.StoreGeneratedPattern);
         }
 
+        // Dev11 345384
         [Fact]
         public void Identity_key_is_created_by_convention_when_table_splitting_is_specified_with_attributes()
         {
@@ -2655,6 +2663,7 @@ namespace FunctionalTests
                                                           .Name);
         }
 
+        // Dev11 287430
         [Fact]
         public void Data_annotations_should_not_be_applied_to_many_to_many_mapping_when_association_is_fully_configured_with_fluent_API()
         {
@@ -2699,7 +2708,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void ForeignKey_annotation_is_allowed_for_one_to_one_PK_to_PK_mapping()
+        public void ForeignKey_annotation_is_allowed_for_one_to_one_PK_to_PK_mapping_Dev11_437725()
         {
             var modelBuilder = new DbModelBuilder();
 
@@ -3416,7 +3425,7 @@ namespace FunctionalTests
 
     #endregion
 
-    #region Model with many-to-many relationship
+    #region Model for Dev11 287430
 
     [Table("person", Schema = "domain")]
     public class Person287430

@@ -207,8 +207,8 @@ namespace System.Data.Entity.Core
 
         /// <summary>
         ///     Constructor optimized for a singleton key.
-        ///     Performance optimization: Does no integrity checking on the key value.
-        ///     Performance optimization: Does no validate type of key members.
+        ///     SQLBUDT 478655: Performance optimization: Does no integrity checking on the key value.
+        ///     SQLBUDT 523554: Performance optimization: Does no validate type of key members.
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         /// <param name="singletonKeyValue"> The single value that composes the entity's key, assumed to contain the correct type. </param>
@@ -229,8 +229,8 @@ namespace System.Data.Entity.Core
 
         /// <summary>
         ///     Constructor optimized for a composite key.
-        ///     Performance optimization: Does no integrity checking on the key values.
-        ///     Performance optimization: Does no validate type of key members.
+        ///     SQLBUDT 478655: Performance optimization: Does no integrity checking on the key values.
+        ///     SQLBUDT 523554: Performance optimization: Does no validate type of key members.
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         /// <param name="compositeKeyValues"> A list of the values (at least 2) that compose the entity's key, assumed to contain correct types. </param>
@@ -395,7 +395,7 @@ namespace System.Data.Entity.Core
 
             // GetEntityContainer will throw if it cannot find the container
 
-            // If this entity key was initially created using an entity set 
+            // SQLBUDT 479443:  If this entity key was initially created using an entity set 
             // from a different workspace, look up the entity set in the new workspace.
             // Metadata will throw an ArgumentException if the entity set could not be found.
 
@@ -960,7 +960,7 @@ namespace System.Data.Entity.Core
         ///     Verify that the types of the objects passed in to be used as keys actually match the types from the model.
         ///     This error is also caught when the entity is materialized and when the key value is set, at which time it
         ///     also throws ThrowSetInvalidValue().
-        ///     This error is possible and should be caught at run time, not in an assertion.
+        ///     SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
         /// </summary>
         /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
         /// <param name="entitySet"> The EntitySet to validate against </param>
@@ -973,7 +973,7 @@ namespace System.Data.Entity.Core
         ///     Verify that the types of the objects passed in to be used as keys actually match the types from the model.
         ///     This error is also caught when the entity is materialized and when the key value is set, at which time it
         ///     also throws ThrowSetInvalidValue().
-        ///     This error is possible and should be caught at run time, not in an assertion.
+        ///     SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
         /// </summary>
         /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
         /// <param name="entitySet"> The EntitySet to validate against </param>

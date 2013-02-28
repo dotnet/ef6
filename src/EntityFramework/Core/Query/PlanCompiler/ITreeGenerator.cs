@@ -502,7 +502,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 //
                 // If the current expression is a boolean, and it is really a predicate, then
                 // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
-                // Handle 3-valued logic for all predicates except IsNull
+                // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
                 // Convert boolean predicate p into
                 //    case when p then true when not(p) then false else null end
                 //
@@ -1561,7 +1561,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             Check.NotNull(e, "e");
 
-            // We need to recognize and simplify IsNull - IsNull and IsNull - Not - IsNull
+            // SQLBUDT #484294: We need to recognize and simplify IsNull - IsNull and IsNull - Not - IsNull
             // This is the latest point where such patterns can be easily recognized. 
             // After this the input predicate would get translated into a case statement.
             var isAlwaysFalse = false; //true if IsNull - IsNull and IsNull - Not - IsNull is recognized
@@ -2050,7 +2050,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // 
             // In all other cases the IsOf filter is applied directly to the expression itself.
             // SC_CONSIDER: Push the IsOf filter down through set operators (Except, Intersect, Union)? 
-            // OfType causes incorrect results if pushed down past Skip and Limit, so these
+            // Dev10#658704: OfType causes incorrect results if pushed down past Skip and Limit, so these
             // operators are no longer included in the list of expressions that the IsOf filter can be
             // pushed down through.
             //
@@ -2264,7 +2264,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             Check.NotNull(e, "e");
 
-            // Creating a collection of refs throws an Assert
+            // SQLBUDT #502617: Creating a collection of refs throws an Assert
             // A SoftCastOp may be required if the argument to the RefExpression is only promotable
             // to the row type produced from the key properties of the referenced Entity type. Since
             // this row type is not actually represented anywhere in the tree it must be built here in

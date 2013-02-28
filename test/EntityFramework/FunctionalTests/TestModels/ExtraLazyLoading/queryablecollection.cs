@@ -76,7 +76,7 @@ namespace LazyUnicorns
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            // Calling lazy load here would previously cause EF to throw
+            // Calling lazy load here would previously cause EF to throw--see Dev11 205813
             // It no longer throws, but we still can't call Load here because DetectChanges uses
             // this method to determine if there are any entities in the collection, and so calling
             // load here will cause DetectChanges to lazily load the collection.

@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // produced by the dummy project node
             //
 
-            // If any of the definitions changes we need to recompute the node info.
+            // Dev10 #480443: If any of the definitions changes we need to recompute the node info.
             var anyVarDefChagned = false;
             foreach (var varDefNode in varDefListNode.Children)
             {
@@ -648,7 +648,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
-            // Make sure the right child not only declares to produce only one definition,
+            //Dev10 #488632: Make sure the right child not only declares to produce only one definition,
             // but has exactly one output. For example, ScanTableOp really outputs all the columns from the table, 
             // but in its ExtendedNodeInfo.Definitions only these that are referenced are shown.
             // This is to allow for projection pruning of the unreferenced columns. 

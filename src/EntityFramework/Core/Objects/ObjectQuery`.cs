@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Objects
         public ObjectQuery(string commandText, ObjectContext context)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
         {
-            // Ensure the assembly containing the entity's CLR type
+            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <T>'s assembly into the ObjectItemCollection or we
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Objects
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             QueryState.UserSpecifiedMergeOption = mergeOption;
 
-            // Ensure the assembly containing the entity's CLR type
+            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <T>'s assembly into the ObjectItemCollection or we
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Objects
             EntityUtil.CheckArgumentMergeOption(mergeOption);
             QueryState.UserSpecifiedMergeOption = mergeOption;
 
-            // Ensure the assembly containing the entity's CLR type
+            // SQLBUDT 447285: Ensure the assembly containing the entity's CLR type
             // is loaded into the workspace. If the schema types are not loaded
             // metadata, cache & query would be unable to reason about the type. We
             // either auto-load <T>'s assembly into the ObjectItemCollection or we

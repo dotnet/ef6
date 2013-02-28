@@ -21,7 +21,7 @@ namespace ProductivityApiTests
     /// </summary>
     public class LinqTests : FunctionalTestBase
     {
-        #region Tests for mismatch between TElement and ElementType
+        #region Tests for mismatch between TElement and ElementType (Dev11 254425)
 
         [Fact]
         public void Generic_CreateQuery_on_generic_DbQuery_uses_ElementType_when_ElementType_differs_from_generic_type()

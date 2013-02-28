@@ -864,7 +864,7 @@ namespace System.Data.Entity.Core.EntityClient
         protected override void Dispose(bool disposing)
         {
             // It is possible for the EntityConnection to be finalized even if the object was not actually
-            // created due to a "won't fix" bug in the x86 JITer.
+            // created due to a "won't fix" bug in the x86 JITer--see Dev10 bug 892884.
             // Even without this bug, a stack overflow trying to allocate space to run the constructor can
             // result in effectively the same situation.  This means we can end up finalizing objects that
             // have not even been fully initialized.  In order for this to work we have to be very careful

@@ -192,6 +192,7 @@ namespace System.Data.Entity.SqlServer
                         // -1 was chosen as the parameter's size because no MaxLength was specified in the TypeUsage and the 
                         // provider is more recent than Sql8. However, it is more optimal to specify a non-max (-1) value for
                         // the size where possible, since 'max' parameters may prevent, for example, filter pushdown.
+                        // (see Dev10#617447 for more details)
                         var suggestedLength = GetNonMaxLength(((SqlParameter)parameter).SqlDbType);
                         if (parameter.Size < suggestedLength)
                         {
@@ -755,6 +756,7 @@ namespace System.Data.Entity.SqlServer
         ///     The file does not exist, but registered with database.
         ///     The user calls:  If (DatabaseExists) DeleteDatabase
         ///     CreateDatabase
+        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
@@ -938,7 +940,8 @@ namespace System.Data.Entity.SqlServer
         ///     if the there are no databases corresponding to the given file return false, otherwise throw.
         ///     Note: We open the connection to cover the scenario when the mdf exists, but is not attached.
         ///     Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case.
-        ///     Also note that checking for the existence of the file does not work for a remote server.
+        ///     Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
+        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {

@@ -119,6 +119,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
+        // See Dev11 bug 113586
         [Fact]
         public void Nice_exception_is_thrown_if_connection_string_in_app_config_does_not_contain_provider_name()
         {

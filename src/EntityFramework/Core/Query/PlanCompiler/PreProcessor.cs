@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     If the discrminator map we're already tracking for this type (in this entityset)
         ///     isn't already rooted at our required type, then we have to suppress the use of
-        ///     the descriminator maps when we constrct the structuredtypes.
+        ///     the descriminator maps when we constrct the structuredtypes; see SQLBUDT #615744
         /// </summary>
         private void DetermineDiscriminatorMapUsage(
             Node viewNode, EntitySetBase entitySet, EntityTypeBase rootEntityType, bool includeSubtypes)
@@ -1733,7 +1733,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 m_freeFloatingEntityConstructorTypes.Add(entityType);
 
-                // Qmv/Umv tests Assert and throws in plan compiler in association tests.
+                // SQLBUDT #546546: Qmv/Umv tests Assert and throws in plan compiler in association tests.
                 // If this Entity constructor is not within a view then there should not be any RelProps
                 // specified on the NewEntityOp - the eSQL WITH RELATIONSHIP clauses that would cause such
                 // RelProps to be added is only enabled when parsing in the user or generated view mode.

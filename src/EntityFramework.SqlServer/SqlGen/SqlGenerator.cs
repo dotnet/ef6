@@ -1437,18 +1437,19 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <list type="number">
         ///         <item>
         ///             If an expression being aggregated contains an outer reference, then that outer
-        ///             reference must be the only column referenced in the expression.
+        ///             reference must be the only column referenced in the expression (SQLBUDT #488741)
         ///         </item>
         ///         <item>
         ///             Sql Server cannot perform an aggregate function on an expression containing
-        ///             an aggregate or a subquery.
+        ///             an aggregate or a subquery. (SQLBUDT #504600)
         ///         </item>
         ///         <item>
         ///             Sql Server requries each GROUP BY expression (key) to contain at least one column
-        ///             that is not an outer reference.
+        ///             that is not an outer reference. (SQLBUDT #616523)
         ///         </item>
         ///         <item>
         ///             Aggregates on the right side of an APPLY cannot reference columns from the left side.
+        ///             (SQLBUDT #617683)
         ///         </item>
         ///     </list>
         ///     The default translation, without inner query is:
@@ -4177,12 +4178,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.Top == null;
 
                 case DbExpressionKind.Project:
-                    // Allow a Project to be compatible with an OrderBy
+                    // SQLBUDT #427998: Allow a Project to be compatible with an OrderBy
                     // Otherwise we won't be able to sort an input, and project out only
                     // a subset of the input columns
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
-                           // If distinct is specified, the projection may affect
+                           // SQLBUDT #513640 - If distinct is specified, the projection may affect
                            // the cardinality of the results, thus a new statement must be started.
                            && !result.Select.IsDistinct;
 
@@ -4196,7 +4197,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
-                           // A Project may be on the top of the Sort, and if so, it would need
+                           // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
                            // to be in the same statement as the Sort (see comment above for the Project case).
                            // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
                            // we need to start a new statement. 
@@ -4406,11 +4407,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <list type="number">
         ///         <item>
         ///             If an expression being aggregated contains an outer reference, then that outer
-        ///             reference must be the only column referenced in the expression.
+        ///             reference must be the only column referenced in the expression (SQLBUDT #488741)
         ///         </item>
         ///         <item>
         ///             Sql Server cannot perform an aggregate function on an expression containing
-        ///             an aggregate or a subquery.
+        ///             an aggregate or a subquery. (SQLBUDT #504600)
         ///         </item>
         ///     </list>
         ///     Potentially, we could furhter optimize this.
@@ -4451,7 +4452,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     is not <see cref="DbPropertyExpression" /> over <see cref="DbVariableReferenceExpression" />
         ///     referencing the given inputVarRefName potentially capped with a <see cref="DbCastExpression" />.
         ///     This is really due to the following limitation: Sql Server requires each GROUP BY expression
-        ///     (key) to contain at least one column that is not an outer reference.
+        ///     (key) to contain at least one column that is not an outer reference. (SQLBUDT #616523)
         ///     Potentially, we could further optimize this.
         /// </summary>
         /// <param name="keys"> </param>

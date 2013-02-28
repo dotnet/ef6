@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <returns> </returns>
         private static Var GetReplacementVar(Var originalVar, VarMap replacementVarMap)
         {
-            // Follow the chain of mapped vars, don't
+            // SQLBUDT #478509: Follow the chain of mapped vars, don't
             //                  just stop at the first one
             var replacementVar = originalVar;
 

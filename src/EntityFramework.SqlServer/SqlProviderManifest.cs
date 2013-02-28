@@ -207,7 +207,7 @@ namespace System.Data.Entity.SqlServer
                     //Remove the types that won't work in SQL 8
                     if (_version == SqlVersion.Sql8)
                     {
-                        // Remove xml and 'max' types for SQL Server 2000
+                        // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
                         primitiveTypes.RemoveAll(
                             delegate(PrimitiveType primitiveType)
                                 {
@@ -239,7 +239,7 @@ namespace System.Data.Entity.SqlServer
                     var functions = base.GetStoreFunctions().Where(f => !IsKatmaiOrNewer(f));
                     if (_version == SqlVersion.Sql8)
                     {
-                        // Remove unsupported overloads from Provider Manifest on SQL 8.0
+                        // SQLBUDT 550998: Remove unsupported overloads from Provider Manifest on SQL 8.0
                         functions = functions.Where(f => !IsYukonOrNewer(f));
                     }
                     _functions = functions.ToList().AsReadOnly();

@@ -413,7 +413,7 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
-        #region Exception thrown for bad connection
+        #region Exception thrown for bad connection (Dev11 364657)
 
         [Fact]
         public void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_MVC4_connection_string_is_used()

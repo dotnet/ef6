@@ -2144,6 +2144,7 @@ namespace FunctionalTests
         }
 
         [Fact]
+        // Regression test for Dev11 Bug 136810
         public void Requires_can_only_be_called_once_per_type()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

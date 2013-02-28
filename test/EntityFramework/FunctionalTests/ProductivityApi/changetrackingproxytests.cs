@@ -29,7 +29,7 @@ namespace ProductivityApiTests
 
         #endregion
 
-        #region DeleteObject throws a collection modified exception with change tracking proxies
+        #region DeleteObject throws a collection modified exception with change tracking proxies (Dev11 71937, 209773)
 
         [Fact]
         [AutoRollback]

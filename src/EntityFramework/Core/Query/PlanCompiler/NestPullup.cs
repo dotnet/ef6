@@ -480,7 +480,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     newCollectionInfoList.AddRange(((MultiStreamNestOp)chi.Op).CollectionInfo);
 
-                    // If the nest op is on a 'nullable' side of join 
+                    // SQLBUDT #615513: If the nest op is on a 'nullable' side of join 
                     // (i.e. right side of LeftOuterJoin/OuterApply or either side of FullOuterJoin)
                     // the driving node of that nest operation needs to be capped with a project with 
                     // a null sentinel and the dependant collection nodes need to be filtered based on that sentinel.
@@ -1018,7 +1018,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     if (m_definingNodeMap.TryGetValue(refVar, out physicalProjectNode))
                     {
                         physicalProjectNode = CopyCollectionVarDefinition(physicalProjectNode);
-                        // We need to track the copy too, in case we need to reuse it
+                        //SQLBUDT #602888: We need to track the copy too, in case we need to reuse it
                         m_definingNodeMap.Add(varDefOp.Var, physicalProjectNode);
                         ConvertToNestOpInput(
                             physicalProjectNode, varDefOp.Var, collectionInfoList, collectionNodes, externalReferences, collectionReferences);
@@ -1101,7 +1101,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                         var newNestedProjectOutputs = Command.CreateVarVec(nestedNestOp.Outputs);
 
-                        //  We need to remove the collection vars, these are not produced by the project
+                        // SQLBUDT #508722:  We need to remove the collection vars, 
+                        //  these are not produced by the project
                         foreach (var ci in nestedNestOp.CollectionInfo)
                         {
                             newNestedProjectOutputs.Clear(ci.CollectionVar);
@@ -1627,7 +1628,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 foreach (var sk in sortKeys)
                 {
-                    // We can't just add the sort keys, we need to copy them, 
+                    //SQLBUDT #507170 - We can't just add the sort keys, we need to copy them, 
                     // to avoid changes to one to affect the other
                     inputNestOp.PrefixSortKeys.Add(Command.CreateSortKey(sk.Var, sk.AscendingSort, sk.Collation));
                 }
@@ -1666,7 +1667,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     sortVars.Set(sk.Var);
 
-                    // We can't just add the sort keys, we need to copy them, 
+                    //SQLBUDT #507170 - We can't just add the sort keys, we need to copy them, 
                     // to avoid changes to one to affect the other
                     sortKeyList.Add(Command.CreateSortKey(sk.Var, sk.AscendingSort, sk.Collation));
                 }
@@ -1791,7 +1792,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PlanCompiler.Assert(newNode.HasChild0, "physicalProject without input?");
             newNode = newNode.Child0;
 
-            // it is not correct to just remove the sort key    
+            // Dev10 #530752 : it is not correct to just remove the sort key    
             if (newNode.Op.OpType
                 == OpType.Sort)
             {
@@ -1812,7 +1813,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Copies the given defining node for a collection var, but also makes sure to 'register' all newly
         ///     created collection vars (i.e. copied).
-        ///     The defining node that is being copied may itself contain definitions to other
+        ///     SQLBUDT #557427: The defining node that is being copied may itself contain definitions to other
         ///     collection vars. These defintions would be present in m_definingNodeMap. However, after we make a copy
         ///     of the defining node, we need to make sure to also put 'matching' definitions of these other collection
         ///     vars into m_definingNodeMap.
@@ -1954,7 +1955,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //       differently for MARS.  But that's a future feature.
             var varRefReplacementMap = new Dictionary<Var, ColumnMap>();
 
-            // The parameters that are output should be retained.
+            //Dev10_579146: The parameters that are output should be retained.
             var outputVars = Command.CreateVarList(op.Outputs.Where(v => v.VarType == VarType.Parameter));
             SimpleColumnMap[] keyColumnMaps;
 
