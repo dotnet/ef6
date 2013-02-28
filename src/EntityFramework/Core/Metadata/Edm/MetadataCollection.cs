@@ -128,6 +128,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             set
             {
                 ThrowIfReadOnly();
+                Debug.Assert(_collectionData.IdentityDictionary.Value == null);
 
                 _collectionData.OrderedList[index] = value;
             }
@@ -185,6 +186,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ThrowIfReadOnly();
 
             _collectionData.OrderedList.Remove(item);
+
+            InvalidateCache();
+        }
+
+        public void InvalidateCache()
+        {
+            _collectionData.IdentityDictionary 
+                = new Lazy<Dictionary<string, OrderedIndex>>(
+                () =>
+                    {
+                        if (_collectionData.OrderedList.Count > UseSortedListCrossover)
+                        {
+                            // Rebuild the fast by-identity lookup dictionary
+
+                            var identityDictionary
+                                = new Dictionary<string, OrderedIndex>(
+                                    _collectionData.OrderedList.Count,
+                                    StringComparer.OrdinalIgnoreCase);
+
+                            for (var i = 0; i < _collectionData.OrderedList.Count; i++)
+                            {
+                                AddToDictionary(
+                                    identityDictionary,
+                                    _collectionData.OrderedList,
+                                    _collectionData.OrderedList[i].Identity,
+                                    i,
+                                    false);
+                            }
+
+                            return identityDictionary;
+                        }
+
+                        return null;
+                    });
         }
 
         /// <summary>
@@ -196,10 +231,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="updateIfFound"> Whether the item should be updated if a matching item is found. </param>
         /// <returns> Index of the added entity, possibly different from the index parameter if updateIfFound is true. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
-        private static int AddToDictionary(CollectionData collectionData, string identity, int index, bool updateIfFound)
+        private static int AddToDictionary(
+            Dictionary<string, OrderedIndex> identityDictionary,
+            List<T> orderedList,
+            string identity,
+            int index,
+            bool updateIfFound)
         {
-            DebugCheck.NotNull(collectionData);
-            DebugCheck.NotNull(collectionData.IdentityDictionary);
+            DebugCheck.NotNull(identityDictionary);
+            DebugCheck.NotNull(orderedList);
             DebugCheck.NotEmpty(identity);
 
             int[] inexact = null;
@@ -207,10 +247,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var exactIndex = index;
 
             // find the item(s) by OrdinalIgnoreCase
-            if (collectionData.IdentityDictionary.TryGetValue(identity, out orderIndex))
+            if (identityDictionary.TryGetValue(identity, out orderIndex))
             {
                 // identity was already tracking an item, verify its not a duplicate by exact name
-                if (EqualIdentity(collectionData.OrderedList, orderIndex.ExactIndex, identity))
+                if (EqualIdentity(orderedList, orderIndex.ExactIndex, identity))
                 {
                     // If the item is already here and we are updating, there is no more work to be done.
                     if (updateIfFound)
@@ -227,7 +267,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // identity was already tracking multiple items, verify its not a duplicate by exact name
                     for (var i = 0; i < orderIndex.InexactIndexes.Length; ++i)
                     {
-                        if (EqualIdentity(collectionData.OrderedList, orderIndex.InexactIndexes[i], identity))
+                        if (EqualIdentity(orderedList, orderIndex.InexactIndexes[i], identity))
                         {
                             // If the item is already here and we are updating, there is no more work to be done.
                             if (updateIfFound)
@@ -253,7 +293,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             // else this is a new identity
 
-            collectionData.IdentityDictionary[identity] = new OrderedIndex(exactIndex, inexact);
+            identityDictionary[identity] = new OrderedIndex(exactIndex, inexact);
 
             return index;
         }
@@ -308,15 +348,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             int index;
             var listCount = collectionData.OrderedList.Count;
-            if (null != collectionData.IdentityDictionary)
+            if (null != collectionData.IdentityDictionary.Value)
             {
-                index = AddToDictionary(collectionData, item.Identity, listCount, updateIfFound);
+                index
+                    = AddToDictionary(
+                        collectionData.IdentityDictionary.Value,
+                        collectionData.OrderedList,
+                        item.Identity,
+                        listCount,
+                        updateIfFound);
             }
             else
             {
                 // We only have to take care of the ordered list.
                 index = IndexOf(collectionData, item.Identity, false);
-
                 if (0 <= index)
                 {
                     // The item is found in the linear ordered list. Unless
@@ -324,6 +369,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     if (!updateIfFound)
                     {
                         throw new ArgumentException(Strings.ItemDuplicateIdentity(item.Identity), "item", null);
+                    }
+                }
+                else
+                {
+                    // This is a new item to be inserted. Grow if we must before adding to ordered list.
+                    if (UseSortedListCrossover <= listCount)
+                    {
+                        collectionData.IdentityDictionary
+                            = new Lazy<Dictionary<string, OrderedIndex>>(
+                                () =>
+                                    {
+                                        var identityDictionary
+                                            = new Dictionary<string, OrderedIndex>(
+                                                collectionData.OrderedList.Count + 1,
+                                                StringComparer.OrdinalIgnoreCase);
+
+                                        for (var i = 0; i < collectionData.OrderedList.Count; ++i)
+                                        {
+                                            AddToDictionary(
+                                                identityDictionary,
+                                                collectionData.OrderedList,
+                                                collectionData.OrderedList[i].Identity,
+                                                i,
+                                                false);
+                                        }
+
+                                        return identityDictionary;
+                                    });
                     }
                 }
             }
@@ -338,7 +411,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             else
             {
                 Debug.Assert(index == -1 || index == listCount);
-
                 collectionData.OrderedList.Add(item);
             }
         }
@@ -469,11 +541,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(identity);
 
             var index = -1;
-            if (null != collectionData.IdentityDictionary)
+            if (null != collectionData.IdentityDictionary.Value)
             {
                 // OrdinalIgnoreCase dictionary lookup
                 OrderedIndex orderIndex;
-                if (collectionData.IdentityDictionary.TryGetValue(identity, out orderIndex))
+                if (collectionData.IdentityDictionary.Value.TryGetValue(identity, out orderIndex))
                 {
                     if (ignoreCase)
                     {
@@ -618,26 +690,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 _collectionData.OrderedList[i].SetReadOnly();
             }
-
             _collectionData.OrderedList.TrimExcess();
-
-            // Build the fast-access by identity dictionary
-            if ((_collectionData.IdentityDictionary == null)
-                && UseSortedListCrossover <= _collectionData.OrderedList.Count)
-            {
-                _collectionData.IdentityDictionary
-                    = new Dictionary<string, OrderedIndex>(
-                        _collectionData.OrderedList.Count,
-                        StringComparer.OrdinalIgnoreCase);
-
-                for (var i = 0; i < _collectionData.OrderedList.Count; ++i)
-                {
-                    AddToDictionary(_collectionData, _collectionData.OrderedList[i].Identity, i, false);
-                }
-            }
-
             _readOnly = true;
-
             return this;
         }
 
@@ -695,7 +749,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ///     an OrderedIndex structure with other case-insensitive matches for the
             ///     entry.  See additional comments in AddInternal.
             /// </summary>
-            internal Dictionary<string, OrderedIndex> IdentityDictionary;
+            internal Lazy<Dictionary<string, OrderedIndex>> IdentityDictionary
+                = new Lazy<Dictionary<string, OrderedIndex>>(() => null);
 
             internal readonly List<T> OrderedList;
 
@@ -715,22 +770,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (UseSortedListCrossover <= OrderedList.Capacity)
                 {
-                    IdentityDictionary = new Dictionary<string, OrderedIndex>(OrderedList.Capacity, StringComparer.OrdinalIgnoreCase);
+                    IdentityDictionary
+                        = new Lazy<Dictionary<string, OrderedIndex>>(
+                            () =>
+                                {
+                                    var identityDictionary
+                                        = new Dictionary<string, OrderedIndex>(
+                                            OrderedList.Capacity,
+                                            StringComparer.OrdinalIgnoreCase);
 
-                    if (null != original.IdentityDictionary)
-                    {
-                        foreach (var pair in original.IdentityDictionary)
-                        {
-                            IdentityDictionary.Add(pair.Key, pair.Value);
-                        }
-                    }
-                    else
-                    {
-                        for (var i = 0; i < OrderedList.Count; ++i)
-                        {
-                            AddToDictionary(this, OrderedList[i].Identity, i, false);
-                        }
-                    }
+                                    if (null != original.IdentityDictionary.Value)
+                                    {
+                                        foreach (var pair in original.IdentityDictionary.Value)
+                                        {
+                                            identityDictionary.Add(pair.Key, pair.Value);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (var i = 0; i < OrderedList.Count; ++i)
+                                        {
+                                            AddToDictionary(identityDictionary, OrderedList, OrderedList[i].Identity, i, false);
+                                        }
+                                    }
+
+                                    return identityDictionary;
+                                });
                 }
             }
         }

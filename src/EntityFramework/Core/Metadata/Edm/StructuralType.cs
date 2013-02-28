@@ -115,5 +115,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _members.Remove(member);
         }
+
+        internal virtual void NotifyItemIdentityChanged()
+        {
+            _members.InvalidateCache();
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using Moq;
     using Xunit;
 
     public class EdmMemberTests
@@ -16,6 +17,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
             property.Name = "Foo";
 
             Assert.Equal("Foo", property.Name);
+        }
+
+        [Fact]
+        public void Can_set_name_and_parent_notified()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var property = EdmProperty.Primitive("P", primitiveType);
+
+            var entityTypeMock = new Mock<StructuralType>();
+
+            property.ChangeDeclaringTypeWithoutCollectionFixup(entityTypeMock.Object);
+
+            property.Name = "Foo";
+
+            entityTypeMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Once());
         }
 
         [Fact]

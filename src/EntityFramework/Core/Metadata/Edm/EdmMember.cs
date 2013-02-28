@@ -56,16 +56,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
-                _name = value;
-
-                if ((_declaringType != null)
-                    && (_declaringType.Members.Except(new[] { this })
-                                      .Any(c => string.Equals(Identity, c.Identity, StringComparison.Ordinal))))
+                if (!string.Equals(_name, value, StringComparison.Ordinal))
                 {
-                    // Duplicate configured name, uniquify the identity so that
-                    // a validation exception can be generated later on. For valid
-                    // models, we sync it back up in SetReadOnly()
-                    _identity = _declaringType.Members.UniquifyName(Identity);
+                    _name = value;
+
+                    if (_declaringType != null)
+                    {
+                        if (_declaringType
+                            .Members.Except(new[] { this })
+                            .Any(c => string.Equals(Identity, c.Identity, StringComparison.Ordinal)))
+                        {
+                            // Duplicate configured name, uniquify the identity so that
+                            // a validation exception can be generated later on. For valid
+                            // models, we sync it back up in SetReadOnly()
+                            _identity = _declaringType.Members.UniquifyName(Identity);
+                        }
+
+                        _declaringType.NotifyItemIdentityChanged();
+                    }
                 }
             }
         }

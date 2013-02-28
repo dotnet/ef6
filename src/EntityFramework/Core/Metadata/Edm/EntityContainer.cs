@@ -17,6 +17,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EntitySetBase> _baseEntitySets;
         private readonly ReadOnlyMetadataCollection<EdmFunction> _functionImports;
 
+        internal EntityContainer()
+        {
+            // mocking only
+        }
+
         /// <summary>
         ///     The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
         /// </summary>
@@ -261,6 +266,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer.SetReadOnly();
 
             return entityContainer;
+        }
+
+        internal virtual void NotifyItemIdentityChanged()
+        {
+            _baseEntitySets.Source.InvalidateCache();
         }
     }
 }

@@ -110,7 +110,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
-                _name = value;
+                if (!string.Equals(_name, value, StringComparison.Ordinal))
+                {
+                    _name = value;
+
+                    if (_entityContainer != null)
+                    {
+                        _entityContainer.NotifyItemIdentityChanged();
+                    }
+                }
             }
         }
 

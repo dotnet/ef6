@@ -179,5 +179,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             base.RemoveMember(member);
         }
+
+        internal override void NotifyItemIdentityChanged()
+        {
+            base.NotifyItemIdentityChanged();
+
+            _keyMembers.Source.InvalidateCache();
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using Moq;
     using Xunit;
 
     public class EntitySetBaseTests
@@ -20,6 +21,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       };
 
             Assert.Equal("Foo", entitySetBase.Name);
+        }
+
+        [Fact]
+        public void Can_set_name_and_parent_notified()
+        {
+            var entitySetBase = new TestEntitySetBase();
+
+            var entityContainerMock = new Mock<EntityContainer>();
+
+            entitySetBase.ChangeEntityContainerWithoutCollectionFixup(entityContainerMock.Object);
+
+            entitySetBase.Name = "Foo";
+
+            entityContainerMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Once());
         }
 
         [Fact]
