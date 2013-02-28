@@ -47,7 +47,7 @@ namespace System.Data.Entity.Config
                 new TransientDependencyResolver<MigrationSqlGenerator>(
                     () => new SqlCeMigrationSqlGenerator(), "System.Data.SqlServerCe.4.0"));
 
-            _resolvers.Add(new ExecutionStrategyResolver());
+            _resolvers.Add(new DefaultExecutionStrategyResolver());
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new CachingDependencyResolver(new DefaultProviderFactoryResolver()));
             _resolvers.Add(new CachingDependencyResolver(new DefaultInvariantNameResolver()));

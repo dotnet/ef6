@@ -3,7 +3,9 @@
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Data.Entity.Core;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Linq;
     using Xunit;
 
     public class SqlCeProviderServicesTests : TestBase
@@ -19,6 +21,14 @@ namespace System.Data.Entity.SqlServerCompact
 
             Assert.IsType<ArgumentException>(baseException);
             Assert.Equal(Strings.UnableToDetermineStoreVersion, baseException.Message);
+        }
+
+        [Fact]
+        public void Has_ProviderInvariantNameAttribute()
+        {
+            Assert.Equal(
+                "System.Data.SqlServerCe.4.0",
+                DbProviderNameAttribute.GetFromType(typeof(SqlCeProviderServices)).Single().Name);
         }
     }
 }

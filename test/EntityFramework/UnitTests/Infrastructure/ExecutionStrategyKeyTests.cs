@@ -11,16 +11,16 @@ namespace System.Data.Entity.Infrastructure
         public void Constructor_throws_on_invalid_parameters()
         {
             Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("invariantProviderName"),
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                 Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey(null, "")).Message);
             Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("invariantProviderName"),
+                Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                 Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("", "b")).Message);
             Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("dataSource"),
+                Strings.ArgumentIsNullOrWhitespace("serverName"),
                 Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", null)).Message);
             Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("dataSource"),
+                Strings.ArgumentIsNullOrWhitespace("serverName"),
                 Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", "")).Message);
         }
 

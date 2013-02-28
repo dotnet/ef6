@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Sql
 {
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
@@ -36,6 +37,14 @@ namespace System.Data.Entity.Migrations.Sql
             Assert.Equal(
                 Strings.SqlServerMigrationSqlGenerator_UnknownOperation(typeof(SqlCeMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
                 ex.Message);
+        }
+
+        [Fact]
+        public void Has_ProviderInvariantNameAttribute()
+        {
+            Assert.Equal(
+                "System.Data.SqlServerCe.4.0",
+                DbProviderNameAttribute.GetFromType(typeof(SqlCeMigrationSqlGenerator)).Single().Name);
         }
     }
 }

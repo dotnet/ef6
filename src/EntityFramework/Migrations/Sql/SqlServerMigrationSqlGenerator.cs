@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -23,6 +24,7 @@ namespace System.Data.Entity.Migrations.Sql
     ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against a Microsoft SQL Server database.
     /// </summary>
+    [DbProviderName("System.Data.SqlClient")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";

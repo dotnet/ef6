@@ -6,21 +6,26 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     A key used for resolving <see cref="ExecutionStrategy"/>. It consists of the ADO.NET provider invariant name
-    ///     and the database server address as specified in the connection string.
+    ///     and the database server name as specified in the connection string.
     /// </summary>
     public class ExecutionStrategyKey
     {
-        public ExecutionStrategyKey(string invariantProviderName, string dataSource)
+        /// <summary>
+        ///     Initializes a new instance of <see cref="ExecutionStrategyKey"/>
+        /// </summary>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
+        /// <param name="serverName">A string that will be matched against the server name in the connection string.</param>
+        public ExecutionStrategyKey(string providerInvariantName, string serverName)
         {
-            Check.NotEmpty(invariantProviderName, "invariantProviderName");
-            Check.NotEmpty(dataSource, "dataSource");
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotEmpty(serverName, "serverName");
 
-            InvariantProviderName = invariantProviderName;
-            DataSourceName = dataSource;
+            ProviderInvariantName = providerInvariantName;
+            ServerName = serverName;
         }
 
-        public string InvariantProviderName { get; private set; }
-        public string DataSourceName { get; private set; }
+        public string ProviderInvariantName { get; private set; }
+        public string ServerName { get; private set; }
 
         public override bool Equals(object obj)
         {
@@ -30,13 +35,13 @@ namespace System.Data.Entity.Infrastructure
                 return false;
             }
 
-            return InvariantProviderName == otherKey.InvariantProviderName
-                   && DataSourceName == otherKey.DataSourceName;
+            return ProviderInvariantName == otherKey.ProviderInvariantName
+                   && ServerName == otherKey.ServerName;
         }
 
         public override int GetHashCode()
         {
-            return InvariantProviderName.GetHashCode() ^ DataSourceName.GetHashCode();
+            return ProviderInvariantName.GetHashCode() ^ ServerName.GetHashCode();
         }
     }
 }

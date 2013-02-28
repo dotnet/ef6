@@ -102,11 +102,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.SqlServer.tt</DependentUpon>
     </Compile>
-    <Compile Include="SqlAzureDbConfiguration.cs" />
     <Compile Include="SqlAzureExecutionStrategy.cs" />
     <Compile Include="SqlAzureRetriableExceptionDetector.cs" />
     <Compile Include="SqlDdlBuilder.cs" />
-    <Compile Include="SqlExecutionStrategyResolver.cs" />
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
     <Compile Include="SqlSpatialServicesForConversions.cs" />

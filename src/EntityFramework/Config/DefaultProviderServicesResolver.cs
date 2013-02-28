@@ -15,7 +15,7 @@ namespace System.Data.Entity.Config
 
                 if (string.IsNullOrWhiteSpace(name))
                 {
-                    throw new ArgumentException(Strings.ProviderInvariantNotPassedToResolver);
+                    throw new ArgumentException(Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderServices).Name));
                 }
 
                 return new ProviderServicesFactory().GetInstanceByConvention(name);

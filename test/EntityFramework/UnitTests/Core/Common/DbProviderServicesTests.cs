@@ -170,8 +170,8 @@ namespace System.Data.Entity.Core.Common
                     k =>
                         {
                             var key = k as ExecutionStrategyKey;
-                            Assert.Equal("System.Data.FakeSqlClient", key.InvariantProviderName);
-                            Assert.Equal("FooSource", key.DataSourceName);
+                            Assert.Equal("System.Data.FakeSqlClient", key.ProviderInvariantName);
+                            Assert.Equal("FooSource", key.ServerName);
                             return mockExecutionStrategy;
                         });
 

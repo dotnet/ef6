@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer
     ///     An <see cref="ExecutionStrategy"/> that uses the <see cref="ExponentialRetryDelayStrategy"/> and
     ///     <see cref="SqlAzureRetriableExceptionDetector"/>.
     /// </summary>
+    [DbProviderName("System.Data.SqlClient")]
     public class SqlAzureExecutionStrategy : ExecutionStrategy
     {
         public SqlAzureExecutionStrategy()

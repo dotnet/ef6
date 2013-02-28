@@ -17,7 +17,7 @@ namespace System.Data.Entity.Config
 
                 if (factory == null)
                 {
-                    throw new ArgumentException(Strings.DbProviderFactoryNotPassedToResolver);
+                    throw new ArgumentException(Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)));
                 }
 
                 return new ProviderInvariantName(factory.GetProviderInvariantName());

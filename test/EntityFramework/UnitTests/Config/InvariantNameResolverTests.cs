@@ -21,13 +21,13 @@ namespace System.Data.Entity.Config
         public void GetService_throws_for_null_or_incorrect_key_type()
         {
             Assert.Equal(
-                Strings.DbProviderFactoryNotPassedToResolver,
+                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                 Assert.Throws<ArgumentException>(
                     () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
                               .GetService<IProviderInvariantName>(null)).Message);
 
             Assert.Equal(
-                Strings.DbProviderFactoryNotPassedToResolver,
+                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                 Assert.Throws<ArgumentException>(
                     () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
                               .GetService<IProviderInvariantName>("Oh No!")).Message);

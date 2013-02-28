@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Sql
 {
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -14,6 +15,7 @@ namespace System.Data.Entity.Migrations.Sql
     ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against Microsoft SQL Server Compact Edition.
     /// </summary>
+    [DbProviderName("System.Data.SqlServerCe.4.0")]
     public class SqlCeMigrationSqlGenerator : SqlServerMigrationSqlGenerator
     {
         /// <inheritdoc />

@@ -102,6 +102,7 @@
     <Compile Include="Config\DbConfigurationEventArgs.cs" />
     <Compile Include="Config\DefaultInvariantNameResolver.cs" />
     <Compile Include="Config\DefaultProviderFactoryResolver.cs" />
+    <Compile Include="Config\DefaultExecutionStrategyResolver.cs" />
     <Compile Include="Config\ExecutionStrategyResolver.cs" />
     <Compile Include="Config\InvariantNameResolver.cs" />
     <Compile Include="Config\TransientDependencyResolver.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
     <Compile Include="DbContextTransaction.cs" />
     <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
+    <Compile Include="Infrastructure\DbProviderNameAttribute.cs" />
     <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />

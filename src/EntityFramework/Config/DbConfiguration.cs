@@ -10,6 +10,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -159,6 +160,27 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
+        ///     an Entity Framework provider.
+        /// </summary>
+        /// <remarks>
+        ///     The giver provider type should have a <see cref="DbProviderNameAttribute"/> applied to it.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="provider"> The provider instance. </param>
+        [CLSCompliant(false)]
+        protected internal void AddDbProviderServices(DbProviderServices provider)
+        {
+            foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(provider.GetType()))
+            {
+                AddDbProviderServices(providerInvariantNameAttribute.Name, provider);
+            }
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
         ///     an ADO.NET provider.
         /// </summary>
         /// <remarks>
@@ -179,6 +201,105 @@ namespace System.Data.Entity.Config
             _internalConfiguration.CheckNotLocked("AddDbProviderFactory");
             _internalConfiguration.RegisterSingleton(providerFactory, providerInvariantName);
             _internalConfiguration.AddDependencyResolver(new InvariantNameResolver(providerFactory, providerInvariantName));
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     <see cref="IExecutionStrategy"/> for use with the associated provider.
+        /// </summary>
+        /// <remarks>
+        ///     The <typeparamref name="T"/> type should have a <see cref="DbProviderNameAttribute"/> applied to it.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <typeparam name="T"> The type that implements <see cref="IExecutionStrategy"/>. </typeparam>
+        /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
+        protected internal void AddExecutionStrategy<T>(Func<T> getExecutionStrategy)
+            where T : IExecutionStrategy
+        {
+            Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
+
+            _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
+
+            foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(typeof(T)))
+            {
+                _internalConfiguration.AddDependencyResolver(
+                    new ExecutionStrategyResolver<T>(providerInvariantNameAttribute.Name, /*serverName:*/ null, getExecutionStrategy));
+            }
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     <see cref="IExecutionStrategy"/> for use with the associated provider for the specified server name.
+        /// </summary>
+        /// <remarks>
+        ///     The <typeparamref name="T"/> type should have a <see cref="DbProviderNameAttribute"/> applied to it.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <typeparam name="T"> The type that implements <see cref="IExecutionStrategy"/>. </typeparam>
+        /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
+        /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
+        protected internal void AddExecutionStrategy<T>(Func<T> getExecutionStrategy, string serverName)
+            where T : IExecutionStrategy
+        {
+            Check.NotEmpty(serverName, "serverName");
+            Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
+
+            _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
+            foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(typeof(T)))
+            {
+                _internalConfiguration.AddDependencyResolver(
+                    new ExecutionStrategyResolver<T>(providerInvariantNameAttribute.Name, serverName, getExecutionStrategy));
+            }
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     <see cref="IExecutionStrategy"/> for use with the provider represented by the given invariant name.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
+        /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
+        protected internal void AddExecutionStrategy(string providerInvariantName, Func<IExecutionStrategy> getExecutionStrategy)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
+
+            _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
+            _internalConfiguration.AddDependencyResolver(new ExecutionStrategyResolver<IExecutionStrategy>(providerInvariantName, /*serverName:*/ null, getExecutionStrategy));
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     <see cref="IExecutionStrategy"/> for use with the provider represented by the given invariant name and for a given server name.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
+        /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
+        /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
+        protected internal void AddExecutionStrategy(string providerInvariantName, Func<IExecutionStrategy> getExecutionStrategy, string serverName)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotEmpty(serverName, "serverName");
+            Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
+
+            _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
+            _internalConfiguration.AddDependencyResolver(new ExecutionStrategyResolver<IExecutionStrategy>(providerInvariantName, serverName, getExecutionStrategy));
         }
 
         /// <summary>
@@ -262,6 +383,32 @@ namespace System.Data.Entity.Config
             _internalConfiguration.CheckNotLocked("AddMigrationSqlGenerator");
             _internalConfiguration.AddDependencyResolver(
                 new TransientDependencyResolver<MigrationSqlGenerator>(sqlGenerator, providerInvariantName));
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add a
+        ///     <see cref="MigrationSqlGenerator" /> for use with the associated provider.
+        /// </summary>
+        /// <remarks>
+        ///     The <typeparamref name="T"/> type should have a <see cref="DbProviderNameAttribute"/> applied to it.
+        ///     This method is typically used by providers to register an associated SQL generator for Code First Migrations.
+        ///     It is different from setting the generator in the <see cref="DbMigrationsConfiguration" /> because it allows
+        ///     EF to use the Migrations pipeline to create a database even when there is no Migrations configuration in the project
+        ///     and/or Migrations are not being explicitly used.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="MigrationSqlGenerator" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <typeparam name="T"> The type that implements <see cref="MigrationSqlGenerator"/>. </typeparam>
+        /// <param name="sqlGenerator"> A delegate that returns a new instance of the SQL generator each time it is called. </param>
+        protected internal void AddMigrationSqlGenerator<T>(Func<T> sqlGenerator)
+            where T : MigrationSqlGenerator
+        {
+            foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(typeof(T)))
+            {
+                AddMigrationSqlGenerator(providerInvariantNameAttribute.Name, sqlGenerator);
+            }
         }
 
         /// <summary>

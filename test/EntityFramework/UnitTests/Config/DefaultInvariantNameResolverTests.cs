@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
@@ -19,12 +20,12 @@ namespace System.Data.Entity.Config
         public void GetService_throws_for_null_or_incorrect_key_type()
         {
             Assert.Equal(
-                Strings.DbProviderFactoryNotPassedToResolver,
+                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>(null)).Message);
 
             Assert.Equal(
-                Strings.DbProviderFactoryNotPassedToResolver,
+                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>("Oh No!")).Message);
         }

@@ -19,22 +19,22 @@ namespace System.Data.Entity.Config
         public void GetService_throws_for_null_or_incorrect_key_type()
         {
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderFactory).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderFactoryResolver().GetService<DbProviderFactory>(null)).Message);
 
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderFactory).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderFactoryResolver().GetService<DbProviderFactory>("")).Message);
 
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderFactory).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderFactoryResolver().GetService<DbProviderFactory>(" ")).Message);
 
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderFactory).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderFactoryResolver().GetService<DbProviderFactory>(new Random())).Message);
         }

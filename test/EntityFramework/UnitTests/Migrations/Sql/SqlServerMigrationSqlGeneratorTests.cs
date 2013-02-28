@@ -3,13 +3,16 @@
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Globalization;
+    using System.Linq;
     using System.Threading;
     using Moq;
     using Xunit;
@@ -925,6 +928,14 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
             Assert.Equal(
                 Strings.SqlServerMigrationSqlGenerator_UnknownOperation(typeof(SqlServerMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
                 ex.Message);
+        }
+
+        [Fact]
+        public void Has_ProviderInvariantNameAttribute()
+        {
+            Assert.Equal(
+                "System.Data.SqlClient",
+                DbProviderNameAttribute.GetFromType(typeof(SqlServerMigrationSqlGenerator)).Single().Name);
         }
     }
 }

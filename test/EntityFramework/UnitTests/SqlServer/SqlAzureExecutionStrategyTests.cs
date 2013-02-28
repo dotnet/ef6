@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using System.Reflection;
     using Xunit;
 
@@ -22,6 +23,14 @@ namespace System.Data.Entity.SqlServer
                 "RetriableExceptionDetector",
                 BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsType<SqlAzureRetriableExceptionDetector>(retriableExceptionDetectorProperty.GetValue(executionStrategy, null));
+        }
+
+        [Fact]
+        public void Has_ProviderInvariantNameAttribute()
+        {
+            Assert.Equal(
+                "System.Data.SqlClient",
+                DbProviderNameAttribute.GetFromType(typeof(SqlAzureExecutionStrategy)).Single().Name);
         }
     }
 }

@@ -41,17 +41,17 @@ namespace System.Data.Entity.Config
         public void The_provider_services_resolver_throws_for_an_empty_provider_name()
         {
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderServices).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderServicesResolver().GetService<DbProviderServices>(null)).Message);
 
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderServices).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderServicesResolver().GetService<DbProviderServices>("")).Message);
 
             Assert.Equal(
-                Strings.ProviderInvariantNotPassedToResolver,
+                Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderServices).Name),
                 Assert.Throws<ArgumentException>(
                     () => new DefaultProviderServicesResolver().GetService<DbProviderServices>(" ")).Message);
         }

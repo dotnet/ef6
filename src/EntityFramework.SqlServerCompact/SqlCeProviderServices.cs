@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
     using System.Data.Entity.SqlServerCompact.Utilities;
@@ -18,6 +19,7 @@ namespace System.Data.Entity.SqlServerCompact
     /// <summary>
     ///     The ProviderServices object for the Sql CE provider
     /// </summary>
+    [DbProviderName("System.Data.SqlServerCe.4.0")]
     internal sealed class SqlCeProviderServices : DbProviderServices
     {
         /// <summary>

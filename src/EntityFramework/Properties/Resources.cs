@@ -12814,19 +12814,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "No name was passed to the IDbDependencyResolver.Get method. The provider invariant name must be supplied when attempting to resolve a DbProviderServices or DbProviderFactory dependency."
+        ///     A string like "No name was passed to the IDbDependencyResolver.GetService method. The provider invariant name must be supplied when attempting to resolve a {0} dependency."
         /// </summary>
-        internal static string ProviderInvariantNotPassedToResolver
+        internal static string DbDependencyResolver_NoProviderInvariantName(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ProviderInvariantNotPassedToResolver); }
+            return EntityRes.GetString(EntityRes.DbDependencyResolver_NoProviderInvariantName, p0);
         }
 
         /// <summary>
-        ///     A string like "No DbProviderFactory instance was passed to the IDbDependencyResolver.Get method. A DbProviderFactory instance must be supplied when attempting to resolve an IProviderInvariantName dependency."
+        ///     A string like "No {0} instance was passed to the IDbDependencyResolver.GetService method. A {0} instance must be supplied when attempting to resolve an {1} dependency."
         /// </summary>
-        internal static string DbProviderFactoryNotPassedToResolver
+        internal static string DbDependencyResolver_InvalidKey(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.DbProviderFactoryNotPassedToResolver); }
+            return EntityRes.GetString(EntityRes.DbDependencyResolver_InvalidKey, p0, p1);
         }
 
         /// <summary>
@@ -13299,6 +13299,14 @@ namespace System.Data.Entity.Resources
         internal static string ExecutionStrategy_StreamingNotSupported
         {
             get { return EntityRes.GetString(EntityRes.ExecutionStrategy_StreamingNotSupported); }
+        }
+
+        /// <summary>
+        ///     A string like "The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter."
+        /// </summary>
+        internal static string DbProviderNameAttributeNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbProviderNameAttributeNotFound, p0);
         }
     }
 
@@ -16597,8 +16605,8 @@ namespace System.Data.Entity.Resources
         internal const string EF6Providers_InstanceMissing = "EF6Providers_InstanceMissing";
         internal const string EF6Providers_NotDbProviderServices = "EF6Providers_NotDbProviderServices";
         internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
-        internal const string ProviderInvariantNotPassedToResolver = "ProviderInvariantNotPassedToResolver";
-        internal const string DbProviderFactoryNotPassedToResolver = "DbProviderFactoryNotPassedToResolver";
+        internal const string DbDependencyResolver_NoProviderInvariantName = "DbDependencyResolver_NoProviderInvariantName";
+        internal const string DbDependencyResolver_InvalidKey = "DbDependencyResolver_InvalidKey";
         internal const string DefaultConfigurationUsedBeforeSet = "DefaultConfigurationUsedBeforeSet";
         internal const string AddHandlerToInUseConfiguration = "AddHandlerToInUseConfiguration";
         internal const string ConfigurationSetTwice = "ConfigurationSetTwice";
@@ -16658,6 +16666,7 @@ namespace System.Data.Entity.Resources
         internal const string DbContext_TransactionAlreadyStarted = "DbContext_TransactionAlreadyStarted";
         internal const string DbContext_TransactionAlreadyEnlistedInUserTransaction = "DbContext_TransactionAlreadyEnlistedInUserTransaction";
         internal const string ExecutionStrategy_StreamingNotSupported = "ExecutionStrategy_StreamingNotSupported";
+        internal const string DbProviderNameAttributeNotFound = "DbProviderNameAttributeNotFound";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

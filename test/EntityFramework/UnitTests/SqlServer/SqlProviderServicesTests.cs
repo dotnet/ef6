@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using Xunit;
 
     public class SqlProviderServicesTests
@@ -10,6 +12,14 @@ namespace System.Data.Entity.SqlServer
         public void GetExecutionStrategy_returns_DefaultSqlExecutionStrategy()
         {
             Assert.IsType<DefaultSqlExecutionStrategy>(SqlProviderServices.Instance.GetExecutionStrategy());
+        }
+
+        [Fact]
+        public void Has_ProviderInvariantNameAttribute()
+        {
+            Assert.Equal(
+                "System.Data.SqlClient",
+                DbProviderNameAttribute.GetFromType(typeof(SqlProviderServices)).Single().Name);
         }
     }
 }
