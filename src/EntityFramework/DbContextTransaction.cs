@@ -14,8 +14,9 @@ namespace System.Data.Entity
     public class DbContextTransaction : IDisposable
     {
         private readonly EntityConnection _connection;
-        private EntityTransaction _entityTransaction;
+        private readonly EntityTransaction _entityTransaction;
         private bool _shouldCloseConnection;
+        private bool _isDisposed;
 
         /// <summary>
         ///     Constructs the DbContextTransaction object with the associated connection object
@@ -57,7 +58,7 @@ namespace System.Data.Entity
         /// </summary>
         public DbTransaction StoreTransaction
         {
-            get { return _entityTransaction == null ? null : _entityTransaction.StoreTransaction; }
+            get { return _entityTransaction.StoreTransaction; }
         }
 
         /// <summary>
@@ -65,10 +66,7 @@ namespace System.Data.Entity
         /// </summary>
         public void Commit()
         {
-            if (_entityTransaction != null)
-            {
-                _entityTransaction.Commit();
-            }
+            _entityTransaction.Commit();
         }
 
         /// <summary>
@@ -76,10 +74,7 @@ namespace System.Data.Entity
         /// </summary>
         public void Rollback()
         {
-            if (_entityTransaction != null)
-            {
-                _entityTransaction.Rollback();
-            }
+            _entityTransaction.Rollback();
         }
 
         /// <summary>
@@ -100,21 +95,21 @@ namespace System.Data.Entity
         {
             if (disposing)
             {
-                _connection.ClearCurrentTransaction();
-
-                if (null != _entityTransaction)
+                if (!_isDisposed)
                 {
+                    _connection.ClearCurrentTransaction();
+
                     _entityTransaction.Dispose();
-                }
 
-                _entityTransaction = null;
-
-                if (_shouldCloseConnection)
-                {
-                    if (ConnectionState.Closed != _connection.State)
+                    if (_shouldCloseConnection)
                     {
-                        _connection.Close();
+                        if (ConnectionState.Closed != _connection.State)
+                        {
+                            _connection.Close();
+                        }
                     }
+
+                    _isDisposed = true;
                 }
             }
         }

@@ -122,6 +122,66 @@ namespace System.Data.Entity
             mockEntityTransaction.Verify(m => m.Rollback(), Times.Once());
         }
 
+        [Fact]
+        public void Calling_Commit_on_an_already_disposed_DbContextTransaction_still_calls_Commit_on_underlying_EntityTransaction()
+        {
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            mockEntityConnection.Setup(m => m.BeginTransaction()).Returns(mockEntityTransaction.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object);
+            dbContextTransaction.Dispose();
+            dbContextTransaction.Commit();
+
+            mockEntityTransaction.Verify(m => m.Commit(), Times.Once());
+        }
+
+        [Fact]
+        public void Calling_Rollback_on_an_already_disposed_DbContextTransaction_still_calls_Rollback_on_underlying_EntityTransaction()
+        {
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            mockEntityConnection.Setup(m => m.BeginTransaction()).Returns(mockEntityTransaction.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object);
+            dbContextTransaction.Dispose();
+            dbContextTransaction.Rollback();
+
+            mockEntityTransaction.Verify(m => m.Rollback(), Times.Once());
+        }
+
+        [Fact]
+        public void Calling_Commit_twice_on_a_DbContextTransaction_calls_Commit_twice_on_underlying_EntityTransaction()
+        {
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            mockEntityConnection.Setup(m => m.BeginTransaction()).Returns(mockEntityTransaction.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object);
+            dbContextTransaction.Commit();
+            dbContextTransaction.Commit();
+
+            mockEntityTransaction.Verify(m => m.Commit(), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void Calling_Rollback_twice_on_a_DbContextTransaction_calls_Rollback_twice_on_underlying_EntityTransaction()
+        {
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            mockEntityConnection.Setup(m => m.BeginTransaction()).Returns(mockEntityTransaction.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object);
+            dbContextTransaction.Rollback();
+            dbContextTransaction.Rollback();
+
+            mockEntityTransaction.Verify(m => m.Rollback(), Times.Exactly(2));
+        }
+
         #endregion
 
         #region Dispose
