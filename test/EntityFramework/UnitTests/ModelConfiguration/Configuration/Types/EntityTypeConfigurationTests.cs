@@ -205,8 +205,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             entityTypeConfiguration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
-            Assert.Equal(2, entityType.DeclaredKeyProperties.Count);
-            Assert.Equal("P1", entityType.DeclaredKeyProperties.First().Name);
+            Assert.Equal(2, entityType.KeyProperties.Count);
+            Assert.Equal("P1", entityType.KeyProperties.First().Name);
         }
 
         [Fact]

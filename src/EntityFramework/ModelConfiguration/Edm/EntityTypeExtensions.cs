@@ -73,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             foreach (var declaringType in entityType.ToHierarchy().Reverse())
             {
-                if (declaringType.DeclaredKeyProperties.Any())
+                if (declaringType.BaseType == null && declaringType.KeyProperties.Any())
                 {
                     if (keyProps != null)
                     {
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                     var entityProps =
                         new HashSet<EdmProperty>(declaringType.DeclaredProperties.Where(p => p != null));
 
-                    foreach (var keyProp in declaringType.DeclaredKeyProperties)
+                    foreach (var keyProp in declaringType.KeyProperties)
                     {
                         if (keyProp != null
                             && !duplicateKeyProps.Contains(keyProp)
@@ -135,9 +135,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             else
             {
                 // only the base type can define key properties
-                if (visitingType.DeclaredKeyProperties != null)
+                var visitingTypeKeyProperties = visitingType.KeyProperties;
+                if (visitingType.KeyProperties.Count > 0)
                 {
-                    keyProperties.AddRange(visitingType.DeclaredKeyProperties);
+                    keyProperties.AddRange(visitingTypeKeyProperties);
                 }
             }
         }
@@ -176,7 +177,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(entityType);
 
-            return entityType.GetRootType().DeclaredKeyProperties;
+            return entityType.GetRootType().KeyProperties;
         }
 
         public static object GetConfiguration(this EntityType entityType)

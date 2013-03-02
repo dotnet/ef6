@@ -9,6 +9,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics.CodeAnalysis;
@@ -179,7 +180,9 @@ namespace System.Data.Entity
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
 
             _internalContext = new LazyInternalContext(
-                this, internalConnection, model, DbConfiguration.GetService<IDbModelCacheKeyFactory>());
+                this, internalConnection, model
+                , DbConfiguration.GetService<IDbModelCacheKeyFactory>()
+                , DbConfiguration.GetService<AttributeProvider>());
             DiscoverAndInitializeSets();
         }
 

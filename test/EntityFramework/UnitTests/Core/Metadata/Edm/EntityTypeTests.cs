@@ -39,30 +39,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Can_get_list_of_declared_key_properties()
-        {
-            var entityType = new EntityType("E", "N", DataSpace.CSpace);
-
-            Assert.Empty(entityType.DeclaredKeyProperties);
-
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-
-            entityType.AddKeyMember(property);
-
-            Assert.Equal(1, entityType.DeclaredKeyProperties.Count);
-
-            entityType.RemoveMember(property);
-
-            var baseType = new EntityType("E", "N", DataSpace.CSpace);
-            baseType.AddKeyMember(property);
-
-            entityType.BaseType = baseType;
-
-            Assert.Empty(entityType.DeclaredKeyProperties);
-            Assert.Equal(1, entityType.KeyMembers.Count);
-        }
-
-        [Fact]
         public void Can_get_list_of_declared_navigation_properties()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);

@@ -18,31 +18,32 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            edmDataModelItem.DeclaredKeyProperties
-                            .Each(
-                                p =>
-                                    {
-                                        edmDataModelItem.RemoveMember(p);
-                                        edmDataModelItem.AddKeyMember(p);
-                                    });
+            if (edmDataModelItem.BaseType == null)
+            {
+                // Performance: avoid converting to .Each<>() Linq expressions in order to avoid closure allocations
+                foreach (var p in edmDataModelItem.KeyProperties)
+                {
+                    edmDataModelItem.RemoveMember(p);
+                    edmDataModelItem.AddKeyMember(p);
+                }
 
-            new PropertyFilter()
-                .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true)
-                .Each(
-                    p =>
-                        {
-                            var property
-                                = edmDataModelItem
-                                    .DeclaredProperties
-                                    .SingleOrDefault(ep => ep.Name == p.Name);
+                foreach (var p in 
+                    new PropertyFilter()
+                    .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true))
+                {
+                    var property
+                        = edmDataModelItem
+                            .DeclaredProperties
+                            .SingleOrDefault(ep => ep.Name == p.Name);
 
-                            if ((property != null)
-                                && !edmDataModelItem.DeclaredKeyProperties.Contains(property))
-                            {
-                                edmDataModelItem.RemoveMember(property);
-                                edmDataModelItem.AddMember(property);
-                            }
-                        });
+                    if ((property != null)
+                        && !edmDataModelItem.KeyProperties.Contains(property))
+                    {
+                        edmDataModelItem.RemoveMember(property);
+                        edmDataModelItem.AddMember(property);
+                    }
+                }
+            }
         }
     }
 }

@@ -4,9 +4,9 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
-    
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -76,6 +76,8 @@ namespace System.Data.Entity.Internal
 
         private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
 
+        private readonly AttributeProvider _attributeProvider;
+
         /// <summary>
         ///     Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
         ///     on first use.
@@ -89,7 +91,8 @@ namespace System.Data.Entity.Internal
             DbContext owner,
             IInternalConnection internalConnection,
             DbCompiledModel model,
-            IDbModelCacheKeyFactory cacheKeyFactory = null)
+            IDbModelCacheKeyFactory cacheKeyFactory = null,
+            AttributeProvider attributeProvider = null)
             : base(owner)
         {
             DebugCheck.NotNull(internalConnection);
@@ -97,6 +100,7 @@ namespace System.Data.Entity.Internal
             _internalConnection = internalConnection;
             _model = model;
             _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory();
+            _attributeProvider = attributeProvider ?? new AttributeProvider();
 
             _createdWithExistingModel = model != null;
         }
@@ -449,9 +453,9 @@ namespace System.Data.Entity.Internal
         /// <returns> The builder. </returns>
         public DbModelBuilder CreateModelBuilder()
         {
-            var versionAttribute = new AttributeProvider().GetAttributes(Owner.GetType())
-                                                          .OfType<DbModelBuilderVersionAttribute>()
-                                                          .FirstOrDefault();
+            var versionAttribute = _attributeProvider.GetAttributes(Owner.GetType())
+                                                     .OfType<DbModelBuilderVersionAttribute>()
+                                                     .FirstOrDefault();
             var version = versionAttribute != null ? versionAttribute.Version : DbModelBuilderVersion.Latest;
 
             var modelBuilder = new DbModelBuilder(version);

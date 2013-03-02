@@ -129,7 +129,7 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
-        protected override void VisitDeclaredKeyProperties(EntityType entityType, IList<EdmProperty> properties)
+        protected override void VisitKeyProperties(EntityType entityType, IList<EdmProperty> properties)
         {
             if (properties.Any())
             {

@@ -560,7 +560,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.DeclaredKeyProperties.Single().Name);
+            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.KeyProperties.Single().Name);
         }
 
         public class DASimple
