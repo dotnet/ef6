@@ -1387,9 +1387,6 @@
   <data name="ELinq_CycleDetected" xml:space="preserve">
     <value>A cycle was detected in a LINQ expression.</value>
   </data>
-  <data name="ELinq_DbFunctionAttributeParameterNameNotValid" xml:space="preserve">
-    <value>The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because the parameter {2} on its DbFunction attribute is empty.</value>
-  </data>
   <data name="ELinq_DbFunctionAttributedFunctionWithWrongReturnType" xml:space="preserve">
     <value>The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because its return type does not match the return type of the function specified by its DbFunction attribute.</value>
   </data>

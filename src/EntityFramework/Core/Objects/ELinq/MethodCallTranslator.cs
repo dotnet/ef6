@@ -675,9 +675,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal CqtExpression TranslateFunctionCall(
                     ExpressionConverter parent, MethodCallExpression call, DbFunctionAttribute functionAttribute)
                 {
-                    //Validate that the attribute parameters are not null or empty
-                    ValidateFunctionAttributeParameter(call, functionAttribute.NamespaceName, "namespaceName");
-                    ValidateFunctionAttributeParameter(call, functionAttribute.FunctionName, "functionName");
+                    Debug.Assert(!string.IsNullOrWhiteSpace(functionAttribute.NamespaceName));
+                    Debug.Assert(!string.IsNullOrWhiteSpace(functionAttribute.FunctionName));
 
                     // Translate the inputs
                     var arguments =
@@ -890,22 +889,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                     return result;
                 }
-
-                /// <summary>
-                ///     Validates that the given parameterValue is not null or empty.
-                /// </summary>
-                /// <param name="call"> </param>
-                /// <param name="parameterValue"> </param>
-                /// <param name="parameterName"> </param>
-                internal static void ValidateFunctionAttributeParameter(
-                    MethodCallExpression call, string parameterValue, string parameterName)
-                {
-                    if (String.IsNullOrEmpty(parameterValue))
-                    {
-                        throw new NotSupportedException(
-                            Strings.ELinq_DbFunctionAttributeParameterNameNotValid(call.Method, call.Method.DeclaringType, parameterName));
-                    }
-                }
             }
 
             private sealed class CanonicalFunctionDefaultTranslator : CallTranslator
@@ -1049,6 +1032,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     yield return
                         typeof(DbFunctions).GetMethod(
                             AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                    yield return
+#pragma warning disable 612,618
+                        typeof(EntityFunctions).GetMethod(
+#pragma warning restore 612,618
+                            AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
 
@@ -1063,6 +1051,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     yield return
                         typeof(DbFunctions).GetMethod(
+                            AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                    yield return
+#pragma warning disable 612,618
+                        typeof(EntityFunctions).GetMethod(
+#pragma warning restore 612,618
                             AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }

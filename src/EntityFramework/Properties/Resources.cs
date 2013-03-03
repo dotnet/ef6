@@ -3006,14 +3006,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because the parameter {2} on its DbFunction attribute is empty."
-        /// </summary>
-        internal static string ELinq_DbFunctionAttributeParameterNameNotValid(object p0, object p1, object p2)
-        {
-            return EntityRes.GetString(EntityRes.ELinq_DbFunctionAttributeParameterNameNotValid, p0, p1, p2);
-        }
-
-        /// <summary>
         ///     A string like "The specified method '{0}' on the type '{1}' cannot be translated into a LINQ to Entities store expression because its return type does not match the return type of the function specified by its DbFunction attribute."
         /// </summary>
         internal static string ELinq_DbFunctionAttributedFunctionWithWrongReturnType(object p0, object p1)
@@ -15411,7 +15403,6 @@ namespace System.Data.Entity.Resources
         internal const string ELinq_UnsupportedMergeAs = "ELinq_UnsupportedMergeAs";
         internal const string ELinq_MethodNotDirectlyCallable = "ELinq_MethodNotDirectlyCallable";
         internal const string ELinq_CycleDetected = "ELinq_CycleDetected";
-        internal const string ELinq_DbFunctionAttributeParameterNameNotValid = "ELinq_DbFunctionAttributeParameterNameNotValid";
         internal const string ELinq_DbFunctionAttributedFunctionWithWrongReturnType = "ELinq_DbFunctionAttributedFunctionWithWrongReturnType";
         internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
         internal const string CompiledELinq_UnsupportedParameterTypes = "CompiledELinq_UnsupportedParameterTypes";

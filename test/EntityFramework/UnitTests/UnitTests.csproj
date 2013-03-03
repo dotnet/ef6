@@ -206,6 +206,7 @@
     <Compile Include="Core\Metadata\Edm\RowTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DataClasses\RelationshipManagerTests.cs" />
+    <Compile Include="Core\Objects\DataClasses\EdmFunctionAttributeTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemTests.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Core\Metadata\Edm\TypeUsageTests.cs" />
     <Compile Include="Core\Objects\DataClasses\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Objects\ELinq\ExpressionConverterTests.cs" />
+    <Compile Include="Core\Objects\EntityFunctionsTests.cs" />
     <Compile Include="Core\Objects\ExecutionOptionsTests.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataReaderTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityProxyFactoryTests.cs" />
@@ -245,6 +247,8 @@
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
     <Compile Include="DbContextTransactionTests.cs" />
+    <Compile Include="DbFunctionAttributeTests.cs" />
+    <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmXmlSchemaWriterTests.cs" />

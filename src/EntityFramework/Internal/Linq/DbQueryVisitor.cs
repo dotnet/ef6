@@ -49,10 +49,8 @@ namespace System.Data.Entity.Internal.Linq
                     // as a function.
                     var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                     if (context != null
-                        &&
-                        !node.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false).Any()
-                        &&
-                        node.Method.GetParameters().Length == 0)
+                        && !node.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false).Any()
+                        && node.Method.GetParameters().Length == 0)
                     {
                         var expression =
                             CreateObjectQueryConstant(
@@ -83,10 +81,8 @@ namespace System.Data.Entity.Internal.Linq
 
             if (propInfo != null
                 && memberExpression != null
-                &&
-                typeof(IQueryable).IsAssignableFrom(propInfo.PropertyType)
-                &&
-                typeof(DbContext).IsAssignableFrom(node.Member.DeclaringType))
+                && typeof(IQueryable).IsAssignableFrom(propInfo.PropertyType)
+                && typeof(DbContext).IsAssignableFrom(node.Member.DeclaringType))
             {
                 var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                 if (context != null)
