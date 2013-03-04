@@ -229,7 +229,7 @@ namespace System.Data.Entity.Internal
             var quotedTypeName = String.Format(
                 CultureInfo.InvariantCulture,
                 "{0}.{1}",
-                DbHelpers.QuoteIdentifier(EntityType.Namespace),
+                DbHelpers.QuoteIdentifier(EntityType.NestingNamespace()),
                 DbHelpers.QuoteIdentifier(EntityType.Name));
 
             queryBuilder.AppendFormat(
@@ -682,7 +682,7 @@ namespace System.Data.Entity.Internal
                 if (_edmEntityType == null)
                 {
                     var metadataWorkspace = _internalContext.ObjectContext.MetadataWorkspace;
-                    var oSpaceType = metadataWorkspace.GetItem<EntityType>(_entityType.FullName, DataSpace.OSpace);
+                    var oSpaceType = metadataWorkspace.GetItem<EntityType>(_entityType.FullNameWithNesting(), DataSpace.OSpace);
                     _edmEntityType = (EntityType)metadataWorkspace.GetEdmSpaceType(oSpaceType);
                 }
                 return _edmEntityType;

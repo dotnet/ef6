@@ -7,29 +7,29 @@ namespace System.Data.Entity.Query.LinqToEntities
     using System.Linq;
     using Xunit;
 
-    public enum Genre 
-    {
-        Action,
-        Humor,
-        Fantasy,
-    }
-
-    public class Book
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public Genre? Genre { get; set; }
-        public AuthorName Author { get; set; }
-    }
-
-    public class AuthorName
-    {
-        public string First { get; set; }
-        public string Last { get; set; }
-    }
-
     public class EnumerableContainsTests : FunctionalTestBase
     {
+        public enum Genre
+        {
+            Action,
+            Humor,
+            Fantasy,
+        }
+
+        public class Book
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public Genre? Genre { get; set; }
+            public AuthorName Author { get; set; }
+        }
+
+        public class AuthorName
+        {
+            public string First { get; set; }
+            public string Last { get; set; }
+        }
+
         public class UnicodeContext : DbContext
         {
             public DbSet<Book> Books { get; set; }
@@ -51,10 +51,10 @@ namespace System.Data.Entity.Query.LinqToEntities
         }
 
         [Fact]
-        public static void EnumerableContains_with_unicode_string_and_store_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_unicode_string_and_store_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE ([Extent1].[Title] IN (N'Title1', N'Title2')) 
@@ -75,10 +75,10 @@ WHERE ([Extent1].[Title] IN (N'Title1', N'Title2'))
         }
 
         [Fact]
-        public static void EnumerableContains_with_unicode_string_and_csharp_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_unicode_string_and_csharp_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS NOT NULL)) 
@@ -99,10 +99,10 @@ WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS N
         }
 
         [Fact]
-        public static void EnumerableContains_with_non_unicode_string_and_store_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_non_unicode_string_and_store_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE ([Extent1].[Title] IN ('Title1', 'Title2')) 
@@ -123,10 +123,10 @@ WHERE ([Extent1].[Title] IN ('Title1', 'Title2'))
         }
 
         [Fact]
-        public static void EnumerableContains_with_non_unicode_string_and_csharp_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_non_unicode_string_and_csharp_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Title] IN ('Title1', 'Title2')) AND ([Extent1].[Title] IS NOT NULL)) 
@@ -147,10 +147,10 @@ WHERE (([Extent1].[Title] IN ('Title1', 'Title2')) AND ([Extent1].[Title] IS NOT
         }
 
         [Fact]
-        public static void EnumerableContains_with_enum_and_store_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_enum_and_store_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE ([Extent1].[Genre] IN (1,2)) 
@@ -171,10 +171,10 @@ WHERE ([Extent1].[Genre] IN (1,2))
         }
 
         [Fact]
-        public static void EnumerableContains_with_enum_and_csharp_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_enum_and_csharp_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Genre] IN (1,2)) AND ([Extent1].[Genre] IS NOT NULL))
@@ -195,7 +195,7 @@ WHERE (([Extent1].[Genre] IN (1,2)) AND ([Extent1].[Genre] IS NOT NULL))
         }
 
         [Fact]
-        public static void EnumerableContains_with_complex_type_throws_NotSupportedException()
+        public void EnumerableContains_with_complex_type_throws_NotSupportedException()
         {
             var array = new[] { new AuthorName(), new AuthorName() };
 
@@ -210,10 +210,10 @@ WHERE (([Extent1].[Genre] IN (1,2)) AND ([Extent1].[Genre] IS NOT NULL))
         }
 
         [Fact]
-        public static void EnumerableContains_with_parameter_and_store_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_parameter_and_store_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE ([Extent1].[Title] IN (N'Title1', N'Title2')) 
@@ -239,10 +239,10 @@ String p__linq__0 = ""Title3""
         }
 
         [Fact]
-        public static void EnumerableContains_with_parameter_and_csharp_null_is_translated_to_expected_sql()
+        public void EnumerableContains_with_parameter_and_csharp_null_is_translated_to_expected_sql()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS NOT NULL))
@@ -264,13 +264,12 @@ String p__linq__0 = ""Title3""
                             where new[] { "Title1", "Title2", parameter, null }.Contains(book.Title)
                             select book.Id;
 
-
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
         [Fact]
-        public static void Contains_throws_for_constant_null_array()
+        public void Contains_throws_for_constant_null_array()
         {
             using (var context = new UnicodeContext())
             {
@@ -282,7 +281,7 @@ String p__linq__0 = ""Title3""
         }
 
         [Fact]
-        public static void Contains_throws_for_constant_null_list()
+        public void Contains_throws_for_constant_null_list()
         {
             using (var context = new UnicodeContext())
             {
@@ -293,11 +292,11 @@ String p__linq__0 = ""Title3""
             }
         }
 
-        [Fact] 
-        public static void Contains_on_non_static_collection_of_enums()
+        [Fact]
+        public void Contains_on_non_static_collection_of_enums()
         {
             const string expectedSql =
-@"SELECT 
+                @"SELECT 
 CASE WHEN ( EXISTS (SELECT 
 	1 AS [C1]
 	FROM [dbo].[Books] AS [Extent2]

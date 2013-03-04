@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             DebugCheck.NotNull(type);
             Debug.Assert(type.IsEnum);
 
-            var enumType = _mappingContext.Model.GetEnumType(type.Name);
+            var enumType = GetExistingEdmType<EnumType>(_mappingContext.Model, type);
 
             if (enumType == null)
             {
@@ -68,11 +68,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                             Convert.ChangeType(Enum.Parse(type, name), type.GetEnumUnderlyingType(), CultureInfo.InvariantCulture)));
                 }
             }
-            else if (type != enumType.GetClrType())
-            {
-                // O/C mapping collision
-                return null;
-            }
 
             return enumType;
         }
@@ -94,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 return null;
             }
 
-            var complexType = _mappingContext.Model.GetComplexType(type.Name);
+            var complexType = GetExistingEdmType<ComplexType>(_mappingContext.Model, type);
 
             if (complexType == null)
             {
@@ -111,11 +106,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     (m, p) => m.Map(p, complexType, complexTypeConfiguration),
                     false,
                     complexTypeConfiguration);
-            }
-            else if (type != complexType.GetClrType())
-            {
-                // O/C mapping collision
-                return null;
             }
 
             return complexType;
@@ -138,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 return null;
             }
 
-            var entityType = _mappingContext.Model.GetEntityType(type.Name);
+            var entityType = GetExistingEdmType<EntityType>(_mappingContext.Model, type);
 
             if (entityType == null)
             {
@@ -155,8 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
                 else if (ReferenceEquals(baseType, entityType))
                 {
-                    // O/C mapping collision
-                    return null;
+                    throw new NotSupportedException(Strings.SimpleNameCollision(type.FullName, type.BaseType.FullName, type.Name));
                 }
 
                 entityType.BaseType = baseType;
@@ -182,13 +171,18 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 MapDerivedTypes(type, entityType);
             }
-            else if (type != entityType.GetClrType())
-            {
-                // O/C mapping collision
-                return null;
-            }
 
             return entityType;
+        }
+
+        private static T GetExistingEdmType<T>(EdmModel model, Type type) where T : EdmType
+        {
+            var edmType = model.GetStructuralOrEnumType(type.Name);
+            if (edmType != null && type != edmType.GetClrType())
+            {
+                throw new NotSupportedException(Strings.SimpleNameCollision(type.FullName, edmType.GetClrType().FullName, type.Name));
+            }
+            return edmType as T;
         }
 
         private void MapStructuralElements<TStructuralTypeConfiguration>(

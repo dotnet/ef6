@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="clrType"> The CLR type to construct from </param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
-            : base(Check.NotNull(clrType, "clrType").Name, clrType.Namespace ?? string.Empty,
+            : base(Check.NotNull(clrType, "clrType").Name, clrType.NestingNamespace() ?? string.Empty,
                 DataSpace.OSpace)
         {
             DebugCheck.NotEmpty(cspaceNamespaceName);

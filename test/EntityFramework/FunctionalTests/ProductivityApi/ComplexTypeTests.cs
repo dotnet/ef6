@@ -18,6 +18,18 @@ namespace ProductivityApiTests
             public DbSet<EntityWithComplexType> Entities1 { get; set; }
         }
 
+        public class EntityWithComplexType
+        {
+            public int Id { get; set; }
+            public SimpleComplexType ComplexProp { get; set; }
+        }
+
+        public class SimpleComplexType
+        {
+            public string Prop1 { get; set; }
+            public int Prop2 { get; set; }
+        }
+
         [Fact]
         public void Single_complex_type_is_discovered_by_convention()
         {
@@ -32,6 +44,18 @@ namespace ProductivityApiTests
         public class ContextWithSimpleRelatedEntities : DbContext
         {
             public DbSet<EntityWithRelatedEntity> Entities1 { get; set; }
+        }
+
+        public class EntityWithRelatedEntity
+        {
+            public int Id { get; set; }
+            public SimpleRelatedEntity RelatedEntity { get; set; }
+        }
+
+        public class SimpleRelatedEntity
+        {
+            public int Id { get; set; }
+            public ICollection<EntityWithRelatedEntity> RelatedEntities { get; set; }
         }
 
         [Fact]
@@ -50,6 +74,13 @@ namespace ProductivityApiTests
             public DbSet<EntityWithComplexTypeTwice> Entities1 { get; set; }
         }
 
+        public class EntityWithComplexTypeTwice
+        {
+            public int Id { get; set; }
+            public SimpleComplexType ComplexProp1 { get; set; }
+            public SimpleComplexType ComplexProp2 { get; set; }
+        }
+
         [Fact]
         public void Complex_type_reused_on_same_entity_is_discovered_by_convention()
         {
@@ -65,6 +96,16 @@ namespace ProductivityApiTests
         {
             public DbSet<EntityWithComplexType> Entities1 { get; set; }
             public DbSet<AnotherEntityWithComplexType> Entities2 { get; set; }
+        }
+
+        public class DerivedFromEntityWithComplexType : EntityWithComplexType
+        {
+        }
+
+        public class AnotherEntityWithComplexType
+        {
+            public int Id { get; set; }
+            public SimpleComplexType ComplexProp { get; set; }
         }
 
         [Fact]
@@ -102,49 +143,4 @@ namespace ProductivityApiTests
 
         #endregion
     }
-
-    #region Entity and complex types
-
-    public class EntityWithComplexType
-    {
-        public int Id { get; set; }
-        public SimpleComplexType ComplexProp { get; set; }
-    }
-
-    public class DerivedFromEntityWithComplexType : EntityWithComplexType
-    {
-    }
-
-    public class AnotherEntityWithComplexType
-    {
-        public int Id { get; set; }
-        public SimpleComplexType ComplexProp { get; set; }
-    }
-
-    public class EntityWithComplexTypeTwice
-    {
-        public int Id { get; set; }
-        public SimpleComplexType ComplexProp1 { get; set; }
-        public SimpleComplexType ComplexProp2 { get; set; }
-    }
-
-    public class SimpleComplexType
-    {
-        public string Prop1 { get; set; }
-        public int Prop2 { get; set; }
-    }
-
-    public class EntityWithRelatedEntity
-    {
-        public int Id { get; set; }
-        public SimpleRelatedEntity RelatedEntity { get; set; }
-    }
-
-    public class SimpleRelatedEntity
-    {
-        public int Id { get; set; }
-        public ICollection<EntityWithRelatedEntity> RelatedEntities { get; set; }
-    }
-
-    #endregion
 }

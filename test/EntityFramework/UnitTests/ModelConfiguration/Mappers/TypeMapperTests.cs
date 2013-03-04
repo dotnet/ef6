@@ -160,7 +160,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         [Fact]
-        public void MapEntityType_should_ignore_new_type_if_type_name_already_used()
+        public void MapEntityType_should_throw_for_new_type_if_entity_type_with_same_simple_name_already_used()
         {
             var model = new EdmModel(DataSpace.CSpace);
 
@@ -170,11 +170,56 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
             Assert.NotNull(typeMapper.MapEntityType(mockType1));
-            Assert.Null(typeMapper.MapEntityType(mockType2));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
         }
 
         [Fact]
-        public void MapComplexType_should_ignore_new_type_if_type_name_already_used()
+        public void MapEntityType_should_throw_for_new_type_if_enum_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            mockType1.SetupGet(t => t.IsEnum).Returns(true);
+            mockType1.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
+            mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
+            mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
+
+            var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapEnumType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
+        }
+
+        [Fact]
+        public void MapEntityType_should_throw_for_new_type_if_complex_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            var modelConfiguration = new ModelConfiguration();
+            modelConfiguration.ComplexType(mockType1);
+
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapComplexType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
+        }
+        
+        [Fact]
+        public void MapComplexType_should_throw_for_new_type_if_complex_type_with_same_simple_name_already_used()
         {
             var model = new EdmModel(DataSpace.CSpace);
 
@@ -188,11 +233,59 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
             Assert.NotNull(typeMapper.MapComplexType(mockType1));
-            Assert.Null(typeMapper.MapComplexType(mockType2));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
         }
 
         [Fact]
-        public void MapEnumType_should_ignore_new_type_if_type_name_already_used()
+        public void MapComplexType_should_throw_for_new_type_if_entity_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            var modelConfiguration = new ModelConfiguration();
+            modelConfiguration.ComplexType(mockType2);
+
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapEntityType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
+        }
+
+        [Fact]
+        public void MapComplexType_should_throw_for_new_type_if_enum_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            var modelConfiguration = new ModelConfiguration();
+            modelConfiguration.ComplexType(mockType2);
+
+            mockType1.SetupGet(t => t.IsEnum).Returns(true);
+            mockType1.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
+            mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
+            mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
+
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapEnumType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
+        }
+        
+        [Fact]
+        public void MapEnumType_should_should_throw_for_new_type_if_enum_type_with_same_simple_name_already_used()
         {
             var model = new EdmModel(DataSpace.CSpace);
 
@@ -205,11 +298,54 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
             mockType2.SetupGet(t => t.IsEnum).Returns(true);
 
-            var modelConfiguration = new ModelConfiguration();
-            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+            var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
             Assert.NotNull(typeMapper.MapEnumType(mockType1));
-            Assert.Null(typeMapper.MapEnumType(mockType2));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
+        }
+
+        [Fact]
+        public void MapEnumType_should_should_throw_for_new_type_if_complex_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            var modelConfiguration = new ModelConfiguration();
+            modelConfiguration.ComplexType(mockType1);
+
+            mockType2.SetupGet(t => t.IsEnum).Returns(true);
+
+            var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapComplexType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
+        }
+
+        [Fact]
+        public void MapEnumType_should_should_throw_for_new_type_if_entity_type_with_same_simple_name_already_used()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+
+            var mockType1 = new MockType("Foo");
+            var mockType2 = new MockType("Foo");
+
+            mockType2.SetupGet(t => t.IsEnum).Returns(true);
+
+            var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
+
+            Assert.NotNull(typeMapper.MapEntityType(mockType1));
+
+            Assert.Equal(
+                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
         }
 
         [Fact]
@@ -399,6 +535,56 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.Equal(3, entityType.DeclaredNavigationProperties.Count);
         }
 
+        internal class MapEntityType_should_only_map_public_instance_read_write_primitive_properties_fixture
+        {
+            // Positive props
+            public int Public { get; set; }
+            public string PrivateSetter { get; private set; }
+
+            // Negative props
+            private int PrivateReadWrite { get; set; }
+            public static long Static { get; set; }
+
+            public TimeSpan ReadOnly
+            {
+                get { return TimeSpan.Zero; }
+            }
+
+            public DateTime WriteOnly
+            {
+                set { ; }
+            }
+
+            // Positive navigation props
+            public MapEntityType_related_entity_fixture ReferenceProp { get; set; }
+            public ICollection<MapEntityType_related_entity_fixture> ReadWriteCollectionProp { get; set; }
+
+            public ICollection<MapEntityType_related_entity_fixture> ReadOnlyCollectionProp
+            {
+                get { return new List<MapEntityType_related_entity_fixture>(); }
+            }
+
+            // Negative navigation props
+            private MapEntityType_related_entity_fixture PrivateReferenceProp { get; set; }
+            public static MapEntityType_related_entity_fixture StaticReferenceProp { get; set; }
+            private ICollection<MapEntityType_related_entity_fixture> PrivateReadWriteCollectionProp { get; set; }
+            public static ICollection<MapEntityType_related_entity_fixture> StaticReadWriteCollectionProp { get; set; }
+
+            private ICollection<MapEntityType_related_entity_fixture> PrivateReadOnlyCollectionProp
+            {
+                get { return new List<MapEntityType_related_entity_fixture>(); }
+            }
+
+            public static ICollection<MapEntityType_related_entity_fixture> StaticReadOnlyCollectionProp
+            {
+                get { return new List<MapEntityType_related_entity_fixture>(); }
+            }
+        }
+
+        internal class MapEntityType_related_entity_fixture
+        {
+        }
+
         [Fact]
         public void MapEntityType_should_recognize_StoreIgnore()
         {
@@ -427,6 +613,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.True(modelConfiguration.IsIgnoredType(type));
             Assert.Equal(0, model.EntityTypes.Count());
             Assert.Equal(0, model.ComplexTypes.Count());
+        }
+
+        [NotMapped]
+        internal class TypeMapper_EntityWithStoreIgnore
+        {
+            public int Id { get; set; }
         }
 
         [Fact]
@@ -473,6 +665,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 Assert.Throws<InvalidOperationException>(() => typeMapper.MapEntityType(type)).Message);
         }
 
+        [ComplexType]
+        internal class TypeMapper_EntityWithStoreInline
+        {
+            public int Id { get; set; }
+        }
+
         [Fact]
         public void MapEntityType_recognizes_TableName()
         {
@@ -487,6 +685,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.Equal(1, model.EntityTypes.Count());
             Assert.Equal(0, model.ComplexTypes.Count());
             Assert.Equal("Foo", modelConfiguration.Entity(typeof(TypeMapper_EntityWithTableName)).GetTableName().Name);
+        }
+
+        [Table("Foo")]
+        internal class TypeMapper_EntityWithTableName
+        {
+            public int Id { get; set; }
         }
 
         [Fact]
@@ -518,91 +722,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.Equal(0, model.EntityTypes.Count());
             Assert.Equal(0, model.ComplexTypes.Count());
         }
-    }
 
-    #region Test Fixtures
-
-    internal class MapEntityType_should_only_map_public_instance_read_write_primitive_properties_fixture
-    {
-        // Positive props
-        public int Public { get; set; }
-        public string PrivateSetter { get; private set; }
-
-        // Negative props
-        private int PrivateReadWrite { get; set; }
-        public static long Static { get; set; }
-
-        public TimeSpan ReadOnly
+        [NotMapped]
+        [ComplexType]
+        internal class TypeMapper_EntityWithStoreInlineAndStoreIgnore
         {
-            get { return TimeSpan.Zero; }
-        }
-
-        public DateTime WriteOnly
-        {
-            set { ; }
-        }
-
-        // Positive navigation props
-        public MapEntityType_related_entity_fixture ReferenceProp { get; set; }
-        public ICollection<MapEntityType_related_entity_fixture> ReadWriteCollectionProp { get; set; }
-
-        public ICollection<MapEntityType_related_entity_fixture> ReadOnlyCollectionProp
-        {
-            get { return new List<MapEntityType_related_entity_fixture>(); }
-        }
-
-        // Negative navigation props
-        private MapEntityType_related_entity_fixture PrivateReferenceProp { get; set; }
-        public static MapEntityType_related_entity_fixture StaticReferenceProp { get; set; }
-        private ICollection<MapEntityType_related_entity_fixture> PrivateReadWriteCollectionProp { get; set; }
-        public static ICollection<MapEntityType_related_entity_fixture> StaticReadWriteCollectionProp { get; set; }
-
-        private ICollection<MapEntityType_related_entity_fixture> PrivateReadOnlyCollectionProp
-        {
-            get { return new List<MapEntityType_related_entity_fixture>(); }
-        }
-
-        public static ICollection<MapEntityType_related_entity_fixture> StaticReadOnlyCollectionProp
-        {
-            get { return new List<MapEntityType_related_entity_fixture>(); }
+            public int Id { get; set; }
         }
     }
-
-    internal class MapEntityType_related_entity_fixture
-    {
-    }
-
-    [NotMapped]
-    internal class TypeMapper_EntityWithStoreIgnore
-    {
-        public int Id { get; set; }
-    }
-
-    [ComplexType]
-    internal class TypeMapper_EntityWithStoreInline
-    {
-        public int Id { get; set; }
-    }
-
-    [Table("Foo")]
-    internal class TypeMapper_EntityWithTableName
-    {
-        public int Id { get; set; }
-    }
-
-    [ComplexType]
-    [Table("Foo")]
-    internal class TypeMapper_EntityWithStoreInlineAndTableName
-    {
-        public int Id { get; set; }
-    }
-
-    [NotMapped]
-    [ComplexType]
-    internal class TypeMapper_EntityWithStoreInlineAndStoreIgnore
-    {
-        public int Id { get; set; }
-    }
-
-    #endregion
 }

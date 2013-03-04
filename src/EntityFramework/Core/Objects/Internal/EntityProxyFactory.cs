@@ -562,7 +562,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                       ospaceEntityType.ClrType.IsSealed ||
                       typeof(IEntityWithRelationships).IsAssignableFrom(ospaceEntityType.ClrType) ||
                       !accessableCtor) &&
-                    access == TypeAttributes.Public);
+                    (access == TypeAttributes.Public || access == TypeAttributes.NestedPublic));
         }
 
         private static bool CanProxyMethod(MethodInfo method)

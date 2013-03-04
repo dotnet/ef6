@@ -1119,7 +1119,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // Ensure the metadata for this object type is loaded
             _perspective.MetadataWorkspace.ImplicitLoadAssemblyForType(linqType, null);
 
-            if (!_perspective.TryGetTypeByName(nonNullableType.FullName, false, out type))
+            if (!_perspective.TryGetTypeByName(nonNullableType.FullNameWithNesting(), false, out type))
             {
                 // If the user is casting to a type that is not a model type or a primitive type it can be a cast to an enum that
                 // is not in the model. In that case we use the underlying enum type. 
@@ -1205,29 +1205,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         internal static string DescribeClrType(Type clrType)
         {
-            var clrTypeName = clrType.Name;
             // Yes, this is a heuristic... just a best effort way of getting
             // a reasonable exception message
-            if (IsCSharpGeneratedClass(clrTypeName, "DisplayClass")
-                ||
-                IsVBGeneratedClass(clrTypeName, "Closure"))
+            if (IsCSharpGeneratedClass(clrType.Name, "DisplayClass")
+                || IsVBGeneratedClass(clrType.Name, "Closure"))
             {
                 return Strings.ELinq_ClosureType;
             }
-            if (IsCSharpGeneratedClass(clrTypeName, "AnonymousType")
-                ||
-                IsVBGeneratedClass(clrTypeName, "AnonymousType"))
+            if (IsCSharpGeneratedClass(clrType.Name, "AnonymousType")
+                || IsVBGeneratedClass(clrType.Name, "AnonymousType"))
             {
                 return Strings.ELinq_AnonymousType;
             }
 
-            var returnName = string.Empty;
-            if (!String.IsNullOrEmpty(clrType.Namespace))
-            {
-                returnName += clrType.Namespace + ".";
-            }
-            returnName += clrType.Name;
-            return returnName;
+            return clrType.FullName;
         }
 
         private static bool IsCSharpGeneratedClass(string typeName, string pattern)

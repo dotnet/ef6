@@ -19,7 +19,7 @@ namespace System.Data.Entity.Edm.Serialization
             Check.NotNull(databaseMapping, "databaseMapping");
             Check.NotNull(xmlWriter, "xmlWriter");
 
-            var schemaWriter = new MslXmlSchemaWriter(xmlWriter, databaseMapping.Model.Version);
+            var schemaWriter = new MslXmlSchemaWriter(xmlWriter, databaseMapping.Model.Version.GetEdmVersion());
 
             schemaWriter.WriteSchema(databaseMapping);
 

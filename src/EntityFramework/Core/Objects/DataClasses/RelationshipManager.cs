@@ -421,7 +421,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Debug.Assert(wrappedOwner.Context.Perspective != null, "Perspective is null");
 
             var entityType = wrappedOwner.Context.MetadataWorkspace.GetItem<EntityType>(
-                wrappedOwner.IdentityType.FullName, DataSpace.OSpace);
+                wrappedOwner.IdentityType.FullNameWithNesting(), DataSpace.OSpace);
             EdmMember member;
             if (!wrappedOwner.Context.Perspective.TryGetMember(entityType, navigationProperty, false, out member)
                 ||
@@ -679,7 +679,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                 }
 
-                var identityName = WrappedOwner.IdentityType.FullName;
+                var identityName = WrappedOwner.IdentityType.FullNameWithNesting();
                 var objectItemCollection = GetObjectItemCollection(WrappedOwner);
                 EdmType entityType = null;
                 if (objectItemCollection != null)
@@ -728,8 +728,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             DefaultObjectMappingItemCollection mappings;
             Map map;
             if (TryGetObjectMappingItemCollection(WrappedOwner, out mappings)
-                &&
-                mappings.TryGetMap(WrappedOwner.IdentityType.FullName, DataSpace.OSpace, out map))
+                && mappings.TryGetMap(WrappedOwner.IdentityType.FullNameWithNesting(), DataSpace.OSpace, out map))
             {
                 var objectMap = (ObjectTypeMapping)map;
                 if (Helper.IsEntityType(objectMap.EdmType))

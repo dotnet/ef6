@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_initialize_and_provider_fields_set()
         {
             var model
-                = new EdmModel(DataSpace.SSpace, 3.0)
+                = new EdmModel(DataSpace.SSpace)
                       {
                           ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
                           ProviderManifest = new SqlProviderManifest("2008"),

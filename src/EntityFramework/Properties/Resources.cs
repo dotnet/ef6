@@ -414,7 +414,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from ComplexObject."
+        ///     A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject."
         /// </summary>
         internal static string CodeFirstInvalidComplexType(object p0)
         {
@@ -422,11 +422,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from EntityObject."
+        ///     A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from EntityObject."
         /// </summary>
         internal static string InvalidEntityType(object p0)
         {
             return EntityRes.GetString(EntityRes.InvalidEntityType, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The type '{0}' and the type '{1}' both have the same simple name of '{2}' and so cannot be used in the same model. All types in a given model must have unique simple names. Use 'NotMappedAttribute' or call Ignore in the Code First fluent API to explicitly exclude a property or type from the model."
+        /// </summary>
+        internal static string SimpleNameCollision(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.SimpleNameCollision, p0, p1, p2);
         }
 
         /// <summary>
@@ -13589,7 +13597,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from ComplexObject."
+        ///     InvalidOperationException with message like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject."
         /// </summary>
         internal static Exception CodeFirstInvalidComplexType(object p0)
         {
@@ -13597,7 +13605,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from EntityObject."
+        ///     InvalidOperationException with message like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from EntityObject."
         /// </summary>
         internal static Exception InvalidEntityType(object p0)
         {
@@ -15081,6 +15089,7 @@ namespace System.Data.Entity.Resources
         internal const string ConflictingConfigurationValue = "ConflictingConfigurationValue";
         internal const string CodeFirstInvalidComplexType = "CodeFirstInvalidComplexType";
         internal const string InvalidEntityType = "InvalidEntityType";
+        internal const string SimpleNameCollision = "SimpleNameCollision";
         internal const string NavigationInverseItself = "NavigationInverseItself";
         internal const string ConflictingConstraint = "ConflictingConstraint";
         internal const string ConflictingInferredColumnType = "ConflictingInferredColumnType";

@@ -353,10 +353,9 @@ namespace System.Data.Entity.Core.Objects
             // ComplexType, fail - OfType() is not a valid operation on scalars,
             // enumerations, collections, etc.
             var clrOfType = typeof(TResultType);
-            EdmType ofType = null;
-            if (
-                !QueryState.ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace).TryGetType(
-                    clrOfType.Name, clrOfType.Namespace ?? string.Empty, out ofType)
+            EdmType ofType;
+            if (!QueryState.ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace).TryGetType(
+                    clrOfType.Name, clrOfType.NestingNamespace() ?? string.Empty, out ofType)
                 || !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
             {
                 var message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);

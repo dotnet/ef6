@@ -23,6 +23,20 @@ namespace System.Data.Entity.Objects
             public DbSet<MeTrackChangesS> MeTrackChanges { get; set; }
         }
 
+        [Serializable]
+        public class MeTrackChangesS
+        {
+            public virtual int Id { get; set; }
+            public virtual ICollection<MeLazyLoadS> MeLazyLoad { get; set; }
+        }
+
+        [Serializable]
+        public class MeLazyLoadS
+        {
+            public int Id { get; set; }
+            public virtual MeTrackChangesS MeTrackChanges { get; set; }
+        }
+
         [Fact]
         public void Change_tracking_proxy_can_be_binary_deserialized_when_running_under_full_trust()
         {
@@ -135,19 +149,5 @@ namespace System.Data.Entity.Objects
                 Assert.Equal(77, deserialized.Id);
             }
         }
-    }
-
-    [Serializable]
-    public class MeTrackChangesS
-    {
-        public virtual int Id { get; set; }
-        public virtual ICollection<MeLazyLoadS> MeLazyLoad { get; set; }
-    }
-
-    [Serializable]
-    public class MeLazyLoadS
-    {
-        public int Id { get; set; }
-        public virtual MeTrackChangesS MeTrackChanges { get; set; }
     }
 }

@@ -3114,6 +3114,43 @@ namespace ProductivityApiTests
             }
         }
 
+        public class SpecialCharacters : DbContext
+        {
+            public SpecialCharacters()
+            {
+                Database.SetInitializer(new SpecialCharactersInitializer());
+            }
+
+            public DbSet<Länder> Länder { get; set; }
+        }
+
+        public class Länder
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public string Näme { get; set; }
+        }
+
+        public class SpecialCharactersInitializer : DropCreateDatabaseAlways<SpecialCharacters>
+        {
+            protected override void Seed(SpecialCharacters context)
+            {
+                context.Länder.Add(
+                    new Länder
+                    {
+                        Id = 1,
+                        Näme = "A"
+                    });
+                context.Länder.Add(
+                    new Länder
+                    {
+                        Id = 2,
+                        Näme = "B"
+                    });
+            }
+        }
+
         #endregion
 
         #region Using Set, etc with proxy types (Dev11 307937)
@@ -3344,45 +3381,4 @@ namespace ProductivityApiTests
 
         #endregion
     }
-
-    #region Model with special characters
-
-    public class SpecialCharacters : DbContext
-    {
-        public SpecialCharacters()
-        {
-            Database.SetInitializer(new SpecialCharactersInitializer());
-        }
-
-        public DbSet<Länder> Länder { get; set; }
-    }
-
-    public class Länder
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public string Näme { get; set; }
-    }
-
-    public class SpecialCharactersInitializer : DropCreateDatabaseAlways<SpecialCharacters>
-    {
-        protected override void Seed(SpecialCharacters context)
-        {
-            context.Länder.Add(
-                new Länder
-                    {
-                        Id = 1,
-                        Näme = "A"
-                    });
-            context.Länder.Add(
-                new Länder
-                    {
-                        Id = 2,
-                        Näme = "B"
-                    });
-        }
-    }
-
-    #endregion
 }

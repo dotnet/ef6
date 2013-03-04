@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Init();
 
-            _edmVersion = model.Version;
+            _edmVersion = model.Version.GetEdmVersion();
 
             model.Validate();
 

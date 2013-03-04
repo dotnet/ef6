@@ -3,8 +3,10 @@
 namespace FunctionalTests
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using FunctionalTests.Fixtures;
+    using System.Data.Entity.Spatial;
     using Xunit;
 
     public class SpatialScenarioTests : TestBase
@@ -60,8 +62,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            Assert.Equal(2.0, databaseMapping.Model.Version);
-            Assert.Equal(2.0, databaseMapping.Database.Version);
+            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Model.Version);
+            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Database.Version);
         }
 
         [Fact]
@@ -213,13 +215,6 @@ namespace FunctionalTests
                 BuildMapping(modelBuilder))
                 .ValidateMessage("EntityMappingConfiguration_CannotMapIgnoredProperty", "Spatial_Customer", "Geometry");
         }
-    }
-
-    namespace Fixtures
-    {
-        using System.ComponentModel.DataAnnotations;
-        using System.ComponentModel.DataAnnotations.Schema;
-        using System.Data.Entity.Spatial;
 
         public class Spatial_Customer
         {

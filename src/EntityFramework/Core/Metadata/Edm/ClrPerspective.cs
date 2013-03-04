@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     /// <summary>
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal bool TryGetType(Type clrType, out TypeUsage outTypeUsage)
         {
             return TryGetTypeByName(
-                clrType.FullName,
+                clrType.FullNameWithNesting(),
                 false /*ignoreCase*/,
                 out outTypeUsage);
         }

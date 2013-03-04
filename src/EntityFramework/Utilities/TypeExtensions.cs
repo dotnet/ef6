@@ -142,7 +142,6 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(type);
 
             return !(type.IsGenericTypeDefinition
-                     || type.IsNested
                      || type.IsPointer
                      || type == typeof(object)
                      || typeof(ComplexObject).IsAssignableFrom(type)
@@ -210,6 +209,32 @@ namespace System.Data.Entity.Utilities
 
             PrimitiveType _;
             return type.IsPrimitiveType(out _) || type.IsEnum;
+        }
+
+        public static string NestingNamespace(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            if (!type.IsNested)
+            {
+                return type.Namespace;
+            }
+
+            var fullName = type.FullName;
+
+            return fullName.Substring(0, fullName.Length - type.Name.Length - 1).Replace('+', '.');
+        }
+
+        public static string FullNameWithNesting(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            if (!type.IsNested)
+            {
+                return type.FullName;
+            }
+
+            return type.FullName.Replace('+', '.');
         }
     }
 }

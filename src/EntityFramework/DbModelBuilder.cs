@@ -97,6 +97,7 @@ namespace System.Data.Entity
                 case DbModelBuilderVersion.V4_1:
                     return V1ConventionSet.Conventions;
                 case DbModelBuilderVersion.V5_0:
+                case DbModelBuilderVersion.V6_0:
                 case DbModelBuilderVersion.Latest:
                     return V2ConventionSet.Conventions;
                 default:
@@ -352,7 +353,7 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion());
+            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion);
 
             model.ProviderInfo = providerInfo;
 

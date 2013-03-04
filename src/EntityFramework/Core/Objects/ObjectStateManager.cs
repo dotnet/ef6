@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Objects
             var actualType = wrappedEntity.Entity.GetType();
             if (identityType != actualType)
             {
-                var entityType = MetadataWorkspace.GetItem<ClrEntityType>(identityType.FullName, DataSpace.OSpace);
+                var entityType = MetadataWorkspace.GetItem<ClrEntityType>(identityType.FullNameWithNesting(), DataSpace.OSpace);
                 var proxyTypeInfo = EntityProxyFactory.GetProxyType(entityType, MetadataWorkspace);
                 if (proxyTypeInfo == null
                     || proxyTypeInfo.ProxyType != actualType)
@@ -3029,7 +3029,7 @@ namespace System.Data.Entity.Core.Objects
                 // This is unimportant until each EntityContainer can have its own ObjectTypeMapping.
                 typeMetadata = AddStateManagerTypeMetadata(
                     entitySet, (ObjectTypeMapping)
-                               MetadataWorkspace.GetMap(entityType.FullName, DataSpace.OSpace, DataSpace.OCSpace));
+                               MetadataWorkspace.GetMap(entityType.FullNameWithNesting(), DataSpace.OSpace, DataSpace.OCSpace));
             }
             return typeMetadata;
         }

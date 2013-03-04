@@ -3,11 +3,12 @@
 namespace FunctionalTests
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
-    using FunctionalTests.Fixtures;
     using Xunit;
 
     public class EnumsScenarioTests : TestBase
@@ -52,6 +53,33 @@ namespace FunctionalTests
             Assert.Equal(PrimitiveTypeKind.Int16, enumType.UnderlyingType.PrimitiveTypeKind);
         }
 
+        [Flags]
+        public enum WithFlags : short
+        {
+            Beverages = 0,
+            Condiments = 1,
+            Confections = 2,
+            Dairy_Products = 4
+        }
+
+        public class Enum_Flags
+        {
+            public int Id { get; set; }
+            public WithFlags FlagsEnum { get; set; }
+        }
+
+        public class Enum_ComplexEntity
+        {
+            public int Id { get; set; }
+            public Enum_ComplexType ComplexType { get; set; }
+        }
+
+        [ComplexType]
+        public class Enum_ComplexType
+        {
+            [Column("col_enum")]
+            public WithFlags? Enum { get; set; }
+        }
         [Fact]
         public void Build_model_for_a_single_type_with_a_enum_key()
         {
@@ -128,8 +156,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            Assert.Equal(2.0, databaseMapping.Model.Version);
-            Assert.Equal(2.0, databaseMapping.Database.Version);
+            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Model.Version);
+            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Database.Version);
         }
 
         [Fact]
@@ -144,6 +172,16 @@ namespace FunctionalTests
             databaseMapping.Assert<Enum_Empty>(p => p.Empty).IsFalse(e => e.EnumType.Members.Any());
         }
 
+        public enum Empty
+        {
+        }
+
+        public class Enum_Empty
+        {
+            public int Id { get; set; }
+            public Empty Empty { get; set; }
+        }
+
         [Fact]
         public void Unsigned_enum_in_model_should_fail_validation()
         {
@@ -154,6 +192,17 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public enum Unsigned : uint
+        {
+            Member
+        }
+
+        public class Enum_Unsigned
+        {
+            public int Id { get; set; }
+            public Unsigned Unsigned { get; set; }
         }
 
         [Fact]
@@ -243,12 +292,6 @@ namespace FunctionalTests
                 BuildMapping(modelBuilder))
                 .ValidateMessage("EntityMappingConfiguration_CannotMapIgnoredProperty", "Enum_Product", "CategoryId");
         }
-    }
-
-    namespace Fixtures
-    {
-        using System.Collections.Generic;
-        using System.ComponentModel.DataAnnotations.Schema;
 
         public enum CategoryId
         {
@@ -259,27 +302,6 @@ namespace FunctionalTests
             Grains_Cereals,
             Meat_Poultry,
             Produce
-        }
-
-        public enum Empty
-        {
-        }
-
-        public class Enum_Empty
-        {
-            public int Id { get; set; }
-            public Empty Empty { get; set; }
-        }
-
-        public enum Unsigned : uint
-        {
-            Member
-        }
-
-        public class Enum_Unsigned
-        {
-            public int Id { get; set; }
-            public Unsigned Unsigned { get; set; }
         }
 
         public class Enum_Product
@@ -295,21 +317,6 @@ namespace FunctionalTests
         {
             public int Id { get; set; }
             public CategoryId? CategoryId { get; set; }
-        }
-
-        [Flags]
-        public enum WithFlags : short
-        {
-            Beverages = 0,
-            Condiments = 1,
-            Confections = 2,
-            Dairy_Products = 4
-        }
-
-        public class Enum_Flags
-        {
-            public int Id { get; set; }
-            public WithFlags FlagsEnum { get; set; }
         }
 
         public class Enum_Product_PK
@@ -343,19 +350,6 @@ namespace FunctionalTests
         {
             public int Id { get; set; }
             public Enum_IA_Principal Principal { get; set; }
-        }
-
-        public class Enum_ComplexEntity
-        {
-            public int Id { get; set; }
-            public Enum_ComplexType ComplexType { get; set; }
-        }
-
-        [ComplexType]
-        public class Enum_ComplexType
-        {
-            [Column("col_enum")]
-            public WithFlags? Enum { get; set; }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace System.Data.Entity.Edm.Serialization
 
             if (_isModelValid)
             {
-                new EdmSerializationVisitor(xmlWriter, model.Version).Visit(model);
+                new EdmSerializationVisitor(xmlWriter, model.Version.GetEdmVersion()).Visit(model);
             }
 
             return _isModelValid;

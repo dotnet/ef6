@@ -13,6 +13,7 @@ namespace System.Data.Entity.Utilities
                 case DbModelBuilderVersion.V4_1:
                     return XmlConstants.EdmVersionForV2;
                 case DbModelBuilderVersion.V5_0:
+                case DbModelBuilderVersion.V6_0:
                 case DbModelBuilderVersion.Latest:
                     return XmlConstants.EdmVersionForV3;
                 default:

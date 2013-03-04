@@ -299,12 +299,15 @@
     <value>{0} = {1} conflicts with {2} = {3}</value>
   </data>
   <data name="CodeFirstInvalidComplexType" xml:space="preserve">
-    <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from ComplexObject.</value>
+    <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="InvalidEntityType" xml:space="preserve">
-    <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive, nested or generic, and does not inherit from EntityObject.</value>
+    <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from EntityObject.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="SimpleNameCollision" xml:space="preserve">
+    <value>The type '{0}' and the type '{1}' both have the same simple name of '{2}' and so cannot be used in the same model. All types in a given model must have unique simple names. Use 'NotMappedAttribute' or call Ignore in the Code First fluent API to explicitly exclude a property or type from the model.</value>
   </data>
   <data name="NavigationInverseItself" xml:space="preserve">
     <value>The navigation property '{0}' declared on type '{1}' cannot be the inverse of itself.</value>

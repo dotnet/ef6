@@ -53,14 +53,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                               .HasForeignKey(d => d.ToString())).Message);
         }
 
-        #region Test Fixtures
-
         private class D
         {
             public int? Fk1 { get; set; }
             public int? Fk2 { get; set; }
         }
-
-        #endregion
     }
 }

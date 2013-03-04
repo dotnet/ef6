@@ -48,6 +48,25 @@ namespace FunctionalTests
             databaseMapping.Assert<EntityWithColumnsRename>("Table2").HasColumn("ColumnFor_Details");
         }
 
+        public class ComplexTypeWithColumnRename
+        {
+            [Column("ColumnFor_Details")]
+            public string Details { get; set; }
+        }
+
+        public class EntityWithColumnsRename
+        {
+            public int Id { get; set; }
+
+            [Column("ColumnFor_Property1")]
+            public byte[] Property1 { get; set; }
+
+            [Column("ColumnFor_Property2")]
+            public string Property2 { get; set; }
+
+            public ComplexTypeWithColumnRename ComplexProp { get; set; }
+        }
+
         [Fact]
         public void Complex_types_in_tpt_should_have_configuration_applied()
         {
@@ -61,6 +80,27 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<Address_166889>(c => c.Street).DbEqual("test", c => c.Name);
+        }
+
+        public class Person_166889
+        {
+            [Key]
+            public int PersonId { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        public class Employee_166889 : Person_166889
+        {
+            public string EmployeeNo { get; set; }
+            public Address_166889 Address { get; set; }
+        }
+
+        public class Address_166889
+        {
+            public string Street { get; set; }
+            public string City { get; set; }
+            public string ZipCode { get; set; }
         }
 
         [Fact]
@@ -173,6 +213,35 @@ namespace FunctionalTests
             Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
+        public class ParentComplexType
+        {
+            [Column("Bar")]
+            [Required]
+            public string Property { get; set; }
+
+            public ChildComplexType Nested { get; set; }
+        }
+
+        public class ChildComplexType
+        {
+            [Column("Foo")]
+            [Required]
+            public string Property { get; set; }
+        }
+
+        public class EntityWithByConventionComplexType
+        {
+            public int Id { get; set; }
+            public ChildComplexType Complex { get; set; }
+        }
+
+        public class EntityWithNestedComplexType
+        {
+            public int Id { get; set; }
+            public ParentComplexType Complex { get; set; }
+            public ChildComplexType ChildComplex { get; set; }
+        }
+
         [Fact]
         public void Complex_type_column_names_use_property_path()
         {
@@ -200,6 +269,19 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () => BuildMapping(modelBuilder))
                 .ValidateMessage("CircularComplexTypeHierarchy");
+        }
+
+        public class ComplexTypeEntity
+        {
+            public int Id { get; set; }
+            public ComplexType ComplexPropertyA { get; set; }
+            public ComplexType ComplexPropertyB { get; set; }
+        }
+
+        public class ComplexType
+        {
+            public string Property { get; set; }
+            public ComplexType NestedComplexProperty { get; set; }
         }
 
         [Fact]
@@ -447,6 +529,58 @@ namespace FunctionalTests
             Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
         }
 
+        public class LoCTBuilding
+        {
+            public int Number { get; set; }
+            public string Name { get; set; }
+            public LoCTAddress Address { get; set; }
+
+            public ICollection<LoCTOffice> LoCTOffices { get; set; }
+        }
+
+        public class LoCTOffice
+        {
+            public int BuildingNumber { get; set; }
+            public string Number { get; set; }
+
+            public LoCTBuilding LoCTBuilding { get; set; }
+            public ICollection<LoCTEmployee> Occupants { get; set; }
+        }
+
+        public class LoCTEmployee
+        {
+            public int EmployeeNumber { get; set; }
+            public LoCTName Name { get; set; }
+            public LoCTAddress HomeAddress { get; set; }
+
+            public LoCTOffice Office { get; set; }
+            public ICollection<LoCTEmployeePhoto> Photos { get; set; }
+        }
+
+        public class LoCTEmployeePhoto
+        {
+            public int PhotoId { get; set; }
+            public int EmployeeNo { get; set; }
+
+            public byte[] Photo { get; set; }
+        }
+
+        public class LoCTName
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Title { get; set; }
+        }
+
+        public class LoCTAddress
+        {
+            public string Line1 { get; set; }
+            public string Line2 { get; set; }
+            public string City { get; set; }
+            public string State { get; set; }
+            public string Zip { get; set; }
+        }
+
         [Fact]
         public void Annotations_on_complex_type_classes_are_not_present_on_properties()
         {
@@ -483,167 +617,29 @@ namespace FunctionalTests
 
             databaseMapping.Assert<Address>(a => a.Line1).FacetEqual(true, f => f.IsMaxLength);
         }
+
+        [ComplexType]
+        public class Address
+        {
+            public string Line1 { get; set; }
+            public string Line2 { get; set; }
+        }
+
+        public class CTEmployee
+        {
+            public int CTEmployeeId { get; set; }
+            public Address HomeAddress { get; set; }
+        }
+
+        public class OffSiteEmployee : CTEmployee
+        {
+            public Address WorkAddress { get; set; }
+        }
+
+        public class Building
+        {
+            public int Id { get; set; }
+            public Address Address { get; set; }
+        }
     }
-
-    #region Fixtures
-
-    [ComplexType]
-    public class Address
-    {
-        public string Line1 { get; set; }
-        public string Line2 { get; set; }
-    }
-
-    public class CTEmployee
-    {
-        public int CTEmployeeId { get; set; }
-        public Address HomeAddress { get; set; }
-    }
-
-    public class OffSiteEmployee : CTEmployee
-    {
-        public Address WorkAddress { get; set; }
-    }
-
-    public class Building
-    {
-        public int Id { get; set; }
-        public Address Address { get; set; }
-    }
-
-    public class LoCTBuilding
-    {
-        public int Number { get; set; }
-        public string Name { get; set; }
-        public LoCTAddress Address { get; set; }
-
-        public ICollection<LoCTOffice> LoCTOffices { get; set; }
-    }
-
-    public class LoCTOffice
-    {
-        public int BuildingNumber { get; set; }
-        public string Number { get; set; }
-
-        public LoCTBuilding LoCTBuilding { get; set; }
-        public ICollection<LoCTEmployee> Occupants { get; set; }
-    }
-
-    public class LoCTEmployee
-    {
-        public int EmployeeNumber { get; set; }
-        public LoCTName Name { get; set; }
-        public LoCTAddress HomeAddress { get; set; }
-
-        public LoCTOffice Office { get; set; }
-        public ICollection<LoCTEmployeePhoto> Photos { get; set; }
-    }
-
-    public class LoCTEmployeePhoto
-    {
-        public int PhotoId { get; set; }
-        public int EmployeeNo { get; set; }
-
-        public byte[] Photo { get; set; }
-    }
-
-    public class LoCTName
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class LoCTAddress
-    {
-        public string Line1 { get; set; }
-        public string Line2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-    }
-
-    public class ComplexTypeEntity
-    {
-        public int Id { get; set; }
-        public ComplexType ComplexPropertyA { get; set; }
-        public ComplexType ComplexPropertyB { get; set; }
-    }
-
-    public class ComplexType
-    {
-        public string Property { get; set; }
-        public ComplexType NestedComplexProperty { get; set; }
-    }
-
-    public class ParentComplexType
-    {
-        [Column("Bar")]
-        [Required]
-        public string Property { get; set; }
-
-        public ChildComplexType Nested { get; set; }
-    }
-
-    public class ChildComplexType
-    {
-        [Column("Foo")]
-        [Required]
-        public string Property { get; set; }
-    }
-
-    public class EntityWithByConventionComplexType
-    {
-        public int Id { get; set; }
-        public ChildComplexType Complex { get; set; }
-    }
-
-    public class EntityWithNestedComplexType
-    {
-        public int Id { get; set; }
-        public ParentComplexType Complex { get; set; }
-        public ChildComplexType ChildComplex { get; set; }
-    }
-
-    public class Person_166889
-    {
-        [Key]
-        public int PersonId { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class Employee_166889 : Person_166889
-    {
-        public string EmployeeNo { get; set; }
-        public Address_166889 Address { get; set; }
-    }
-
-    public class Address_166889
-    {
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string ZipCode { get; set; }
-    }
-
-    public class ComplexTypeWithColumnRename
-    {
-        [Column("ColumnFor_Details")]
-        public string Details { get; set; }
-    }
-
-    public class EntityWithColumnsRename
-    {
-        public int Id { get; set; }
-
-        [Column("ColumnFor_Property1")]
-        public byte[] Property1 { get; set; }
-
-        [Column("ColumnFor_Property2")]
-        public string Property2 { get; set; }
-
-        public ComplexTypeWithColumnRename ComplexProp { get; set; }
-    }
-
-    #endregion
 }

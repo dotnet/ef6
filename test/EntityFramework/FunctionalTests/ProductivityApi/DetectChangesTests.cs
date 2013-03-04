@@ -74,6 +74,69 @@ namespace ProductivityApiTests
             }
         }
 
+        public class ProxiesContext : DbContext
+        {
+            public ProxiesContext()
+            {
+                Database.SetInitializer<ProxiesContext>(null);
+            }
+
+            public DbSet<ProxyProduct> Products { get; set; }
+            public DbSet<ProxyCategory> Categories { get; set; }
+        }
+
+        public class ProxyProduct
+        {
+            private string _name;
+
+            public virtual int Id { get; set; }
+
+            public virtual string Name
+            {
+                get
+                {
+                    ReadCount++;
+                    return _name;
+                }
+
+                set { _name = value; }
+            }
+
+            public virtual ProductProperties Properties { get; set; }
+            public virtual ProxyCategory Category { get; set; }
+
+            public static int ReadCount { get; set; }
+        }
+
+        public class ProxyCategory
+        {
+            private string _name;
+
+            public virtual int Id { get; set; }
+
+            public virtual string Name
+            {
+                get
+                {
+                    ReadCount++;
+                    return _name;
+                }
+
+                set { _name = value; }
+            }
+
+            public virtual ICollection<ProxyProduct> Products { get; set; }
+
+            public static int ReadCount { get; set; }
+        }
+
+        public class ProductProperties
+        {
+            public virtual decimal UnitCost { get; set; }
+            public virtual int StockCount { get; set; }
+            public virtual string SpecialOfferCode { get; set; }
+        }
+
         #endregion
 
         #region Detect changes for complex types with null original values (Dev11 36323)
@@ -309,6 +372,39 @@ namespace ProductivityApiTests
             }
         }
 
+        public class Context36323 : DbContext
+        {
+            public Context36323()
+            {
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Context36323>());
+            }
+
+            public DbSet<Model36323> Models { get; set; }
+        }
+
+        public class Model36323
+        {
+            public int Id { get; set; }
+            public string Foo { get; set; }
+            public ContactInfo36323 Contact { get; set; }
+        }
+
+        [ComplexType]
+        public class ContactInfo36323
+        {
+            public string First { get; set; }
+            public string Last { get; set; }
+
+            public Phone36323 HomePhone { get; set; }
+            public Phone36323 WorkPhone { get; set; }
+        }
+
+        [ComplexType]
+        public class Phone36323
+        {
+            public string Number { get; set; }
+        }
+
         private Building CreateBuilding(bool nullAddress, bool nullSiteInfo = true)
         {
             return new Building
@@ -342,108 +438,4 @@ namespace ProductivityApiTests
 
         #endregion
     }
-
-    #region Change tracking proxy model with some complex types
-
-    public class ProxiesContext : DbContext
-    {
-        public ProxiesContext()
-        {
-            Database.SetInitializer<ProxiesContext>(null);
-        }
-
-        public DbSet<ProxyProduct> Products { get; set; }
-        public DbSet<ProxyCategory> Categories { get; set; }
-    }
-
-    public class ProxyProduct
-    {
-        private string _name;
-
-        public virtual int Id { get; set; }
-
-        public virtual string Name
-        {
-            get
-            {
-                ReadCount++;
-                return _name;
-            }
-
-            set { _name = value; }
-        }
-
-        public virtual ProductProperties Properties { get; set; }
-        public virtual ProxyCategory Category { get; set; }
-
-        public static int ReadCount { get; set; }
-    }
-
-    public class ProxyCategory
-    {
-        private string _name;
-
-        public virtual int Id { get; set; }
-
-        public virtual string Name
-        {
-            get
-            {
-                ReadCount++;
-                return _name;
-            }
-
-            set { _name = value; }
-        }
-
-        public virtual ICollection<ProxyProduct> Products { get; set; }
-
-        public static int ReadCount { get; set; }
-    }
-
-    public class ProductProperties
-    {
-        public virtual decimal UnitCost { get; set; }
-        public virtual int StockCount { get; set; }
-        public virtual string SpecialOfferCode { get; set; }
-    }
-
-    #endregion
-
-    #region Model for Dev11 36323
-
-    public class Context36323 : DbContext
-    {
-        public Context36323()
-        {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Context36323>());
-        }
-
-        public DbSet<Model36323> Models { get; set; }
-    }
-
-    public class Model36323
-    {
-        public int Id { get; set; }
-        public string Foo { get; set; }
-        public ContactInfo36323 Contact { get; set; }
-    }
-
-    [ComplexType]
-    public class ContactInfo36323
-    {
-        public string First { get; set; }
-        public string Last { get; set; }
-
-        public Phone36323 HomePhone { get; set; }
-        public Phone36323 WorkPhone { get; set; }
-    }
-
-    [ComplexType]
-    public class Phone36323
-    {
-        public string Number { get; set; }
-    }
-
-    #endregion
 }

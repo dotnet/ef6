@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Type clrType,
             PrimitiveType baseType,
             DbProviderManifest providerManifest)
-            : this(Check.NotNull(clrType, "clrType").Name, clrType.Namespace,
+            : this(Check.NotNull(clrType, "clrType").Name, clrType.NestingNamespace(),
                 DataSpace.OSpace, baseType, providerManifest)
         {
             Debug.Assert(clrType == ClrEquivalentType, "not equivalent to ClrEquivalentType");

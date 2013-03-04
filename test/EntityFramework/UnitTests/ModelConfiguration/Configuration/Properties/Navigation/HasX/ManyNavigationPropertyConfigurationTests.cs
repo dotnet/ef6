@@ -78,8 +78,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.InverseEndKind);
         }
 
-        #region Test Fixtures
-
         private class S
         {
         }
@@ -89,7 +87,5 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             public ICollection<S> Ss { get; set; }
             public S S { get; set; }
         }
-
-        #endregion
     }
 }

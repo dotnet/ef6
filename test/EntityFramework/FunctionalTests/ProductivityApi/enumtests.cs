@@ -215,70 +215,66 @@ namespace ProductivityApiTests
             return new DataTableReader(dt);
         }
 
-        #endregion
-    }
-
-    #region Model with enums and other un-mapped types
-
-    public class EnumyCatContext : DbContext
-    {
-        public EnumyCatContext()
+        public class EnumyCatContext : DbContext
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EnumyCatContext>());
+            public EnumyCatContext()
+            {
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<EnumyCatContext>());
+            }
+
+            public DbSet<EnumyCat> Cats { get; set; }
         }
 
-        public DbSet<EnumyCat> Cats { get; set; }
-    }
+        public enum LongBreedType : long
+        {
+            Burmese = 1L,
+            Tonkinese = 2L,
+            NorwegianForestCat = 3L,
+        }
 
-    public enum LongBreedType : long
-    {
-        Burmese = 1L,
-        Tonkinese = 2L,
-        NorwegianForestCat = 3L,
-    }
+        public enum BreedType
+        {
+            Burmese = 1,
+            Tonkinese = 2,
+            NorwegianForestCat = 3,
+        }
 
-    public enum BreedType
-    {
-        Burmese = 1,
-        Tonkinese = 2,
-        NorwegianForestCat = 3,
-    }
+        public class EnumyCat
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public BreedType Breed { get; set; }
+            public LongBreedType LongBreed { get; set; }
+        }
 
-    public class EnumyCat
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public BreedType Breed { get; set; }
-        public LongBreedType LongBreed { get; set; }
-    }
+        public enum EnumNotInModel
+        {
+            Burmese = 1,
+            Tonkinese = 2,
+            NorwegianForestCat = 3,
+        }
 
-    public enum EnumNotInModel
-    {
-        Burmese = 1,
-        Tonkinese = 2,
-        NorwegianForestCat = 3,
-    }
+        public enum LongEnumNotInModel : long
+        {
+            Burmese = 1L,
+            Tonkinese = 2L,
+            NorwegianForestCat = 3L,
+        }
 
-    public enum LongEnumNotInModel : long
-    {
-        Burmese = 1L,
-        Tonkinese = 2L,
-        NorwegianForestCat = 3L,
-    }
+        public enum ULongEnumNotInModel : ulong
+        {
+            Burmese = 1UL,
+            Tonkinese = 2UL,
+            NorwegianForestCat = 3UL,
+        }
 
-    public enum ULongEnumNotInModel : ulong
-    {
-        Burmese = 1UL,
-        Tonkinese = 2UL,
-        NorwegianForestCat = 3UL,
-    }
+        public class ClassNotInModel
+        {
+            public BreedType Breed { get; set; }
+            public EnumNotInModel NotInModel { get; set; }
+            public ulong ULong { get; set; }
+        }
 
-    public class ClassNotInModel
-    {
-        public BreedType Breed { get; set; }
-        public EnumNotInModel NotInModel { get; set; }
-        public ulong ULong { get; set; }
+        #endregion
     }
-
-    #endregion
 }

@@ -15,11 +15,11 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         private const BindingFlags DefaultBindingFlags
             = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        private readonly double? _edmModelVersion;
+        private readonly DbModelBuilderVersion _modelBuilderVersion;
 
-        public PropertyFilter(double? edmModelVersion = null)
+        public PropertyFilter(DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
         {
-            _edmModelVersion = edmModelVersion;
+            _modelBuilderVersion = modelBuilderVersion;
         }
 
         public IEnumerable<PropertyInfo> GetProperties(
@@ -47,8 +47,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                   let m = p.GetGetMethod(true)
                   where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))
                         && (!declaredOnly || type.BaseType.GetProperties(DefaultBindingFlags).All(bp => bp.Name != p.Name))
-                        && (EdmV3FeaturesSupported || !IsEnumType(p.PropertyType)
-                            && (EdmV3FeaturesSupported || !IsSpatialType(p.PropertyType)))
+                        && (EdmV3FeaturesSupported || (!IsEnumType(p.PropertyType) && !IsSpatialType(p.PropertyType)))
+                        && (Ef6FeaturesSupported || !p.PropertyType.IsNested)
                   select p;
 
             return propertyInfos;
@@ -56,7 +56,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public void ValidatePropertiesForModelVersion(Type type, IEnumerable<PropertyInfo> explicitlyMappedProperties)
         {
-            if (_edmModelVersion == null)
+            if (_modelBuilderVersion == DbModelBuilderVersion.Latest)
             {
                 return;
             }
@@ -75,7 +75,19 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public bool EdmV3FeaturesSupported
         {
-            get { return _edmModelVersion == null || _edmModelVersion >= XmlConstants.EdmVersionForV3; }
+            get
+            {
+                return _modelBuilderVersion.GetEdmVersion() >= XmlConstants.EdmVersionForV3;
+            }
+        }
+
+        public bool Ef6FeaturesSupported
+        {
+            get
+            {
+                return _modelBuilderVersion == DbModelBuilderVersion.Latest
+                       || _modelBuilderVersion >= DbModelBuilderVersion.V6_0;
+            }
         }
 
         private static bool IsEnumType(Type type)

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -43,8 +44,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void EdmModel_version_correctly()
         {
-            Assert.Equal(2.0, new EdmModel(DataSpace.CSpace, 2.0).Version);
-            Assert.Equal(2.0, new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), 2.0).Version);
+            Assert.Equal(DbModelBuilderVersion.V4_1, new EdmModel(DataSpace.CSpace, DbModelBuilderVersion.V4_1).Version);
+            Assert.Equal(2.0, new EdmModel(DataSpace.CSpace, DbModelBuilderVersion.V4_1).Version.GetEdmVersion());
+
+            Assert.Equal(
+                DbModelBuilderVersion.V4_1,
+                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), DbModelBuilderVersion.V4_1).Version);
+            Assert.Equal(
+                2.0,
+                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), DbModelBuilderVersion.V4_1).Version.GetEdmVersion());
         }
 
         [Fact]

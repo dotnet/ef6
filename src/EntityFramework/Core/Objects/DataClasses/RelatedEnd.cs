@@ -2607,7 +2607,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     var navigationPropertyName = TargetAccessor.PropertyName;
 
                     var entityType = _wrappedOwner.Context.MetadataWorkspace.GetItem<EntityType>(
-                        _wrappedOwner.IdentityType.FullName, DataSpace.OSpace);
+                        _wrappedOwner.IdentityType.FullNameWithNesting(), DataSpace.OSpace);
                     NavigationProperty member;
                     if (!entityType.NavigationProperties.TryGetValue(navigationPropertyName, false, out member))
                     {

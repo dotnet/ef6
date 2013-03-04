@@ -3388,6 +3388,17 @@ namespace ProductivityApiTests
             cmd.Connection.Close();
         }
 
+        public class ReplaceConnectionContext : DbContext
+        {
+            public DbSet<PersistEntity> Entities { get; set; }
+        }
+
+        public class PersistEntity
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
         #endregion
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
@@ -3529,19 +3540,4 @@ namespace ProductivityApiTests
         }
         #endregion
     }
-
-    #region Fake contexts
-
-    public class ReplaceConnectionContext : DbContext
-    {
-        public DbSet<PersistEntity> Entities { get; set; }
-    }
-
-    public class PersistEntity
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    #endregion
 }

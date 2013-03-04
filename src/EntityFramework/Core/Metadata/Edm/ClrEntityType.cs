@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="type"> The CLR type to construct from </param>
         internal ClrEntityType(Type type, string cspaceNamespaceName, string cspaceTypeName)
-            : base(Check.NotNull(type, "type").Name, type.Namespace ?? string.Empty,
+            : base(Check.NotNull(type, "type").Name, type.NestingNamespace() ?? string.Empty,
                 DataSpace.OSpace)
         {
             DebugCheck.NotEmpty(cspaceNamespaceName);

@@ -81,6 +81,47 @@ namespace ProductivityApiTests
             }
         }
 
+        public class GranniesContext : DbContext
+        {
+            public GranniesContext()
+            {
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<GranniesContext>());
+            }
+
+            public DbSet<Granny> Grannys { get; set; }
+            public DbSet<Child> Children { get; set; }
+            public DbSet<House> Houses { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Granny>().HasRequired(g => g.House).WithRequiredPrincipal(h => h.Granny);
+                modelBuilder.Entity<Granny>().HasMany(g => g.Children).WithRequired(c => c.Granny);
+                modelBuilder.Entity<House>().HasMany(h => h.Children).WithOptional(c => c.House);
+            }
+        }
+
+        public class Granny
+        {
+            public virtual int Id { get; set; }
+            public virtual House House { get; set; }
+            public virtual ICollection<Child> Children { get; set; }
+        }
+
+        public class Child
+        {
+            public virtual int Id { get; set; }
+            public virtual string Name { get; set; }
+            public virtual Granny Granny { get; set; }
+            public virtual House House { get; set; }
+        }
+
+        public class House
+        {
+            public virtual int Id { get; set; }
+            public virtual ICollection<Child> Children { get; set; }
+            public virtual Granny Granny { get; set; }
+        }
+
         [Fact]
         [AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
@@ -100,6 +141,60 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Detached, context.Entry(group).State);
                 Assert.Equal(0, group.Exams.Count);
             }
+        }
+
+        public class HaveToDoContext : DbContext
+        {
+            public HaveToDoContext()
+            {
+                Database.SetInitializer(new HaveToDoInitializer());
+            }
+
+            public DbSet<Training> Training { get; set; }
+            public DbSet<Exam> Exams { get; set; }
+            public DbSet<ComplexExam> ComplexExams { get; set; }
+        }
+
+        public class HaveToDoInitializer : DropCreateDatabaseAlways<HaveToDoContext>
+        {
+            protected override void Seed(HaveToDoContext context)
+            {
+                var training = context.Training.Add(context.Training.Create());
+                training.Code = "training";
+                training.Todos.Add(
+                    new ComplexExam
+                    {
+                        Code = "group"
+                    });
+            }
+        }
+
+        public class Training
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public virtual Guid Id { get; set; }
+
+            public virtual string Code { get; set; }
+            public virtual ICollection<HaveToDo> Todos { get; set; }
+        }
+
+        public class HaveToDo
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public virtual Guid Id { get; set; }
+
+            public virtual string Code { get; set; }
+            public virtual Training Training { get; set; }
+        }
+
+        public class Exam : HaveToDo
+        {
+            public virtual ComplexExam Parent { get; set; }
+        }
+
+        public class ComplexExam : HaveToDo
+        {
+            public virtual ICollection<Exam> Exams { get; set; }
         }
 
         #endregion
@@ -193,139 +288,40 @@ namespace ProductivityApiTests
             }
         }
 
+        public class YummyContext : DbContext
+        {
+            public YummyContext()
+            {
+                Database.SetInitializer(new DropCreateDatabaseAlways<YummyContext>());
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<YummyDetail>().HasRequired(d => d.Product).WithOptional(p => p.ProductDetail);
+            }
+
+            public DbSet<YummyProduct> Products { get; set; }
+            public DbSet<YummyDetail> Details { get; set; }
+        }
+
+        public class YummyProduct
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+
+            public virtual string Name { get; set; }
+            public virtual YummyDetail ProductDetail { get; set; }
+        }
+
+        public class YummyDetail
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+
+            public virtual string ExtraInfo { get; set; }
+            public virtual YummyProduct Product { get; set; }
+        }
+
         #endregion
     }
-
-    #region Change tracking proxies models with independent associations
-
-    public class GranniesContext : DbContext
-    {
-        public GranniesContext()
-        {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<GranniesContext>());
-        }
-
-        public DbSet<Granny> Grannys { get; set; }
-        public DbSet<Child> Children { get; set; }
-        public DbSet<House> Houses { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Granny>().HasRequired(g => g.House).WithRequiredPrincipal(h => h.Granny);
-            modelBuilder.Entity<Granny>().HasMany(g => g.Children).WithRequired(c => c.Granny);
-            modelBuilder.Entity<House>().HasMany(h => h.Children).WithOptional(c => c.House);
-        }
-    }
-
-    public class Granny
-    {
-        public virtual int Id { get; set; }
-        public virtual House House { get; set; }
-        public virtual ICollection<Child> Children { get; set; }
-    }
-
-    public class Child
-    {
-        public virtual int Id { get; set; }
-        public virtual string Name { get; set; }
-        public virtual Granny Granny { get; set; }
-        public virtual House House { get; set; }
-    }
-
-    public class House
-    {
-        public virtual int Id { get; set; }
-        public virtual ICollection<Child> Children { get; set; }
-        public virtual Granny Granny { get; set; }
-    }
-
-    public class HaveToDoContext : DbContext
-    {
-        public HaveToDoContext()
-        {
-            Database.SetInitializer(new HaveToDoInitializer());
-        }
-
-        public DbSet<Training> Training { get; set; }
-        public DbSet<Exam> Exams { get; set; }
-        public DbSet<ComplexExam> ComplexExams { get; set; }
-    }
-
-    public class HaveToDoInitializer : DropCreateDatabaseAlways<HaveToDoContext>
-    {
-        protected override void Seed(HaveToDoContext context)
-        {
-            var training = context.Training.Add(context.Training.Create());
-            training.Code = "training";
-            training.Todos.Add(
-                new ComplexExam
-                    {
-                        Code = "group"
-                    });
-        }
-    }
-
-    public class Training
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual Guid Id { get; set; }
-
-        public virtual string Code { get; set; }
-        public virtual ICollection<HaveToDo> Todos { get; set; }
-    }
-
-    public class HaveToDo
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual Guid Id { get; set; }
-
-        public virtual string Code { get; set; }
-        public virtual Training Training { get; set; }
-    }
-
-    public class Exam : HaveToDo
-    {
-        public virtual ComplexExam Parent { get; set; }
-    }
-
-    public class ComplexExam : HaveToDo
-    {
-        public virtual ICollection<Exam> Exams { get; set; }
-    }
-
-    public class YummyContext : DbContext
-    {
-        public YummyContext()
-        {
-            Database.SetInitializer(new DropCreateDatabaseAlways<YummyContext>());
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<YummyDetail>().HasRequired(d => d.Product).WithOptional(p => p.ProductDetail);
-        }
-
-        public DbSet<YummyProduct> Products { get; set; }
-        public DbSet<YummyDetail> Details { get; set; }
-    }
-
-    public class YummyProduct
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public virtual int Id { get; set; }
-
-        public virtual string Name { get; set; }
-        public virtual YummyDetail ProductDetail { get; set; }
-    }
-
-    public class YummyDetail
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public virtual int Id { get; set; }
-
-        public virtual string ExtraInfo { get; set; }
-        public virtual YummyProduct Product { get; set; }
-    }
-
-    #endregion
 }

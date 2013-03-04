@@ -97,12 +97,12 @@ namespace System.Data.Entity.Utilities
             }
 
             [Fact]
-            public void IsValidStructuralType_should_return_false_for_nested_types()
+            public void IsValidStructuralType_should_return_true_for_nested_types()
             {
                 var mockType = new MockType();
                 mockType.SetupGet(t => t.DeclaringType).Returns(typeof(object));
 
-                Assert.False(mockType.Object.IsValidStructuralType());
+                Assert.True(mockType.Object.IsValidStructuralType());
             }
         }
 
@@ -146,6 +146,10 @@ namespace System.Data.Entity.Utilities
                 Assert.True(typeof(ICollection_should_correctly_detect_collections_fixture).IsCollection(out elementType));
                 Assert.Equal(typeof(bool), elementType);
             }
+        }
+
+        private sealed class ICollection_should_correctly_detect_collections_fixture : List<bool>
+        {
         }
 
         public class TryGetElementType
@@ -288,6 +292,13 @@ namespace System.Data.Entity.Utilities
                                   .CreateInstance<DbConfiguration>(s => new MigrationsException(s))).Message);
             }
 
+            public abstract class BadConstructorConfiguration : DbConfiguration
+            {
+                protected BadConstructorConfiguration(int _)
+                {
+                }
+            }
+
             [Fact]
             public void CreateInstance_throws_expected_exception_type_if_type_is_abstract()
             {
@@ -298,6 +309,19 @@ namespace System.Data.Entity.Utilities
                                   .CreateInstance<DbConfiguration>(s => new MigrationsException(s))).Message);
             }
 
+            public abstract class AbstractConfiguration : DbConfiguration
+            {
+                public AbstractConfiguration()
+                {
+                    // prevent code cleanup removal
+                    DoStuff();
+                }
+
+                private void DoStuff()
+                {
+                }
+            }
+
             [Fact]
             public void CreateInstance_throws_expected_exception_type_if_type_is_generic_type()
             {
@@ -306,6 +330,10 @@ namespace System.Data.Entity.Utilities
                     Assert.Throws<MigrationsException>(
                         () => typeof(GenericConfiguration<>)
                                   .CreateInstance<DbConfiguration>(s => new MigrationsException(s))).Message);
+            }
+
+            public class GenericConfiguration<T> : DbConfiguration
+            {
             }
 
             [Fact]
@@ -323,36 +351,89 @@ namespace System.Data.Entity.Utilities
             }
         }
 
-        #region Test Fixtures
-
-        private sealed class ICollection_should_correctly_detect_collections_fixture : List<bool>
+        public class NestingNamespace
         {
-        }
-
-        public abstract class AbstractConfiguration : DbConfiguration
-        {
-            public AbstractConfiguration()
+            [Fact]
+            public void NestingNamespace_returns_simple_namespace_for_non_nested_type()
             {
-                // prevent code cleanup removal
-                DoStuff();
+                Assert.Equal("System.Data.Entity.Utilities", typeof(TypeExtensionsTests).NestingNamespace());
             }
 
-            private void DoStuff()
+            [Fact]
+            public void NestingNamespace_returns_correct_namespace_for_nested_type()
             {
+                Assert.Equal("System.Data.Entity.Utilities.TypeExtensionsTests", typeof(NestingNamespace).NestingNamespace());
+            }
+
+            public class MoreNested
+            {
+            }
+
+            [Fact]
+            public void NestingNamespace_returns_correct_namespace_for_double_nested_type()
+            {
+                Assert.Equal("System.Data.Entity.Utilities.TypeExtensionsTests.NestingNamespace", typeof(MoreNested).NestingNamespace());
+            }
+
+            [Fact]
+            public void NestingNamespace_returns_null_for_non_nested_type_not_in_a_namespace()
+            {
+                Assert.Null(typeof(NoNamespaceClass).NestingNamespace());
+            }
+
+            [Fact]
+            public void NestingNamespace_returns_correct_namespace_for_nested_type_not_in_a_namespace()
+            {
+                Assert.Equal("NoNamespaceClass", typeof(NoNamespaceClass.Nested).NestingNamespace());
             }
         }
 
-        public class GenericConfiguration<T> : DbConfiguration
+        public class FullNameWithNesting
         {
-        }
+            [Fact]
+            public void FullNameWithNesting_returns_simple_name_for_non_nested_type()
+            {
+                Assert.Equal("System.Data.Entity.Utilities.TypeExtensionsTests", typeof(TypeExtensionsTests).FullNameWithNesting());
+            }
 
-        public abstract class BadConstructorConfiguration : DbConfiguration
-        {
-            protected BadConstructorConfiguration(int _)
+            [Fact]
+            public void FullNameWithNesting_returns_correct_name_for_nested_type()
+            {
+                Assert.Equal(
+                    "System.Data.Entity.Utilities.TypeExtensionsTests.FullNameWithNesting",
+                    typeof(FullNameWithNesting).FullNameWithNesting());
+            }
+
+            public class MoreNested
             {
             }
-        }
 
-        #endregion
+            [Fact]
+            public void FullNameWithNesting_returns_correct_name_for_double_nested_type()
+            {
+                Assert.Equal(
+                    "System.Data.Entity.Utilities.TypeExtensionsTests.FullNameWithNesting.MoreNested",
+                    typeof(MoreNested).FullNameWithNesting());
+            }
+
+            [Fact]
+            public void FullNameWithNesting_returns_correct_name_for_non_nested_type_not_in_a_namespace()
+            {
+                Assert.Equal("NoNamespaceClass", typeof(NoNamespaceClass).FullNameWithNesting());
+            }
+
+            [Fact]
+            public void FullNameWithNesting_returns_correct_name_for_nested_type_not_in_a_namespace()
+            {
+                Assert.Equal("NoNamespaceClass.Nested", typeof(NoNamespaceClass.Nested).FullNameWithNesting());
+            }
+        }
+    }
+}
+
+public class NoNamespaceClass
+{
+    public class Nested
+    {
     }
 }

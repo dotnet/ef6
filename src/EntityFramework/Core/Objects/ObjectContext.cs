@@ -3271,10 +3271,10 @@ namespace System.Data.Entity.Core.Objects
                         // If the types were not loaded into the workspace we try loading types from the assembly the type lives in and re-try
                         // loading the type. We don't care if the type still cannot be loaded - in this case the result TypeUsage will be null
                         // which we handle later.
-                        if (!Perspective.TryGetTypeByName(objectParameter.MappableType.FullName, /*ignoreCase */ false, out typeUsage))
+                        if (!Perspective.TryGetTypeByName(objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage))
                         {
                             MetadataWorkspace.ImplicitLoadAssemblyForType(objectParameter.MappableType, null);
-                            Perspective.TryGetTypeByName(objectParameter.MappableType.FullName, /*ignoreCase */ false, out typeUsage);
+                            Perspective.TryGetTypeByName(objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage);
                         }
                     }
                     else
@@ -3351,7 +3351,7 @@ namespace System.Data.Entity.Core.Objects
                             MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
 
                             EntityType entityType;
-                            ospaceItems.TryGetItem(type.FullName, out entityType);
+                            ospaceItems.TryGetItem(type.FullNameWithNesting(), out entityType);
                             return entityType;
                         }).Where(entityType => entityType != null),
                         MetadataWorkspace
@@ -3406,7 +3406,7 @@ namespace System.Data.Entity.Core.Objects
 
             // Retrieve the OSpace EntityType that corresponds to the supplied CLR type.
             // This call ensure that this mapping exists.
-            var entityType = MetadataWorkspace.GetItem<ClrEntityType>(clrType.FullName, DataSpace.OSpace);
+            var entityType = MetadataWorkspace.GetItem<ClrEntityType>(clrType.FullNameWithNesting(), DataSpace.OSpace);
             EntityProxyTypeInfo proxyTypeInfo = null;
 
             if (ContextOptions.ProxyCreationEnabled

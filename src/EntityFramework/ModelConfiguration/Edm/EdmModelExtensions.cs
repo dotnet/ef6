@@ -163,8 +163,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return new DatabaseMappingGenerator(providerManifest).Generate(model);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
+        public static EdmType GetStructuralOrEnumType(this EdmModel model, string name)
+        {
+            DebugCheck.NotNull(model);
+            DebugCheck.NotEmpty(name);
+
+            return model.GetStructuralType(name) ?? model.GetEnumType(name);
+        }
+
         public static EdmType GetStructuralType(this EdmModel model, string name)
         {
             DebugCheck.NotNull(model);

@@ -368,6 +368,33 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         [Fact]
+        public void GetStructuralOrEnumType_should_return_correct_type_for_EntityType()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType = model.AddEntityType("Foo");
+
+            Assert.Same(entityType, model.GetStructuralOrEnumType("Foo"));
+        }
+
+        [Fact]
+        public void GetStructuralOrEnumType_should_return_correct_type_for_ComplexType()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var complexType = model.AddComplexType("Foo");
+
+            Assert.Same(complexType, model.GetStructuralOrEnumType("Foo"));
+        }
+
+        [Fact]
+        public void GetStructuralOrEnumType_should_return_correct_type_for_EnumType()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var enumType = model.AddEnumType("Foo");
+
+            Assert.Same(enumType, model.GetStructuralOrEnumType("Foo"));
+        }
+
+        [Fact]
         public void AddEntitySet_should_create_and_add_to_default_container()
         {
             var model = new EdmModel(DataSpace.CSpace);

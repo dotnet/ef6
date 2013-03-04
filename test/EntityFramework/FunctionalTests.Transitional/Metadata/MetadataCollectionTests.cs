@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Metadata
 {
-    using System.Data.Entity.Metadata.Fixtures;
     using Xunit;
 
     public class MetadataCollectionTests : FunctionalTestBase
@@ -28,10 +27,7 @@ namespace System.Data.Entity.Metadata
                         });
             }
         }
-    }
 
-    namespace Fixtures
-    {
         // Model with more than 25 entities
 
         public class MyEntity_01

@@ -19,1320 +19,6 @@ namespace FunctionalTests
     using FunctionalTests.Model;
     using Xunit;
 
-    #region Fixtures
-
-    public class Party
-    {
-        public int Id { get; set; }
-    }
-
-    public class DayRecord
-    {
-        public int Id { get; set; }
-        public Party ReportedBy { get; set; }
-        public ICollection<HourlyForecast> Forecasts { get; set; }
-    }
-
-    public class HourlyForecast
-    {
-        public int Id { get; set; }
-    }
-
-    public class TypeClass
-    {
-        public int Id { get; set; }
-        public int IntProp { get; set; }
-        public string StringProp { get; set; }
-        public byte[] ByteArrayProp { get; set; }
-        public DateTime DateTimeProp { get; set; }
-        public decimal DecimalProp { get; set; }
-    }
-
-    public abstract class AbsAtBase
-    {
-        public int Id { get; set; }
-        public int Data { get; set; }
-    }
-
-    public class AbsAtBaseL1 : AbsAtBase
-    {
-        public int L1Data { get; set; }
-    }
-
-    public class AbsAtBaseL2 : AbsAtBaseL1
-    {
-        public int L2Data { get; set; }
-    }
-
-    public class AbsInMiddle
-    {
-        public int Id { get; set; }
-        public int Data { get; set; }
-    }
-
-    public abstract class AbsInMiddleL1 : AbsInMiddle
-    {
-        public int L1Data { get; set; }
-    }
-
-    public class AbsInMiddleL2 : AbsInMiddleL1
-    {
-        public int L2Data { get; set; }
-    }
-
-    public class AssocBase
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string BaseData { get; set; }
-        public int AssocRelatedBaseId { get; set; }
-        public AssocRelated AssocRelatedBase { get; set; }
-    }
-
-    public class AssocDerived : AssocBase
-    {
-        public int AssocRelatedId { get; set; }
-        public string DerivedData1 { get; set; }
-        public string DerivedData2 { get; set; }
-        public AssocRelated AssocRelated { get; set; }
-    }
-
-    public class AssocRelated
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<AssocDerived> Deriveds { get; set; }
-        public ICollection<AssocBase> Bases { get; set; }
-        public AssocDerived RefDerived { get; set; }
-        public AssocBase RefBase { get; set; }
-    }
-
-    public class AssocPrincipal
-    {
-        public int Id { get; set; }
-        public AssocDependent DependentNavigation { get; set; }
-    }
-
-    public class AssocDependent : AssocBaseDependent
-    {
-        public AssocPrincipal PrincipalNavigation { get; set; }
-    }
-
-    public class AssocBaseDependent
-    {
-        public string BaseProperty { get; set; }
-        public int Id { get; set; }
-    }
-
-    public struct FancyId
-    {
-        public int Id1 { get; set; }
-        public int Id2 { get; set; }
-    }
-
-    public class Stimulus
-    {
-        public int Id { get; set; }
-        public Brush Background { get; set; }
-    }
-
-    public class TSItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public TSItemDetail TSItemDetail { get; set; }
-        public TSItemDetailDiffKey TSItemDetailDiffKey { get; set; }
-        public TSItemDetailOverlappingProperty TSItemDetailOverlappingProperty { get; set; }
-    }
-
-    public class TSItemDetail
-    {
-        public int Id { get; set; }
-        public string Detail { get; set; }
-    }
-
-    public class TSItemDetailDiffKey
-    {
-        public int DiffId { get; set; }
-        public string Detail { get; set; }
-    }
-
-    public class TSItemDetailOverlappingProperty
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class TSIAItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public TSIAItemDetail Detail { get; set; }
-    }
-
-    public class TSIAItemDetail
-    {
-        public string Id { get; set; }
-        public string Detail { get; set; }
-    }
-
-    public class TSBase
-    {
-        public int Id { get; set; }
-        public string BaseData { get; set; }
-        public TSBaseDetail BaseDetail { get; set; }
-    }
-
-    public class TSBaseDetail
-    {
-        public int Id { get; set; }
-        public string BaseDetail { get; set; }
-    }
-
-    public class TSDerived : TSBase
-    {
-        public string DerivedData { get; set; }
-        public TSDerivedDetail Detail { get; set; }
-    }
-
-    public class TSDerivedDetail
-    {
-        public int Id { get; set; }
-        public string DerivedDetail { get; set; }
-    }
-
-    public class CTBase
-    {
-        public int Id { get; set; }
-        public CTAddress HomeAddress { get; set; }
-        public CTAddress WorkAddress { get; set; }
-    }
-
-    public class CTAddress
-    {
-        public string Street { get; set; }
-        public string City { get; set; }
-        public CTRegion Region { get; set; }
-    }
-
-    public class CTRegion
-    {
-        public string Country { get; set; }
-        public string Zip { get; set; }
-    }
-
-    public class TPHBase
-    {
-        public int Id { get; set; }
-        public string BaseData { get; set; }
-        public int IntProp { get; set; }
-        public int? NullableIntProp { get; set; }
-    }
-
-    public class TPHDerived : TPHBase
-    {
-        public string DerivedData { get; set; }
-    }
-
-    public class TPHLeaf : TPHDerived
-    {
-        public string LeafData { get; set; }
-    }
-
-    public class TPHRoot
-    {
-        public int Id { get; set; }
-        public int RootData { get; set; }
-    }
-
-    public class TPHNodeA : TPHRoot
-    {
-        public int AData { get; set; }
-    }
-
-    public class TPHNodeB : TPHRoot
-    {
-        public int BData { get; set; }
-    }
-
-    public class TPHNodeC : TPHRoot
-    {
-        public int CData { get; set; }
-    }
-
-    // Hybrid tree:
-    //       HybridBase
-    //          /  \
-    //  HybridL1A  HybridL1B
-    //        /
-    // HybridL2
-
-    public class HybridBase
-    {
-        public int Id { get; set; }
-        public int BaseData { get; set; }
-    }
-
-    public class HybridL1A : HybridBase
-    {
-        public int L1AData { get; set; }
-    }
-
-    public class HybridL1B : HybridBase
-    {
-        public int L1BData { get; set; }
-    }
-
-    public class HybridL2 : HybridL1A
-    {
-        public int L2Data { get; set; }
-    }
-
-    public class NullablePk
-    {
-        public int? Key { get; set; }
-        public int? Id { get; set; }
-    }
-
-    public class AnnotatedNullablePk
-    {
-        [Key]
-        public int? Key { get; set; }
-    }
-
-    public abstract class AbstractBaseEntity
-    {
-        public long Id { get; set; }
-        public abstract string AbstractBaseClassProperty { get; set; }
-    }
-
-    public class BaseEntity : AbstractBaseEntity
-    {
-        public string BaseClassProperty { get; set; }
-        public virtual string VirtualBaseClassProperty { get; set; }
-        public override string AbstractBaseClassProperty { get; set; }
-    }
-
-    public class Unit : BaseEntity
-    {
-        public override string VirtualBaseClassProperty { get; set; }
-        public virtual AbstractBaseEntity Related { get; set; }
-    }
-
-    public class DifferentUnit : BaseEntity
-    {
-        public new string VirtualBaseClassProperty { get; set; }
-    }
-
-    public class ACrazy
-    {
-        public int Id { get; set; }
-        public string A { get; set; }
-    }
-
-    public abstract class BCrazy : ACrazy
-    {
-        public string B { get; set; }
-    }
-
-    public class CCrazy : BCrazy
-    {
-        public string C { get; set; }
-    }
-
-    public abstract class DCrazy : CCrazy
-    {
-        public string D { get; set; }
-    }
-
-    public class ECrazy : DCrazy
-    {
-        public string E { get; set; }
-    }
-
-    public class XCrazy : DCrazy
-    {
-        public string X { get; set; }
-    }
-
-    public class IsolatedIsland
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class CKCategory
-    {
-        public Guid Key1 { get; set; }
-        public double? Key2 { get; set; }
-    }
-
-    public class CKImage
-    {
-        public Guid Key1 { get; set; }
-        public double? Key2 { get; set; }
-        public string ImageData { get; set; }
-    }
-
-    public class CKProduct
-    {
-        public Guid CKCategoryKey1 { get; set; }
-        public double CKCategoryKey2 { get; set; }
-        public CKCategory CKCategory { get; set; }
-    }
-
-    public class CKDerivedProduct : CKProduct
-    {
-        public decimal? DerivedProperty1 { get; set; }
-        public CKImage Image { get; set; }
-    }
-
-    public class CKDerivedProduct2 : CKDerivedProduct
-    {
-        public decimal? DerivedProperty2 { get; set; }
-    }
-
-    public class SelfRefDerived : SelfRefBase
-    {
-        public float? DependentKey1 { get; set; }
-        public SelfRefDerived SelfRefNavigation { get; set; }
-    }
-
-    public class SelfRefBase
-    {
-        public string BaseProperty { get; set; }
-        public float Key1 { get; set; }
-    }
-
-    public class Repro136761_A
-    {
-        public int Repro136761_AId { get; set; }
-        public string AData { get; set; }
-    }
-
-    public class Repro136761_B : Repro136761_A
-    {
-        public string BData { get; set; }
-    }
-
-    public class Repro136761_C
-    {
-        public int Repro136761_CId { get; set; }
-        public string CData { get; set; }
-        public int Repro136761_BId { get; set; }
-        public Repro136761_B Repro136761_B { get; set; }
-    }
-
-    // Base association with property discriminator, composite nullable key types
-
-    public class Repro136322_Principal
-    {
-        public byte[] Key1 { get; set; }
-        public long? Key2 { get; set; }
-    }
-
-    public class Repro136322_Dependent
-    {
-        public byte[] PrincipalKey1 { get; set; }
-        public long PrincipalKey2 { get; set; }
-        public int Id { get; set; }
-        public Repro136322_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro136322_DerivedDependent : Repro136322_Dependent
-    {
-        public string DerivedProperty1 { get; set; }
-        public string Discriminator1 { get; set; }
-    }
-
-    // Base association, singleton non-nullable key type
-
-    public class Repro136855_Dependent
-    {
-        public DateTime Key1 { get; set; }
-        public int Id { get; set; }
-        public Repro136855_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro136855_Principal
-    {
-        public DateTime Key1 { get; set; }
-    }
-
-    public class Repro136855_DerivedDependent : Repro136855_Dependent
-    {
-        public bool? DerivedProperty1 { get; set; }
-    }
-
-    // Derived association
-
-    public class Repro135563_Dependent : Repro135563_BaseDependent
-    {
-        public Repro135563_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro135563_Principal
-    {
-        public decimal Key1 { get; set; }
-        public short? Key2 { get; set; }
-        public Repro135563_Dependent DependentNavigation { get; set; }
-    }
-
-    public class Repro135563_BaseDependent
-    {
-        public TimeSpan BaseProperty { get; set; }
-        public int Id { get; set; }
-    }
-
-    // Three Level Hierarchy, abstract middle, self-ref in middle
-
-    public class ThreeLevelBase
-    {
-        public string BaseProperty { get; set; }
-        public float? Key1 { get; set; }
-    }
-
-    public abstract class ThreeLevelDerived : ThreeLevelBase
-    {
-        public ICollection<ThreeLevelDerived> DependentNavigation { get; set; }
-    }
-
-    public class ThreeLevelLeaf : ThreeLevelDerived
-    {
-        public string DerivedProperty1 { get; set; }
-    }
-
-    // Two level hierarchy with byte[] prop
-
-    public class ByteBase
-    {
-        public int Id { get; set; }
-        public byte[] ByteData { get; set; }
-    }
-
-    public class ByteDerived : ByteBase
-    {
-        public byte[] DerivedData { get; set; }
-    }
-
-    public class ByteDerived2 : ByteDerived
-    {
-        public byte[] ExtraData { get; set; }
-    }
-
-    // Association to abstract dependent base type
-
-    public abstract class AbsDep_Dependent
-    {
-        public int Id { get; set; }
-        public short PrincipalKey1 { get; set; }
-        public AbsDep_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class AbsDep_Principal
-    {
-        public short Key1 { get; set; }
-        public ICollection<AbsDep_Dependent> DependentNavigation { get; set; }
-    }
-
-    public class AbsDep_DerivedDependent : AbsDep_Dependent
-    {
-        public byte[] DerivedProperty1 { get; set; }
-    }
-
-    // Association to a principal base type
-
-    public class AssocBase_Department
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class AssocBase_OldDepartment : AssocBase_Department
-    {
-        public DateTime ObsoleteDate { get; set; }
-    }
-
-    public class AssocBase_Employee
-    {
-        public int Id { get; set; }
-        public int AssocBase_DepartmentId { get; set; }
-        public AssocBase_Department AssocBase_Department { get; set; }
-    }
-
-    // Two Hierachies with association between subtypes
-
-    public class THABS_BasePrincipal
-    {
-        public string BaseProperty { get; set; }
-        public byte[] Key1 { get; set; }
-    }
-
-    public class THABS_Principal : THABS_BasePrincipal
-    {
-        public ICollection<THABS_Dependent> THABS_DependentNavigation { get; set; }
-    }
-
-    public class THABS_Dependent
-    {
-        public int Id { get; set; }
-        public THABS_Principal THABS_PrincipalNavigation { get; set; }
-    }
-
-    public class THABS_DerivedDependent : THABS_Dependent
-    {
-        public DateTime DerivedProperty1 { get; set; }
-    }
-
-    // Self-ref on derived type
-
-    public class SRBase
-    {
-        public string BaseProperty { get; set; }
-        public float? Key1 { get; set; }
-        public DateTime Key2 { get; set; }
-    }
-
-    public class SRDerived : SRBase
-    {
-        public ICollection<SRDerived> Navigation { get; set; }
-    }
-
-    // Table splitting on base...used with TPC
-
-    public class Repro140106_Vehicle
-    {
-        public string Repro140106_VehicleId { get; set; }
-        public string Name { get; set; }
-        public Repro140106_Model Model { get; set; }
-    }
-
-    public class Repro140106_Car : Repro140106_Vehicle
-    {
-        public string Type { get; set; }
-    }
-
-    public class Repro140106_Model
-    {
-        public string Repro140106_ModelId { get; set; }
-        public decimal Description { get; set; }
-        public Repro140106_Vehicle Repro140106_Vehicle { get; set; }
-    }
-
-    // Table splitting on base...used with TPT
-
-    public class Repro140107_Vehicle
-    {
-        public int? Repro140107_VehicleId { get; set; }
-        public short? Name { get; set; }
-        public Repro140107_Model Repro140107_Model { get; set; }
-    }
-
-    public class Repro140107_Car : Repro140107_Vehicle
-    {
-        public long Type { get; set; }
-    }
-
-    public class Repro140107_Model
-    {
-        public int? Repro140107_ModelId { get; set; }
-        public bool Description { get; set; }
-        public Repro140107_Vehicle Repro140107_Vehicle { get; set; }
-    }
-
-    // Hybrid mapping model
-
-    public class Entity1
-    {
-        public short? Entity1_Col1 { get; set; }
-        public DateTime Entity1_Col2 { get; set; }
-        public byte[] Entity1_Col3 { get; set; }
-        public string Id { get; set; }
-    }
-
-    public class Entity2 : Entity1
-    {
-        public DateTime? Entity2_Col1 { get; set; }
-    }
-
-    public class Entity3 : Entity1
-    {
-        public string Entity3_Col1 { get; set; }
-        public DateTimeOffset Entity3_Col2 { get; set; }
-    }
-
-    public class Entity4 : Entity1
-    {
-        public long? Entity4_Col1 { get; set; }
-        public string Entity4_Col2 { get; set; }
-    }
-
-    public class Entity5 : Entity2
-    {
-        public bool? Entity5_Col1 { get; set; }
-        public DateTime Entity5_Col2 { get; set; }
-        public TimeSpan Entity5_Col3 { get; set; }
-        public decimal? Entity5_Col4 { get; set; }
-        public DateTime Entity5_Col5 { get; set; }
-    }
-
-    // Hybrid Scenario
-
-    public class Repro137329_A1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public string Age1 { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Repro137329_A2 : Repro137329_A1
-    {
-        public string Age2 { get; set; }
-    }
-
-    public class Repro137329_A3 : Repro137329_A2
-    {
-        public string Age3 { get; set; }
-    }
-
-    public class Repro137329_A4 : Repro137329_A1
-    {
-        public string Age4 { get; set; }
-    }
-
-    // Property Discriminator
-
-    public class Repro143236_Dependent
-    {
-        public int Id { get; set; }
-    }
-
-    public class Repro143236_DerivedDependent : Repro143236_Dependent
-    {
-        public DateTime DerivedProperty1 { get; set; }
-        public double DiscriminatorNotNull { get; set; }
-    }
-
-    // abstract base class
-
-    public abstract class Repro143662_Party
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Repro143662_Agency : Repro143662_Party
-    {
-        public int Reputation { get; set; }
-    }
-
-    public class Repro143662_Person : Repro143662_Party
-    {
-        public string Address { get; set; }
-    }
-
-    // IA relationship between subtypes
-
-    public class Repro109944_BaseEntity
-    {
-        public int ID { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class Repro109944_Entity1 : Repro109944_BaseEntity
-    {
-        public string SomeProperty { get; set; }
-        public Repro109944_Entity2 Repro109944_Entity2 { get; set; }
-        public int Repro109944_Entity2ID { get; set; }
-    }
-
-    public class Repro109944_Entity2 : Repro109944_BaseEntity
-    {
-        public string SomeProperty { get; set; }
-    }
-
-    // Base type to base type FK association
-
-    public class Repro142961_Dependent
-    {
-        public decimal Key1 { get; set; }
-        public int Id { get; set; }
-        public Repro142961_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro142961_Principal
-    {
-        public decimal Key1 { get; set; }
-    }
-
-    public class Repro142961_DerivedDependent : Repro142961_Dependent
-    {
-        public Guid DerivedProperty1 { get; set; }
-    }
-
-    public class Repro142961_DerivedPrincipal : Repro142961_Principal
-    {
-        public long DerivedProperty1 { get; set; }
-    }
-
-    // Abstract base with discriminator
-
-    public abstract class Repro142666_Dependent
-    {
-        public bool DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-        public int Id { get; set; }
-    }
-
-    public class Repro142666_DerivedDependent : Repro142666_Dependent
-    {
-        public string DerivedProperty1 { get; set; }
-    }
-
-    // Simple three level hierarchy
-
-    public class Repro143127_EntityA
-    {
-        public int Id { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class Repro143127_EntityB : Repro143127_EntityA
-    {
-        public int Count { get; set; }
-        public string Info { get; set; }
-    }
-
-    public class Repro143127_EntityC : Repro143127_EntityB
-    {
-        public int P1 { get; set; }
-    }
-
-    // IA from an abstract non-root type
-
-    public abstract class Repro142682_Dependent : Repro142682_BaseDependent
-    {
-        public DateTime DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-        public Repro142682_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro142682_Principal
-    {
-        public DateTime? Key1 { get; set; }
-        public ICollection<Repro142682_Dependent> DependentNavigation { get; set; }
-    }
-
-    public class Repro142682_BaseDependent
-    {
-        public long? BaseProperty { get; set; }
-        public int Id { get; set; }
-    }
-
-    public class Repro142682_DerivedDependent : Repro142682_Dependent
-    {
-        public decimal? DerivedProperty1 { get; set; }
-    }
-
-    // Simple hierarchy for TPC property renaming
-
-    public class Repro144459_Product
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Repro144459_DiscontinuedProduct : Repro144459_Product
-    {
-        public DateTime DiscontinuedOn { get; set; }
-    }
-
-    public class Repro144459_ClearanceProduct : Repro144459_Product
-    {
-        public decimal SalePrice { get; set; }
-    }
-
-    // Abstract base as principal of FK association
-
-    public abstract class Repro110459_Customer
-    {
-        public virtual Guid Id { get; set; }
-        public virtual string Name { get; set; }
-        public virtual ICollection<Repro110459_Order> Orders { get; set; }
-    }
-
-    public class Repro110459_Account : Repro110459_Customer
-    {
-        public virtual string AccountNumber { get; set; }
-    }
-
-    public class Repro110459_Contact : Repro110459_Customer
-    {
-        public virtual string FirstName { get; set; }
-        public virtual string LastName { get; set; }
-    }
-
-    public class Repro110459_Order
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public Repro110459_Customer BillToCustomer { get; set; }
-        public Guid BillToCustomerId { get; set; }
-    }
-
-    // Multiple relationships at various points in hierarchy with TPT
-
-    public class Repro109916_BaseEntity
-    {
-        [Key]
-        public int ID { get; set; }
-
-        public string Title { get; set; }
-
-        public Repro109916_Collectible Parent { get; set; }
-        public virtual ICollection<Repro109916_Collectible> Children { get; set; }
-    }
-
-    public class Repro109916_Collectible
-    {
-        public int ID { get; set; }
-    }
-
-    public class Repro109916_SomeEntity : Repro109916_BaseEntity
-    {
-        public byte Units { get; set; }
-
-        public string Watermark { get; set; }
-        public Repro109916_BaseEntity BaseEntity { get; set; }
-    }
-
-    public class Repro109916_SomeMore : Repro109916_BaseEntity
-    {
-        [Column("Watermark")]
-        public string Watermark { get; set; }
-
-        public string Denomination { get; set; }
-
-        // These cause the problem:
-        public Repro109916_Product Product { get; set; }
-        public Repro109916_SomeEntity SomeEntity { get; set; }
-    }
-
-    public class Repro109916_Product
-    {
-        [Key]
-        public int ID { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    // Three level hierarchy with abstract middle
-
-    public class Repro147822_EntityA
-    {
-        public int Id { get; set; }
-        public byte[] Photo { get; set; }
-        public string Description { get; set; }
-        public string Name { get; set; }
-    }
-
-    public abstract class Repro147822_EntityB : Repro147822_EntityA
-    {
-        public string Details { get; set; }
-    }
-
-    public class Repro147822_EntityC : Repro147822_EntityB
-    {
-        public string Color { get; set; }
-    }
-
-    // Two level hierarchy with abstract root type
-
-    public abstract class Repro147906_EntityA1
-    {
-        public int Id { get; set; }
-        public byte[] Photo { get; set; }
-        public string Description { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Repro147906_EntityA1_1 : Repro147906_EntityA1
-    {
-        public string Property1 { get; set; }
-        public string Property2 { get; set; }
-        public string Property3 { get; set; }
-    }
-
-    public class Repro147906_EntityA1_2 : Repro147906_EntityA1
-    {
-        public string Property4 { get; set; }
-        public string Property5 { get; set; }
-        public string Property6 { get; set; }
-    }
-
-    // Complex Type on a base entity
-
-    public class Repro148415_EntityC1
-    {
-        public int Id { get; set; }
-        public Repro148415_ComplexTypeC1 ComplexProperty1 { get; set; }
-        public float Property2 { get; set; }
-    }
-
-    public class Repro148415_EntityC1_1 : Repro148415_EntityC1
-    {
-        public float Property3 { get; set; }
-        public float Property4 { get; set; }
-    }
-
-    public class Repro148415_ComplexTypeC1
-    {
-        public int P1 { get; set; }
-        public float P2 { get; set; }
-    }
-
-    // Table splitting on base used for TPC
-
-    public class TPCVehicle
-    {
-        public string TPCVehicleId { get; set; }
-        public string Name { get; set; }
-        public TPCModel TPCModel { get; set; }
-    }
-
-    public class TPCCar : TPCVehicle
-    {
-        public string Type { get; set; }
-    }
-
-    public class TPCModel
-    {
-        public string TPCModelId { get; set; }
-        public decimal Description { get; set; }
-        public TPCVehicle TPCVehicle { get; set; }
-    }
-
-    // Three level hierarchy for entity splitting
-
-    public class Repro147929_EntityB1
-    {
-        public int Id { get; set; }
-        public byte[] Photo { get; set; }
-        public string Description { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Repro147929_EntityB1_1 : Repro147929_EntityB1
-    {
-        public string Property1 { get; set; }
-        public string Property2 { get; set; }
-        public string Property3 { get; set; }
-    }
-
-    public class Repro147929_EntityB1_1_1 : Repro147929_EntityB1_1
-    {
-        public string Property4 { get; set; }
-        public string Property5 { get; set; }
-        public string Property6 { get; set; }
-    }
-
-    // Three level hierarchy with association between abstract middle types
-
-    public class Repro150248_BaseDependent
-    {
-        public DateTime? BaseProperty { get; set; }
-        public string Key1 { get; set; }
-    }
-
-    public abstract class Repro150248_Dependent : Repro150248_BaseDependent
-    {
-        public string PrincipalKey1 { get; set; }
-        public Repro150248_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro150248_DerivedDependent : Repro150248_Dependent
-    {
-        public decimal? DerivedProperty1 { get; set; }
-    }
-
-    public abstract class Repro150248_Principal : Repro150248_BaseDependent
-    {
-        public ICollection<Repro150248_Dependent> DependentNavigation { get; set; }
-    }
-
-    public class Repro150248_DerivedPrincipal : Repro150248_Principal
-    {
-        public string DerivedProperty1 { get; set; }
-    }
-
-    // 1:0..1 IA on derived dependent
-
-    public class Repro150634_BaseDependent
-    {
-        public string BaseProperty { get; set; }
-        public Guid? Key1 { get; set; }
-        public Guid? Key2 { get; set; }
-    }
-
-    public class Repro150634_Dependent : Repro150634_BaseDependent
-    {
-        public Int32 DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-        public Repro150634_Principal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro150634_DerivedDependent : Repro150634_Dependent
-    {
-        public Int32 ExtraProp { get; set; }
-    }
-
-    public class Repro150634_Principal
-    {
-        public int Id { get; set; }
-        public Repro150634_Dependent DependentNavigation { get; set; }
-    }
-
-    // 0..1:* IA to derived principal
-
-    public class Repro165020_BaseDependent
-    {
-        public int Id { get; set; }
-    }
-
-    public class Repro165020_DerivedDependent : Repro165020_BaseDependent
-    {
-        public Repro165020_DerivedPrincipal PrincipalNavigation { get; set; }
-    }
-
-    public class Repro165020_BasePrincipal
-    {
-        public DateTime? Key1 { get; set; }
-        public decimal Key2 { get; set; }
-    }
-
-    public class Repro165020_DerivedPrincipal : Repro165020_BasePrincipal
-    {
-        public ICollection<Repro165020_DerivedDependent> DependentNavigation { get; set; }
-    }
-
-    // composite key with property ordering
-
-    public class EntityWithCompositePK
-    {
-        [Column(Order = 1)]
-        public string Key1 { get; set; }
-
-        [Column(Order = 2)]
-        public int Key2 { get; set; }
-
-        [Column(Order = 3)]
-        public byte[] Property1 { get; set; }
-
-        [Column(Order = 4)]
-        public string Property2 { get; set; }
-    }
-
-    // Hierarchy with abstract base and FK on base
-
-    public abstract class Repro150248_Dependent_2
-    {
-        public string Key1 { get; set; }
-        public Repro150248_Principal_2 PrincipalNavigation { get; set; }
-    }
-
-    public class Repro150248_Principal_2 : Repro150248_BasePrincipal_2
-    {
-        public Repro150248_Dependent_2 DependentNavigation { get; set; }
-    }
-
-    public class Repro150248_DerivedDependent_2 : Repro150248_Dependent_2
-    {
-        public byte? DependentDerivedProperty1 { get; set; }
-    }
-
-    public class Repro150248_BasePrincipal_2
-    {
-        public string Key1 { get; set; }
-    }
-
-    // hierarchy with middle type given a table name
-
-    public class Repro143351_A1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
-
-        public string A1Col1 { get; set; }
-        public byte[] A1Col2 { get; set; }
-    }
-
-    [Table("NewA2TableName")]
-    public class Repro143351_A2 : Repro143351_A1
-    {
-        public byte[] A2Col1 { get; set; }
-    }
-
-    public class Repro143351_A3 : Repro143351_A2
-    {
-        public DateTime A3Col1 { get; set; }
-    }
-
-    public class Repro143351_A4 : Repro143351_A1
-    {
-        public long A4Col1 { get; set; }
-    }
-
-    // self reference from derived to abstract base
-
-    public class Repro135563_2_Dependent : Repro135563_2_BaseDependent
-    {
-        public Repro135563_2_BaseDependent PrincipalNavigation { get; set; }
-    }
-
-    public abstract class Repro135563_2_BaseDependent
-    {
-        public Guid BaseProperty { get; set; }
-        public short Key1 { get; set; }
-        public ICollection<Repro135563_2_Dependent> DependentNavigation { get; set; }
-    }
-
-    public class Repro135563_2_Other : Repro135563_2_BaseDependent
-    {
-        public string OtherData { get; set; }
-    }
-
-    // self reference from derived to concrete base
-
-    public class Repro135563_3_Dependent : Repro135563_3_BaseDependent
-    {
-        public Repro135563_3_BaseDependent PrincipalNavigation { get; set; }
-    }
-
-    public class Repro135563_3_BaseDependent
-    {
-        public Guid BaseProperty { get; set; }
-        public short Key1 { get; set; }
-        public ICollection<Repro135563_3_Dependent> DependentNavigation { get; set; }
-    }
-
-    // Basic Inheritance
-
-    public class EntityL
-    {
-        public int Id { get; set; }
-        public string Property1 { get; set; }
-        public byte[] Property2 { get; set; }
-    }
-
-    public class EntityL_1 : EntityL
-    {
-        public string Property3 { get; set; }
-        public byte[] Property4 { get; set; }
-    }
-
-    // abstract at base for splitting
-
-    public abstract class AbsBaseSplit
-    {
-        public int Id { get; set; }
-        public string Prop1 { get; set; }
-        public string Prop2 { get; set; }
-    }
-
-    public class AbsDerivedSplit : AbsBaseSplit
-    {
-        public string Prop3 { get; set; }
-    }
-
-    // abstract in middle for splitting
-
-    public class EntityN
-    {
-        public int Id { get; set; }
-        public int Property1 { get; set; }
-        public int Property1_1 { get; set; }
-    }
-
-    public abstract class EntityN_1 : EntityN
-    {
-        public int Property2 { get; set; }
-        public int Property2_1 { get; set; }
-    }
-
-    public class EntityN_1_1 : EntityN_1
-    {
-        public int Property3_1 { get; set; }
-        public int Property3 { get; set; }
-    }
-
-    public abstract class BaseNote
-    {
-        public virtual Guid Id { get; set; }
-        public virtual string Description { get; set; }
-    }
-
-    public class NoteWithRelationship1 : BaseNote
-    {
-        public virtual TargetEmployee TargetEmployee { get; set; }
-    }
-
-    public class NoteWithRelationship2 : BaseNote
-    {
-        public virtual TargetEmployee TargetEmployee { get; set; }
-    }
-
-    public abstract class BaseEmployee
-    {
-        public Guid Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-    }
-
-    public class TargetEmployee : BaseEmployee
-    {
-        public DateTime? DateOfBirth { get; set; }
-    }
-
-    // Reuse complex type in derived classes
-
-    [Table("Product")]
-    public abstract class VehicleProduct
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-    }
-
-    [Table("RedVehicle")]
-    public abstract class RedVehicle : VehicleProduct
-    {
-        public VehicleType VehicleType { get; set; } //The same name of complex type
-    }
-
-    [Table("BlueVehicle")]
-    public abstract class BlueVehicle : VehicleProduct
-    {
-        public VehicleType VehicleType { get; set; } //The same name of complex type
-    }
-
-    [Table("RedCar")]
-    public class RedCar : RedVehicle
-    {
-    }
-
-    [Table("BlueCar")]
-    public class BlueCar : BlueVehicle
-    {
-    }
-
-    [ComplexType]
-    public class VehicleType
-    {
-        [Required]
-        public string Model { get; set; }
-    }
-
-    #endregion
-
     public class BasicMappingScenarioTests : TestBase
     {
         [Fact]
@@ -1404,6 +90,16 @@ namespace FunctionalTests
             databaseMapping.Assert<TypeClass>(t => t.StringProp).DbEqual(42, f => f.MaxLength);
         }
 
+        public class TypeClass
+        {
+            public int Id { get; set; }
+            public int IntProp { get; set; }
+            public string StringProp { get; set; }
+            public byte[] ByteArrayProp { get; set; }
+            public DateTime DateTimeProp { get; set; }
+            public decimal DecimalProp { get; set; }
+        }
+
         [Fact]
         public void Should_be_able_to_call_simple_has_key_twice()
         {
@@ -1451,8 +147,8 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
-                    "BaseClassProperty", "FunctionalTests.Unit",
-                    "FunctionalTests.BaseEntity");
+                    "BaseClassProperty", "FunctionalTests.BasicMappingScenarioTests+Unit",
+                    "FunctionalTests.BasicMappingScenarioTests+BaseEntity");
         }
 
         [Fact]
@@ -1484,8 +180,8 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
-                    "BaseClassProperty", "FunctionalTests.Unit",
-                    "FunctionalTests.BaseEntity");
+                    "BaseClassProperty", "FunctionalTests.BasicMappingScenarioTests+Unit",
+                    "FunctionalTests.BasicMappingScenarioTests+BaseEntity");
         }
 
         [Fact]
@@ -1521,8 +217,8 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
-                    "VirtualBaseClassProperty", "FunctionalTests.DifferentUnit",
-                    "FunctionalTests.BaseEntity");
+                    "VirtualBaseClassProperty", "FunctionalTests.BasicMappingScenarioTests+DifferentUnit",
+                    "FunctionalTests.BasicMappingScenarioTests+BaseEntity");
         }
 
         [Fact]
@@ -1536,8 +232,32 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                 .ValidateMessage(
                     "CannotIgnoreMappedBaseProperty",
-                    "VirtualBaseClassProperty", "FunctionalTests.Unit",
-                    "FunctionalTests.BaseEntity");
+                    "VirtualBaseClassProperty", "FunctionalTests.BasicMappingScenarioTests+Unit",
+                    "FunctionalTests.BasicMappingScenarioTests+BaseEntity");
+        }
+
+        public abstract class AbstractBaseEntity
+        {
+            public long Id { get; set; }
+            public abstract string AbstractBaseClassProperty { get; set; }
+        }
+
+        public class BaseEntity : AbstractBaseEntity
+        {
+            public string BaseClassProperty { get; set; }
+            public virtual string VirtualBaseClassProperty { get; set; }
+            public override string AbstractBaseClassProperty { get; set; }
+        }
+
+        public class Unit : BaseEntity
+        {
+            public override string VirtualBaseClassProperty { get; set; }
+            public virtual AbstractBaseEntity Related { get; set; }
+        }
+
+        public class DifferentUnit : BaseEntity
+        {
+            public new string VirtualBaseClassProperty { get; set; }
         }
 
         [Fact]
@@ -1564,6 +284,12 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
         }
 
+        public class AnnotatedNullablePk
+        {
+            [Key]
+            public int? Key { get; set; }
+        }
+
         [Fact]
         public void Should_be_able_to_discover_nullable_ospace_key()
         {
@@ -1574,6 +300,12 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class NullablePk
+        {
+            public int? Key { get; set; }
+            public int? Id { get; set; }
         }
 
         [Fact]
@@ -1612,6 +344,12 @@ namespace FunctionalTests
             // WPF classes invalid
             Assert.Throws<ModelValidationException>(
                 () => BuildMapping(modelBuilder));
+        }
+
+        public class Stimulus
+        {
+            public int Id { get; set; }
+            public Brush Background { get; set; }
         }
 
         [Fact]
@@ -1826,6 +564,23 @@ namespace FunctionalTests
                 2,
                 (storeCollection.GetItem<EntityContainer>("CodeFirstDatabase")).BaseEntitySets.OfType
                     <AssociationSet>().Count());
+        }
+
+        public class Party
+        {
+            public int Id { get; set; }
+        }
+
+        public class DayRecord
+        {
+            public int Id { get; set; }
+            public Party ReportedBy { get; set; }
+            public ICollection<HourlyForecast> Forecasts { get; set; }
+        }
+
+        public class HourlyForecast
+        {
+            public int Id { get; set; }
         }
 
         #endregion
@@ -2143,6 +898,12 @@ namespace FunctionalTests
                                }));
         }
 
+        public struct FancyId
+        {
+            public int Id1 { get; set; }
+            public int Id2 { get; set; }
+        }
+
         [Fact]
         // Regression test for Dev11 Bug 136810
         public void Requires_can_only_be_called_once_per_type()
@@ -2431,6 +1192,45 @@ namespace FunctionalTests
                 .HasColumnCondition("Discriminator", "TPHNodeB");
         }
 
+        public class TPHBase
+        {
+            public int Id { get; set; }
+            public string BaseData { get; set; }
+            public int IntProp { get; set; }
+            public int? NullableIntProp { get; set; }
+        }
+
+        public class TPHDerived : TPHBase
+        {
+            public string DerivedData { get; set; }
+        }
+
+        public class TPHLeaf : TPHDerived
+        {
+            public string LeafData { get; set; }
+        }
+
+        public class TPHRoot
+        {
+            public int Id { get; set; }
+            public int RootData { get; set; }
+        }
+
+        public class TPHNodeA : TPHRoot
+        {
+            public int AData { get; set; }
+        }
+
+        public class TPHNodeB : TPHRoot
+        {
+            public int BData { get; set; }
+        }
+
+        public class TPHNodeC : TPHRoot
+        {
+            public int CData { get; set; }
+        }
+
         [Fact]
         public void Null_discriminator_value_gets_string_type()
         {
@@ -2467,6 +1267,12 @@ namespace FunctionalTests
                 .DbEqual(100, tm => tm.Properties.Single(c => c.Name == "disc").MaxLength);
             databaseMapping.AssertMapping<IsolatedIsland>("IsolatedIslands")
                 .HasNullabilityColumnCondition("disc", true);
+        }
+
+        public class IsolatedIsland
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
 
         [Fact]
@@ -2533,6 +1339,26 @@ namespace FunctionalTests
             databaseMapping.Assert<Repro136322_Dependent>()
                 .DbEqual(false, tm => tm.Properties.Single(c => c.Name == "PrincipalKey1").Nullable)
                 .DbEqual(false, tm => tm.Properties.Single(c => c.Name == "PrincipalKey2").Nullable);
+        }
+
+        public class Repro136322_Principal
+        {
+            public byte[] Key1 { get; set; }
+            public long? Key2 { get; set; }
+        }
+
+        public class Repro136322_Dependent
+        {
+            public byte[] PrincipalKey1 { get; set; }
+            public long PrincipalKey2 { get; set; }
+            public int Id { get; set; }
+            public Repro136322_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro136322_DerivedDependent : Repro136322_Dependent
+        {
+            public string DerivedProperty1 { get; set; }
+            public string Discriminator1 { get; set; }
         }
 
         [Fact]
@@ -2635,6 +1461,22 @@ namespace FunctionalTests
                 .HasColumnCondition("Discriminator1", "authenticode");
         }
 
+        public class ThreeLevelBase
+        {
+            public string BaseProperty { get; set; }
+            public float? Key1 { get; set; }
+        }
+
+        public abstract class ThreeLevelDerived : ThreeLevelBase
+        {
+            public ICollection<ThreeLevelDerived> DependentNavigation { get; set; }
+        }
+
+        public class ThreeLevelLeaf : ThreeLevelDerived
+        {
+            public string DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void Derived_association_creates_nullable_FKs_in_TPH()
         {
@@ -2661,6 +1503,24 @@ namespace FunctionalTests
             databaseMapping.Assert<Repro135563_BaseDependent>()
                 .DbEqual(true, tm => tm.Properties.Single(c => c.Name == "PrincipalNavigation_Key1").Nullable)
                 .DbEqual(true, tm => tm.Properties.Single(c => c.Name == "PrincipalNavigation_Key1").Nullable);
+        }
+
+        public class Repro135563_Dependent : Repro135563_BaseDependent
+        {
+            public Repro135563_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro135563_Principal
+        {
+            public decimal Key1 { get; set; }
+            public short? Key2 { get; set; }
+            public Repro135563_Dependent DependentNavigation { get; set; }
+        }
+
+        public class Repro135563_BaseDependent
+        {
+            public TimeSpan BaseProperty { get; set; }
+            public int Id { get; set; }
         }
 
         [Fact]
@@ -2731,6 +1591,24 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("IndependentKey1", "AbsDep_Principal");
         }
 
+        public abstract class AbsDep_Dependent
+        {
+            public int Id { get; set; }
+            public short PrincipalKey1 { get; set; }
+            public AbsDep_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class AbsDep_Principal
+        {
+            public short Key1 { get; set; }
+            public ICollection<AbsDep_Dependent> DependentNavigation { get; set; }
+        }
+
+        public class AbsDep_DerivedDependent : AbsDep_Dependent
+        {
+            public byte[] DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void Requires_property_is_sufficient_for_base()
         {
@@ -2740,6 +1618,17 @@ namespace FunctionalTests
                 mapping => { mapping.Requires(e => e.DiscriminatorNotNull).HasValue(); });
 
             var databaseMapping = BuildMapping(modelBuilder);
+        }
+
+        public class Repro143236_Dependent
+        {
+            public int Id { get; set; }
+        }
+
+        public class Repro143236_DerivedDependent : Repro143236_Dependent
+        {
+            public DateTime DerivedProperty1 { get; set; }
+            public double DiscriminatorNotNull { get; set; }
         }
 
         [Fact]
@@ -2761,6 +1650,17 @@ namespace FunctionalTests
             databaseMapping.Assert<Repro142666_DerivedDependent>()
                 .DbEqual("nchar", t => t.Properties.Single(c => c.Name == "DiscriminatorValue").TypeName)
                 .DbEqual(30, t => t.Properties.Single(c => c.Name == "DiscriminatorValue").MaxLength);
+        }
+
+        public abstract class Repro142666_Dependent
+        {
+            public bool DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+            public int Id { get; set; }
+        }
+
+        public class Repro142666_DerivedDependent : Repro142666_Dependent
+        {
+            public string DerivedProperty1 { get; set; }
         }
 
         [Fact]
@@ -2785,6 +1685,29 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
         }
 
+        public abstract class Repro142682_Dependent : Repro142682_BaseDependent
+        {
+            public DateTime DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+            public Repro142682_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro142682_Principal
+        {
+            public DateTime? Key1 { get; set; }
+            public ICollection<Repro142682_Dependent> DependentNavigation { get; set; }
+        }
+
+        public class Repro142682_BaseDependent
+        {
+            public long? BaseProperty { get; set; }
+            public int Id { get; set; }
+        }
+
+        public class Repro142682_DerivedDependent : Repro142682_Dependent
+        {
+            public decimal? DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void TPH_with_an_FK_from_abstract_root_type()
         {
@@ -2798,6 +1721,27 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro150248_Principal_2>().Map(mapping => { mapping.ToTable("Principal"); });
 
             var databaseMapping = BuildMapping(modelBuilder);
+        }
+
+        public abstract class Repro150248_Dependent_2
+        {
+            public string Key1 { get; set; }
+            public Repro150248_Principal_2 PrincipalNavigation { get; set; }
+        }
+
+        public class Repro150248_Principal_2 : Repro150248_BasePrincipal_2
+        {
+            public Repro150248_Dependent_2 DependentNavigation { get; set; }
+        }
+
+        public class Repro150248_DerivedDependent_2 : Repro150248_Dependent_2
+        {
+            public byte? DependentDerivedProperty1 { get; set; }
+        }
+
+        public class Repro150248_BasePrincipal_2
+        {
+            public string Key1 { get; set; }
         }
 
         [Fact]
@@ -2842,6 +1786,23 @@ namespace FunctionalTests
                 .DbEqual(true, t => t.Properties.Single(c => c.Name == "PrincipalNavigation_Key1").Nullable);
         }
 
+        public class Repro135563_2_Dependent : Repro135563_2_BaseDependent
+        {
+            public Repro135563_2_BaseDependent PrincipalNavigation { get; set; }
+        }
+
+        public abstract class Repro135563_2_BaseDependent
+        {
+            public Guid BaseProperty { get; set; }
+            public short Key1 { get; set; }
+            public ICollection<Repro135563_2_Dependent> DependentNavigation { get; set; }
+        }
+
+        public class Repro135563_2_Other : Repro135563_2_BaseDependent
+        {
+            public string OtherData { get; set; }
+        }
+
         [Fact]
         public void TPH_with_self_ref_FK_on_derived_type_has_nullable_FK_when_base_type_is_concrete()
         {
@@ -2861,6 +1822,18 @@ namespace FunctionalTests
                 .HasColumns("Key1", "BaseProperty", "PrincipalNavigation_Key1", "DiscriminatorValue")
                 .HasForeignKeyColumn("PrincipalNavigation_Key1")
                 .DbEqual(true, t => t.Properties.Single(c => c.Name == "PrincipalNavigation_Key1").Nullable);
+        }
+
+        public class Repro135563_3_Dependent : Repro135563_3_BaseDependent
+        {
+            public Repro135563_3_BaseDependent PrincipalNavigation { get; set; }
+        }
+
+        public class Repro135563_3_BaseDependent
+        {
+            public Guid BaseProperty { get; set; }
+            public short Key1 { get; set; }
+            public ICollection<Repro135563_3_Dependent> DependentNavigation { get; set; }
         }
 
         #endregion
@@ -3144,6 +2117,18 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("DependentKey1", "SelfRefDerived");
         }
 
+        public class SelfRefDerived : SelfRefBase
+        {
+            public float? DependentKey1 { get; set; }
+            public SelfRefDerived SelfRefNavigation { get; set; }
+        }
+
+        public class SelfRefBase
+        {
+            public string BaseProperty { get; set; }
+            public float Key1 { get; set; }
+        }
+
         [Fact]
         public void TPT_moves_FKs_pointing_to_moved_table()
         {
@@ -3167,6 +2152,25 @@ namespace FunctionalTests
             databaseMapping.Assert<Repro136761_C>()
                 .DbEqual(1, t => t.ForeignKeyBuilders.Count())
                 .HasForeignKeyColumn("Repro136761_BId", "B");
+        }
+
+        public class Repro136761_A
+        {
+            public int Repro136761_AId { get; set; }
+            public string AData { get; set; }
+        }
+
+        public class Repro136761_B : Repro136761_A
+        {
+            public string BData { get; set; }
+        }
+
+        public class Repro136761_C
+        {
+            public int Repro136761_CId { get; set; }
+            public string CData { get; set; }
+            public int Repro136761_BId { get; set; }
+            public Repro136761_B Repro136761_B { get; set; }
         }
 
         [Fact]
@@ -3207,6 +2211,23 @@ namespace FunctionalTests
                 .DbEqual(false, tm => tm.Properties.Single(c => c.Name == "Key1").Nullable);
         }
 
+        public class Repro136855_Dependent
+        {
+            public DateTime Key1 { get; set; }
+            public int Id { get; set; }
+            public Repro136855_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro136855_Principal
+        {
+            public DateTime Key1 { get; set; }
+        }
+
+        public class Repro136855_DerivedDependent : Repro136855_Dependent
+        {
+            public bool? DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void IA_Association_between_subtypes_with_TPT()
         {
@@ -3239,6 +2260,28 @@ namespace FunctionalTests
             databaseMapping.Assert<THABS_DerivedDependent>("DerivedDependent")
                 .HasColumns("Id", "DerivedProperty1")
                 .HasForeignKeyColumn("Id", "Dependent");
+        }
+
+        public class THABS_BasePrincipal
+        {
+            public string BaseProperty { get; set; }
+            public byte[] Key1 { get; set; }
+        }
+
+        public class THABS_Principal : THABS_BasePrincipal
+        {
+            public ICollection<THABS_Dependent> THABS_DependentNavigation { get; set; }
+        }
+
+        public class THABS_Dependent
+        {
+            public int Id { get; set; }
+            public THABS_Principal THABS_PrincipalNavigation { get; set; }
+        }
+
+        public class THABS_DerivedDependent : THABS_Dependent
+        {
+            public DateTime DerivedProperty1 { get; set; }
         }
 
         [Fact]
@@ -3339,6 +2382,24 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("ID", "BaseEntities");
         }
 
+        public class Repro109944_BaseEntity
+        {
+            public int ID { get; set; }
+            public string Title { get; set; }
+        }
+
+        public class Repro109944_Entity1 : Repro109944_BaseEntity
+        {
+            public string SomeProperty { get; set; }
+            public Repro109944_Entity2 Repro109944_Entity2 { get; set; }
+            public int Repro109944_Entity2ID { get; set; }
+        }
+
+        public class Repro109944_Entity2 : Repro109944_BaseEntity
+        {
+            public string SomeProperty { get; set; }
+        }
+
         [Fact]
         public void FK_between_TPT_base_types_has_FK_to_base_table()
         {
@@ -3376,6 +2437,28 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("PrincipalNavigation_Key1", "Principal");
         }
 
+        public class Repro142961_Dependent
+        {
+            public decimal Key1 { get; set; }
+            public int Id { get; set; }
+            public Repro142961_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro142961_Principal
+        {
+            public decimal Key1 { get; set; }
+        }
+
+        public class Repro142961_DerivedDependent : Repro142961_Dependent
+        {
+            public Guid DerivedProperty1 { get; set; }
+        }
+
+        public class Repro142961_DerivedPrincipal : Repro142961_Principal
+        {
+            public long DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void TPT_with_multiple_associations_in_hierarchy()
         {
@@ -3386,6 +2469,50 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro109916_SomeMore>().ToTable("SomeMores");
 
             BuildMapping(modelBuilder);
+        }
+
+        public class Repro109916_BaseEntity
+        {
+            [Key]
+            public int ID { get; set; }
+
+            public string Title { get; set; }
+
+            public Repro109916_Collectible Parent { get; set; }
+            public virtual ICollection<Repro109916_Collectible> Children { get; set; }
+        }
+
+        public class Repro109916_Collectible
+        {
+            public int ID { get; set; }
+        }
+
+        public class Repro109916_SomeEntity : Repro109916_BaseEntity
+        {
+            public byte Units { get; set; }
+
+            public string Watermark { get; set; }
+            public Repro109916_BaseEntity BaseEntity { get; set; }
+        }
+
+        public class Repro109916_SomeMore : Repro109916_BaseEntity
+        {
+            [Column("Watermark")]
+            public string Watermark { get; set; }
+
+            public string Denomination { get; set; }
+
+            // These cause the problem:
+            public Repro109916_Product Product { get; set; }
+            public Repro109916_SomeEntity SomeEntity { get; set; }
+        }
+
+        public class Repro109916_Product
+        {
+            [Key]
+            public int ID { get; set; }
+
+            public string Name { get; set; }
         }
 
         [Fact]
@@ -3432,6 +2559,33 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro150248_Dependent>().Property(p => p.PrincipalKey1).IsRequired();
 
             BuildMapping(modelBuilder);
+        }
+
+        public class Repro150248_BaseDependent
+        {
+            public DateTime? BaseProperty { get; set; }
+            public string Key1 { get; set; }
+        }
+
+        public abstract class Repro150248_Dependent : Repro150248_BaseDependent
+        {
+            public string PrincipalKey1 { get; set; }
+            public Repro150248_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro150248_DerivedDependent : Repro150248_Dependent
+        {
+            public decimal? DerivedProperty1 { get; set; }
+        }
+
+        public abstract class Repro150248_Principal : Repro150248_BaseDependent
+        {
+            public ICollection<Repro150248_Dependent> DependentNavigation { get; set; }
+        }
+
+        public class Repro150248_DerivedPrincipal : Repro150248_Principal
+        {
+            public string DerivedProperty1 { get; set; }
         }
 
         [Fact]
@@ -3486,6 +2640,30 @@ namespace FunctionalTests
                 .DbEqual(false, t => t.Properties.Single(x => x.Name == "PrincipalNavigation_Id").Nullable);
         }
 
+        public class Repro150634_BaseDependent
+        {
+            public string BaseProperty { get; set; }
+            public Guid? Key1 { get; set; }
+            public Guid? Key2 { get; set; }
+        }
+
+        public class Repro150634_Dependent : Repro150634_BaseDependent
+        {
+            public Int32 DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+            public Repro150634_Principal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro150634_DerivedDependent : Repro150634_Dependent
+        {
+            public Int32 ExtraProp { get; set; }
+        }
+
+        public class Repro150634_Principal
+        {
+            public int Id { get; set; }
+            public Repro150634_Dependent DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void Uniquification_happens_correctly_when_relationship_with_same_name_exists_in_two_derived_types()
         {
@@ -3514,6 +2692,43 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        [Table("Product")]
+        public abstract class VehicleProduct
+        {
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public int Id { get; set; }
+        }
+
+        [Table("RedVehicle")]
+        public abstract class RedVehicle : VehicleProduct
+        {
+            public VehicleType VehicleType { get; set; } //The same name of complex type
+        }
+
+        [Table("BlueVehicle")]
+        public abstract class BlueVehicle : VehicleProduct
+        {
+            public VehicleType VehicleType { get; set; } //The same name of complex type
+        }
+
+        [Table("RedCar")]
+        public class RedCar : RedVehicle
+        {
+        }
+
+        [Table("BlueCar")]
+        public class BlueCar : BlueVehicle
+        {
+        }
+
+        [ComplexType]
+        public class VehicleType
+        {
+            [Required]
+            public string Model { get; set; }
         }
 
         #endregion
@@ -3792,6 +3007,37 @@ namespace FunctionalTests
                 .HasForeignKey(new[] { "CKCategoryKey1", "CKCategoryKey2" }, "Principal");
         }
 
+        public class CKCategory
+        {
+            public Guid Key1 { get; set; }
+            public double? Key2 { get; set; }
+        }
+
+        public class CKImage
+        {
+            public Guid Key1 { get; set; }
+            public double? Key2 { get; set; }
+            public string ImageData { get; set; }
+        }
+
+        public class CKProduct
+        {
+            public Guid CKCategoryKey1 { get; set; }
+            public double CKCategoryKey2 { get; set; }
+            public CKCategory CKCategory { get; set; }
+        }
+
+        public class CKDerivedProduct : CKProduct
+        {
+            public decimal? DerivedProperty1 { get; set; }
+            public CKImage Image { get; set; }
+        }
+
+        public class CKDerivedProduct2 : CKDerivedProduct
+        {
+            public decimal? DerivedProperty2 { get; set; }
+        }
+
         [Fact]
         public void Mapping_store_type_propagates_to_derived_TPC_table()
         {
@@ -3820,6 +3066,22 @@ namespace FunctionalTests
             databaseMapping.Assert<ByteDerived2>().DbEqual(
                 "image",
                 t => t.Properties.Single(c => c.Name == "DerivedData").TypeName);
+        }
+
+        public class ByteBase
+        {
+            public int Id { get; set; }
+            public byte[] ByteData { get; set; }
+        }
+
+        public class ByteDerived : ByteBase
+        {
+            public byte[] DerivedData { get; set; }
+        }
+
+        public class ByteDerived2 : ByteDerived
+        {
+            public byte[] ExtraData { get; set; }
         }
 
         [Fact]
@@ -3868,6 +3130,27 @@ namespace FunctionalTests
                 "numeric", t => t.Properties.Single(c => c.Name == "PrincipalNavigation_Key2").TypeName);
         }
 
+        public class Repro165020_BaseDependent
+        {
+            public int Id { get; set; }
+        }
+
+        public class Repro165020_DerivedDependent : Repro165020_BaseDependent
+        {
+            public Repro165020_DerivedPrincipal PrincipalNavigation { get; set; }
+        }
+
+        public class Repro165020_BasePrincipal
+        {
+            public DateTime? Key1 { get; set; }
+            public decimal Key2 { get; set; }
+        }
+
+        public class Repro165020_DerivedPrincipal : Repro165020_BasePrincipal
+        {
+            public ICollection<Repro165020_DerivedDependent> DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void FK_association_to_principal_base_should_not_make_FK_in_TPC()
         {
@@ -3888,6 +3171,24 @@ namespace FunctionalTests
             databaseMapping.Assert<AssocBase_Employee>().HasNoForeignKeyColumns();
             databaseMapping.Assert<AssocBase_Department>().HasNoForeignKeyColumns();
             databaseMapping.Assert<AssocBase_OldDepartment>().HasNoForeignKeyColumns();
+        }
+
+        public class AssocBase_Department
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class AssocBase_OldDepartment : AssocBase_Department
+        {
+            public DateTime ObsoleteDate { get; set; }
+        }
+
+        public class AssocBase_Employee
+        {
+            public int Id { get; set; }
+            public int AssocBase_DepartmentId { get; set; }
+            public AssocBase_Department AssocBase_Department { get; set; }
         }
 
         [Fact]
@@ -3933,6 +3234,18 @@ namespace FunctionalTests
                         }));
         }
 
+        public class SRBase
+        {
+            public string BaseProperty { get; set; }
+            public float? Key1 { get; set; }
+            public DateTime Key2 { get; set; }
+        }
+
+        public class SRDerived : SRBase
+        {
+            public ICollection<SRDerived> Navigation { get; set; }
+        }
+
         [Fact]
         public void TPC_with_abstract_base_type()
         {
@@ -3955,6 +3268,22 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+        }
+
+        public abstract class Repro143662_Party
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Repro143662_Agency : Repro143662_Party
+        {
+            public int Reputation { get; set; }
+        }
+
+        public class Repro143662_Person : Repro143662_Party
+        {
+            public string Address { get; set; }
         }
 
         [Fact]
@@ -3988,6 +3317,23 @@ namespace FunctionalTests
                 .DbEqual("varchar(max)", t => t.Properties.Single(c => c.Name == "Info").TypeName);
         }
 
+        public class Repro143127_EntityA
+        {
+            public int Id { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class Repro143127_EntityB : Repro143127_EntityA
+        {
+            public int Count { get; set; }
+            public string Info { get; set; }
+        }
+
+        public class Repro143127_EntityC : Repro143127_EntityB
+        {
+            public int P1 { get; set; }
+        }
+
         [Fact]
         public void Column_name_configuration_on_non_root_type_is_propagated_to_derived_types()
         {
@@ -4010,6 +3356,22 @@ namespace FunctionalTests
                 .DbEqual(true, t => t.Properties.Any(c => c.Name == "NameOfProduct"));
         }
 
+        public class Repro144459_Product
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Repro144459_DiscontinuedProduct : Repro144459_Product
+        {
+            public DateTime DiscontinuedOn { get; set; }
+        }
+
+        public class Repro144459_ClearanceProduct : Repro144459_Product
+        {
+            public decimal SalePrice { get; set; }
+        }
+
         [Fact]
         public void Abstract_principal_can_be_mapped_with_TPC()
         {
@@ -4030,6 +3392,32 @@ namespace FunctionalTests
                 HasForeignKey(o => o.BillToCustomerId);
 
             var databaseMapping = BuildMapping(modelBuilder);
+        }
+
+        public abstract class Repro110459_Customer
+        {
+            public virtual Guid Id { get; set; }
+            public virtual string Name { get; set; }
+            public virtual ICollection<Repro110459_Order> Orders { get; set; }
+        }
+
+        public class Repro110459_Account : Repro110459_Customer
+        {
+            public virtual string AccountNumber { get; set; }
+        }
+
+        public class Repro110459_Contact : Repro110459_Customer
+        {
+            public virtual string FirstName { get; set; }
+            public virtual string LastName { get; set; }
+        }
+
+        public class Repro110459_Order
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; }
+            public Repro110459_Customer BillToCustomer { get; set; }
+            public Guid BillToCustomerId { get; set; }
         }
 
         #endregion
@@ -4185,6 +3573,31 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
+        public class Repro143351_A1
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public string Id { get; set; }
+
+            public string A1Col1 { get; set; }
+            public byte[] A1Col2 { get; set; }
+        }
+
+        [Table("NewA2TableName")]
+        public class Repro143351_A2 : Repro143351_A1
+        {
+            public byte[] A2Col1 { get; set; }
+        }
+
+        public class Repro143351_A3 : Repro143351_A2
+        {
+            public DateTime A3Col1 { get; set; }
+        }
+
+        public class Repro143351_A4 : Repro143351_A1
+        {
+            public long A4Col1 { get; set; }
+        }
+
         [Fact]
         public void Mix_TPH_and_TPC_by_mapping_one_middle_type_to_TPC()
         {
@@ -4286,6 +3699,34 @@ namespace FunctionalTests
                 .HasColumnCondition("Discriminator", "HybridL2");
         }
 
+        // Hybrid tree:
+        //       HybridBase
+        //          /  \
+        //  HybridL1A  HybridL1B
+        //        /
+        // HybridL2
+
+        public class HybridBase
+        {
+            public int Id { get; set; }
+            public int BaseData { get; set; }
+        }
+
+        public class HybridL1A : HybridBase
+        {
+            public int L1AData { get; set; }
+        }
+
+        public class HybridL1B : HybridBase
+        {
+            public int L1BData { get; set; }
+        }
+
+        public class HybridL2 : HybridL1A
+        {
+            public int L2Data { get; set; }
+        }
+
         [Fact]
         public void Can_alternate_abstract_in_TPH_hierarchy()
         {
@@ -4360,6 +3801,37 @@ namespace FunctionalTests
                 .HasNoColumnConditions();
         }
 
+        public class ACrazy
+        {
+            public int Id { get; set; }
+            public string A { get; set; }
+        }
+
+        public abstract class BCrazy : ACrazy
+        {
+            public string B { get; set; }
+        }
+
+        public class CCrazy : BCrazy
+        {
+            public string C { get; set; }
+        }
+
+        public abstract class DCrazy : CCrazy
+        {
+            public string D { get; set; }
+        }
+
+        public class ECrazy : DCrazy
+        {
+            public string E { get; set; }
+        }
+
+        public class XCrazy : DCrazy
+        {
+            public string X { get; set; }
+        }
+
         [Fact]
         // Regression for 142318
         public void Can_have_TPH_alone_at_base_of_3_level_heirarchy()
@@ -4426,6 +3898,40 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
+        public class Entity1
+        {
+            public short? Entity1_Col1 { get; set; }
+            public DateTime Entity1_Col2 { get; set; }
+            public byte[] Entity1_Col3 { get; set; }
+            public string Id { get; set; }
+        }
+
+        public class Entity2 : Entity1
+        {
+            public DateTime? Entity2_Col1 { get; set; }
+        }
+
+        public class Entity3 : Entity1
+        {
+            public string Entity3_Col1 { get; set; }
+            public DateTimeOffset Entity3_Col2 { get; set; }
+        }
+
+        public class Entity4 : Entity1
+        {
+            public long? Entity4_Col1 { get; set; }
+            public string Entity4_Col2 { get; set; }
+        }
+
+        public class Entity5 : Entity2
+        {
+            public bool? Entity5_Col1 { get; set; }
+            public DateTime Entity5_Col2 { get; set; }
+            public TimeSpan Entity5_Col3 { get; set; }
+            public decimal? Entity5_Col4 { get; set; }
+            public DateTime Entity5_Col5 { get; set; }
+        }
+
         [Fact]
         public void Mixed_TPH_and_TPT()
         {
@@ -4476,6 +3982,30 @@ namespace FunctionalTests
 
             Assert.Throws<NotSupportedException>(
                 () => BuildMapping(modelBuilder));
+        }
+
+        public class Repro137329_A1
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public string Age1 { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Repro137329_A2 : Repro137329_A1
+        {
+            public string Age2 { get; set; }
+        }
+
+        public class Repro137329_A3 : Repro137329_A2
+        {
+            public string Age3 { get; set; }
+        }
+
+        public class Repro137329_A4 : Repro137329_A1
+        {
+            public string Age4 { get; set; }
         }
 
         [Fact]
@@ -5160,6 +4690,33 @@ namespace FunctionalTests
             databaseMapping.Assert<AssocBase>("DataTbl").HasColumns("Id", "BaseData");
         }
 
+        public class AssocBase
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string BaseData { get; set; }
+            public int AssocRelatedBaseId { get; set; }
+            public AssocRelated AssocRelatedBase { get; set; }
+        }
+
+        public class AssocDerived : AssocBase
+        {
+            public int AssocRelatedId { get; set; }
+            public string DerivedData1 { get; set; }
+            public string DerivedData2 { get; set; }
+            public AssocRelated AssocRelated { get; set; }
+        }
+
+        public class AssocRelated
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<AssocDerived> Deriveds { get; set; }
+            public ICollection<AssocBase> Bases { get; set; }
+            public AssocDerived RefDerived { get; set; }
+            public AssocBase RefBase { get; set; }
+        }
+
         [Fact]
         public void Entity_split_base_type_with_derived_TPT_with_abstract_middle_type()
         {
@@ -5202,6 +4759,24 @@ namespace FunctionalTests
                 .HasForeignKeyColumn("Id", "Table3");
         }
 
+        public class Repro147822_EntityA
+        {
+            public int Id { get; set; }
+            public byte[] Photo { get; set; }
+            public string Description { get; set; }
+            public string Name { get; set; }
+        }
+
+        public abstract class Repro147822_EntityB : Repro147822_EntityA
+        {
+            public string Details { get; set; }
+        }
+
+        public class Repro147822_EntityC : Repro147822_EntityB
+        {
+            public string Color { get; set; }
+        }
+
         [Fact]
         public void Entity_split_base_type_with_derived_TPH_with_abstract_base_with_duplicate_property_throws()
         {
@@ -5235,6 +4810,28 @@ namespace FunctionalTests
                     });
 
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
+        }
+
+        public abstract class Repro147906_EntityA1
+        {
+            public int Id { get; set; }
+            public byte[] Photo { get; set; }
+            public string Description { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Repro147906_EntityA1_1 : Repro147906_EntityA1
+        {
+            public string Property1 { get; set; }
+            public string Property2 { get; set; }
+            public string Property3 { get; set; }
+        }
+
+        public class Repro147906_EntityA1_2 : Repro147906_EntityA1
+        {
+            public string Property4 { get; set; }
+            public string Property5 { get; set; }
+            public string Property6 { get; set; }
         }
 
         [Fact]
@@ -5336,6 +4933,25 @@ namespace FunctionalTests
                 .HasColumnCondition("d", "EntityC1_1");
         }
 
+        public class Repro148415_EntityC1
+        {
+            public int Id { get; set; }
+            public Repro148415_ComplexTypeC1 ComplexProperty1 { get; set; }
+            public float Property2 { get; set; }
+        }
+
+        public class Repro148415_EntityC1_1 : Repro148415_EntityC1
+        {
+            public float Property3 { get; set; }
+            public float Property4 { get; set; }
+        }
+
+        public class Repro148415_ComplexTypeC1
+        {
+            public int P1 { get; set; }
+            public float P2 { get; set; }
+        }
+
         [Fact]
         public void Entity_split_middle_type_in_TPH()
         {
@@ -5418,6 +5034,28 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
+        public class Repro147929_EntityB1
+        {
+            public int Id { get; set; }
+            public byte[] Photo { get; set; }
+            public string Description { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Repro147929_EntityB1_1 : Repro147929_EntityB1
+        {
+            public string Property1 { get; set; }
+            public string Property2 { get; set; }
+            public string Property3 { get; set; }
+        }
+
+        public class Repro147929_EntityB1_1_1 : Repro147929_EntityB1_1
+        {
+            public string Property4 { get; set; }
+            public string Property5 { get; set; }
+            public string Property6 { get; set; }
+        }
+
         [Fact]
         public void Entity_splitting_maintains_configured_composite_key_ordering()
         {
@@ -5451,6 +5089,21 @@ namespace FunctionalTests
             databaseMapping.Assert<EntityWithCompositePK>("Table2")
                 .HasColumns("Key1", "Key2", "Property2")
                 .HasForeignKey(new[] { "Key1", "Key2" }, "Table1");
+        }
+
+        public class EntityWithCompositePK
+        {
+            [Column(Order = 1)]
+            public string Key1 { get; set; }
+
+            [Column(Order = 2)]
+            public int Key2 { get; set; }
+
+            [Column(Order = 3)]
+            public byte[] Property1 { get; set; }
+
+            [Column(Order = 4)]
+            public string Property2 { get; set; }
         }
 
         [Fact]
@@ -5619,6 +5272,19 @@ namespace FunctionalTests
             databaseMapping.Assert<EntityL_1>("Table3")
                 .HasForeignKeyColumn("Id", "Table2")
                 .DbEqual(1, t => t.ForeignKeyBuilders.Count());
+        }
+
+        public class EntityL
+        {
+            public int Id { get; set; }
+            public string Property1 { get; set; }
+            public byte[] Property2 { get; set; }
+        }
+
+        public class EntityL_1 : EntityL
+        {
+            public string Property3 { get; set; }
+            public byte[] Property4 { get; set; }
         }
 
         [Fact]
@@ -5840,6 +5506,33 @@ namespace FunctionalTests
             databaseMapping.Assert<TSItem>("Items").HasColumns("Id", "Name", "OtherName");
         }
 
+        public class TSItem
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public TSItemDetail TSItemDetail { get; set; }
+            public TSItemDetailDiffKey TSItemDetailDiffKey { get; set; }
+            public TSItemDetailOverlappingProperty TSItemDetailOverlappingProperty { get; set; }
+        }
+
+        public class TSItemDetail
+        {
+            public int Id { get; set; }
+            public string Detail { get; set; }
+        }
+
+        public class TSItemDetailDiffKey
+        {
+            public int DiffId { get; set; }
+            public string Detail { get; set; }
+        }
+
+        public class TSItemDetailOverlappingProperty
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
         [Fact]
         public void Table_split_with_IA_one_to_one_relationship_throws()
         {
@@ -5942,6 +5635,25 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
         }
 
+        public class Repro140107_Vehicle
+        {
+            public int? Repro140107_VehicleId { get; set; }
+            public short? Name { get; set; }
+            public Repro140107_Model Repro140107_Model { get; set; }
+        }
+
+        public class Repro140107_Car : Repro140107_Vehicle
+        {
+            public long Type { get; set; }
+        }
+
+        public class Repro140107_Model
+        {
+            public int? Repro140107_ModelId { get; set; }
+            public bool Description { get; set; }
+            public Repro140107_Vehicle Repro140107_Vehicle { get; set; }
+        }
+
         [Fact]
         // Doesn't work due to an EF bug
         public void Table_split_base_on_TPC()
@@ -5963,6 +5675,44 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
+        }
+
+        public class TSIAItem
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public TSIAItemDetail Detail { get; set; }
+        }
+
+        public class TSIAItemDetail
+        {
+            public string Id { get; set; }
+            public string Detail { get; set; }
+        }
+
+        public class TSBase
+        {
+            public int Id { get; set; }
+            public string BaseData { get; set; }
+            public TSBaseDetail BaseDetail { get; set; }
+        }
+
+        public class TSBaseDetail
+        {
+            public int Id { get; set; }
+            public string BaseDetail { get; set; }
+        }
+
+        public class TSDerived : TSBase
+        {
+            public string DerivedData { get; set; }
+            public TSDerivedDetail Detail { get; set; }
+        }
+
+        public class TSDerivedDetail
+        {
+            public int Id { get; set; }
+            public string DerivedDetail { get; set; }
         }
 
         [Fact]
@@ -5997,6 +5747,25 @@ namespace FunctionalTests
             Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
         }
 
+        public class Repro140106_Vehicle
+        {
+            public string Repro140106_VehicleId { get; set; }
+            public string Name { get; set; }
+            public Repro140106_Model Model { get; set; }
+        }
+
+        public class Repro140106_Car : Repro140106_Vehicle
+        {
+            public string Type { get; set; }
+        }
+
+        public class Repro140106_Model
+        {
+            public string Repro140106_ModelId { get; set; }
+            public decimal Description { get; set; }
+            public Repro140106_Vehicle Repro140106_Vehicle { get; set; }
+        }
+
         [Fact]
         // Doesn't work due to an EF bug
         public void Table_split_base_on_TPC_has_no_FK_to_base_and_table_split_entity_props_not_inherited()
@@ -6024,6 +5793,25 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Throws<MappingException>(() => databaseMapping.AssertValid(true));
+        }
+
+        public class TPCVehicle
+        {
+            public string TPCVehicleId { get; set; }
+            public string Name { get; set; }
+            public TPCModel TPCModel { get; set; }
+        }
+
+        public class TPCCar : TPCVehicle
+        {
+            public string Type { get; set; }
+        }
+
+        public class TPCModel
+        {
+            public string TPCModelId { get; set; }
+            public decimal Description { get; set; }
+            public TPCVehicle TPCVehicle { get; set; }
         }
 
         #endregion
@@ -6107,6 +5895,26 @@ namespace FunctionalTests
             databaseMapping.Assert<CTBase>("HomeCity").HasColumns("Id", "HomeAddress_City");
         }
 
+        public class CTBase
+        {
+            public int Id { get; set; }
+            public CTAddress HomeAddress { get; set; }
+            public CTAddress WorkAddress { get; set; }
+        }
+
+        public class CTAddress
+        {
+            public string Street { get; set; }
+            public string City { get; set; }
+            public CTRegion Region { get; set; }
+        }
+
+        public class CTRegion
+        {
+            public string Country { get; set; }
+            public string Zip { get; set; }
+        }
+
         #endregion
 
         #region Abstract In Middle
@@ -6167,6 +5975,22 @@ namespace FunctionalTests
             Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
             databaseMapping.Assert<AbsInMiddle>("Base").HasColumns("Id", "Data");
             databaseMapping.Assert<AbsInMiddleL2>("L2").HasColumns("Id", "Data", "L1Data", "L2Data");
+        }
+
+        public class AbsInMiddle
+        {
+            public int Id { get; set; }
+            public int Data { get; set; }
+        }
+
+        public abstract class AbsInMiddleL1 : AbsInMiddle
+        {
+            public int L1Data { get; set; }
+        }
+
+        public class AbsInMiddleL2 : AbsInMiddleL1
+        {
+            public int L2Data { get; set; }
         }
 
         [Fact]
@@ -6238,6 +6062,53 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
+        public class EntityN
+        {
+            public int Id { get; set; }
+            public int Property1 { get; set; }
+            public int Property1_1 { get; set; }
+        }
+
+        public abstract class EntityN_1 : EntityN
+        {
+            public int Property2 { get; set; }
+            public int Property2_1 { get; set; }
+        }
+
+        public class EntityN_1_1 : EntityN_1
+        {
+            public int Property3_1 { get; set; }
+            public int Property3 { get; set; }
+        }
+
+        public abstract class BaseNote
+        {
+            public virtual Guid Id { get; set; }
+            public virtual string Description { get; set; }
+        }
+
+        public class NoteWithRelationship1 : BaseNote
+        {
+            public virtual TargetEmployee TargetEmployee { get; set; }
+        }
+
+        public class NoteWithRelationship2 : BaseNote
+        {
+            public virtual TargetEmployee TargetEmployee { get; set; }
+        }
+
+        public abstract class BaseEmployee
+        {
+            public Guid Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+        }
+
+        public class TargetEmployee : BaseEmployee
+        {
+            public DateTime? DateOfBirth { get; set; }
+        }
+
         #endregion
 
         #region Abstract At Base
@@ -6272,6 +6143,22 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
             databaseMapping.AssertMapping<AbsAtBase>("AbsAtBases").HasNoColumnConditions();
             databaseMapping.AssertMapping<AbsAtBaseL1>("AbsAtBases").HasNullabilityColumnCondition("L1Data", false);
+        }
+
+        public abstract class AbsAtBase
+        {
+            public int Id { get; set; }
+            public int Data { get; set; }
+        }
+
+        public class AbsAtBaseL1 : AbsAtBase
+        {
+            public int L1Data { get; set; }
+        }
+
+        public class AbsAtBaseL2 : AbsAtBaseL1
+        {
+            public int L2Data { get; set; }
         }
 
         [Fact]
@@ -6338,6 +6225,18 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+        }
+
+        public abstract class AbsBaseSplit
+        {
+            public int Id { get; set; }
+            public string Prop1 { get; set; }
+            public string Prop2 { get; set; }
+        }
+
+        public class AbsDerivedSplit : AbsBaseSplit
+        {
+            public string Prop3 { get; set; }
         }
 
         #endregion

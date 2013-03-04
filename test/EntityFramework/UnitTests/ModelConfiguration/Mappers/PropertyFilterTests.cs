@@ -73,63 +73,89 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         [Fact]
-        public void PropertyFilter_supports_V3_properties_if_no_specific_schema_version_is_used()
+        public void PropertyFilter_supports_EF6_properties_if_no_specific_builder_version_is_used()
+        {
+            Assert.True(new PropertyFilter().Ef6FeaturesSupported);
+        }
+
+        [Fact]
+        public void PropertyFilter_supports_EF6_properties_if_builder_version_for_EF6_is_used()
+        {
+            Assert.True(new PropertyFilter(DbModelBuilderVersion.V6_0).Ef6FeaturesSupported);
+        }
+
+        [Fact]
+        public void PropertyFilter_supports_EF6_properties_if_latest_builder_version_is_used()
+        {
+            Assert.True(new PropertyFilter(DbModelBuilderVersion.Latest).Ef6FeaturesSupported);
+        }
+
+        [Fact]
+        public void PropertyFilter_does_not_support_EF6_properties_if_earlier_builder_version_is_used()
+        {
+            Assert.False(new PropertyFilter(DbModelBuilderVersion.V4_1).Ef6FeaturesSupported);
+            Assert.False(new PropertyFilter(DbModelBuilderVersion.V5_0).Ef6FeaturesSupported);
+        }
+
+        [Fact]
+        public void PropertyFilter_supports_V3_properties_if_no_specific_builder_version_is_used()
         {
             Assert.True(new PropertyFilter().EdmV3FeaturesSupported);
         }
 
         [Fact]
-        public void PropertyFilter_supports_V3_properties_if_V3_schema_version_is_used()
+        public void PropertyFilter_supports_V3_properties_if_builder_version_for_V3_schema_is_used()
         {
-            Assert.True(new PropertyFilter(XmlConstants.EdmVersionForV3).EdmV3FeaturesSupported);
+            Assert.True(new PropertyFilter(DbModelBuilderVersion.V5_0).EdmV3FeaturesSupported);
+            Assert.True(new PropertyFilter(DbModelBuilderVersion.V6_0).EdmV3FeaturesSupported);
         }
 
         [Fact]
-        public void PropertyFilter_supports_V3_properties_if_greater_than_V3_schema_version_is_used()
+        public void PropertyFilter_supports_V3_properties_if_latest_builder_version_is_used()
         {
-            Assert.True(new PropertyFilter(4.0).EdmV3FeaturesSupported);
+            Assert.True(new PropertyFilter(DbModelBuilderVersion.Latest).EdmV3FeaturesSupported);
         }
 
         [Fact]
-        public void PropertyFilter_does_not_support_V3_properties_if_V2_schema_version_is_used()
+        public void PropertyFilter_does_not_support_V3_properties_if_V2_builder_version_is_used()
         {
-            Assert.False(new PropertyFilter(XmlConstants.EdmVersionForV2).EdmV3FeaturesSupported);
+            Assert.False(new PropertyFilter(DbModelBuilderVersion.V4_1).EdmV3FeaturesSupported);
         }
 
         [Fact]
-        public void PropertyFilter_validates_enum_properties_if_no_specific_schema_version_is_used()
+        public void PropertyFilter_validates_enum_properties_if_no_specific_builder_version_is_used()
         {
             PropertyFilter_validates_enum_types(new PropertyFilter());
         }
 
         [Fact]
-        public void PropertyFilter_validates_spatial_properties_if_no_specific_schema_version_is_used()
+        public void PropertyFilter_validates_spatial_properties_if_no_specific_builder_version_is_used()
         {
             PropertyFilter_validates_spatial_types(new PropertyFilter());
         }
 
         [Fact]
-        public void PropertyFilter_validates_spatial_properties_if_V3_schema_version_is_used()
+        public void PropertyFilter_validates_spatial_properties_if_V3_builder_version_is_used()
         {
-            PropertyFilter_validates_spatial_types(new PropertyFilter(XmlConstants.EdmVersionForV3));
+            PropertyFilter_validates_spatial_types(new PropertyFilter(DbModelBuilderVersion.V5_0));
         }
 
         [Fact]
-        public void PropertyFilter_validates_spatial_properties_if_greater_than_V3_schema_version_is_used()
+        public void PropertyFilter_validates_spatial_properties_if_latest_builder_version_is_used()
         {
-            PropertyFilter_validates_spatial_types(new PropertyFilter(4.0));
+            PropertyFilter_validates_spatial_types(new PropertyFilter(DbModelBuilderVersion.Latest));
         }
 
         [Fact]
-        public void PropertyFilter_validates_enum_properties_if_V3_schema_version_is_used()
+        public void PropertyFilter_validates_enum_properties_if_V3_builder_version_is_used()
         {
-            PropertyFilter_validates_enum_types(new PropertyFilter(XmlConstants.EdmVersionForV3));
+            PropertyFilter_validates_enum_types(new PropertyFilter(DbModelBuilderVersion.V5_0));
         }
 
         [Fact]
-        public void PropertyFilter_validates_enum_properties_if_greater_than_V3_schema_version_is_used()
+        public void PropertyFilter_validates_enum_properties_if_latest_builder_version_is_used()
         {
-            PropertyFilter_validates_enum_types(new PropertyFilter(4.0));
+            PropertyFilter_validates_enum_types(new PropertyFilter(DbModelBuilderVersion.Latest));
         }
 
         private void PropertyFilter_validates_enum_types(PropertyFilter filter)
@@ -157,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         }
 
         [Fact]
-        public void PropertyFilter_rejects_enum_properties_if_V2_schema_version_is_used()
+        public void PropertyFilter_rejects_enum_properties_if_V2_builder_version_is_used()
         {
             var mockType = new MockType("BadType");
             mockType.Setup(m => m.IsEnum).Returns(true);
@@ -170,11 +196,11 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             Assert.Equal(
                 Strings.UnsupportedUseOfV3Type("BadType", "EnumProp"),
                 Assert.Throws<NotSupportedException>(
-                    () => new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(mockType, properties)).Message);
+                    () => new PropertyFilter(DbModelBuilderVersion.V4_1).ValidatePropertiesForModelVersion(mockType, properties)).Message);
         }
 
         [Fact]
-        public void PropertyFilter_rejects_DbGeography_properties_if_V2_schema_version_is_used()
+        public void PropertyFilter_rejects_DbGeography_properties_if_V2_builder_version_is_used()
         {
             var properties = new List<PropertyInfo>
                                  {
@@ -185,12 +211,12 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 Strings.UnsupportedUseOfV3Type("BadType", "Geography"),
                 Assert.Throws<NotSupportedException>(
                     () =>
-                    new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
+                    new PropertyFilter(DbModelBuilderVersion.V4_1).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
                     Message);
         }
 
         [Fact]
-        public void PropertyFilter_rejects_DbGeometry_properties_if_V2_schema_version_is_used()
+        public void PropertyFilter_rejects_DbGeometry_properties_if_V2_builder_version_is_used()
         {
             var properties = new List<PropertyInfo>
                                  {
@@ -201,7 +227,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 Strings.UnsupportedUseOfV3Type("BadType", "Geometry"),
                 Assert.Throws<NotSupportedException>(
                     () =>
-                    new PropertyFilter(XmlConstants.EdmVersionForV2).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
+                    new PropertyFilter(DbModelBuilderVersion.V4_1).ValidatePropertiesForModelVersion(new MockType("BadType"), properties)).
                     Message);
         }
 
@@ -240,12 +266,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(properties);
 
-            var filteredProperties = new PropertyFilter(XmlConstants.EdmVersionForV2).GetProperties(mockType, declaredOnly: false);
+            var filteredProperties = new PropertyFilter(DbModelBuilderVersion.V4_1).GetProperties(mockType, declaredOnly: false);
 
             Assert.Equal(0, filteredProperties.Count());
         }
-
-        #region Test Fixtures
 
         public interface PropertyFilterTests_Interface
         {
@@ -297,7 +321,5 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             internal static int InternalStaticDerived { get; set; }
             protected static int ProtectedStaticDerived { get; set; }
         }
-
-        #endregion
     }
 }

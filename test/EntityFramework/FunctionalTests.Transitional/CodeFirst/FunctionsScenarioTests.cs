@@ -3,6 +3,8 @@
 namespace FunctionalTests
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Migrations;
@@ -14,6 +16,30 @@ namespace FunctionalTests
 
     public class FunctionsScenarioTests
     {
+        [ComplexType]
+        public class Address
+        {
+            public string Line1 { get; set; }
+            public string Line2 { get; set; }
+        }
+
+        public class CTEmployee
+        {
+            public int CTEmployeeId { get; set; }
+            public Address HomeAddress { get; set; }
+        }
+
+        public class OffSiteEmployee : CTEmployee
+        {
+            public Address WorkAddress { get; set; }
+        }
+
+        public class Building
+        {
+            public int Id { get; set; }
+            public Address Address { get; set; }
+        }
+
         public class ModificationFunctions
         {
             public class MetadataGeneration : TestBase
@@ -174,6 +200,20 @@ namespace FunctionalTests
 
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
+                }
+
+                public class ProductA
+                {
+                    public int Id { get; set; }
+                    public string Name { get; set; }
+                    public ICollection<Tag> Tags { get; set; }
+                }
+
+                public class Tag
+                {
+                    public int Id { get; set; }
+                    public string Name { get; set; }
+                    public ICollection<ProductA> Products { get; set; }
                 }
 
                 [Fact]
@@ -757,9 +797,23 @@ namespace FunctionalTests
                             map => map.Insert(f => f.HasName("boom")));
 
                     Assert.Equal(
-                        Strings.ConflictingFunctionsMapping("Tags", "FunctionalTests.ProductA"),
+                        Strings.ConflictingFunctionsMapping("Tags", "FunctionalTests.FunctionsScenarioTests+ModificationFunctions+Apis+ProductA"),
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
+                }
+
+                public class ProductA
+                {
+                    public int Id { get; set; }
+                    public string Name { get; set; }
+                    public ICollection<Tag> Tags { get; set; }
+                }
+
+                public class Tag
+                {
+                    public int Id { get; set; }
+                    public string Name { get; set; }
+                    public ICollection<ProductA> Products { get; set; }
                 }
 
                 [Fact]
@@ -975,6 +1029,14 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id2"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "id3"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "item_id3"));
+                }
+
+                public class Item
+                {
+                    public int Id { get; set; }
+                    public int Name { get; set; }
+                    public virtual Item ParentItem { get; set; }
+                    public virtual ICollection<Item> ChildrenItems { get; set; }
                 }
 
                 public void Column_configuration_is_propagated_to_parameters()

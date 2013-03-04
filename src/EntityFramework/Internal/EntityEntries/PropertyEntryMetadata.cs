@@ -59,7 +59,7 @@ namespace System.Data.Entity.Internal
             DbHelpers.GetPropertyTypes(declaringType).TryGetValue(propertyName, out propertyType);
 
             var metadataWorkspace = internalContext.ObjectContext.MetadataWorkspace;
-            var edmType = metadataWorkspace.GetItem<StructuralType>(declaringType.FullName, DataSpace.OSpace);
+            var edmType = metadataWorkspace.GetItem<StructuralType>(declaringType.FullNameWithNesting(), DataSpace.OSpace);
 
             var isMapped = false;
             var isComplex = false;

@@ -110,8 +110,6 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal("A", ((EntityTypeConfiguration)entityConfiguration.Configuration).GetTableName().Name);
         }
 
-        #region Test Fixtures
-
         private class Fixture
         {
             public int Id { get; private set; }
@@ -129,7 +127,5 @@ namespace System.Data.Entity.ModelConfiguration
         private class C : A
         {
         }
-
-        #endregion
     }
 }

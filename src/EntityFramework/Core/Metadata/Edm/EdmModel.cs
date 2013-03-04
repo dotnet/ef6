@@ -26,12 +26,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private DbProviderInfo _providerInfo;
         private DbProviderManifest _providerManifest;
 
-        public double Version { get; set; }
+        public DbModelBuilderVersion Version { get; set; }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        // Using XmlConstants.EdmVersionForV3 as a "general" EF model version concept 
-        // to avoid adding another constant with a value we already have.
-        public EdmModel(EntityContainer entityContainer, double version = XmlConstants.EdmVersionForV3)
+        public EdmModel(EntityContainer entityContainer, DbModelBuilderVersion version = DbModelBuilderVersion.Latest)
         {
             Check.NotNull(entityContainer, "entityContainer");
 
@@ -41,7 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(DataSpace dataSpace, double version = XmlConstants.EdmVersionForV3)
+        public EdmModel(DataSpace dataSpace, DbModelBuilderVersion version = DbModelBuilderVersion.Latest)
         {
             if (dataSpace != DataSpace.CSpace
                 && dataSpace != DataSpace.SSpace)

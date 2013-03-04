@@ -422,6 +422,11 @@ END";
             }
         }
 
+        public class PersistEntity
+        {
+            public int Id { get; set; }
+        }
+
         [Fact]
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_lazy_connection()
         {
@@ -731,10 +736,5 @@ END";
         }
 
         #endregion
-    }
-
-    public class PersistEntity
-    {
-        public int Id { get; set; }
     }
 }

@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="type"> CLR type setting Type property </param>
         /// <param name="isCollection"> Sets IsCollectionType property </param>
         internal MetadataPropertyAttribute(Type type, bool isCollection)
-            : this(ClrComplexType.CreateReadonlyClrComplexType(type, type.Namespace ?? string.Empty, type.Name), isCollection)
+            : this(ClrComplexType.CreateReadonlyClrComplexType(type, type.NestingNamespace() ?? string.Empty, type.Name), isCollection)
         {
         }
 

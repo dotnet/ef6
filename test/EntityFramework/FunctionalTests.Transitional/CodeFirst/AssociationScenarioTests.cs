@@ -34,6 +34,24 @@ namespace FunctionalTests
                 new[] { "DependentForeignKeyPropertyNotFromConvention1" }, "Principal_172949");
         }
 
+        public class Dependent_172949
+        {
+            public int Id { get; set; }
+
+            [ForeignKey("PrincipalNavigation")]
+            public short DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            public Principal_172949 PrincipalNavigation { get; set; }
+        }
+
+        public class Principal_172949
+        {
+            public short? Id { get; set; }
+
+            [InverseProperty("PrincipalNavigation")]
+            public ICollection<Dependent_172949> DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void Required_on_dependent_nav_prop_with_foreign_key_attribute_on_fk()
         {
@@ -88,6 +106,46 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, associationType.TargetEnd.RelationshipMultiplicity);
         }
 
+        public class Principal_159001
+        {
+            public int Key1 { get; set; }
+        }
+
+        public class Dependent_159001a
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            public Principal_159001 PrincipalNavigation { get; set; }
+        }
+
+        public class Dependent_159001b
+        {
+            public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
+            public Principal_159001 PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalWithNav_159001a
+        {
+            public int Key1 { get; set; }
+
+            [Required]
+            public DependentWithNav_159001a DependentNavigation { get; set; }
+        }
+
+        public class DependentWithNav_159001a
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            public PrincipalWithNav_159001a PrincipalNavigation { get; set; }
+        }
+
         [Fact]
         public void Should_not_detect_one_to_one_fk_that_is_not_the_dependent_pk()
         {
@@ -104,6 +162,21 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<Dependent_181909>().HasForeignKey(new[] { "Order_Id" }, "Principal_181909");
+        }
+
+        public class Principal_181909
+        {
+            public int Id { get; set; }
+            public virtual Dependent_181909 Order { get; set; }
+        }
+
+        public class Dependent_181909
+        {
+            public string Key { get; set; }
+            public int Principal_181909Id { get; set; }
+
+            [Required]
+            public virtual Principal_181909 Order { get; set; }
         }
 
         [Fact]
@@ -230,6 +303,23 @@ namespace FunctionalTests
                 "Order_181909");
         }
 
+        public class Order_181909
+        {
+            public int OrderId { get; set; }
+            public int CustomerId { get; set; }
+            public virtual ICollection<OrderLine_181909> Lines { get; set; }
+        }
+
+        public class OrderLine_181909
+        {
+            public int OrderLineId { get; set; }
+            public int CustomerId { get; set; }
+            public int OrderId { get; set; }
+            public virtual Order_181909 Order { get; set; }
+            public string Description { get; set; }
+            public decimal Quantity { get; set; }
+        }
+
         [Fact]
         public void Can_map_ia_to_other_table_when_entity_splitting()
         {
@@ -259,6 +349,13 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
         }
 
+        public class Dependent_162348
+        {
+            public short Key1 { get; set; }
+            public short? PrincipalNavigationKey1 { get; set; }
+            public Dependent_162348 PrincipalNavigation { get; set; }
+        }
+
         [Fact]
         public void Configured_annotated_nullable_fk_should_be_non_nullable_when_association_end_required()
         {
@@ -274,6 +371,21 @@ namespace FunctionalTests
             databaseMapping.Assert<Dependent_6927>(d => d.DependentForeignKeyPropertyNotFromConvention1).IsFalse(f => f.Nullable);
         }
 
+        public class Dependent_6927
+        {
+            public string DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+            public int Id { get; set; }
+
+            [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
+            public Principal_6927 PrincipalNavigation { get; set; }
+        }
+
+        public class Principal_6927
+        {
+            public string Key1 { get; set; }
+            public ICollection<Dependent_6927> DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void Configured_required_end_should_result_in_required_dependent_keys_when_configured_identifying()
         {
@@ -286,6 +398,18 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class DependentWithNullableFkIdentifying
+        {
+            public int? Id { get; set; }
+            public PrincipalWithNullableFkIdentifying PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalWithNullableFkIdentifying
+        {
+            public int? Id { get; set; }
+            public DependentWithNullableFkIdentifying DependentNavigation { get; set; }
         }
 
         [Fact]
@@ -315,6 +439,19 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class DependentWithNullableFk
+        {
+            public int Id { get; set; }
+            public string PrincipalNavigationId { get; set; }
+            public PrincipalWithNullableFk PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalWithNullableFk
+        {
+            public string Id { get; set; }
+            public ICollection<DependentWithNullableFk> DependentNavigation { get; set; }
         }
 
         [Fact]
@@ -366,6 +503,20 @@ namespace FunctionalTests
             Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
 
+        public class ProductManyToManyTableNaming
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<SupplierManyToManyTableNaming> Suppliers { get; set; }
+        }
+
+        public class SupplierManyToManyTableNaming
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<ProductManyToManyTableNaming> Products { get; set; }
+        }
+
         [Fact]
         public void Configure_partial_api_plus_annotation_optional_to_required_should_have_principal()
         {
@@ -381,6 +532,22 @@ namespace FunctionalTests
             databaseMapping.Assert<Dependent144934>().HasForeignKeyColumn("PrincipalNavigationKey1");
         }
 
+        public class Principal144934
+        {
+            public string Key1 { get; set; }
+
+            [InverseProperty("PrincipalNavigation")]
+            public Dependent144934 DependentNavigation { get; set; }
+        }
+
+        public class Dependent144934
+        {
+            public string PrincipalNavigationKey1 { get; set; }
+
+            [Required]
+            public Principal144934 PrincipalNavigation { get; set; }
+        }
+
         [Fact]
         public void Should_be_able_to_mix_convention_and_configuration_when_multiple_associations()
         {
@@ -392,6 +559,21 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             Assert.Equal(2, databaseMapping.Model.AssociationTypes.Count());
+        }
+
+        public class Dependent144843
+        {
+            public int Id { get; set; }
+
+            public Principal144843 Principal1 { get; set; }
+            public int Principal1Id { get; set; }
+        }
+
+        public class Principal144843
+        {
+            public int Id { get; set; }
+            public ICollection<Dependent144843> Dependents1 { get; set; }
+            public Dependent144843 Dependent { get; set; }
         }
 
         [Fact]
@@ -410,6 +592,16 @@ namespace FunctionalTests
             databaseMapping.Assert<DependentManyToManySelf>(d => d.Key1).DbEqual("numeric", c => c.TypeName);
         }
 
+        public abstract class DependentManyToManySelf
+        {
+            public decimal? Key1 { get; set; }
+        }
+
+        public class DerivedDependentManyToManySelf : DependentManyToManySelf
+        {
+            public float DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void One_to_one_split_required_inverse_annotations_can_determine_principal()
         {
@@ -425,6 +617,18 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class DependentSelfRefInverseRequired
+        {
+            public string Key1 { get; set; }
+            public string Key2 { get; set; }
+
+            [InverseProperty("PrincipalNavigation")]
+            public DependentSelfRefInverseRequired DependentNavigation { get; set; }
+
+            [Required]
+            public DependentSelfRefInverseRequired PrincipalNavigation { get; set; }
         }
 
         [Fact]
@@ -447,6 +651,45 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
         }
 
+        public class BaseDependentAbstractKeyOrder
+        {
+            public decimal BaseProperty { get; set; }
+            public int Id { get; set; }
+        }
+
+        public abstract class DependentAbstractKeyOrder : BaseDependentAbstractKeyOrder
+        {
+            [ForeignKey("PrincipalNavigation")]
+            [Column(Order = 1)]
+            public decimal? DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [ForeignKey("PrincipalNavigation")]
+            [Column(Order = 2)]
+            public decimal? DependentForeignKeyPropertyNotFromConvention2 { get; set; }
+
+            public PrincipalAbstractKeyOrder PrincipalNavigation { get; set; }
+        }
+
+        public class BasePrincipalAbstractKeyOrder
+        {
+            public string BaseProperty { get; set; }
+            public decimal Key1 { get; set; }
+            public decimal Key2 { get; set; }
+        }
+
+        public abstract class PrincipalAbstractKeyOrder : BasePrincipalAbstractKeyOrder
+        {
+        }
+
+        public class DerivedPrincipalKeyOrder : PrincipalAbstractKeyOrder
+        {
+        }
+
+        public class DerivedDependentKeyOrder : DependentAbstractKeyOrder
+        {
+            public byte DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public virtual void One_to_one_self_ref_with_inverse_annotation()
         {
@@ -464,6 +707,23 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
         }
 
+        public abstract class DependentSelfRefInverse
+        {
+            public short Key1 { get; set; }
+            public short DependentSelfRefInverseKey1 { get; set; }
+
+            public DependentSelfRefInverse DependentNavigation { get; set; }
+
+            [InverseProperty("DependentNavigation")]
+            [Required]
+            public DependentSelfRefInverse PrincipalNavigation { get; set; }
+        }
+
+        public class DerivedDependentSelfRefInverse : DependentSelfRefInverse
+        {
+            public string DerivedProperty1 { get; set; }
+        }
+
         [Fact]
         public void Foreign_key_and_inverse_on_derived_abstract_class()
         {
@@ -475,6 +735,44 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class BaseDependentFkAbstract
+        {
+            public DateTime? BaseProperty { get; set; }
+            public int Id { get; set; }
+        }
+
+        public abstract class DependentFkAbstract : BaseDependentFkAbstract
+        {
+            public int? DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [InverseProperty("DependentNavigation")]
+            [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
+            public PrincipalFkAbstract PrincipalNavigation { get; set; }
+        }
+
+        public class DerivedDependentFkAbstract : DependentFkAbstract
+        {
+            public string DerivedProperty1 { get; set; }
+        }
+
+        public class PrincipalFkAbstract
+        {
+            public int? Key1 { get; set; }
+
+            [InverseProperty("PrincipalNavigation")]
+            public ICollection<DependentFkAbstract> DependentNavigation { get; set; }
+
+            public PrincipalFkAbstract()
+            {
+                DependentNavigation = new List<DependentFkAbstract>();
+            }
+        }
+
+        public class DerivedPrincipalFkAbstract : PrincipalFkAbstract
+        {
+            public byte[] DerivedProperty1 { get; set; }
         }
 
         [Fact]
@@ -495,6 +793,25 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
             databaseMapping.Assert<DependentSelfRef>()
                            .HasNoForeignKeyColumns();
+        }
+
+        public class DependentSelfRef
+        {
+            [ForeignKey("PrincipalNavigation")]
+            [Column(Order = 1)]
+            public DateTimeOffset Key1 { get; set; }
+
+            [ForeignKey("PrincipalNavigation")]
+            [Column(Order = 2)]
+            public DateTimeOffset DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            public DerivedDependentSelfRef PrincipalNavigation { get; set; }
+        }
+
+        public class DerivedDependentSelfRef : DependentSelfRef
+        {
+            public byte[] DerivedProperty1 { get; set; }
         }
 
         [Fact]
@@ -537,6 +854,30 @@ namespace FunctionalTests
                            .HasForeignKey(new[] { "Fk2", "Fk1" }, "PrincipalWeirdKeyOrders");
             databaseMapping.Assert<DependentWeirdKeyOrder2>()
                            .HasForeignKey(new[] { "Fk1", "Fk2" }, "PrincipalWeirdKeyOrders");
+        }
+
+        public class DependentWeirdKeyOrder
+        {
+            public int Fk1 { get; set; }
+            public int Fk2 { get; set; }
+
+            [ForeignKey("Fk2,Fk1")]
+            public PrincipalWeirdKeyOrder PrincipalNavigation { get; set; }
+        }
+
+        public class DependentWeirdKeyOrder2
+        {
+            public int Fk1 { get; set; }
+            public int Fk2 { get; set; }
+
+            [ForeignKey("Fk1,Fk2")]
+            public PrincipalWeirdKeyOrder PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalWeirdKeyOrder
+        {
+            public int Id1 { get; set; }
+            public int Id2 { get; set; }
         }
 
         [Fact]
@@ -582,6 +923,28 @@ namespace FunctionalTests
                            .HasForeignKey(new[] { "DependentForeignKeyPropertyNotFromConvention1" }, "PrincipalNoPrincipalNavs");
         }
 
+        public class DependentNoPrincipalNavRequired
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            public PrincipalNoPrincipalNav PrincipalNavigation { get; set; }
+        }
+
+        public class DependentNoPrincipalNavOptional
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            public PrincipalNoPrincipalNav PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalNoPrincipalNav
+        {
+            public Guid? Key1 { get; set; }
+        }
+
         [Fact]
         public void Foreign_key_annotation_on_pk_should_change_principal_end_kind_required_to_optional_bidirectional()
         {
@@ -620,6 +983,24 @@ namespace FunctionalTests
                                "PrincipalPrincipalNavOptionals");
         }
 
+        public class DependentPrincipalNavOptional
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [ForeignKey("PrincipalNavigation")]
+            public Guid DependentForeignKeyPropertyNotFromConvention2 { get; set; }
+
+            public PrincipalPrincipalNavOptional PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalPrincipalNavOptional
+        {
+            public int? Key1 { get; set; }
+            public Guid? Key2 { get; set; }
+            public DependentPrincipalNavOptional DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void Foreign_key_annotation_on_pk_should_change_principal_end_kind_required_to_required_bidirectional()
         {
@@ -641,6 +1022,21 @@ namespace FunctionalTests
                            .HasForeignKey(
                                new[] { "DependentForeignKeyPropertyNotFromConvention1" },
                                "PrincipalPrincipalNavRequireds");
+        }
+
+        public class DependentPrincipalNavRequired
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [Required]
+            public PrincipalPrincipalNavRequired PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalPrincipalNavRequired
+        {
+            public Guid? Key1 { get; set; }
+            public DependentPrincipalNavRequired DependentNavigation { get; set; }
         }
 
         [Fact]
@@ -666,6 +1062,22 @@ namespace FunctionalTests
                                "PrincipalPrincipalNavRequiredDependents");
         }
 
+        public class DependentPrincipalNavRequiredDependent
+        {
+            [ForeignKey("PrincipalNavigation")]
+            public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            public PrincipalPrincipalNavRequiredDependent PrincipalNavigation { get; set; }
+        }
+
+        public class PrincipalPrincipalNavRequiredDependent
+        {
+            public Guid? Key1 { get; set; }
+
+            [Required]
+            public DependentPrincipalNavRequiredDependent DependentNavigation { get; set; }
+        }
+
         [Fact]
         public void One_to_one_byte_key_inverse_and_fk_annotations()
         {
@@ -677,6 +1089,23 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+        }
+
+        public class PrincipalByteKey
+        {
+            public byte[] Key1 { get; set; }
+
+            [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
+            public DependentByteKey DependentNavigation { get; set; }
+        }
+
+        public class DependentByteKey
+        {
+            public byte[] DependentForeignKeyPropertyNotFromConvention1 { get; set; }
+
+            [InverseProperty("DependentNavigation")]
+            [Required]
+            public PrincipalByteKey PrincipalNavigation { get; set; }
         }
 
         [Fact]
@@ -697,6 +1126,19 @@ namespace FunctionalTests
             Assert.Equal(
                 OperationAction.None,
                 databaseMapping.Model.AssociationTypes.Single().TargetEnd.DeleteBehavior);
+        }
+
+        public class SelfRefInheritedBase
+        {
+            public string Id { get; set; }
+
+            [Required]
+            public SelfRefInheritedDerived Derived { get; set; }
+        }
+
+        public class SelfRefInheritedDerived : SelfRefInheritedBase
+        {
+            public ICollection<SelfRefInheritedBase> Bases { get; set; }
         }
 
         [Fact]
@@ -755,6 +1197,42 @@ namespace FunctionalTests
                   .ValidateMessage("ForeignKeyAttributeConvention_OrderRequired", typeof(CompositePartiallyAnnotatedDependent));
         }
 
+        public class PrincipalWithCompositeAnnotatedDependent
+        {
+            public int Id1 { get; set; }
+            public string Id2 { get; set; }
+            public ICollection<CompositeAnnotatedDependent> Dependents { get; set; }
+            public ICollection<CompositePartiallyAnnotatedDependent> Dependents2 { get; set; }
+        }
+
+        public class CompositeAnnotatedDependent
+        {
+            public int Id { get; set; }
+
+            [ForeignKey("Principal")]
+            [Column(Order = 2)]
+            public int TheFk1 { get; set; }
+
+            [ForeignKey("Principal")]
+            [Column(Order = 1)]
+            public string TheFk2 { get; set; }
+
+            public PrincipalWithCompositeAnnotatedDependent Principal { get; set; }
+        }
+
+        public class CompositePartiallyAnnotatedDependent
+        {
+            public int Id { get; set; }
+
+            [ForeignKey("Principal")]
+            public int TheFk1 { get; set; }
+
+            [ForeignKey("Principal")]
+            public string TheFk2 { get; set; }
+
+            public PrincipalWithCompositeAnnotatedDependent Principal { get; set; }
+        }
+
         [Fact]
         public void Annotated_fk_one_to_one_should_use_annotation_to_determine_principal()
         {
@@ -781,6 +1259,28 @@ namespace FunctionalTests
                       "ForeignKeyAttributeConvention_InvalidNavigationProperty",
                       "Id", typeof(AnnotatedDependentWrong),
                       "Wrong");
+        }
+
+        public class PrincipalWithAnnotatedDependent
+        {
+            public string AnId { get; set; }
+            public AnnotatedDependent Dependent { get; set; }
+        }
+
+        public class AnnotatedDependent
+        {
+            [ForeignKey("Principal")]
+            public string AnotherId { get; set; }
+
+            public PrincipalWithAnnotatedDependent Principal { get; set; }
+        }
+
+        public class AnnotatedDependentWrong
+        {
+            [ForeignKey("Wrong")]
+            public string Id { get; set; }
+
+            public PrincipalWithAnnotatedDependent Principal { get; set; }
         }
 
         [Fact]
@@ -832,6 +1332,18 @@ namespace FunctionalTests
             var table = databaseMapping.Database.EntityTypes.Single(t => t.Name == "ToOne");
 
             Assert.Equal("bigint", table.Properties.Single(c => c.Name == "NavOne_AnId").TypeName);
+        }
+
+        public class SomeItem
+        {
+            public int SomeItemId { get; set; }
+            public SomeItemDetail Detail { get; set; }
+        }
+
+        public class SomeItemDetail
+        {
+            public int Id { get; set; }
+            public SomeItem Item { get; set; }
         }
 
         [Fact]
@@ -889,6 +1401,18 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () => BuildMapping(modelBuilder))
                   .ValidateMessage("UnableToDeterminePrincipal", typeof(Dependent).ToString(), typeof(Principal).ToString());
+        }
+
+        public class Principal
+        {
+            public int Id { get; set; }
+            public Dependent DependentNavigation { get; set; }
+        }
+
+        public class Dependent
+        {
+            public int Id { get; set; }
+            public Principal PrincipalNavigation { get; set; }
         }
 
         [Fact]
@@ -1080,6 +1604,19 @@ namespace FunctionalTests
             databaseMapping.Assert<ToOne>().HasForeignKeyColumn("NavOne_AnId");
         }
 
+        public class One
+        {
+            public int AnId { get; set; }
+            public ToOne NavToOne { get; set; }
+        }
+
+        public class ToOne
+        {
+            public string AnotherId1 { get; set; }
+            public string AnotherId2 { get; set; }
+            public One NavOne { get; set; }
+        }
+
         [Fact]
         // Regression test for Dev11 Bug 98118
         public void Self_ref_many_to_optional_should_find_FK()
@@ -1092,6 +1629,14 @@ namespace FunctionalTests
 
             Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
             databaseMapping.Assert<TreeNode>().HasForeignKeyColumn("ParentId");
+        }
+
+        public class TreeNode
+        {
+            public int Id { get; set; }
+            public int? ParentId { get; set; }
+            public TreeNode Parent { get; set; }
+            public ICollection<TreeNode> Children { get; set; }
         }
 
         [Fact]
@@ -1117,6 +1662,13 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<SelfRefToOne>().HasForeignKeyColumn("SelfOne_Id");
+        }
+
+        public class SelfRefToOne
+        {
+            public int Id { get; set; }
+            public SelfRefToOne SelfOne { get; set; }
+            public SelfRefToOne SelfTwo { get; set; }
         }
 
         [Fact]
@@ -1180,6 +1732,12 @@ namespace FunctionalTests
             databaseMapping.Assert<SelfRef>().HasColumn("TheKey");
         }
 
+        public class SelfRef
+        {
+            public int Id { get; set; }
+            public SelfRef Self { get; set; }
+        }
+
         [Fact]
         public void Build_model_for_self_referencing_optional_to_many_ia_with_configured_key_column()
         {
@@ -1217,6 +1775,14 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
             databaseMapping.Assert<Item>().HasColumn("TheId");
             databaseMapping.Assert<Item>().HasColumn("TheName");
+        }
+
+        public class Item
+        {
+            public int Id { get; set; }
+            public int Name { get; set; }
+            public virtual Item ParentItem { get; set; }
+            public virtual ICollection<Item> ChildrenItems { get; set; }
         }
 
         [Fact]
@@ -1258,6 +1824,13 @@ namespace FunctionalTests
             Assert.Equal(2, joinTable.ForeignKeyBuilders.Count());
 
             Assert.True(joinTable.ForeignKeyBuilders.All(fk => fk.DeleteAction == OperationAction.None));
+        }
+
+        public class Person
+        {
+            public int Id { get; set; }
+            public ICollection<Person> Children { get; set; }
+            public ICollection<Person> Parents { get; set; }
         }
 
         [Fact]
@@ -1414,6 +1987,21 @@ namespace FunctionalTests
             Assert.Equal(2, tempQualifier1.EntityTypes.ElementAt(0).Properties.Count());
 
             Assert.Equal(2, databaseMapping.Database.EntityTypes.ElementAt(1).Properties.Count());
+        }
+
+        public class Album
+        {
+            public int Id { get; set; }
+            public virtual Photo Thumbnail { get; set; }
+            public int? ThumbnailId { get; set; }
+            public virtual ICollection<Photo> Photos { get; set; }
+        }
+
+        public class Photo
+        {
+            public int Id { get; set; }
+            public int AlbumId { get; set; }
+            public virtual Album Album { get; set; }
         }
 
         [Fact]
@@ -1704,6 +2292,29 @@ namespace FunctionalTests
 
             Assert.Throws<ModelValidationException>(
                 () => BuildMapping(modelBuilder));
+        }
+
+        public class PrincipalBase
+        {
+            public int Id { get; set; }
+            public DerivedDependent DerivedDependentNavigation { get; set; }
+        }
+
+        public class DerivedPrincipal : PrincipalBase
+        {
+            public ICollection<DerivedDependent> DerivedDependentNavigations { get; set; }
+        }
+
+        public class DependentBase
+        {
+            public int Id { get; set; }
+            public int PrincipalNavigationId { get; set; }
+            public PrincipalBase PrincipalNavigation { get; set; }
+        }
+
+        public class DerivedDependent : DependentBase
+        {
+            public DerivedPrincipal DerivedPrincipalNavigation { get; set; }
         }
 
         [Fact]
@@ -2173,6 +2784,19 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
         }
 
+        public class CDPrin
+        {
+            public int CDPrinId { get; set; }
+            public List<CDDep> CDDeps { get; set; }
+        }
+
+        public class CDDep
+        {
+            public int Id { get; set; }
+            public int CDPrinId { get; set; }
+            public CDPrin CDPrin { get; set; }
+        }
+
         #region Configuration from both sides tests
 
         [Fact]
@@ -2268,7 +2892,21 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () => BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMapping", "Products", "FunctionalTests.Tag");
+                  .ValidateMessage("ConflictingMapping", "Products", "FunctionalTests.AssociationScenarioTests+Tag");
+        }
+
+        public class ProductA
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<Tag> Tags { get; set; }
+        }
+
+        public class Tag
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<ProductA> Products { get; set; }
         }
 
         [Fact]
@@ -2282,7 +2920,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.SomeItem");
+                  .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.AssociationScenarioTests+SomeItem");
         }
 
         [Fact]
@@ -2296,7 +2934,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.SomeItem");
+                  .ValidateMessage("ConflictingMultiplicities", "Detail", "FunctionalTests.AssociationScenarioTests+SomeItem");
         }
 
         [Fact]
@@ -2310,7 +2948,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2324,7 +2962,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2338,7 +2976,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2352,7 +2990,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2366,7 +3004,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2380,7 +3018,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2394,7 +3032,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2408,7 +3046,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2422,7 +3060,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingConstraint", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2460,7 +3098,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingMultiplicities", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2514,7 +3152,7 @@ namespace FunctionalTests
             Assert.Throws<InvalidOperationException>(
                 () =>
                 BuildMapping(modelBuilder))
-                  .ValidateMessage("ConflictingCascadeDeleteOperation", "Item", "FunctionalTests.SomeItemDetail");
+                  .ValidateMessage("ConflictingCascadeDeleteOperation", "Item", "FunctionalTests.AssociationScenarioTests+SomeItemDetail");
         }
 
         [Fact]
@@ -2622,6 +3260,19 @@ namespace FunctionalTests
                            .DbEqual(StoreGeneratedPattern.Identity, c => c.StoreGeneratedPattern);
         }
 
+        public class TableSharing1
+        {
+            public int Id { get; set; }
+            public int Name { get; set; }
+        }
+
+        public class TableSharing2
+        {
+            public int Id { get; set; }
+            public byte[] Picture { get; set; }
+            public TableSharing1 BackRef { get; set; }
+        }
+
         // Dev11 345384
         [Fact]
         public void Identity_key_is_created_by_convention_when_table_splitting_is_specified_with_attributes()
@@ -2639,6 +3290,21 @@ namespace FunctionalTests
             databaseMapping.Assert<TableSharing1A>(d => d.Id)
                            .DbEqual(true, c => c.IsPrimaryKeyColumn)
                            .DbEqual(StoreGeneratedPattern.Identity, c => c.StoreGeneratedPattern);
+        }
+
+        [Table("SharedTable")]
+        public class TableSharing1A
+        {
+            public int Id { get; set; }
+            public int Name { get; set; }
+        }
+
+        [Table("SharedTable")]
+        public class TableSharing2A
+        {
+            public int Id { get; set; }
+            public byte[] Picture { get; set; }
+            public TableSharing1A BackRef { get; set; }
         }
 
         [Fact]
@@ -2661,6 +3327,19 @@ namespace FunctionalTests
                 "IndependentColumn1",
                 databaseMapping.EntityContainerMappings[0].AssociationSetMappings.ElementAt(0).ColumnConditions.ElementAt(0).ColumnProperty
                                                           .Name);
+        }
+
+        public class Repro150565_Dependent : Repro150565_BaseDependent
+        {
+            public decimal? BaseDependentKey1 { get; set; }
+            public Repro150565_BaseDependent PrincipalNavigation { get; set; }
+        }
+
+        public class Repro150565_BaseDependent
+        {
+            public Guid BaseProperty { get; set; }
+            public decimal? Key1 { get; set; }
+            public ICollection<Repro150565_Dependent> DependentNavigation { get; set; }
         }
 
         // Dev11 287430
@@ -2689,6 +3368,30 @@ namespace FunctionalTests
             databaseMapping.Assert("person_role", "domain").HasForeignKey(new[] { "person_identifier" }, "person");
         }
 
+        [Table("person", Schema = "domain")]
+        public class Person287430
+        {
+            [Key]
+            [Column("identifier", TypeName = "nvarchar")]
+            [StringLength(36, MinimumLength = 36)]
+            public string Identifier { get; private set; }
+
+            [InverseProperty("Persons")]
+            public virtual ICollection<Role287430> Roles { get; set; }
+        }
+
+        [Table("role", Schema = "domain")]
+        public class Role287430
+        {
+            [Key]
+            [Column("identifier", TypeName = "nvarchar")]
+            [StringLength(36, MinimumLength = 36)]
+            public string Identifier { get; set; }
+
+            [InverseProperty("Roles")]
+            public virtual ICollection<Person287430> Persons { get; set; }
+        }
+
         [Fact]
         public void Bug_46199_Sequence_contains_more_than_one_element_exception_thrown_at_navigation_property_configuration()
         {
@@ -2707,6 +3410,63 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
         }
 
+        public class APerson
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Full Name")]
+            public string Name { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Biography")]
+            public string Bio { get; set; }
+
+            public Event Birth { get; set; }
+            public Event Death { get; set; }
+
+            public APerson Mother { get; set; }
+            public APerson Father { get; set; }
+
+            public GenderType Gender { get; set; }
+        }
+
+        public enum GenderType
+        {
+            Male,
+            Female
+        }
+
+        public class Event
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            public DateTime Date { get; set; }
+
+            [DataType(DataType.Text)]
+            public string Location { get; set; }
+        }
+
+        public class Marriage
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Required]
+            public Person Husband { get; set; }
+
+            [Required]
+            public Person Wife { get; set; }
+
+            [Required]
+            public Event WeddingDay { get; set; }
+        }
+
         [Fact]
         public void ForeignKey_annotation_is_allowed_for_one_to_one_PK_to_PK_mapping_Dev11_437725()
         {
@@ -2722,791 +3482,21 @@ namespace FunctionalTests
             databaseMapping.Assert<OneToOneResultDetail>().HasForeignKey(
                 new[] { "OneToOneResultId" }, "OneToOneResults");
         }
-    }
 
-    #region Fixtures
-
-    public class CDPrin
-    {
-        public int CDPrinId { get; set; }
-        public List<CDDep> CDDeps { get; set; }
-    }
-
-    public class CDDep
-    {
-        public int Id { get; set; }
-        public int CDPrinId { get; set; }
-        public CDPrin CDPrin { get; set; }
-    }
-
-    public class SomeItem
-    {
-        public int SomeItemId { get; set; }
-        public SomeItemDetail Detail { get; set; }
-    }
-
-    public class SomeItemDetail
-    {
-        public int Id { get; set; }
-        public SomeItem Item { get; set; }
-    }
-
-    public class Album
-    {
-        public int Id { get; set; }
-        public virtual Photo Thumbnail { get; set; }
-        public int? ThumbnailId { get; set; }
-        public virtual ICollection<Photo> Photos { get; set; }
-    }
-
-    public class Photo
-    {
-        public int Id { get; set; }
-        public int AlbumId { get; set; }
-        public virtual Album Album { get; set; }
-    }
-
-    public class ProductA
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<Tag> Tags { get; set; }
-    }
-
-    public class Tag
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<ProductA> Products { get; set; }
-    }
-
-    public class Item
-    {
-        public int Id { get; set; }
-        public int Name { get; set; }
-        public virtual Item ParentItem { get; set; }
-        public virtual ICollection<Item> ChildrenItems { get; set; }
-    }
-
-    public class Person
-    {
-        public int Id { get; set; }
-        public ICollection<Person> Children { get; set; }
-        public ICollection<Person> Parents { get; set; }
-    }
-
-    public class SelfRef
-    {
-        public int Id { get; set; }
-        public SelfRef Self { get; set; }
-    }
-
-    public class TreeNode
-    {
-        public int Id { get; set; }
-        public int? ParentId { get; set; }
-        public TreeNode Parent { get; set; }
-        public ICollection<TreeNode> Children { get; set; }
-    }
-
-    public class One
-    {
-        public int AnId { get; set; }
-        public ToOne NavToOne { get; set; }
-    }
-
-    public class ToOne
-    {
-        public string AnotherId1 { get; set; }
-        public string AnotherId2 { get; set; }
-        public One NavOne { get; set; }
-    }
-
-    public class SelfRefToOne
-    {
-        public int Id { get; set; }
-        public SelfRefToOne SelfOne { get; set; }
-        public SelfRefToOne SelfTwo { get; set; }
-    }
-
-    public class Principal
-    {
-        public int Id { get; set; }
-        public Dependent DependentNavigation { get; set; }
-    }
-
-    public class Dependent
-    {
-        public int Id { get; set; }
-        public Principal PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalWithAnnotatedDependent
-    {
-        public string AnId { get; set; }
-        public AnnotatedDependent Dependent { get; set; }
-    }
-
-    public class AnnotatedDependent
-    {
-        [ForeignKey("Principal")]
-        public string AnotherId { get; set; }
-
-        public PrincipalWithAnnotatedDependent Principal { get; set; }
-    }
-
-    public class AnnotatedDependentWrong
-    {
-        [ForeignKey("Wrong")]
-        public string Id { get; set; }
-
-        public PrincipalWithAnnotatedDependent Principal { get; set; }
-    }
-
-    public class PrincipalWithCompositeAnnotatedDependent
-    {
-        public int Id1 { get; set; }
-        public string Id2 { get; set; }
-        public ICollection<CompositeAnnotatedDependent> Dependents { get; set; }
-        public ICollection<CompositePartiallyAnnotatedDependent> Dependents2 { get; set; }
-    }
-
-    public class CompositeAnnotatedDependent
-    {
-        public int Id { get; set; }
-
-        [ForeignKey("Principal")]
-        [Column(Order = 2)]
-        public int TheFk1 { get; set; }
-
-        [ForeignKey("Principal")]
-        [Column(Order = 1)]
-        public string TheFk2 { get; set; }
-
-        public PrincipalWithCompositeAnnotatedDependent Principal { get; set; }
-    }
-
-    public class CompositePartiallyAnnotatedDependent
-    {
-        public int Id { get; set; }
-
-        [ForeignKey("Principal")]
-        public int TheFk1 { get; set; }
-
-        [ForeignKey("Principal")]
-        public string TheFk2 { get; set; }
-
-        public PrincipalWithCompositeAnnotatedDependent Principal { get; set; }
-    }
-
-    public class PrincipalBase
-    {
-        public int Id { get; set; }
-        public DerivedDependent DerivedDependentNavigation { get; set; }
-    }
-
-    public class DerivedPrincipal : PrincipalBase
-    {
-        public ICollection<DerivedDependent> DerivedDependentNavigations { get; set; }
-    }
-
-    public class DependentBase
-    {
-        public int Id { get; set; }
-        public int PrincipalNavigationId { get; set; }
-        public PrincipalBase PrincipalNavigation { get; set; }
-    }
-
-    public class DerivedDependent : DependentBase
-    {
-        public DerivedPrincipal DerivedPrincipalNavigation { get; set; }
-    }
-
-    public class SelfRefInheritedBase
-    {
-        public string Id { get; set; }
-
-        [Required]
-        public SelfRefInheritedDerived Derived { get; set; }
-    }
-
-    public class SelfRefInheritedDerived : SelfRefInheritedBase
-    {
-        public ICollection<SelfRefInheritedBase> Bases { get; set; }
-    }
-
-    public class DependentNoPrincipalNavRequired
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        public PrincipalNoPrincipalNav PrincipalNavigation { get; set; }
-    }
-
-    public class DependentNoPrincipalNavOptional
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        public PrincipalNoPrincipalNav PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalNoPrincipalNav
-    {
-        public Guid? Key1 { get; set; }
-    }
-
-    public class DependentPrincipalNavOptional
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [ForeignKey("PrincipalNavigation")]
-        public Guid DependentForeignKeyPropertyNotFromConvention2 { get; set; }
-
-        public PrincipalPrincipalNavOptional PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalPrincipalNavOptional
-    {
-        public int? Key1 { get; set; }
-        public Guid? Key2 { get; set; }
-        public DependentPrincipalNavOptional DependentNavigation { get; set; }
-    }
-
-    public class DependentPrincipalNavRequired
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        public PrincipalPrincipalNavRequired PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalPrincipalNavRequired
-    {
-        public Guid? Key1 { get; set; }
-        public DependentPrincipalNavRequired DependentNavigation { get; set; }
-    }
-
-    public class DependentPrincipalNavRequiredDependent
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public Guid DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        public PrincipalPrincipalNavRequiredDependent PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalPrincipalNavRequiredDependent
-    {
-        public Guid? Key1 { get; set; }
-
-        [Required]
-        public DependentPrincipalNavRequiredDependent DependentNavigation { get; set; }
-    }
-
-    public class PrincipalByteKey
-    {
-        public byte[] Key1 { get; set; }
-
-        [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
-        public DependentByteKey DependentNavigation { get; set; }
-    }
-
-    public class DependentByteKey
-    {
-        public byte[] DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [InverseProperty("DependentNavigation")]
-        [Required]
-        public PrincipalByteKey PrincipalNavigation { get; set; }
-    }
-
-    public class DependentSelfRef
-    {
-        [ForeignKey("PrincipalNavigation")]
-        [Column(Order = 1)]
-        public DateTimeOffset Key1 { get; set; }
-
-        [ForeignKey("PrincipalNavigation")]
-        [Column(Order = 2)]
-        public DateTimeOffset DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        public DerivedDependentSelfRef PrincipalNavigation { get; set; }
-    }
-
-    public class DerivedDependentSelfRef : DependentSelfRef
-    {
-        public byte[] DerivedProperty1 { get; set; }
-    }
-
-    public class DependentWeirdKeyOrder
-    {
-        public int Fk1 { get; set; }
-        public int Fk2 { get; set; }
-
-        [ForeignKey("Fk2,Fk1")]
-        public PrincipalWeirdKeyOrder PrincipalNavigation { get; set; }
-    }
-
-    public class DependentWeirdKeyOrder2
-    {
-        public int Fk1 { get; set; }
-        public int Fk2 { get; set; }
-
-        [ForeignKey("Fk1,Fk2")]
-        public PrincipalWeirdKeyOrder PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalWeirdKeyOrder
-    {
-        public int Id1 { get; set; }
-        public int Id2 { get; set; }
-    }
-
-    public class BaseDependentAbstractKeyOrder
-    {
-        public decimal BaseProperty { get; set; }
-        public int Id { get; set; }
-    }
-
-    public abstract class DependentAbstractKeyOrder : BaseDependentAbstractKeyOrder
-    {
-        [ForeignKey("PrincipalNavigation")]
-        [Column(Order = 1)]
-        public decimal? DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [ForeignKey("PrincipalNavigation")]
-        [Column(Order = 2)]
-        public decimal? DependentForeignKeyPropertyNotFromConvention2 { get; set; }
-
-        public PrincipalAbstractKeyOrder PrincipalNavigation { get; set; }
-    }
-
-    public class BasePrincipalAbstractKeyOrder
-    {
-        public string BaseProperty { get; set; }
-        public decimal Key1 { get; set; }
-        public decimal Key2 { get; set; }
-    }
-
-    public abstract class PrincipalAbstractKeyOrder : BasePrincipalAbstractKeyOrder
-    {
-    }
-
-    public class DerivedPrincipalKeyOrder : PrincipalAbstractKeyOrder
-    {
-    }
-
-    public class DerivedDependentKeyOrder : DependentAbstractKeyOrder
-    {
-        public byte DerivedProperty1 { get; set; }
-    }
-
-    public abstract class DependentSelfRefInverse
-    {
-        public short Key1 { get; set; }
-        public short DependentSelfRefInverseKey1 { get; set; }
-
-        public DependentSelfRefInverse DependentNavigation { get; set; }
-
-        [InverseProperty("DependentNavigation")]
-        [Required]
-        public DependentSelfRefInverse PrincipalNavigation { get; set; }
-    }
-
-    public class DerivedDependentSelfRefInverse : DependentSelfRefInverse
-    {
-        public string DerivedProperty1 { get; set; }
-    }
-
-    public class BaseDependentFkAbstract
-    {
-        public DateTime? BaseProperty { get; set; }
-        public int Id { get; set; }
-    }
-
-    public abstract class DependentFkAbstract : BaseDependentFkAbstract
-    {
-        public int? DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [InverseProperty("DependentNavigation")]
-        [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
-        public PrincipalFkAbstract PrincipalNavigation { get; set; }
-    }
-
-    public class DerivedDependentFkAbstract : DependentFkAbstract
-    {
-        public string DerivedProperty1 { get; set; }
-    }
-
-    public class PrincipalFkAbstract
-    {
-        public int? Key1 { get; set; }
-
-        [InverseProperty("PrincipalNavigation")]
-        public ICollection<DependentFkAbstract> DependentNavigation { get; set; }
-
-        public PrincipalFkAbstract()
+        public class OneToOneResult
         {
-            DependentNavigation = new List<DependentFkAbstract>();
+            public int OneToOneResultId { get; set; }
+
+            [ForeignKey("OneToOneResultId")]
+            public virtual OneToOneResultDetail Detail { get; set; }
         }
-    }
 
-    public class DerivedPrincipalFkAbstract : PrincipalFkAbstract
-    {
-        public byte[] DerivedProperty1 { get; set; }
-    }
+        public class OneToOneResultDetail
+        {
+            [Key]
+            public int OneToOneResultId { get; set; }
 
-    public class Dependent144843
-    {
-        public int Id { get; set; }
-
-        public Principal144843 Principal1 { get; set; }
-        public int Principal1Id { get; set; }
-    }
-
-    public class Principal144843
-    {
-        public int Id { get; set; }
-        public ICollection<Dependent144843> Dependents1 { get; set; }
-        public Dependent144843 Dependent { get; set; }
-    }
-
-    public abstract class DependentManyToManySelf
-    {
-        public decimal? Key1 { get; set; }
-    }
-
-    public class DerivedDependentManyToManySelf : DependentManyToManySelf
-    {
-        public float DerivedProperty1 { get; set; }
-    }
-
-    public class DependentSelfRefInverseRequired
-    {
-        public string Key1 { get; set; }
-        public string Key2 { get; set; }
-
-        [InverseProperty("PrincipalNavigation")]
-        public DependentSelfRefInverseRequired DependentNavigation { get; set; }
-
-        [Required]
-        public DependentSelfRefInverseRequired PrincipalNavigation { get; set; }
-    }
-
-    public class Principal144934
-    {
-        public string Key1 { get; set; }
-
-        [InverseProperty("PrincipalNavigation")]
-        public Dependent144934 DependentNavigation { get; set; }
-    }
-
-    public class Dependent144934
-    {
-        public string PrincipalNavigationKey1 { get; set; }
-
-        [Required]
-        public Principal144934 PrincipalNavigation { get; set; }
-    }
-
-    public class ProductManyToManyTableNaming
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<SupplierManyToManyTableNaming> Suppliers { get; set; }
-    }
-
-    public class SupplierManyToManyTableNaming
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICollection<ProductManyToManyTableNaming> Products { get; set; }
-    }
-
-    public class DependentWithNullableFk
-    {
-        public int Id { get; set; }
-        public string PrincipalNavigationId { get; set; }
-        public PrincipalWithNullableFk PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalWithNullableFk
-    {
-        public string Id { get; set; }
-        public ICollection<DependentWithNullableFk> DependentNavigation { get; set; }
-    }
-
-    public class DependentWithNullableFkIdentifying
-    {
-        public int? Id { get; set; }
-        public PrincipalWithNullableFkIdentifying PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalWithNullableFkIdentifying
-    {
-        public int? Id { get; set; }
-        public DependentWithNullableFkIdentifying DependentNavigation { get; set; }
-    }
-
-    // Association from base to derived type
-
-    public class Repro150565_Dependent : Repro150565_BaseDependent
-    {
-        public decimal? BaseDependentKey1 { get; set; }
-        public Repro150565_BaseDependent PrincipalNavigation { get; set; }
-    }
-
-    public class Repro150565_BaseDependent
-    {
-        public Guid BaseProperty { get; set; }
-        public decimal? Key1 { get; set; }
-        public ICollection<Repro150565_Dependent> DependentNavigation { get; set; }
-    }
-
-    public class Dependent_6927
-    {
-        public string DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-        public int Id { get; set; }
-
-        [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
-        public Principal_6927 PrincipalNavigation { get; set; }
-    }
-
-    public class Principal_6927
-    {
-        public string Key1 { get; set; }
-        public ICollection<Dependent_6927> DependentNavigation { get; set; }
-    }
-
-    public class Dependent_162348
-    {
-        public short Key1 { get; set; }
-        public short? PrincipalNavigationKey1 { get; set; }
-        public Dependent_162348 PrincipalNavigation { get; set; }
-    }
-
-    public class Order_181909
-    {
-        public int OrderId { get; set; }
-        public int CustomerId { get; set; }
-        public virtual ICollection<OrderLine_181909> Lines { get; set; }
-    }
-
-    public class OrderLine_181909
-    {
-        public int OrderLineId { get; set; }
-        public int CustomerId { get; set; }
-        public int OrderId { get; set; }
-        public virtual Order_181909 Order { get; set; }
-        public string Description { get; set; }
-        public decimal Quantity { get; set; }
-    }
-
-    public class Principal_181909
-    {
-        public int Id { get; set; }
-        public virtual Dependent_181909 Order { get; set; }
-    }
-
-    public class Dependent_181909
-    {
-        public string Key { get; set; }
-        public int Principal_181909Id { get; set; }
-
-        [Required]
-        public virtual Principal_181909 Order { get; set; }
-    }
-
-    public class Principal_159001
-    {
-        public int Key1 { get; set; }
-    }
-
-    public class Dependent_159001a
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        public Principal_159001 PrincipalNavigation { get; set; }
-    }
-
-    public class Dependent_159001b
-    {
-        public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        [ForeignKey("DependentForeignKeyPropertyNotFromConvention1")]
-        public Principal_159001 PrincipalNavigation { get; set; }
-    }
-
-    public class PrincipalWithNav_159001a
-    {
-        public int Key1 { get; set; }
-
-        [Required]
-        public DependentWithNav_159001a DependentNavigation { get; set; }
-    }
-
-    public class DependentWithNav_159001a
-    {
-        [ForeignKey("PrincipalNavigation")]
-        public int DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        [Required]
-        public PrincipalWithNav_159001a PrincipalNavigation { get; set; }
-    }
-
-    public class Dependent_172949
-    {
-        public int Id { get; set; }
-
-        [ForeignKey("PrincipalNavigation")]
-        public short DependentForeignKeyPropertyNotFromConvention1 { get; set; }
-
-        public Principal_172949 PrincipalNavigation { get; set; }
-    }
-
-    public class Principal_172949
-    {
-        public short? Id { get; set; }
-
-        [InverseProperty("PrincipalNavigation")]
-        public ICollection<Dependent_172949> DependentNavigation { get; set; }
-    }
-
-    public class TableSharing1
-    {
-        public int Id { get; set; }
-        public int Name { get; set; }
-    }
-
-    public class TableSharing2
-    {
-        public int Id { get; set; }
-        public byte[] Picture { get; set; }
-        public TableSharing1 BackRef { get; set; }
-    }
-
-    [Table("SharedTable")]
-    public class TableSharing1A
-    {
-        public int Id { get; set; }
-        public int Name { get; set; }
-    }
-
-    [Table("SharedTable")]
-    public class TableSharing2A
-    {
-        public int Id { get; set; }
-        public byte[] Picture { get; set; }
-        public TableSharing1A BackRef { get; set; }
-    }
-
-    public class OneToOneResult
-    {
-        public int OneToOneResultId { get; set; }
-
-        [ForeignKey("OneToOneResultId")]
-        public virtual OneToOneResultDetail Detail { get; set; }
-    }
-
-    public class OneToOneResultDetail
-    {
-        [Key]
-        public int OneToOneResultId { get; set; }
-
-        public DateTime DataDate { get; set; }
-    }
-
-    #endregion
-
-    #region Model for Dev11 287430
-
-    [Table("person", Schema = "domain")]
-    public class Person287430
-    {
-        [Key]
-        [Column("identifier", TypeName = "nvarchar")]
-        [StringLength(36, MinimumLength = 36)]
-        public string Identifier { get; private set; }
-
-        [InverseProperty("Persons")]
-        public virtual ICollection<Role287430> Roles { get; set; }
-    }
-
-    [Table("role", Schema = "domain")]
-    public class Role287430
-    {
-        [Key]
-        [Column("identifier", TypeName = "nvarchar")]
-        [StringLength(36, MinimumLength = 36)]
-        public string Identifier { get; set; }
-
-        [InverseProperty("Roles")]
-        public virtual ICollection<Person287430> Persons { get; set; }
-    }
-
-    #endregion
-
-    public class APerson
-    {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Full Name")]
-        public string Name { get; set; }
-
-        [DataType(DataType.Text)]
-        [Display(Name = "Biography")]
-        public string Bio { get; set; }
-
-        public Event Birth { get; set; }
-        public Event Death { get; set; }
-
-        public APerson Mother { get; set; }
-        public APerson Father { get; set; }
-
-        public GenderType Gender { get; set; }
-    }
-
-    public class Event
-    {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-
-        [DataType(DataType.Text)]
-        public string Location { get; set; }
-    }
-
-    public enum GenderType
-    {
-        Male,
-        Female
-    }
-
-    public class Marriage
-    {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public Person Husband { get; set; }
-
-        [Required]
-        public Person Wife { get; set; }
-
-        [Required]
-        public Event WeddingDay { get; set; }
+            public DateTime DataDate { get; set; }
+        }
     }
 }

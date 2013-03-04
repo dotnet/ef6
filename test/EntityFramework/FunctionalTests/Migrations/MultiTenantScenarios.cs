@@ -11,6 +11,16 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class MultiTenantScenarios : DbTestCase
     {
+        public class TenantA
+        {
+            public int Id { get; set; }
+        }
+
+        public class TenantB
+        {
+            public int Id { get; set; }
+        }
+
         public class ContextA : DbContext
         {
             public DbSet<TenantA> As { get; set; }
@@ -212,15 +222,5 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("foo.TenantBs"));
             Assert.False(TableExists("foo." + HistoryContext.TableName));
         }
-    }
-
-    public class TenantA
-    {
-        public int Id { get; set; }
-    }
-
-    public class TenantB
-    {
-        public int Id { get; set; }
     }
 }

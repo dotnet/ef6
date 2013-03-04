@@ -73,6 +73,17 @@ namespace FunctionalTests
             Assert.Equal(1, databaseMapping.Database.EntityTypes.Count());
         }
 
+        public abstract class BaseDependent_165027
+        {
+            public decimal? BaseProperty { get; set; }
+            public float? Key1 { get; set; }
+            public decimal? Key2 { get; set; }
+        }
+
+        public class Dependent_165027 : BaseDependent_165027
+        {
+        }
+
         [Fact]
         public void Should_be_able_configure_base_properties_via_derived_type()
         {
@@ -152,6 +163,21 @@ namespace FunctionalTests
             modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("base_foo");
         }
 
+        public class Base_195898
+        {
+            public int Id { get; set; }
+            public Complex_195898 Complex { get; set; }
+        }
+
+        public class Derived_195898 : Base_195898
+        {
+        }
+
+        public class Complex_195898
+        {
+            public string Foo { get; set; }
+        }
+
         [Fact]
         public void Columns_should_get_preferred_names_when_distinct_in_target_table()
         {
@@ -183,6 +209,24 @@ namespace FunctionalTests
             databaseMapping.AssertValid();
             databaseMapping.Assert<Entity1DuplicateProps>(e => e.SomeProperty).DbEqual("Foo", c => c.Name);
             databaseMapping.Assert<Entity2DuplicateProps>(e => e.SomeProperty).DbEqual("Foo", c => c.Name);
+        }
+
+        public class BaseEntityDuplicateProps
+        {
+            public int ID { get; set; }
+            public string Title { get; set; }
+        }
+
+        public class Entity1DuplicateProps : BaseEntityDuplicateProps
+        {
+            public string SomeProperty { get; set; }
+            public int Entity2ID { get; set; }
+            public Entity2DuplicateProps Entity2 { get; set; }
+        }
+
+        public class Entity2DuplicateProps : BaseEntityDuplicateProps
+        {
+            public string SomeProperty { get; set; }
         }
 
         [Fact]
@@ -440,6 +484,21 @@ namespace FunctionalTests
                                 Properties.Count());
         }
 
+        public abstract class ITFoo
+        {
+            public int Id { get; set; }
+        }
+
+        public class ITBar : ITFoo
+        {
+        }
+
+        public class ITBaz
+        {
+            public int Id { get; set; }
+            public ICollection<ITFoo> ITFoos { get; set; }
+        }
+
         [Fact]
         public void Abstract_type_at_base_of_TPH_gets_IsTypeOf_mapping()
         {
@@ -466,6 +525,33 @@ namespace FunctionalTests
             Assert.False(
                 databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "A4").IsHierarchyMapping);
+        }
+
+        public abstract class A1
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public int Age1 { get; set; }
+            public string Name1 { get; set; }
+        }
+
+        public class A2 : A1
+        {
+            public int Age2 { get; set; }
+            public string Name2 { get; set; }
+        }
+
+        public class A3 : A2
+        {
+            public int Age3 { get; set; }
+            public string Name3 { get; set; }
+        }
+
+        public class A4 : A1
+        {
+            public int Age4 { get; set; }
+            public string Name4 { get; set; }
         }
 
         //[Fact]
@@ -496,6 +582,27 @@ namespace FunctionalTests
             Assert.False(
                 databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "B3").IsHierarchyMapping);
+        }
+
+        public class B1
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public int Age1 { get; set; }
+            public string Name1 { get; set; }
+        }
+
+        public abstract class B2 : B1
+        {
+            public int Age2 { get; set; }
+            public string Name2 { get; set; }
+        }
+
+        public class B3 : B2
+        {
+            public int Age3 { get; set; }
+            public string Name3 { get; set; }
         }
 
         [Fact]
@@ -561,6 +668,67 @@ namespace FunctionalTests
             Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
         }
 
+        public class ITOffice
+        {
+            public int ITOfficeId { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class ITEmployee
+        {
+            public int ITEmployeeId { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class ITOnSiteEmployee : ITEmployee
+        {
+            public ITOffice ITOffice { get; set; }
+        }
+
+        public class ITOffSiteEmployee : ITEmployee
+        {
+            public string SiteName { get; set; }
+        }
+
+        public class IT_Office
+        {
+            public int IT_OfficeId { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class IT_Employee
+        {
+            public int IT_EmployeeId { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class IT_OnSiteEmployee : IT_Employee
+        {
+            public int IT_OfficeId { get; set; }
+            public IT_Office IT_Office { get; set; }
+        }
+
+        public class IT_OffSiteEmployee : IT_Employee
+        {
+            public string SiteName { get; set; }
+        }
+
+        public class IT_Context : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<IT_Office>();
+                modelBuilder.Entity<IT_Employee>().ToTable("Employees");
+                modelBuilder.Entity<IT_OffSiteEmployee>().ToTable("OffSiteEmployees");
+                modelBuilder.Entity<IT_OnSiteEmployee>().ToTable("OnSiteEmployees");
+                modelBuilder.Entity<IT_OnSiteEmployee>()
+                            .HasRequired(e => e.IT_Office);
+            }
+
+            public DbSet<IT_Office> Offices { get; set; }
+            public DbSet<IT_Employee> Employees { get; set; }
+        }
+
         [Fact]
         public void Mapping_association_to_subtype_by_convention_and_TPH_uses_correct_entity_sets()
         {
@@ -591,6 +759,23 @@ namespace FunctionalTests
 
             Assert.Equal("C1", databaseMapping.Model.Containers.Single().AssociationSets[0].SourceSet.Name);
             Assert.Equal("D1", databaseMapping.Model.Containers.Single().AssociationSets[0].TargetSet.Name);
+        }
+
+        public abstract class D1
+        {
+            public int D1Id { get; set; }
+        }
+
+        public class DiscontinueD1 : D1
+        {
+            public DateTime DiscontinuedOn { get; set; }
+        }
+
+        public class C1
+        {
+            public int Id { get; set; }
+            public int DiscontinueD1Id { get; set; }
+            public DiscontinueD1 DiscontinueD1 { get; set; }
         }
 
         [Fact]
@@ -791,206 +976,30 @@ namespace FunctionalTests
         }
     }
 
-    #region Fixtures
-
-    public abstract class ITFoo
-    {
-        public int Id { get; set; }
-    }
-
-    public class ITBar : ITFoo
-    {
-    }
-
-    public class ITBaz
-    {
-        public int Id { get; set; }
-        public ICollection<ITFoo> ITFoos { get; set; }
-    }
-
-    public abstract class A1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public int Age1 { get; set; }
-        public string Name1 { get; set; }
-    }
-
-    public class A2 : A1
-    {
-        public int Age2 { get; set; }
-        public string Name2 { get; set; }
-    }
-
-    public class A3 : A2
-    {
-        public int Age3 { get; set; }
-        public string Name3 { get; set; }
-    }
-
-    public class A4 : A1
-    {
-        public int Age4 { get; set; }
-        public string Name4 { get; set; }
-    }
-
-    public class B1
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public int Age1 { get; set; }
-        public string Name1 { get; set; }
-    }
-
-    public abstract class B2 : B1
-    {
-        public int Age2 { get; set; }
-        public string Name2 { get; set; }
-    }
-
-    public class B3 : B2
-    {
-        public int Age3 { get; set; }
-        public string Name3 { get; set; }
-    }
-
-    public class ITOffice
-    {
-        public int ITOfficeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ITEmployee
-    {
-        public int ITEmployeeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class ITOnSiteEmployee : ITEmployee
-    {
-        public ITOffice ITOffice { get; set; }
-    }
-
-    public class ITOffSiteEmployee : ITEmployee
-    {
-        public string SiteName { get; set; }
-    }
-
-    public class IT_Office
-    {
-        public int IT_OfficeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class IT_Employee
-    {
-        public int IT_EmployeeId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class IT_OnSiteEmployee : IT_Employee
-    {
-        public int IT_OfficeId { get; set; }
-        public IT_Office IT_Office { get; set; }
-    }
-
-    public class IT_OffSiteEmployee : IT_Employee
-    {
-        public string SiteName { get; set; }
-    }
-
-    public class IT_Context : DbContext
-    {
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IT_Office>();
-            modelBuilder.Entity<IT_Employee>().ToTable("Employees");
-            modelBuilder.Entity<IT_OffSiteEmployee>().ToTable("OffSiteEmployees");
-            modelBuilder.Entity<IT_OnSiteEmployee>().ToTable("OnSiteEmployees");
-            modelBuilder.Entity<IT_OnSiteEmployee>()
-                        .HasRequired(e => e.IT_Office);
-        }
-
-        public DbSet<IT_Office> Offices { get; set; }
-        public DbSet<IT_Employee> Employees { get; set; }
-    }
-
-    public abstract class D1
-    {
-        public int D1Id { get; set; }
-    }
-
-    public class DiscontinueD1 : D1
-    {
-        public DateTime DiscontinuedOn { get; set; }
-    }
-
-    public class C1
-    {
-        public int Id { get; set; }
-        public int DiscontinueD1Id { get; set; }
-        public DiscontinueD1 DiscontinueD1 { get; set; }
-    }
-
-    public class BaseEntityDuplicateProps
-    {
-        public int ID { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class Entity1DuplicateProps : BaseEntityDuplicateProps
-    {
-        public string SomeProperty { get; set; }
-        public int Entity2ID { get; set; }
-        public Entity2DuplicateProps Entity2 { get; set; }
-    }
-
-    public class Entity2DuplicateProps : BaseEntityDuplicateProps
-    {
-        public string SomeProperty { get; set; }
-    }
-
-    public class Base_195898
-    {
-        public int Id { get; set; }
-        public Complex_195898 Complex { get; set; }
-    }
-
-    public class Derived_195898 : Base_195898
-    {
-    }
-
-    public class Complex_195898
-    {
-        public string Foo { get; set; }
-    }
-
-    public abstract class BaseDependent_165027
-    {
-        public decimal? BaseProperty { get; set; }
-        public float? Key1 { get; set; }
-        public decimal? Key2 { get; set; }
-    }
-
-    public class Dependent_165027 : BaseDependent_165027
-    {
-    }
-
-    #endregion
-
     #region Bug DevDiv#223284
 
-    namespace Bug223284
+    namespace Bug223284A
     {
-        public class ITEmployee : FunctionalTests.ITEmployee
+        public class ITEmployee
         {
-            public ITOffice ITOffice { get; set; }
+            public int ITEmployeeId { get; set; }
+            public string Name { get; set; }
+        }
+    }
+
+    namespace Bug223284B
+    {
+        public class ITEmployee : Bug223284A.ITEmployee
+        {
         }
 
         public class IT_Context : DbContext
         {
+            static IT_Context()
+            {
+                Database.SetInitializer<IT_Context>(null);
+            }
+
             public DbSet<ITEmployee> Employees { get; set; }
         }
 
@@ -1001,8 +1010,12 @@ namespace FunctionalTests
             {
                 var context = new IT_Context();
 
-                Assert.Throws<InvalidOperationException>(() => context.Employees.Add(new ITEmployee())).
-                       ValidateMessage("InvalidEntityType", "FunctionalTests.Bug223284.ITEmployee");
+                Assert.Throws<NotSupportedException>(() => context.Employees.Add(new ITEmployee()))
+                      .ValidateMessage(
+                          "SimpleNameCollision",
+                          typeof(ITEmployee).FullName,
+                          typeof(Bug223284A.ITEmployee).FullName,
+                          typeof(ITEmployee).Name);
             }
         }
     }

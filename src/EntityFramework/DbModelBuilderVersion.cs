@@ -40,6 +40,14 @@ namespace System.Data.Entity
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
-        V5_0
+        V5_0,
+
+        /// <summary>
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
+        ///     <see cref="DbContext" /> conventions shipped with Entity Framework v6.0
+        ///     should be used.
+        /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        V6_0
     }
 }

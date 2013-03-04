@@ -32,6 +32,13 @@ namespace FunctionalTests
             databaseMapping.Assert<AllBinaryDataTypes>(p => p.NProp_binary_10).DbEqual(false, f => f.IsMaxLength);
         }
 
+        public class AllBinaryDataTypes
+        {
+            public int ID { get; set; }
+            public byte[] Prop_binary_10 { get; set; }
+            public byte[] NProp_binary_10 { get; set; }
+        }
+
         [Fact]
         public void Decimal_property_gets_default_precision_by_convention()
         {
@@ -55,6 +62,13 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<DuplicatePropNames>().HasColumns("Id", "name", "NAME");
+        }
+
+        public class DuplicatePropNames
+        {
+            public int Id { get; set; }
+            public string name { get; set; }
+            public string NAME { get; set; }
         }
 
         [Fact]
@@ -298,6 +312,30 @@ namespace FunctionalTests
                     .MetadataProperties.Single(a => a.Name.EndsWith("StoreGeneratedPattern")).Value);
         }
 
+        [ComplexType]
+        public class Address
+        {
+            public string Line1 { get; set; }
+            public string Line2 { get; set; }
+        }
+
+        public class CTEmployee
+        {
+            public int CTEmployeeId { get; set; }
+            public Address HomeAddress { get; set; }
+        }
+
+        public class OffSiteEmployee : CTEmployee
+        {
+            public Address WorkAddress { get; set; }
+        }
+
+        public class Building
+        {
+            public int Id { get; set; }
+            public Address Address { get; set; }
+        }
+
         [Fact]
         public void Configure_IsRequired_on_a_complex_child_property()
         {
@@ -499,6 +537,12 @@ namespace FunctionalTests
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
         }
 
+        public class TwoManyKeys
+        {
+            public int Id { get; set; }
+            public int ID { get; set; }
+        }
+
         [Fact]
         public void
             Two_properties_that_both_match_the_primary_key_convention_can_be_disambiguated_using_a_data_annotation()
@@ -513,37 +557,13 @@ namespace FunctionalTests
             databaseMapping.Assert<TwoManyKeysWithAnnotation>(e => e.ID)
                 .DbEqual(true, c => c.IsPrimaryKeyColumn);
         }
-    }
 
-    #region Fixtures
+        public class TwoManyKeysWithAnnotation
+        {
+            public int Id { get; set; }
 
-    public class DuplicatePropNames
-    {
-        public int Id { get; set; }
-        public string name { get; set; }
-        public string NAME { get; set; }
-    }
-
-    public class AllBinaryDataTypes
-    {
-        public int ID { get; set; }
-        public byte[] Prop_binary_10 { get; set; }
-        public byte[] NProp_binary_10 { get; set; }
-    }
-
-    #endregion
-
-    public class TwoManyKeys
-    {
-        public int Id { get; set; }
-        public int ID { get; set; }
-    }
-
-    public class TwoManyKeysWithAnnotation
-    {
-        public int Id { get; set; }
-
-        [Key]
-        public int ID { get; set; }
+            [Key]
+            public int ID { get; set; }
+        }
     }
 }

@@ -304,7 +304,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             DebugCheck.NotNull(type);
 
             if (_rootContext.Perspective.TryGetTypeByName(
-                TypeSystem.GetNonNullableType(type).FullName,
+                TypeSystem.GetNonNullableType(type).FullNameWithNesting(),
                 false, // bIgnoreCase
                 out typeUsage)
                 &&

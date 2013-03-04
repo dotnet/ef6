@@ -256,6 +256,28 @@ namespace ProductivityApiTests
             public DbSet<MeTrackChanges> MeTrackChanges { get; set; }
         }
 
+        [Serializable]
+        [DataContract]
+        public class MeTrackChanges
+        {
+            [DataMember]
+            public virtual int Id { get; set; }
+
+            [DataMember]
+            public virtual ICollection<MeLazyLoad> MeLazyLoad { get; set; }
+        }
+
+        [Serializable]
+        [DataContract]
+        public class MeLazyLoad
+        {
+            [DataMember]
+            public int Id { get; set; }
+
+            [DataMember]
+            public virtual MeTrackChanges MeTrackChanges { get; set; }
+        }
+
         [Fact]
         public void Lazy_loading_proxy_can_be_created_under_partial_trust()
         {
@@ -282,15 +304,34 @@ namespace ProductivityApiTests
         {
             static FullTrustProxiesContext()
             {
-                Database.SetInitializer<ProxiesContext>(null);
+                Database.SetInitializer<FullTrustProxiesContext>(null);
             }
 
             public DbSet<MeISerializable> MeISerializables { get; set; }
         }
 
+        [Serializable]
+        public class MeISerializable : ISerializable
+        {
+            public virtual int Id { get; set; }
+
+            public MeISerializable()
+            {
+            }
+
+            protected MeISerializable(SerializationInfo info, StreamingContext context)
+            {
+            }
+
+            [SecurityCritical]
+            public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+            }
+        }
+
         [Fact]
         [FullTrust]
-        public void Prxoy_for_ISerializable_entity_can_be_created_under_full_trust_and_is_ISerializable()
+        public void Proxy_for_ISerializable_entity_can_be_created_under_full_trust_and_is_ISerializable()
         {
             using (var context = new FullTrustProxiesContext())
             {
@@ -388,47 +429,6 @@ namespace ProductivityApiTests
                 Assert.Same(proxy.GetType(), deserialized.GetType());
                 Assert.Equal(77, deserialized.Id);
             }
-        }
-    }
-
-    [Serializable]
-    [DataContract]
-    public class MeTrackChanges
-    {
-        [DataMember]
-        public virtual int Id { get; set; }
-
-        [DataMember]
-        public virtual ICollection<MeLazyLoad> MeLazyLoad { get; set; }
-    }
-
-    [Serializable]
-    [DataContract]
-    public class MeLazyLoad
-    {
-        [DataMember]
-        public int Id { get; set; }
-
-        [DataMember]
-        public virtual MeTrackChanges MeTrackChanges { get; set; }
-    }
-
-    [Serializable]
-    public class MeISerializable : ISerializable
-    {
-        public virtual int Id { get; set; }
-
-        public MeISerializable()
-        {
-        }
-
-        protected MeISerializable(SerializationInfo info, StreamingContext context)
-        {
-        }
-
-        [SecurityCritical]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
         }
     }
 }

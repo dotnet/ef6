@@ -15,88 +15,84 @@ namespace System.Data.Entity.Internal
     using Moq;
     using Xunit;
 
-    #region Test fixtures
-
-    public class FakeEntity1
-    {
-    }
-
-    public class FakeEntity2
-    {
-    }
-
-    public class FakeEntity3
-    {
-    }
-
-    public class FakeEntity4
-    {
-    }
-
-    public class FakeEntity5
-    {
-    }
-
-    public class FakeEntity6
-    {
-    }
-
-    public class FakeEntity7
-    {
-    }
-
-    public class FakeEntity8
-    {
-    }
-
-    public class FakeEntity9
-    {
-    }
-
-    public class FakeEntity10
-    {
-    }
-
-    public class FakeEntity11
-    {
-    }
-
-    public class FakeEntity12
-    {
-    }
-
-    public class FakeEntity13
-    {
-    }
-
-    public class FakeEntity14
-    {
-    }
-
-    public class FakeEntity15
-    {
-    }
-
-    public class FakeEntity16
-    {
-    }
-
-    public class FakeEntity17
-    {
-    }
-
-    public class FakeEntity18
-    {
-    }
-
-    #endregion
-
     /// <summary>
     ///     Unit tests for the DbSet/ObjectSet discovery service.
     /// </summary>
     public class DbSetDiscoveryServiceTests : TestBase
     {
         #region Positive DbContext discovery and initialization tests
+
+        public class FakeEntity1
+        {
+        }
+
+        public class FakeEntity2
+        {
+        }
+
+        public class FakeEntity3
+        {
+        }
+
+        public class FakeEntity4
+        {
+        }
+
+        public class FakeEntity5
+        {
+        }
+
+        public class FakeEntity6
+        {
+        }
+
+        public class FakeEntity7
+        {
+        }
+
+        public class FakeEntity8
+        {
+        }
+
+        public class FakeEntity9
+        {
+        }
+
+        public class FakeEntity10
+        {
+        }
+
+        public class FakeEntity11
+        {
+        }
+
+        public class FakeEntity12
+        {
+        }
+
+        public class FakeEntity13
+        {
+        }
+
+        public class FakeEntity14
+        {
+        }
+
+        public class FakeEntity15
+        {
+        }
+
+        public class FakeEntity16
+        {
+        }
+
+        public class FakeEntity17
+        {
+        }
+
+        public class FakeEntity18
+        {
+        }
 
         private class FakeDbContextWithDbSets : DbContext
         {
@@ -261,20 +257,6 @@ namespace System.Data.Entity.Internal
                 Strings.InvalidEntityType(typeof(List<FakeEntity>)),
                 Assert.Throws<InvalidOperationException>(
                     () => new DbSetDiscoveryService(new FakeDbContextWithGenericDbSet()).InitializeSets()).Message);
-        }
-
-        private class FakeDbContextWithNestedDbSet : DbContext
-        {
-            public DbSet<FakeDbContextWithDbSets> SetProp { get; set; }
-        }
-
-        [Fact]
-        public void Discovery_of_DbSet_of_nested_type_throws()
-        {
-            Assert.Equal(
-                Strings.InvalidEntityType(typeof(FakeDbContextWithDbSets)),
-                Assert.Throws<InvalidOperationException>(
-                    () => new DbSetDiscoveryService(new FakeDbContextWithNestedDbSet()).InitializeSets()).Message);
         }
 
         private class FakeDbContextWithObjectDbSet : DbContext

@@ -663,31 +663,31 @@ namespace System.Data.Entity.Migrations
                     automaticMigrationsEnabled: false)
                           .Update());
         }
-    }
 
-    public class MultiUserContextA : DbContext
-    {
-        public DbSet<MultiUserA> As { get; set; }
-    }
+        public class MultiUserContextA : DbContext
+        {
+            public DbSet<MultiUserA> As { get; set; }
+        }
 
-    public class MultiUserContextB : DbContext
-    {
-        public DbSet<MultiUserB> Bs { get; set; }
-    }
+        public class MultiUserContextB : DbContext
+        {
+            public DbSet<MultiUserB> Bs { get; set; }
+        }
 
-    public class MultiUserContextAB : DbContext
-    {
-        public DbSet<MultiUserA> As { get; set; }
-        public DbSet<MultiUserB> Bs { get; set; }
-    }
+        public class MultiUserContextAB : DbContext
+        {
+            public DbSet<MultiUserA> As { get; set; }
+            public DbSet<MultiUserB> Bs { get; set; }
+        }
 
-    public class MultiUserA
-    {
-        public int Id { get; set; }
-    }
+        public class MultiUserA
+        {
+            public int Id { get; set; }
+        }
 
-    public class MultiUserB
-    {
-        public int Id { get; set; }
+        public class MultiUserB
+        {
+            public int Id { get; set; }
+        }
     }
 }

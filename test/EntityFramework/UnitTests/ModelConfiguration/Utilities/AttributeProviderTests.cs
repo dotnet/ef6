@@ -111,8 +111,6 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             Assert.Equal(0, attributes.OfType<KeyAttribute>().Count());
         }
 
-        #region Test Fixtures
-
         [DataContract]
         [Table("Foo")]
         [MetadataType(typeof(AttributeProviderBuddyClass))]
@@ -178,7 +176,5 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             {
             }
         }
-
-        #endregion
     }
 }

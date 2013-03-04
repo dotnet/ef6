@@ -734,6 +734,94 @@ namespace ProductivityApiTests
             }
         }
 
+        public class DetachmentContext : DbContext
+        {
+            public DetachmentContext()
+            {
+                Database.SetInitializer(new DetachmentInitializer());
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<DeLogin>()
+                    .HasMany(l => l.Orders)
+                    .WithOptional(o => o.Login);
+
+                modelBuilder
+                    .Entity<DeCustomer>()
+                    .HasMany(c => c.Logins)
+                    .WithOptional(l => l.Customer)
+                    .HasForeignKey(l => l.CustomerId);
+
+                modelBuilder
+                    .Entity<DeLogin>()
+                    .Property(l => l.CustomerId)
+                    .IsOptional();
+            }
+
+            public DbSet<DeLogin> Logins { get; set; }
+            public DbSet<DeOrder> Orders { get; set; }
+            public DbSet<DeCustomer> Customers { get; set; }
+        }
+
+        public class DetachmentInitializer : DropCreateDatabaseAlways<DetachmentContext>
+        {
+            protected override void Seed(DetachmentContext context)
+            {
+                var login = new DeLogin
+                {
+                    Id = 14,
+                    CustomerId = 21
+                };
+                var order = new DeOrder
+                {
+                    Id = 19
+                };
+                var customer = new DeCustomer
+                {
+                    DeCustomerId = 21
+                };
+
+                login.Orders.Add(order);
+                order.Login = login;
+                login.Customer = customer;
+
+                context.Logins.Add(login);
+            }
+        }
+
+        public class DeLogin
+        {
+            public DeLogin()
+            {
+                Orders = new List<DeOrder>();
+            }
+
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public ICollection<DeOrder> Orders { get; set; }
+            public int CustomerId { get; set; }
+            public DeCustomer Customer { get; set; }
+        }
+
+        public class DeOrder
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public DeLogin Login { get; set; }
+        }
+
+        public class DeCustomer
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int DeCustomerId { get; set; }
+
+            public ICollection<DeLogin> Logins { get; set; }
+        }
+
         #endregion
 
         #region Refresh with primary key (Dev11 212562)
@@ -759,6 +847,46 @@ namespace ProductivityApiTests
                 // Should not throw because the conceptual null should have been cleared.
                 GetObjectContext(context).AcceptAllChanges();
             }
+        }
+
+        public class RefreshContext : DbContext
+        {
+            public RefreshContext()
+            {
+                Database.SetInitializer(new RefreshInitializer());
+            }
+
+            public DbSet<ReProduct> Products { get; set; }
+        }
+
+        public class RefreshInitializer : DropCreateDatabaseAlways<RefreshContext>
+        {
+            protected override void Seed(RefreshContext context)
+            {
+                context.Products.Add(
+                    new ReProduct
+                    {
+                        Id = "ALFKI",
+                        Supplier = new ReSupplier
+                        {
+                            Id = 14,
+                            Name = "Initial"
+                        }
+                    });
+            }
+        }
+
+        public class ReProduct
+        {
+            public string Id { get; set; }
+            public int SupplierId { get; set; }
+            public ReSupplier Supplier { get; set; }
+        }
+
+        public class ReSupplier
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
 
         #endregion
@@ -801,208 +929,76 @@ namespace ProductivityApiTests
             }
         }
 
-        #endregion
-    }
-
-    #region Repro models
-
-    public class DetachmentContext : DbContext
-    {
-        public DetachmentContext()
+        public class MixedIAAndFKContext : DbContext
         {
-            Database.SetInitializer(new DetachmentInitializer());
+            public MixedIAAndFKContext()
+            {
+                Database.SetInitializer(new MixedIAAndFKInitializer());
+            }
+
+            public DbSet<MixedPrincipal> Principals { get; set; }
+            public DbSet<MixedBoth> Boths { get; set; }
+            public DbSet<MixedDependent> Dependents { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder builder)
+            {
+                builder.Entity<MixedPrincipal>().HasMany(p => p.IADependents).WithOptional(d => d.IAPrincipal);
+                builder.Entity<MixedPrincipal>().HasMany(p => p.FKDependents).WithOptional(d => d.FKPrincipal).HasForeignKey
+                    (d => d.FK);
+                builder.Entity<MixedBoth>().HasMany(p => p.IADependents).WithOptional(d => d.IAPrincipal);
+                builder.Entity<MixedBoth>().HasMany(p => p.FKDependents).WithOptional(d => d.FKPrincipal).HasForeignKey(
+                    d => d.FK);
+            }
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        public class MixedPrincipal
         {
-            modelBuilder
-                .Entity<DeLogin>()
-                .HasMany(l => l.Orders)
-                .WithOptional(o => o.Login);
+            public int Id { get; set; }
 
-            modelBuilder
-                .Entity<DeCustomer>()
-                .HasMany(c => c.Logins)
-                .WithOptional(l => l.Customer)
-                .HasForeignKey(l => l.CustomerId);
-
-            modelBuilder
-                .Entity<DeLogin>()
-                .Property(l => l.CustomerId)
-                .IsOptional();
+            public virtual ICollection<MixedBoth> IADependents { get; set; }
+            public virtual ICollection<MixedBoth> FKDependents { get; set; }
         }
 
-        public DbSet<DeLogin> Logins { get; set; }
-        public DbSet<DeOrder> Orders { get; set; }
-        public DbSet<DeCustomer> Customers { get; set; }
-    }
-
-    public class DetachmentInitializer : DropCreateDatabaseAlways<DetachmentContext>
-    {
-        protected override void Seed(DetachmentContext context)
+        public class MixedBoth
         {
-            var login = new DeLogin
-                            {
-                                Id = 14,
-                                CustomerId = 21
-                            };
-            var order = new DeOrder
-                            {
-                                Id = 19
-                            };
-            var customer = new DeCustomer
-                               {
-                                   DeCustomerId = 21
-                               };
+            public int Id { get; set; }
+            public int? FK { get; set; }
 
-            login.Orders.Add(order);
-            order.Login = login;
-            login.Customer = customer;
+            public virtual MixedPrincipal IAPrincipal { get; set; }
+            public virtual MixedPrincipal FKPrincipal { get; set; }
 
-            context.Logins.Add(login);
-        }
-    }
-
-    public class DeLogin
-    {
-        public DeLogin()
-        {
-            Orders = new List<DeOrder>();
+            public virtual ICollection<MixedDependent> IADependents { get; set; }
+            public virtual ICollection<MixedDependent> FKDependents { get; set; }
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public ICollection<DeOrder> Orders { get; set; }
-        public int CustomerId { get; set; }
-        public DeCustomer Customer { get; set; }
-    }
-
-    public class DeOrder
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-
-        public DeLogin Login { get; set; }
-    }
-
-    public class DeCustomer
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int DeCustomerId { get; set; }
-
-        public ICollection<DeLogin> Logins { get; set; }
-    }
-
-    public class RefreshContext : DbContext
-    {
-        public RefreshContext()
+        public class MixedDependent
         {
-            Database.SetInitializer(new RefreshInitializer());
+            public int Id { get; set; }
+            public int? FK { get; set; }
+
+            public virtual MixedBoth IAPrincipal { get; set; }
+            public virtual MixedBoth FKPrincipal { get; set; }
         }
 
-        public DbSet<ReProduct> Products { get; set; }
-    }
-
-    public class RefreshInitializer : DropCreateDatabaseAlways<RefreshContext>
-    {
-        protected override void Seed(RefreshContext context)
+        public class MixedIAAndFKInitializer : DropCreateDatabaseIfModelChanges<MixedIAAndFKContext>
         {
-            context.Products.Add(
-                new ReProduct
-                    {
-                        Id = "ALFKI",
-                        Supplier = new ReSupplier
-                                       {
-                                           Id = 14,
-                                           Name = "Initial"
-                                       }
-                    });
-        }
-    }
-
-    public class ReProduct
-    {
-        public string Id { get; set; }
-        public int SupplierId { get; set; }
-        public ReSupplier Supplier { get; set; }
-    }
-
-    public class ReSupplier
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class MixedIAAndFKContext : DbContext
-    {
-        public MixedIAAndFKContext()
-        {
-            Database.SetInitializer(new MixedIAAndFKInitializer());
-        }
-
-        public DbSet<MixedPrincipal> Principals { get; set; }
-        public DbSet<MixedBoth> Boths { get; set; }
-        public DbSet<MixedDependent> Dependents { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder builder)
-        {
-            builder.Entity<MixedPrincipal>().HasMany(p => p.IADependents).WithOptional(d => d.IAPrincipal);
-            builder.Entity<MixedPrincipal>().HasMany(p => p.FKDependents).WithOptional(d => d.FKPrincipal).HasForeignKey
-                (d => d.FK);
-            builder.Entity<MixedBoth>().HasMany(p => p.IADependents).WithOptional(d => d.IAPrincipal);
-            builder.Entity<MixedBoth>().HasMany(p => p.FKDependents).WithOptional(d => d.FKPrincipal).HasForeignKey(
-                d => d.FK);
-        }
-    }
-
-    public class MixedPrincipal
-    {
-        public int Id { get; set; }
-
-        public virtual ICollection<MixedBoth> IADependents { get; set; }
-        public virtual ICollection<MixedBoth> FKDependents { get; set; }
-    }
-
-    public class MixedBoth
-    {
-        public int Id { get; set; }
-        public int? FK { get; set; }
-
-        public virtual MixedPrincipal IAPrincipal { get; set; }
-        public virtual MixedPrincipal FKPrincipal { get; set; }
-
-        public virtual ICollection<MixedDependent> IADependents { get; set; }
-        public virtual ICollection<MixedDependent> FKDependents { get; set; }
-    }
-
-    public class MixedDependent
-    {
-        public int Id { get; set; }
-        public int? FK { get; set; }
-
-        public virtual MixedBoth IAPrincipal { get; set; }
-        public virtual MixedBoth FKPrincipal { get; set; }
-    }
-
-    public class MixedIAAndFKInitializer : DropCreateDatabaseIfModelChanges<MixedIAAndFKContext>
-    {
-        protected override void Seed(MixedIAAndFKContext context)
-        {
-            var principal = new MixedPrincipal();
-            var both = new MixedBoth
-                           {
-                               IAPrincipal = principal,
-                               FKPrincipal = principal
-                           };
-            context.Dependents.Add(
-                new MixedDependent
+            protected override void Seed(MixedIAAndFKContext context)
+            {
+                var principal = new MixedPrincipal();
+                var both = new MixedBoth
+                {
+                    IAPrincipal = principal,
+                    FKPrincipal = principal
+                };
+                context.Dependents.Add(
+                    new MixedDependent
                     {
                         IAPrincipal = both,
                         FKPrincipal = both
                     });
+            }
         }
-    }
 
-    #endregion
+        #endregion
+    }
 }

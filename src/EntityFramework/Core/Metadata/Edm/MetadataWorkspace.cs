@@ -1556,7 +1556,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ImplicitLoadAssemblyForType(nonNullableType, Assembly.GetCallingAssembly());
             var objectItemCollection = (ObjectItemCollection)GetItemCollection(DataSpace.OSpace);
             EdmType objectEdmType;
-            if (objectItemCollection.TryGetItem(nonNullableType.FullName, out objectEdmType))
+            if (objectItemCollection.TryGetItem(nonNullableType.FullNameWithNesting(), out objectEdmType))
             {
                 Map map;
                 if (TryGetMap(objectEdmType, DataSpace.OCSpace, out map))

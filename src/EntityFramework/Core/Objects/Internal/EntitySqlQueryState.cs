@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Objects
                         // sure that the parameter TypeUsage is not populated with the provider
                         // default facet values.
                         ObjectContext.Perspective.TryGetTypeByName(
-                            parameter.MappableType.FullName,
+                            parameter.MappableType.FullNameWithNesting(),
                             false /* bIgnoreCase */,
                             out typeUsage);
                     }

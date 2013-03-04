@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
             _xmlWriter = xmlWriter;
             _databaseMapping = databaseMapping;
-            _version = databaseMapping.Model.Version;
+            _version = databaseMapping.Model.Version.GetEdmVersion();
             _providerInfo = providerInfo;
             _namespace = Equals(_version, XmlConstants.EdmVersionForV3) ? EdmXmlNamespaceV3 : EdmXmlNamespaceV2;
 

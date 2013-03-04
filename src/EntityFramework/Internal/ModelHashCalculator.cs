@@ -35,7 +35,7 @@ namespace System.Data.Entity.Internal
             EdmMetadataContext.ConfigureEdmMetadata(modelBuilder.ModelConfiguration);
 
             var databaseMetadata = modelBuilder.Build(providerInfo).DatabaseMapping.Database;
-            databaseMetadata.Version = 2.0; // Ensures SSDL version matches that created by EF 4.1/4.2
+            databaseMetadata.Version = DbModelBuilderVersion.V4_1; // Ensures SSDL version matches that created by EF 4.1/4.2
 
             var stringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(

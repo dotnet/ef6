@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     internal class DataModelValidator
     {
@@ -17,7 +18,7 @@ namespace System.Data.Entity.Edm.Validation
             var modelVisitor
                 = new EdmModelValidationVisitor(
                     context,
-                    EdmModelRuleSet.CreateEdmModelRuleSet(model.Version, validateSyntax));
+                    EdmModelRuleSet.CreateEdmModelRuleSet(model.Version.GetEdmVersion(), validateSyntax));
 
             modelVisitor.Visit(model);
         }

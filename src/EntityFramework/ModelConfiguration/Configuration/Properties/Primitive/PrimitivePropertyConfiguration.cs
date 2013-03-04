@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     var declaringTypeName = propertyInfo == null
                                                 ? string.Empty
                                                 : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
-                                                                         FullName;
+                                                                         FullNameWithNesting();
                     throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
                 }
 

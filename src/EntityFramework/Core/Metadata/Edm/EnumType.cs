@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </remarks>
         internal EnumType(Type clrType)
             :
-                base(clrType.Name, clrType.Namespace ?? string.Empty, DataSpace.OSpace)
+                base(clrType.Name, clrType.NestingNamespace() ?? string.Empty, DataSpace.OSpace)
         {
             DebugCheck.NotNull(clrType);
             Debug.Assert(clrType.IsEnum, "enum type expected");

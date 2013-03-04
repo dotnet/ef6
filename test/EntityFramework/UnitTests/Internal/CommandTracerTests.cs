@@ -40,10 +40,10 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Can_trace_commands()
         {
-            using (var context = new YummyContext())
+            using (var context = new ChangeTrackingProxyTests.YummyContext())
             {
                 context.Products.Add(
-                    new YummyProduct
+                    new ChangeTrackingProxyTests.YummyProduct
                         {
                             Name = "Pineapple Lumps"
                         });

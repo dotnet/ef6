@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                      || t.BuiltInTypeKind == BuiltInTypeKind.EnumType
                      || t.BuiltInTypeKind == BuiltInTypeKind.ComplexType))
             {
-                var clrType = GetClrType(cSpaceType);
+                var clrType = cSpaceType.GetClrType();
                 if (clrType != null)
                 {
                     var oSpaceType = _typeFactory.TryCreateType(clrType, cSpaceType);
@@ -56,29 +56,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             objectItemCollection.AddLoadedTypes(_typeFactory.LoadedTypes);
             objectItemCollection.OSpaceTypesLoaded = true;
-        }
-
-        private static Type GetClrType(EdmType item)
-        {
-            var asEntityType = item as EntityType;
-            if (asEntityType != null)
-            {
-                return asEntityType.GetClrType();
-            }
-
-            var asEnumType = item as EnumType;
-            if (asEnumType != null)
-            {
-                return asEnumType.GetClrType();
-            }
-
-            var asComplexType = item as ComplexType;
-            if (asComplexType != null)
-            {
-                return asComplexType.GetClrType();
-            }
-
-            return null;
         }
     }
 }

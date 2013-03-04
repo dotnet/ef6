@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
         [Fact]
         public void Serialize_should_return_valid_edmx_xml_v2()
         {
-            var databaseMapping = CreateSimpleModel(2.0);
+            var databaseMapping = CreateSimpleModel(DbModelBuilderVersion.V4_1);
             var edmx = new XDocument();
 
             using (var xmlWriter = edmx.CreateWriter())
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
         [Fact]
         public void Serialize_should_return_valid_edmx_xml_v3()
         {
-            var databaseMapping = CreateSimpleModel(3.0);
+            var databaseMapping = CreateSimpleModel(DbModelBuilderVersion.V5_0);
             var edmx = new XDocument();
 
             using (var xmlWriter = edmx.CreateWriter())
@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             edmx.Validate(LoadEdmxSchemaSet(3), (_, e) => { throw e.Exception; });
         }
 
-        private static DbDatabaseMapping CreateSimpleModel(double version)
+        private static DbDatabaseMapping CreateSimpleModel(DbModelBuilderVersion version)
         {
             var model = new EdmModel(DataSpace.CSpace, version);
 
