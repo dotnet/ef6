@@ -23,12 +23,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(metadataWorkspace);
 
-            m_metadataWorkspace = metadataWorkspace;
-            m_targetDataspace = targetDataspace;
+            _metadataWorkspace = metadataWorkspace;
+            _targetDataspace = targetDataspace;
         }
 
-        private readonly MetadataWorkspace m_metadataWorkspace;
-        private readonly DataSpace m_targetDataspace;
+        private readonly MetadataWorkspace _metadataWorkspace;
+        private readonly DataSpace _targetDataspace;
 
         /// <summary>
         ///     Given the type in the target space and the member name in the source space,
@@ -144,13 +144,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fullName = namespaceName + "." + functionName;
 
             // First look for a model-defined function in the target space.
-            var itemCollection = m_metadataWorkspace.GetItemCollection(m_targetDataspace);
+            var itemCollection = _metadataWorkspace.GetItemCollection(_targetDataspace);
             IList<EdmFunction> overloads =
-                m_targetDataspace == DataSpace.SSpace
+                _targetDataspace == DataSpace.SSpace
                     ? ((StoreItemCollection)itemCollection).GetCTypeFunctions(fullName, ignoreCase)
                     : itemCollection.GetFunctions(fullName, ignoreCase);
 
-            if (m_targetDataspace == DataSpace.CSpace)
+            if (_targetDataspace == DataSpace.CSpace)
             {
                 // Then look for a function import.
                 if (overloads == null
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     || overloads.Count == 0)
                 {
                     ItemCollection storeItemCollection;
-                    if (m_metadataWorkspace.TryGetItemCollection(DataSpace.SSpace, out storeItemCollection))
+                    if (_metadataWorkspace.TryGetItemCollection(DataSpace.SSpace, out storeItemCollection))
                     {
                         overloads = ((StoreItemCollection)storeItemCollection).GetCTypeFunctions(fullName, ignoreCase);
                     }
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal MetadataWorkspace MetadataWorkspace
         {
-            get { return m_metadataWorkspace; }
+            get { return _metadataWorkspace; }
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> </returns>
         internal virtual bool TryGetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, out PrimitiveType primitiveType)
         {
-            primitiveType = m_metadataWorkspace.GetMappedPrimitiveType(primitiveTypeKind, DataSpace.CSpace);
+            primitiveType = _metadataWorkspace.GetMappedPrimitiveType(primitiveTypeKind, DataSpace.CSpace);
 
             return (null != primitiveType);
         }
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal DataSpace TargetDataspace
         {
-            get { return m_targetDataspace; }
+            get { return _targetDataspace; }
         }
     }
 }

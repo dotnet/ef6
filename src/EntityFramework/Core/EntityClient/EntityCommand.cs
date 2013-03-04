@@ -550,9 +550,6 @@ namespace System.Data.Entity.Core.EntityClient
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
         /// </exception>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "behavior")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public new virtual async Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
             // prepare the query first

@@ -10,9 +10,9 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Useful extension methods for <see cref="DbSet{TEntity}" />.
+    ///     Useful extension methods for <see cref="IDbSet{TEntity}" />.
     /// </summary>
-    public static class DbSetExtensions
+    public static class IDbSetExtensions
     {
         /// <summary>
         ///     Asynchronously finds an entity with the given primary key values.

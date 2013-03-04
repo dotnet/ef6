@@ -1288,7 +1288,7 @@
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="DbFunctionAttribute.cs" />
     <Compile Include="DbFunctions.cs" />
-    <Compile Include="DbSetExtensions.cs" />
+    <Compile Include="IDbSetExtensions.cs" />
     <Compile Include="Edm\Validation\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
