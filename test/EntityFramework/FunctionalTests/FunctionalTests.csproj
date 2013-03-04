@@ -202,6 +202,7 @@
     <Compile Include="Query\LinqToEntities\MaterializationTests.cs" />
     <Compile Include="Query\LinqToEntities\OrderByLiftingTests.cs" />
     <Compile Include="Query\QueryEnumTests.cs" />
+    <Compile Include="Query\SpatialTests.cs" />
     <Compile Include="SqlClient\SqlProviderServicesTests.cs" />
     <Compile Include="Query\SqlGeneratorTests.cs" />
     <Compile Include="TestHelpers\EnumeratorExtensions.cs" />

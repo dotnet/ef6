@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Query
 {
+    using System.Data.Entity.TestModels.ArubaModel;
     using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Query
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(entityCommand.ToTraceString()));
         }
 
-        public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql, params EntityParameter[] entityParameters)
+        private static string GenerateQuery(string query, MetadataWorkspace workspace, params EntityParameter[] entityParameters)
         {
             var entityCommand = new EntityCommand();
             entityCommand.CommandText = query;
@@ -63,9 +64,38 @@ namespace System.Data.Entity.Query
                 entityCommand.Parameters.Remove(entityParameter);
             }
 
+            return command;
+        }
+
+        public static void VerifyQuery(string query, MetadataWorkspace workspace, string expectedSql, params EntityParameter[] entityParameters)
+        {
+            var command = GenerateQuery(query, workspace, entityParameters);
             Assert.Equal(StripFormatting(expectedSql), StripFormatting(command));
         }
 
+        public static void VerifyQueryContains(string query, MetadataWorkspace workspace, string expectedSql, params EntityParameter[] entityParameters)
+        {
+            var command = GenerateQuery(query, workspace, entityParameters);
+            Assert.True(StripFormatting(command).Contains(StripFormatting(expectedSql)));
+        }
+
+        public static EntityDataReader EntityCommandSetup(ArubaContext db, string query, string expectedSql = null, params EntityParameter[] entityParameters)
+        {
+            var command = new EntityCommand();
+            var objectContext = ((IObjectContextAdapter)db).ObjectContext;
+
+            if (expectedSql != null)
+            {
+                VerifyQueryContains(query, objectContext.MetadataWorkspace, expectedSql, entityParameters);
+            }
+
+            command.Connection = (EntityConnection)objectContext.Connection;
+            command.CommandText = query;
+            command.Parameters.AddRange(entityParameters);
+            command.Connection.Open();
+
+            return command.ExecuteReader(CommandBehavior.SequentialAccess);
+        }
 
         public static void VerifyDbQuery<TElement>(IEnumerable<TElement> query, string expectedSql)
         {

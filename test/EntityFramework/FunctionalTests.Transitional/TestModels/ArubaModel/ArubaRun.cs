@@ -3,6 +3,7 @@
 namespace System.Data.Entity.TestModels.ArubaModel
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Spatial;
 
     public class ArubaRun
     {
@@ -11,5 +12,6 @@ namespace System.Data.Entity.TestModels.ArubaModel
         public int Purpose { get; set; }
         public ArubaOwner RunOwner { get; set; }
         public ICollection<ArubaTask> Tasks { get; set; }
+        public DbGeometry Geometry { get; set; }
     }
 }

@@ -59,5 +59,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
         public ArubaByteEnum c34_byteenum { get; set; }
         [Timestamp]
         public byte[] c35_timestamp { get; set; }
+        public DbGeometry c36_geometry_linestring { get; set; }
+        public DbGeometry c37_geometry_polygon { get; set; }
     }
 }

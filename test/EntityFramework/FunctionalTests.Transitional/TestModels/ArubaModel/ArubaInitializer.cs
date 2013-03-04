@@ -115,9 +115,12 @@ namespace System.Data.Entity.TestModels.ArubaModel
                         c29_datetime2 = new DateTime(2012, i % 5 + 1, i % 5 + 1, 1, 2, 3),
                         c30_datetimeoffset = new DateTimeOffset(new DateTime(2030 + i, 1, 2), new TimeSpan(i % 12, i % 60, 0)),
                         c31_geography = DbGeography.FromText(string.Format("POINT ({0}.0 {0}.0)", i % 8), 4326),
-                        c32_geometry = DbGeometry.FromText(string.Format("POINT (1{0}.0 2{0}.0)", i % 8), 123),
+                        c32_geometry = DbGeometry.FromText(string.Format("POINT (1{0}.0 2{0}.0)", i % 8), 32768),
                         c33_enum = (ArubaEnum)(i % 4),
                         c34_byteenum = (ArubaByteEnum)(i % 3),
+                        //c35_timestamp
+                        c36_geometry_linestring = DbGeometry.FromText(string.Format("LINESTRING (1{0} 2{0}, 1{1} 2{0}, 1{1} 2{1}, 1{0} 2{1}, 1{0} 2{0})", i % 5 + 2, i % 5 + 4), 32768),
+                        c37_geometry_polygon = DbGeometry.FromText(string.Format("POLYGON ((1{1} 2{0}, 1{0} 2{0}, 1{0} 2{1}, 1{1} 2{0}))", i % 5+ 3, i % 5 + 4), 32768),
                     };
 
                 allTypesList[i] = allTypes;
@@ -262,6 +265,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                     Name = "Run Name" + i,
                     Purpose = i + 10,
                     Tasks = new List<ArubaTask>(),
+                    Geometry = DbGeometry.FromText(string.Format("POINT (1{0}.0 2{1}.0)", i % 8, 8 - i % 8), 32768),
                 };
                 runs[i] = run;
             }
