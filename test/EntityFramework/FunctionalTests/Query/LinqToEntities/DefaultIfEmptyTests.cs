@@ -47,6 +47,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON [Extent1].[Id] = [Extent2].[A
 [Extent1].[Id] AS [Id], 
 [Extent1].[Name] AS [Name], 
 [Extent1].[Purpose] AS [Purpose], 
+[Extent1].[Geometry] AS [Geometry], 
 [Extent2].[Id] AS [Id1], 
 [Extent2].[Name] AS [Name1], 
 [Extent2].[Deleted] AS [Deleted], 
@@ -117,6 +118,7 @@ LEFT OUTER JOIN  (SELECT [Extent2].[Id] AS [Id1], [Extent2].[ArubaOwner_Id] AS [
 [Extent1].[Id] AS [Id], 
 [Extent1].[Name] AS [Name], 
 [Extent1].[Purpose] AS [Purpose], 
+[Extent1].[Geometry] AS [Geometry], 
 CASE WHEN (CASE WHEN ([Extent2].[Id] IS NULL) THEN CAST(NULL AS tinyint) ELSE cast(1 as tinyint) END IS NULL) THEN N'Default' ELSE [Extent2].[Name] END AS [C1]
 FROM  [dbo].[ArubaRuns] AS [Extent1]
 LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON ([Extent1].[Id] = [Extent2].[ArubaRun_Id]) AND (1 = [Extent2].[Id])";
@@ -148,6 +150,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON ([Extent1].[Id] = [Extent2].[
 [Extent1].[Id] AS [Id], 
 [Extent1].[Name] AS [Name], 
 [Extent1].[Purpose] AS [Purpose], 
+[Extent1].[Geometry] AS [Geometry], 
 CASE WHEN (CASE WHEN ([Extent2].[Id] IS NULL) THEN CAST(NULL AS tinyint) ELSE cast(1 as tinyint) END IS NULL) THEN -1 ELSE [Extent2].[Id] END AS [C1], 
 CASE WHEN (CASE WHEN ([Extent2].[Id] IS NULL) THEN CAST(NULL AS tinyint) ELSE cast(1 as tinyint) END IS NULL) THEN N'Unknown' ELSE [Extent2].[Name] END AS [C2], 
 CASE WHEN (CASE WHEN ([Extent2].[Id] IS NULL) THEN CAST(NULL AS tinyint) ELSE cast(1 as tinyint) END IS NULL) THEN cast(1 as bit) ELSE [Extent2].[Deleted] END AS [C3]
