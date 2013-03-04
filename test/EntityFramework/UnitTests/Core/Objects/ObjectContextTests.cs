@@ -19,10 +19,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Linq;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using System.Transactions;
     using Moq;
     using Moq.Protected;
@@ -271,9 +269,9 @@ namespace System.Data.Entity.Core.Objects
                     () => new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
 
                 var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-                                           {
-                                               CallBase = true
-                                           };
+                    {
+                        CallBase = true
+                    };
 
                 var entityType = new EntityType(
                     "FakeEntityType", "FakeNamespace", DataSpace.CSpace, new[] { "key" }, new EdmMember[] { new EdmProperty("key") });
@@ -287,18 +285,18 @@ namespace System.Data.Entity.Core.Objects
 
                 var model = new EdmModel(DataSpace.CSpace);
                 var omicMock = new Mock<DefaultObjectMappingItemCollection>(new EdmItemCollection(model), new ObjectItemCollection())
-                                   {
-                                       CallBase = true
-                                   };
+                    {
+                        CallBase = true
+                    };
                 var objectTypeMapping = new ObjectTypeMapping(entityType, entityType);
                 objectTypeMapping.AddMemberMap(
                     new ObjectPropertyMapping((EdmProperty)entityType.Members.First(), (EdmProperty)entityType.Members.First()));
                 omicMock.Setup(m => m.GetMap(It.IsAny<GlobalItem>())).Returns(objectTypeMapping);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>
-                                                {
-                                                    CallBase = true
-                                                };
+                    {
+                        CallBase = true
+                    };
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 metadataWorkspaceMock.Setup(m => m.GetEntityContainer(It.IsAny<string>(), It.IsAny<DataSpace>()))
@@ -313,9 +311,9 @@ namespace System.Data.Entity.Core.Objects
 #pragma warning restore 618
 
                 var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspaceMock.Object)
-                                                 {
-                                                     CallBase = true
-                                                 };
+                    {
+                        CallBase = true
+                    };
                 var entityKey = new EntityKey(entitySet, "keyValue");
                 var entityEntry = objectStateManagerMock.Object.AddKeyEntry(entityKey, entitySet);
 
@@ -381,7 +379,7 @@ namespace System.Data.Entity.Core.Objects
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() =>executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.Refresh(RefreshMode.StoreWins, new object());
@@ -405,9 +403,9 @@ namespace System.Data.Entity.Core.Objects
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
                 connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
                 var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
+                    {
+                        CallBase = true
+                    };
                 using (new TransactionScope())
                 {
                     Assert.Throws<NotImplementedException>(() => objectContextMock.Object.EnsureConnection());
@@ -431,9 +429,9 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
 
                 var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
+                    {
+                        CallBase = true
+                    };
                 objectContextMock.Object.EnsureConnection();
 
                 entityConnectionMock.Verify(m => m.Open(), Times.Once());
@@ -559,12 +557,12 @@ namespace System.Data.Entity.Core.Objects
                 var parameterMock4 = new Mock<DbParameter>();
 
                 var parameterMockList = new List<Mock<DbParameter>>
-                                            {
-                                                parameterMock1,
-                                                parameterMock2,
-                                                parameterMock3,
-                                                parameterMock4,
-                                            };
+                    {
+                        parameterMock1,
+                        parameterMock2,
+                        parameterMock3,
+                        parameterMock4,
+                    };
 
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -843,13 +841,12 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                Mock.Get(objectContext.MetadataWorkspace).Setup(m => m.GetQueryCacheManager())
-                    .Throws(new InvalidOperationException("Foo"));
-
                 Assert.Equal(
-                    "Foo",
-                    Assert.Throws<InvalidOperationException>(
-                        () => objectContext.ExecuteStoreQuery<object>("Foo")).Message);
+                    new ArgumentOutOfRangeException(
+                        typeof(MergeOption).Name, Strings.ADP_InvalidEnumerationValue(typeof(MergeOption).Name, 10)).Message,
+                    Assert.Throws<ArgumentOutOfRangeException>(
+                        () => objectContext.ExecuteStoreQuery<object>("Foo", new ExecutionOptions((MergeOption)10, streaming: false)))
+                          .Message);
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
                 Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
@@ -1400,9 +1397,9 @@ namespace System.Data.Entity.Core.Objects
                                               "ReturnedEntity", "FooNamespace", DataSpace.CSpace,
                                               new[] { "key" }, new EdmMember[] { new EdmProperty("key") });
                 var collectionTypeMock = new Mock<CollectionType>(entityType)
-                                             {
-                                                 CallBase = true
-                                             };
+                    {
+                        CallBase = true
+                    };
                 metadataWorkspaceMock.Setup(m => m.TryDetermineCSpaceModelType(It.IsAny<Type>(), out entityType))
                                      .Returns(true);
 
@@ -1416,12 +1413,12 @@ namespace System.Data.Entity.Core.Objects
                             IsComposable = false,
                             IsFunctionImport = true,
                             ReturnParameters = new[]
-                                                   {
-                                                       new FunctionParameter(
-                                                           EdmConstants.ReturnType,
-                                                           TypeUsage.Create(collectionTypeMock.Object),
-                                                           ParameterMode.ReturnValue),
-                                                   }
+                                {
+                                    new FunctionParameter(
+                                        EdmConstants.ReturnType,
+                                        TypeUsage.Create(collectionTypeMock.Object),
+                                        ParameterMode.ReturnValue),
+                                }
                         });
                 entityContainer.AddFunctionImport(functionImport);
 
@@ -1436,9 +1433,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var storageMappingItemCollection = new Mock<StorageMappingItemCollection>(
                     edmItemCollection, storeItemCollection, new string[0])
-                                                       {
-                                                           CallBase = true
-                                                       };
+                    {
+                        CallBase = true
+                    };
                 storageMappingItemCollection.Setup(m => m.GetItems<StorageEntityContainerMapping>())
                                             .Returns(
                                                 new ReadOnlyCollection<StorageEntityContainerMapping>(
@@ -1737,8 +1734,9 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
-                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>())).Returns<Func<Task<int>>, CancellationToken>(
-                    (f, c) => Task.FromResult(2));
+                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()))
+                                     .Returns<Func<Task<int>>, CancellationToken>(
+                                         (f, c) => Task.FromResult(2));
 
                 MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
@@ -1764,9 +1762,9 @@ namespace System.Data.Entity.Core.Objects
                     () => new DbEnumeratorShim<object>(((IEnumerable<object>)new[] { new object() }).GetEnumerator()));
 
                 var objectResultMock = new Mock<ObjectResult<object>>(shaperMock.Object, null, null)
-                                           {
-                                               CallBase = true
-                                           };
+                    {
+                        CallBase = true
+                    };
 
                 var entityType = new EntityType(
                     "FakeEntityType", "FakeNamespace", DataSpace.CSpace, new[] { "key" }, new EdmMember[] { new EdmProperty("key") });
@@ -1780,18 +1778,18 @@ namespace System.Data.Entity.Core.Objects
 
                 var model = new EdmModel(DataSpace.CSpace);
                 var omicMock = new Mock<DefaultObjectMappingItemCollection>(new EdmItemCollection(model), new ObjectItemCollection())
-                                   {
-                                       CallBase = true
-                                   };
+                    {
+                        CallBase = true
+                    };
                 var objectTypeMapping = new ObjectTypeMapping(entityType, entityType);
                 objectTypeMapping.AddMemberMap(
                     new ObjectPropertyMapping((EdmProperty)entityType.Members.First(), (EdmProperty)entityType.Members.First()));
                 omicMock.Setup(m => m.GetMap(It.IsAny<GlobalItem>())).Returns(objectTypeMapping);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>
-                                                {
-                                                    CallBase = true
-                                                };
+                    {
+                        CallBase = true
+                    };
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
                 metadataWorkspaceMock.Setup(m => m.GetEntityContainer(It.IsAny<string>(), It.IsAny<DataSpace>()))
@@ -1806,9 +1804,9 @@ namespace System.Data.Entity.Core.Objects
 #pragma warning restore 618
 
                 var objectStateManagerMock = new Mock<ObjectStateManager>(metadataWorkspaceMock.Object)
-                                                 {
-                                                     CallBase = true
-                                                 };
+                    {
+                        CallBase = true
+                    };
                 var entityKey = new EntityKey(entitySet, "keyValue");
                 var entityEntry = objectStateManagerMock.Object.AddKeyEntry(entityKey, entitySet);
 
@@ -1909,9 +1907,9 @@ namespace System.Data.Entity.Core.Objects
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
                 connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
                 var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
+                    {
+                        CallBase = true
+                    };
 
                 using (new TransactionScope())
                 {
@@ -1937,9 +1935,9 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
 
                 var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
-                                            {
-                                                CallBase = true
-                                            };
+                    {
+                        CallBase = true
+                    };
                 objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
 
                 entityConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
@@ -2069,12 +2067,12 @@ namespace System.Data.Entity.Core.Objects
                 var parameterMock4 = new Mock<DbParameter>();
 
                 var parameterMockList = new List<Mock<DbParameter>>
-                                            {
-                                                parameterMock1,
-                                                parameterMock2,
-                                                parameterMock3,
-                                                parameterMock4,
-                                            };
+                    {
+                        parameterMock1,
+                        parameterMock2,
+                        parameterMock3,
+                        parameterMock4,
+                    };
 
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -2381,14 +2379,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                Mock.Get(objectContext.MetadataWorkspace).Setup(m => m.GetQueryCacheManager())
-                    .Throws(new InvalidOperationException("Foo"));
-
                 Assert.Equal(
-                    "Foo",
-                    Assert.Throws<InvalidOperationException>(
+                    new ArgumentOutOfRangeException(
+                        typeof(MergeOption).Name, Strings.ADP_InvalidEnumerationValue(typeof(MergeOption).Name, 10)).Message,
+                    Assert.Throws<ArgumentOutOfRangeException>(
                         () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () => objectContext.ExecuteStoreQueryAsync<object>("Foo").Wait())).Message);
+                            () =>
+                            objectContext.ExecuteStoreQueryAsync<object>("Foo", new ExecutionOptions((MergeOption)10, streaming: false))
+                                         .Wait())).Message);
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
                 Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
@@ -2769,9 +2767,9 @@ namespace System.Data.Entity.Core.Objects
         private static ObjectContext CreateObjectContext(DbCommand dbCommand = null)
         {
             var metadataWorkspaceMock = new Mock<MetadataWorkspace>
-                                            {
-                                                CallBase = true
-                                            };
+                {
+                    CallBase = true
+                };
             var edmItemCollection = new EdmItemCollection();
             var providerManifestMock = new Mock<DbProviderManifest>();
             providerManifestMock.Setup(m => m.GetStoreTypes()).Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType>()));
@@ -2859,9 +2857,9 @@ namespace System.Data.Entity.Core.Objects
             }
 
             var objectContextMock = new Mock<ObjectContext>(objectQueryExecutionPlanFactory, translator, columnMapFactory, null)
-                                        {
-                                            CallBase = true
-                                        };
+                {
+                    CallBase = true
+                };
 
             objectContextMock.Setup(m => m.Connection).Returns(entityConnectionMock.Object);
             objectContextMock.Setup(m => m.ObjectStateManager).Returns(() => objectStateManagerMock.Object);

@@ -174,8 +174,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 // create materializer delegate
                 TypeUsage resultItemEdmType;
-                if (ResultType.EdmType.BuiltInTypeKind
-                    == BuiltInTypeKind.CollectionType)
+                if (ResultType.EdmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
                 {
                     resultItemEdmType = ((CollectionType)ResultType.EdmType).TypeUsage;
                 }

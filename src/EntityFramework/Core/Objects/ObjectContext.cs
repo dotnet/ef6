@@ -3443,9 +3443,7 @@ namespace System.Data.Entity.Core.Objects
                 var entitySet = entitySets.Count > resultSetIndex ? entitySets[resultSetIndex] : null;
 
                 // create the shaper
-                var cacheManager = Perspective.MetadataWorkspace.GetQueryCacheManager();
-                var shaperFactory = _translator.TranslateColumnMap<TElement>(
-                    cacheManager, commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
+                var shaperFactory = _translator.TranslateColumnMap<TElement>(commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
                     false);
                 var shaper = shaperFactory.Create(
                     storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, useSpatialReader, shouldReleaseConnection);
@@ -4342,9 +4340,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             // build a shaper for the column map to produce typed results
-            var cacheManager = MetadataWorkspace.GetQueryCacheManager();
-            var shaperFactory = _translator.TranslateColumnMap<TElement>(
-                cacheManager, columnMap, MetadataWorkspace, null, mergeOption, false);
+            var shaperFactory = _translator.TranslateColumnMap<TElement>(columnMap, MetadataWorkspace, null, mergeOption, false);
             var shaper = shaperFactory.Create(
                 reader, this, MetadataWorkspace, mergeOption, readerOwned, /*useSpatialReader:*/ true, shouldReleaseConnection);
             return new ObjectResult<TElement>(

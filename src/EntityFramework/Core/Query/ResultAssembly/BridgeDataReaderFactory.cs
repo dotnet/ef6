@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     internal class BridgeDataReaderFactory
     {
@@ -51,11 +52,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             DebugCheck.NotNull(columnMap);
             DebugCheck.NotNull(workspace);
 
-            var cacheManager = workspace.GetQueryCacheManager();
-            const MergeOption NoTracking = MergeOption.NoTracking;
-
-            var shaperFactory = _translator.TranslateColumnMap<RecordState>(
-                cacheManager, columnMap, workspace, null, NoTracking, valueLayer: true);
+            var shaperFactory = _translator.TranslateColumnMap<RecordState>(columnMap, workspace, null, MergeOption.NoTracking, valueLayer: true);
             var recordShaper = shaperFactory.Create(
                 storeDataReader, null, workspace, MergeOption.NoTracking, readerOwned: true, useSpatialReader: true,
                 shouldReleaseConnection: true);
@@ -67,12 +64,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         private IEnumerable<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> GetNextResultShaperInfo(
             DbDataReader storeDataReader, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
         {
-            foreach (var nextResultColumnMap in nextResultColumnMaps)
-            {
-                // It is important to do this lazily as the storeDataReader will be advanced to the next result set
-                // by the time this is called
-                yield return CreateShaperInfo(storeDataReader, nextResultColumnMap, workspace);
-            }
+            // It is important to do this lazily as the storeDataReader will have advanced to the next result set
+            // by the time this IEnumerable is advanced
+            return nextResultColumnMaps.Select(nextResultColumnMap => CreateShaperInfo(storeDataReader, nextResultColumnMap, workspace));
         }
     }
 }

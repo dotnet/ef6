@@ -26,8 +26,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             var translatorMock = new Mock<Translator>();
             translatorMock.Setup(
-                m => m.TranslateColumnMap<RecordState>(
-                    It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
+                m => m.TranslateColumnMap<RecordState>(It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(shaperFactory);
 
             return translatorMock.Object;
@@ -42,8 +41,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             var translatorMock = new Mock<Translator>();
             translatorMock.Setup(
-                m => m.TranslateColumnMap<T>(
-                    It.IsAny<QueryCacheManager>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
+                m => m.TranslateColumnMap<T>(It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
                     It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(shaperFactory);
 
             return translatorMock.Object;

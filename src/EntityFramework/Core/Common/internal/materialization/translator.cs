@@ -35,10 +35,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     a ShaperFactory which can be used to materialize results for a query.
         /// </summary>
         internal virtual ShaperFactory<T> TranslateColumnMap<T>(
-            QueryCacheManager queryCacheManager, ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex,
-            MergeOption mergeOption, bool valueLayer)
+            ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
         {
-            DebugCheck.NotNull(queryCacheManager);
             DebugCheck.NotNull(columnMap);
             DebugCheck.NotNull(workspace);
 
@@ -49,6 +47,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var columnMapKey = ColumnMapKeyBuilder.GetColumnMapKey(columnMap, spanIndex);
             var cacheKey = new ShaperFactoryQueryCacheKey<T>(columnMapKey, mergeOption, valueLayer);
 
+            var queryCacheManager = workspace.GetQueryCacheManager();
             if (queryCacheManager.TryCacheLookup(cacheKey, out result))
             {
                 return result;
@@ -87,7 +86,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal static ShaperFactory TranslateColumnMap(
             Translator translator,
             Type elementType,
-            QueryCacheManager queryCacheManager,
             ColumnMap columnMap,
             MetadataWorkspace workspace,
             SpanIndex spanIndex,
@@ -95,14 +93,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             bool valueLayer)
         {
             DebugCheck.NotNull(elementType);
-            DebugCheck.NotNull(queryCacheManager);
             DebugCheck.NotNull(columnMap);
             DebugCheck.NotNull(workspace);
 
             var typedCreateMethod = GenericTranslateColumnMap.MakeGenericMethod(elementType);
 
             return (ShaperFactory)typedCreateMethod.Invoke(
-                translator, new object[] { queryCacheManager, columnMap, workspace, spanIndex, mergeOption, valueLayer });
+                translator, new object[] { columnMap, workspace, spanIndex, mergeOption, valueLayer });
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -508,7 +505,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 var multipleDiscriminatorPolymorphicColumnMapHelper =
                     Translator_MultipleDiscriminatorPolymorphicColumnMapHelper.MakeGenericMethod(arg.RequestedType);
-                var result = (Expression)multipleDiscriminatorPolymorphicColumnMapHelper.Invoke(this, new object[] { columnMap, arg });
+                var result = (Expression)multipleDiscriminatorPolymorphicColumnMapHelper.Invoke(this, new object[] { columnMap });
                 return new TranslatorResult(result, arg.RequestedType);
             }
 
@@ -790,7 +787,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         var elementType = spannedResultReader.Type.GetGenericArguments()[0];
 
                         var handleFullSpanCollectionMethod =
-                            CodeGenEmitter.Shaper_HandleFullSpanCollection.MakeGenericMethod(arg.RequestedType, elementType);
+                            CodeGenEmitter.Shaper_HandleFullSpanCollection.MakeGenericMethod(elementType);
                         result = Expression.Call(
                             CodeGenEmitter.Shaper_Parameter, handleFullSpanCollectionMethod, result, expressionToGetCoordinator,
                             Expression.Constant(targetMember));
@@ -801,8 +798,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                             == spannedResultReader.Type)
                         {
                             // relationship span
-                            var handleRelationshipSpanMethod =
-                                CodeGenEmitter.Shaper_HandleRelationshipSpan.MakeGenericMethod(arg.RequestedType);
+                            var handleRelationshipSpanMethod = CodeGenEmitter.Shaper_HandleRelationshipSpan;
                             result = Expression.Call(
                                 CodeGenEmitter.Shaper_Parameter, handleRelationshipSpanMethod, result, spannedResultReader,
                                 Expression.Constant(targetMember));
@@ -810,8 +806,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         else
                         {
                             // full span element
-                            var handleFullSpanElementMethod = CodeGenEmitter.Shaper_HandleFullSpanElement.MakeGenericMethod(
-                                arg.RequestedType, spannedResultReader.Type);
+                            var handleFullSpanElementMethod = CodeGenEmitter.Shaper_HandleFullSpanElement;
                             result = Expression.Call(
                                 CodeGenEmitter.Shaper_Parameter, handleFullSpanElementMethod, result, spannedResultReader,
                                 Expression.Constant(targetMember));

@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var treeResultType = tree.Query.ResultType;
 
             // Rewrite this tree for Span?
-            DbExpression spannedQuery = null;
+            DbExpression spannedQuery;
             SpanIndex spanInfo;
             if (ObjectSpanRewriter.TryRewrite(tree, span, mergeOption, aliasGenerator, out spannedQuery, out spanInfo))
             {
@@ -42,11 +42,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var entityDefinition = CreateCommandDefinition(context, tree);
 
-            var cacheManager = context.Perspective.MetadataWorkspace.GetQueryCacheManager();
-
             var shaperFactory = Translator.TranslateColumnMap(
-                _translator,
-                elementType, cacheManager, entityDefinition.CreateColumnMap(null),
+                _translator, elementType, entityDefinition.CreateColumnMap(null),
                 context.MetadataWorkspace, spanInfo, mergeOption, false);
 
             // attempt to determine entity information for this query (e.g. which entity type and which entity set)
@@ -84,7 +81,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static EntityCommandDefinition CreateCommandDefinition(ObjectContext context, DbQueryCommandTree tree)
         {
             var connection = context.Connection;
-            DbCommandDefinition definition = null;
 
             // The connection is required to get to the CommandDefinition builder.
             if (connection == null)
@@ -94,6 +90,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var services = DbProviderServices.GetProviderServices(connection);
 
+            DbCommandDefinition definition;
             try
             {
                 definition = services.CreateCommandDefinition(tree);

@@ -244,8 +244,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     when the collection is closed that pulls the collection of full spanned
         ///     objects into the state manager.
         /// </summary>
-        public IEntityWrapper HandleFullSpanCollection<T_SourceEntity, T_TargetEntity>(
-            IEntityWrapper wrappedEntity, Coordinator<T_TargetEntity> coordinator, AssociationEndMember targetMember)
+        public IEntityWrapper HandleFullSpanCollection<TTargetEntity>(
+            IEntityWrapper wrappedEntity, Coordinator<TTargetEntity> coordinator, AssociationEndMember targetMember)
         {
             DebugCheck.NotNull(wrappedEntity);
             if (null != wrappedEntity.Entity)
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     Call to ensure a single full-spanned element is added into
         ///     the state manager properly.
         /// </summary>
-        public IEntityWrapper HandleFullSpanElement<T_SourceEntity, T_TargetEntity>(
+        public IEntityWrapper HandleFullSpanElement(
             IEntityWrapper wrappedSource, IEntityWrapper wrappedSpannedEntity, AssociationEndMember targetMember)
         {
             DebugCheck.NotNull(wrappedSource);
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     Call to ensure a target entities key is added into the state manager
         ///     properly
         /// </summary>
-        public IEntityWrapper HandleRelationshipSpan<T_SourceEntity>(
+        public IEntityWrapper HandleRelationshipSpan(
             IEntityWrapper wrappedEntity, EntityKey targetKey, AssociationEndMember targetMember)
         {
             if (null == wrappedEntity.Entity)
@@ -758,9 +758,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // we may need to remove it, depending on the current state and the MergeOption
             if ((null != (object)sourceKey)
                 && (null == targetValue)
-                &&
-                (MergeOption == MergeOption.PreserveChanges ||
-                 MergeOption == MergeOption.OverwriteChanges))
+                && (MergeOption == MergeOption.PreserveChanges ||
+                    MergeOption == MergeOption.OverwriteChanges))
             {
                 // When the spanned value is null, it may be because the spanned association applies to a
                 // subtype of the entity's type, and the entity is not actually an instance of that type.
@@ -768,10 +767,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 EdmType expectedSourceType = ((RefType)sourceEnd.TypeUsage.EdmType).ElementType;
                 TypeUsage entityTypeUsage;
                 if (!Context.Perspective.TryGetType(wrappedSource.IdentityType, out entityTypeUsage)
-                    ||
-                    entityTypeUsage.EdmType.EdmEquals(expectedSourceType)
-                    ||
-                    TypeSemantics.IsSubTypeOf(entityTypeUsage.EdmType, expectedSourceType))
+                    || entityTypeUsage.EdmType.EdmEquals(expectedSourceType)
+                    || TypeSemantics.IsSubTypeOf(entityTypeUsage.EdmType, expectedSourceType))
                 {
                     // Otherwise, the source entity is the correct type (exactly or a subtype) for the source
                     // end of the spanned association, so validate that the relationhip that was spanned is
@@ -810,8 +807,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         ///     Wire's one or more full-spanned entities into the state manager; used by
         ///     both full-spanned collections and full-spanned entities.
         /// </summary>
-        private void FullSpanAction<T_TargetEntity>(
-            IEntityWrapper wrappedSource, IList<T_TargetEntity> spannedEntities, AssociationEndMember targetMember)
+        private void FullSpanAction<TTargetEntity>(
+            IEntityWrapper wrappedSource, IList<TTargetEntity> spannedEntities, AssociationEndMember targetMember)
         {
             DebugCheck.NotNull(wrappedSource);
 
@@ -826,7 +823,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // Add members of the list to the source entity (item in column 0)
                     var count = Context.ObjectStateManager.UpdateRelationships(
                         Context, MergeOption, (AssociationSet)relatedEnd.RelationshipSet, sourceMember, wrappedSource,
-                        targetMember, (List<T_TargetEntity>)spannedEntities, true);
+                        targetMember, (List<TTargetEntity>)spannedEntities, true);
 
                     SetIsLoadedForSpan(relatedEnd, count > 0);
                 }
