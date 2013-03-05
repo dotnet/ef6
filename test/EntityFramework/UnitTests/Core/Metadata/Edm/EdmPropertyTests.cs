@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public class EdmPropertyTests
@@ -397,6 +400,51 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var property = new EdmProperty("P", typeUsage);
             Assert.False(property.IsScaleConstant);
             Assert.Null(property.Scale);
+        }
+
+        [Fact]
+        public void Create_creates_new_property()
+        {
+            var typeUsage = 
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            var property = EdmProperty.Create("foo", typeUsage);
+            Assert.Equal("foo", property.Name);
+            Assert.Same(typeUsage, property.TypeUsage);
+        }
+
+        [Fact]
+        public void Cannot_create_property_of_invalid_type()
+        {
+            var rowType =
+                RowType.Create(
+                    new[]
+                        {
+                            EdmProperty.Primitive("property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))
+                        },
+                    null);
+
+            Assert.Equal(
+                Strings.EdmProperty_InvalidPropertyType(rowType.FullName),
+                Assert.Throws<ArgumentException>(() => EdmProperty.Create("invalidProperty", TypeUsage.Create(rowType))).Message);
+        }
+
+        [Fact]
+        public void SetMetadataProperties_sets_metadata_properties()
+        {
+            var typeUsage =
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            var property = EdmProperty.Create("foo", typeUsage);
+
+            property.SetMetadataProperties(
+                new List<MetadataProperty>
+                    {
+                        MetadataProperty.Create(
+                            "foo", TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)), "bar")
+                    });
+
+            Assert.NotNull(property.MetadataProperties.SingleOrDefault(p => p.Name == "foo" && (string)p.Value == "bar"));
         }
 
         private static Facet CreateConstFacet(string facetName, PrimitiveTypeKind facetTypeKind, object value)

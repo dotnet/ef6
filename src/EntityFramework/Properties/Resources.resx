@@ -5310,4 +5310,7 @@
   <data name="DbProviderNameAttributeNotFound" xml:space="preserve">
     <value>The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter.</value>
   </data>
+  <data name="EdmProperty_InvalidPropertyType">
+    <value>A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
+  </data>
 </root>

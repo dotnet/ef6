@@ -13308,6 +13308,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.DbProviderNameAttributeNotFound, p0);
         }
+
+        /// <summary>
+        ///     A string like "A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType."
+        /// </summary>
+        internal static string EdmProperty_InvalidPropertyType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EdmProperty_InvalidPropertyType, p0);
+        }
     }
 
     /// <summary>
@@ -16667,6 +16675,7 @@ namespace System.Data.Entity.Resources
         internal const string DbContext_TransactionAlreadyEnlistedInUserTransaction = "DbContext_TransactionAlreadyEnlistedInUserTransaction";
         internal const string ExecutionStrategy_StreamingNotSupported = "ExecutionStrategy_StreamingNotSupported";
         internal const string DbProviderNameAttributeNotFound = "DbProviderNameAttributeNotFound";
+        internal const string EdmProperty_InvalidPropertyType = "EdmProperty_InvalidPropertyType";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

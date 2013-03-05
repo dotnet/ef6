@@ -440,7 +440,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Returns a Model type usage for a provider type
         /// </summary>
         /// <returns> model (CSpace) type usage </returns>
-        internal TypeUsage GetModelTypeUsage()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public TypeUsage GetModelTypeUsage()
         {
             if (_modelTypeUsage == null)
             {
@@ -472,11 +473,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     var sspaceCollectionType = ((CollectionType)edmType);
                     var newTypeUsage = sspaceCollectionType.TypeUsage.GetModelTypeUsage();
                     result = Create(new CollectionType(newTypeUsage), Facets);
-                }
-                else if (Helper.IsRefType(edmType))
-                {
-                    Debug.Assert(((RefType)edmType).ElementType.DataSpace == DataSpace.CSpace);
-                    result = this;
                 }
                 else if (Helper.IsPrimitiveType(edmType))
                 {

@@ -2,7 +2,11 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Moq;
     using Xunit;
 
@@ -101,6 +105,127 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Assert.Throws<ArgumentOutOfRangeException>(
                         () => TypeUsage.CreateBinaryTypeUsage(primitiveTypeMock.Object, isFixedLength: false, maxLength: -10))
                           .Message.StartsWith(Strings.InvalidMaxLengthSize));
+            }
+        }
+
+        public class GetModelTypeUsage
+        {
+            [Fact]
+            public void This_returned_for_CSPace_type()
+            {
+                var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+                Assert.Same(typeUsage, typeUsage.GetModelTypeUsage());
+            }
+
+            [Fact]
+            public void This_returned_for_OSPace_type()
+            {
+                var enumType = new ClrEnumType(typeof(System.DayOfWeek), "foo", "DayOfWeek");
+                var typeUsage = TypeUsage.Create(enumType);
+
+                Assert.Same(typeUsage, typeUsage.GetModelTypeUsage());
+            }
+
+            [Fact]
+            public void Non_nullable_CSpace_primitive_type_returned_for_non_nullable_SSpace_primitive_type()
+            {
+                var sSpaceTypeUsage =
+                    FakeSqlProviderServices
+                        .Instance.GetProviderManifest("2008")
+                        .GetStoreType(
+                            TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)));
+
+                var nonNullableSSpaceTypeUsage =
+                    sSpaceTypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                Nullable = false
+                            });
+
+                var cSpaceTypeUsage = nonNullableSSpaceTypeUsage.GetModelTypeUsage();
+
+                Assert.Equal(DataSpace.CSpace, cSpaceTypeUsage.EdmType.GetDataSpace());
+                Assert.Equal(
+                    ((PrimitiveType)sSpaceTypeUsage.EdmType).PrimitiveTypeKind,
+                    ((PrimitiveType)cSpaceTypeUsage.EdmType).PrimitiveTypeKind);
+                Assert.False((bool)cSpaceTypeUsage.Facets["Nullable"].Value);
+            }
+
+            [Fact]
+            public void Nullable_CSpace_primitive_type_returned_for_non_nullable_SSpace_primitive_type()
+            {
+                var sSpaceTypeUsage =
+                    FakeSqlProviderServices
+                    .Instance.GetProviderManifest("2008")
+                    .GetStoreType(TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+
+                var cSpaceTypeUsage = sSpaceTypeUsage.GetModelTypeUsage();
+
+                Assert.Equal(DataSpace.CSpace, cSpaceTypeUsage.EdmType.GetDataSpace());
+                Assert.Equal(
+                    ((PrimitiveType)sSpaceTypeUsage.EdmType).PrimitiveTypeKind,
+                    ((PrimitiveType)cSpaceTypeUsage.EdmType).PrimitiveTypeKind);
+                Assert.True((bool)sSpaceTypeUsage.Facets["Nullable"].Value);
+            }
+
+            [Fact]
+            public void ProviderIncompatibleException_thrown_for_invalid_primitive_type()
+            {
+                var mockProviderManifest = new Mock<DbProviderManifest>();
+                var fakeStorePrimitiveTypeUsage =
+                    TypeUsage.Create(
+                        new PrimitiveType(
+                            "foo",
+                            "bar",
+                            DataSpace.SSpace,
+                            EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.Int32),
+                            mockProviderManifest.Object));
+
+                Assert.Equal(
+                    Strings.Mapping_ProviderReturnsNullType("bar.foo"),
+                    Assert.Throws<ProviderIncompatibleException>(() => fakeStorePrimitiveTypeUsage.GetModelTypeUsage()).Message);
+            }
+
+            [Fact]
+            public void CSpace_CollectionType_returned_for_SSpace_CollectionType()
+            {
+                var sSpaceCollectionTypeUsage =
+                    TypeUsage.Create(
+                        FakeSqlProviderServices.Instance.GetProviderManifest("2008")
+                                               .GetStoreTypes()
+                                               .First(t => t.PrimitiveTypeKind == PrimitiveTypeKind.Geometry)
+                                               .GetCollectionType());
+
+                var cSpaceCollectionType = sSpaceCollectionTypeUsage.GetModelTypeUsage().EdmType;
+
+                Assert.Equal(DataSpace.CSpace, cSpaceCollectionType.GetDataSpace());
+                Assert.Equal(BuiltInTypeKind.CollectionType, cSpaceCollectionType.BuiltInTypeKind);
+
+                var elementType = ((CollectionType)cSpaceCollectionType).TypeUsage.EdmType;
+                Assert.Equal(DataSpace.CSpace, elementType.GetDataSpace());
+                Assert.Equal(PrimitiveTypeKind.Geometry, ((PrimitiveType)elementType).PrimitiveTypeKind);
+            }
+
+            [Fact]
+            public void CSpace_RowType_returned_for_SSpace_RowType()
+            {
+                var sSpaceTypeUsage =
+                    FakeSqlProviderServices
+                        .Instance.GetProviderManifest("2008")
+                        .GetStoreType(TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+
+                var sSpaceRowTypeUsage = 
+                    TypeUsage.CreateDefaultTypeUsage(RowType.Create(new[] { EdmProperty.Create("foo", sSpaceTypeUsage) }, null));
+
+                var cSpaceRowType = (RowType)sSpaceRowTypeUsage.GetModelTypeUsage().EdmType;
+                
+                Assert.Equal(DataSpace.CSpace, cSpaceRowType.GetDataSpace());
+                Assert.Equal(1, cSpaceRowType.Properties.Count);
+                Assert.Equal(DataSpace.CSpace, cSpaceRowType.Properties.Single().TypeUsage.EdmType.GetDataSpace());
+                Assert.Equal("foo", cSpaceRowType.Properties.Single().Name);
+                Assert.Equal(
+                    PrimitiveTypeKind.String,
+                    ((PrimitiveType)cSpaceRowType.Properties.Single().TypeUsage.EdmType).PrimitiveTypeKind);
             }
         }
     }

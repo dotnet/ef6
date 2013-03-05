@@ -5,9 +5,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
     using System.Threading;
 
@@ -45,6 +47,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             property.Nullable = false;
 
             return property;
+        }
+
+        /// <summary>
+        /// Creates a new instance of EdmProperty type.
+        /// </summary>
+        /// <param name="name">Name of the property.</param>
+        /// <param name="typeUsage">Property <see cref="TypeUsage" /></param>
+        /// <returns>A new instance of EdmProperty type</returns>
+        public static EdmProperty Create(string name, TypeUsage typeUsage)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(typeUsage, "primitiveType");
+
+            var edmType = typeUsage.EdmType;
+            if (!(Helper.IsPrimitiveType(edmType)
+                || Helper.IsEnumType(edmType)
+                || Helper.IsComplexType(edmType)))
+            {
+                throw new ArgumentException(Strings.EdmProperty_InvalidPropertyType(edmType.FullName));
+            }
+
+            return new EdmProperty(name, typeUsage);
         }
 
         private static EdmProperty CreateProperty(string name, EdmType edmType)
@@ -523,6 +547,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         Scale = value
                     });
             }
+        }
+
+        public void SetMetadataProperties(IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotNull(metadataProperties, "metadataProperties");
+
+            Util.ThrowIfReadOnly(this);
+            AddMetadataProperties(metadataProperties.ToList());
         }
     }
 }
