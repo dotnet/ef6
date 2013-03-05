@@ -8,6 +8,7 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -28,6 +29,22 @@ namespace System.Data.Entity.ModelConfiguration
         public ComplexTypeConfiguration()
             : this(new ComplexTypeConfiguration(typeof(TComplexType)))
         {
+        }
+
+        /// <summary>
+        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// </summary>
+        /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public ComplexTypeConfiguration<TComplexType> Ignore<TProperty>(Expression<Func<TComplexType, TProperty>> propertyExpression)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+
+            Configuration.Ignore(propertyExpression.GetSimplePropertyAccess().Single());
+
+            return this;
         }
 
         internal ComplexTypeConfiguration(ComplexTypeConfiguration configuration)

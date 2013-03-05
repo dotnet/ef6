@@ -59,14 +59,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
+        /// <param name="propertyName"> The name of the property to be configured. </param>
+        /// <remarks>
+        ///     Calling this will have no effect if the property does not exist.
+        /// </remarks>
+        public new LightweightEntityConfiguration<T> Ignore(string propertyName)
+        {
+            Check.NotEmpty(propertyName, "propertyName");
+
+            base.Ignore(propertyName);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// </summary>
+        /// <param name="propertyInfo"> The property to be configured. </param>
+        /// <remarks>
+        ///     Calling this will have no effect if the property does not exist.
+        /// </remarks>
+        public new LightweightEntityConfiguration<T> Ignore(PropertyInfo propertyInfo)
+        {
+            base.Ignore(propertyInfo);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// </summary>
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public void Ignore<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        public LightweightEntityConfiguration<T> Ignore<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
 
             Ignore(propertyExpression.GetSimplePropertyAccess().Single());
+
+            return this;
         }
 
         /// <summary>
@@ -170,6 +202,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public new LightweightEntityConfiguration<T> HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
             base.HasKey(keyProperties);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the table name that this entity type is mapped to.
+        /// </summary>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured.
+        /// </remarks>
+        public new LightweightEntityConfiguration<T> ToTable(string tableName)
+        {
+            Check.NotEmpty(tableName, "tableName");
+
+            base.ToTable(tableName);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Configures the table name that this entity type is mapped to.
+        /// </summary>
+        /// <param name="tableName"> The name of the table. </param>
+        /// <param name="schemaName"> The database schema of the table. </param>
+        /// <remarks>
+        ///     Calling this will have no effect once it has been configured.
+        /// </remarks>
+        public new LightweightEntityConfiguration<T> ToTable(string tableName, string schemaName)
+        {
+            Check.NotEmpty(tableName, "tableName");
+
+            base.ToTable(tableName, schemaName);
+
+            return this;
+        }
+
+        public new LightweightEntityConfiguration<T> MapToStoredProcedures()
+        {
+            base.MapToStoredProcedures();
 
             return this;
         }
