@@ -300,6 +300,10 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\AssociationModificationFunctionConfiguration`Tests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightModificationFunctionsConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightUpdateModificationFunctionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightInsertModificationFunctionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightDeleteModificationFunctionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionsConfiguration``Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionConfiguration``Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\DeleteModificationFunctionConfiguration`Tests.cs" />

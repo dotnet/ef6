@@ -2,23 +2,24 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
-    using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
 
     /// <summary>
     ///     Allows configuration to be performed for an entity type in a model.
     ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
     /// <typeparam name="T"> A type inherited by the entity type. </typeparam>
-    public class LightweightEntityConfiguration<T> : LightweightEntityConfiguration
+    public class LightweightEntityConfiguration<T>
         where T : class
     {
+        private readonly LightweightEntityConfiguration _configuration;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="LightweightEntityConfiguration{T}" /> class.
         /// </summary>
@@ -26,8 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         ///     The <see cref="Type" /> of this entity type.
         /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        public LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
-            : base(type, configuration)
+        internal LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
         {
             Check.NotNull(type, "type");
             Check.NotNull(configuration, "configuration");
@@ -36,6 +36,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             {
                 throw Error.LightweightEntityConfiguration_TypeMismatch(type, typeof(T));
             }
+
+            _configuration = new LightweightEntityConfiguration(type, configuration);
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="Type" /> of this entity type.
+        /// </summary>
+        public Type ClrType
+        {
+            get { return _configuration.ClrType; }
         }
 
         /// <summary>
@@ -49,39 +59,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public new LightweightEntityConfiguration<T> HasEntitySetName(string entitySetName)
+        public LightweightEntityConfiguration<T> HasEntitySetName(string entitySetName)
         {
-            base.HasEntitySetName(entitySetName);
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
-        /// </summary>
-        /// <param name="propertyName"> The name of the property to be configured. </param>
-        /// <remarks>
-        ///     Calling this will have no effect if the property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> Ignore(string propertyName)
-        {
-            Check.NotEmpty(propertyName, "propertyName");
-
-            base.Ignore(propertyName);
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
-        /// </summary>
-        /// <param name="propertyInfo"> The property to be configured. </param>
-        /// <remarks>
-        ///     Calling this will have no effect if the property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> Ignore(PropertyInfo propertyInfo)
-        {
-            base.Ignore(propertyInfo);
+            _configuration.HasEntitySetName(entitySetName);
 
             return this;
         }
@@ -96,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(propertyExpression, "propertyExpression");
 
-            Ignore(propertyExpression.GetSimplePropertyAccess().Single());
+            _configuration.Ignore(propertyExpression.GetSimplePropertyAccess().Single());
 
             return this;
         }
@@ -112,61 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(propertyExpression, "propertyExpression");
 
-            return Property(propertyExpression.GetComplexPropertyAccess());
-        }
-
-        /// <summary>
-        ///     Configures the primary key property for this entity type.
-        /// </summary>
-        /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
-        /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
-        /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if the
-        ///     property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> HasKey(string propertyName)
-        {
-            base.HasKey(propertyName);
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Configures the primary key property for this entity type.
-        /// </summary>
-        /// <param name="propertyInfo"> The property to be used as the primary key. </param>
-        /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
-        /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if the
-        ///     property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> HasKey(PropertyInfo propertyInfo)
-        {
-            base.HasKey(propertyInfo);
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Configures the primary key property(s) for this entity type.
-        /// </summary>
-        /// <param name="propertyNames"> The names of the properties to be used as the primary key. </param>
-        /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
-        /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if any
-        ///     property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> HasKey(IEnumerable<string> propertyNames)
-        {
-            base.HasKey(propertyNames);
-
-            return this;
+            return _configuration.Property(propertyExpression.GetComplexPropertyAccess());
         }
 
         /// <summary>
@@ -185,23 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(keyExpression, "keyExpression");
 
-            return HasKey(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single()));
-        }
-
-        /// <summary>
-        ///     Configures the primary key property(s) for this entity type.
-        /// </summary>
-        /// <param name="keyProperties"> The properties to be used as the primary key. </param>
-        /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
-        /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if any
-        ///     property does not exist.
-        /// </remarks>
-        public new LightweightEntityConfiguration<T> HasKey(IEnumerable<PropertyInfo> keyProperties)
-        {
-            base.HasKey(keyProperties);
+            _configuration.HasKey(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single()));
 
             return this;
         }
@@ -213,11 +123,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public new LightweightEntityConfiguration<T> ToTable(string tableName)
+        public LightweightEntityConfiguration<T> ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
 
-            base.ToTable(tableName);
+            _configuration.ToTable(tableName);
 
             return this;
         }
@@ -230,20 +140,60 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public new LightweightEntityConfiguration<T> ToTable(string tableName, string schemaName)
+        public LightweightEntityConfiguration<T> ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
 
-            base.ToTable(tableName, schemaName);
+            _configuration.ToTable(tableName, schemaName);
 
             return this;
         }
 
-        public new LightweightEntityConfiguration<T> MapToStoredProcedures()
+        public LightweightEntityConfiguration<T> MapToStoredProcedures()
         {
-            base.MapToStoredProcedures();
+            _configuration.MapToStoredProcedures();
 
             return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public LightweightEntityConfiguration<T> MapToStoredProcedures(
+            Action<ModificationFunctionsConfiguration<T>> modificationFunctionsConfigurationAction)
+        {
+            Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
+
+            var modificationFunctionMappingConfiguration = new ModificationFunctionsConfiguration<T>();
+
+            modificationFunctionsConfigurationAction(modificationFunctionMappingConfiguration);
+
+            _configuration.MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
+
+            return this;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

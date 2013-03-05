@@ -27,8 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             ex = Assert.Throws<ArgumentException>(
                 () => new LightweightEntityConfiguration<Assert>(
-                    type,
-                    () => new EntityTypeConfiguration(type)));
+                          type,
+                          () => new EntityTypeConfiguration(type)));
 
             Assert.Equal(
                 Strings.LightweightEntityConfiguration_TypeMismatch(type, typeof(Assert)),
@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.NotNull(result.Configuration);
             Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
         }
-        
+
         [Fact]
         public void HasKey_evaluates_preconditions()
         {
@@ -125,12 +125,45 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig);
 
-            var result = config.HasKey(e => new { e.Property1, e.Property2 });
+            var result = config.HasKey(
+                e => new
+                         {
+                             e.Property1,
+                             e.Property2
+                         });
 
             Assert.Equal(2, innerConfig.KeyProperties.Count());
             Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
             Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
             Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void MapToStoredProcedures_with_no_args_should_add_configuration()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig);
+
+            config.MapToStoredProcedures();
+
+            Assert.True(innerConfig.IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void MapToStoredProcedures_with_action_should_invoke_and_add_configuration()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig);
+
+            ModificationFunctionsConfiguration<LocalEntityType> configuration = null;
+
+            config.MapToStoredProcedures(c => configuration = c);
+
+            Assert.Same(
+                configuration.Configuration,
+                innerConfig.ModificationFunctionsConfiguration);
         }
 
         private class LocalEntityType

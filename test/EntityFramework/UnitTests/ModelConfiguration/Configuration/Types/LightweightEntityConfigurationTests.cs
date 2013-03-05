@@ -432,6 +432,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Same(type.Object, config.ClrType);
         }
 
+        [Fact]
+        public void MapToStoredProcedures_with_no_args_should_add_configuration()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            config.MapToStoredProcedures();
+
+            Assert.True(innerConfig.IsMappedToFunctions);
+        }
+
+        [Fact]
+        public void MapToStoredProcedures_with_action_should_invoke_and_add_configuration()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            LightweightModificationFunctionsConfiguration configuration = null;
+
+            config.MapToStoredProcedures(c => configuration = c);
+
+            Assert.Same(
+                configuration.Configuration,
+                innerConfig.ModificationFunctionsConfiguration);
+        }
+
         private class LocalEntityType
         {
             public int this[int index]

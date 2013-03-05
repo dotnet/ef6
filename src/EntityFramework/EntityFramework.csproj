@@ -401,6 +401,11 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\AssociationModificationFunctionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightDeleteModificationFunctionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightInsertModificationFunctionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightModificationFunctionConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightModificationFunctionsConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Functions\LightweightUpdateModificationFunctionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionConfiguration``.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ManyToManyModificationFunctionsConfiguration``.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\DeleteModificationFunctionConfiguration`.cs" />

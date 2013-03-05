@@ -273,7 +273,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public UpdateModificationFunctionConfiguration<TEntityType> RowsAffectedParameter(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");

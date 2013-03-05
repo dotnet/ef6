@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         ///     The <see cref="Type" /> of this entity type.
         /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        public LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
+        internal LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
         {
             Check.NotNull(type, "type");
             Check.NotNull(configuration, "configuration");
@@ -279,6 +279,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _configuration().MapToStoredProcedures();
 
             return this;
+        }
+
+        public LightweightEntityConfiguration MapToStoredProcedures(
+            Action<LightweightModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
+        {
+            Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
+
+            var modificationFunctionMappingConfiguration = new LightweightModificationFunctionsConfiguration(_type);
+
+            modificationFunctionsConfigurationAction(modificationFunctionMappingConfiguration);
+
+            MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
+
+            return this;
+        }
+
+        internal void MapToStoredProcedures(ModificationFunctionsConfiguration modificationFunctionsConfiguration)
+        {
+            DebugCheck.NotNull(modificationFunctionsConfiguration);
+
+            _configuration().MapToStoredProcedures(modificationFunctionsConfiguration);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

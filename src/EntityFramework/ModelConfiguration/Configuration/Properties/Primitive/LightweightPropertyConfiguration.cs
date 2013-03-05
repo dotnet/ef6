@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The <see cref="PropertyInfo" /> for this property
         /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        public LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
+        internal LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
             Check.NotNull(configuration, "configuration");
