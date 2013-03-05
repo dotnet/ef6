@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var associationSetEnd = AssociationSetEnds.FirstOrDefault();
                 return
                     associationSetEnd != null
-                        ? ElementType.Members.OfType<AssociationEndMember>().SingleOrDefault(e => e.Name == associationSetEnd.Name)
+                        ? ElementType.KeyMembers.OfType<AssociationEndMember>().SingleOrDefault(e => e.Name == associationSetEnd.Name)
                         : null;
             }
         }
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var associationSetEnd = AssociationSetEnds.ElementAtOrDefault(1);
                 return
                     associationSetEnd != null
-                        ? ElementType.Members.OfType<AssociationEndMember>().SingleOrDefault(e => e.Name == associationSetEnd.Name)
+                        ? ElementType.KeyMembers.OfType<AssociationEndMember>().SingleOrDefault(e => e.Name == associationSetEnd.Name)
                         : null;
             }
         }

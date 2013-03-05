@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Interlocked.CompareExchange(
                         ref _associationEndMembers,
                         new FilteredReadOnlyMetadataCollection<AssociationEndMember, EdmMember>(
-                            Members, Helper.IsAssociationEndMember), null);
+                            KeyMembers, Helper.IsAssociationEndMember), null);
                 }
                 return _associationEndMembers;
             }

@@ -139,6 +139,54 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void AssociationSet_SourceEnd_correct_after_setting_principal_table()
+        {
+            var database
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
+            var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
+
+            var table = database.AddTable("T");
+
+            foreignKeyBuilder.PrincipalTable = database.AddTable("P");
+            foreignKeyBuilder.SetOwner(table);
+
+            var associationType = database.GetAssociationType("FK");
+            var associationSet = database.GetAssociationSet(associationType);
+
+            Assert.Equal("P", associationType.SourceEnd.Name);
+            Assert.Equal("P", associationSet.SourceEnd.Name);
+
+            foreignKeyBuilder.PrincipalTable = table;
+
+            Assert.Equal("T", associationType.SourceEnd.Name);
+            Assert.Equal("T", associationSet.SourceEnd.Name);
+        }
+
+        [Fact]
+        public void AssociationSet_TargetEnd_correct_after_setting_owner()
+        {
+            var database
+                = new EdmModel(DataSpace.SSpace, 3.0);
+
+            var foreignKeyBuilder = new ForeignKeyBuilder(database, "FK");
+
+            foreignKeyBuilder.PrincipalTable = database.AddTable("P");
+            foreignKeyBuilder.SetOwner(database.AddTable("T"));
+
+            var associationType = database.GetAssociationType("FK");
+            var associationSet = database.GetAssociationSet(associationType);
+
+            Assert.Equal("T", associationType.TargetEnd.Name);
+            Assert.Equal("T", associationSet.TargetEnd.Name);
+
+            foreignKeyBuilder.SetOwner(database.AddTable("T1"));
+
+            Assert.Equal("T1", associationType.TargetEnd.Name);
+            Assert.Equal("T1", associationSet.TargetEnd.Name);
+        }
+
+        [Fact]
         public void Can_get_and_set_dependent_columns_and_multiplicities_assigned()
         {
             var database
