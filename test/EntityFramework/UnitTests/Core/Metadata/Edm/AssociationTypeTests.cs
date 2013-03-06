@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Linq;
     using Xunit;
 
     public class AssociationTypeTests
@@ -89,6 +90,109 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Same(associationType.TargetEnd, newTarget);
             Assert.Same(associationType.AssociationEndMembers[1], newTarget);
+        }
+
+        [Fact]
+        public void Create_throws_argument_exception_when_called_with_invalid_arguments()
+        {
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+            var constraint =
+                new ReferentialConstraint(
+                    sourceEnd,
+                    targetEnd,
+                    new[] { new EdmProperty("SourceProperty") },
+                    new[] { new EdmProperty("TargetProperty") });
+            var metadataProperty =
+                new MetadataProperty(
+                    "MetadataProperty",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    "value");
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationType.Create(
+                    null,
+                    "Namespace",
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationType.Create(
+                    String.Empty,
+                    "Namespace",
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationType.Create(
+                    "AssociationType",
+                    null,
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationType.Create(
+                    "AssociationType",
+                    String.Empty,
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    new[] { metadataProperty }));
+        }
+
+        [Fact]
+        public void Create_sets_properties_and_seals_the_instance()
+        {
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+            var constraint = 
+                new ReferentialConstraint(
+                    sourceEnd,
+                    targetEnd,
+                    new[] { new EdmProperty("SourceProperty") },
+                    new[] { new EdmProperty("TargetProperty") });
+            var metadataProperty = 
+                new MetadataProperty(
+                    "MetadataProperty",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    "value");
+            var associationType = 
+                AssociationType.Create(
+                    "AssociationType",
+                    "Namespace",
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    new[] { metadataProperty });
+
+            Assert.Equal("Namespace.AssociationType", associationType.FullName);
+            Assert.Equal(true, associationType.IsForeignKey);
+            Assert.Equal(DataSpace.CSpace, associationType.DataSpace);
+            Assert.Same(sourceEnd, associationType.SourceEnd);
+            Assert.Same(targetEnd, associationType.TargetEnd);
+            Assert.Same(constraint, associationType.Constraint);
+            Assert.Same(metadataProperty, associationType.MetadataProperties.SingleOrDefault(p => p.Name == "MetadataProperty"));
+            Assert.True(associationType.IsReadOnly);
         }
     }
 }

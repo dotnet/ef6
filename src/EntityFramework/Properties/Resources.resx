@@ -5316,4 +5316,7 @@
   <data name="ConcurrentMethodInvocation" xml:space="preserve">
     <value>A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads.</value>
   </data>
+  <data name="AssociationSet_EndEntityTypeMismatch" xml:space="preserve">
+    <value>The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end.</value>  
+  </data>
 </root>

@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -52,6 +54,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // It doesn't matter which delegate wins, but only one should be jitted
                 Interlocked.CompareExchange(ref _getRelatedEndMethod, value, null);
             }
+        }
+
+        /// <summary>
+        /// Creates a read-only AssociationEndMember instance.
+        /// </summary>
+        /// <param name="name">The name of the association end member.</param>
+        /// <param name="endRefType">The reference type for the end.</param>
+        /// <param name="multiplicity">The multiplicity of the end.</param>
+        /// <param name="deleteAction">Flag that indicates the delete behavior of the end.</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The newly created AssociationEndMember instance.</returns>
+        /// <exception cref="ArgumentException">The specified name is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">The specified reference type is null.</exception>
+        public static AssociationEndMember Create(
+            string name, 
+            RefType endRefType, 
+            RelationshipMultiplicity multiplicity,
+            OperationAction deleteAction,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(endRefType, "endRefType");
+
+            var instance = new AssociationEndMember(name, endRefType, multiplicity);
+            instance.DeleteBehavior = deleteAction;
+
+            if (metadataProperties != null)
+            {
+                instance.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            instance.SetReadOnly();
+
+            return instance;
         }
     }
 }

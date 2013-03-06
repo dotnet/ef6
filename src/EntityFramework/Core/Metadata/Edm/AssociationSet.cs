@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
@@ -151,6 +153,57 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void AddAssociationSetEnd(AssociationSetEnd associationSetEnd)
         {
             AssociationSetEnds.Source.Add(associationSetEnd);
+        }
+
+        /// <summary>
+        /// Creates a read-only AssociationSet instance from the specified parameters.
+        /// </summary>
+        /// <param name="name">The name of the association set.</param>
+        /// <param name="type">The association type of the elements in the association set.</param>
+        /// <param name="sourceSet">The entity set for the source association set end.</param>
+        /// <param name="targetSet">The entity set for the target association set end.</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The newly created AssociationSet instance.</returns>        
+        /// <exception cref="System.ArgumentException">The specified name is null or empty.</exception>
+        /// <exception cref="System.ArgumentNullException">The specified association type is null.</exception>
+        /// <exception cref="System.ArgumentException">The entity type of one of the ends of the specified
+        /// association type does not match the entity type of the corresponding entity set end.</exception>
+        public static AssociationSet Create(
+            string name, 
+            AssociationType type, 
+            EntitySet sourceSet, 
+            EntitySet targetSet,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(type, "type");
+
+            if (type.SourceEnd.GetEntityType() != sourceSet.ElementType
+                || type.TargetEnd.GetEntityType() != targetSet.ElementType)
+            {
+                throw new ArgumentException(Strings.AssociationSet_EndEntityTypeMismatch);
+            }
+
+            var instance = new AssociationSet(name, type);
+
+            if (sourceSet != null)
+            {
+                instance.SourceSet = sourceSet;
+            }
+
+            if (targetSet != null)
+            {
+                instance.TargetSet = targetSet;
+            }
+
+            if (metadataProperties != null)
+            {
+                instance.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            instance.SetReadOnly();
+
+            return instance;
         }
     }
 }

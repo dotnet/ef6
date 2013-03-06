@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Linq;
     using Xunit;
 
     public class AssociationSetTests
@@ -55,6 +56,128 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Same(sourceEnd, associationSet.SourceEnd);
             Assert.Same(targetEnd, associationSet.TargetEnd);
+        }
+
+        [Fact]
+        public void Create_throws_argument_exception_when_called_with_invalid_arguments()
+        {
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var other = new EntityType("Other", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+            var constraint =
+                new ReferentialConstraint(
+                    sourceEnd,
+                    targetEnd,
+                    new[] { new EdmProperty("SourceProperty") },
+                    new[] { new EdmProperty("TargetProperty") });
+            var associationType =
+                AssociationType.Create(
+                    "AssociationType",
+                    "Namespace",
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    Enumerable.Empty<MetadataProperty>());
+            var sourceSet = new EntitySet("SourceSet", "Schema", "Table", "Query", source);
+            var targetSet = new EntitySet("TargetSet", "Schema", "Table", "Query", target);
+            var otherSet = new EntitySet("OtherSet", "Schema", "Table", "Query", other);
+            var metadataProperty =
+                new MetadataProperty(
+                    "MetadataProperty",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    "value");
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationSet.Create(
+                    null,
+                    associationType,
+                    sourceSet,
+                    targetSet,
+                    new [] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationSet.Create(
+                    String.Empty,
+                    associationType,
+                    sourceSet,
+                    targetSet,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentNullException>(
+                () => AssociationSet.Create(
+                    "AssociationSet",
+                    null,
+                    sourceSet,
+                    targetSet,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationSet.Create(
+                    "AssociationSet",
+                    associationType,
+                    otherSet,
+                    targetSet,
+                    new[] { metadataProperty }));
+
+            Assert.Throws<ArgumentException>(
+                () => AssociationSet.Create(
+                    "AssociationSet",
+                    associationType,
+                    sourceSet,
+                    otherSet,
+                    new[] { metadataProperty }));
+        }
+
+        [Fact]
+        public void Create_sets_properties_and_seals_the_instance()
+        {
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+            var constraint =
+                new ReferentialConstraint(
+                    sourceEnd,
+                    targetEnd,
+                    new[] { new EdmProperty("SourceProperty") },
+                    new[] { new EdmProperty("TargetProperty") });
+            var associationType =
+                AssociationType.Create(
+                    "AssociationType",
+                    "Namespace",
+                    true,
+                    DataSpace.CSpace,
+                    sourceEnd,
+                    targetEnd,
+                    constraint,
+                    Enumerable.Empty<MetadataProperty>());
+            var sourceSet = new EntitySet("SourceSet", "Schema", "Table", "Query", source);
+            var targetSet = new EntitySet("TargetSet", "Schema", "Table", "Query", target);
+            var metadataProperty =
+                new MetadataProperty(
+                    "MetadataProperty",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    "value");
+            var associationSet = 
+                AssociationSet.Create(
+                    "AssociationSet",
+                    associationType,
+                    sourceSet,
+                    targetSet,
+                    new[] { metadataProperty });
+
+            Assert.Equal("AssociationSet", associationSet.Name);
+            Assert.Same(associationType, associationSet.ElementType);
+            Assert.Same(sourceSet, associationSet.SourceSet);
+            Assert.Same(targetSet, associationSet.TargetSet);
+            Assert.Same(source, associationSet.SourceEnd.GetEntityType());
+            Assert.Same(target, associationSet.TargetEnd.GetEntityType());
+            Assert.Same(metadataProperty, associationSet.MetadataProperties.SingleOrDefault(p => p.Name == "MetadataProperty"));
+            Assert.True(associationSet.IsReadOnly);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -181,6 +182,60 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal void AddReferentialConstraint(ReferentialConstraint referentialConstraint)
         {
             ReferentialConstraints.Source.Add(referentialConstraint);
+        }
+
+        /// <summary>
+        /// Creates a read-only AssociationType instance from the specified parameters.
+        /// </summary>
+        /// <param name="name">The name of the association type.</param>
+        /// <param name="namespaceName">The namespace of the association type.</param>
+        /// <param name="foreignKey">Flag that indicates a foreign key (FK) relationship.</param>
+        /// <param name="dataSpace">The data space for the association type.</param>
+        /// <param name="sourceEnd">The source association end member.</param>
+        /// <param name="targetEnd">The target association end member.</param>
+        /// <param name="constraint">A referential constraint.</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The newly created AssociationType instance.</returns>
+        /// <exception cref="System.ArgumentException">The specified name is null or empty.</exception>
+        /// <exception cref="System.ArgumentException">The specified namespace is null or empty.</exception>
+        public static AssociationType Create(
+            string name, 
+            string namespaceName, 
+            bool foreignKey, 
+            DataSpace dataSpace,
+            AssociationEndMember sourceEnd,
+            AssociationEndMember targetEnd,
+            ReferentialConstraint constraint,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
+
+            var instance = new AssociationType(name, namespaceName, foreignKey, dataSpace);
+
+            if (sourceEnd != null)
+            {
+                instance.SourceEnd = sourceEnd;
+            }
+
+            if (targetEnd != null)
+            {
+                instance.TargetEnd = targetEnd;
+            }
+
+            if (constraint != null)
+            {
+                instance.Constraint = constraint;
+            }
+
+            if (metadataProperties != null)
+            {
+                instance.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            instance.SetReadOnly();
+
+            return instance;
         }
     }
 }

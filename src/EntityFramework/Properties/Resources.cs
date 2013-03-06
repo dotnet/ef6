@@ -13324,6 +13324,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.ConcurrentMethodInvocation); }
         }
+
+        /// <summary>
+        ///     A string like "The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end."
+        /// </summary>
+        internal static string AssociationSet_EndEntityTypeMismatch
+        {
+            get { return EntityRes.GetString(EntityRes.AssociationSet_EndEntityTypeMismatch); }
+        }
     }
 
     /// <summary>
@@ -16685,6 +16693,7 @@ namespace System.Data.Entity.Resources
         internal const string DbProviderNameAttributeNotFound = "DbProviderNameAttributeNotFound";
         internal const string EdmProperty_InvalidPropertyType = "EdmProperty_InvalidPropertyType";
         internal const string ConcurrentMethodInvocation = "ConcurrentMethodInvocation";
+        internal const string AssociationSet_EndEntityTypeMismatch = "AssociationSet_EndEntityTypeMismatch";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
