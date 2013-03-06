@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Package;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    
+
     <PropertyGroup>
         <Configuration>Release</Configuration>
         <Platform>Any CPU</Platform>
         <SolutionFile>EntityFramework.sln</SolutionFile>
-        <BuildProperties>Platform=$(Platform);RestorePackages=false</BuildProperties>
+        <BuildProperties>Platform=$(Platform)</BuildProperties>
     </PropertyGroup>
 
     <Target Name="Clean">
-        <MSBuild Targets="Clean" 
-                 Projects="$(SolutionFile)" 
-                 Properties="Configuration=$(Configuration);$(BuildProperties)"/>
+        <MSBuild Targets="Clean"
+                 Projects="$(SolutionFile)"
+                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
+        <MSBuild Targets="Clean"
+                 Projects="$(SolutionFile)"
+                 Properties="Configuration=ReleaseNet40;$(BuildProperties)" />
     </Target>
-    
-    <Target Name="PreRestorePackages">
+
+    <Target Name="RestorePackages">
         <ItemGroup>
-            <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
-            <RestoreCsProjFiles Include="test\EntityFramework\FunctionalTests.Transitional\*.csproj" />
+            <RestoreProjFiles Include="src\EntityFramework.SqlServerCompact\*.csproj" />
+            <RestoreProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
+            <RestoreProjFiles Include="test\EntityFramework\FunctionalTests.Transitional\*.csproj" />
+            <RestoreProjFiles Include="test\EntityFramework\UnitTests\*.csproj" />
+            <RestoreProjFiles Include="test\EntityFramework\VBTests\*.vbproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
-    </Target>
-    
-    <Target Name="RestorePackages" DependsOnTargets="PreRestorePackages">
-        <MSBuild Projects="@(RestoreCsProjFiles)" Targets="EnableRestore;RestorePackages" />
+        <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=false" />
     </Target>
 
-    <Target Name="RestorePackagesSafe" DependsOnTargets="PreRestorePackages">
-        <MSBuild Projects="@(RestoreCsProjFiles)" Targets="RestorePackages" />
-    </Target>
-    
-    <Target Name="Build" DependsOnTargets="RestorePackagesSafe">
-        <MSBuild Targets="Build" 
+    <Target Name="Build">
+        <MSBuild Targets="Build"
                  Projects="$(SolutionFile)"
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
-    </Target>
-
-    <Target Name="Rebuild" DependsOnTargets="RestorePackagesSafe">
-        <MSBuild Targets="Rebuild" 
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
-        <MSBuild Targets="Rebuild" 
+        <MSBuild Targets="Build"
                  Projects="$(SolutionFile)"
                  Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
     </Target>
-   
+
+    <Target Name="Rebuild">
+        <MSBuild Targets="Rebuild"
+                 Projects="$(SolutionFile)"
+                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
+        <MSBuild Targets="Rebuild"
+                 Projects="$(SolutionFile)"
+                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
+    </Target>
+
     <Target Name="Test" DependsOnTargets="Rebuild">
         <MSBuild Projects="tools\EF.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
     <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
-        <MSBuild Targets="Rebuild"
+        <MSBuild Targets="Build"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="Configuration=$(Configuration);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-        <MSBuild Targets="Rebuild"
+        <MSBuild Targets="Build"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="Configuration=ReleaseNet40;$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
     </Target>
@@ -76,11 +78,11 @@
                           Lines="@(Lines)"
                           Overwrite="true"
                           Encoding="UTF-8" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework\EntityFramework.nuspec" 
+        <XmlPoke XmlInputPath="src\NuGet\EntityFramework\EntityFramework.nuspec"
                  Query="//x:package/x:metadata/x:version"
                  Value="$(AssemblyInfoVersion)"
                  Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec" 
+        <XmlPoke XmlInputPath="src\NuGet\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec"
                  Query="//x:package/x:metadata/x:version"
                  Value="$(AssemblyInfoVersion)"
                  Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />

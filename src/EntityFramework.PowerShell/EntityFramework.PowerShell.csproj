@@ -16,8 +16,6 @@
     <DelaySign>true</DelaySign>
     <TargetFrameworkProfile />
     <BuildPackages>true</BuildPackages>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -166,5 +164,4 @@
   <Target Name="AfterBuild" Condition="$(BuildPackages) == 'true'">
     <MSBuild Projects="..\NuGet\NuGet.proj" />
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
