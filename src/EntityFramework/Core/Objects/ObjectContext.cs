@@ -2523,7 +2523,8 @@ namespace System.Data.Entity.Core.Objects
                     entriesAffected = await executionStrategy.ExecuteAsync(
                         () => SaveChangesToStoreAsync(
                             options,
-                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken))
+                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
+                            cancellationToken)
                                                              .ConfigureAwait(continueOnCapturedContext: false);
                 }
 

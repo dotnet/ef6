@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
 #if !NET40
+    using System.Threading;
     using System.Threading.Tasks;
 #endif
     using Xunit;
@@ -47,13 +48,13 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void ExecuteAsync_Action_doesnt_retry()
         {
-            ExecuteAsync_doesnt_retry((e, f) => e.ExecuteAsync(() => (Task)f()));
+            ExecuteAsync_doesnt_retry((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
         }
 
         [Fact]
         public void ExecuteAsync_Func_doesnt_retry()
         {
-            ExecuteAsync_doesnt_retry((e, f) => e.ExecuteAsync(f));
+            ExecuteAsync_doesnt_retry((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
         private void ExecuteAsync_doesnt_retry(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)

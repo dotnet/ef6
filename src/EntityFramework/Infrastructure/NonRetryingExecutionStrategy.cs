@@ -26,20 +26,10 @@ namespace System.Data.Entity.Infrastructure
         {
             return func();
         }
-        
+
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> taskFunc)
-        {
-            return taskFunc();
-        }
-
         public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
-        {
-            return taskFunc();
-        }
-
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc)
         {
             return taskFunc();
         }

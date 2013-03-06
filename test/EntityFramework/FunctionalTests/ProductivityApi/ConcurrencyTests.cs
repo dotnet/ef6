@@ -787,22 +787,10 @@ namespace ProductivityApiTests
                 return func();
             }
 
-            public async Task ExecuteAsync(Func<Task> taskFunc)
-            {
-                await _signalTask;
-                await taskFunc();
-            }
-
             public async Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
             {
                 await _signalTask;
                 await taskFunc();
-            }
-
-            public async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc)
-            {
-                await _signalTask;
-                return await taskFunc();
             }
 
             public async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)

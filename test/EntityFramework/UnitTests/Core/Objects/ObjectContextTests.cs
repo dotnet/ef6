@@ -1768,8 +1768,8 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
-                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>())).Returns<Func<Task<int>>>(
-                    f => Task.FromResult(2));
+                executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>())).Returns<Func<Task<int>>, CancellationToken>(
+                    (f, c) => Task.FromResult(2));
 
                 MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
                 try
@@ -1781,7 +1781,7 @@ namespace System.Data.Entity.Core.Objects
                     MutableResolver.ClearResolvers();
                 }
 
-                executionStrategyMock.Verify(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>()), Times.Once());
+                executionStrategyMock.Verify(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
             }
         }
 

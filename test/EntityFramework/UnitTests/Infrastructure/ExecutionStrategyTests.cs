@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Diagnostics.Eventing.Reader;
     using System.Runtime.InteropServices;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
     using Moq;
@@ -356,13 +357,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_throws_for_an_existing_transaction()
             {
-                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => (Task)Task.FromResult(1)));
+                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => (Task)Task.FromResult(1), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_throws_for_an_existing_transaction()
             {
-                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => Task.FromResult(1)));
+                ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
             }
 
             private void ExecuteAsync_throws_for_an_existing_transaction(Func<ExecutionStrategy, Task> executeAsync)
@@ -386,13 +387,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_throws_when_invoked_twice()
             {
-                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => (Task)Task.FromResult(1)));
+                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => (Task)Task.FromResult(1), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_throws_when_invoked_twice()
             {
-                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => Task.FromResult(1)));
+                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
             }
 
             private void ExecuteAsync_throws_when_invoked_twice(Func<ExecutionStrategy, Task> executeAsync)
@@ -424,7 +425,7 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Equal(
                     "taskFunc",
-                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync(null).Wait()).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync(null, CancellationToken.None).Wait()).ParamName);
             }
 
             [Fact]
@@ -438,19 +439,19 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Equal(
                     "taskFunc",
-                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync((Func<Task<int>>)null).Wait()).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync((Func<Task<int>>)null, CancellationToken.None).Wait()).ParamName);
             }
 
             [Fact]
             public void ExecuteAsync_Action_throws_on_invalid_delay()
             {
-                ExecuteAsync_throws_on_invalid_delay((e, f) => e.ExecuteAsync(() => (Task)f()));
+                ExecuteAsync_throws_on_invalid_delay((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_throws_on_invalid_delay()
             {
-                ExecuteAsync_throws_on_invalid_delay((e, f) => e.ExecuteAsync(f));
+                ExecuteAsync_throws_on_invalid_delay((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
             private void ExecuteAsync_throws_on_invalid_delay(Func<ExecutionStrategy, Func<Task<int>>, Task> executeAsync)
@@ -495,13 +496,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_doesnt_retry_if_succesful()
             {
-                ExecuteAsync_doesnt_retry_if_succesful((e, f) => e.ExecuteAsync(() => (Task)f()));
+                ExecuteAsync_doesnt_retry_if_succesful((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_doesnt_retry_if_succesful()
             {
-                ExecuteAsync_doesnt_retry_if_succesful((e, f) => e.ExecuteAsync(f));
+                ExecuteAsync_doesnt_retry_if_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
             private void ExecuteAsync_doesnt_retry_if_succesful(Func<ExecutionStrategy, Func<Task<int>>, Task> executeAsync)
@@ -536,13 +537,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_retries_until_succesful()
             {
-                ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(() => (Task)f()));
+                ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_retries_until_succesful()
             {
-                ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(f));
+                ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
             private void ExecuteAsync_retries_until_succesful(Func<ExecutionStrategy, Func<Task<int>>, Task> executeAsync)
@@ -579,13 +580,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_retries_until_not_retrieable_exception_is_thrown()
             {
-                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown((e, f) => e.ExecuteAsync(() => (Task)f()));
+                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_retries_until_not_retrieable_exception_is_thrown()
             {
-                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown((e, f) => e.ExecuteAsync(f));
+                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
             private void ExecuteAsync_retries_until_not_retrieable_exception_is_thrown(
@@ -629,13 +630,13 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_retries_until_limit_is_reached()
             {
-                ExecuteAsync_retries_until_limit_is_reached((e, f) => e.ExecuteAsync(() => (Task)f()));
+                ExecuteAsync_retries_until_limit_is_reached((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
             public void ExecuteAsync_Func_retries_until_limit_is_reached()
             {
-                ExecuteAsync_retries_until_limit_is_reached((e, f) => e.ExecuteAsync(f));
+                ExecuteAsync_retries_until_limit_is_reached((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
             private void ExecuteAsync_retries_until_limit_is_reached(Func<ExecutionStrategy, Func<Task<int>>, Task> executeAsync)

@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
+    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -100,22 +101,22 @@ namespace System.Data.Entity.SqlServer
 
             Assert.Equal(
                 "taskFunc",
-                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
 
             Assert.Equal(
                 "taskFunc",
-                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
         }
         [Fact]
         public void ExecuteAsync_Action_doesnt_retry_on_transient_exceptions()
         {
-            ExecuteAsync_doesnt_retry_on_transient_exceptions((e, f) => e.ExecuteAsync(() => (Task)f()));
+            ExecuteAsync_doesnt_retry_on_transient_exceptions((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
         }
 
         [Fact]
         public void ExecuteAsync_Func_doesnt_retry_on_transient_exceptions()
         {
-            ExecuteAsync_doesnt_retry_on_transient_exceptions((e, f) => e.ExecuteAsync(f));
+            ExecuteAsync_doesnt_retry_on_transient_exceptions((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
         private void ExecuteAsync_doesnt_retry_on_transient_exceptions(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)
@@ -145,13 +146,13 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void ExecuteAsync_Action_doesnt_retry_on_nontransient_exceptions()
         {
-            ExecuteAsync_doesnt_retry_on_nontransient_exceptions((e, f) => e.ExecuteAsync(() => (Task)f()));
+            ExecuteAsync_doesnt_retry_on_nontransient_exceptions((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
         }
 
         [Fact]
         public void ExecuteAsync_Func_doesnt_retry_on_nontransient_exceptions()
         {
-            ExecuteAsync_doesnt_retry_on_nontransient_exceptions((e, f) => e.ExecuteAsync(f));
+            ExecuteAsync_doesnt_retry_on_nontransient_exceptions((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
         private void ExecuteAsync_doesnt_retry_on_nontransient_exceptions(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)

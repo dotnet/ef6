@@ -59,16 +59,6 @@ namespace System.Data.Entity.SqlServer
 
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> taskFunc)
-        {
-            if (taskFunc == null)
-            {
-                throw new ArgumentNullException("taskFunc");
-            }
-
-            return ExecuteAsync(taskFunc, CancellationToken.None);
-        }
-
         public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
         {
             if (taskFunc == null)
@@ -82,16 +72,6 @@ namespace System.Data.Entity.SqlServer
                               await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
                               return true;
                           });
-        }
-
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc)
-        {
-            if (taskFunc == null)
-            {
-                throw new ArgumentNullException("taskFunc");
-            }
-
-            return ExecuteAsync(taskFunc, CancellationToken.None);
         }
 
         public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)

@@ -428,7 +428,7 @@ namespace System.Data.Entity
         ///     This extension method calls the Include(String) method of the source <see cref="IQueryable{T}"/> object,
         ///     if such a method exists. If the source <see cref="IQueryable{T}"/> does not have a matching method,
         ///     then this method does nothing. The <see cref="ObjectQuery{T}"/>, <see cref="ObjectSet{T}"/>,
-        ///     <see cref="DbQuery{T}"/> and <see cref="DbSet{T}"/> types all have an appropriate Include method to call.
+        ///     <see cref="DbQuery{TResult}"/> and <see cref="DbSet{T}"/> types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
         ///     the returned instance of the <see cref="IQueryable{T}"/>. Other instances of <see cref="IQueryable{T}"/>
@@ -637,7 +637,7 @@ namespace System.Data.Entity
         }
 
         #endregion
-        
+
         #region AsStreaming
 
         /// <summary>
@@ -788,7 +788,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
@@ -805,7 +804,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <param name="source"> The source query. </param>
         /// <param name="action"> The action to be executed. </param>
@@ -823,7 +821,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <param name="source"> The source query. </param>
@@ -841,7 +838,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Enumerates the <see cref="IQueryable" /> asynchronously and executes the provided action on each element.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <param name="source"> The source query. </param>
@@ -867,43 +863,37 @@ namespace System.Data.Entity
 #if !NET40
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
-        /// </summary>
-        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
+        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         /// <param name="source"> The source query. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        ///     A <see cref="Task" /> containing a <see cref="List{Object}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<List<T>> ToListAsync<T>(this IQueryable source)
+        public static Task<List<object>> ToListAsync(this IQueryable source)
         {
             Check.NotNull(source, "source");
 
-            return source.AsDbAsyncEnumerable().ToListAsync<T>();
+            return source.AsDbAsyncEnumerable().ToListAsync<object>();
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
+        ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         /// </summary>
-        /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <param name="source"> The source query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
+        ///     A <see cref="Task" /> containing a <see cref="List{Object}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public static Task<List<T>> ToListAsync<T>(this IQueryable source, CancellationToken cancellationToken)
+        public static Task<List<object>> ToListAsync(this IQueryable source, CancellationToken cancellationToken)
         {
             Check.NotNull(source, "source");
 
-            return source.AsDbAsyncEnumerable().ToListAsync<T>(cancellationToken);
+            return source.AsDbAsyncEnumerable().ToListAsync<object>(cancellationToken);
         }
 
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .
@@ -922,7 +912,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .
@@ -942,7 +931,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .
@@ -961,7 +949,6 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Creates a T[] from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .
@@ -1119,9 +1106,7 @@ namespace System.Data.Entity
         /// </param>
         /// <returns>
         ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     selected from the input sequence.
+        ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -1155,9 +1140,7 @@ namespace System.Data.Entity
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns>
         ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     selected from the input sequence.
+        ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -1194,9 +1177,7 @@ namespace System.Data.Entity
         /// </param>
         /// <returns>
         ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     selected from the input sequence.
+        ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -1234,9 +1215,7 @@ namespace System.Data.Entity
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns>
         ///     A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     selected from the input sequence.
+        ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
@@ -1271,16 +1250,10 @@ namespace System.Data.Entity
         ///     A <see cref="Task" /> containing the first element in <paramref name="source" /> .
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     is
-        ///     <c>null</c>
-        ///     .
+        ///     <paramref name="source" /> is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///     <paramref name="source" />
-        ///     doesn't implement
-        ///     <see cref="IDbAsyncQueryProvider" />
-        ///     .
+        ///     <paramref name="source" /> doesn't implement <see cref="IDbAsyncQueryProvider" />.
         /// </exception>
         /// <exception cref="InvalidOperationException">The source sequence is empty.</exception>
         public static Task<TSource> FirstAsync<TSource>(this IQueryable<TSource> source)
