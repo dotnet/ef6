@@ -4,9 +4,9 @@ namespace System.Data.Entity.Query
 {
     public static class ProductModel
     {
-        public static readonly string ssdl =
+        public const string Ssdl =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
-<Schema Namespace=""ProductStore"" Alias=""Self"" Provider=""System.Data.SqlClient"" ProviderManifestToken=""2008"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm/ssdl"">
+<Schema Namespace=""ĎefauľtNamėspacĕ.Store"" Alias=""Self"" Provider=""System.Data.SqlClient"" ProviderManifestToken=""2008"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm/ssdl"">
   <EntityContainer Name=""ProductContainer_Store"">
     <EntitySet Name=""Products"" EntityType=""Self.Product"" Schema=""dbo"" Table=""Products"" />
     <EntitySet Name=""Customers"" EntityType=""Self.Customer"" Schema=""dbo"" Table=""Customers"" />
@@ -33,9 +33,21 @@ namespace System.Data.Entity.Query
     <Property Name=""Phone"" Type=""nvarchar"" MaxLength=""24"" />
     <Property Name=""Fax"" Type=""nvarchar"" MaxLength=""24"" />
   </EntityType>
+  <Function Name=""F_TVF_With_High_Bytes"" Schema=""dbo"" Aggregate=""false"" BuiltIn=""false"" IsComposable=""true"" NiladicFunction=""false""> 
+    <ReturnType> 
+      <CollectionType> 
+        <RowType> 
+          <Property Name=""Čode"" Type=""varbinary"" Nullable=""false"" /> 
+          <Property Name=""ProduċtId"" Type=""int"" Nullable=""false"" /> 
+          <Property Name=""Ŧext"" Type=""nvarchar(max)"" Nullable=""false"" /> 
+          <Property Name=""Propeŗty2_ƀit"" Type=""bit"" Nullable=""false"" /> 
+        </RowType> 
+      </CollectionType> 
+    </ReturnType> 
+  </Function>
 </Schema>";
 
-        public static readonly string msl =
+        public const string Msl =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Mapping xmlns=""http://schemas.microsoft.com/ado/2009/11/mapping/cs"" Space=""C-S"">
   <EntityContainerMapping CdmEntityContainer=""ProductContainer"" StorageEntityContainer=""ProductContainer_Store"">
@@ -74,7 +86,7 @@ namespace System.Data.Entity.Query
 </EntityContainerMapping>
 </Mapping>";
 
-        private static readonly string csdlTemplate =
+        private const string CsdlTemplate =
             @"<?xml version=""1.0"" encoding=""utf-8""?>
 <Schema Namespace=""ProductModel"" Alias=""Self"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
   <EntityContainer Name=""ProductContainer"">
@@ -113,8 +125,7 @@ namespace System.Data.Entity.Query
   {0}
 </Schema>";
 
-        private static readonly string modelDefinedFunctions =
-            @" <Function Name=""F_NoBody"" ReturnType=""Int32"" />
+        private const string ModelDefinedFunctions = @" <Function Name=""F_NoBody"" ReturnType=""Int32"" />
   <Function Name=""F_A"" ReturnType=""Int32"">
     <DefiningExpression>
       using ProductModel;
@@ -688,8 +699,8 @@ namespace System.Data.Entity.Query
     </DefiningExpression>
   </Function>";
 
-        public static readonly string csdl = string.Format(csdlTemplate, "");
+        public static readonly string Csdl = string.Format(CsdlTemplate, "");
 
-        public static readonly string csdlWithFunctions = string.Format(csdlTemplate, modelDefinedFunctions);
+        public static readonly string CsdlWithFunctions = string.Format(CsdlTemplate, ModelDefinedFunctions);
     }
 }

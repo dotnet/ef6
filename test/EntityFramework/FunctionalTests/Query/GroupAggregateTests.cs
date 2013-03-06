@@ -12,7 +12,7 @@ namespace System.Data.Entity.Query
     public class GroupAggregateTests : FunctionalTestBase
     {
         private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
-            ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
+            ProductModel.Csdl, ProductModel.Ssdl, ProductModel.Msl);
 
         private DbGroupExpressionBinding CreateBasicGroupBinding()
         {

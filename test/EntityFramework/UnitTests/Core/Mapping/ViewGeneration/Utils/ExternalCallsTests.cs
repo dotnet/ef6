@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         [Fact]
         public void CompileFunctionDefinition_uses_the_given_item_collection()
         {
-            var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(ProductModel.csdlWithFunctions).CreateReader() });
+            var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(ProductModel.CsdlWithFunctions).CreateReader() });
 
             Assert.Equal(
                 "ProductModel.F_NoBody()",

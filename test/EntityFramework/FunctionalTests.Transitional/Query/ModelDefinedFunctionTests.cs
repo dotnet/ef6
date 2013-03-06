@@ -10,7 +10,7 @@ namespace System.Data.Entity.Query
     public class ModelDefinedFunctionTests : FunctionalTestBase
     {
         private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
-            ProductModel.csdlWithFunctions, ProductModel.ssdl, ProductModel.msl);
+            ProductModel.CsdlWithFunctions, ProductModel.Ssdl, ProductModel.Msl);
 
         [Fact]
         public void Exception_thrown_for_function_with_no_body()

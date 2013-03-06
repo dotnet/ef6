@@ -7,8 +7,8 @@ namespace System.Data.Entity.Query
 
     public class FunctionTests : TestBase
     {
-        private static readonly MetadataWorkspace workspace = QueryTestHelpers.CreateMetadataWorkspace(
-            ProductModel.csdl, ProductModel.ssdl, ProductModel.msl);
+        private static readonly MetadataWorkspace _workspace = QueryTestHelpers.CreateMetadataWorkspace(
+            ProductModel.Csdl, ProductModel.Ssdl, ProductModel.Msl);
 
         [Fact]
         public void Inline_function_count_Products()
@@ -34,7 +34,7 @@ FROM ( SELECT
 	GROUP BY [Extent1].[ProductName]
 )  AS [GroupBy1]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ FROM ( SELECT
 	GROUP BY [Extent1].[ProductName]
 )  AS [GroupBy1]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
 
         [Fact]
@@ -96,7 +96,7 @@ FROM ( SELECT
 	GROUP BY [Extent1].[ProductName]
 )  AS [GroupBy1]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ FROM ( SELECT
 	GROUP BY [Extent1].[ProductName]
 )  AS [GroupBy1]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
 
         [Fact]
@@ -176,7 +176,7 @@ FROM ( SELECT
 	GROUP BY [UnionAll4].[C1]
 )  AS [GroupBy1]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
 
         [Fact]
@@ -210,7 +210,23 @@ FROM ( SELECT
 	)  AS [Distinct1]
 )  AS [Project2]";
 
-            QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
+        }
+
+        [Fact]
+        public void Query_against_TVF_using_namespace_with_high_byte_characters_does_not_throw()
+        {
+            const string query = @"(select value e from [ĎefauľtNamėspacĕ].Store.F_TVF_With_High_Bytes() as [e] where e.[Čode] is null)";
+            const string expectedSql = @"SELECT
+                    1 AS [C1],
+                    [Extent1].[Čode] AS [Čode],
+                    [Extent1].[ProduċtId] AS [ProduċtId],
+                    [Extent1].[Ŧext] AS [Ŧext],
+                    [Extent1].[Propeŗty2_ƀit] AS [Propeŗty2_ƀit]
+                    FROM [dbo].[F_TVF_With_High_Bytes]() AS [Extent1] 
+                    WHERE [Extent1].[Čode] ISNULL";
+
+            QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }
     }
 }
