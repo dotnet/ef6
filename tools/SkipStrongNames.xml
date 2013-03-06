@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies defaultPublicKeyToken="b77a5c561934e089">
+
+  <!-- Production assemblies -->
+  <assembly name="EntityFramework" />
+  <assembly name="EntityFramework.SqlServer" />
+  <assembly name="EntityFramework.SqlServerCompact" />
+  <assembly name="EntityFramework.PowerShell" />
+  <assembly name="EntityFramework.PowerShell.Utility" />
+  <assembly name="Migrate" />
+
+  <!-- Unit test assemblies and helpers -->
+  <assembly name="EntityFramework.UnitTests" publicKeyToken="b03f5f7f11d50a3a" />
+  <assembly name="EntityFramework.FunctionalTests" publicKeyToken="b03f5f7f11d50a3a" />
+  <assembly name="EntityFramework.FunctionalTests.Transitional" publicKeyToken="b03f5f7f11d50a3a" />
+  <assembly name="EntityFramework.VBTests" publicKeyToken="b03f5f7f11d50a3a" />
+
+</assemblies>

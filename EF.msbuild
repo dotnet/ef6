@@ -6,7 +6,10 @@
         <Platform>Any CPU</Platform>
         <SolutionFile>EntityFramework.sln</SolutionFile>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
     </PropertyGroup>
+
+    <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 
     <Target Name="Clean">
         <MSBuild Targets="Clean"
@@ -18,6 +21,9 @@
     </Target>
 
     <Target Name="RestorePackages">
+        <PropertyGroup>
+            <RequireRestoreConsent>false</RequireRestoreConsent>
+        </PropertyGroup>
         <ItemGroup>
             <RestoreProjFiles Include="src\EntityFramework.SqlServerCompact\*.csproj" />
             <RestoreProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
@@ -26,7 +32,17 @@
             <RestoreProjFiles Include="test\EntityFramework\VBTests\*.vbproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
-        <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=false" />
+        <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
+    </Target>
+
+    <Target Name="RestoreSolutionPackages" DependsOnTargets="CheckPrerequisites" AfterTargets="RestorePackages">
+        <PropertyGroup>
+            <PackagesConfig>$([System.IO.Path]::Combine($(NuGetToolsPath), "packages.config"))</PackagesConfig>
+            <SolutionRequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</SolutionRequireConsentSwitch>
+            <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(SolutionRequireConsentSwitch) -solutionDir "$(SolutionDir) "</RestoreCommand>
+        </PropertyGroup>
+        <Exec Command="$(RestoreCommand)"
+              LogStandardErrorAsError="true" />
     </Target>
 
     <Target Name="Build">
@@ -47,7 +63,22 @@
                  Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
     </Target>
 
-    <Target Name="Test" DependsOnTargets="Rebuild">
+    <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+        <MSBuild Targets="CheckSkipStrongNames"
+                 Projects="tools\EF.skipstrongnames.targets" />
+    </Target>
+
+    <Target Name="EnableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+        <MSBuild Targets="EnableSkipStrongNames"
+                 Projects="tools\EF.skipstrongnames.targets" />
+    </Target>
+
+    <Target Name="DisableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+        <MSBuild Targets="DisableSkipStrongNames"
+                 Projects="tools\EF.skipstrongnames.targets" />
+    </Target>
+
+    <Target Name="Test" DependsOnTargets="CheckSkipStrongNames;Rebuild">
         <MSBuild Projects="tools\EF.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
