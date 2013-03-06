@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Xunit" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- This is a separate MSBuild file so that we can survive upgrades of the xunit NuGet package
+         and also still work with NuGet Package Restore. -->
+         
+    <ItemGroup>
+        <XunitMsBuildRunner Include="..\packages\**\xunit.runner.msbuild.dll"/>
+    </ItemGroup>
+    
+    <UsingTask TaskName="Xunit.Runner.MSBuild.xunit" AssemblyFile="@(XunitMsBuildRunner)"/>
+
+    <Target Name="Xunit">
+        <xunit Assembly="..\test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" Xml="..\test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.xml" ShadowCopy="true" />
+        <xunit Assembly="..\test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" Xml="..\test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.xml" ShadowCopy="true" />
+        <xunit Assembly="..\test\EntityFramework\FunctionalTests.Transitional\bin\$(Configuration)\EntityFramework.FunctionalTests.Transitional.dll" Xml="..\test\EntityFramework\FunctionalTests.Transitional\bin\$(Configuration)\EntityFramework.FunctionalTests.Transitional.xml" ShadowCopy="true" />
+        <xunit Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" Assembly="..\test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" Xml="..\test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.xml" ShadowCopy="true" />
+    </Target>
+    
+</Project>

@@ -46,7 +46,7 @@
     </Target>
    
     <Target Name="Test" DependsOnTargets="Rebuild">
-        <MSBuild Projects="EF.xunit.targets"
+        <MSBuild Projects="tools\EF.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
