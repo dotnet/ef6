@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
     using System.Transactions;
 
@@ -45,7 +46,7 @@ namespace System.Data.Entity
                 databaseExists = context.Database.Exists();
             }
 
-            if (databaseExists)
+            if (databaseExists && new DatabaseTableChecker().AnyModelTableExists(context))
             {
                 if (context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                 {
@@ -56,7 +57,7 @@ namespace System.Data.Entity
             }
 
             // Database didn't exist or we deleted it, so we now create it again.
-            context.Database.Create();
+            context.Database.Create(skipExistsCheck: true);
 
             Seed(context);
             context.SaveChanges();

@@ -598,8 +598,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce(
-            )
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce()
         {
             MutableResolver.AddResolver<IDbConnectionFactory>(
                 k => new SqlCeConnectionFactory(
@@ -709,6 +708,28 @@ namespace ProductivityApiTests
 
                 Assert.Equal(1, context.Categories.Count());
                 Assert.Equal("Watchers", context.Categories.Single().Id);
+            }
+        }
+
+        [Fact]
+        public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_without_metadata_but_with_model_table()
+        {
+            Database.Delete(SimpleConnection<SimpleContextForDropCreateDatabaseIfModelChanges>());
+
+            using (var context = new SimpleContextForDropCreateDatabaseIfModelChanges())
+            {
+                // Create database without metadata
+                Database.SetInitializer<SimpleContextForDropCreateDatabaseIfModelChanges>(null);
+                ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
+
+                // Add some data
+                context.Categories.Add(new Category("Slayers"));
+                context.SaveChanges();
+
+                Database.SetInitializer(new SimpleDropCreateDatabaseIfModelChanges());
+
+                Assert.Throws<NotSupportedException>(() => context.Database.Initialize(force: true))
+                      .ValidateMessage("Database_NoDatabaseMetadata");
             }
         }
 
@@ -1517,9 +1538,9 @@ namespace ProductivityApiTests
             }
 
             using (var context = new DataLossContextContext
-                                     {
-                                         V2 = true
-                                     })
+                {
+                    V2 = true
+                })
             {
                 Assert.Throws<InvalidOperationException>(
                     () => context.Database.Initialize(force: true))
@@ -1618,6 +1639,98 @@ namespace ProductivityApiTests
                 Assert.Throws<SqlException>(() => context.Database.Initialize(force: false));
 
                 Assert.True(context.Database.Exists());
+            }
+        }
+
+        public class BooksBase<T> : DbContext
+            where T : BooksBase<T>
+        {
+            public const string DatabaseName = "BooksAndMoarBooks";
+
+            static BooksBase()
+            {
+                Database.SetInitializer(new BooksInitializer<T>());
+            }
+
+            public BooksBase()
+                : base(DatabaseName)
+            {
+            }
+
+            public DbSet<Book> Books { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Book>().ToTable(typeof(T).Name + "_Books");
+            }
+        }
+
+        public class BooksContext : BooksBase<BooksContext>
+        {
+        }
+
+        public class MoarBooksContext : BooksBase<MoarBooksContext>
+        {
+        }
+
+        public class SchemaBooksContext : BooksBase<SchemaBooksContext>
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.HasDefaultSchema(GetType().Name);
+                base.OnModelCreating(modelBuilder);
+            }
+        }
+
+        public class BooksInitializer<TContext> : DropCreateDatabaseIfModelChanges<TContext>
+            where TContext : BooksBase<TContext>
+        {
+            protected override void Seed(TContext context)
+            {
+                context.Books.Add(new Book { Title = "A book about " + typeof(TContext).Name });
+            }
+        }
+
+        public class Book
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+        }
+
+        [Fact] // CodePlex 640
+        public void DropCreateDatabaseIfModelChanges_can_create_tables_for_multiple_contexts_in_the_same_database()
+        {
+            var connectionString = SimpleConnectionString(BooksContext.DatabaseName);
+            Database.Delete(connectionString);
+
+            using (var context = new BooksContext())
+            {
+                context.Database.Initialize(force: false);
+            }
+
+            using (var context = new MoarBooksContext())
+            {
+                context.Database.Initialize(force: false);
+            }
+
+            using (var context = new SchemaBooksContext())
+            {
+                context.Database.Initialize(force: false);
+            }
+
+            using (var context = new BooksContext())
+            {
+                Assert.Equal("A book about BooksContext", context.Books.Single().Title);
+            }
+
+            using (var context = new MoarBooksContext())
+            {
+                Assert.Equal("A book about MoarBooksContext", context.Books.Single().Title);
+            }
+
+            using (var context = new SchemaBooksContext())
+            {
+                Assert.Equal("A book about SchemaBooksContext", context.Books.Single().Title);
             }
         }
     }

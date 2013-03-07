@@ -170,7 +170,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists Exists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists DeleteIfExists Exists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
