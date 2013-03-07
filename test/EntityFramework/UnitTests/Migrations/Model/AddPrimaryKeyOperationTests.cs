@@ -66,5 +66,11 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("pk2", inverse.Columns.Single());
             Assert.True(inverse.IsSystem);
         }
+
+        [Fact]
+        public void Is_clustered_by_default()
+        {
+            Assert.True(new AddPrimaryKeyOperation().IsClustered);
+        }
     }
 }

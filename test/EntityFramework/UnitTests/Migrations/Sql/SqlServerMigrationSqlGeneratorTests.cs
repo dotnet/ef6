@@ -221,11 +221,7 @@ namespace System.Data.Entity.Migrations.Sql
                         IsNullable = false
                     });
 
-            createTableOperation.PrimaryKey
-                = new AddPrimaryKeyOperation
-                      {
-                          IsClustered = true
-                      };
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
 
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
