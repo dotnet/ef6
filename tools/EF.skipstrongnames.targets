@@ -11,14 +11,18 @@
     <SkipStrongNamesXml>SkipStrongNames.xml</SkipStrongNamesXml>
   </PropertyGroup>
 
-  <Target Name="CheckSkipStrongNames">
+  <!-- TODO: Remove Condition when CheckSkipStrongNamesStatus works on .NET 4.0 -->
+  <Target Name="CheckSkipStrongNames"
+          Condition=" '$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full@Release)' != '' ">
     <CheckSkipStrongNamesStatus AssembliesFile="$(SkipStrongNamesXml)">
       <Output TaskParameter="Status" PropertyName="Status" />
     </CheckSkipStrongNamesStatus>
     <Error Text="Unit tests will not run correctly unless SkipStrongNames is Enabled. Current status: $(Status). Run 'build /t:EnableSkipStrongNames' to fix this problem." Condition="'$(Status)' != 'Enabled'" />
   </Target>
 
-  <Target Name="EnableSkipStrongNames">
+  <!-- TODO: Remove Condition when CheckSkipStrongNamesStatus works on .NET 4.0 -->
+  <Target Name="EnableSkipStrongNames"
+          Condition=" '$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full@Release)' != '' ">
     <Exec Command="@(SkipStrongNamesExe) -e $(SkipStrongNamesXml)" />
     <CheckSkipStrongNamesStatus AssembliesFile="$(SkipStrongNamesXml)">
       <Output TaskParameter="Status" PropertyName="Status" />
@@ -26,7 +30,9 @@
     <Message Text="SkipStrongNames: $(Status)" Importance="High" />
   </Target>
 
-  <Target Name="DisableSkipStrongNames">
+  <!-- TODO: Remove Condition when CheckSkipStrongNamesStatus works on .NET 4.0 -->
+  <Target Name="DisableSkipStrongNames"
+          Condition=" '$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full@Release)' != '' ">
     <Exec Command="@(SkipStrongNamesExe) -d $(SkipStrongNamesXml)" />
     <CheckSkipStrongNamesStatus AssembliesFile="$(SkipStrongNamesXml)">
       <Output TaskParameter="Status" PropertyName="Status" />
