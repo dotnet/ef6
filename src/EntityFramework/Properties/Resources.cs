@@ -4454,6 +4454,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The function '{0}' is not marked as FunctionImport and cannot be added to the EntityContainer"
+        /// </summary>
+        internal static string OnlyFunctionImportsCanBeAddedToEntityContainer(object p0)
+        {
+            return EntityRes.GetString(EntityRes.OnlyFunctionImportsCanBeAddedToEntityContainer, p0);
+        }
+
+        /// <summary>
         ///     A string like "The member with identity '{0}' does not exist in the metadata collection."
         /// </summary>
         internal static string ItemInvalidIdentity(object p0)
@@ -11006,6 +11014,38 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The Mode of all parameters in the ReturnParameter collection must be set to ParameterMode.ReturnValue."
+        /// </summary>
+        internal static string NonReturnParameterInReturnParameterCollection
+        {
+            get { return EntityRes.GetString(EntityRes.NonReturnParameterInReturnParameterCollection); }
+        }
+
+        /// <summary>
+        ///     A string like "Parameters in the Parameters collection must not have mode set to ParameterMode.ReturnValue."
+        /// </summary>
+        internal static string ReturnParameterInInputParameterCollection
+        {
+            get { return EntityRes.GetString(EntityRes.ReturnParameterInInputParameterCollection); }
+        }
+
+        /// <summary>
+        ///     A string like "The EntitySets parameter must not be null for functions returning multiple resultsets."
+        /// </summary>
+        internal static string NullEntitySetsForFunctionReturningMultipleResultSets
+        {
+            get { return EntityRes.GetString(EntityRes.NullEntitySetsForFunctionReturningMultipleResultSets); }
+        }
+
+        /// <summary>
+        ///     A string like "The number of entity sets should match the number of return parameters."
+        /// </summary>
+        internal static string NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters
+        {
+            get { return EntityRes.GetString(EntityRes.NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters); }
+        }
+
+        /// <summary>
         ///     A string like "An EntityParameter with ParameterName '{0}' is not contained by this EntityParameterCollection."
         /// </summary>
         internal static string EntityParameterCollectionInvalidParameterName(object p0)
@@ -15584,6 +15624,7 @@ namespace System.Data.Entity.Resources
         internal const string CheckArgumentContainsNullFailed = "CheckArgumentContainsNullFailed";
         internal const string InvalidRelationshipSetName = "InvalidRelationshipSetName";
         internal const string InvalidEntitySetName = "InvalidEntitySetName";
+        internal const string OnlyFunctionImportsCanBeAddedToEntityContainer = "OnlyFunctionImportsCanBeAddedToEntityContainer";
         internal const string ItemInvalidIdentity = "ItemInvalidIdentity";
         internal const string ItemDuplicateIdentity = "ItemDuplicateIdentity";
         internal const string NotStringTypeForTypeUsage = "NotStringTypeForTypeUsage";
@@ -16403,6 +16444,10 @@ namespace System.Data.Entity.Resources
         internal const string DbParameter_SourceVersion = "DbParameter_SourceVersion";
         internal const string ADP_CollectionParameterElementIsNull = "ADP_CollectionParameterElementIsNull";
         internal const string ADP_CollectionParameterElementIsNullOrEmpty = "ADP_CollectionParameterElementIsNullOrEmpty";
+        internal const string NonReturnParameterInReturnParameterCollection = "NonReturnParameterInReturnParameterCollection";
+        internal const string ReturnParameterInInputParameterCollection = "ReturnParameterInInputParameterCollection";
+        internal const string NullEntitySetsForFunctionReturningMultipleResultSets = "NullEntitySetsForFunctionReturningMultipleResultSets";
+        internal const string NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters = "NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters";
         internal const string EntityParameterCollectionInvalidParameterName = "EntityParameterCollectionInvalidParameterName";
         internal const string EntityParameterCollectionInvalidIndex = "EntityParameterCollectionInvalidIndex";
         internal const string InvalidEntityParameterType = "InvalidEntityParameterType";

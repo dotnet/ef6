@@ -66,5 +66,130 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.True(function.IsReadOnly);
         }
+
+        [Fact]
+        public void Cannot_create_function_with_input_parameter_with_ReturnValue_mode()
+        {
+            Assert.Equal(
+                Resources.Strings.ReturnParameterInInputParameterCollection,
+                Assert.Throws<ArgumentException>(
+                    () => new EdmFunction(
+                              "foo",
+                              "bar",
+                              DataSpace.CSpace,
+                              new EdmFunctionPayload()
+                                  {
+                                      Parameters =
+                                          new[]
+                                              {
+                                                  new FunctionParameter(
+                                                      "returnParam",
+                                                      TypeUsage.CreateDefaultTypeUsage(
+                                                          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                                      ParameterMode.ReturnValue)
+                                              }
+                                  })).Message);
+        }
+
+        [Fact]
+        public void Cannot_create_function_with_null_return_parameter()
+        {
+            Assert.Equal(
+                Resources.Strings.ADP_CollectionParameterElementIsNull("ReturnParameters"),
+                Assert.Throws<ArgumentException>(
+                    () => new EdmFunction(
+                              "foo",
+                              "bar",
+                              DataSpace.CSpace,
+                              new EdmFunctionPayload()
+                                  {
+                                      ReturnParameters = new FunctionParameter[] { null }
+                                  })).Message);
+        }
+
+        [Fact]
+        public void Cannot_create_function_with_return_parameter_whose_mode_is_not_ReturnValue()
+        {
+            foreach (var mode in new [] { ParameterMode.In, ParameterMode.InOut, ParameterMode.Out })
+            {
+                Assert.Equal(
+                    Resources.Strings.NonReturnParameterInReturnParameterCollection,
+                    Assert.Throws<ArgumentException>(
+                        () => new EdmFunction(
+                                  "foo",
+                                  "bar",
+                                  DataSpace.CSpace,
+                                  new EdmFunctionPayload()
+                                      {
+                                          ReturnParameters =
+                                              new[]
+                                                  {
+                                                      new FunctionParameter(
+                                                          "param",
+                                                          TypeUsage.CreateDefaultTypeUsage(
+                                                              PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                                          mode)
+                                                  }
+                                      })).Message);
+            }
+        }
+
+        [Fact]
+        public void Cannot_create_function_if_entity_sets_not_null_an_not_matching_number_of_return_parameters()
+        {
+            var entitySet = new EntitySet("set", null, null, null, new EntityType("entity", "ns", DataSpace.CSpace));
+
+            Assert.Equal(
+                Resources.Strings.NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters,
+                Assert.Throws<ArgumentException>(
+                    () => new EdmFunction(
+                              "foo",
+                              "bar",
+                              DataSpace.CSpace,
+                              new EdmFunctionPayload()
+                                  {
+                                      EntitySets = new[] { entitySet, entitySet },
+                                      ReturnParameters =
+                                          new[]
+                                              {
+                                                  new FunctionParameter(
+                                                      "param",
+                                                      TypeUsage.CreateDefaultTypeUsage(
+                                                          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                                      ParameterMode.ReturnValue)
+                                                  ,
+                                              }
+                                  })).Message);
+        }
+
+        [Fact]
+        public void Cannot_create_function_with_multiple_resultsets_and_null_entity_sets()
+        {
+            Assert.Equal(
+                Resources.Strings.NullEntitySetsForFunctionReturningMultipleResultSets,
+                Assert.Throws<ArgumentException>(
+                    () => new EdmFunction(
+                              "foo",
+                              "bar",
+                              DataSpace.CSpace,
+                              new EdmFunctionPayload()
+                              {
+                                  ReturnParameters =
+                                      new[]
+                                              {
+                                                  new FunctionParameter(
+                                                      "param1",
+                                                      TypeUsage.CreateDefaultTypeUsage(
+                                                          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                                      ParameterMode.ReturnValue),
+                                                  new FunctionParameter(
+                                                      "param2",
+                                                      TypeUsage.CreateDefaultTypeUsage(
+                                                          PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                                      ParameterMode.ReturnValue)
+                                              }
+                              })).Message);
+        }
+
     }
 }

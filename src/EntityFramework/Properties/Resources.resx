@@ -1930,6 +1930,9 @@
   <data name="InvalidEntitySetName" xml:space="preserve">
     <value>The EntitySet with the specified name '{0}' does not exist in the EntityContainer.</value>
   </data>
+  <data name="OnlyFunctionImportsCanBeAddedToEntityContainer">
+    <value>The function '{0}' is not marked as FunctionImport and cannot be added to the EntityContainer</value>
+  </data>
   <data name="ItemInvalidIdentity" xml:space="preserve">
     <value>The member with identity '{0}' does not exist in the metadata collection.</value>
   </data>
@@ -4416,6 +4419,18 @@
   </data>
   <data name="ADP_CollectionParameterElementIsNullOrEmpty" xml:space="preserve">
     <value>The element in the collection parameter '{0}' cannot be null or empty.</value>
+  </data>
+  <data name="NonReturnParameterInReturnParameterCollection" xml:space="preserve">
+    <value>The Mode of all parameters in the ReturnParameter collection must be set to ParameterMode.ReturnValue.</value>
+  </data>
+  <data name="ReturnParameterInInputParameterCollection" xml:space="preserve">
+    <value>Parameters in the Parameters collection must not have mode set to ParameterMode.ReturnValue.</value>
+  </data>
+  <data name="NullEntitySetsForFunctionReturningMultipleResultSets">
+    <value>The EntitySets parameter must not be null for functions that return multiple result sets.</value>
+  </data>
+  <data name="NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters">
+    <value>The number of entity sets should match the number of return parameters.</value>
   </data>
   <data name="EntityParameterCollectionInvalidParameterName" xml:space="preserve">
     <value>An EntityParameter with ParameterName '{0}' is not contained by this EntityParameterCollection.</value>

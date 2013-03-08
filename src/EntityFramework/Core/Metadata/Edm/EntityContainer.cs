@@ -259,6 +259,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 foreach (var function in functions)
                 {
+                    if (!function.IsFunctionImport)
+                    {
+                        throw new ArgumentException(Strings.OnlyFunctionImportsCanBeAddedToEntityContainer(function.Name));
+                    }
                     entityContainer.AddFunctionImport(function);
                 }
             }

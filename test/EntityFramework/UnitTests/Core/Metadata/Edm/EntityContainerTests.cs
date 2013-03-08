@@ -58,13 +58,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var entitySets = new[] { new EntitySet { Name = "Bar"} };
 
+            var functionImports =
+                new[]
+                    {
+                        new EdmFunction(
+                            "foo",
+                            "bar",
+                            DataSpace.CSpace,
+                            new EdmFunctionPayload()
+                                {
+                                    IsFunctionImport = true
+                                })
+                    };
+
+
             var entityContainer = 
-                EntityContainer.Create("Foo", DataSpace.SSpace, entitySets, null);
+                EntityContainer.Create("Foo", DataSpace.SSpace, entitySets, functionImports);
 
             Assert.Equal("Foo", entityContainer.Name);
             Assert.Equal(entitySets, entityContainer.EntitySets);
-            Assert.Empty(entityContainer.FunctionImports);
+            Assert.Equal(functionImports, entityContainer.FunctionImports);
             Assert.True(entityContainer.IsReadOnly);
+        }
+
+        [Fact]
+        public void Cannot_create_EntityContainer_with_function_not_marked_as_function_import()
+        {
+            var function = new EdmFunction(
+                "foo",
+                "bar",
+                DataSpace.CSpace,
+                new EdmFunctionPayload()
+                    {
+                        IsFunctionImport = false
+                    });
+
+            Assert.Equal(
+                Resources.Strings.OnlyFunctionImportsCanBeAddedToEntityContainer("foo"),
+                Assert.Throws<ArgumentException>(
+                    () =>
+                    EntityContainer.Create("Foo", DataSpace.SSpace, null, new[] { function })).Message);
         }
     }
 }

@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
@@ -22,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal EdmFunction(string name, string namespaceName, DataSpace dataSpace, EdmFunctionPayload payload)
             : base(name, namespaceName, dataSpace)
         {
@@ -32,10 +31,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             var returnParameters = payload.ReturnParameters ?? new FunctionParameter[0];
 
-            Debug.Assert(returnParameters.All((returnParameter) => returnParameter != null), "All return parameters must be non-null");
-            Debug.Assert(
-                returnParameters.All((returnParameter) => returnParameter.Mode == ParameterMode.ReturnValue),
-                "Return parameter in a function must have the ParameterMode equal to ReturnValue.");
+            foreach (var returnParameter in returnParameters)
+            {
+                if (returnParameter == null)
+                {
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("ReturnParameters"));    
+                }
+
+                if (returnParameter.Mode != ParameterMode.ReturnValue)
+                {
+                    throw new ArgumentException(Strings.NonReturnParameterInReturnParameterCollection);
+                }
+            }
 
             _returnParameters = new ReadOnlyMetadataCollection<FunctionParameter>(
                 returnParameters
@@ -86,21 +93,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (payload.EntitySets != null)
             {
-                Debug.Assert(
-                    _returnParameters.Count == payload.EntitySets.Length,
-                    "The number of entity sets should match the number of return parameters");
+                if (payload.EntitySets.Length != returnParameters.Length)
+                {
+                    throw new ArgumentException(Strings.NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters);
+                }
+
                 _entitySets = new ReadOnlyMetadataCollection<EntitySet>(payload.EntitySets);
             }
             else
             {
-                var list = new List<EntitySet>();
-                if (_returnParameters.Count != 0)
+                if (_returnParameters.Count > 1)
                 {
-                    Debug.Assert(
-                        _returnParameters.Count == 1, "If there was more than one result set payload.EntitySets should not have been null");
-                    list.Add(null);
+                    throw new ArgumentException(Strings.NullEntitySetsForFunctionReturningMultipleResultSets);
                 }
-                _entitySets = new ReadOnlyMetadataCollection<EntitySet>(list);
+
+                _entitySets = new ReadOnlyMetadataCollection<EntitySet>(_returnParameters.Select(p => (EntitySet)null).ToList());
             }
 
             if (payload.CommandText != null)
@@ -117,8 +124,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("parameters"));
                     }
-                    Debug.Assert(
-                        parameter.Mode != ParameterMode.ReturnValue, "No function parameter can have ParameterMode equal to ReturnValue.");
+
+                    if (parameter.Mode == ParameterMode.ReturnValue)
+                    {
+                        throw new ArgumentException(Strings.ReturnParameterInInputParameterCollection);
+                    }
                 }
 
                 // Populate the parameters
