@@ -24,6 +24,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
+        public override LightweightPropertyConfiguration HasParameterName(string parameterName)
+        {
+            return this;
+        }
+
         public override LightweightPropertyConfiguration IsConcurrencyToken()
         {
             return this;

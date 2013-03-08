@@ -2078,6 +2078,64 @@ namespace FunctionalTests
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
+
+                [Fact]
+                public void Can_configure_parameter_name_via_properties()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures();
+
+                    modelBuilder
+                        .Properties()
+                        .Configure(c => c.HasParameterName("i_" + c.ClrPropertyInfo.Name));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var integerParameters
+                        = databaseMapping
+                            .Database
+                            .Functions
+                            .SelectMany(f => f.Parameters)
+                            .Where(p => p.TypeName == "int")
+                            .ToList();
+
+                    Assert.Equal(6, integerParameters.Count());
+                    Assert.True(integerParameters.All(p => p.Name.StartsWith("i_")));
+                }
+
+                [Fact]
+                public void Can_configure_parameter_name_via_properties_of_type()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<OrderLine>()
+                        .MapToStoredProcedures();
+
+                    modelBuilder
+                        .Properties<int>()
+                        .Configure(c => c.HasParameterName("i_" + c.ClrPropertyInfo.Name));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var integerParameters
+                        = databaseMapping
+                            .Database
+                            .Functions
+                            .SelectMany(f => f.Parameters)
+                            .Where(p => p.TypeName == "int")
+                            .ToList();
+
+                    Assert.Equal(6, integerParameters.Count());
+                    Assert.True(integerParameters.All(p => p.Name.StartsWith("i_")));
+                }
             }
         }
 

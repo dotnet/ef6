@@ -91,6 +91,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
+        public virtual LightweightPropertyConfiguration HasParameterName(string parameterName)
+        {
+            if (_configuration().ParameterName == null)
+            {
+                _configuration().ParameterName = parameterName;
+            }
+
+            return this;
+        }
+
         /// <summary>
         ///     Configures the order of the database column used to store the property.
         ///     This method is also used to specify key ordering when an entity type has a composite key.

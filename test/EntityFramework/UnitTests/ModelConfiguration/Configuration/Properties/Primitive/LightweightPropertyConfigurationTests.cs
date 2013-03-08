@@ -70,6 +70,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
+        public void HasParameterName_configures_when_unset()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasParameterName("Parameter1");
+
+            Assert.Equal("Parameter1", innerConfig.ParameterName);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasParameterName_is_noop_when_set()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration
+            {
+                ParameterName = "Parameter1"
+            };
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasParameterName("Parameter2");
+
+            Assert.Equal("Parameter1", innerConfig.ParameterName);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
         public void HasColumnOrder_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
