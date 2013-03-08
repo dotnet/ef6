@@ -534,7 +534,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void PrimitivePropertyConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<PrimitivePropertyConfiguration>(8);
+            VerifyFieldCount<PrimitivePropertyConfiguration>(9);
         }
 
         [Fact]

@@ -160,6 +160,7 @@
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
+    <Compile Include="Core\Mapping\StorageEntityTypeModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageAssociationSetMappingTests.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
     <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntryTests.cs" />
     <Compile Include="Infrastructure\Pluralization\EnglishPluralizationServiceTests.cs" />
+    <Compile Include="ModelConfiguration\Edm\FunctionParameterExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\EdmTypeExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />

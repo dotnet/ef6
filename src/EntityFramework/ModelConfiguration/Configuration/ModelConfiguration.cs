@@ -363,8 +363,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                   .Cast<StructuralTypeConfiguration>()
                                   .Where(c => c != null))
             {
-                structuralTypeConfiguration.Configure(
-                    databaseMapping.GetComplexPropertyMappings(structuralTypeConfiguration.ClrType),
+                structuralTypeConfiguration.ConfigurePropertyMappings(
+                    databaseMapping.GetComplexPropertyMappings(structuralTypeConfiguration.ClrType).ToList(),
                     providerManifest);
             }
 
@@ -374,6 +374,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ConfigureTables(databaseMapping.Database);
             ConfigureDefaultSchema(databaseMapping);
             UniquifyFunctionNames(databaseMapping);
+            ConfigureFunctionParameters(databaseMapping);
+        }
+
+        private static void ConfigureFunctionParameters(DbDatabaseMapping databaseMapping)
+        {
+            DebugCheck.NotNull(databaseMapping);
+
+            foreach (var structuralTypeConfiguration
+                in databaseMapping.Model.ComplexTypes
+                      .Select(ct => ct.GetConfiguration())
+                      .Cast<StructuralTypeConfiguration>()
+                      .Where(c => c != null))
+            {
+                structuralTypeConfiguration.ConfigureFunctionParameters(
+                    databaseMapping.GetComplexParameterBindings(structuralTypeConfiguration.ClrType).ToList());
+            }
+
+            foreach (var entityType in databaseMapping.Model.EntityTypes.Where(e => e.GetConfiguration() != null))
+            {
+                var entityTypeConfiguration = (EntityTypeConfiguration)entityType.GetConfiguration();
+
+                entityTypeConfiguration.ConfigureFunctionParameters(databaseMapping, entityType);
+            }
         }
 
         private static void UniquifyFunctionNames(DbDatabaseMapping databaseMapping)
@@ -468,6 +491,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
         {
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(providerManifest);
+
             var sortedEntityConfigurations =
                 SortEntityConfigurationsByInheritance(databaseMapping);
 

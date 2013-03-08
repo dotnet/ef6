@@ -574,11 +574,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
             ConfigureDependentKeys(databaseMapping, providerManifest);
-            ConfigureModificationFunctions(entityType, databaseMapping, providerManifest);
+            ConfigureModificationFunctions(databaseMapping, entityType, providerManifest);
         }
 
-        private void ConfigureModificationFunctions(
-            EntityType entityType, DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
+        internal void ConfigureFunctionParameters(DbDatabaseMapping databaseMapping, EntityType entityType)
+        {
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(entityType);
+
+            var parameterBindings
+                = (from esm in databaseMapping.GetEntitySetMappings()
+                   from mfm in esm.ModificationFunctionMappings
+                   where mfm.EntityType == entityType
+                   from pb in mfm.PrimaryParameterBindings
+                   select pb)
+                    .ToList();
+
+            ConfigureFunctionParameters(parameterBindings);
+
+            foreach (var derivedEntityType in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))
+            {
+                ConfigureFunctionParameters(databaseMapping, derivedEntityType);
+            }
+        }
+
+        private void ConfigureModificationFunctions(DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
@@ -614,15 +634,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var entityTypeMappings = databaseMapping.GetEntityTypeMappings(entityType);
 
             var propertyMappings
-                = from etm in entityTypeMappings
+                = (from etm in entityTypeMappings
                   from etmf in etm.MappingFragments
                   from pm in etmf.ColumnMappings
-                  select Tuple.Create(pm, etmf.Table);
+                  select Tuple.Create(pm, etmf.Table))
+                    .ToList();
 
-            Configure(propertyMappings, providerManifest, allowOverride);
+            ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride);
 
-            foreach (
-                var derivedEntityType in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))
+            foreach (var derivedEntityType 
+                in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))
             {
                 ConfigurePropertyMappings(databaseMapping, derivedEntityType, providerManifest, true);
             }

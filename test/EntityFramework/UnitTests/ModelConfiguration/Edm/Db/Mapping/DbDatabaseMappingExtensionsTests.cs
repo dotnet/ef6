@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Linq;
     using Xunit;
 
@@ -51,6 +52,59 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             entityTypeMappingFragment.AddColumnMapping(propertyMapping2);
 
             Assert.Equal(2, databaseMapping.GetComplexPropertyMappings(typeof(object)).Count());
+        }
+
+        [Fact]
+        public void GetComplexParameterBindings_should_return_all_complex_parameter_bindings_for_type()
+        {
+            var databaseMapping
+                = new DbDatabaseMapping()
+                    .Initialize(
+                        new EdmModel(DataSpace.CSpace),
+                        new EdmModel(DataSpace.SSpace));
+
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entitySet = databaseMapping.Model.AddEntitySet("ES", entityType);
+            var entitySetMapping = databaseMapping.AddEntitySetMapping(entitySet);
+
+            var complexType1 = new ComplexType();
+            complexType1.Annotations.SetClrType(typeof(string));
+
+            var complexType2 = new ComplexType();
+            complexType2.Annotations.SetClrType(typeof(object));
+
+            var storageModificationFunctionMapping
+                = new StorageModificationFunctionMapping(
+                    entitySet,
+                    entityType,
+                    new EdmFunction("F", "N", DataSpace.SSpace),
+                    new[]
+                        {
+                            new StorageModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new StorageModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        EdmProperty.Complex("C1", complexType1),
+                                        EdmProperty.Complex("C2", complexType2),
+                                        new EdmProperty("M")
+                                    },
+                                null),
+                                true
+                                )
+                        },
+                    null,
+                    null);
+
+            entitySetMapping.AddModificationFunctionMapping(
+                new StorageEntityTypeModificationFunctionMapping(
+                    entityType,
+                    storageModificationFunctionMapping,
+                    storageModificationFunctionMapping,
+                    storageModificationFunctionMapping));
+
+            Assert.Equal(3, databaseMapping.GetComplexParameterBindings(typeof(string)).Count());
+            Assert.Equal(3, databaseMapping.GetComplexParameterBindings(typeof(object)).Count());
         }
 
         [Fact]

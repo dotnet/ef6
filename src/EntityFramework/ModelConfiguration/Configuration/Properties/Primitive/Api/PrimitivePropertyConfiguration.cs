@@ -125,6 +125,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        public PrimitivePropertyConfiguration<TConfiguration> HasParameterName(string parameterName)
+        {
+            Configuration.ParameterName = parameterName;
+
+            return this;
+        }
+
         /// <summary>
         ///     Configures the order of the database column used to store the property.
         ///     This method is also used to specify key ordering when an entity type has a composite key.

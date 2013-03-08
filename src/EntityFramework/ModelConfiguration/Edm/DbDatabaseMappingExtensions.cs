@@ -141,6 +141,23 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    select Tuple.Create(epm, etmf.Table);
         }
 
+        public static IEnumerable<StorageModificationFunctionParameterBinding> GetComplexParameterBindings(
+            this DbDatabaseMapping databaseMapping, Type complexType)
+        {
+            DebugCheck.NotNull(databaseMapping);
+            DebugCheck.NotNull(complexType);
+
+            return from esm in databaseMapping.GetEntitySetMappings()
+                   from mfm in esm.ModificationFunctionMappings
+                   from pb in mfm.PrimaryParameterBindings
+                   where pb.MemberPath.Members
+                           .OfType<EdmProperty>()
+                           .Any(
+                               p => p.IsComplexType
+                                    && p.ComplexType.GetClrType() == complexType)
+                   select pb;
+        }
+
         public static StorageEntitySetMapping GetEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {

@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     ///     Describes modification function mappings for an entity type within an entity set.
@@ -44,6 +46,31 @@ namespace System.Data.Entity.Core.Mapping
         ///     Gets update function for the current entity type.
         /// </summary>
         internal readonly StorageModificationFunctionMapping UpdateFunctionMapping;
+
+        internal IEnumerable<StorageModificationFunctionParameterBinding> PrimaryParameterBindings
+        {
+            get
+            {
+                var result = Enumerable.Empty<StorageModificationFunctionParameterBinding>();
+
+                if (DeleteFunctionMapping != null)
+                {
+                    result = result.Concat(DeleteFunctionMapping.ParameterBindings);
+                }
+
+                if (InsertFunctionMapping != null)
+                {
+                    result = result.Concat(InsertFunctionMapping.ParameterBindings);
+                }
+
+                if (UpdateFunctionMapping != null)
+                {
+                    result = result.Concat(UpdateFunctionMapping.ParameterBindings.Where(pb => pb.IsCurrent));
+                }
+
+                return result;
+            }
+        }
 
         public override string ToString()
         {

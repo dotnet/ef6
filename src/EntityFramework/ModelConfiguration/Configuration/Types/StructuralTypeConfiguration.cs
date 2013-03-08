@@ -160,8 +160,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return (TPrimitivePropertyConfiguration)primitivePropertyConfiguration;
         }
 
-        internal void Configure(
-            IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
+        internal void ConfigurePropertyMappings(
+            IList<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
@@ -176,14 +176,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 propertyConfiguration.Configure(
                     propertyMappings.Where(
                         pm =>
-                        propertyPath ==
-                        new PropertyPath(
+                        propertyPath.Equals(
+                            new PropertyPath(
                             pm.Item1.PropertyPath
                               .Skip(pm.Item1.PropertyPath.Count - propertyPath.Count)
                               .Select(p => p.GetClrPropertyInfo()))
-                        ),
+                            )),
                     providerManifest,
                     allowOverride);
+            }
+        }
+
+        internal void ConfigureFunctionParameters(IList<StorageModificationFunctionParameterBinding> parameterBindings)
+        {
+            DebugCheck.NotNull(parameterBindings);
+
+            foreach (var configuration in PrimitivePropertyConfigurations)
+            {
+                var propertyPath = configuration.Key;
+                var propertyConfiguration = configuration.Value;
+
+                var parameters
+                    = parameterBindings
+                        .Where(
+                            pb =>
+                            (pb.MemberPath.AssociationSetEnd == null)
+                            && propertyPath.Equals(
+                                new PropertyPath(
+                                   pb.MemberPath.Members
+                                     .Skip(pb.MemberPath.Members.Count - propertyPath.Count)
+                                     .Select(m => m.GetClrPropertyInfo()))))
+                        .Select(pb => pb.Parameter);
+
+                propertyConfiguration.ConfigureFunctionParameters(parameters);
             }
         }
 
