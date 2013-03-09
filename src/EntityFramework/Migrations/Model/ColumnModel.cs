@@ -168,23 +168,39 @@ namespace System.Data.Entity.Migrations.Model
 
         private static readonly Dictionary<PrimitiveTypeKind, int> _typeSize // in bytes
             = new Dictionary<PrimitiveTypeKind, int>
-                  {
-                      { PrimitiveTypeKind.Binary, int.MaxValue },
-                      { PrimitiveTypeKind.Boolean, 1 },
-                      { PrimitiveTypeKind.Byte, 1 },
-                      { PrimitiveTypeKind.DateTime, 8 },
-                      { PrimitiveTypeKind.DateTimeOffset, 10 },
-                      { PrimitiveTypeKind.Decimal, 17 },
-                      { PrimitiveTypeKind.Double, 53 },
-                      { PrimitiveTypeKind.Guid, 16 },
-                      { PrimitiveTypeKind.Int16, 2 },
-                      { PrimitiveTypeKind.Int32, 4 },
-                      { PrimitiveTypeKind.Int64, 8 },
-                      { PrimitiveTypeKind.SByte, 1 },
-                      { PrimitiveTypeKind.Single, 4 },
-                      { PrimitiveTypeKind.String, int.MaxValue },
-                      { PrimitiveTypeKind.Time, 5 },
-                  };
+                {
+                    { PrimitiveTypeKind.Binary, int.MaxValue },
+                    { PrimitiveTypeKind.Boolean, 1 },
+                    { PrimitiveTypeKind.Byte, 1 },
+                    { PrimitiveTypeKind.DateTime, 8 },
+                    { PrimitiveTypeKind.DateTimeOffset, 10 },
+                    { PrimitiveTypeKind.Decimal, 17 },
+                    { PrimitiveTypeKind.Double, 53 },
+                    { PrimitiveTypeKind.Guid, 16 },
+                    { PrimitiveTypeKind.Int16, 2 },
+                    { PrimitiveTypeKind.Int32, 4 },
+                    { PrimitiveTypeKind.Int64, 8 },
+                    { PrimitiveTypeKind.SByte, 1 },
+                    { PrimitiveTypeKind.Single, 4 },
+                    { PrimitiveTypeKind.String, int.MaxValue },
+                    { PrimitiveTypeKind.Time, 5 },
+                    { PrimitiveTypeKind.Geometry, int.MaxValue },
+                    { PrimitiveTypeKind.Geography, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryPoint, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryLineString, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryPolygon, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryMultiPoint, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryMultiLineString, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryMultiPolygon, int.MaxValue },
+                    { PrimitiveTypeKind.GeometryCollection, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyPoint, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyLineString, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyPolygon, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyMultiPoint, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyMultiLineString, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyMultiPolygon, int.MaxValue },
+                    { PrimitiveTypeKind.GeographyCollection, int.MaxValue },
+                };
 
         /// <summary>
         ///     Determines if this column is a narrower data type than another column.
