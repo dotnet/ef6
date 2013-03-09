@@ -107,9 +107,6 @@
     <None Include="..\FinalPublicKey.snk">
       <Link>Properties\FinalPublicKey.snk</Link>
     </None>
-    <EmbeddedResource Include="Objects\TransactionsModel.csdl" />
-    <EmbeddedResource Include="Objects\TransactionsModel.msl" />
-    <EmbeddedResource Include="Objects\TransactionsModel.ssdl" />
     <EmbeddedResource Include="Metadata\MetadataCachingModel.csdl" />
     <EmbeddedResource Include="Metadata\MetadataCachingModel.msl" />
     <EmbeddedResource Include="Metadata\MetadataCachingModel.ssdl" />
@@ -191,7 +188,6 @@
     <Compile Include="Migrations\CustomHistoryScenarios.cs" />
     <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
-    <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />

@@ -110,6 +110,9 @@
     <None Include="..\FinalPublicKey.snk">
       <Link>Properties\FinalPublicKey.snk</Link>
     </None>
+    <EmbeddedResource Include="Objects\TransactionsModel.csdl" />
+    <EmbeddedResource Include="Objects\TransactionsModel.msl" />
+    <EmbeddedResource Include="Objects\TransactionsModel.ssdl" />
     <None Include="packages.config" />
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -143,6 +146,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
