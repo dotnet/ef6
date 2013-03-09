@@ -143,7 +143,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(model, "model");
             DebugCheck.NotNull(model.ProviderInfo);
             DebugCheck.NotNull(model.ProviderManifest);
-            Debug.Assert(model.Version.GetEdmVersion() > 0);
 
             _providerManifest = model.ProviderManifest;
             _providerInvariantName = model.ProviderInfo.ProviderInvariantName;
@@ -153,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             LoadProviderManifest(_providerManifest);
 
-            _schemaVersion = model.Version.GetEdmVersion();
+            _schemaVersion = model.SchemaVersion;
 
             model.Validate();
 

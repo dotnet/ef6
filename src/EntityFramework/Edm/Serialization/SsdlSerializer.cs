@@ -61,7 +61,7 @@ namespace System.Data.Entity.Edm.Serialization
 
         private static EdmSerializationVisitor CreateVisitor(XmlWriter xmlWriter, EdmModel dbDatabase, bool serializeDefaultNullability)
         {
-            return new EdmSerializationVisitor(xmlWriter, dbDatabase.Version.GetEdmVersion(), serializeDefaultNullability);
+            return new EdmSerializationVisitor(xmlWriter, dbDatabase.SchemaVersion, serializeDefaultNullability);
         }
     }
 }

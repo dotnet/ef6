@@ -204,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             var propertyMapper = new PropertyMapper(this);
 
-            foreach (var propertyInfo in new PropertyFilter(_mappingContext.Model.Version)
+            foreach (var propertyInfo in new PropertyFilter(_mappingContext.ModelBuilderVersion)
                 .GetProperties(
                     type,
                     mapDeclaredPropertiesOnly,
@@ -301,7 +301,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 var propertyInfo = member.GetClrPropertyInfo();
 
                 var declaredProperties
-                    = new PropertyFilter(_mappingContext.Model.Version)
+                    = new PropertyFilter(_mappingContext.ModelBuilderVersion)
                         .GetProperties(
                             type,
                             /*declaredOnly:*/ true,

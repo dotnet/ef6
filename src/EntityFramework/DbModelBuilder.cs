@@ -353,7 +353,7 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion);
+            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion());
 
             model.ProviderInfo = providerInfo;
 
@@ -401,7 +401,7 @@ namespace System.Data.Entity
         {
             DebugCheck.NotNull(model);
 
-            var typeMapper = new TypeMapper(new MappingContext(_modelConfiguration, _conventionsConfiguration, model));
+            var typeMapper = new TypeMapper(new MappingContext(_modelConfiguration, _conventionsConfiguration, model, _modelBuilderVersion));
 
             _modelConfiguration.Entities
                                .Where(type => typeMapper.MapEntityType(type) == null)

@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using Xunit;
 
@@ -62,8 +63,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Model.Version);
-            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Database.Version);
+            Assert.Equal(XmlConstants.StoreVersionForV2, databaseMapping.Model.SchemaVersion);
+            Assert.Equal(XmlConstants.StoreVersionForV2, databaseMapping.Database.SchemaVersion);
         }
 
         [Fact]

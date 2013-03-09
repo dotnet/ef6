@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                         edmDataModelItem.AddKeyMember(p);
                                     });
 
-            new PropertyFilter(model.Version)
+            new PropertyFilter()
                 .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true)
                 .Each(
                     p =>

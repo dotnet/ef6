@@ -26,20 +26,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private DbProviderInfo _providerInfo;
         private DbProviderManifest _providerManifest;
 
-        public DbModelBuilderVersion Version { get; set; }
+        public double SchemaVersion { get; set; }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(EntityContainer entityContainer, DbModelBuilderVersion version = DbModelBuilderVersion.Latest)
+        public EdmModel(EntityContainer entityContainer, double version = XmlConstants.SchemaVersionLatest)
         {
             Check.NotNull(entityContainer, "entityContainer");
 
             _dataSpace = entityContainer.DataSpace;
             _containers.Add(entityContainer);
-            Version = version;
+            SchemaVersion = version;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(DataSpace dataSpace, DbModelBuilderVersion version = DbModelBuilderVersion.Latest)
+        public EdmModel(DataSpace dataSpace, double version = XmlConstants.SchemaVersionLatest)
         {
             if (dataSpace != DataSpace.CSpace
                 && dataSpace != DataSpace.SSpace)
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     dataSpace));
 
             _dataSpace = dataSpace;
-            Version = version;
+            SchemaVersion = version;
         }
 
         internal virtual void Validate()

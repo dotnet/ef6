@@ -42,17 +42,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void EdmModel_version_correctly()
+        public void EdmModel_version_set_correctly()
         {
-            Assert.Equal(DbModelBuilderVersion.V4_1, new EdmModel(DataSpace.CSpace, DbModelBuilderVersion.V4_1).Version);
-            Assert.Equal(2.0, new EdmModel(DataSpace.CSpace, DbModelBuilderVersion.V4_1).Version.GetEdmVersion());
+            Assert.Equal(XmlConstants.StoreVersionForV2, new EdmModel(DataSpace.CSpace, XmlConstants.StoreVersionForV2).SchemaVersion);
 
             Assert.Equal(
-                DbModelBuilderVersion.V4_1,
-                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), DbModelBuilderVersion.V4_1).Version);
-            Assert.Equal(
-                2.0,
-                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), DbModelBuilderVersion.V4_1).Version.GetEdmVersion());
+                XmlConstants.StoreVersionForV2,
+                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), XmlConstants.StoreVersionForV2).SchemaVersion);
         }
 
         [Fact]

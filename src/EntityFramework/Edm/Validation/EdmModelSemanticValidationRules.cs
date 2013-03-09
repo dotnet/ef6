@@ -669,7 +669,7 @@ namespace System.Data.Entity.Edm.Validation
                                     isDependentRoleKeyProperty,
                                     "The properties in the PrincipalRole must be the key of the Entity type referred to by the principal role");
 
-                                var v1Behavior = context.Model.Version.GetEdmVersion() <= XmlConstants.EdmVersionForV1_1;
+                                var v1Behavior = context.Model.SchemaVersion <= XmlConstants.EdmVersionForV1_1;
 
                                 // Since the FromProperty must be the key of the FromRole, the FromRole cannot be '*' as multiplicity
                                 // Also the lower bound of multiplicity of FromRole can be zero if and only if all the properties in 
@@ -725,7 +725,7 @@ namespace System.Data.Entity.Edm.Validation
                                 // Need to constrain the dependent role in CSDL to Key properties if this is not a IsForeignKey
                                 // relationship.
                                 if ((!isDependentRolePropertiesSubsetofKeyProperties)
-                                    && !edmAssociationType.IsForeignKey(context.Model.Version.GetEdmVersion()))
+                                    && !edmAssociationType.IsForeignKey(context.Model.SchemaVersion))
                                 {
                                     context.AddError(
                                         dependentRoleEnd,

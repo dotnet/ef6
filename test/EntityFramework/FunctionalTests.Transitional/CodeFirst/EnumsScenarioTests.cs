@@ -156,8 +156,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Model.Version);
-            Assert.Equal(DbModelBuilderVersion.V4_1, databaseMapping.Database.Version);
+            Assert.Equal(XmlConstants.StoreVersionForV2, databaseMapping.Model.SchemaVersion);
+            Assert.Equal(XmlConstants.StoreVersionForV2, databaseMapping.Database.SchemaVersion);
         }
 
         [Fact]

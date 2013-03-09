@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         {
             var database = new EdmModel(DataSpace.SSpace);
 
-            Assert.Equal(DbModelBuilderVersion.Latest, database.Version);
+            Assert.Equal(XmlConstants.SchemaVersionLatest, database.SchemaVersion);
         }
 
         [Fact]
