@@ -29,7 +29,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             catch (FileNotFoundException)
             {
-                // See 552932: ObjectItemCollection: fails on referenced assemblies that are not available
+                // ObjectItemCollection fails on referenced assemblies that are not available
+            }
+            catch (FileLoadException)
+            {
+                // file is found but cannot be loaded - e.g. happens for winmd files
             }
 
             return assembly;
